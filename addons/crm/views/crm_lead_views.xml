@@ -421,16 +421,16 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today())]"
                             help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
-                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('activity_ids.date_deadline', '=', context_today())]"/>
                     <filter string="Future Activities (7 days)" name="activities_week"
-                            domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                     ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                            domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today()),
+                                     ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)))
                             ]"/>
                     <filter string="Future Activities (All)" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today())
                         ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
@@ -680,23 +680,23 @@
                             domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                            domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                            domain="[('activity_ids.date_deadline', '&lt;', context_today())]"
                             help="Show all opportunities for which the next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
-                            domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                            domain="[('activity_ids.date_deadline', '=', context_today())]"/>
                     <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today())
                         ]"/>
 
                     <separator/>
                     <filter string="Overdue Opportunities" name="overdue_opp"
-                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            domain="[('date_deadline', '&lt;', context_today()), ('date_closed', '=', False)]"
                             help="Opportunities with a date of Expected Closing which is in the past"/>
 
                     <filter string="To Close This Month" name="close_this_month" domain="[
                                 '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+                                ('date_deadline', '&gt;=', (context_today() + datetime.relativedelta(day=1))),
+                                ('date_deadline', '&lt;=', (context_today() + datetime.relativedelta(months=1, day=1, days=-1))),
                             ]"/>
                     <separator/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>

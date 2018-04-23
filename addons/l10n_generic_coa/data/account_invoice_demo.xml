@@ -7,7 +7,7 @@
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">out_invoice</field>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="date_invoice" eval="datetime.today().start_of('month')"/>
         </record>
         <record id="demo_invoice_1_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
@@ -33,7 +33,7 @@
         <record id="demo_invoice_2" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="type">out_invoice</field>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="date_invoice" eval="datetime.today().replace(day=8)"/>
         </record>
         <record id="demo_invoice_2_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_03').partner_ref"/>
@@ -59,7 +59,7 @@
         <record id="demo_invoice_3" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="type">out_invoice</field>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-08'"/>
+            <field name="date_invoice" eval="datetime.today().replace(day=8)"/>
         </record>
         <record id="demo_invoice_3_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
@@ -89,7 +89,7 @@
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="type">out_invoice</field>
-            <field name="date_invoice" eval="(datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')"/>
+            <field name="date_invoice" eval="datetime.today() + datetime.timedelta(days=-15)"/>
         </record>
         <record id="demo_invoice_followup_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
@@ -119,7 +119,7 @@
             <field name="payment_term_id" ref="account.account_payment_term"/>
             <field name="type">in_invoice</field>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="date_invoice" eval="datetime.today().start_of('month')"/>
         </record>
         <record id="demo_invoice_0_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_delivery_01').partner_ref"/>
@@ -141,7 +141,7 @@
         <record id="demo_invoice_january_wages" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_12"/>
             <field name="type">in_invoice</field>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+            <field name="date_invoice" eval="datetime.today().start_of('month')"/>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
 
@@ -161,7 +161,7 @@
         <record id="demo_invoice_equipment_purchase" model="account.invoice">
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="type">in_invoice</field>
-            <field name="date_invoice" eval="time.strftime('%Y-%m')+'-15'"/>
+            <field name="date_invoice" eval="datetime.today().replace(day=15)"/>
             <field name="journal_id" search="[('type', '=', 'purchase')]"/>
         </record>
 

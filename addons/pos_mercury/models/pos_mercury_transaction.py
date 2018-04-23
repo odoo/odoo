@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, timedelta
-
 import requests
 import werkzeug
 
 from odoo import models, api, service
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, misc
+from odoo.tools import misc
+from odoo.tools.datetime import date, timedelta
 
 
 class MercuryTransaction(models.Model):
@@ -115,7 +114,7 @@ class MercuryTransaction(models.Model):
     # deleted after 6 months
     @api.model
     def cleanup_old_tokens(self):
-        expired_creation_date = (date.today() - timedelta(days=6 * 30)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        expired_creation_date = (date.today() - timedelta(days=6 * 30))
 
         for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
             order.ref_no = ""

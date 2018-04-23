@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.api import Environment
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from datetime import date, timedelta
+from odoo.tools.datetime import date, timedelta
 
 import odoo.tests
 
@@ -193,18 +192,18 @@ class TestUi(odoo.tests.HttpCase):
             'item_ids': [(0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 1,
-                'date_start': two_weeks_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'date_end': one_week_ago.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_start': two_weeks_ago,
+                'date_end': one_week_ago,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
-                'date_start': today.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'date_end': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_start': today,
+                'date_end': one_week_from_now,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 3,
-                'date_start': one_week_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
-                'date_end': two_weeks_from_now.strftime(DEFAULT_SERVER_DATE_FORMAT),
+                'date_start': one_week_from_now,
+                'date_end': two_weeks_from_now,
             })],
         })
 

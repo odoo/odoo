@@ -5,11 +5,10 @@
 
 import base64
 import io
-from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
-from odoo.tools import pycompat, DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools import pycompat
 
 
 class AccountFrFec(models.TransientModel):
@@ -68,7 +67,7 @@ class AccountFrFec(models.TransientModel):
             '''
         company = self.env.user.company_id
         formatted_date_from = self.date_from.replace('-', '')
-        date_from = datetime.strptime(self.date_from, DEFAULT_SERVER_DATE_FORMAT)
+        date_from = self.date_from
         formatted_date_year = date_from.year
         self._cr.execute(
             sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
@@ -174,7 +173,7 @@ class AccountFrFec(models.TransientModel):
         AND aat.type not in ('receivable', 'payable')
         '''
         formatted_date_from = self.date_from.replace('-', '')
-        date_from = datetime.strptime(self.date_from, DEFAULT_SERVER_DATE_FORMAT)
+        date_from = self.date_from
         formatted_date_year = date_from.year
         self._cr.execute(
             sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))

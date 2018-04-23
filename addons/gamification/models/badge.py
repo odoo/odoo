@@ -2,9 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from datetime import date
 
 from odoo import api, fields, models, _, exceptions
+from odoo.tools.datetime import date
 
 _logger = logging.getLogger(__name__)
 
@@ -157,7 +157,7 @@ class GamificationBadge(models.Model):
     @api.depends('owner_ids.badge_id', 'owner_ids.create_date', 'owner_ids.user_id')
     def _get_badge_user_stats(self):
         """Return stats related to badge users"""
-        first_month_day = fields.Date.to_string(date.today().replace(day=1))
+        first_month_day = date.today().replace(day=1)
 
         for badge in self:
             owners = badge.owner_ids

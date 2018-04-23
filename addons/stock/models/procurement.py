@@ -2,14 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
+from odoo.tools import float_compare, float_round
+from odoo.tools.datetime import datetime, relativedelta
 
 from odoo.exceptions import UserError
 
@@ -88,7 +87,7 @@ class ProcurementRule(models.Model):
         :param procurement: browse record
         :rtype: dictionary
         '''
-        date_expected = (datetime.strptime(values['date_planned'], DEFAULT_SERVER_DATETIME_FORMAT) - relativedelta(days=self.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_expected = (datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0))
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
@@ -332,9 +331,9 @@ class ProcurementGroup(models.Model):
 
                 for group in location_data['groups']:
                     if group.get('from_date'):
-                        product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        product_context['from_date'] = group['from_date']
                     if group['to_date']:
-                        product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+                        product_context['to_date'] = group['to_date']
                     product_quantity = location_data['products'].with_context(product_context)._product_available()
                     for orderpoint in location_orderpoints:
                         try:

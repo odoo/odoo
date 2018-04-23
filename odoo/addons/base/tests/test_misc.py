@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import unittest
 
 from odoo.tools import misc
 from odoo.tests.common import TransactionCase, tagged
+from odoo.tools.datetime import datetime
 
 
 @tagged('standard', 'at_install')
@@ -42,7 +42,7 @@ class TestCountingStream(unittest.TestCase):
 
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
-        date_datetime = datetime.datetime.strptime('2017-01-31 12:00:00', "%Y-%m-%d %H:%M:%S")
+        date_datetime = datetime(2017, 1, 31, 12, 0, 0)
         date_date = date_datetime.date()
         date_str = '2017-01-31'
 

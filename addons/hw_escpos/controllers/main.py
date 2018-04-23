@@ -36,8 +36,8 @@ _logger = logging.getLogger(__name__)
 
 # workaround https://bugs.launchpad.net/openobject-server/+bug/947231
 # related to http://bugs.python.org/issue7980
-from datetime import datetime
-datetime.strptime('2012-01-01', '%Y-%m-%d')
+from odoo.tools.datetime import datetime
+datetime.from_string('2012-01-01 00:00:00')
 
 class EscposDriver(Thread):
     def __init__(self):

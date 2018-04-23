@@ -7,6 +7,7 @@ import re
 
 from odoo.tests import common
 from odoo.tools.misc import mute_logger
+from odoo.tools.datetime import datetime
 
 def message(msg, type='error', from_=0, to_=0, record=0, field='value', **kwargs):
     return dict(kwargs,
@@ -1066,7 +1067,7 @@ class test_datetime(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
-            ['2012-02-02 21:11:11'])
+            [datetime.from_string('2012-02-03 11:11:11', tzinfo='Pacific/Kiritimati')])
 
         # UTC-0930
         result = self.import_(
@@ -1074,7 +1075,7 @@ class test_datetime(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
-            ['2012-02-03 20:41:11'])
+            [datetime.from_string('2012-02-03 11:11:11', tzinfo='Pacific/Marquesas')])
 
     def test_usertz(self):
         """ If the context does not hold a timezone, the importing user's tz
@@ -1088,7 +1089,7 @@ class test_datetime(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
-            ['2012-02-03 01:11:11'])
+            [datetime.from_string('2012-02-03 11:11:11', tzinfo='Asia/Yakutsk')])
 
     def test_notz(self):
         """ If there is no tz either in the context or on the user, falls back
@@ -1100,7 +1101,7 @@ class test_datetime(ImporterCase):
         self.assertFalse(result['messages'])
         self.assertEqual(
             values(self.read(domain=[('id', 'in', result['ids'])])),
-            ['2012-02-03 11:11:11'])
+            [datetime.from_string('2012-02-03 11:11:11')])
 
 
 class test_unique(ImporterCase):

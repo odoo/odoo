@@ -10,14 +10,14 @@
                     <filter name="week" string="This Week"
                             domain="[
                                 '&amp;',
-                                ('date', '>=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
-                                ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
+                                ('date', '>=', context_today() + datetime.relativedelta(weeks=-1,days=1,weekday=0)),
+                                ('date', '&lt;=', context_today() + datetime.relativedelta(weekday=6)),
                             ]"/>
                     <filter name="month" string="This Month"
                             domain="[
                                 '&amp;',
-                                ('date', '>=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
-                                ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+                                ('date', '>=', context_today() + datetime.relativedelta(day=1)),
+                                ('date', '&lt;=', context_today() + datetime.relativedelta(months=1, day=1, days=-1)),
                             ]"/>
                 </search>
             </field>

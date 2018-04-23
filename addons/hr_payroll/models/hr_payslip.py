@@ -2,15 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import time
-from datetime import datetime
-from datetime import time as datetime_time
-from dateutil import relativedelta
 
 import babel
 
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.datetime import datetime, relativedelta, date
+from odoo.tools.datetime import time as datetime_time
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -29,9 +28,9 @@ class HrPayslip(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, readonly=True,
         states={'draft': [('readonly', False)]})
     date_from = fields.Date(string='Date From', readonly=True, required=True,
-        default=time.strftime('%Y-%m-01'), states={'draft': [('readonly', False)]})
+        default=date.today().start_of('month'), states={'draft': [('readonly', False)]})
     date_to = fields.Date(string='Date To', readonly=True, required=True,
-        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
+        default=str(datetime.now() + relativedelta(months=+1, day=1, days=-1))[:10],
         states={'draft': [('readonly', False)]})
     # this is chaos: 4 states are defined, 3 are used ('verify' isn't) and 5 exist ('confirm' seems to have existed)
     state = fields.Selection([
@@ -175,23 +174,24 @@ class HrPayslip(models.Model):
 
             # compute leave days
             leaves = {}
-            day_leave_intervals = contract.employee_id.iter_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
-            for day_intervals in day_leave_intervals:
-                for interval in day_intervals:
-                    holiday = interval[2]['leaves'].holiday_id
-                    current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
-                        'name': holiday.holiday_status_id.name,
-                        'sequence': 5,
-                        'code': holiday.holiday_status_id.name,
-                        'number_of_days': 0.0,
-                        'number_of_hours': 0.0,
-                        'contract_id': contract.id,
-                    })
-                    leave_time = (interval[1] - interval[0]).seconds / 3600
-                    current_leave_struct['number_of_hours'] += leave_time
-                    work_hours = contract.employee_id.get_day_work_hours_count(interval[0].date(), calendar=contract.resource_calendar_id)
-                    if work_hours:
-                        current_leave_struct['number_of_days'] += leave_time / work_hours
+            calendar = contract.resource_calendar_id
+            day_leave_intervals = contract.employee_id.list_leaves(day_from, day_to, calendar=contract.resource_calendar_id)
+            for interval in day_leave_intervals:
+                holiday = interval[2].holiday_id
+                current_leave_struct = leaves.setdefault(holiday.holiday_status_id, {
+                    'name': holiday.holiday_status_id.name,
+                    'sequence': 5,
+                    'code': holiday.holiday_status_id.name,
+                    'number_of_days': 0.0,
+                    'number_of_hours': 0.0,
+                    'contract_id': contract.id,
+                })
+                current_leave_struct['number_of_hours'] += interval[1]
+                work_hours = calendar.get_work_hours_count(datetime.combine(interval[0], datetime_time(0, 0, 0), tzinfo=calendar.tz),
+                                                           datetime.combine(interval[0], datetime_time(23, 59, 59), tzinfo=calendar.tz),
+                                                           compute_leaves=False)
+                if work_hours:
+                    current_leave_struct['number_of_days'] += interval[1] / work_hours
 
             # compute worked days
             work_data = contract.employee_id.get_work_days_data(day_from, day_to, calendar=contract.resource_calendar_id)
@@ -394,7 +394,7 @@ class HrPayslip(models.Model):
         }
         if (not employee_id) or (not date_from) or (not date_to):
             return res
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
+        ttyme = date_from
         employee = self.env['hr.employee'].browse(employee_id)
         locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
@@ -446,7 +446,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
         contract_ids = []
 
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
+        ttyme = datetime.combine(date_from, datetime_time(0, 0, 0))
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
@@ -566,10 +566,10 @@ class HrPayslipRun(models.Model):
         ('close', 'Close'),
     ], string='Status', index=True, readonly=True, copy=False, default='draft')
     date_start = fields.Date(string='Date From', required=True, readonly=True,
-        states={'draft': [('readonly', False)]}, default=time.strftime('%Y-%m-01'))
+        states={'draft': [('readonly', False)]}, default=date.today().start_of('month'))
     date_end = fields.Date(string='Date To', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
-        default=str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
+        default=str(datetime.now() + relativedelta(months=+1, day=1, days=-1))[:10])
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")

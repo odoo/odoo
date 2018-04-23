@@ -12,7 +12,7 @@
                 <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
             </xpath>
             <xpath expr="/search" position="inside">
-                <filter string="Last 7 days" name="rating_last_7_days" domain="[('create_date', '>=', (context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 7 days" name="rating_last_7_days" domain="[('create_date', '>=', context_today()-datetime.timedelta(days=7))]"/>
             </xpath>
         </field>
     </record>

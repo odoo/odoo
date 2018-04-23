@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from datetime import datetime, timedelta
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
-from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import mute_logger
+from odoo.tools.datetime import datetime, timedelta
 
 
 class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
@@ -172,7 +172,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     #         mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
 
     #         self.email_template_in_2_days.write({
-    #             'scheduled_date': "${(datetime.datetime.now() + relativedelta(days=2)).strftime('%s')}" % DEFAULT_SERVER_DATETIME_FORMAT,
+    #             'scheduled_date': "${(datetime.datetime.now() + relativedelta(days=2))}",
     #         })
 
     #         mail_now_id = self.email_template.send_mail(self.test_record.id)
@@ -186,7 +186,7 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
     #         self.assertEqual(bool(mail_now.scheduled_date), False)
     #         self.assertEqual(mail_now.state, 'outgoing')
     #         self.assertEqual(mail_in_2_days.state, 'outgoing')
-    #         scheduled_date = datetime.strptime(mail_in_2_days.scheduled_date, DEFAULT_SERVER_DATETIME_FORMAT)
+    #         scheduled_date = mail_in_2_days.scheduled_date
     #         date_in_2_days = datetime.now() + timedelta(days = 2)
     #         self.assertEqual(scheduled_date, date_in_2_days)
     #         # self.assertEqual(scheduled_date.month, date_in_2_days.month)

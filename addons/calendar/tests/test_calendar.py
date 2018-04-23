@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import datetime
-
-from datetime import datetime, timedelta
 
 from odoo import fields
+from odoo.tools.datetime import datetime, timedelta
 from odoo.tests.common import TransactionCase
 
 
@@ -102,8 +100,8 @@ class TestCalendar(TransactionCase):
         # I create a recuring rule for my event
         calendar_event_sprint_review = self.CalendarEvent.create({
             'name': 'Begin of month meeting',
-            'start': fields.Date.today() + ' 12:00:00',
-            'stop': fields.Date.today() + ' 18:00:00',
+            'start': fields.Datetime.today().replace(hour=12),
+            'stop': fields.Datetime.today().replace(hour=18),
             'recurrency': True,
             'rrule': 'FREQ=MONTHLY;INTERVAL=1;COUNT=12;BYDAY=1MO'
         })
@@ -233,8 +231,8 @@ class TestCalendar(TransactionCase):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'start': now + timedelta(days=-1),
+            'stop': now + timedelta(hours=2),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)
@@ -243,19 +241,19 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_record.activity_ids.summary, test_name)
         self.assertEqual(test_record.activity_ids.note, test_description)
         self.assertEqual(test_record.activity_ids.user_id, self.env.user)
-        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-1)).date()))
+        self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-1)).date())
 
         # updating event should update activity
         test_event.write({
             'name': '%s2' % test_name,
             'description': test_description2,
-            'start': fields.Datetime.to_string(now + timedelta(days=-2)),
+            'start': now + timedelta(days=-2),
             'user_id': test_user.id,
         })
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
         self.assertEqual(test_record.activity_ids.note, test_description2)
         self.assertEqual(test_record.activity_ids.user_id, test_user)
-        self.assertEqual(test_record.activity_ids.date_deadline, fields.Date.to_string((now + timedelta(days=-2)).date()))
+        self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
 
         # deleting meeting should delete its activity
         test_record.activity_ids.unlink()
@@ -268,8 +266,8 @@ class TestCalendar(TransactionCase):
         ).create({
             'name': test_name,
             'description': test_description,
-            'start': fields.Datetime.to_string(now + timedelta(days=-1)),
-            'stop': fields.Datetime.to_string(now + timedelta(hours=2)),
+            'start': now + timedelta(days=-1),
+            'stop': now + timedelta(hours=2),
             'user_id': self.env.user.id,
         })
         self.assertEqual(test_event.res_model, test_record._name)

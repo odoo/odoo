@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from odoo.tools.datetime import datetime
 
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
 
@@ -32,7 +31,7 @@ class TestPurchaseOrder(AccountingTestCase):
                     'product_qty': 5.0,
                     'product_uom': self.product_id_1.uom_po_id.id,
                     'price_unit': 500.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 }),
                 (0, 0, {
                     'name': self.product_id_2.name,
@@ -40,7 +39,7 @@ class TestPurchaseOrder(AccountingTestCase):
                     'product_qty': 5.0,
                     'product_uom': self.product_id_2.uom_po_id.id,
                     'price_unit': 250.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 })],
         }
 

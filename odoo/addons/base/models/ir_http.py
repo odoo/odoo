@@ -3,7 +3,6 @@
 # ir_http modular http routing
 #----------------------------------------------------------
 import base64
-import datetime
 import hashlib
 import logging
 import mimetypes
@@ -23,6 +22,7 @@ from odoo.exceptions import AccessDenied, AccessError
 from odoo.http import request, STATIC_CACHE, content_disposition
 from odoo.tools import pycompat, consteq
 from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.datetime import datetime
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -139,12 +139,7 @@ class IrHttp(models.AbstractModel):
                 return werkzeug.utils.redirect(name, 301)
 
             response = werkzeug.wrappers.Response()
-            server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(wdate, server_format)
+            response.last_modified = datetime.from_string(wdate)
 
             response.set_etag(checksum)
             response.make_conditional(request.httprequest)

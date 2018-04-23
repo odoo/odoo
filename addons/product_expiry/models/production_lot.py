@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import datetime
 from odoo import api, fields, models
+from odoo.tools import datetime
 
 
 class StockProductionLot(models.Model):
@@ -37,8 +37,7 @@ class StockProductionLot(models.Model):
             for field in mapped_fields:
                 duration = getattr(product, mapped_fields[field])
                 if duration:
-                    date = datetime.datetime.now() + datetime.timedelta(days=duration)
-                    res[field] = fields.Datetime.to_string(date)
+                    res[field] = datetime.datetime.now() + datetime.timedelta(days=duration)
         return res
 
     # Assign dates according to products data

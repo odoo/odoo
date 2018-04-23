@@ -3,12 +3,11 @@
 import babel.dates
 import re
 import werkzeug
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
+from odoo.tools.datetime import datetime, timedelta, relativedelta
 
 
 class WebsiteEventController(http.Controller):
@@ -50,14 +49,14 @@ class WebsiteEventController(http.Controller):
                 0],
             ['month', _('This month'), [
                 ("date_end", ">=", sd(today.replace(day=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=1)).strftime('%Y-%m-%d 00:00:00'))],
+                ("date_begin", "<", today.replace(day=1) + relativedelta(months=1))],
                 0],
             ['nextmonth', _('Next month'), [
                 ("date_end", ">=", sd(today.replace(day=1) + relativedelta(months=1))),
-                ("date_begin", "<", (today.replace(day=1) + relativedelta(months=2)).strftime('%Y-%m-%d 00:00:00'))],
+                ("date_begin", "<", today.replace(day=1) + relativedelta(months=2))],
                 0],
             ['old', _('Old Events'), [
-                ("date_end", "<", today.strftime('%Y-%m-%d 00:00:00'))],
+                ("date_end", "<", today)],
                 0],
         ]
 
@@ -188,15 +187,15 @@ class WebsiteEventController(http.Controller):
         date_begin = datetime.today() + timedelta(days=(14))
         vals = {
             'name': event_name,
-            'date_begin': fields.Date.to_string(date_begin),
-            'date_end': fields.Date.to_string((date_begin + timedelta(days=(1)))),
+            'date_begin': date_begin,
+            'date_end': date_begin + timedelta(days=(1)),
             'seats_available': 1000,
         }
         return request.env['event.event'].with_context(context or {}).create(vals)
 
     def get_formated_date(self, event):
-        start_date = fields.Datetime.from_string(event.date_begin).date()
-        end_date = fields.Datetime.from_string(event.date_end).date()
+        start_date = event.date_begin.date()
+        end_date = event.date_end.date()
         month = babel.dates.get_month_names('abbreviated', locale=event.env.context.get('lang') or 'en_US')[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 

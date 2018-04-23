@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
-from odoo.fields import Datetime as Dt
 from odoo.addons.mrp.tests.common import TestMrpCommon
-
+from odoo.tools.datetime import datetime, timedelta
 
 class TestMrpOrder(TestMrpCommon):
 
@@ -75,7 +72,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check production move
         production_move = man_order.move_finished_ids
-        self.assertEqual(production_move.date, Dt.to_string(test_date_planned))
+        self.assertEqual(production_move.date, test_date_planned)
         self.assertEqual(production_move.product_id, self.product_4)
         self.assertEqual(production_move.product_uom, man_order.product_uom_id)
         self.assertEqual(production_move.product_qty, man_order.product_qty)
@@ -84,7 +81,7 @@ class TestMrpOrder(TestMrpCommon):
 
         # check consumption moves
         for move in man_order.move_raw_ids:
-            self.assertEqual(move.date, Dt.to_string(test_date_planned))
+            self.assertEqual(move.date, test_date_planned)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_2)
         self.assertEqual(first_move.product_qty, test_quantity / self.bom_1.product_qty * self.product_4.uom_id.factor_inv * 2)
         first_move = man_order.move_raw_ids.filtered(lambda move: move.product_id == self.product_1)

@@ -3,7 +3,6 @@
 
 import babel.messages.pofile
 import base64
-import datetime
 import functools
 import glob
 import hashlib
@@ -35,6 +34,7 @@ import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
 from odoo.tools import crop_image, topological_sort, html_escape, pycompat
+from odoo.tools.datetime import datetime, datetime_types, date_types
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlwt, file_open
 from odoo.tools.safe_eval import safe_eval
@@ -264,13 +264,13 @@ def get_last_modified(files):
 
     :param list(str) files: names of files to check
     :return: most recent modification time amongst the fileset
-    :rtype: datetime.datetime
+    :rtype: datetime
     """
     files = list(files)
     if files:
-        return max(datetime.datetime.fromtimestamp(os.path.getmtime(f))
+        return max(datetime.fromtimestamp(os.path.getmtime(f))
                    for f in files)
-    return datetime.datetime(1970, 1, 1)
+    return datetime(1970, 1, 1)
 
 def make_conditional(response, last_modified=None, etag=None, max_age=0):
     """ Makes the provided response conditional based upon the request,
@@ -281,7 +281,7 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
 
     :param response: Werkzeug response
     :type response: werkzeug.wrappers.Response
-    :param datetime.datetime last_modified: last modification date of the response content
+    :param datetime last_modified: last modification date of the response content
     :param str etag: some sort of checksum of the content (deep etag)
     :return: the response object provided
     :rtype: werkzeug.wrappers.Response
@@ -726,7 +726,7 @@ class Database(http.Controller):
     def backup(self, master_pwd, name, backup_format = 'zip'):
         try:
             odoo.service.db.check_super(master_pwd)
-            ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            ts = datetime.utcnow().to_filename()
             filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
                 ('Content-Type', 'application/octet-stream; charset=binary'),
@@ -1484,9 +1484,9 @@ class ExcelExport(ExportFormat, http.Controller):
 
                 if isinstance(cell_value, pycompat.string_types):
                     cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
-                elif isinstance(cell_value, datetime.datetime):
+                elif isinstance(cell_value, datetime_types):
                     cell_style = datetime_style
-                elif isinstance(cell_value, datetime.date):
+                elif isinstance(cell_value, date_types):
                     cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 

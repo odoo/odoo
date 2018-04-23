@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import werkzeug
 
 from collections import OrderedDict
@@ -14,6 +13,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
+from odoo.tools import datetime
 
 from odoo.tools.translate import _
 
@@ -94,7 +94,7 @@ class WebsiteAccount(CustomerPortal):
         domain = self.get_domain_my_opp(request.env.user)
 
         today = fields.Date.today()
-        this_week_end_date = fields.Date.to_string(fields.Date.from_string(today) + datetime.timedelta(days=7))
+        this_week_end_date = today + datetime.timedelta(days=7)
 
         searchbar_filters = {
             'all': {'label': _('Active'), 'domain': []},

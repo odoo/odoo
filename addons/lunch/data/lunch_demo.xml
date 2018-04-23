@@ -109,21 +109,21 @@
 
         <record model="lunch.order" id="order_1">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=2)"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">new</field>
         </record>
 
         <record model="lunch.order" id="order_2">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=1)"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">confirmed</field>
         </record>
 
         <record model="lunch.order" id="order_3">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=3)"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">confirmed</field>
         </record>
@@ -132,7 +132,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_Bolognese"/>
             <field name="price">7.70</field>
-            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=2)"/>
             <field name="state">new</field>
             <field name="supplier" ref="partner_pizza_inn"/>
             <field name="note">+Emmental</field>
@@ -143,7 +143,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_italiana"/>
             <field name="price">7.40</field>
-            <field name="date" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=1)"/>
             <field name="state">confirmed</field>
             <field name="supplier" ref="partner_pizza_inn"/>
             <field name="note">+Mushrooms</field>
@@ -154,7 +154,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_gouda"/>
             <field name="price">2.50</field>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=3)"/>
             <field name="state">cancelled</field>
             <field name="supplier" ref="partner_coin_gourmand"/>
             <field name="note">+Salad +Tomatoes +Cucumbers</field>
@@ -165,7 +165,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_chicken_curry"/>
             <field name="price">2.60</field>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=3)"/>
             <field name="state">confirmed</field>
             <field name="supplier" ref="partner_coin_gourmand"/>
             <field name="note">+Salad +Tomatoes +Eggs</field>
@@ -174,7 +174,7 @@
 
         <record model="lunch.cashmove" id="cashmove_1">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=2)"/>
             <field name="description">Pizza Italiana</field>
             <field name="amount">-7.40</field>
             <field name="order_id" ref="order_2"/>
@@ -183,7 +183,7 @@
 
         <record model="lunch.cashmove" id="cashmove_2">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=3)"/>
             <field name="description">Chicken curry</field>
             <field name="amount">-2.60</field>
             <field name="order_id" ref="order_3"/>
@@ -192,7 +192,7 @@
 
         <record model="lunch.cashmove" id="cashmove_3">
             <field name="user_id" ref="base.user_demo"/>
-            <field name="date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="date" eval="datetime.today() + datetime.timedelta(days=3)"/>
             <field name="description">Payment: 5 lunch tickets (6€)</field>
             <field name="amount">30</field>
             <field name="state">payment</field>

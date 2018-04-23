@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import time
 
 import odoo
 from odoo import fields
@@ -421,7 +420,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         account_statement = self.AccountBankStatement.create({
             'balance_start': 0.0,
             'balance_end_real': 0.0,
-            'date': time.strftime('%Y-%m-%d'),
+            'date': fields.Date.today(),
             'journal_id': journal.id,
             'company_id': self.company_id,
             'name': 'pos session test',

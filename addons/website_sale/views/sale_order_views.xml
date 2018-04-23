@@ -136,7 +136,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban</field>
-        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
+        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('partner_id', '!=', context.get('public_partner_id')), ('team_id.team_type', '=', 'website'), ('date_order', '&lt;=', datetime.utcnow() - datetime.timedelta(hours=1))]</field>
         <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner')}"/>
         <field name="view_id" ref="sale.view_quotation_tree"/>
         <field name="help" type="html">

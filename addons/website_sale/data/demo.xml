@@ -784,8 +784,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=7)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=7)"/>
             <field name="state">sale</field>
         </record>
 
@@ -805,8 +805,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=6)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=6)"/>
             <field name="state">sale</field>
         </record>
 
@@ -826,8 +826,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=5)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=5)"/>
             <field name="state">sale</field>
         </record>
 
@@ -847,8 +847,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=4)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=4)"/>
             <field name="state">sale</field>
         </record>
 
@@ -868,8 +868,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=3)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=3)"/>
             <field name="state">sale</field>
         </record>
 
@@ -889,8 +889,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=2)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=2)"/>
             <field name="state">sale</field>
         </record>
 
@@ -910,8 +910,8 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
-            <field name="confirmation_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(days=1)"/>
+            <field name="confirmation_date" eval="datetime.now()-datetime.relativedelta(days=1)"/>
             <field name="state">sale</field>
         </record>
 
@@ -952,7 +952,7 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.relativedelta(hours=2)"/>
         </record>
 
         <record id="website_sale_order_line_9" model="sale.order.line">
@@ -1001,7 +1001,7 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.timedelta(hours=1)"/>
         </record>
 
         <record id="website_sale_order_line_12" model="sale.order.line">
@@ -1022,7 +1022,7 @@ Weight: 31 grams</field>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
-            <field name="date_order" eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="datetime.now()-datetime.timedelta(hours=1)"/>
             <field name="state">sent</field>
         </record>
 

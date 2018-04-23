@@ -198,13 +198,12 @@ class StockQuant(models.Model):
 
         if lot_id:
             incoming_dates = quants.mapped('in_date')  # `mapped` already filtered out falsy items
-            incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
             if in_date:
                 incoming_dates += [in_date]
             # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
             # consider only the oldest one as being relevant.
             if incoming_dates:
-                in_date = fields.Datetime.to_string(min(incoming_dates))
+                in_date = min(incoming_dates)
             else:
                 in_date = fields.Datetime.now()
 

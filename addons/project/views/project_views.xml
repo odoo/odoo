@@ -40,12 +40,12 @@
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today())]"
                         help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_ids.date_deadline', '=', context_today())]"/>
                     <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today())
                         ]"/>
                     <separator/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
@@ -726,7 +726,7 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
+            <field name="domain">[('date_deadline','&lt;',datetime.today())]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>

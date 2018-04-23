@@ -8,13 +8,13 @@ import json
 import textwrap
 import uuid
 import sass
-from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
 from odoo.tools import func, misc
+from odoo.tools.datetime import datetime
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -505,12 +505,8 @@ class WebAsset(object):
             if self._filename:
                 return datetime.fromtimestamp(os.path.getmtime(self._filename))
             elif self._ir_attach:
-                server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
                 last_update = self._ir_attach['__last_update']
-                try:
-                    return datetime.strptime(last_update, server_format + '.%f')
-                except ValueError:
-                    return datetime.strptime(last_update, server_format)
+                datetime.from_string(last_update)
         except Exception:
             pass
         return datetime(1970, 1, 1)

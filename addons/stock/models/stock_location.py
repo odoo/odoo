@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil import relativedelta
 from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.datetime import datetime, relativedelta
 
 
 class Location(models.Model):
@@ -214,7 +212,7 @@ class PushedFlow(models.Model):
     sequence = fields.Integer('Sequence')
 
     def _apply(self, move):
-        new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        new_date = (move.date_expected + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             move.write({
                 'date': new_date,

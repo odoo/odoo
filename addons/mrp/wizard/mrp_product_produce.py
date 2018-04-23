@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
-from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round
+from odoo.tools.datetime import datetime
 
 class MrpProductProduce(models.TransientModel):
     _name = "mrp.product.produce"

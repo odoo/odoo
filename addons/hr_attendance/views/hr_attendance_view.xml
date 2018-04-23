@@ -68,8 +68,8 @@
             <search string="Hr Attendance Search">
                 <field name="employee_id"/>
                 <field name="department_id"/>
-                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
-                <filter string="Current Month" name="currentmonth" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.now().replace(hour=23, minute=59, second=59))]" />
+                <filter string="Current Month" name="currentmonth" domain="[('check_in', '&gt;=', datetime.today().replace(day=1))]" />
                 <separator/>
                 <filter string="No Check Out" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <separator/>

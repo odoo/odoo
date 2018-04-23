@@ -538,7 +538,7 @@
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>
                     <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
-                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', datetime.today()), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson" domain="[('share','=', False)]"/>
@@ -550,12 +550,12 @@
                         domain="[('activity_ids.user_id', '=', uid)]"/>
                     <separator/>
                     <filter string="Late Activities" name="activities_overdue"
-                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today())]"
                         help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                        domain="[('activity_ids.date_deadline', '=', context_today())]"/>
                     <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today())
                         ]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>

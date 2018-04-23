@@ -1,12 +1,11 @@
 import json
-from datetime import datetime, timedelta
 
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
+from odoo.tools.datetime import date as datelib, timedelta, datetime
 
 class account_journal(models.Model):
     _inherit = "account.journal"
@@ -52,14 +51,14 @@ class account_journal(models.Model):
         self.ensure_one()
         BankStatement = self.env['account.bank.statement']
         data = []
-        today = datetime.today()
+        today = datelib.today()
         last_month = today + timedelta(days=-30)
         locale = self._context.get('lang') or 'en_US'
 
         #starting point of the graph is the last statement
-        last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
+        last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today)], order='date desc, id desc', limit=1)
         if not last_stmt:
-            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month)], order='date desc, id desc', limit=1)
         last_balance = last_stmt and last_stmt.balance_end_real or 0
         data.append(build_graph_data(today, last_balance))
 
@@ -78,13 +77,13 @@ class account_journal(models.Model):
                         """
         self.env.cr.execute(query, (self.id, last_month, today))
         for val in self.env.cr.dictfetchall():
-            date = datetime.strptime(val['date'], DF)
-            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+            date = datelib.from_string(val['date'])
+            if val['date'] != str(today):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
             amount -= val['amount']
 
         # make sure the graph starts 1 month ago
-        if date.strftime(DF) != last_month.strftime(DF):
+        if date != last_month:
             data[:0] = [build_graph_data(last_month, amount)]
 
         [graph_title, graph_key] = self._graph_title_and_key()
@@ -94,7 +93,7 @@ class account_journal(models.Model):
     @api.multi
     def get_bar_graph_datas(self):
         data = []
-        today = datetime.strptime(fields.Date.context_today(self), DF)
+        today = fields.Datetime.context_today(self)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
@@ -118,12 +117,12 @@ class account_journal(models.Model):
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
             if i == 0:
-                query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
+                query += "("+select_sql_clause+" and date < '"+str(start_date)+"')"
             elif i == 5:
-                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date >= '"+str(start_date)+"')"
             else:
                 next_date = start_date + timedelta(days=7)
-                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date >= '"+str(start_date)+"' and date < '"+str(next_date)+"')"
                 start_date = next_date
 
         self.env.cr.execute(query, query_args)

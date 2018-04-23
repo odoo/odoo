@@ -5,17 +5,16 @@ import odoo
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools import datetime
 from odoo.tools import pycompat
 from odoo.http import request
 
 import base64
 from collections import defaultdict
-import datetime
-import dateutil
 import logging
 import time
 
-from pytz import timezone
+from odoo.tools.datetime import timezone
 
 _logger = logging.getLogger(__name__)
 
@@ -74,8 +73,7 @@ class IrActions(models.Model):
             'uid': self._uid,
             'user': self.env.user,
             'time': time,
-            'datetime': datetime,
-            'dateutil': dateutil,
+            'datetime': datetime.DatetimeContext,
             'timezone': timezone,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
@@ -331,7 +329,7 @@ class IrActionsServer(models.Model):
 #  - model: Odoo Model of the record on which the action is triggered; is a void recordset
 #  - record: record on which the action is triggered; may be be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
-#  - time, datetime, dateutil, timezone: useful Python libraries
+#  - time, datetime, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""

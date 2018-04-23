@@ -3,12 +3,11 @@
 
 import babel
 import collections
-import datetime
-import pytz
 
 from odoo import fields, http
 from odoo.http import request
 from odoo.tools import html_escape as escape, html2plaintext
+from odoo.tools import datetime
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -29,7 +28,7 @@ class WebsiteEventTrackController(http.Controller):
         return babel.dates.format_time(dt_time, format='short', locale=locale)
 
     def _prepare_calendar(self, event, event_track_ids):
-        local_tz = pytz.timezone(event.date_tz or 'UTC')
+        local_tz = event.date_tz or 'UTC'
         lang_code = request.env.context.get('lang')
         locations = {}                  # { location: [track, start_date, end_date, rowspan]}
         dates = []                      # [ (date, {}) ]
@@ -38,7 +37,7 @@ class WebsiteEventTrackController(http.Controller):
 
         forcetr = True
         for track in event_track_ids:
-            start_date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            start_date = track.date.astimezone(local_tz)
             end_date = start_date + datetime.timedelta(hours=(track.duration or 0.5))
             location = track.location_id or False
             locations.setdefault(location, [])
@@ -68,12 +67,12 @@ class WebsiteEventTrackController(http.Controller):
     @http.route(['''/event/<model("event.event"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
     def event_agenda(self, event, tag=None, **post):
         event = event.with_context(tz=event.date_tz or 'UTC')
-        local_tz = pytz.timezone(event.date_tz or 'UTC')
+        local_tz = event.date_tz or 'UTC'
         days_tracks = collections.defaultdict(lambda: [])
         for track in event.track_ids.sorted(lambda track: (track.date or '', bool(track.location_id))):
             if not track.date:
                 continue
-            date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            date = track.date.astimezone(local_tz)
             days_tracks[str(date)[:10]].append(track)
 
         days = {}

@@ -59,7 +59,7 @@ class sale_quote(http.Controller):
 
         days = 0
         if order_sudo.validity_date:
-            days = (fields.Date.from_string(order_sudo.validity_date) - fields.Date.from_string(fields.Date.today())).days + 1
+            days = (order_sudo.validity_date - fields.Date.today()).days + 1
         if pdf:
             pdf = request.env.ref('website_quote.report_web_quote').sudo().with_context(set_viewport_size=True).render_qweb_pdf([order_sudo.id])[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
