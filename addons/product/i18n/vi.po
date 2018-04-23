@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2017
 # Martin Trigaux, 2017
@@ -55,7 +55,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr "%s %% chiếu khấu %s phụ phí"
 
 #. module: product
-#: code:addons/product/models/product_template.py:324
+#: code:addons/product/models/product_template.py:332
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
@@ -326,7 +326,7 @@ msgstr "Bàn phím Không dây Apple"
 #: model:ir.ui.view,arch_db:product.product_normal_form_view
 #: model:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Applicable On"
-msgstr "Có thể áp dụng cho"
+msgstr "Có thể áp dụng vào"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_applied_on
@@ -338,7 +338,7 @@ msgstr "Áp dụng cho"
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr "Đã lưu trữ"
+msgstr "Đã lưu "
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
@@ -555,7 +555,7 @@ msgstr "Hủy"
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
-msgstr "Nhóm ĐV"
+msgstr "Nhóm"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -701,13 +701,13 @@ msgstr "Giá Tính toán"
 #: model:product.product,name:product.product_product_16
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Computer Case"
-msgstr ""
+msgstr "Case Máy vi tính"
 
 #. module: product
 #: model:product.product,name:product.product_product_3
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Computer SC234"
-msgstr ""
+msgstr "Máy vi tính SC234"
 
 #. module: product
 #: code:addons/product/models/product_template.py:50
@@ -746,7 +746,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "Giá vốn"
+msgstr "Chi phí"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -755,6 +755,11 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
+"Giá vốn được sử dụng cho mục đích định giá tồn kho theo phương thức giá vốn "
+"'Giá tiêu chuẩn' và được coi như là số liệu đầu tiên để thiết lập giá vốn "
+"trong phương pháp Trung bình hoặc FIFO. Nó cũng được sử dụng như là giá cơ "
+"bản cho các bảng giá. Giá vốn này là đơn giá theo đơn vị đo lường mặc định "
+"của sản phẩm."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_standard_price
@@ -763,6 +768,11 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product. "
 msgstr ""
+"Giá vốn được sử dụng cho mục đích định giá tồn kho theo phương thức giá vốn "
+"'Giá tiêu chuẩn' và được coi như là số liệu đầu tiên để thiết lập giá vốn "
+"trong phương pháp Trung bình hoặc FIFO. Nó cũng được sử dụng như là giá cơ "
+"bản cho các bảng giá. Giá vốn này là đơn giá theo đơn vị đo lường mặc định "
+"của sản phẩm."
 
 #. module: product
 #: model:product.product,name:product.service_delivery
@@ -783,7 +793,7 @@ msgstr "Nhóm Quốc gia"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
 msgid "Create Variant"
-msgstr ""
+msgstr "Tạo Biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_uid
@@ -913,12 +923,12 @@ msgstr "Thời gian giao hàng"
 #: model:ir.model.fields,field_description:product.field_product_product_description
 #: model:ir.model.fields,field_description:product.field_product_template_description
 msgid "Description"
-msgstr "Miêu tả"
+msgstr "Mô tả"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Miêu tả cho Khách hàng"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -952,7 +962,7 @@ msgstr "Chỉ ra thứ tự hiển thị"
 #: model:ir.model.fields,field_description:product.field_product_uom_display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_display_name
 msgid "Display Name"
-msgstr "Tên hiển thị"
+msgstr "Tên Hiển thị"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
@@ -1001,7 +1011,7 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:53
+#: code:addons/product/models/product.py:56
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Lỗi! Bạn không thể tạo nhóm với cấu trúc đệ quy lẫn nhau."
@@ -1013,7 +1023,7 @@ msgid "Error ! You cannot use this attribute with the following value."
 msgstr "Lỗi! Bạn không thể sử dụng thuộc tính này với giá trị sau."
 
 #. module: product
-#: code:addons/product/models/product.py:283
+#: code:addons/product/models/product.py:291
 #, python-format
 msgid ""
 "Error! It is not allowed to choose more than one value for a given "
@@ -1038,7 +1048,7 @@ msgstr ""
 "tính giá!"
 
 #. module: product
-#: code:addons/product/models/product_template.py:274
+#: code:addons/product/models/product_template.py:282
 #, python-format
 msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
@@ -1170,7 +1180,7 @@ msgstr "Thân thiện với môi trường"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Future Activities"
-msgstr ""
+msgstr "Hoạt động trong Tương lai"
 
 #. module: product
 #: model:product.product,name:product.product_product_1
@@ -1181,7 +1191,7 @@ msgstr "Dịch vụ phân tích GAP"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr "Thông tin Tổng quát"
+msgstr "Thông tin chung"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1324,7 +1334,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_id
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -1422,7 +1432,7 @@ msgstr "Nhóm Nội bộ"
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr "Mã Mặc định"
+msgstr "Tham chiếu nội bộ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1434,6 +1444,12 @@ msgstr "Mã số quốc tế được sử dụng để xác định sản phẩ
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
 msgstr "Tồn kho"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product_is_product_variant
+#: model:ir.model.fields,field_description:product.field_product_template_is_product_variant
+msgid "Is a product variant"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1520,7 +1536,7 @@ msgstr "Cập nhật lần cuối"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr ""
+msgstr "Hoạt động Muộn"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_delay
@@ -1536,7 +1552,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
 msgid "Left Parent"
-msgstr "Left Parent"
+msgstr ""
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
@@ -1546,7 +1562,7 @@ msgstr "Chiều dài / Khoảng cách"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr "Lines"
+msgstr "Các dòng"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1692,7 +1708,7 @@ msgstr "Ghi chú"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Other Information"
-msgstr "Thông tin Khác"
+msgstr "Thông tin khác"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_base_pricelist_id
@@ -1709,7 +1725,7 @@ msgstr "Hơn 375,000 apps."
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Package Type"
-msgstr ""
+msgstr "Kiểu đóng gói"
 
 #. module: product
 #: model:ir.model,name:product.model_product_packaging
@@ -1721,7 +1737,7 @@ msgstr "Đóng gói"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_id
 msgid "Parent Category"
-msgstr "Nhóm Cha"
+msgstr "Danh mục cha"
 
 #. module: product
 #: model:product.product,name:product.product_product_5c
@@ -1902,7 +1918,7 @@ msgstr "Bảng giá được quản lý theo"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr "Chính sách Giá bán"
+msgstr "Tính giá"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -1961,7 +1977,7 @@ msgstr "Thuộc tính Sản phẩm"
 #: model:ir.ui.view,arch_db:product.product_category_list_view
 #: model:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Nhóm Sản phẩm"
+msgstr "Nhóm sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1973,7 +1989,7 @@ msgstr "Nhóm Sản phẩm"
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr "Tên Sản phẩm"
+msgstr "Tên sản phẩm"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1998,18 +2014,18 @@ msgstr "Đóng gói Sản phẩm"
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_tmpl_id
 #: model:ir.ui.view,arch_db:product.product_search_form_view
 msgid "Product Template"
-msgstr "Mẫu Sản phẩm"
+msgstr "Mẫu sản phẩm"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_type
 #: model:ir.model.fields,field_description:product.field_product_template_type
 msgid "Product Type"
-msgstr "Kiểu Sản phẩm"
+msgstr "Loại sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Đơn vị Đo lường của Sản phẩm"
+msgstr "Đơn vị Đo lường của sản phẩm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -2030,7 +2046,7 @@ msgstr "Biến thể Sản phẩm"
 #: model:ir.actions.act_window,name:product.product_variant_action
 #: model:ir.ui.view,arch_db:product.product_product_tree_view
 msgid "Product Variants"
-msgstr "Biến thể Sản phẩm"
+msgstr "Biến thể sản phẩm"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action
@@ -2064,7 +2080,7 @@ msgid "Products Price Search"
 msgstr "Tìm Giá sản phẩm"
 
 #. module: product
-#: code:addons/product/models/product.py:448
+#: code:addons/product/models/product.py:457
 #, python-format
 msgid "Products: "
 msgstr "Sản phẩm: "
@@ -2158,7 +2174,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
 msgid "Right Parent"
-msgstr "Right Parent"
+msgstr ""
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2200,12 +2216,12 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Rounding Method"
-msgstr "Phương pháp Làm tròn"
+msgstr "Phương pháp làm tròn"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_uom_rounding
 msgid "Rounding Precision"
-msgstr "Làm tròn Chính xác"
+msgstr "Làm tròn chính xác"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_sale
@@ -2216,7 +2232,7 @@ msgstr "Miêu tả Bán hàng"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_lst_price
 msgid "Sale Price"
-msgstr "Giá Bán"
+msgstr "Giá bán"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
@@ -2280,7 +2296,7 @@ msgstr "Trình tự"
 #: model:product.product,name:product.consu_delivery_01
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Server"
-msgstr "Server"
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_template.py:51
@@ -2326,6 +2342,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Hiển thị tất cả các bản ghi mà có ngày hành động tiếp theo trước ngày hôm "
+"nay"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_product_pricelist
@@ -2335,7 +2353,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr ""
+msgstr "Hiển thị bảng giá cho khách hàng"
 
 #. module: product
 #: model:product.product,name:product.membership_1
@@ -2353,7 +2371,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
 #: model:ir.model.fields,field_description:product.field_product_template_image_small
 msgid "Small-sized image"
-msgstr "Ảnh cỡ Nhỏ"
+msgstr "Ảnh cỡ nhỏ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_small
@@ -2798,7 +2816,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
-msgstr ""
+msgstr "Các Hoạt động Hôm nay"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2926,7 +2944,7 @@ msgstr "Giá trị"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Đếm Biến thể"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
@@ -3186,7 +3204,7 @@ msgstr "ngày"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr "decimal.precision"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
