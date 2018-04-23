@@ -254,6 +254,7 @@
                             <field name="reference" string="Vendor Reference"/>
                             <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
                               domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','paid')), ('type','=','in_invoice')]"
+                              string="Auto-Complete" placeholder="Select an old vendor bill"
                               options="{'no_create': True}" context="{'show_total_amount': True}"/>
                         </group>
                         <group>
