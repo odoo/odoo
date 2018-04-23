@@ -69,7 +69,7 @@ class PosOrderReport(models.Model):
     def _from(self):
         return """
             FROM pos_order_line AS l
-                LEFT JOIN pos_order s ON (s.id=l.order_id)
+                INNER JOIN pos_order s ON (s.id=l.order_id)
                 LEFT JOIN product_product p ON (l.product_id=p.id)
                 LEFT JOIN product_template pt ON (p.product_tmpl_id=pt.id)
                 LEFT JOIN uom_uom u ON (u.id=pt.uom_id)
