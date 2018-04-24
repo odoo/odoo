@@ -26,7 +26,6 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
     var KeyboardNavigationMixin = {
         events: {
             'keydown': '_onKeyDown',
-            'keypress': '_onKeyPress',
             'keyup': '_onKeyUp',
         },
 
@@ -175,21 +174,6 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                         }
                     }
                 }
-            }
-        },
-        /**
-         * hides the shortcut overlays when key press event is triggered on the ALT key
-         *
-         * @private
-         * @param keyPressEvent {jQueryKeyboardEvent} the keyboard event triggered
-         * @return {undefined|false}
-         */
-        _onKeyPress: function (keyPressEvent) {
-            if ((keyPressEvent.altKey || keyPressEvent.key === 'Alt') && !keyPressEvent.ctrlKey) {
-                if (keyPressEvent.preventDefault) keyPressEvent.preventDefault(); else keyPressEvent.returnValue = false;
-                if (keyPressEvent.stopPropagation) keyPressEvent.stopPropagation();
-                if (keyPressEvent.cancelBubble) keyPressEvent.cancelBubble = true;
-                return false;
             }
         },
         /**
