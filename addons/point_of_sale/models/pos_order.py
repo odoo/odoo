@@ -22,6 +22,22 @@ class PosOrder(models.Model):
     _order = "id desc"
 
     @api.model
+    def _amount_tax_by_id(self, order):
+        res = {}
+        currency = order.pricelist_id.currency_id
+        for line in order.lines:
+            taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+            if order.fiscal_position_id:
+                taxes = order.fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = taxes.compute_all(price, line.order_id.pricelist_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
+            for tax in taxes:
+                tax_id = tax.get('id')
+                res.setdefault(tax_id, 0.0)
+                res[tax_id] += tax.get('amount', 0.0)
+        return sum(map(currency.round, res.values()))
+
+    @api.model
     def _amount_line_tax(self, line, fiscal_position_id):
         taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
         if fiscal_position_id:
@@ -470,7 +486,10 @@ class PosOrder(models.Model):
             currency = order.pricelist_id.currency_id
             order.amount_paid = sum(payment.amount for payment in order.statement_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
-            order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
+            if order.session_id.config_id.company_id.tax_calculation_rounding_method == 'round_globally':
+                order.amount_tax =  self._amount_tax_by_id(order)
+            else:
+                currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 

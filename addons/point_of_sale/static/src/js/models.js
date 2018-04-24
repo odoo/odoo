@@ -2134,9 +2134,28 @@ exports.Order = Backbone.Model.extend({
         }), 0), this.pos.currency.rounding);
     },
     get_total_tax: function() {
-        return round_pr(this.orderlines.reduce((function(sum, orderLine) {
-            return sum + orderLine.get_tax();
-        }), 0), this.pos.currency.rounding);
+        if (this.pos.company.tax_calculation_rounding_method == "round_globally"){
+            var tax_set = {};
+            this.orderlines.each(function(line){
+                var taxes_ids = line.get_product().taxes_id;
+                for (var i = 0; i < taxes_ids.length; i++) {
+                    if (tax_set[taxes_ids[i]]) {
+                        tax_set[taxes_ids[i]] += line.get_tax();
+                        return;
+                    } else {
+                        tax_set[taxes_ids[i]] = line.get_tax();
+                    }
+                }
+            });
+            var rounding = this.pos.currency.rounding;
+            return Object.values(tax_set).reduce((function(sum, total) {
+                return sum + round_pr(total, rounding);
+            }), 0);
+        } else {
+            return round_pr(this.orderlines.reduce((function(sum, orderLine) {
+                return sum + orderLine.get_tax();
+            }), 0), this.pos.currency.rounding);
+        }
     },
     get_total_paid: function() {
         return round_pr(this.paymentlines.reduce((function(sum, paymentLine) {
