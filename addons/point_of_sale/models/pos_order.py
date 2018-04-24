@@ -368,7 +368,7 @@ class PosOrder(models.Model):
                             tax_rounded_total += line['credit'] - line['debit']
                         tax_total = cur.round(tax_total)
                         tax_diff = tax_total - tax_rounded_total
-                        if tax_diff != 0:
+                        if not cur.is_zero(tax_diff):
                             line = group_value[-1]
                             insert_data('tax', {
                                 'name': line['name'] + '. ' +_('Round Globally'),
