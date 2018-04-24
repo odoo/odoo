@@ -215,7 +215,7 @@
 <template id="blog_edit_options" inherit_id="website.user_navbar" name="Edit Blog Options">
     <xpath expr="//li[@id='edit-in-backend']" position="after">
         <li groups="website.group_website_designer" t-if="main_object._name == 'blog.post'">
-            <form class="duplicate hidden" action="/blog/post_duplicate" method="POST">
+            <form class="duplicate d-none" action="/blog/post_duplicate" method="POST">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input name="blog_post_id" t-att-value="blog_post.id if blog_post else None"/>
             </form>
@@ -312,7 +312,7 @@
                 <t t-set="additionnal_classes" t-value="'cover_footer'"/>
 
                 <div class="blog_title">
-                    <a class="hidden js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
+                    <a class="d-none js_next" t-attf-href="/blog/#{ slug(next_post.blog_id) }/post/#{ slug(next_post) }/#wrap"/>
                     <h1 t-field="next_post.name" placeholder="Blog Post Title"/>
                     <h2 t-field="next_post.subtitle" placeholder="Subtitle"/>
                     <div>

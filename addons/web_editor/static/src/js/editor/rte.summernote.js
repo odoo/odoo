@@ -86,7 +86,7 @@ renderer.tplPopovers = function (lang, options) {
     var $airPopover = $popover.find('.note-air-popover');
 
     if (window === window.top) {
-        $popover.children().addClass("hidden-xs");
+        $popover.children().addClass("d-none d-md-block");
     }
 
     //////////////// image popover
@@ -124,7 +124,7 @@ renderer.tplPopovers = function (lang, options) {
     })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
 
     // add spin for fa
-    var $spin = $('<div class="btn-group hidden only_fa"/>').insertAfter($button.parent());
+    var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());
     $(tplIconButton('fa fa-refresh', {
             title: _t('Spin'),
             event: 'imageShape',
@@ -132,7 +132,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($spin);
 
     // resize for fa
-    var $resizefa = $('<div class="btn-group hidden only_fa"/>')
+    var $resizefa = $('<div class="btn-group d-none only_fa"/>')
         .insertAfter($imagePopover.find('.btn-group:has([data-event="resize"])'));
     for (var size=1; size<=5; size++) {
         $(tplButton('<span class="note-fontsize-10">'+size+'x</span>', {
@@ -220,7 +220,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
     fn_boutton_update.call(this, $container, oStyle);
 
-    $container.find('.note-color').removeClass("hidden");
+    $container.find('.note-color').removeClass('d-none');
 
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
@@ -234,8 +234,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $(oStyle.image).addClass('o_we_selected_image');
 
         if (dom.isImgFont(oStyle.image)) {
-            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
-            $container.find('.only_fa').removeClass("hidden");
+            $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass('d-none');
+            $container.find('.only_fa').removeClass('d-none');
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
             $container.find('button[data-event="resizefa"][data-value="3"]').toggleClass("active", $(oStyle.image).hasClass("fa-3x"));
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
@@ -246,8 +246,8 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-            $container.find('.hidden:not(.only_fa)').removeClass("hidden");
-            $container.find('.only_fa').addClass("hidden");
+            $container.find('.d-none:not(.only_fa)').removeClass('d-none');
+            $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
                 width = width[2];
@@ -260,10 +260,10 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
             if (!$(oStyle.image).is("img")) {
-                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass("hidden");
+                $container.find('.btn-group:has(button[data-event="imageShape"])').addClass('d-none');
             }
 
-            $container.find('.note-color').addClass("hidden");
+            $container.find('.note-color').addClass('d-none');
         }
 
         $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));

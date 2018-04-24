@@ -40,8 +40,8 @@
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-            <li class="divider hidden"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li id="my_cart" t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
+            <li class="divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+            <li id="my_cart" t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'">
                 <a href="/shop/cart">
                     <i class="fa fa-shopping-cart"></i>
                     My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
@@ -155,7 +155,7 @@
 
     <template id="pricelist_list" name="Pricelists Dropdown">
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'hidden'} btn-group">
+        <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'd-none'} btn-group">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
             <a role="button" href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
@@ -188,7 +188,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="hidden" id="products_grid_before"></div>
+                        <div class="d-none" id="products_grid_before"></div>
                         <div class="col-md-12" id="products_grid">
                             <table width="100%">
                                 <tbody>
@@ -369,7 +369,7 @@
             </form>
         </xpath>
         <xpath expr="//div[@id='products_grid_before']" position="attributes">
-            <attribute name="class">col-md-3 hidden-xs</attribute>
+            <attribute name="class">col-md-3 d-none d-md-block</attribute>
         </xpath>
         <xpath expr="//div[@id='products_grid']" position="attributes">
             <attribute name="class">col-md-9</attribute>
@@ -607,14 +607,14 @@
                    "display_currency": product.currency_id,
                }'/>
           </h4>
-          <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
+          <h4 class="d-none oe_not_available bg-warning">Product not available</h4>
       </div>
     </template>
 
     <template id="product_variants" inherit_id="website_sale.product" active="False" customize_show="True" name="List View of Variants">
       <xpath expr="//t[@t-placeholder='select']" position="replace">
         <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
-        <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)"/>
+        <ul class="d-none js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)"/>
         <input type="hidden" t-if="len(product.product_variant_ids) == 1" class="product_id" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-if="len(product.product_variant_ids) &gt; 1">
           <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
@@ -707,22 +707,22 @@
                     <div class="progress-wizard">
                         <a class="no-decoration" t-att-href="step&gt;=10 and '/shop/cart' or '#'">
                           <div id="wizard-step10" t-att-class="'progress-wizard-step %s' % (step == 10 and 'active' or step&gt;10 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar hidden-xs"/>
-                            <span class="progress-wizard-dot hidden-xs"></span>
+                            <div class="progress-wizard-bar d-none d-md-block"/>
+                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                             <div class="text-center progress-wizard-steplabel">Review Order</div>
                           </div>
                         </a>
                         <a class="no-decoration" t-att-href="step&gt;=20 and '/shop/checkout' or '#'">
                           <div id="wizard-step20" t-att-class="'progress-wizard-step %s' % (step == 20 and 'active' or step&gt;20 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar hidden-xs"/>
-                            <span class="progress-wizard-dot hidden-xs"></span>
+                            <div class="progress-wizard-bar d-none d-md-block"/>
+                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                             <div class="text-center progress-wizard-steplabel">Address</div>
                           </div>
                         </a>
                         <a class="no-decoration" t-att-href="step&gt;=40 and '/shop/payment' or '#'">
                           <div id="wizard-step40" t-att-class="'progress-wizard-step %s' % (step == 40 and 'active' or step&gt;40 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar hidden-xs"/>
-                            <span class="progress-wizard-dot hidden-xs"></span>
+                            <div class="progress-wizard-bar d-none d-md-block"/>
+                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                             <div class="text-center progress-wizard-steplabel">Confirm Order</div>
                           </div>
                         </a>
@@ -743,7 +743,7 @@
                                 <t t-set="step" t-value="30"/>
                             </t>
                         </div>
-                        <div class="col-lg-4 col-lg-push-8 hidden visible-lg">
+                        <div class="col-lg-4 col-lg-push-8 d-none d-xl-block">
                             <t t-call='website_sale.cart_summary'/>
                         </div>
                         <div class="col-lg-8 col-lg-pull-4 col-sm-12 col-xs-12 oe_cart">
@@ -796,13 +796,13 @@
     <template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False" customize_show="True">
         <!-- Add a "flag element" to trigger style variation -->
         <xpath expr="//div[hasclass('wizard')]/div" position="before">
-            <span class="o_wizard_has_extra_step hidden"/>
+            <span class="o_wizard_has_extra_step d-none"/>
         </xpath>
         <xpath expr="//div[@id='wizard-step20']" position="after">
             <a class="no-decoration" t-att-href="step&gt;=30 and '/shop/extra_info' or '#'">
                 <div id="wizard-step30" t-att-class="'progress-wizard-step %s' % (step == 30 and 'active' or step&gt;30 and 'complete' or 'disabled')">
-                    <div class="progress-wizard-bar hidden-xs"/>
-                        <span class="progress-wizard-dot hidden-xs"></span>
+                    <div class="progress-wizard-bar d-none d-md-block"/>
+                    <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                     <div class="text-center progress-wizard-steplabel">Extra Info</div>
                 </div>
             </a>
@@ -836,7 +836,7 @@
                                     <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
                                 </a>
                             </div>
-                            <div class="text-muted hidden-xs small">
+                            <div class="text-muted d-none d-md-block small">
                                 <t t-foreach="line.name.splitlines()[1:]" t-as="name_line">
                                     <span><t t-esc="name_line"/></span><br/>
                                 </t>
@@ -844,11 +844,11 @@
                         </td>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group oe_website_spinner">
-                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs" aria-label="Remove one" title="Remove one">
+                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                     <i class="fa fa-minus"></i>
                                 </a>
                                 <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs" aria-label="Add one" title="Add one">
+                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -899,11 +899,11 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
-                                    <a role="button" href="/shop" class="btn btn-default mb32 hidden-xs hidden-sm hidden-md">
+                                    <a role="button" href="/shop" class="btn btn-default mb32 d-none d-xl-inline-block">
                                         <span class="fa fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
-                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
+                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
                                         <span class="">Process Checkout</span>
                                         <span class="fa fa-chevron-right" />
                                     </a>
@@ -913,10 +913,10 @@
                         </div>
                         <div class="col-lg-4 col-sm-12 col-xs-12">
                             <t t-call='website_sale.short_cart_summary'/>
-                            <div class='hidden-lg'>
+                            <div class="d-xl-none">
                                 <a role="button" href="/shop" class="btn btn-default mb32">
                                     <span class="fa fa-chevron-left" />
-                                    Continue<span class="hidden-xs"> Shopping</span>
+                                    Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
                                 <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
                                     <span class="">Process Checkout</span>
@@ -980,7 +980,7 @@
                                     <strong t-field="product.display_name" />
                                 </a>
                             </div>
-                            <div class="text-muted hidden-xs" t-field="product.description_sale" />
+                            <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
                         </td>
                         <td class='td-price'>
                             <t t-if="product.website_price_difference  and website.get_current_pricelist().discount_policy=='without_discount'">
@@ -1029,7 +1029,7 @@
                                 <t t-set="step" t-value="20" />
                             </t>
                         </div>
-                        <div class="col-lg-4 col-lg-push-8 hidden visible-lg">
+                        <div class="col-lg-4 col-lg-push-8 d-none d-xl-block">
                             <t t-call='website_sale.cart_summary' />
                         </div>
                         <div class="col-lg-8 col-lg-pull-4 col-sm-12 col-xs-12 oe_cart">
@@ -1091,7 +1091,7 @@
     </template>
 
     <template id="address_kanban" name="Kanban address">
-            <form action="/shop/checkout" method="POST" class='hide'>
+            <form action="/shop/checkout" method="POST" class="d-none">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
                 <t t-if='edit_billing'>
@@ -1132,7 +1132,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-push-8 hidden visible-lg">
+                        <div class="col-lg-4 col-lg-push-8 d-none d-xl-block">
                             <t t-call='website_sale.cart_summary' />
                         </div>
                         <div class="col-lg-8 col-lg-pull-4 col-sm-12 col-xs-12 oe_cart">
@@ -1181,7 +1181,7 @@
                                     </t>
                                     <div class="clearfix" />
                                     <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-md-12 div_street">
-                                        <label class="control-label" for="street">Street <span class="hidden-xs"> and Number</span></label>
+                                        <label class="control-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
                                         <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-md-12 div_street2">
@@ -1361,13 +1361,13 @@
     <template id="short_cart_summary" name="Short Cart right column">
         <div class="panel panel-default js_cart_summary" t-if="website_sale_order and website_sale_order.website_order_line" >
             <div class="panel-body row">
-                <h4 class='col-md-12 hidden visible-lg'>Order Total</h4>
-                <hr class='hidden visible-lg mt4 mb4'/>
+                <h4 class='col-md-12 d-none d-xl-block'>Order Total</h4>
+                <hr class='d-none d-xl-block mt4 mb4'/>
                 <div class='col-md-12'>
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 hidden visible-lg" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1378,7 +1378,7 @@
     <template id="cart_summary" name="Cart right column">
         <div class="panel panel-default">
             <div class="panel-body row">
-                <div class='toggle_summary col-md-12 hidden-lg'>
+                <div class='toggle_summary col-md-12 d-xl-none'>
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
                     <span class='fa fa-chevron-down fa-border pull-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
@@ -1386,7 +1386,7 @@
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
                   Your cart is empty!
                 </div>
-                <div class='toggle_summary_div hidden visible-lg'>
+                <div class='toggle_summary_div d-none d-xl-block'>
                     <table class="table table-striped table-condensed col-md-12" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                         <thead>
                             <tr>
@@ -1453,7 +1453,7 @@
                             <div class="oe_cart">
                                 <div class="thanks_msg mb32">
                                     <h2>Thank you for your order.
-                                        <a role="button" class="btn btn-primary hidden-xs" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
+                                        <a role="button" class="btn btn-primary d-none d-md-inline-block" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
                                     </h2>
                                 </div>
                                 <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
@@ -1547,7 +1547,7 @@
                     <t t-if="not force_coupon">
                         <a class='show_coupon'>I have a promo code</a>
                     </t>
-                    <div t-attf-class='coupon_form #{not force_coupon and "hidden"}'>
+                    <div t-attf-class='coupon_form #{not force_coupon and "d-none"}'>
                         <t t-call='website_sale.coupon_form'>
                         </t>
                     </div>

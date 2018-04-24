@@ -1316,7 +1316,7 @@
         <div class="row">
             <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="file" class="hidden o_forum_file_upload" name="ufile" accept="image/*"/>
+                <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <div class="col-md-2">
                     <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
                         <i class="fa fa-pencil fa-1g pull-left" title="Edit"></i>

@@ -249,7 +249,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     //- File & settings change section
     onfile_loaded: function () {
         var file = this.$('.oe_import_file')[0].files[0];
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('hidden');
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').val('');
         this.$('.oe_import_datetime_format').val('');
@@ -268,7 +268,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     onpreviewing: function () {
         var self = this;
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('hidden');
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
         this.$el.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
         this.$el.removeClass('oe_import_preview_error oe_import_error');
@@ -287,10 +287,10 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
     },
     onpreview_error: function (event, from, to, result) {
         this.$('.oe_import_options').show();
-        this.$buttons.filter('.o_import_file_reload').removeClass('hidden');
+        this.$buttons.filter('.o_import_file_reload').removeClass('d-none');
         this.$el.addClass('oe_import_preview_error oe_import_error');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('hidden');
-        this.$el.find('.o_view_nocontent').addClass('hidden');
+        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$el.find('.o_view_nocontent').addClass('d-none');
         this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.preview.error', result));
     },
@@ -300,9 +300,9 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
             .text(_t('Load New File'))
             .removeClass('btn-primary').addClass('btn-default')
             .blur();
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('hidden');
-        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('hidden');
-        this.$el.find('.o_view_nocontent').addClass('hidden');
+        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('d-none');
+        this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
+        this.$el.find('.o_view_nocontent').addClass('d-none');
         this.$el.addClass('oe_import_preview');
         this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));

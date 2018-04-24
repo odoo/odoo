@@ -12,14 +12,14 @@
                 </ul>
             </div>
             <select id="ace-view-list" class="o_res_list"/>
-            <select id="ace-scss-list" class="o_res_list hidden"/>
+            <select id="ace-scss-list" class="o_res_list d-none"/>
             <label class="o_include_option oe_include_bundles">
                 <div class="o_checkbox">
                     <input type="checkbox" class="js_include_bundles" t-att-checked="widget.options.includeBundles ? 'checked' : undefined"/><span/>
                 </div>
                 Include Asset Bundles
             </label>
-            <label class="o_include_option o_include_all_scss hidden">
+            <label class="o_include_option o_include_all_scss d-none">
                 <div class="o_checkbox">
                     <input type="checkbox" class="js_include_all_scss" t-att-checked="widget.options.includeAllSCSS ? 'checked' : undefined"/><span/>
                 </div>

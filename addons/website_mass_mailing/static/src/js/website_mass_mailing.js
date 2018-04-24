@@ -10,7 +10,7 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
         var self = this;
 
         // set value and display button
-        self.$target.find("input").removeClass("hidden");
+        self.$target.find("input").removeClass('d-none');
         this._rpc({
             route: '/website_mass_mailing/is_subscriber',
             params: {
@@ -23,15 +23,15 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
             self.$target.attr("data-subscribe", data.is_subscriber ? 'on' : 'off');
             self.$target.find('a.js_subscribe_btn')
                 .attr("disabled", data.is_subscriber && data.email.length ? "disabled" : false);
-            self.$target.removeClass("hidden");
-            self.$target.find('.js_subscribe_btn').toggleClass('hidden', !!data.is_subscriber);
-            self.$target.find('.js_subscribed_btn').toggleClass('hidden', !data.is_subscriber);
+            self.$target.removeClass('d-none');
+            self.$target.find('.js_subscribe_btn').toggleClass('d-none', !!data.is_subscriber);
+            self.$target.find('.js_subscribed_btn').toggleClass('d-none', !data.is_subscriber);
         });
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
-            $('.js_subscribe > .alert').addClass("hidden");
-            $('.js_subscribe > .input-group-btn.hidden').removeClass("hidden");
+            $('.js_subscribe > .alert').addClass('d-none');
+            $('.js_subscribe > .input-group-btn.d-none').removeClass('d-none');
             this.$target.find('.js_subscribe_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -55,8 +55,8 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
                 'email': $email.length ? $email.val() : false,
             },
         }).then(function (subscribe) {
-            self.$target.find(".js_subscribe_email, .input-group-btn").addClass("hidden");
-            self.$target.find(".alert").removeClass("hidden");
+            self.$target.find(".js_subscribe_email, .input-group-btn").addClass('d-none');
+            self.$target.find(".alert").removeClass('d-none');
             self.$target.find('input.js_subscribe_email').attr("disabled", subscribe ? "disabled" : false);
             self.$target.attr("data-subscribe", subscribe ? 'on' : 'off');
         });

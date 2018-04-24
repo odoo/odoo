@@ -252,7 +252,7 @@ var ViewEditor = Widget.extend({
         if (!this.sortedViews.length || !this.sortedSCSS.length) {
             _.defer((function () {
                 this._switchType(this.sortedViews.length ? 'xml' : 'scss');
-                this.$typeSwitcherBtn.parent('.btn-group').addClass('hidden');
+                this.$typeSwitcherBtn.parent('.btn-group').addClass('d-none');
             }).bind(this));
         }
 
@@ -365,7 +365,7 @@ var ViewEditor = Widget.extend({
         }
         this.$lists[this.currentType].select2('val', resID);
 
-        this.$resetButton.toggleClass('hidden', this.currentType === 'xml' || !this.scss[resID].customized);
+        this.$resetButton.toggleClass('d-none', this.currentType === 'xml' || !this.scss[resID].customized);
     },
     /**
      * Formats the current resource being vizualized.
@@ -662,12 +662,12 @@ var ViewEditor = Widget.extend({
     _switchType: function (type) {
         this.currentType = type;
         this.$typeSwitcherBtn.html(this.$typeSwitcherChoices.filter('[data-type=' + type + ']').html());
-        _.each(this.$lists, function ($list, _type) { $list.toggleClass('hidden', type !== _type); });
+        _.each(this.$lists, function ($list, _type) { $list.toggleClass('d-none', type !== _type); });
         this.$lists[type].change();
 
-        this.$includeBundlesArea.toggleClass('hidden', this.currentType === 'scss' || !session.debug);
-        this.$includeAllSCSSArea.toggleClass('hidden', this.currentType === 'xml' || !session.debug || this.options.defaultBundlesRestriction.length === 0);
-        this.$formatButton.toggleClass('hidden', this.currentType === 'scss');
+        this.$includeBundlesArea.toggleClass('d-none', this.currentType === 'scss' || !session.debug);
+        this.$includeAllSCSSArea.toggleClass('d-none', this.currentType === 'xml' || !session.debug || this.options.defaultBundlesRestriction.length === 0);
+        this.$formatButton.toggleClass('d-none', this.currentType === 'scss');
     },
     /**
      * Updates the select option DOM element associated with a particular resID

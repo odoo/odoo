@@ -253,7 +253,7 @@ var ModelFieldSelector = Widget.extend({
         if (!this._isOpen) return;
 
         this._isOpen = false;
-        this.$popover.addClass("hidden");
+        this.$popover.addClass('d-none');
 
         if (this.dirty) {
             this.dirty = false;
@@ -332,7 +332,7 @@ var ModelFieldSelector = Widget.extend({
         }));
 
         // Toggle the warning message
-        this.$valid.toggleClass("hidden", !!this.isValid());
+        this.$valid.toggleClass('d-none', !!this.isValid());
 
         // Adapt the popover content
         var page = _.last(this.pages);
@@ -376,7 +376,7 @@ var ModelFieldSelector = Widget.extend({
         if (this._isOpen) return;
 
         this._isOpen = true;
-        this.$popover.removeClass("hidden");
+        this.$popover.removeClass('d-none');
     },
     /**
      * Toggles the valid status of the widget and display the error message if

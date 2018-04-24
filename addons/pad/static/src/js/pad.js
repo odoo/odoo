@@ -35,8 +35,8 @@ var FieldPad = AbstractField.extend({
      */
     start: function () {
         if (!this.isPadConfigured) {
-            this.$(".oe_unconfigured").removeClass('hidden');
-            this.$(".oe_configured").addClass('hidden');
+            this.$(".oe_unconfigured").removeClass('d-none');
+            this.$(".oe_configured").addClass('d-none');
             return;
         }
         if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {

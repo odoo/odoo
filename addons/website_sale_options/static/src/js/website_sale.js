@@ -45,7 +45,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                                 window.location.pathname = window.location.pathname.replace(/shop([\/?].*)?$/, "shop/cart");
                             }
                             var $q = $(".my_cart_quantity");
-                            $q.parent().parent().removeClass("hidden", !quantity);
+                            $q.parent().parent().removeClass("d-none", !quantity);
                             $q.html(quantity).hide().fadeIn(600);
                         }
                     });
@@ -61,7 +61,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                 $modal.on("click", "a.js_add, a.js_remove", function (event) {
                     event.preventDefault();
                     var $parent = $(this).parents('.js_product:first');
-                    $parent.find("a.js_add, span.js_remove").toggleClass("hidden");
+                    $parent.find("a.js_add, span.js_remove").toggleClass('d-none');
                     $parent.find("input.js_optional_same_quantity").val( $(this).hasClass("js_add") ? 1 : 0 );
                     $parent.find(".js_remove");
                 });
@@ -69,11 +69,11 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                 $modal.on("change", "input.js_quantity", function () {
                     var qty = parseFloat($(this).val());
                     if (qty === 1) {
-                        $(".js_remove .js_items").addClass("hidden");
-                        $(".js_remove .js_item").removeClass("hidden");
+                        $(".js_remove .js_items").addClass('d-none');
+                        $(".js_remove .js_item").removeClass('d-none');
                     } else {
-                        $(".js_remove .js_items").removeClass("hidden").text($(".js_remove .js_items:first").text().replace(/[0-9.,]+/, qty));
-                        $(".js_remove .js_item").addClass("hidden");
+                        $(".js_remove .js_items").removeClass('d-none').text($(".js_remove .js_items:first").text().replace(/[0-9.,]+/, qty));
+                        $(".js_remove .js_item").addClass('d-none');
                     }
                 });
 

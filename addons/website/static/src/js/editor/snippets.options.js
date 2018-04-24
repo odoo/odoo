@@ -188,7 +188,7 @@ options.registry.carousel = options.Class.extend({
         var cycle = this.$inner.find('.item').length;
         var $active = this.$inner.find('.item.active, .item.prev, .item.next').first();
         var index = $active.index();
-        this.$('.carousel-control, .carousel-indicators').removeClass('hidden');
+        this.$('.carousel-control, .carousel-indicators').removeClass('d-none');
         this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
         var $clone = this.$('.item:first').clone(true);
         $clone.removeClass('active').insertAfter($active);
@@ -223,7 +223,7 @@ options.registry.carousel = options.Class.extend({
                 self._rebindEvents();
                 self.remove_process = false;
                 if (cycle === 1) {
-                    self.$target.find('.carousel-control, .carousel-indicators').addClass('hidden');
+                    self.$target.find('.carousel-control, .carousel-indicators').addClass('d-none');
                 }
             });
             _.defer(function () {
@@ -555,7 +555,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
         this.trigger_up('animation_stop_demand', {
             $target: this.$previewPage,
         });
-        this.$('.facebook_page_warning').toggleClass('hidden', toggle);
+        this.$('.facebook_page_warning').toggleClass('d-none', toggle);
         this.$footer.find('.btn-primary').prop('disabled', !toggle);
     },
 

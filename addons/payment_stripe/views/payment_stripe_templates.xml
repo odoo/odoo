@@ -3,24 +3,24 @@
     <data>
         <template id="stripe_form">
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
-            <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
-            <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
-            <input type='hidden' name='amount' t-att-value="amount"/>
+            <input type="hidden" name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
+            <input type="hidden" name='merchant' t-att-value='acquirer.company_id.name'/>
+            <input type="hidden" name='amount' t-att-value="amount"/>
             <input type="hidden" name='return_url' t-att-value='returndata'/>
             <!--Order Information -->
-            <input type='hidden' name='invoice_num' t-att-value='reference'/>
-            <input type='hidden' name='currency' t-att-value='currency'/>
-            <input type='hidden' name='currency_id' t-att-value='currency_id'/>
+            <input type="hidden" name='invoice_num' t-att-value='reference'/>
+            <input type="hidden" name='currency' t-att-value='currency'/>
+            <input type="hidden" name='currency_id' t-att-value='currency_id'/>
             <!-- Billing Information-->
-            <input type='hidden' name='name' t-att-value='name'/>
-            <input type='hidden' name='address_line1' t-att-value='address_line1'/>
-            <input type='hidden' name='address_city' t-att-value='address_city'/>
-            <input type='hidden' name='address_zip' t-att-value='address_zip'/>
-            <input type='hidden' name='address_country' t-att-value='address_country'/>
-            <input type='hidden' name='phone' t-att-value='phone'/>
-            <input type='hidden' name='email' t-att-value='email'/>
-            <input id="acquirer_stripe" type='hidden' name="acquirer" t-att-value="acquirer.id"/>
-            <input type='hidden' name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
+            <input type="hidden" name='name' t-att-value='name'/>
+            <input type="hidden" name='address_line1' t-att-value='address_line1'/>
+            <input type="hidden" name='address_city' t-att-value='address_city'/>
+            <input type="hidden" name='address_zip' t-att-value='address_zip'/>
+            <input type="hidden" name='address_country' t-att-value='address_country'/>
+            <input type="hidden" name='phone' t-att-value='phone'/>
+            <input type="hidden" name='email' t-att-value='email'/>
+            <input id="acquirer_stripe" type="hidden" name="acquirer" t-att-value="acquirer.id"/>
+            <input type="hidden" name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
             <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
         </template>
 

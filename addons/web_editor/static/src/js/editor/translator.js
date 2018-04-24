@@ -138,7 +138,7 @@ var TranslatorMenuBar = Widget.extend({
                 var translation = $node.data('translation') || {};
                 var trans = $node.attr(attr);
                 var match = trans.match(/<span [^>]*data-oe-translation-id="([0-9]+)"[^>]*>(.*)<\/span>/);
-                var $trans = $(trans).addClass('hidden o_editable o_editable_translatable_attribute').appendTo('body');
+                var $trans = $(trans).addClass('d-none o_editable o_editable_translatable_attribute').appendTo('body');
                 $trans.data('$node', $node).data('attribute', attr);
                 translation[attr] = $trans[0];
                 $node.attr(attr, match[2]);

@@ -414,7 +414,7 @@
     <div itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
         <form id="registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post" class="panel panel-default" t-if="buy">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="panel-heading hidden-xs hidden-sm">
+            <div class="panel-heading d-none d-lg-block">
                 <div class="row">
                     <div class="col-md-3">
                         <h5><b>Ticket Type</b></h5>
@@ -483,7 +483,7 @@
 </template>
 
 <template id="ticket" name="Ticket offer template">
-    <div class="col-xs-12 hidden-md hidden-lg panel-heading mb4">
+    <div class="col-xs-12 d-lg-none panel-heading mb4">
         <h5>
             <strong>Ticket Type:</strong>
             <t t-raw="name"/>
@@ -494,18 +494,18 @@
     </div>
     <div class="panel-body">
         <div class="row" itemscope="itemscope" itemtype="http://schema.org/Offer">
-            <div class="col-md-3 hidden-xs hidden-sm" t-raw="name"/>
-            <div class="col-xs-6 hidden-md hidden-lg">
+            <div class="col-md-3 d-none d-lg-block" t-raw="name"/>
+            <div class="col-xs-6 d-lg-none">
                 <h6>End of Registration</h6>
             </div>
             <div class="col-xs-6 col-md-3" itemprop="availabilityEnds" t-raw="registration_end"/>
-            <div class="clearfix hidden-md hidden-lg mb4"/>
-            <div class="col-xs-6 hidden-md hidden-lg">
+            <div class="clearfix d-lg-none mb4"/>
+            <div class="col-xs-6 d-lg-none">
                 <h6>Price</h6>
             </div>
             <div class="col-xs-6 col-md-3" t-raw="price"/>
-            <div class="clearfix hidden-md hidden-lg mb4"/>
-            <div class="col-xs-6 hidden-md hidden-lg">
+            <div class="clearfix d-lg-none mb4"/>
+            <div class="col-xs-6 d-lg-none">
                 <h6>Quantity</h6>
             </div>
             <div class="col-xs-6 col-md-3">
@@ -556,7 +556,7 @@
                                         <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/></div>
                                         <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
                                         <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
-                                        <input class='hidden' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
+                                        <input class='d-none' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
                                     </div>
                                 </t>
                                 <t t-set="counter_type" t-value="counter_type + 1"/>

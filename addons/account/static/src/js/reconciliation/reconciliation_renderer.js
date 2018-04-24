@@ -343,9 +343,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     update: function (state) {
         var self = this;
         // isValid
-        this.$('caption .o_buttons button.o_validate').toggleClass('hidden', !!state.balance.type);
-        this.$('caption .o_buttons button.o_reconcile').toggleClass('hidden', state.balance.type <= 0);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('hidden', state.balance.type >= 0);
+        this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type);
+        this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
 
         // partner_id
         this._makePartnerRecord(state.st_line.partner_id, state.st_line.partner_name).then(function (recordID) {

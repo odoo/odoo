@@ -377,8 +377,8 @@ odoo.define('payment.payment_form', function (require) {
             ev.preventDefault();
             var $listItems = $(ev.currentTarget).parents('ul').children('li');
             var $moreItem = $(ev.currentTarget).parents('li');
-            $listItems.removeClass('hidden');
-            $moreItem.addClass('hidden');
+            $listItems.removeClass('d-none');
+            $moreItem.addClass('d-none');
         },
 
         // event handler when clicking on a radio button
@@ -389,8 +389,8 @@ odoo.define('payment.payment_form', function (require) {
         {
             var checked_radio = this.$('input[type="radio"]:checked');
             // we hide all the acquirers form
-            this.$('[id*="o_payment_add_token_acq_"]').addClass('hidden');
-            this.$('[id*="o_payment_form_acq_"]').addClass('hidden');
+            this.$('[id*="o_payment_add_token_acq_"]').addClass('d-none');
+            this.$('[id*="o_payment_form_acq_"]').addClass('d-none');
             if (checked_radio.length !== 1) {
                 return;
             }
@@ -399,10 +399,10 @@ odoo.define('payment.payment_form', function (require) {
 
             // if we clicked on an add new payment radio, display its form
             if (this.isNewPaymentRadio(checked_radio)) {
-                this.$('#o_payment_add_token_acq_' + acquirer_id).removeClass('hidden');
+                this.$('#o_payment_add_token_acq_' + acquirer_id).removeClass('d-none');
             }
             else if (this.isFormPaymentRadio(checked_radio)) {
-                this.$('#o_payment_form_acq_' + acquirer_id).removeClass('hidden');
+                this.$('#o_payment_form_acq_' + acquirer_id).removeClass('d-none');
             }
         },
         isNewPaymentRadio: function (element) {
