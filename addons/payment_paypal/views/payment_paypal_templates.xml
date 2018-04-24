@@ -20,15 +20,15 @@
                 <input type="hidden" name="first_name" t-att-value="first_name"/>
                 <input type="hidden" name="last_name" t-att-value="last_name"/>
                 <input type="hidden" name="zip" t-att-value="zip_code"/>
-                <input t-if='state' type='hidden' name="state"
+                <input t-if='state' type="hidden" name="state"
                     t-att-value='state'/>
                 <!-- after payment parameters -->
-                <input t-if='custom' type='hidden' name="custom"
+                <input t-if='custom' type="hidden" name="custom"
                     t-att-value='custom'/>
                 <!-- URLs -->
-                <input t-if="paypal_return" type='hidden' name='return'
+                <input t-if="paypal_return" type="hidden" name='return'
                     t-att-value="paypal_return"/>
-                <input t-if="acquirer.paypal_use_ipn" type='hidden' name='notify_url'
+                <input t-if="acquirer.paypal_use_ipn" type="hidden" name='notify_url'
                     t-att-value="notify_url"/>
                 <input t-if="cancel_return" type="hidden" name="cancel_return"
                     t-att-value="cancel_return"/>

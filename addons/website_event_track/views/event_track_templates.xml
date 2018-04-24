@@ -10,7 +10,7 @@
 
 <template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
     <xpath expr="//div[@id='wrap']" position="inside">
-        <div class="container mt32 mb16 hidden-print" t-if="event.sponsor_ids">
+        <div class="container mt32 mb16 d-print-none" t-if="event.sponsor_ids">
             <section>
                 <h2 class="text-center mb32">Our Sponsors</h2>
             </section>

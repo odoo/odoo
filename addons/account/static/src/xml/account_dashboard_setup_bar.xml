@@ -2,7 +2,7 @@
 <templates>
     <!-- This template defines the setup bar, at the top of account module's dashboard -->
     <t t-name="account.AccountDashboardSetupBar">
-        <div class="o_account_dashboard_header hidden-xs o_form_view" t-if="values['show_setup_bar']">
+        <div class="o_account_dashboard_header d-none d-md-block o_form_view" t-if="values['show_setup_bar']">
             <div class="o_form_statusbar">
                 <div class="o_statusbar_status" data-original-title="" title="" >
                     <button name="setting_chart_of_accounts_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['chart_of_accounts'] and 'o_action_done' or ''}" >

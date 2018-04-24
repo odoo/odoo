@@ -10,7 +10,7 @@
                     <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right " role="img" aria-label="Chart" title="Chart"/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
-                <div class="panel panel-default hidden-print">
+                <div class="panel panel-default d-print-none">
                     <div class="panel-heading"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
                     <div class="panel-body">
                         <span t-if="filter_finish == True">
@@ -135,7 +135,7 @@
     <template id="result_choice" name="Choice Result">
         <div>
             <!-- Tabs -->
-            <ul class="nav nav-tabs hidden-print" role="tablist">
+            <ul class="nav nav-tabs d-print-none" role="tablist">
                 <li class="active" t-if="question.type != 'simple_choice'">
                     <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
                         <i class="fa fa-bar-chart-o"></i> Graph
@@ -199,7 +199,7 @@
     <template id="result_matrix" name="Matrix Result">
         <t t-set="matrix_result" t-value="prepare_result"/>
         <!-- Tabs -->
-        <ul class="nav nav-tabs hidden-print" role="tablist">
+        <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="active">
                 <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
                     <i class="fa fa-bar-chart"></i>
@@ -261,7 +261,7 @@
             <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
             <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
-        <ul class="nav nav-tabs hidden-print" role="tablist">
+        <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="active">
                 <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" data-toggle="tab" role="tab">
                     <i class="fa fa-list-ol"></i>
@@ -305,7 +305,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hidden" t-foreach="number_result['input_lines']" t-as="user_input">
+                        <tr class="d-none" t-foreach="number_result['input_lines']" t-as="user_input">
                             <td><a t-att-href="'%s/%s' % (user_input.user_input_id.print_url, user_input.user_input_id.token)"><t t-esc="user_input_index + 1"></t></a></td>
                             <td><span t-field="user_input.value_number"></span><br/></td>
                         </tr>

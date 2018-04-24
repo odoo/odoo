@@ -74,9 +74,9 @@
         <table class="accounting_view">
             <caption>
                 <div class="pull-right o_buttons">
-                    <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'hidden'}">Validate</button>
-                    <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'hidden'}">Reconcile</button>
-                    <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'hidden'}">Select a partner or choose a counterpart</span>
+                    <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'd-none'}">Validate</button>
+                    <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
+                    <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'd-none'}">Select a partner or choose a counterpart</span>
                 </div>
             </caption>
             <thead>
@@ -107,9 +107,9 @@
 <t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
     <t t-jquery=".o_buttons" t-operation="replace">
         <div class="pull-right o_buttons">
-            <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'hidden'}">Reconcile</button>
-            <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'hidden'}">Reconcile</button>
-            <button t-attf-class="o_no_valid btn btn-default btn-sm #{state.balance.type &lt; 0 ? '' : 'hidden'}">Skip</button>
+            <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
+            <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
+            <button t-attf-class="o_no_valid btn btn-default btn-sm #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
         </div>
     </t>
     <t t-jquery=".accounting_view tbody" t-operation="append">

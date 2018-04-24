@@ -235,7 +235,7 @@
                             attrs="{'invisible': [('has_packages', '=', False)]}"/>
                         <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
                     </div>
-                    <h1 class="hidden-xs">
+                    <h1 class="d-none d-md-block">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
                     </h1>
                     <group>

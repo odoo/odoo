@@ -811,14 +811,14 @@ registry.background = SnippetOption.extend({
      */
     chooseImage: function (previewMode, value, $li) {
         // Put fake image in the DOM, edit it and use it as background-image
-        var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
+        var $image = $('<img/>', {class: 'd-none', src: value}).appendTo(this.$target);
 
         var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
             firstFilters: ['background'],
             res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),            
+            res_id: $editable.data('oe-id'),
         }, null, $image[0]).open();
 
         _editor.on('save', this, function () {
@@ -926,7 +926,7 @@ registry.background_position = SnippetOption.extend({
      * @override
      */
     onFocus: function () {
-        this.$el.toggleClass('hidden', this.$target.css('background-image') === 'none');
+        this.$el.toggleClass('d-none', this.$target.css('background-image') === 'none');
     },
 
     //--------------------------------------------------------------------------
@@ -1153,8 +1153,8 @@ registry.many2one = SnippetOption.extend({
 
         // move menu item
         setTimeout(function () {
-            if (self.$overlay.find('.oe_options').hasClass('hidden')) {
-                self.$btn.css('height', '0').find('> a').addClass('hidden');
+            if (self.$overlay.find('.oe_options').hasClass('d-none')) {
+                self.$btn.css('height', '0').find('> a').addClass('d-none');
                 self.$ul.show().css({
                     'top': '-24px', 'margin': '0', 'padding': '2px 0', 'position': 'relative'
                 });

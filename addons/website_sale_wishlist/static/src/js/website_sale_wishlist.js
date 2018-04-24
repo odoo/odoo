@@ -136,7 +136,7 @@ var ProductWishlist = Widget.extend({
         var product = tr.data('product-id');
 
         // can be hidden if empty
-        $('#my_cart').removeClass('hidden');
+        $('#my_cart').removeClass('d-none');
         website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
         return this.add_to_cart(product, tr.find('qty').val() || 1);
     },
@@ -144,7 +144,7 @@ var ProductWishlist = Widget.extend({
         var tr = $(e.currentTarget).parents('tr');
         var product = tr.data('product-id');
 
-        $('#my_cart').removeClass('hidden');
+        $('#my_cart').removeClass('d-none');
         website_sale_utils.animate_clone($('#my_cart'), tr, 25, 40);
         var adding_deffered = this.add_to_cart(product, tr.find('qty').val() || 1);
         this.wishlist_rm(e, adding_deffered);

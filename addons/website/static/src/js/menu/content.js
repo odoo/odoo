@@ -105,9 +105,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
 
         var defs = [this._super.apply(this, arguments)];
 
-        this.$('.ask_for_redirect').addClass('hidden');
-        this.$('.redirect_type').addClass('hidden');
-        this.$('.warn_about_call').addClass('hidden');
+        this.$('.ask_for_redirect').addClass('d-none');
+        this.$('.redirect_type').addClass('d-none');
+        this.$('.warn_about_call').addClass('d-none');
 
         defs.push(this._getPageDependencies(this.page_id, context)
         .then(function (dependencies) {
@@ -326,7 +326,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onUrlChanged: function () {
         var url = this.$('input#page_url').val();
-        this.$('.ask_for_redirect').toggleClass('hidden', url === this.page.url);
+        this.$('.ask_for_redirect').toggleClass('d-none', url === this.page.url);
     },
     /**
      * @private
@@ -338,7 +338,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         // check only for url and not key
         var ext = '.' + this.page.name.split('.').pop();
         if (ext in this.supportedMimetype && ext !== '.html') {
-            this.$('.warn_about_call').toggleClass('hidden', name === this.page.name);
+            this.$('.warn_about_call').toggleClass('d-none', name === this.page.name);
         }
     },
     /**
@@ -346,7 +346,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onCreateRedirectChanged: function () {
         var createRedirect = this.$('input#create_redirect').prop('checked');
-        this.$('.redirect_type').toggleClass('hidden', !createRedirect);
+        this.$('.redirect_type').toggleClass('d-none', !createRedirect);
     },
 });
 

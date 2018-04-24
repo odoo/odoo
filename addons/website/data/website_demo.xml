@@ -140,7 +140,7 @@ response = request.render("website.template_partner_comment", {
                   <t t-call="website.layout">
                     <div id="wrap" class="oe_structure oe_empty">
                       <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
-                        <ol class="carousel-indicators hidden">
+                        <ol class="carousel-indicators d-none">
                           <li class="active" data-slide-to="0" data-target="#myCarousel0"/>
                         </ol>
                         <div class="carousel-inner">
@@ -154,15 +154,15 @@ response = request.render("website.template_partner_comment", {
                                     <a role="button" class="btn btn-success btn-large" href="/contactus">Contact us</a>
                                   </p>
                                 </div>
-                                <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
+                                <span class="carousel-img col-md-6 d-none d-lg-block"> </span>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Previous" title="Previous">
+                        <div class="carousel-control left d-none" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Previous" title="Previous">
                           <i class="fa fa-chevron-left"/>
                         </div>
-                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Next" title="Next">
+                        <div class="carousel-control right d-none" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" role="img" aria-label="Next" title="Next">
                           <i class="fa fa-chevron-right"/>
                         </div>
                       </div>
