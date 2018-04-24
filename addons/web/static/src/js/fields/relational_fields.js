@@ -1293,10 +1293,7 @@ var FieldOne2Many = FieldX2Many.extend({
 
         var self = this;
         var id = ev.data.id;
-        var onSaved = function (record, hasChanged) {
-            if (!hasChanged) {
-                return;
-            }
+        var onSaved = function (record) {
             if (_.some(self.value.data, {id: record.id})) {
                 // the record already exists in the relation, so trigger an
                 // empty 'UPDATE' operation when the user clicks on 'Save' in
