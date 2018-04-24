@@ -108,7 +108,7 @@ var KanbanController = BasicController.extend({
         return groupedByM2o;
     },
     /**
-     * @param {string[]} ids
+     * @param {number[]} ids
      * @private
      * @returns {Deferred}
      */
