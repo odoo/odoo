@@ -6,7 +6,7 @@
             <input type="hidden" name="session_id"
                t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
-            <div class="oe_import_box col-md-12 hidden">
+            <div class="oe_import_box col-md-12 d-none">
                 <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
                       name="file" class="oe_import_file" type="file" style="display:none;"/>
                 <div class="oe_import_with_file">
@@ -35,7 +35,7 @@
                 </div>
             </div>
 
-            <div class="oe_import_with_file oe_padding col-sm-12 hidden">
+            <div class="oe_import_with_file oe_padding col-sm-12 d-none">
                 <h2>Map your columns to import</h2>
                 <div title="If the model uses openchatter, history tracking
                             will set up subscriptions and send notifications
@@ -93,10 +93,10 @@
     </t>
 
     <t t-name="ImportView.buttons">
-        <button type="button" class="btn btn-sm btn-primary o_import_import hidden">Import</button>
-        <button type="button" class="btn btn-sm btn-default o_import_validate hidden">Test Import</button>
+        <button type="button" class="btn btn-sm btn-primary o_import_import d-none">Import</button>
+        <button type="button" class="btn btn-sm btn-default o_import_validate d-none">Test Import</button>
         <button type="button" class="btn btn-sm btn-primary oe_import_file">Load File</button>
-        <button type="button" class="btn btn-sm btn-default o_import_file_reload hidden">Reload File</button>
+        <button type="button" class="btn btn-sm btn-default o_import_file_reload d-none">Reload File</button>
         <button type="button" class="btn btn-sm btn-default o_import_cancel">Cancel</button>
     </t>
 

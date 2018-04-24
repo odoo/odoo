@@ -20,9 +20,9 @@
              <div class="o_composer_attachments_list"/>
          </div>
          <div class="o_composer_send">
-             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.sendText"/></button>
+             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send d-none d-md-inline-block" type="button"><t t-esc="widget.options.sendText"/></button>
          </div>
-         <span class="hide">
+         <span class="d-none">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>

@@ -47,10 +47,10 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="active"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'hidden' : ''">Image</a></li>
-            <li><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'hidden' : ''">Document</a></li>
-            <li><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'hidden' : ''">Pictogram</a></li>
-            <li><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'hidden' : ''">Video</a></li>
+            <li class="active"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'd-none' : ''">Image</a></li>
+            <li><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'd-none' : ''">Document</a></li>
+            <li><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'd-none' : ''">Pictogram</a></li>
+            <li><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'd-none' : ''">Video</a></li>
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
@@ -90,7 +90,7 @@
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
             <div class="well">
                 <div class="form-group pull-left">
-                    <input type="file" class="hidden" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
+                    <input type="file" class="d-none" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
                     <input type="hidden" name="disable_optimization" value=""/>
                     <div class="btn-group">
                         <button class="btn btn-primary o_upload_image_button" type="button">Upload an image</button>
@@ -118,7 +118,7 @@
             <div class="existing-attachments">
                 <t t-call="web_editor.dialog.image.existing"/>
             </div>
-            <iframe class="hidden" name="fileframe"/>
+            <iframe class="d-none" name="fileframe"/>
         </form>
     </t>
     <t t-name="web_editor.dialog.image.existing">
@@ -198,7 +198,7 @@
                 <div class="text-right">
                     <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
                 </div>
-                <div class="o_video_dialog_options hidden mt48">
+                <div class="o_video_dialog_options d-none mt48">
                     <small class="text-muted">Options</small>
                     <ul class="list-group">
                         <li class="list-group-item o_yt_option o_vim_option o_dm_option">
@@ -226,7 +226,7 @@
                 </div>
             </div>
             <div id="video-preview">
-                <div class="o_video_dialog_preview_text small mt16 mb8 hidden">Preview</div>
+                <div class="o_video_dialog_preview_text small mt16 mb8 d-none">Preview</div>
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
                     <iframe class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" src=""/>
@@ -239,7 +239,7 @@
     <div t-name="web_editor.dialog.link" class="o_link_dialog">
         <div class="row">
             <form class="col-md-8 form-horizontal">
-                <div t-attf-class="form-group#{widget.needLabel ? '' : ' hidden'}">
+                <div t-attf-class="form-group#{widget.needLabel ? '' : ' d-none'}">
                     <label class="control-label col-sm-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-sm-9">
                         <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
@@ -268,12 +268,12 @@
                         <div class="o_link_dialog_color">
                             <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
                                 <span>L</span>
-                                <input class="hidden link-style" name="link_style_color" type="radio" value=""/>
+                                <input class="d-none link-style" name="link_style_color" type="radio" value=""/>
                                 <i class="fa"/>
                             </label>
                             <t t-foreach="['primary', 'default', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
                                 <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
-                                    <input type="radio" name="link_style_color" class="hidden link-style" t-att-value="color"/>
+                                    <input type="radio" name="link_style_color" class="d-none link-style" t-att-value="color"/>
                                     <i class="fa"/>
                                 </label>
                             </t>

@@ -771,7 +771,7 @@ registry.gallerySlider = Animation.extend({
 
         function hide() {
             $lis.each(function (i) {
-                $(this).toggleClass('hidden', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
+                $(this).toggleClass('d-none', !(i >= page*nbPerPage && i < (page+1)*nbPerPage));
             });
             if (self.editableMode) { // do not remove DOM in edit mode
                 return;

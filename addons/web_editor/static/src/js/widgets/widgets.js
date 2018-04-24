@@ -988,7 +988,7 @@ var VideoWidget = MediaWidget.extend({
         // Reset the feedback
         this.$content.empty();
         this.$('#o_video_form_group').removeClass('has-error has-success');
-        this.$('.o_video_dialog_options li').addClass('hidden');
+        this.$('.o_video_dialog_options li').addClass('d-none');
 
         // Check video code
         var $textarea = this.$('textarea#o_video_text');
@@ -1017,20 +1017,20 @@ var VideoWidget = MediaWidget.extend({
         var $opt_box = this.$('.o_video_dialog_options');
 
         // Show / Hide preview elements
-        this.$el.find('.o_video_dialog_preview_text, .media_iframe_video_size').add($opt_box).toggleClass('hidden', !query.$video);
+        this.$el.find('.o_video_dialog_preview_text, .media_iframe_video_size').add($opt_box).toggleClass('d-none', !query.$video);
         // Toggle validation classes
         this.$el.find('#o_video_form_group').toggleClass('has-error', !query.$video).toggleClass('has-success', !!query.$video);
 
         // Individually show / hide options base on the video provider
-        $opt_box.find('li.o_' + query.type + '_option').removeClass('hidden');
+        $opt_box.find('li.o_' + query.type + '_option').removeClass('d-none');
 
         // Hide the entire options box if no options are available
-        $opt_box.toggleClass('hidden', $opt_box.find('li:not(.hidden)').length === 0);
+        $opt_box.toggleClass('d-none', $opt_box.find('li:not(.d-none)').length === 0);
 
         if (query.type === 'yt') {
             // Youtube only: If 'hide controls' is checked, hide 'fullscreen'
             // and 'youtube logo' options too
-            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('li').toggleClass('hidden', this.$('input#o_video_hide_controls').is(':checked'));
+            this.$('input#o_video_hide_fullscreen, input#o_video_hide_yt_logo').closest('li').toggleClass('d-none', this.$('input#o_video_hide_controls').is(':checked'));
         }
 
         var $content = query.$video;
@@ -1268,8 +1268,8 @@ var MediaDialog = Dialog.extend({
      */
     _updateControlPanel: function () {
         var cpConfig = this.active.getControlPanelConfig();
-        this.$('li.search').toggleClass("hidden", !cpConfig.searchEnabled);
-        this.$('li.previous, li.next').toggleClass("hidden", !cpConfig.pagerEnabled);
+        this.$('li.search').toggleClass('d-none', !cpConfig.searchEnabled);
+        this.$('li.previous, li.next').toggleClass('d-none', !cpConfig.pagerEnabled);
         this.$('li.previous > a').toggleClass("disabled", !cpConfig.pagerLeftEnabled);
         this.$('li.next > a').toggleClass("disabled", !cpConfig.pagerRightEnabled);
     },
@@ -1556,7 +1556,7 @@ var LinkDialog = Dialog.extend({
     _onURLInput: function (ev) {
         $(ev.currentTarget).closest('.form-group').removeClass('has-error');
         var isLink = $(ev.currentTarget).val().indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('hidden', !isLink);
+        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
     },
 });
 

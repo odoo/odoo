@@ -89,8 +89,8 @@
                 <thead>
                   <tr class="active">
                     <th>
-                      <span class='hidden-xs'>Sales Order #</span>
-                      <span class='visible-xs'>Ref.</span>
+                      <span class='d-none d-md-inline'>Sales Order #</span>
+                      <span class='d-block d-md-none'>Ref.</span>
                     </th>
                     <th>Order Date</th>
                     <th ></th>
@@ -104,11 +104,11 @@
                         </td>
                         <td>
                           <span t-field="order.date_order" t-options="{'widget': 'date'}"/>&amp;nbsp;
-                          <span class='hidden-xs' t-field="order.date_order" t-options="{'time_only': True}"/>
+                          <span class='d-none d-md-inline' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
                         <td>
                             <t t-if="order.state == 'done'">
-                                <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="hidden-xs"> Done</span></span>
+                                <span class="label label-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
                             </t>
                         </td>
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
@@ -145,7 +145,7 @@
                         </t>
                     </h4>
                 </div>
-                <div class="col-md-6 col-sm-3 col-xs-3 hidden-print" id="o_portal_order_actions">
+                <div class="col-md-6 col-sm-3 col-xs-3 d-print-none" id="o_portal_order_actions">
                     <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
                         <a role="button" class="btn btn-primary ml8 pull-right" href="#portal_sign">
                             <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
@@ -220,16 +220,16 @@
                 <div t-att-class="'col-lg-4 col-sm-4 col-xs-5' if display_discount else 'col-lg-5 col-sm-5 col-xs-6'">
                   <strong>Product</strong>
                 </div>
-                <div class="col-sm-3 hidden-xs text-right">
+                <div class="col-sm-3 d-none d-md-block text-right">
                   <strong>Unit Price</strong>
                 </div>
                 <div t-if="display_discount" class="col-xs-1 text-right" >
                   <strong>Discount</strong>
                 </div>
-                <div class="hidden-xs col-sm-2 text-right">
+                <div class="d-none d-md-block col-sm-2 text-right">
                   <strong>Quantity</strong>
                 </div>
-                <div class="col-xs-2 hidden-sm hidden-md hidden-lg text-right">
+                <div class="col-xs-2 d-md-none text-right">
                   <strong>Qty.</strong>
                 </div>
                 <div class="col-sm-2 col-xs-4 text-right">
@@ -246,13 +246,13 @@
 
                 <div t-attf-class="row orders_vertical_align {{ 'o_is_' + line.display_type if line.display_type else '' }} pt8 pb8">
                   <t t-if="not line.display_type">
-                      <div class="visible-lg col-lg-1 text-center">
+                      <div class="d-none d-xl-block col-lg-1 text-center">
                         <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                       </div>
                       <div id='product_name' t-att-class="'col-lg-3 col-sm-4 col-xs-5' if display_discount else 'col-lg-4 col-sm-5 col-xs-6'">
                         <span t-field="line.product_id.name"/>
                       </div>
-                    <div class="col-sm-3 hidden-xs text-right">
+                    <div class="col-sm-3 d-none d-md-block text-right">
                       <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                     </div>
                     <div t-if="display_discount" class="col-xs-1 text-right" style='white-space: nowrap'>

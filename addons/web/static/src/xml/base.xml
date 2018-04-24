@@ -692,7 +692,7 @@
                 </option>
             </select>
         </div>
-        <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' hidden' : ''}">
+        <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' d-none' : ''}">
             <t t-if="widget.selectionChoices !== null">
                 <select class="o_domain_leaf_value_input o_input">
                     <option t-foreach="widget.selectionChoices" t-as="val"
@@ -747,9 +747,9 @@
 <div aria-atomic="true" t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
     <div class="o_field_selector_value" tabindex="0"/>
     <div class="o_field_selector_controls" tabindex="0">
-        <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning hidden" title="Invalid field chain" aria-label="Invalid field chain"/>
+        <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
     </div>
-    <div t-if="!widget.options.readonly" class="o_field_selector_popover hidden" tabindex="0">
+    <div t-if="!widget.options.readonly" class="o_field_selector_popover d-none" tabindex="0">
         <div class="o_field_selector_popover_header text-center">
             <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
@@ -839,7 +839,7 @@
 </t>
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
-        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' hidden' or '')">
+        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
             <option/>
             <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
         </select>
@@ -1506,7 +1506,7 @@
 <t t-name="BaseSetting.Tabs">
     <t t-foreach="tabItems" t-as="tab">
         <div class="tab" t-attf-data-key="#{tab.key}" role="tab">
-            <div class="icon hidden-xs" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
+            <div class="icon d-none d-md-block" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
         </div>
     </t>
 </t>
@@ -1521,7 +1521,7 @@
 <t t-name="AttachDocument">
     <button class="btn btn-sm btn-default o_attachment_button">
         <span class="o_attach_document"><t t-esc="widget.node.attrs.string"/></span>
-        <span class="hide">
+        <span class="d-none">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>

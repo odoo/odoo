@@ -36,7 +36,7 @@ options.registry.subscribe = options.Class.extend({
         });
     },
     cleanForSave: function () {
-        this.$target.addClass("hidden");
+        this.$target.addClass('d-none');
     },
 });
 });

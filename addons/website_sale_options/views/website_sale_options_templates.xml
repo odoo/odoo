@@ -57,19 +57,19 @@
                 </td>
                 <td class="text-center td-qty">
                   <div class="css_quantity input-group oe_website_spinner">
-                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs" aria-label="Remove one" title="Remove one">
+                      <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                           <i class="fa fa-minus"></i>
                       </a>
                       <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" value="1"/>
-                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs" aria-label="Add one" title="Add one">
+                      <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
                           <i class="fa fa-plus"></i>
                       </a>
                   </div>
                 </td>
                 <td class="text-center td-price" name="price">
-                  <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(main_product_attr_ids)"></ul>
-                  <div class="hidden oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
-                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
+                  <ul class="d-none js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(main_product_attr_ids)"></ul>
+                  <div class="d-none oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
+                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'd-none' }}"
                     t-field="product.lst_price"
                     t-options='{
                       "widget": "monetary",
@@ -121,10 +121,10 @@
 
                   <div class='mt8'>
                     <input type="hidden" class="js_optional_same_quantity" t-attf-name="optional-add-#{product_index}" value="0"/>
-                    <a role="button" href="#" class="js_add btn btn-sm btn-info"><strong>Add<span class='hidden-xs'> to Cart</span></strong></a>
-                    <span class="js_remove hidden">
-                      <span class="js_item">1 </span><span class="js_items hidden">5 </span> <span t-field="product.uom_id.sudo().name"/><br/>
-                      <a role="button" href="#" class="js_remove btn btn-xs btn-info"><small>Remove <span class='hidden-xs'> from Cart</span></small></a>
+                    <a role="button" href="#" class="js_add btn btn-sm btn-info"><strong>Add<span class='d-none d-md-inline'> to Cart</span></strong></a>
+                    <span class="js_remove d-none">
+                      <span class="js_item">1 </span><span class="js_items d-none">5 </span> <span t-field="product.uom_id.sudo().name"/><br/>
+                      <a role="button" href="#" class="js_remove btn btn-xs btn-info"><small>Remove <span class='d-none d-md-inline'> from Cart</span></small></a>
                     </span>
                   </div>
                 </td>
@@ -134,8 +134,8 @@
           </table>
         </main>
         <footer class="modal-footer">
-          <a role="button" class="btn btn-default a-submit js_goto_shop" aria-label="Continue shopping" title="Continue shopping"><i class="fa fa-chevron-left"></i> <span class="hidden-xs">Continue Shopping</span><span class="visible-xs-inline">Continue</span></a>
-          <a role="button" class="btn btn-primary pull-right a-submit" aria-label="Proceed to checkout" title="Proceed to checkout"><i class="fa fa-shopping-cart fa-fw"></i> <span class="hidden-xs">Proceed to Checkout</span><span class="visible-xs-inline">Checkout</span></a>
+          <a role="button" class="btn btn-default a-submit js_goto_shop" aria-label="Continue shopping" title="Continue shopping"><i class="fa fa-chevron-left"></i> <span class="d-none d-md-inline">Continue Shopping</span><span class="d-inline d-md-none">Continue</span></a>
+          <a role="button" class="btn btn-primary pull-right a-submit" aria-label="Proceed to checkout" title="Proceed to checkout"><i class="fa fa-shopping-cart fa-fw"></i> <span class="d-none d-md-inline">Proceed to Checkout</span><span class="d-inline d-md-none">Checkout</span></a>
         </footer>
       </div>
     </div>

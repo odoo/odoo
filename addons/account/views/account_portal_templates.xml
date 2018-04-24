@@ -34,7 +34,7 @@
                   <tr class="active">
                     <th>Invoice #</th>
                     <th>Invoice Date</th>
-                    <th class='hidden-xs'>Due Date</th>
+                    <th class='d-none d-md-table-cell'>Due Date</th>
                     <th></th>
                     <th>Amount Due</th>
                   </tr>
@@ -45,16 +45,16 @@
                             <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
-                        <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
+                        <td class='d-none d-md-table-cell'><span t-field="invoice.date_due"/></td>
                         <td class="tx_status">
                             <t t-if="invoice.state == 'open'">
-                                <span class="label label-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="hidden-xs"> Waiting for Payment</span></span>
+                                <span class="label label-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
                             <t t-if="invoice.state == 'paid'">
-                                <span class="label label-default"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="hidden-xs"> Paid</span></span>
+                                <span class="label label-default"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
                             <t t-if="invoice.state == 'cancel'">
-                                <span class="label label-default"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="hidden-xs"> Cancelled</span></span>
+                                <span class="label label-default"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                             </t>
                         </td>
                         <td><span t-esc="-invoice.residual if invoice.type == 'out_refund' else invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
@@ -72,7 +72,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
-                <div class="col-md-3 hidden-print">
+                <div class="col-md-3 d-print-none">
                     <div class="bs-sidebar mb16" id="sidebar_content">
                         <div class="text-center pt16 o_account_portal_sidebar">
                             <h2 class="media-heading">
@@ -86,7 +86,7 @@
                         <div class="o_payment_button">
                             <div class="text-center mb8 ml16 mr16 o_download_pdf">
                                 <a class="btn btn-default btn-block btn-sm o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
-                                <a class="btn btn-default btn-block btn-sm hidden-xs hidden-sm o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
+                                <a class="btn btn-default btn-block btn-sm d-none d-lg-inline-block o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
                             </div>
                         </div>
                         <hr t-if="invoice.user_id" class="mt0 mb0"/>
@@ -102,13 +102,13 @@
                                 <a data-toggle="modal" href="#" data-target="#invoice_chatter">Contact us</a>
                             </div>
                         </div>
-                        <div class="text-center hidden-xs mt4 o_portal_brand">
+                        <div class="text-center d-none d-md-block mt4 o_portal_brand">
                             Powered by <a target="_blank" href="http://www.odoo.com">Odoo</a>
                         </div>
                     </div>
                 </div>
                 <!-- Page Content -->
-                <div id="invoice_content" class="col-md-9 o_portal_page_content hidden-print">
+                <div id="invoice_content" class="col-md-9 o_portal_page_content d-print-none">
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                     <div class="o_portal_html_view">

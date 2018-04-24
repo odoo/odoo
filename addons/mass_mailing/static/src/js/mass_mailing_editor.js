@@ -28,7 +28,7 @@ options.registry.sizing_x = options.Class.extend({
         this.isIMG = this.$target.is("img");
         if (this.isIMG) {
             this.$overlay.find(".o_handle.w").addClass("readonly");
-            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass("hidden");
+            this.$overlay.find(".oe_snippet_move, .oe_snippet_clone").addClass('d-none');
         }
 
         var $body = $(document.body);

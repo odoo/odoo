@@ -158,7 +158,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 }
                 var $q = $(".my_cart_quantity");
                 if (data.cart_quantity) {
-                    $q.parents('li:first').removeClass("hidden");
+                    $q.parents('li:first').removeClass('d-none');
                 }
                 else {
                     window.location = '/shop/cart';
@@ -321,10 +321,10 @@ odoo.define('website_sale.website_sale', function (require) {
                     if (variant_ids[k][3]-variant_ids[k][2]>0.01) {
                         $default_price.closest('.oe_website_sale').addClass("discount");
                         $optional_price.closest('.oe_optional').show().css('text-decoration', 'line-through');
-                        $default_price.parent().removeClass('hidden');
+                        $default_price.parent().removeClass('d-none');
                     } else {
                         $optional_price.closest('.oe_optional').hide();
-                        $default_price.parent().addClass('hidden');
+                        $default_price.parent().addClass('d-none');
                     }
                     product_id = variant_ids[k][0];
                     update_product_image(this, product_id);
@@ -371,7 +371,7 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $('.oe_website_sale').on('click', '.show_coupon', function(e) {
             $(e.currentTarget).hide();
-            $('.coupon_form').removeClass('hidden');
+            $('.coupon_form').removeClass('d-none');
         });
         $('.oe_cart').on('click', '.js_change_shipping', function() {
           if (!$('body.editor_enable').length) { //allow to edit button text with editor
@@ -472,13 +472,13 @@ odoo.define('website_sale.website_sale', function (require) {
     });
 
     $('.toggle_summary').on('click', function(e) {
-        $('.toggle_summary_div').toggleClass('hidden');
-        $('.toggle_summary_div').removeClass('visible-lg');
+        $('.toggle_summary_div').toggleClass('d-none');
+        $('.toggle_summary_div').removeClass('d-none d-xl-block');
     });
 
     core.bus.on('resize', this, function() {
         if (config.device.size_class === config.device.SIZES.XL) {
-            $('.toggle_summary_div').addClass('visible-lg');
+            $('.toggle_summary_div').addClass('d-none d-xl-block');
         }
     });
 

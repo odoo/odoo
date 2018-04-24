@@ -17,7 +17,7 @@
 <template id="s_banner" name="Slider">
     <div id="myCarousel" class="carousel slide s_banner" data-interval="10000">
         <!-- Indicators -->
-        <ol class="carousel-indicators hidden">
+        <ol class="carousel-indicators d-none">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
         </ol>
         <div class="carousel-inner">
@@ -29,15 +29,15 @@
                             <h4>Click to customize this text</h4>
                             <p><a role="button" href="/contactus" class="btn btn-warning btn-large">Contact us</a></p>
                         </div>
-                        <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs">
+                        <div class="carousel-img col-md-6 col-md-offset-1 d-none d-lg-block">
                             <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%" role="img" aria-label="Previous" title="Previous"><i class="fa fa-chevron-left"></i></div>
-        <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%" role="img" aria-label="Next" title="Next"><i class="fa fa-chevron-right"></i></div>
+        <div class="carousel-control left d-none" data-target="#myCarousel" data-slide="prev" style="width: 10%" role="img" aria-label="Previous" title="Previous"><i class="fa fa-chevron-left"></i></div>
+        <div class="carousel-control right d-none" data-target="#myCarousel" data-slide="next" style="width: 10%" role="img" aria-label="Next" title="Next"><i class="fa fa-chevron-right"></i></div>
     </div>
 </template>
 

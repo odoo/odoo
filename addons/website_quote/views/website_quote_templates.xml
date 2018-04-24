@@ -93,7 +93,7 @@
                       />
                     </td>
                     <td class="text-center">
-                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id" aria-label="Remove" title="Remove">
+                      <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json d-print-none" t-if="line.option_line_id" aria-label="Remove" title="Remove">
                         <span class="fa fa-trash-o"></span>
                       </a>
                     </td>
@@ -197,13 +197,13 @@
   <template id="change_quantity" inherit_id="website_quote.pricing" active="False" customize_show="True" name="Change Quantity">
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group oe_website_spinner">
-              <span class="input-group-addon hidden-print">
+              <span class="input-group-addon d-print-none">
                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Remove one" title="Remove one">
                       <span class="fa fa-minus"/>
                   </a>
               </span>
               <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
-              <span class="input-group-addon hidden-print">
+              <span class="input-group-addon d-print-none">
                   <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">
                       <span class="fa fa-plus"/>
                   </a>
@@ -248,7 +248,7 @@
             <div class="container o_website_quote">
               <div class="row mt16">
                 <!-- Sidebar -->
-                  <div class="col-md-3 hidden-print">
+                  <div class="col-md-3 d-print-none">
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
                               <a role="button" t-if="order_valid and not quotation.signature and quotation.has_to_be_signed()" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
@@ -427,14 +427,14 @@
                         </div>
                       </div>
 
-                      <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'" role="alert">
+                      <div class="alert alert-warning alert-dismissable d-print-none" t-if="quotation.state == 'cancel'" role="alert">
                           <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
 
                       <t t-call="website_quote.so_quotation_content"/>
 
-                      <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
+                      <div class="text-center d-print-none mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
                           <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
                               <i class="fa fa-check"></i> Accept
                           </a>
@@ -491,7 +491,7 @@
             <t t-if="quotation.state not in ('draft','sent','cancel')">Your Order</t>
             <em t-esc="quotation.name"/>
             <small t-field="quotation.state"/>
-            <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
+            <div t-ignore="true" class="pull-right css_editable_mode_hidden d-print-none">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman">
                     <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
@@ -578,7 +578,7 @@
           <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
               <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
               <a t-att-id="line.id"/>
-              <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty hidden-print'" t-field="line.website_description"/>
+              <div t-att-class="'oe_no_empty' if line.website_description else 'oe_no_empty d-print-none'" t-field="line.website_description"/>
           </t>
       </t>
       <div class="oe_structure"/>
@@ -637,7 +637,7 @@
                                 </strong>
                             </td>
                             <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print" aria-label="Add to cart" title="Add to cart">
+                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 d-print-none" aria-label="Add to cart" title="Add to cart">
                                     <span class="fa fa-shopping-cart"/>
                                 </a>
                             </td>
@@ -655,7 +655,7 @@
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
                 <div class="row mt16">
-                    <div class="col-md-3 hidden-print">
+                    <div class="col-md-3 d-print-none">
                         <div class="bs-sidebar">
                             <div class="navspy" role="complementary" t-ignore="True">
                                 <ul class="nav bs-sidenav" data-id="quote_sidebar"/>
@@ -665,7 +665,7 @@
                     <div class="col-md-9">
                         <div class="row mb8">
                             <div t-ignore="true" class="css_editable_mode_hidden col-md-offset-11">
-                              <a role="button" class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
+                              <a role="button" class="btn btn-info d-print-none" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
                             </div>
                         </div>
                         <div class="alert alert-info alert-dismissable" t-ignore="True" role="status">

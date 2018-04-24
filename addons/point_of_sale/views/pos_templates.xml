@@ -88,9 +88,9 @@
 <template id="customer_facing_display_snippets">
     <!-- web_editor needs a ul (normally contains the header, body, extra buttons)-->
     <ul/>
-    <div id="o_scroll" class="hidden"/>
+    <div id="o_scroll" class="d-none"/>
 
-    <div id="snippet_options" class="hidden">
+    <div id="snippet_options" class="d-none">
         <t t-call="web_editor.snippet_options"/>
 
         <div data-js='pos_no_remove' data-selector=".pos-company_logo, .pos-adv, .pos-customer_facing_display"/>
@@ -115,7 +115,7 @@
 
         <div data-js='pos_background' data-selector=".pos-company_logo, .pos-adv">
             <li data-choose-image="true" data-no-preview="true"><a href="#"><b>Set Custom Image...</b></a></li>
-            <li class="hidden pos-use_default_logo" data-background=""><a href="#">Default company logo</a></li>
+            <li class="d-none pos-use_default_logo" data-background=""><a href="#">Default company logo</a></li>
             <li class="divider"/>
             <li data-toggle-class="pos-hidden"><a href="#"><i class="fa fa-eye-slash"/>Hide</a></li>
         </div>

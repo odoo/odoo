@@ -881,7 +881,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
               <button class="btn btn-default" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
-                  <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                  <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                   <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
               </button>
               <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">

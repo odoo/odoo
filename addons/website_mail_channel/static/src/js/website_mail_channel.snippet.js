@@ -24,13 +24,13 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
                 self.$target.find(".js_mg_follow_form").remove();
             }
             self.toggle_subscription(data.is_member ? 'on' : 'off', data.email);
-            self.$target.removeClass("hidden");
+            self.$target.removeClass('d-none');
         });
 
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
-            this.$('> .alert').addClass("hidden");
-            this.$('> .input-group-btn.hidden').removeClass("hidden");
+            this.$('> .alert').addClass('d-none');
+            this.$('> .input-group-btn.d-none').removeClass('d-none');
             this.$('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -78,19 +78,19 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
         var alias_done = this.get_alias_info();
         if (follow === "on") {
             // user is connected and can unsubscribe
-            this.$target.find(".js_mg_follow_form").addClass("hidden");
-            this.$target.find(".js_mg_details").removeClass("hidden");
-            this.$target.find(".js_mg_confirmation").addClass("hidden");
+            this.$target.find(".js_mg_follow_form").addClass('d-none');
+            this.$target.find(".js_mg_details").removeClass('d-none');
+            this.$target.find(".js_mg_confirmation").addClass('d-none');
         } else if (follow === "off") {
             // user is connected and can subscribe
-            this.$target.find(".js_mg_follow_form").removeClass("hidden");
-            this.$target.find(".js_mg_details").addClass("hidden");
-            this.$target.find(".js_mg_confirmation").addClass("hidden");
+            this.$target.find(".js_mg_follow_form").removeClass('d-none');
+            this.$target.find(".js_mg_details").addClass('d-none');
+            this.$target.find(".js_mg_confirmation").addClass('d-none');
         } else if (follow === "email") {
             // a confirmation email has been sent
-            this.$target.find(".js_mg_follow_form").addClass("hidden");
-            this.$target.find(".js_mg_details").addClass("hidden");
-            this.$target.find(".js_mg_confirmation").removeClass("hidden");
+            this.$target.find(".js_mg_follow_form").addClass('d-none');
+            this.$target.find(".js_mg_details").addClass('d-none');
+            this.$target.find(".js_mg_confirmation").removeClass('d-none');
         } else {
             console.error("Unknown subscription action", follow);
         }
@@ -108,10 +108,10 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
         return this._rpc({route: '/groups/' + this.$target.data('id') + '/get_alias_info'}).then(function (data) {
             if (data.alias_name) {
                 self.$target.find('.js_mg_email').attr('href', 'mailto:' + data.alias_name);
-                self.$target.find('.js_mg_email').removeClass('hidden');
+                self.$target.find('.js_mg_email').removeClass('d-none');
             }
             else {
-                self.$target.find('.js_mg_email').addClass('hidden');
+                self.$target.find('.js_mg_email').addClass('d-none');
             }
         });
     }

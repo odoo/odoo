@@ -125,7 +125,7 @@
         </template>
 
         <template id="portal_project_rating_popover">
-            <div t-attf-id="rating_#{rating.id}" class="container hidden">
+            <div t-attf-id="rating_#{rating.id}" class="container d-none">
                 <div class="row">
                     <div class="col-md-2">
                         <img t-if="rating.partner_id.image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}" alt="Rated partner"/>

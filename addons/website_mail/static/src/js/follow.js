@@ -19,12 +19,12 @@ sAnimation.registry.follow = sAnimation.Class.extend({
             self.is_user = data.is_user;
             self.email = data.email;
             self.toggle_subscription(data.is_follower, data.email);
-            self.$target.removeClass("hidden");
+            self.$target.removeClass('d-none');
         });
 
         // not if editable mode to allow designer to edit
         if (!this.editableMode) {
-            $('.js_follow > .input-group-btn.hidden').removeClass("hidden");
+            $('.js_follow > .input-group-btn.d-none').removeClass('d-none');
             this.$target.find('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -60,12 +60,12 @@ sAnimation.registry.follow = sAnimation.Class.extend({
     toggle_subscription: function (follow, email) {
         follow = follow || (!email && this.$target.attr('data-unsubscribe'));
         if (follow) {
-            this.$target.find(".js_follow_btn").addClass("hidden");
-            this.$target.find(".js_unfollow_btn").removeClass("hidden");
+            this.$target.find(".js_follow_btn").addClass('d-none');
+            this.$target.find(".js_unfollow_btn").removeClass('d-none');
         }
         else {
-            this.$target.find(".js_follow_btn").removeClass("hidden");
-            this.$target.find(".js_unfollow_btn").addClass("hidden");
+            this.$target.find(".js_follow_btn").removeClass('d-none');
+            this.$target.find(".js_unfollow_btn").addClass('d-none');
         }
         this.$target.find('input.js_follow_email')
             .val(email || "")

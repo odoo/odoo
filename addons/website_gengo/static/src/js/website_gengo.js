@@ -41,8 +41,8 @@ translate.Class.include({
     translation_gengo_display: function () {
         var self = this;
         if ($('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').length === 0){
-            self.$el.find('.gengo_post').addClass("hidden");
-            self.$el.find('.gengo_inprogress').removeClass("hidden");
+            self.$el.find('.gengo_post').addClass('d-none');
+            self.$el.find('.gengo_inprogress').removeClass('d-none');
         }
     },
     translation_gengo_post: function () {
@@ -60,8 +60,8 @@ translate.Class.include({
                 dialog.on('service_level', this, function () {
                     var gengo_service_level = dialog.$el.find(".form-control").val();
                     dialog.$el.modal('hide');
-                    self.$el.find('.gengo_post').addClass("hidden");
-                    self.$el.find('.gengo_wait').removeClass("hidden");
+                    self.$el.find('.gengo_post').addClass('d-none');
+                    self.$el.find('.gengo_wait').removeClass('d-none');
                     var trans = [];
                     $('[data-oe-translation-state="to_translate"], [data-oe-translation-state="None"]').each(function () {
                         var $node = $(this);
