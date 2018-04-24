@@ -1135,13 +1135,15 @@ class AccountMoveLine(models.Model):
 
         #create an empty move that will hold all the exchange rate adjustments
         exchange_move = False
-        if aml_to_balance_currency:
+        if aml_to_balance_currency and any([residual for dummy, residual in aml_to_balance_currency.values()]):
             exchange_move = self.env['account.move'].create(
                 self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=self[0].company_id))
 
         for currency, values in aml_to_balance_currency.items():
             aml_to_balance = values[0]
             total_amount_currency = values[1]
+            if not total_amount_currency:
+                continue
             #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
             aml_recs, partial_recs = self.env['account.partial.reconcile'].create_exchange_rate_entry(aml_to_balance, 0.0, total_amount_currency, currency, exchange_move)
 
