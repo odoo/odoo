@@ -1,6 +1,7 @@
 odoo.define('base.settings', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var core = require('web.core');
 var config = require('web.config');
 var FormView = require('web.FormView');
@@ -329,8 +330,25 @@ var BaseSettingController = FormController.extend({
     },
 });
 
+var BaseSettingsModel = BasicModel.extend({
+    /**
+     * @override
+     */
+    save: function (recordID) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (result) {
+            // we remove here the res_id, because the record should still be
+            // considered new.  We want the web client to always perform a
+            // default_get to fetch the settings anew.
+            delete self.localData[recordID].res_id;
+            return result;
+        });
+    },
+});
+
 var BaseSettingView = FormView.extend({
     config: _.extend({}, FormView.prototype.config, {
+        Model: BaseSettingsModel,
         Renderer: BaseSettingRenderer,
         Controller: BaseSettingController,
     }),
@@ -343,6 +361,7 @@ var BaseSettingView = FormView.extend({
 view_registry.add('base_settings', BaseSettingView);
 
 return {
+    Model: BaseSettingsModel,
     Renderer: BaseSettingRenderer,
     Controller: BaseSettingController,
 };
