@@ -397,7 +397,7 @@ class PosOrder(models.Model):
             aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
             try:
                 aml_returns.reconcile()
-                (aml - aml_returns).reconcile()
+                (aml - aml_returns.filtered('reconciled')).reconcile()
             except:
                 # There might be unexpected situations where the automatic reconciliation won't
                 # work. We don't want the user to be blocked because of this, since the automatic
