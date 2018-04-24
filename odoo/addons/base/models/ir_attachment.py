@@ -65,7 +65,8 @@ class IrAttachment(models.Model):
         }[self._storage()]
 
         for attach in self.search(domain):
-            attach.write({'datas': attach.datas})
+            # pass mimetype, to avoid recomputation
+            attach.write({'datas': attach.datas, 'mimetype': attach.mimetype})
         return True
 
     @api.model
