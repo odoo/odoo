@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import timedelta, timezone
 
 from odoo import api, fields, models
 from odoo.tools import float_utils
+from odoo.tools.datetime import timedelta, timezone
 
 # This will generate quarter of days
 ROUNDING_FACTOR = 4
