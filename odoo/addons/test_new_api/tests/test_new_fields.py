@@ -200,7 +200,7 @@ class TestFields(common.TransactionCase):
         message = self.env.ref('test_new_api.message_0_1')
 
         # related record inverse change
-        with self.assertQueryCount(15):
+        with self.assertQueryCount(11):
             message.write({
                 'discussion_name': 'My Stuff',
                 'discussion_moderator': self.env.ref('base.user_root').id

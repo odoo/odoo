@@ -123,6 +123,7 @@ class Message(models.Model):
     size = fields.Integer(compute='_compute_size', search='_search_size')
     double_size = fields.Integer(compute='_compute_double_size')
     discussion_name = fields.Char(related='discussion.name', string="Discussion Name", readonly=False)
+    discussion_moderator = fields.Many2one(related='discussion.moderator', string="Discussion Moderator", store=True)
     author_partner = fields.Many2one(
         'res.partner', compute='_compute_author_partner',
         search='_search_author_partner')
