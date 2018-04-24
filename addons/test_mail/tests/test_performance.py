@@ -291,7 +291,7 @@ class TestAdvMailPerformance(TransactionCase):
         with self.assertQueryCount(admin=5, emp=5):  # test_mail only: 5 - 5
             record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
 
-        with self.assertQueryCount(admin=12, emp=12):  # test_mail only: 12 - 12
+        with self.assertQueryCount(admin=1, emp=1):  # test_mail only: 1 - 1
             record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
 
 
@@ -449,7 +449,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.assertEqual(rec.message_channel_ids, self.channel)
 
         # subscribe existing and new followers with force=True, meaning all will have the same subtypes
-        with self.assertQueryCount(admin=42, emp=42):  # test_mail only: 42 - 42
+        with self.assertQueryCount(admin=13, emp=13):  # test_mail only: 13 - 13
             rec.message_subscribe(
                 partner_ids=pids,
                 channel_ids=cids,

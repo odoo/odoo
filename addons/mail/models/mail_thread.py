@@ -2082,7 +2082,7 @@ class MailThread(models.AbstractModel):
                 self._name, self.ids,
                 partner_ids, dict((pid, subtype_ids) for pid in partner_ids),
                 channel_ids, dict((cid, subtype_ids) for cid in channel_ids),
-                customer_ids=customer_ids, check_existing=True, existing_policy='force')
+                customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True
 
