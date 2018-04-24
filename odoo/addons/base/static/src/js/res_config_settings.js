@@ -344,6 +344,28 @@ var BaseSettingController = FormController.extend({
         this._super.apply(this, arguments);
         this.renderer.activeSettingTab = this.initialState.context.module;
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * We just set ID as undefined to the state if records have a res_id. This allows the web
+     * client to not set id in the url.
+     *
+     * @override
+     * @private
+     */
+    _pushState: function () {
+        if (this.model.get(this.handle).res_id) {
+            this.trigger_up('push_state', {
+                controllerID: this.controllerID,
+                state: {id: undefined}
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
 });
 
 var BaseSettingView = FormView.extend({
