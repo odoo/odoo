@@ -1001,4 +1001,37 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('parallel data loading should discard all but the last one', function (assert) {
+        assert.expect(2);
+
+        var def;
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                      '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        def = $.Deferred();
+        pivot.update({groupBy: ['product_id']});
+        pivot.update({groupBy: ['product_id', 'customer']});
+        def.resolve();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,
+            "should have 6 cells");
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows");
+        pivot.destroy();
+    });
 });});
