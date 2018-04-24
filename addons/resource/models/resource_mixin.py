@@ -3,9 +3,11 @@
 
 from collections import defaultdict
 from odoo.tools.datetime import timedelta
+from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.tools import float_utils
+from odoo.tools.datetime import timedelta, timezone
 
 # This will generate quarter of days
 ROUNDING_FACTOR = 4
