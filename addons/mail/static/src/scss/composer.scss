@@ -43,11 +43,15 @@
     .o_composer {
         .o_composer_input[contenteditable=true]:empty:before {
             content: attr(placeholder);
-            opacity: 0.75;
+            opacity: 0.4;
         }
         .o_composer_input {
+            border: none;
+            box-shadow: none;
+            cursor: text;
             display: inline-block;
             height: 100%;
+            padding: 0px 0px $o-mail-chatter-gap;
             white-space: pre-wrap;
             word-break: break-all;
         }
@@ -172,8 +176,6 @@
             }
             .o_composer_text_field {
                 @include o-flex(1, 1, 50%);
-                margin: -4px 7px 5px 0px;
-                padding: 2.5px 0px 0px 5px;
             }
             .o_chatter_composer_tools {
                 @include o-flex(0, 1, auto);

@@ -5,6 +5,7 @@ var ChatManager = require('mail.ChatManager');
 var systray = require('mail.systray');
 var mailTestUtils = require('mail.testUtils');
 
+var Bus = require('web.Bus');
 var testUtils = require('web.test_utils');
 
 var createBusService = mailTestUtils.createBusService;
@@ -126,4 +127,197 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     activityMenu.destroy();
 });
 });
+
+QUnit.module('MessagingMenu', {
+    beforeEach: function () {
+        // patch _.debounce and _.throttle to be fast and synchronous
+        this.underscoreDebounce = _.debounce;
+        this.underscoreThrottle = _.throttle;
+        _.debounce = _.identity;
+        _.throttle = _.identity;
+
+        this.data = {
+            'mail.channel': {
+                fields: {
+                    name: {
+                        string: "Name",
+                        type: "char",
+                        required: true,
+                    },
+                    channel_type: {
+                        string: "Channel Type",
+                        type: "selection",
+                    },
+                    channel_message_ids: {
+                        string: "Messages",
+                        type: "many2many",
+                        relation: 'mail.message'
+                    },
+                },
+                records: [{
+                    id: 1,
+                    name: "general",
+                    channel_type: "channel",
+                    channel_message_ids: [1],
+                }],
+            },
+            'mail.message': {
+                fields: {
+                    body: {
+                        string: "Contents",
+                        type: 'html',
+                    },
+                    author_id: {
+                        string: "Author",
+                        relation: 'res.partner',
+                    },
+                    channel_ids: {
+                        string: "Channels",
+                        type: 'many2many',
+                        relation: 'mail.channel',
+                    },
+                    starred: {
+                        string: "Starred",
+                        type: 'boolean',
+                    },
+                    needaction: {
+                      string: "Need Action",
+                      type: 'boolean',
+                    },
+                    starred_partner_ids: {
+                      string: "partner ids",
+                      type: 'integer',
+                    }
+                },
+                records: [{
+                    id: 1,
+                    author_id: ['1', 'Me'],
+                    body: '<p>test</p>',
+                    channel_ids: [1],
+                }],
+            },
+            initMessaging: {
+                channel_slots: {
+                    channel_channel: [{
+                        id: 1,
+                        channel_type: "channel",
+                        name: "general",
+                    }],
+                },
+            },
+        };
+        this.services = [ChatManager, createBusService()];
+    },
+    afterEach: function () {
+        // unpatch _.debounce and _.throttle
+        _.debounce = this.underscoreDebounce;
+        _.throttle = this.underscoreThrottle;
+    }
+});
+
+QUnit.test('messaging menu widget: menu with no records', function (assert) {
+    assert.expect(1);
+
+    var messagingMenu = new systray.MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+            services: this.services,
+            mockRPC: function (route, args) {
+                if (args.method === 'message_fetch') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+    messagingMenu.appendTo($('#qunit-fixture'));
+    messagingMenu.$('.dropdown-toggle').click();
+    assert.ok(messagingMenu.$('.o_no_activity').hasClass('o_no_activity'), "should not have instance of widget");
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: messaging menu with 1 record', function (assert) {
+    assert.expect(3);
+    var messagingMenu = new systray.MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: this.services,
+        data: this.data,
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    messagingMenu.$('.dropdown-toggle').click();
+
+    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview').length, 1,
+        "should display a channel preview");
+    assert.strictEqual(messagingMenu.$('.o_channel_name').text().trim(), "general",
+        "should display correct name of channel in channel preview");
+
+    // remove any space-character inside text
+    var lastMessagePreviewText =
+        messagingMenu.$('.o_last_message_preview').text().replace(/\s/g, "");
+    assert.strictEqual(lastMessagePreviewText,
+        "Me:test",
+        "should display correct last message preview in channel preview");
+
+    messagingMenu.destroy();
+});
+
+QUnit.test('messaging menu widget: no crash when clicking on inbox notification not associated to a document', function (assert) {
+    assert.expect(3);
+
+    var bus = new Bus();
+
+    var messagingMenu = new systray.MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        services: [ChatManager, createBusService(bus)],
+        data: this.data,
+        session: {
+            partner_id: 1,
+        },
+        intercepts: {
+            /**
+             * Simulate action 'mail.mail_channel_action_client_chat'
+             * successfully performed.
+             *
+             * @param {OdooEvent} ev
+             * @param {function} ev.data.on_success called when success action performed
+             */
+            do_action: function (ev) {
+                ev.data.on_success();
+            },
+        },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Simulate received needaction message without associated document,
+    // so that we have a message in inbox without a model and a resID
+    var message = {
+        id: 2,
+        author_id: [1, "Me"],
+        body: '<p>test</p>',
+        channel_ids: [],
+        needaction_partner_ids: [1],
+    };
+    var notifications = [
+        [['myDB', 'ir.needaction'], message]
+    ];
+    bus.trigger('notification', notifications);
+
+    // Open messaging menu
+    messagingMenu.$('.dropdown-toggle').click();
+
+    var $firstChannelPreview =
+        messagingMenu.$('.o_mail_channel_preview').first();
+
+    assert.strictEqual($firstChannelPreview.length, 1,
+        "should have at least one channel preview");
+    assert.strictEqual($firstChannelPreview.data('channel_id'),
+        'channel_inbox',
+        "should be a preview from channel inbox");
+    try {
+        $firstChannelPreview.click();
+        assert.ok(true, "should not have crashed when clicking on needaction preview message");
+    } finally {
+        messagingMenu.destroy();
+    }
+});
+
 });

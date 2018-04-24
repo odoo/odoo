@@ -74,3 +74,27 @@ class TestPerformance(TransactionCase):
                 'name': 'X',
                 'tag_ids': [(0, 0, {'name': val}) for val in range(10)],
             })
+
+    @users('admin', 'demo')
+    @warmup
+    def test_several_prefetch(self):
+        initial_records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(initial_records), 5)
+        for _i in range(8):
+            self.env.cr.execute(
+                'insert into test_performance_base(value) select value from test_performance_base'
+            )
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 1280)
+        # should only cause 2 queries thanks to prefetching
+        with self.assertQueryCount(admin=2, demo=2):
+            records.mapped('value')
+        records.invalidate_cache(['value'])
+
+        with self.assertQueryCount(admin=2, demo=2):
+            with self.env.do_in_onchange():
+                records.mapped('value')
+        self.env.cr.execute(
+            'delete from test_performance_base where id not in %s',
+            (tuple(initial_records.ids),)
+        )
