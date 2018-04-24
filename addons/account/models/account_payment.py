@@ -39,6 +39,8 @@ class account_abstract_payment(models.AbstractModel):
         "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed ")
     payment_method_code = fields.Char(related='payment_method_id.code',
         help="Technical field used to adapt the interface to the payment type selected.", readonly=True)
+    domain_payment_method_ids = fields.Many2many('account.payment.method', compute="_compute_domain_payment_method_ids")
+    domain_payment_type = fields.Char(compute="_compute_domain_payment_type")
 
     partner_type = fields.Selection([('customer', 'Customer'), ('supplier', 'Vendor')])
     partner_id = fields.Many2one('res.partner', string='Partner')
@@ -59,6 +61,16 @@ class account_abstract_payment(models.AbstractModel):
         if self.amount < 0:
             raise ValidationError(_('The payment amount cannot be negative.'))
 
+    @api.depends('payment_type', 'journal_id')
+    def _compute_domain_payment_method_ids(self):
+        if self.journal_id:
+            self.domain_payment_method_ids = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+
+    @api.depends('payment_type')
+    def _compute_domain_payment_type(self):
+        if self.journal_id:
+            self.domain_payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
+
     @api.multi
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
@@ -78,9 +90,6 @@ class account_abstract_payment(models.AbstractModel):
             # Set default payment method (we consider the first to be the default one)
             payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
             self.payment_method_id = payment_methods and payment_methods[0] or False
-            # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
-            payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
-            return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
         return {}
 
     @api.model
