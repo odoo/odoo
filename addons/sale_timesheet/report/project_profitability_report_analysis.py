@@ -38,8 +38,8 @@ class ProfitabilityAnalysis(models.Model):
                     P.user_id AS user_id,
                     TIMESHEET_AMOUNT.project_id AS project_id,
                     TIMESHEET_AMOUNT.sale_line_id AS sale_line_id,
-                    AA.id AS analytic_account_id,
-                    AA.partner_id AS partner_id,
+                    P.analytic_account_id AS analytic_account_id,
+                    P.partner_id AS partner_id,
                     C.id AS company_id,
                     C.currency_id AS currency_id,
                     S.id AS sale_order_id,
@@ -50,8 +50,7 @@ class ProfitabilityAnalysis(models.Model):
                     TIMESHEET_AMOUNT.timesheet_unit_amount AS timesheet_unit_amount,
                     TIMESHEET_AMOUNT.timesheet_cost AS timesheet_cost
                 FROM project_project P
-                    LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
-                    JOIN res_company C ON C.id = AA.company_id
+                    JOIN res_company C ON C.id = P.company_id
                     LEFT JOIN
                         (
                             SELECT T.sale_line_id AS sale_line_id, T.project_id AS project_id
@@ -67,7 +66,6 @@ class ProfitabilityAnalysis(models.Model):
                             SELECT
                                 project_id AS project_id,
                                 so_line AS sale_line_id,
-                                array_agg(id),
                                 SUM(TS.unit_amount) AS timesheet_unit_amount,
                                 SUM(TS.amount) AS timesheet_cost
                             FROM account_analytic_line TS
