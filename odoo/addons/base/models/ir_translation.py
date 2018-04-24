@@ -590,8 +590,8 @@ class IrTranslation(models.Model):
         external_ids = records.get_external_id()  # if no xml_id, empty string
         if callable(field.translate):
             # insert missing translations for each term in src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND l.translatable AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -610,8 +610,8 @@ class IrTranslation(models.Model):
                     })
         else:
             # insert missing translations for src
-            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s
+            query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, module, state)
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND l.translatable AND l.code != 'en_US' AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
