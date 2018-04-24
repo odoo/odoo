@@ -1605,6 +1605,8 @@ class AccountInvoiceLine(models.Model):
     is_rounding_line = fields.Boolean(string='Rounding Line', help='Is a rounding line in case of cash rounding.')
 
     line_type = fields.Selection([('section', 'Section'), ('note', 'Note'), ('product', 'Product')], default="product")
+    line_pagebreak = fields.Boolean('Add pagebreak')
+    line_subtotal = fields.Boolean('Add subtotal', default=True)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

@@ -615,19 +615,30 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.line_type == 'section':
                 result.append({
-                    'section': line.name,
+                    'section': {
+                        'name': line.name,
+                        'line_subtotal': line.line_subtotal,
+                        'line_pagebreak': line.line_pagebreak
+                    },
                     'lines': empty_line
                 })
             elif len(result):
                 result[-1]['lines'] = result[-1]['lines'] + line
             else:
-                result = [{'section': _('Uncategorized'),
-                           'lines': line,
-                           }]
-        return result
-
-
-
+                result = [{'section': {
+                    'name': _("Uncategorized"),
+                    'line_subtotal': line.line_subtotal,
+                    'line_pagebreak': line.line_pagebreak
+                },
+                    'lines': line,
+                }]
+        pages = []
+        for res in result:
+            if pages and not pages[-1][-1]['section']['line_pagebreak']:
+                pages[-1].append(res)
+            else:
+                pages.append([res])
+        return pages
 
     @api.multi
     def _get_tax_amount_by_group(self):
@@ -955,6 +966,8 @@ class SaleOrderLine(models.Model):
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
 
     line_type = fields.Selection([('section', 'Section'), ('note', 'Note'), ('product', 'Product')], default="product")
+    line_pagebreak = fields.Boolean('Add pagebreak')
+    line_subtotal = fields.Boolean('Add subtotal', default=True)
 
     @api.multi
     @api.depends('state', 'is_expense')
@@ -1074,7 +1087,9 @@ class SaleOrderLine(models.Model):
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'line_type': self.line_type
+            'line_type': self.line_type,
+            'line_pagebreak': self.line_pagebreak,
+            'line_subtotal': self.line_subtotal
         }
         return res
 

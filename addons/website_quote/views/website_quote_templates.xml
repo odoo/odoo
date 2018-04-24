@@ -16,7 +16,8 @@
 
   <template id="pricing" name="Price">
       <section id="quote">
-          <h1 class="page-header">Pricing</h1>
+            <h1 class="page-header">Pricing</h1>
+            <t t-foreach="doc.order_lines_layouted()" t-as="pages">
             <table class="table wq-table">
                 <thead>
                     <tr>
@@ -31,13 +32,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="quotation.order_lines_layouted()" t-as="layout">
+                    <t t-foreach="pages" t-as="layout">
                         <t t-set="section" t-value="layout['section']"/>
                         <t t-set="lines" t-value="layout['lines']"/>    
                             
                         <tr class="active">
-                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
-                                <t t-esc="section"/>
+                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">
+                                <t t-esc="section['name']"/>
                             </td>
                         </tr>
 
@@ -88,7 +89,7 @@
                           </tr>
                         </t>
 
-                        <tr>
+                        <tr t-if="section['line_subtotal']">
                             <td></td><td></td><td></td><td></td>
                             <td class="text-right" style="padding-bottom: 32px"><strong>Subtotal:</strong></td>
                             <td class="text-right" style="padding-bottom: 32px">
@@ -127,6 +128,7 @@
                     </tr>
                 </tbody>
             </table>
+        </t>
       </section>
       <section id="terms" class="container" t-if="quotation.note">
           <h2 class="page-header">Terms &amp; Conditions</h2>

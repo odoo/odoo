@@ -2,105 +2,105 @@
 <odoo>
 
     <template id="gst_report_invoice_layouted_inherit" inherit_id="sale.report_invoice_layouted">
-        <xpath expr="//thead[@name='th_layout']/tr" position="replace">
-            <tr>
-                <th>Description</th>
-                <th class="text-right">Quantity</th>
-                <th class="text-right">Unit Price</th>
-                <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
-                <th class="text-right">Taxes</th>
-                <th class="text-right">Price</th>
-                <t t-if="o.company_id.country_id.code == 'IN'">
-                    <th class="text-right" t-if="is_cgst">CGST</th>
-                    <th class="text-right" t-if="is_cgst">SGST</th>
-                    <th class="text-right" t-if="is_igst">IGST</th>
-                    <th class="text-right" t-if="is_cess">CESS</th>
-                </t>
-            </tr>
-        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']" position="replace">
+                <table class="table table-condensed" name="invoice_line_table">
+                    <thead>
+                        <th>Description</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Unit Price</th>
+                        <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
+                        <th class="text-right" t-if="len(o.tax_line_ids) > 0">Tax</th>
+                        <th class="text-right">Price</th>
+                        <t t-if="o.company_id.country_id.code == 'IN'">
+                            <th class="text-right" t-if="is_cgst">CGST</th>
+                            <th class="text-right" t-if="is_cgst">SGST</th>
+                            <th class="text-right" t-if="is_igst">IGST</th>
+                            <th class="text-right" t-if="is_cess">CESS</th>
+                        </t>
+                    </thead>
+                    <tbody class="invoice_tbody">
+                        <t t-foreach="pages" t-as="layout">
+                            <t t-set="section" t-value="layout['section']"/>
+                            <t t-set="lines" t-value="layout['lines']"/>   
+                            
+                            <tr class="active">
+                                <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">
+                                    <t t-esc="section['name']"/>
+                                </td>
+                            </tr>
 
-        <xpath expr="//t[@name='lines_layouted']" position="replace">
-            <t t-foreach="o.order_lines_layouted()" t-as="layout" name="lines_layouted">
-                <t t-set="section" t-value="layout['section']"/>
-                <t t-set="lines" t-value="layout['lines']"/>
-                <tbody class="invoice_tbody">
-                    <tr class="active">
-                        <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
-                            <t t-esc="section"/>
-                        </td>
-                    </tr>
-
-                    <!-- Lines associated -->
-                    <t t-foreach="lines" t-as="line">
-                        <tr>
-                            <td><span t-field="line.name"/>
-                            <t t-if="line.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="line.product_id.l10n_in_hsn_code"/></h6></t></td>
-                            <td class="text-right">
-                                <span t-field="line.quantity"/>
-                                <span t-field="line.uom_id"  groups="uom.group_uom"/>
-                            </td>
-                            <td class="text-right">
-                                <span t-field="line.price_unit"/>
-                            </td>
-                            <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
-                                <span t-field="line.discount"/>
-                            </td>
-                            <td class="text-right">
-                                <span t-esc="', '.join(map(lambda x: x.description or x.name, line.invoice_line_tax_ids))"/>
-                            </td>
-                            <td class="text-right" groups="sale.group_show_price_subtotal">
-                                <span t-field="line.price_subtotal"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                            <td class="text-right" groups="sale.group_show_price_total">
-                                <span t-field="line.price_total"
-                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                            <t t-if="o.company_id.country_id.code == 'IN'">
-                                <td class="text-right" t-if="is_cgst">
-                                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
-                                        <t t-if="tag_cgst_id in tax_data['tag_ids']">
-                                            <t t-esc="tax_data['amount']"/>
-                                        </t>
+                            <!-- Lines associated -->
+                            <t t-foreach="lines" t-as="l">
+                                <tr>
+                                    <td><span t-field="l.name"/>
+                                    <t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t></td>
+                                    <td class="text-right">
+                                        <span t-field="l.quantity"/>
+                                        <span t-field="l.uom_id"  groups="uom.group_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                        <span t-field="l.discount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="', '.join(map(lambda x: x.description or x.name, l.invoice_line_tax_ids))"/>
+                                    </td>
+                                    <td class="text-right" groups="sale.group_show_price_subtotal">
+                                        <span t-field="l.price_subtotal"
+                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                    <td class="text-right" groups="sale.group_show_price_total">
+                                        <span t-field="l.price_total"
+                                            t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                    <t t-if="o.company_id.country_id.code == 'IN'">
+                                        <td class="text-right" t-if="is_cgst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_cgst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-right" t-if="is_cgst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_sgst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-right" t-if="is_igst">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_igst_id in tax_data['tag_ids']">
+                                                    <t t-esc="tax_data['amount']"/>
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <t t-set="total_cess" t-value="0.0"/>
+                                        <td class="text-right" t-if="is_cess">
+                                            <t t-foreach="tax_datas[l.id]" t-as="tax_data">
+                                                <t t-if="tag_cess_id in tax_data['tag_ids']">
+                                                    <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                                                </t>
+                                            </t>
+                                            <t t-esc="total_cess"/>
+                                        </td>
                                     </t>
-                                </td>
-                                <td class="text-right" t-if="is_cgst">
-                                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
-                                        <t t-if="tag_sgst_id in tax_data['tag_ids']">
-                                            <t t-esc="tax_data['amount']"/>
-                                        </t>
-                                    </t>
-                                </td>
-                                <td class="text-right" t-if="is_igst">
-                                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
-                                        <t t-if="tag_igst_id in tax_data['tag_ids']">
-                                            <t t-esc="tax_data['amount']"/>
-                                        </t>
-                                    </t>
-                                </td>
-                                <t t-set="total_cess" t-value="0.0"/>
-                                <td class="text-right" t-if="is_cess">
-                                    <t t-foreach="tax_datas[line.id]" t-as="tax_data">
-                                        <t t-if="tag_cess_id in tax_data['tag_ids']">
-                                            <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
-                                        </t>
-                                    </t>
-                                    <t t-esc="total_cess"/>
-                                </td>
+                                </tr>
                             </t>
-                        </tr>
-                    </t>
-                    <tr class="text-right">
-                        <td t-att-colspan="o.company_id.country_id.code == 'IN' and 9 or 6">
-                            <strong>Subtotal: </strong>
-                            <t t-set="subtotal" t-value="sum(line.price_subtotal for line in lines)"/>
-                            <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
-                        </td>
-                    </tr>
-                </tbody>
-            </t>
-        </xpath>
 
+                            <tr t-if="section['line_subtotal']"  class="text-right">
+                                <td t-att-colspan="o.company_id.country_id.code == 'IN' and 9 or 6">
+                                    <strong>Subtotal: </strong>
+                                    <t t-set="subtotal" t-value="sum(line.price_subtotal for line in lines)"/>
+                                    <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+        </xpath>
     </template>
 
 </odoo>

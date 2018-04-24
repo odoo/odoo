@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+<template id="report_invoice_layouted" priority="30" inherit_id="account.report_invoice_document">
     <xpath expr="//table/tbody/tr/td[@id='subtotal']" position="attributes">
         <attribute name="groups">!sale.group_show_price_total</attribute>
     </xpath>
@@ -9,8 +9,9 @@
             <span t-field="l.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
         </td>
     </xpath>
-    <xpath expr="//table" position="after">
-            <table class="table table-condensed">
+        <xpath expr="//table[@name='invoice_line_table']" position="replace">
+            <t t-foreach="o.order_lines_layouted()" t-as="pages" name="lines_layouted">
+            <table class="table table-condensed" name="invoice_line_table">
                 <thead name="th_layout">
                     <tr>
                         <th>Description</th>
@@ -21,13 +22,13 @@
                         <th class="text-right">Price</th>
                     </tr>
                 </thead>
-                <t t-foreach="o.order_lines_layouted()" t-as="layout" name="lines_layouted">
-                    <t t-set="section" t-value="layout['section']"/>
-                    <t t-set="lines" t-value="layout['lines']"/>
+                <t t-foreach="pages" t-as="layout">
                     <tbody class="invoice_tbody">
+                        <t t-set="section" t-value="layout['section']"/>
+                        <t t-set="lines" t-value="layout['lines']"/>
                         <tr class="active">
-                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
-                                <t t-esc="section"/>
+                            <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">
+                                <t t-esc="section['name']"/>
                             </td>
                         </tr>
 
@@ -58,7 +59,7 @@
                                 </td>
                             </tr>
                         </t>
-                        <tr class="text-right">
+                        <tr t-if="section['line_subtotal']" class="text-right">
                             <td colspan="6">
                                 <strong>Subtotal: </strong>
                                 <t t-set="subtotal" t-value="sum(line.price_subtotal for line in lines)"/>
@@ -68,6 +69,8 @@
                     </tbody>
                 </t>
             </table>
+            <p style="page-break-before:always;"> </p>
+            </t>
     </xpath>
 </template>
 

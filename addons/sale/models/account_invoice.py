@@ -72,22 +72,35 @@ class AccountInvoice(models.Model):
         Returns this account invoice line classified by section with subtotal.
         Used to render the report.
         """
-        self.ensure_one()
-        result = []
         empty_line = self.env['account.invoice.line']
+        result = []
         for line in self.invoice_line_ids:
             if line.line_type == 'section':
                 result.append({
-                    'section': line.name,
+                    'section': {
+                        'name': line.name,
+                        'line_subtotal': line.line_subtotal,
+                        'line_pagebreak': line.line_pagebreak
+                    },
                     'lines': empty_line
                 })
             elif len(result):
                 result[-1]['lines'] = result[-1]['lines'] + line
             else:
-                result = [{'section': _('Uncategorized'),
-                           'lines': line,
-                           }]
-        return result
+                result = [{'section': {
+                    'name': _("Uncategorized"),
+                    'line_subtotal': line.line_subtotal,
+                    'line_pagebreak': line.line_pagebreak
+                },
+                    'lines': line,
+                }]
+        pages = []
+        for res in result:
+            if pages and not pages[-1][-1]['section']['line_pagebreak']:
+                pages[-1].append(res)
+            else:
+                pages.append([res])
+        return pages
 
     @api.multi
     def get_delivery_partner_id(self):
