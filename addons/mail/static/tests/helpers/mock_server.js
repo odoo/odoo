@@ -12,7 +12,7 @@ MockServer.include({
      * handled as a model definition.
      *
      * @override
-     * @param {Object} [data.initMessaging] 
+     * @param {Object} [data.initMessaging]
      */
     init: function (data, options) {
         if (data && data.initMessaging) {
@@ -22,6 +22,25 @@ MockServer.include({
         this._super.apply(this, arguments);
     },
 
+    /**
+     * Simulate the '/mail.channel/channel_fetch_preview' route
+     *
+     * @private
+     * @return {$.Promise<Object[]>} resolved with list of channels previews
+     */
+    _mockChannelFetchPreview: function (args) {
+        var self = this;
+        var ids = args.args[0]; // list of channel ids to fetch preview
+        var model = args.model;
+        var channels = this._getRecords(model, [['id', 'in', ids]]);
+        var previews = _.map(channels, function (channel) {
+            var maxMessageID = _.max(channel.channel_message_ids);
+            var lastMessage = self._getRecords('mail.message', [['id', '=', maxMessageID]])[0];
+            channel.last_message = lastMessage;
+            return channel;
+        });
+        return $.when(previews);
+    },
     /**
      * Simulate the '/mail/init_messaging' route
      *
@@ -72,6 +91,9 @@ MockServer.include({
         }
         if (args.method === 'channel_seen') {
             return $.when();
+        }
+        if (args.method === 'channel_fetch_preview') {
+            return this._mockChannelFetchPreview(args);
         }
         return this._super(route, args);
     },

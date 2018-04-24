@@ -3197,6 +3197,45 @@ QUnit.module('ActionManager', {
         delete core.action_registry.ClientAction;
     });
 
+    QUnit.test('web client is not deadlocked when a view crashes', function (assert) {
+        assert.expect(3);
+
+        var readOnFirstRecordDef = $.Deferred();
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.args[0][0] === 1) {
+                    return readOnFirstRecordDef;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        actionManager.doAction(3);
+
+        // open first record in form view. this will crash and will not
+        // display a form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+
+        readOnFirstRecordDef.reject("not working as intended");
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "there should still be a list view in dom");
+
+        // open another record, the read will not crash
+        actionManager.$('.o_list_view .o_data_row:eq(2)').click();
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "there should not be a list view in dom");
+
+        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
+            "there should be a form view in dom");
+
+        actionManager.destroy();
+    });
 });
 
 });

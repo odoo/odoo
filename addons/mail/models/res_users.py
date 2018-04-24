@@ -53,7 +53,10 @@ class Users(models.Model):
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        return super(Users, self).create(values)
+        user = super(Users, self).create(values)
+        # Auto-subscribe to channels
+        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
+        return user
 
     @api.multi
     def write(self, vals):

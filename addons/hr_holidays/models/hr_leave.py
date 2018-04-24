@@ -209,7 +209,7 @@ class HolidaysRequest(models.Model):
             if nholidays:
                 raise ValidationError(_('You can not have 2 leaves that overlaps on same day!'))
 
-    @api.constrains('state', 'number_of_days_temp')
+    @api.constrains('state', 'number_of_days_temp', 'holiday_status_id')
     def _check_holidays(self):
         for holiday in self:
             if holiday.holiday_type != 'employee' or not holiday.employee_id or holiday.holiday_status_id.limit:

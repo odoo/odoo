@@ -1579,7 +1579,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create a column in grouped on m2o', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var nbRPCs = 0;
         var kanban = createView({
@@ -1597,6 +1597,11 @@ QUnit.module('Views', {
                 nbRPCs++;
                 if (args.method === 'name_create') {
                     assert.ok(true, "should call name_create");
+                }
+                //Create column will call resequence to set column order
+                if (route === '/web/dataset/resequence') {
+                    assert.ok(true, "should call resequence");
+                    return $.when(true);
                 }
                 return this._super(route, args);
             },
@@ -1679,7 +1684,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(28);
+        assert.expect(29);
 
         testUtils.patch(KanbanRenderer, {
             _renderGrouped: function () {

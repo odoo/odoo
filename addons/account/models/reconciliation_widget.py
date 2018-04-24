@@ -338,6 +338,7 @@ class AccountReconciliation(models.AbstractModel):
             partner_id = is_partner and row['partner_id'] or None
             rec_prop = self._get_move_line_reconciliation_proposition(account.id, partner_id)
             row['reconciliation_proposition'] = self._prepare_move_lines(rec_prop, target_currency=currency)
+            row['company_id'] = account.company_id.id
         return rows
 
     @api.model

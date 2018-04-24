@@ -615,7 +615,14 @@ ActionManager.include({
         };
 
         var controllerDef = action.controllers[viewType];
-        if (!controllerDef) {
+        if (!controllerDef || controllerDef.state() === 'rejected') {
+            // if the controllerDef is rejected, it probably means that the js
+            // code or the requests made to the server crashed.  In that case,
+            // if we reuse the same deferred, then the switch to the view is
+            // definitely blocked.  We want to use a new controller, even though
+            // it is very likely that it will recrash again.  At least, it will
+            // give more feedback to the user, and it could happen that one
+            // record crashes, but not another.
             controllerDef = newController();
         } else {
             controllerDef = controllerDef.then(function (controller) {

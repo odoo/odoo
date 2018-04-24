@@ -278,6 +278,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'inherited_field': None,        # the corresponding inherited field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -625,7 +626,7 @@ class Field(MetaField('DummyField', (object,), {})):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
-        return self.related_field.base_field if self.inherited else self
+        return self.inherited_field.base_field if self.inherited_field else self
 
     #
     # Company-dependent fields
@@ -2540,6 +2541,7 @@ class Id(Field):
         'string': 'ID',
         'store': True,
         'readonly': True,
+        'prefetch': False,
     }
 
     def update_db(self, model, columns):

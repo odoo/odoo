@@ -108,7 +108,7 @@ body .modal {
         @include o-w-preserve-modals;
         @include o-w-preserve-tabs;
 
-        button.close {
+        &:not(.oe_mobile_preview) button.close {
             @include o-w-close-icon(12px);
             margin-right: -2px;
         }
