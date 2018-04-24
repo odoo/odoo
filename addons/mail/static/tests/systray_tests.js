@@ -221,6 +221,12 @@ QUnit.test('messaging menu widget: menu with no records', function (assert) {
     var messagingMenu = new systray.MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
             services: this.services,
+            mockRPC: function (route, args) {
+                if (args.method === 'message_fetch') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            }
         });
     messagingMenu.appendTo($('#qunit-fixture'));
     messagingMenu.$('.dropdown-toggle').click();
