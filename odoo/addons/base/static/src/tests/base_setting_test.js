@@ -8,6 +8,8 @@ var view_registry = require('web.view_registry');
 
 var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
+var createActionManager = testUtils.createActionManager;
+
 
 BaseSetting.Renderer.include({
     _getAppIconUrl: function() {
@@ -90,6 +92,60 @@ QUnit.module('base_settings_tests', {
         form.$('.searchInput').val('bx').trigger('keyup');
         assert.strictEqual(form.$('.notFound').hasClass('o_hidden'),false,"record not found message shown");
         form.destroy();
+    });
+
+    QUnit.test('settings views does not read existing id when coming back in breadcrumbs', function (assert) {
+        assert.expect(7);
+
+        var actions = [{
+            id: 1,
+            name: 'Settings view',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[1, 'form']],
+        }, {
+            id: 4,
+            name: 'Other action',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+        }];
+        var archs = {
+            'project,1,form': '<form string="Settings" js_class="base_settings">' +
+                    '<div class="app_settings_block" string="CRM" data-key="crm">' +
+                        '<button name="4" string="Execute action" type="action"/>' +
+                    '</div>' +
+                '</form>',
+            'project,2,list': '<tree><field name="foo"/></tree>',
+            'project,false,search': '<search></search>',
+        };
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(1);
+        actionManager.$('button[name="4"]').click();
+        $('.o_control_panel .breadcrumb li a').click();
+        assert.verifySteps([
+            'load_views', // initial setting action
+            'default_get', // this is a setting view => create new record
+            'create', // when we click on action button => save
+            'read', // with save, we have a reload... (not necessary actually)
+            'load_views', // for other action in breadcrumb,
+                    // with a searchread (not shown here since it is a route)
+            'default_get', // when we come back, we want to restart from scratch
+        ]);
+
+        actionManager.destroy();
     });
 });
 });
