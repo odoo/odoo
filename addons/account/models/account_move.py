@@ -102,8 +102,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', string="Partner", store=True, readonly=True)
     amount = fields.Monetary(compute='_amount_compute', store=True)
     narration = fields.Text(string='Internal Note')
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
-        default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
