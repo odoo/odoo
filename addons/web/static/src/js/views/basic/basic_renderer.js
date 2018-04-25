@@ -629,15 +629,23 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // Prepare widget rendering and save the related deferred
         var def = widget._widgetRenderAndInsert(function () {});
-        if (def.state() === 'pending') {
+        var async = def.state() === 'pending';
+        if (async) {
             this.defs.push(def);
         }
+        var $el = async ? $('<div>') : widget.$el;
 
-        // handle other attributes/modifiers
-        this._handleAttributes(widget.$el, node);
-        this._registerModifiers(node, record, widget);
-        widget.$el.addClass('o_widget');
-        return widget.$el;
+        var self = this;
+        def.then(function () {
+            self._handleAttributes(widget.$el, node);
+            self._registerModifiers(node, record, widget);
+            widget.$el.addClass('o_widget');
+            if (async) {
+                $el.replaceWith(widget.$el);
+            }
+        });
+
+        return $el;
     },
 
     /**
