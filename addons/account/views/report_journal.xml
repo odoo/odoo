@@ -31,7 +31,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Move</th>
@@ -62,7 +62,7 @@
 
                     <div class="row">
                         <div class="col-4 pull-right">
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                                 <tr>
                                     <td><strong>Total</strong></td>
                                     <td><span t-esc="sum_debit(data, o)" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>
@@ -74,7 +74,7 @@
 
                     <div class="row">
                         <div class="col-4">
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr><th colspan="3">Tax Declaration</th></tr>
                                     <tr>

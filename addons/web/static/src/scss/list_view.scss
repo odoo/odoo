@@ -5,6 +5,11 @@
     background-color: $o-view-background-color;
     margin-bottom: 0px;
 
+    // Don't understand why but without those, the list view appears broken
+    // in both form views and standalone list views.
+    border-collapse: initial;
+    border-spacing: 0;
+
     // Checkbox in editable list
     // should be clickable and activate the row
     &.o_editable_list .o_data_row:not(.o_selected_row) .o_data_cell {
@@ -98,9 +103,10 @@
             cursor: text;
             user-select: none;
             text-align: right;
-            padding-top: 0;
-            padding-bottom: 0;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
             .o_pager_previous, .o_pager_next {
+                max-height: 30px;
                 background-color: $o-list-group-header-color;
                 &:hover {
                     background-color: darken($o-list-group-header-color, 10%);
@@ -182,7 +188,7 @@
             width: 16px; // to have some space on the right
         }
         .o_input {
-            padding: $table-condensed-cell-padding;
+            padding: $table-cell-padding-sm;
             background-color: white;
 
             .o_input {

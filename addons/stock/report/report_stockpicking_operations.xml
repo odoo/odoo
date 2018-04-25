@@ -45,7 +45,7 @@
                             <br/>
                             <h1 t-field="o.name" class="mt0 pull-left"/>
                             <div class="clearfix"/>
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th t-if="o.origin"><strong>Order</strong></th>
@@ -69,7 +69,7 @@
                             </table>
                             <br/>
                             <br/>
-                            <table class="table table-condensed" t-if="o.move_line_ids">
+                            <table class="table table-sm" t-if="o.move_line_ids">
                                 <t t-set="has_barcode" t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
                                 <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
                                 <thead>
@@ -135,7 +135,7 @@
                                     </t>
                                   </tbody>
                             </table>
-                            <table class="table table-condensed" t-if="o.package_level_ids and o.picking_type_entire_packs">
+                            <table class="table table-sm" t-if="o.package_level_ids and o.picking_type_entire_packs">
                                 <thead>
                                     <tr>
                                         <th width="25%">Package</th>

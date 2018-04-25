@@ -347,7 +347,7 @@ QUnit.module('Views', {
             'There should be two modals');
 
         var $second_modal = $modals.not($modal);
-        $second_modal.find('.o_list_view.table.table-condensed.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]').click();
+        $second_modal.find('.o_list_view.table.table-sm.table-striped.o_list_view_ungrouped .o_data_row input[type=checkbox]').click();
 
         $second_modal.find('.o_select_button').click();
 

@@ -77,7 +77,7 @@
 
     <!-- Result for free_text,textbox and date -->
     <template id="result_text" name="Text Result">
-        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
             <thead>
                 <tr>
                     <th>#</th>
@@ -112,7 +112,7 @@
     <!-- Result for comments -->
     <template id="result_comments" name="Text Result">
         <!-- a 'comments' variable must be set an must contain a list of browse records of user input lines -->
-        <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+        <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
             <thead>
                 <tr>
                     <th>#</th>
@@ -162,7 +162,7 @@
                     <svg style="height:20em"></svg>
                 </div>
                 <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                    <table class="table table-hover table-condensed">
+                    <table class="table table-hover table-sm">
                         <thead>
                             <tr>
                                 <th>Answer Choices</th>
@@ -219,7 +219,7 @@
                 <svg style="height:20em"></svg>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-condensed text-right">
+                <table class="table table-hover table-sm text-right">
                     <thead>
                         <tr>
                             <th></th>
@@ -277,7 +277,7 @@
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active with-3d-shadow with-transitions" t-att-id="'most_common_%d' % question.id">
-                <table class="table table-hover table-condensed">
+                <table class="table table-hover table-sm">
                      <thead>
                          <tr>
                              <th>User Responses</th>
@@ -297,7 +297,7 @@
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'data_question_%d' % question.id">
-                <table class="table table-hover table-condensed" t-att-id="'table_question_%d' % question.id">
+                <table class="table table-hover table-sm" t-att-id="'table_question_%d' % question.id">
                     <thead>
                         <tr>
                             <th>#</th>

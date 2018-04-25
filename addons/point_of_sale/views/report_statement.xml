@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -64,7 +64,7 @@
 
                     <div class="row">
                         <div class="col-4 pull-right">
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                                 <tr class="border-black">
                                     <td><strong>Total</strong></td>
                                     <td class="text-right"><span t-esc="sum([line.amount for line in o.line_ids])" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/></td>

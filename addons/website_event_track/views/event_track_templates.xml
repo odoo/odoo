@@ -59,7 +59,7 @@
                 <span t-field="tracks_by_days[day][0].date" t-field-options="{'widget': 'date'}"/>
                 <small><t t-esc="len(tracks_by_days[day])"/> talks</small>
             </h3>
-            <table id="table_search" class="table table-bordered table-condensed">
+            <table id="table_search" class="table table-bordered table-sm">
             <tr>
                 <th/>
                 <t t-foreach="locations.keys()" t-as="location">
