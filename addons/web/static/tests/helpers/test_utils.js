@@ -313,12 +313,14 @@ function addMockEnvironment(widget, params) {
         var url = window.location.href + separator + 'testId=' + QUnit.config.current.testId;
         console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
     }
+
     var mockServer = new Server(params.data, {
         actions: params.actions,
         archs: params.archs,
         currentDate: params.currentDate,
         debug: params.debug,
         services: params.services,
+        widget: widget,
     });
 
     // make sure images do not trigger a GET on the server
@@ -424,23 +426,6 @@ function addMockEnvironment(widget, params) {
         ev.data.callback(result);
     });
 
-    // Deploy services
-    var done = false;
-    while (!done) {
-        var serviceName = _.findKey(params.services, function (Service) {
-            return !_.some(Service.prototype.dependencies, function (depName) {
-                return !_.has(services, depName);
-            });
-        });
-        if (serviceName) {
-            var service = services[serviceName] = new params.services[serviceName](widget);
-            delete params.services[serviceName];
-            service.start();
-        } else {
-            done = true;
-        }
-    }
-
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {
             kwargs: {
@@ -471,7 +456,7 @@ function addMockEnvironment(widget, params) {
     });
 
     intercept(widget, "get_session", function (event) {
-        event.data.callback(params.session || session);
+        event.data.callback(session);
     });
 
     intercept(widget, "load_filters", function (event) {
@@ -486,6 +471,34 @@ function addMockEnvironment(widget, params) {
         _.each(params.intercepts, function (cb, name) {
             intercept(widget, name, cb);
         });
+    }
+
+    // Deploy services
+    var done = false;
+    var servicesToDeploy = _.clone(params.services);
+    while (!done) {
+        var serviceName = _.findKey(servicesToDeploy, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
+        });
+        if (serviceName) {
+            var Service = servicesToDeploy[serviceName];
+            var service = services[serviceName] = new Service(widget);
+            delete servicesToDeploy[serviceName];
+
+            intercept(service, "get_session", function (event) {
+                event.data.callback(session);
+            });
+
+            service.start();
+        } else {
+            var serviceNames = _.keys(servicesToDeploy);
+            if (serviceNames.length) {
+                console.warn("Non loaded services:", serviceNames);
+            }
+            done = true;
+        }
     }
 
     return mockServer;
