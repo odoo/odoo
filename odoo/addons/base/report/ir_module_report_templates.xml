@@ -47,7 +47,7 @@
                             <span t-field="dependency_id.name"/> - <span t-field="dependency_id.module_id.state"/>
                         </div>
 
-                        <table t-foreach="findobj(o)" t-as="obj" class="table table-condensed mt16 mb32">
+                        <table t-foreach="findobj(o)" t-as="obj" class="table table-sm mt16 mb32">
                             <tr>
                                 <th colspan="2">Object: <span t-esc="obj.model"/></th>
                             </tr>

@@ -9,7 +9,7 @@ var QWeb = core.qweb;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
-    className: 'table-hover table-condensed table-bordered',
+    className: 'table-hover table-sm table-bordered',
     events: _.extend({}, AbstractRenderer.prototype.events, {
         'hover td': '_onTdHover',
     }),

@@ -49,7 +49,7 @@
                             <t t-if="o.state == 'done'">Operations Done</t>
                             <t t-else="">Operations Planned</t>
                         </h3>
-                        <table class="table table-condensed">
+                        <table class="table table-sm">
                             <tr>
                                 <th><strong>Operation</strong></th>
                                 <th><strong>WorkCenter</strong></th>
@@ -75,7 +75,7 @@
                         </t>
                     </h3>
 
-                    <table class="table table-condensed" t-if="o.move_raw_ids">
+                    <table class="table table-sm" t-if="o.move_raw_ids">
                         <t t-set="has_location" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.location_id.id)))" groups="stock.group_stock_multi_locations"/>
                         <t t-set="has_serial_number" t-value="any(o.move_raw_ids.filtered(lambda x: x.move_line_ids.filtered(lambda x: x.lot_id or x.lot_name)))" groups="stock.group_production_lot"/>
                         <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>

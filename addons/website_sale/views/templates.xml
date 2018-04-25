@@ -815,7 +815,7 @@
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="js_cart_lines alert alert-info">
           Your cart is empty!
         </div>
-        <table class="mb16 table table-striped table-condensed js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+        <table class="mb16 table table-striped table-sm js_cart_lines" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
             <thead>
                 <tr>
                     <th class="td-img">Product</th>
@@ -972,7 +972,7 @@
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" customize_show="True" name="Alternative Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
-            <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-condensed">
+            <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
                 <tbody>
                     <tr t-foreach="suggested_products" t-as="product">
                         <td class='td-img'>
@@ -1393,7 +1393,7 @@
                   Your cart is empty!
                 </div>
                 <div class='toggle_summary_div d-none d-xl-block'>
-                    <table class="table table-striped table-condensed col-lg-12" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
+                    <table class="table table-striped table-sm col-lg-12" id="cart_products" t-if="website_sale_order and website_sale_order.website_order_line">
                         <thead>
                             <tr>
                                 <th class='td-img'>Product</th>
