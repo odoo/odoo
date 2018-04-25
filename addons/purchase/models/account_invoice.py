@@ -4,16 +4,14 @@
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
 
-from odoo.exceptions import UserError
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
-
     purchase_id = fields.Many2one(
         comodel_name='purchase.order',
         string='Add Purchase Order',
         readonly=True, states={'draft': [('readonly', False)]},
-        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.'
+        help='Load the vendor bill based on selected purchase order. Several PO can be selected.'
     )
 
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
@@ -29,7 +27,7 @@ class AccountInvoice(models.Model):
         purchase_ids = self.invoice_line_ids.mapped('purchase_id').filtered(lambda r: r.order_line <= purchase_line_ids)
 
         result['domain'] = {'purchase_id': [
-            ('invoice_status', '=', 'to invoice'),
+            ('invoice_status', 'in', ['to invoice', 'no']),
             ('partner_id', 'child_of', self.partner_id.id),
             ('id', 'not in', purchase_ids.ids),
             ]}
@@ -48,7 +46,7 @@ class AccountInvoice(models.Model):
         date = self.date_invoice
         data = {
             'purchase_line_id': line.id,
-            'name': line.order_id.name+': '+line.name,
+            'name': line.order_id.name + ': ' + line.name,
             'origin': line.order_id.origin,
             'uom_id': line.product_uom.id,
             'product_id': line.product_id.id,
@@ -243,7 +241,7 @@ class AccountInvoice(models.Model):
         invoice = super(AccountInvoice, self).create(vals)
         purchase = invoice.invoice_line_ids.mapped('purchase_line_id.order_id')
         if purchase and not invoice.refund_invoice_id:
-            message = _("This vendor bill has been created from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
+            message = _("This vendor bill has been created from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id=" + str(order.id) + ">" + order.name + "</a>" for order in purchase]))
             invoice.message_post(body=message)
         return invoice
 
@@ -257,7 +255,7 @@ class AccountInvoice(models.Model):
             #To get all po reference when updating invoice line or adding purchase order reference from vendor bill.
             purchase = (purchase_old | purchase_new) - (purchase_old & purchase_new)
             if purchase:
-                message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id="+str(order.id)+">"+order.name+"</a>" for order in purchase]))
+                message = _("This vendor bill has been modified from: %s") % (",".join(["<a href=# data-oe-model=purchase.order data-oe-id=" + str(order.id) + ">" + order.name + "</a>" for order in purchase]))
                 invoice.message_post(body=message)
         return result
 

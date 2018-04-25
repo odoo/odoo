@@ -286,6 +286,8 @@ class AccountInvoice(models.Model):
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
+    vendor_bill_id = fields.Many2one('account.invoice', string='Vendor Bill',
+        help="Auto-complete from a past bill.")
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
         readonly=True, states={'draft': [('readonly', False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
@@ -371,6 +373,20 @@ class AccountInvoice(models.Model):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    # Load all Vendor Bill lines
+    @api.onchange('vendor_bill_id')
+    def _onchange_vendor_bill(self):
+        if not self.vendor_bill_id:
+            return {}
+        self.currency_id = self.vendor_bill_id.currency_id
+        new_lines = self.env['account.invoice.line']
+        for line in self.vendor_bill_id.invoice_line_ids:
+            new_lines += new_lines.new(line._prepare_invoice_line())
+        self.invoice_line_ids += new_lines
+        self.payment_term_id = self.vendor_bill_id.payment_term_id
+        self.vendor_bill_id = False
+        return {}
 
     def _get_seq_number_next_stuff(self):
         self.ensure_one()
@@ -1654,6 +1670,23 @@ class AccountInvoiceLine(models.Model):
         if self.filtered(lambda r: r.invoice_id and r.invoice_id.state != 'draft'):
             raise UserError(_('You can only delete an invoice line if the invoice is in draft state.'))
         return super(AccountInvoiceLine, self).unlink()
+
+    def _prepare_invoice_line(self):
+        data = {
+            'name': self.name,
+            'origin': self.origin,
+            'uom_id': self.uom_id.id,
+            'product_id': self.product_id.id,
+            'account_id': self.account_id.id,
+            'price_unit': self.price_unit,
+            'quantity': self.quantity,
+            'discount': self.discount,
+            'account_analytic_id': self.account_analytic_id.id,
+            'analytic_tag_ids': self.analytic_tag_ids.ids,
+            'invoice_line_tax_ids': self.invoice_line_tax_ids.ids
+        }
+        return data
+
 
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"

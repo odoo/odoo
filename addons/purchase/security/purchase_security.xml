@@ -69,5 +69,11 @@
         <field name="domain_force">['|',('order_id.message_partner_ids','child_of',[user.commercial_partner_id.id]),('order_id.partner_id','child_of',[user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+    <record model="ir.rule" id="purchase_bill_union_comp_rule">
+        <field name="name">Purchases &amp; Bills Union multi-company</field>
+        <field name="model_id" ref="model_purchase_bill_union"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
 </data>
 </odoo>
