@@ -43,6 +43,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'views/assets.xml',
         'views/res_config_settings_views.xml',
         'views/account_journal_dashboard.xml',
+        'views/res_users_views.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
     'installable': True,

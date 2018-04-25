@@ -230,6 +230,32 @@ class Users(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True)
     email = fields.Char(related='partner_id.email', inherited=True)
 
+    group_base_user = fields.Selection(
+        selection=lambda self: self._get_group_selection('base.module_category_user_type'),
+        string="User type", compute='_compute_groups_id', inverse='_inverse_groups_id',
+        category_xml_id='base.module_category_user_type')
+
+    group_administration_user = fields.Selection(
+        selection=lambda self: self._get_group_selection('base.module_category_administration'),
+        string="Administration", compute='_compute_groups_id', inverse='_inverse_groups_id',
+        category_xml_id='base.module_category_administration')
+
+    has_group_multi_company = fields.Boolean(
+        'Multi Companies', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='base.group_multi_company')
+
+    has_group_multi_currency = fields.Boolean(
+        'Multi Currencies', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='base.group_multi_currency')
+
+    has_group_no_one = fields.Boolean(
+        'Technical Features', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='base.group_no_one')
+
+    has_group_partner_manager = fields.Boolean(
+        'Contact Creation', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='base.group_partner_manager')
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
@@ -330,6 +356,7 @@ class Users(models.Model):
 
     @api.model
     def create(self, vals):
+        # import pudb; pudb.set_trace()
         user = super(Users, self).create(vals)
         user.partner_id.active = user.active
         if user.partner_id.company_id:
@@ -766,6 +793,7 @@ class GroupsImplied(models.Model):
     @api.multi
     def write(self, values):
         res = super(GroupsImplied, self).write(values)
+
         if values.get('users') or values.get('implied_ids'):
             # add all implied groups (to all users of each group)
             for group in self:

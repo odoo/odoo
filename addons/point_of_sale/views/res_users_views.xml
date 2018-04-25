@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="res_users_form_view" model="ir.ui.view">
+    <record id="res_users_view_form" model="ir.ui.view">
         <field name="name">res.users.form.view</field>
         <field name="model">res.users</field>
-        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">130</field>
         <field name="arch" type="xml">
+            <group name="applications" position="inside">
+                <field name='group_point_of_sale_user'/>
+            </group>
             <notebook position="inside">
                 <page string="Point of Sale">
                     <group>
