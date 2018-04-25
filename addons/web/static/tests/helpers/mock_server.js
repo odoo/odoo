@@ -110,7 +110,9 @@ var MockServer = Class.extend({
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
             args = JSON.parse(JSON.stringify(args));
         }
-        return this._performRpc(route, args).then(function (result) {
+        var def = this._performRpc(route, args);
+        var abort = def.abort;
+        def = def.then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (debug) {
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
@@ -123,6 +125,8 @@ var MockServer = Class.extend({
             }
             return $.Deferred().reject(errorString, event || $.Event());
         });
+        def.abort = abort;
+        return def;
     },
 
     //--------------------------------------------------------------------------
