@@ -964,6 +964,7 @@ var StatementModel = BasicModel.extend({
         var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
+        var amount = values.amount !== undefined ? values.amount : line.balance.amount;
         var prop = {
             'id': _.uniqueId('createLine'),
             'label': values.label || line.st_line.name,
@@ -975,8 +976,7 @@ var StatementModel = BasicModel.extend({
             'debit': 0,
             'credit': 0,
             'base_amount': values.amount_type !== "percentage" ?
-                (values.amount || line.balance.amount) :
-                line.balance.amount * values.amount / 100,
+                (amount) : line.balance.amount * values.amount / 100,
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,
