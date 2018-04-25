@@ -622,7 +622,7 @@ var FieldMonetary = InputField.extend({
         this.$el.empty();
 
         // Prepare and add the input
-        this._prepareInput().appendTo(this.$el);
+        this._prepareInput(this.$input).appendTo(this.$el);
 
         if (this.currency) {
             // Prepare and add the currency symbol
