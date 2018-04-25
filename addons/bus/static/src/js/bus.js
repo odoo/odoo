@@ -53,6 +53,7 @@ bus.Bus = Widget.extend({
     },
     destroy: function () {
         var self = this;
+        this.stop_polling();
         $(window).off("focus." + this.bus_id);
         $(window).off("blur." + this.bus_id);
         $(window).off("unload." + this.bus_id);
@@ -70,6 +71,9 @@ bus.Bus = Widget.extend({
         this.activated = false;
         this.stop = true;
         this.channels = [];
+        if (this._pollRpc) {
+            this._pollRpc.abort();
+        }
     },
     poll: function () {
         var self = this;
@@ -89,7 +93,7 @@ bus.Bus = Widget.extend({
         this._pollRpc.then(function (result) {
             self._pollRpc = false;
             self.on_notification(result);
-            if (!self.stop) {
+            if (!self.stop && self.activated) {
                 self.poll();
             }
         }, function (error, event) {
