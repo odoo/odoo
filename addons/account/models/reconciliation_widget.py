@@ -471,6 +471,10 @@ class AccountReconciliation(models.AbstractModel):
             ])
         # filter on account.move.line having the same company as the statement line
         domain = expression.AND([domain, [('company_id', '=', st_line.company_id.id)]])
+
+        if st_line.company_id.account_bank_reconciliation_start:
+            domain = expression.AND([domain, [('date', '>=', st_line.company_id.account_bank_reconciliation_start)]])
+
         return domain
 
     @api.model
@@ -648,19 +652,25 @@ class AccountReconciliation(models.AbstractModel):
         st_line_currency = st_line.currency_id or st_line.journal_id.currency_id
         currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
+
         params = {'company_id': st_line.company_id.id,
                     'account_payable_receivable': (st_line.journal_id.default_credit_account_id.id, st_line.journal_id.default_debit_account_id.id),
                     'amount': float_repr(float_round(amount, precision_digits=precision), precision_digits=precision),
                     'partner_id': st_line.partner_id.id,
                     'excluded_ids': tuple(excluded_ids),
                     'ref': st_line.name,
+                    'bank_rec_threshold': st_line.journal_id.company_id.account_bank_reconciliation_start,
                     }
+
         # Look for structured communication match
         if st_line.name:
             add_to_select = ", CASE WHEN aml.ref = %(ref)s THEN 1 ELSE 2 END as temp_field_order "
             add_to_from = " JOIN account_move m ON m.id = aml.move_id "
             select_clause, from_clause, where_clause = st_line._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, split=True)
             sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause
+
+            if params['bank_rec_threshold']:
+                sql_query += "AND aml.date > %(bank_rec_threshold)s"
             sql_query += " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
                     ORDER BY temp_field_order, date_maturity desc, aml.id desc"
             self.env.cr.execute(sql_query, params)
@@ -673,8 +683,10 @@ class AccountReconciliation(models.AbstractModel):
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = st_line._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + ")) \
-                ORDER BY date_maturity desc, aml.id desc LIMIT 1"
+                " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + "))"
+        if params['bank_rec_threshold']:
+            sql_query += "AND aml.date > %(bank_rec_threshold)s "
+        sql_query += "ORDER BY date_maturity desc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
         if results:
