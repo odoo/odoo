@@ -487,9 +487,9 @@ class PosOrder(models.Model):
             order.amount_paid = sum(payment.amount for payment in order.statement_ids)
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.statement_ids)
             if order.session_id.config_id.company_id.tax_calculation_rounding_method == 'round_globally':
-                order.amount_tax =  self._amount_tax_by_id(order)
+                order.amount_tax = self._amount_tax_by_id(order)
             else:
-                currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
+                order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
             order.amount_total = order.amount_tax + amount_untaxed
 
