@@ -3842,6 +3842,10 @@ var BasicModel = AbstractModel.extend({
                     var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
                     _.each(emptyGroupsIDs, function (groupID) {
                         list.data.push(groupID);
+                        var emptyGroup = self.localData[groupID];
+                        // this attribute hasn't been updated in the previous
+                        // loop for empty groups
+                        emptyGroup.aggregateValues = {};
                     });
                 }
                 return $.when.apply($, defs).then(function () {
