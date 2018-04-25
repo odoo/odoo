@@ -346,7 +346,9 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
 
         return deferred.then(function () {
             if (aborted) {
-                return $.Deferred().reject('communication', $.Event(), 'abort', 'abort');
+                var def = $.Deferred().reject('communication', $.Event(), 'abort', 'abort');
+                def.abort = function () {};
+                return def;
             }
             // TODO: remove
             if (! _.isString(url)) {
