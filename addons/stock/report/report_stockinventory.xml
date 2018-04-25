@@ -8,7 +8,7 @@
                         <div class="page">
                             <h2>Stock Inventory</h2>
 
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                             <thead>
                                 <tr>
                                     <th><strong>Inventory</strong></th>
@@ -28,7 +28,7 @@
                             </table>
 
                             <t t-set="locations" t-value="o.line_ids.mapped('location_id')"/>
-                            <table class="table table-condensed">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th groups="stock.group_stock_multi_locations"><strong>Location</strong></th>
@@ -60,7 +60,7 @@
                             <t t-if="o.filter == 'product' and o.product_id">
                               <div class="row">
                                 <div class="col-4 pull-right">
-                                     <table class="table table-condensed">
+                                     <table class="table table-sm">
                                         <tr class="border-black">
                                             <td><strong>Total Quantity</strong></td>
                                             <td class="text-right">

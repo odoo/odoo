@@ -21,7 +21,7 @@
                     <h2>
                         <span t-field="o.name"/>
                     </h2>
-                    <table class="table table-condensed">
+                    <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th t-if="o.origin"><strong>Order</strong></th>
@@ -46,7 +46,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="o.state!='done'">
+                    <table class="table table-sm mt48" t-if="o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -64,7 +64,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state=='done'">
+                    <table class="table table-sm mt48" t-if="o.move_line_ids and o.state=='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>

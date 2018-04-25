@@ -23,7 +23,7 @@
                         </div>
                     </div>
 
-                    <table class="table table-condensed" t-if="data['debit_credit'] == 1">
+                    <table class="table table-sm" t-if="data['debit_credit'] == 1">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -56,7 +56,7 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-condensed" t-if="not data['enable_filter'] and not data['debit_credit']">
+                    <table class="table table-sm" t-if="not data['enable_filter'] and not data['debit_credit']">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -79,7 +79,7 @@
                         </tbody>
                     </table>
 
-                    <table class="table table-condensed" t-if="data['enable_filter'] == 1 and not data['debit_credit']">
+                    <table class="table table-sm" t-if="data['enable_filter'] == 1 and not data['debit_credit']">
                         <thead>
                             <tr>
                                 <th>Name</th>
