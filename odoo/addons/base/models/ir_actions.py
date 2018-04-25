@@ -498,8 +498,8 @@ class IrActionsServer(models.Model):
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
-        record = None
-        records = None
+        record = model
+        records = model
         if self._context.get('active_model') == model_name and self._context.get('active_id'):
             record = model.browse(self._context['active_id'])
         if self._context.get('active_model') == model_name and self._context.get('active_ids'):
