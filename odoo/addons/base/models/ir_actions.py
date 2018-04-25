@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools import pycompat
+from odoo.tools import float_round, float_is_zero, float_compare
 from odoo.http import request
 
 import base64
@@ -79,6 +80,9 @@ class IrActions(models.Model):
             'timezone': timezone,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
+            'float_round': float_round,
+            'float_is_zero': float_is_zero,
+            'float_compare': float_compare,
         }
 
     @api.model
@@ -332,6 +336,7 @@ class IrActionsServer(models.Model):
 #  - record: record on which the action is triggered; may be be void
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
+#  - float_round, float_is_zero, float_compare: useful floating number helpers
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
 # To return an action, assign: action = {...}\n\n\n\n"""
