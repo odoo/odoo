@@ -13,6 +13,7 @@ _logger = logging.getLogger(__name__)
 try:
     import stdnum.eu.vat as stdnum_vat
     if not hasattr(stdnum_vat, "country_codes"):
+        # stdnum version >= 1.9
         stdnum_vat.country_codes = stdnum_vat._country_codes
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
