@@ -238,7 +238,7 @@
                         <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}"/>
                         <label string="Credit Note " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}"/>
                         <h1 class="mt0">
-                            <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="number" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                                 <field name="sequence_number_next_prefix" class="oe_inline"/>
                                 <field name="sequence_number_next" class="oe_inline"/>
@@ -252,6 +252,10 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
+                            <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
+                              domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','paid')), ('type','=','in_invoice')]"
+                              string="Auto-Complete" placeholder="Select an old vendor bill"
+                              options="{'no_create': True}" context="{'show_total_amount': True}"/>
                         </group>
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
