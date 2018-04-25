@@ -65,7 +65,7 @@
         width: 76%;
         height: $font-size-sm;
         margin-bottom: 0;
-        background-color: $gray-lighter-dark;
+        background-color: gray('300');
         box-shadow: none;
 
         .progress-bar {
@@ -112,9 +112,9 @@
 }
 
 .o_kanban_view .o_kanban_group {
-    @include o-kanban-css-filter(success, $brand-success);
-    @include o-kanban-css-filter(warning, $brand-warning);
-    @include o-kanban-css-filter(danger, $brand-danger);
+    @include o-kanban-css-filter(success, theme-color('success'));
+    @include o-kanban-css-filter(warning, theme-color('warning'));
+    @include o-kanban-css-filter(danger, theme-color('danger'));
 
     &.o_kanban_group_show {
         display: flex;

@@ -243,21 +243,21 @@ a.o_underline {
 @include o-create-color-btn-classes(delta, $color-delta);
 @include o-create-color-btn-classes(epsilon, $color-epsilon);
 
-// Create classes for UI colors
-@include o-create-color-classes(primary, $brand-primary);
-@include o-create-color-classes(success, $state-success-bg, $content-color: $state-success-text);
-@include o-create-color-classes(info, $state-info-bg, $content-color: $state-info-text);
-@include o-create-color-classes(warning, $state-warning-bg, $content-color: $state-warning-text);
-@include o-create-color-classes(danger, $state-danger-bg, $content-color: $state-danger-text);
+// Create classes for UI colors // FIXME
+@include o-create-color-classes(primary, theme-color('primary'));
+// @include o-create-color-classes(success, $state-success-bg, $content-color: $state-success-text);
+// @include o-create-color-classes(info, $state-info-bg, $content-color: $state-info-text);
+// @include o-create-color-classes(warning, $state-warning-bg, $content-color: $state-warning-text);
+// @include o-create-color-classes(danger, $state-danger-bg, $content-color: $state-danger-text);
 
 // Create classes for greyscale colors
-@include o-create-color-classes('black', $gray-base);
-@include o-create-color-classes('gray-darker', $gray-darker);
-@include o-create-color-classes('gray-dark', $gray-dark);
-@include o-create-color-classes('gray', $gray);
-@include o-create-color-classes('gray-light', $gray-light);
-@include o-create-color-classes('gray-lighter', $gray-lighter);
-@include o-create-color-classes('white', $gray-white);
+@include o-create-color-classes('black', $black);
+@include o-create-color-classes('gray-darker', gray('900')); // FIXME
+@include o-create-color-classes('gray-dark', gray('900'));
+@include o-create-color-classes('gray', gray('700'));
+@include o-create-color-classes('gray-light', gray('600'));
+@include o-create-color-classes('gray-lighter', gray('200'));
+@include o-create-color-classes('white', $white);
 
 // Create classes for greyscale transparent colours
 @include o-create-color-classes('black-25', $color-black-25);

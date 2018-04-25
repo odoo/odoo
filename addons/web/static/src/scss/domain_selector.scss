@@ -35,7 +35,7 @@
                     padding-left: 5px;
 
                     &:hover {
-                        color: $brand-danger;
+                        color: theme-color('danger');
                     }
                 }
             }
@@ -74,7 +74,7 @@
                 display: block;
                 margin-top: 16px;
                 padding: 8px 10px 12px;
-                background: $gray-dark;
+                background: gray('900');
                 color: rgba(white, 0.5);
                 font-family: monospace;
                 font-weight: normal;
@@ -172,7 +172,7 @@
         display: block;
         height: $o-domain-animation-bar-height;
         max-height: 0;
-        background-image: linear-gradient(45deg, rgba($o-brand-optional, 0.4), rgba($o-brand-optional, 0.1));
+        background-image: linear-gradient(45deg, rgba($o-brand-primary, 0.4), rgba($o-brand-primary, 0.1));
         transition: max-height .05s ease .05s;
     }
 

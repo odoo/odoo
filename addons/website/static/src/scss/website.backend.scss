@@ -15,7 +15,7 @@
             h2, h4 {
                 text-transform: uppercase;
                 margin-top: 0;
-                color: $o-brand-primary;
+                color: $o-brand-odoo;
             }
 
             h4 { margin: 0 0 0 8px; }
@@ -86,10 +86,10 @@
                         .nv-series-0 {
                             stroke-width: 3 !important;
                             .nv-point {
-                                stroke: $o-brand-optional;
+                                stroke: $o-brand-primary;
                                 stroke-opacity: 1 !important;
                                 &.hover {
-                                    stroke: darken($o-brand-optional, 10%);
+                                    stroke: darken($o-brand-primary, 10%);
                                 }
                             }
                         }
@@ -107,14 +107,14 @@
 
                 .nvtooltip {
                     border-radius: 0;
-                    border: 1px solid $gray-lighter;
+                    border: 1px solid gray('200');
                     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
                     .legend-color-guide > div {
                         border: none;
                     }
                     tr:first-child .legend-color-guide > div {
-                        background-color: $o-brand-optional !important;
+                        background-color: $o-brand-primary !important;
                     }
                     tr:last-child .legend-color-guide > div {
                         background-color: darken($o-brand-lightsecondary, 10%) !important;
@@ -148,15 +148,15 @@
                 white-space: nowrap;
                 cursor: pointer;
                 color: white;
-                background-color: $o-brand-optional;
-                    &:hover {
-                        background-color: darken($o-brand-optional, 10%);
-                    }
-                &.o_primary {
-                    background-color: $o-brand-primary;
-                    color: white;
+                background-color: $o-brand-primary;
                     &:hover {
                         background-color: darken($o-brand-primary, 10%);
+                    }
+                &.o_primary {
+                    background-color: $o-brand-odoo;
+                    color: white;
+                    &:hover {
+                        background-color: darken($o-brand-odoo, 10%);
                     }
                 }
                 .o_highlight {
@@ -167,7 +167,7 @@
 
         .o_graph_sales {
             .o_legend0 {
-                background-color: $o-brand-optional;
+                background-color: $o-brand-primary;
             }
             .o_legend1 {
                 background-color: $o-main-color-muted;
@@ -226,7 +226,7 @@
                 float: right;
                 top: -60px;
                 right: 10px;
-                border: 1px solid $gray-lighter;
+                border: 1px solid gray('200');
                 font-weight: 300;
                 white-space: nowrap;
                 padding: .5em 1.5em;
@@ -249,17 +249,17 @@
 
             @keyframes increase {
               10% {
-                background-color: lighten($o-brand-optional, 30%);
-                border-color: $o-brand-optional;
-                color: $o-brand-optional;
+                background-color: lighten($o-brand-primary, 30%);
+                border-color: $o-brand-primary;
+                color: $o-brand-primary;
               }
             }
 
             @keyframes decrease {
               10% {
-                background-color: lighten($o-brand-optional, 30%);
-                border-color: $o-brand-optional;
-                color: $o-brand-optional;
+                background-color: lighten($o-brand-primary, 30%);
+                border-color: $o-brand-primary;
+                color: $o-brand-primary;
               }
             }
         }

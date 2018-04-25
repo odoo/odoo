@@ -18,7 +18,7 @@
     display: flex;
     margin: 1px 0;
     border-top: none;
-    background: $gray-lighter;
+    background: gray('200');
 
     .o_composer, .o_composer_subject {
         position: relative;
@@ -69,15 +69,15 @@
         }
         @include media-breakpoint-down(sm) {
             .o_composer_button_send {
-                color: $o-brand-optional;
+                color: $o-brand-primary;
             }
         }
 
         .o_mail_emoji_container {
             padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
-            border: 1px solid $gray-lighter-dark;
+            border: 1px solid gray('300');
             border-width: 1px 0 0 0;
-            background-color: $gray-lighter;
+            background-color: gray('200');
 
             .o_mail_emoji {
                 margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
@@ -92,7 +92,7 @@
     &:not(.o_chat_mini_composer) {
         padding:  $o-mail-thread-avatar-size*0.5;
         padding-left: $grid-gutter-width*0.5 + $o-mail-thread-avatar-size + $o-mail-chatter-gap;
-        border: 1px solid $gray-lighter-dark;
+        border: 1px solid gray('300');
         border-top: none;
 
         .o_chatter_avatar {
@@ -120,7 +120,7 @@
         }
 
         .o_composer, .o_composer_subject {
-            border: 1px solid $gray-lighter-dark;
+            border: 1px solid gray('300');
 
             textarea, input {
                 padding: 0 0 $o-mail-chatter-gap;
@@ -133,7 +133,7 @@
         }
 
         .o_chatter_composer_tools {
-            border-top: 1px solid $gray-lighter-dark;
+            border-top: 1px solid gray('300');
         }
 
         &:not(.o_chat_inline_composer) {
@@ -182,7 +182,7 @@
 
             .o_chatter_composer_tools {
                 border: none;
-                border-left: 1px solid $gray-lighter-dark;
+                border-left: 1px solid gray('300');
                 padding-left: $o-mail-chatter-gap*0.5;
                 transform: translateY(-$o-mail-chatter-gap*0.5);
             }
@@ -191,7 +191,7 @@
                 border-radius: 0 3px 3px 0;
                 // Make the button appear as the same size as the subject input
                 padding: 10px $input-btn-padding-x;
-                border: 1px solid darken($o-brand-optional, 5%);
+                border: 1px solid darken($o-brand-primary, 5%);
                 border-left-width: 0;
             }
         }
@@ -200,7 +200,7 @@
     // Mini-composer enabled
     &.o_chat_mini_composer {
         .o_composer_container {
-            border-top: 1px solid $gray-lighter-dark;
+            border-top: 1px solid gray('300');
             width: 100%;
         }
         .o_composer {
@@ -318,7 +318,7 @@ $o-mail-attachment-margin: 5px;
     }
 
     .o_attachment_delete {
-        background: desaturate($brand-primary, 50%);
+        background: desaturate(theme-color('primary'), 50%);
         color: white;
         cursor: pointer;
         font-size: 20px;
@@ -326,7 +326,7 @@ $o-mail-attachment-margin: 5px;
         transition: all 0.3s ease 0s;
 
         &:hover {
-            background: $brand-primary;
+            background: theme-color('primary');
         }
     }
 
@@ -371,7 +371,7 @@ $o-mail-attachment-margin: 5px;
         .o_attachment_wrap {
             padding: 0;
             border-radius: 2px;
-            border: 1px solid $gray-lighter-darker;
+            border: 1px solid gray('400');
         }
 
         .o_image_box {
@@ -415,7 +415,7 @@ $o-mail-attachment-margin: 5px;
 
 @mixin o-viewer-black-btn {
     background-color: rgba(black, 0.4);
-    color: rgba($gray-lighter, 0.7);
+    color: rgba(gray('200'), 0.7);
 
     &:hover {
         background-color: rgba(black, 0.6);
@@ -423,7 +423,7 @@ $o-mail-attachment-margin: 5px;
     }
 
     &.disabled {
-        color: $gray-light;
+        color: gray('600');
         background: none;
     }
 }
@@ -444,7 +444,7 @@ $o-mail-attachment-margin: 5px;
             color: #FFFFFF;
 
             a {
-                @include o-hover-text-color(rgba($gray-lighter, 0.6), white);
+                @include o-hover-text-color(rgba(gray('200'), 0.6), white);
             }
 
             .o_close_btn {

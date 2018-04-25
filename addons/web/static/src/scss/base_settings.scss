@@ -41,15 +41,15 @@
                     height: 28px;
                     padding: 0px;
                     border: 0px;
-                    border-bottom: 1px solid $gray-lighter-darker;
-                    border-color: $gray;
+                    border-bottom: 1px solid gray('400');
+                    border-color: gray('700');
                     box-shadow: none;
                     font-weight: 500;
                 }
 
                 .searchIcon {
                     @include o-position-absolute(4px, 0);
-                    color: $gray;
+                    color: gray('700');
                 }
             }
         }
@@ -83,7 +83,7 @@
             display: flex;
             flex: 0 0 auto;
             flex-flow: column nowrap;
-            background: $gray-dark;
+            background: gray('900');
             overflow: auto;
             padding-top: $o-horizontal-padding*0.5;
 
@@ -96,8 +96,8 @@
             }
 
             .selected {
-                background-color: $gray-darker;
-                box-shadow: inset 3px 0 0 $o-brand-optional;
+                background-color: gray('900');
+                box-shadow: inset 3px 0 0 $o-brand-primary;
 
                 .app_name {
                     color: white;
@@ -108,7 +108,7 @@
                 display: flex;
                 padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
                 height: 40px;
-                color: $gray-lighter-darker;
+                color: gray('400');
                 font-size: 13px;
                 line-height: 40px;
                 cursor: pointer;
@@ -138,7 +138,7 @@
 
                     &:after {
                         content: '';
-                        background: $o-brand-optional;
+                        background: $o-brand-primary;
                         opacity: 0;
                         @include o-position-absolute(auto, 0, 0, 0);
                         @include size(100%, 3px);
@@ -179,7 +179,7 @@
                 h2 {
                     margin-bottom: 0;
                     @include o-base-settings-horizontal-padding;
-                    background-color: $gray-lighter;
+                    background-color: gray('200');
                     font-size: 15px;
                     font-weight: bold;
 
@@ -199,7 +199,7 @@
                 display: flex;
                 margin: 30px 0 10px;
                 @include o-base-settings-horizontal-padding;
-                background-color: $gray-lighter;
+                background-color: gray('200');
 
                 .icon {
                     width: 25px;

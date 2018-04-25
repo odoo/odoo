@@ -33,8 +33,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         color: white;
         padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
         border-radius: 3px 3px 0 0;
-        border-bottom: 1px solid $gray-lighter-dark;
-        background-color: $o-brand-primary;
+        border-bottom: 1px solid gray('300');
+        background-color: $o-brand-odoo;
         padding: 8px;
 
         @include media-breakpoint-down(sm) {
@@ -97,7 +97,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     width: auto;
     height: 28px;
     color: white;
-    background-color: $gray-dark;
+    background-color: gray('900');
     cursor: pointer;
     box-shadow: none;
 
@@ -114,7 +114,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_total_unread_counter {
             @include o-position-absolute(-10px, 0, auto, auto);
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
             padding: 0 2px;
             font-size: smaller;
         }
@@ -134,7 +134,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 border-top: 1px solid white;
             }
             &:hover {
-                background-color: darken($o-brand-primary, 10%);
+                background-color: darken($o-brand-odoo, 10%);
             }
         }
     }

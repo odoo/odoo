@@ -136,7 +136,7 @@
             padding-top: 10px;
             padding-bottom: 10px;
             cursor: pointer;
-            background-color: darken($gray, 8%);
+            background-color: darken(gray('700'), 8%);
             color: white;
         }
     }
@@ -148,14 +148,14 @@
 
 .o_mail_discuss {
     .o_mail_discuss_sidebar {
-        background-color: $gray-dark;
-        color: $gray-lighter-dark;
+        background-color: gray('900');
+        color: gray('300');
 
         .o_mail_discuss_item {
             cursor: pointer;
 
             &:hover {
-                background-color: darken($gray-dark,2%);
+                background-color: darken(gray('900'),2%);
 
                 .o_mail_partner_unpin, .o_mail_channel_settings {
                     opacity: $o-mail-sidebar-icon-opacity;
@@ -163,8 +163,8 @@
             }
 
             &.o_active {
-                background-color: $gray-darker;
-                box-shadow: inset 3px 0 0 $o-brand-optional;
+                background-color: gray('900');
+                box-shadow: inset 3px 0 0 $o-brand-primary;
             }
 
             .o_mail_hash {
@@ -181,7 +181,7 @@
 
             > .badge {
                 color: white;
-                background-color: $o-brand-optional;
+                background-color: $o-brand-primary;
                 font-size: 10px;
                 line-height: 16px;
                 height: 18px;
@@ -191,14 +191,14 @@
                 font-size: $font-size-base;
 
                 &.o_mail_mailbox_title_starred > .badge {
-                    background-color: $gray-light;
-                    border-color: $gray-light;
+                    background-color: gray('600');
+                    border-color: gray('600');
                 }
             }
         }
 
         > hr {
-            border-color: $gray;
+            border-color: gray('700');
         }
 
         .o_mail_add_thread {
@@ -216,7 +216,7 @@
                 margin: 0;
                 font-size: $font-size-sm;
                 text-transform: uppercase;
-                color: $gray-light;
+                color: gray('600');
                 &.o_mail_open_channels:hover {
                     color: white;
                 }
@@ -224,7 +224,7 @@
             .o_add {
                 cursor: pointer;
                 @include o-hover-opacity($o-mail-sidebar-icon-opacity, 1);
-                @include o-hover-text-color($gray-light, white);
+                @include o-hover-text-color(gray('600'), white);
             }
         }
     }
@@ -249,10 +249,10 @@
     font-size: 1em;
     position: relative;
     &.o_user_online {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
     }
     &.o_user_idle {
-        color: $brand-warning;
+        color: theme-color('warning');
     }
 }
 
@@ -270,7 +270,7 @@
             display: flex;
             flex: 0 0 auto;
             z-index: 2;
-            box-shadow: 0 2px 4px $gray-lighter-darker;
+            box-shadow: 0 2px 4px gray('400');
 
             .o_mailbox_inbox_item {
                 flex: 1 1 auto;
@@ -278,7 +278,7 @@
                 padding: 2%;
 
                 &.btn-secondary {
-                    border-bottom: 1px solid $gray-lighter-darker
+                    border-bottom: 1px solid gray('400')
                 }
             }
         }
@@ -321,13 +321,13 @@
 
 .o_mail_preview {
     display: flex;
-    background-color: $gray-lighter;
+    background-color: gray('200');
     color: $o-main-text-color;
     cursor: pointer;
     overflow: hidden;
     position: relative;
     &:hover {
-        background-color: $gray-lighter-dark;
+        background-color: gray('300');
         .o_preview_name {
             color: $headings-color;
         }
@@ -336,7 +336,7 @@
         }
     }
     &:not(:last-child) {
-        border-bottom: 1px solid $gray-lighter-darker;
+        border-bottom: 1px solid gray('400');
     }
     .o_mail_preview_image {
         flex: 0 0 auto;
@@ -384,7 +384,7 @@
     &.o_preview_unread {
         background-color: transparent;
         &:hover {
-            background-color: $gray-lighter;
+            background-color: gray('200');
         }
         .o_preview_info {
             .o_preview_title {
@@ -392,7 +392,7 @@
                     font-weight: 700;
                 }
                 .o_last_message_date {
-                    color: $o-brand-optional;
+                    color: $o-brand-primary;
                 }
             }
         }
@@ -431,7 +431,7 @@
 
     .o_mail_mobile_tabs {
         display: flex;
-        box-shadow: 0 0 8px $gray-lighter-darker;
+        box-shadow: 0 0 8px gray('400');
 
         .o_mail_mobile_tab {
             display: flex;
@@ -440,7 +440,7 @@
             flex-flow: column nowrap;
             justify-content: space-between;
             padding: $o-mail-chatter-mobile-gap $o-mail-chatter-mobile-gap*2;
-            box-shadow: 1px 0 0 $gray-lighter-darker;
+            box-shadow: 1px 0 0 gray('400');
             text-align: center;
 
             > span {
@@ -455,7 +455,7 @@
             }
 
             &.active > span {
-                color: $o-brand-optional;
+                color: $o-brand-primary;
             }
         }
     }

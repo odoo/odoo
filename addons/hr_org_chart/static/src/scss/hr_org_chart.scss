@@ -25,7 +25,7 @@
         border-left: 1px solid $o-hr-org-chart-border-color;
 
         .o_org_chart_title {
-            color: $gray-light
+            color: gray('600')
         }
     }
 }
@@ -141,12 +141,12 @@
                 float: right;
                 cursor: pointer;
                 margin-right: 5px;
-                color: $gray-light;
+                color: gray('600');
                 background: $o-hr-org-chart-bg;
-                border: 1px solid $gray-light;
+                border: 1px solid gray('600');
                 &:hover {
-                    color: $o-brand-optional;
-                    border-color: $o-brand-optional;
+                    color: $o-brand-primary;
+                    border-color: $o-brand-primary;
                 }
                 &:focus {
                     outline: none;
@@ -157,7 +157,7 @@
                 display: block;
                 line-height: 1.2;
                 font-size: 11px;
-                color: lighten($gray-light, 15%);
+                color: lighten(gray('600'), 15%);
             }
         }
 
@@ -183,7 +183,7 @@
 
                 &:hover {
                     border-color: $o-hr-org-chart-entry-border-color;
-                    color:$o-brand-optional;
+                    color:$o-brand-primary;
                 }
             }
         }
@@ -198,21 +198,21 @@
                 display: block;
 
                 .media-heading {
-                    color: lighten($gray-light, 5%);
+                    color: lighten(gray('600'), 5%);
                     font-size: 13px;
                 }
             }
 
             &:hover {
                 .media-object {
-                    box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w*2 rgba($o-brand-optional, 0.6);
+                    box-shadow: 0 0 0 $o-hr-org-chart-entry-line-w*2 rgba($o-brand-primary, 0.6);
                 }
                 .media-body > a {
                     .media-heading {
-                        color: $o-brand-optional;
+                        color: $o-brand-primary;
                     }
                     strong {
-                        color: lighten($gray-light, 5%);
+                        color: lighten(gray('600'), 5%);
                     }
                 }
             }
@@ -231,7 +231,7 @@
                 width: $o-hr-org-chart-entry-pic-size;
                 height: $o-hr-org-chart-entry-pic-size;
                 margin: 0;
-                border: $o-hr-org-chart-entry-line-w*2 solid $o-brand-optional;
+                border: $o-hr-org-chart-entry-line-w*2 solid $o-brand-primary;
                 box-shadow: inset 0 0 0 $o-hr-org-chart-entry-line-w*2 white;
             }
 

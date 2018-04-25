@@ -311,7 +311,7 @@ tour.register('rte_inline', {
     trigger: '#wrapwrap img:first[width][height][style*="-radius"][style*="1px"][style*="padding"]',
 }, {
     content: "check the font image src",
-    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(51,122,183)/28"]',
+    trigger: '#wrapwrap img:eq(1)[src^="/web_editor/font_to_img/"][src$="/rgb(0,123,255)/32"]',
 }, {
     content: "check the font class to css",
     trigger: '#wrapwrap img:eq(1)[height]:not([class*="fa"])',

@@ -66,7 +66,7 @@
                 .o_activity_info {
                     vertical-align: baseline;
                     padding: 4px 6px;
-                    background: $gray-lighter;
+                    background: gray('200');
                     border-radius: 2px 2px 0 0;
                     @include o-hover-opacity(1, 1);
 
@@ -113,13 +113,13 @@
     }
 
     .o_activity_color_planned {
-        color: $brand-success;
+        color: theme-color('success');
     }
     .o_activity_color_overdue {
-        color: $brand-danger;
+        color: theme-color('danger');
     }
     .o_activity_color_today {
-        color: $brand-warning;
+        color: theme-color('warning');
     }
 }
 
@@ -157,7 +157,7 @@
 
             & > li:last-child {
                 background-color: $o-brand-lightsecondary;
-                color: $gray-dark;
+                color: gray('900');
                 line-height: 3em;
             }
             li > ul.o_activity_log {
@@ -179,7 +179,7 @@
                         padding: 8px 10px 8px 0px;
                         vertical-align: middle;
                         &:hover {
-                            background-color: $gray-lighter;
+                            background-color: gray('200');
                             .o_activity_link_kanban {
                                 visibility: visible;
                             }

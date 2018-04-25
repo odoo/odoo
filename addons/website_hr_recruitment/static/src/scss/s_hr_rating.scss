@@ -39,12 +39,12 @@
         .s_hr_rating_bar {
             height: 15px;
             padding: 1px;
-            background-color: $gray-lighter;
+            background-color: gray('200');
             border-radius: 2px;
             &:before {
                 content: "";
                 border-radius: 2px;
-                background-color: $brand-primary;
+                background-color: theme-color('primary');
                 display: block;
                 @include size(0, 100%);
             }
