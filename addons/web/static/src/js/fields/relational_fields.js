@@ -2166,6 +2166,19 @@ var FieldSelection = AbstractField.extend({
     isSet: function () {
         return this.value !== false;
     },
+    /**
+     * Listen to modifiers updates to hide/show the falsy value in the dropdown
+     * according to the required modifier.
+     *
+     * @override
+     */
+    updateModifiersValue: function () {
+        this._super.apply(this, arguments);
+        if (!this.attrs.modifiersValue.invisible && this.mode !== 'readonly') {
+            this._setValues();
+            this._renderEdit();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -2219,7 +2232,9 @@ var FieldSelection = AbstractField.extend({
                 return v[0] === false && v[1] === '';
             });
         }
-        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        if (!this.attrs.modifiersValue || !this.attrs.modifiersValue.required) {
+            this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        }
     },
 
     //--------------------------------------------------------------------------

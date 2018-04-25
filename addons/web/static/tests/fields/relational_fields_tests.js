@@ -11558,6 +11558,41 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('required selection widget should not have blank option', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.feedback_value = {
+            type: "selection",
+            required: true,
+            selection : [['good', 'Good'], ['bad', 'Bad']],
+            default: 'good',
+            string: 'Good'
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="feedback_value"/>' +
+                        '<field name="color" attrs="{\'required\': [(\'feedback_value\', \'=\', \'bad\')]}"/>' +
+                '</form>',
+            res_id: 1
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 3,
+            "non required selection field must have 3 options 1 blank option and 2 value options");
+        assert.strictEqual(form.$('.o_field_widget[name=feedback_value]')[0].options.length, 2,
+            "should have only 2 options without blank option");
+
+        // change value to update widget modifier values
+        form.$('.o_field_widget[name=feedback_value]').val('"bad"').trigger('change');
+        assert.strictEqual(form.$('.o_field_widget[name=color]')[0].options.length, 2,
+            "should have only 2 options");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyTags');
 
     QUnit.test('fieldmany2many tags with and without color', function (assert) {
