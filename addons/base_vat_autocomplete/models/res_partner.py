@@ -12,8 +12,8 @@ _logger = logging.getLogger(__name__)
 
 try:
     import stdnum.eu.vat as stdnum_vat
-    if not hasattr(stdnum_vat, "_country_codes"):
-        stdnum_vat._country_codes = stdnum_vat.country_codes
+    if not hasattr(stdnum_vat, "country_codes"):
+        stdnum_vat.country_codes = stdnum_vat._country_codes
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
     stdnum_vat = None
@@ -51,7 +51,7 @@ class ResPartner(models.Model):
             non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
             if not partner.vat:
                 return {}
-            if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat._country_codes:
+            if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
                 # Equivalent to stdnum_vat.check_vies(partner.vat).
                 # However, we want to add a custom timeout to the suds.client
                 # because by default, it's 120 seconds and this is to long.
