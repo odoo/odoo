@@ -1,10 +1,3 @@
-// Define $gray-lighter-dark as a minor bootstrap $gray-lighter variation used
-// for design purposes only (e.g. cards' borders). We avoid to overwrite the
-// default $gray-light because it is deeply used by bootstrap to define muted
-// elements.
-$gray-lighter-dark: $o-color-silver-dark;
-$gray-lighter-darker: $o-color-silver-darker;
-
 $o-webclient-background-color: $o-color-silver;
 $o-control-panel-background-color: $o-color-silver;
 
@@ -12,7 +5,8 @@ $o-list-footer-color: $o-main-text-color;
 $o-list-group-header-color: lighten($o-brand-lightsecondary, 10%);
 
 // UI custom colors for tags, kanban records' colors, ...)
-$o-colors: $o-color-gray-light, #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
+// Note: the first value is the old BS3 gray-light value
+$o-colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814968,
               #EB7E7F, #2C8397, #475577, #D6145F, #30C381, #9365B8;
 
 $o-sheet-cancel-hpadding: $o-horizontal-padding;
@@ -21,7 +15,7 @@ $o-sheet-cancel-bpadding: $o-horizontal-padding;
 $o-statusbar-arrow-width: $o-statusbar-height / 3;
 $o-statusbar-disabled-bg: lighten($o-brand-lightsecondary, 7%);
 
-$o-navbar-inverse-link-hover-bg: darken($o-brand-primary, 10%);
+$o-navbar-inverse-link-hover-bg: darken($o-brand-odoo, 10%);
 
 $o-datepicker-week-bg-color: lighten($o-datepicker-week-color, 30%);
 

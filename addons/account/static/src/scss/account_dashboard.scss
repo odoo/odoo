@@ -35,26 +35,26 @@
             font-weight: 500;
 
             .o_account_dashboard_index {
-                color: $gray-dark;
+                color: gray('900');
             }
 
             &.o_action_done {
-                color: $gray-dark;
-                background-color: $gray-lighter;
+                color: gray('900');
+                background-color: gray('200');
 
                 &:after {
-                    border-left-color: $gray-lighter;
+                    border-left-color: gray('200');
                 }
 
                 .fa-check {
-                    color: $brand-success;
+                    color: theme-color('success');
                 }
             }
 
             &:last-of-type {
                 margin-left: $o-horizontal-padding;
                 padding-left: $o-horizontal-padding*.5;
-                border-left: 1px solid $gray-lighter-dark;
+                border-left: 1px solid gray('300');
             }
         }
     }

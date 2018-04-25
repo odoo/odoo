@@ -10,7 +10,7 @@
             margin-top: 0px;
             margin-bottom: 15px;
         }
-        border-bottom: 1px solid $gray-lighter-darker;
+        border-bottom: 1px solid gray('400');
         text-align: center;
 
         .o_thread_date {
@@ -25,14 +25,14 @@
 
     .o_thread_new_messages_separator {
         margin-bottom: 15px;
-        border-bottom: solid lighten($o-brand-primary, 15%) 1px;
+        border-bottom: solid lighten($o-brand-odoo, 15%) 1px;
         text-align: right;
         .o_thread_separator_label {
             position: relative;
             top: 8px;
             padding: 0 10px;
             background: white;
-            color: lighten($o-brand-primary, 15%);
+            color: lighten($o-brand-odoo, 15%);
             font-size: smaller;
         }
     }
@@ -43,8 +43,8 @@
         margin-bottom: 0px;
 
         &.o_mail_not_discussion {
-            background-color: rgba($gray-lighter-dark, 0.5);
-            border-bottom: 1px solid $gray-lighter-darker;
+            background-color: rgba(gray('300'), 0.5);
+            border-bottom: 1px solid gray('400');
         }
 
         .o_thread_message_sidebar {
@@ -181,9 +181,9 @@
 
                 .o_thread_tooltip_content {
                     top: 10px;
-                    background: $gray-lighter;
+                    background: gray('200');
                     padding: 4px;
-                    border: solid $gray-lighter 1px;
+                    border: solid gray('200') 1px;
                     border-radius: 5px;
                     color: gray;
                     width: 300px;

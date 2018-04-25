@@ -59,7 +59,7 @@
             }
 
             &.btn-primary {
-                @include button-variant(white, $o-brand-primary, $o-brand-primary);
+                @include button-variant(white, $o-brand-odoo, $o-brand-odoo);
             }
             &.btn-secondary {
                 @include button-variant(white, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
@@ -251,11 +251,11 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 // DROPZONES
 @keyframes dropZoneInsert {
     to {
-        background-color: rgba($o-brand-primary, 0.2);
+        background-color: rgba($o-brand-odoo, 0.2);
     }
 }
 #wrapwrap .oe_drop_zone {
-    background-color: rgba($o-brand-primary, 0.05);
+    background-color: rgba($o-brand-odoo, 0.05);
     animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
@@ -282,7 +282,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         }
 
         &.oe_vertical {
-            border: 2px dashed $o-brand-primary;
+            border: 2px dashed $o-brand-odoo;
             border-left: none;
             border-right: none;
 
@@ -451,7 +451,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                                     @include o-position-absolute($top: 5px, $left: 5px);
                                     content: "\f00c";
                                     font-family: "FontAwesome";
-                                    color: $o-brand-optional;
+                                    color: $o-brand-primary;
                                 }
                             }
 
@@ -970,7 +970,7 @@ table.colorpicker {
             &.selected:after {
                 content: "\f00c";
                 font-family: "FontAwesome";
-                color: $brand-success;
+                color: theme-color('success');
             }
 
             &[data-event="foreColor"] {
@@ -1089,7 +1089,7 @@ body.editor_enable {
     }
 }
 @keyframes inputHighlighter {
-    from { background: $o-brand-optional; }
+    from { background: $o-brand-primary; }
     to   { width: 0; background: transparent; }
 }
 
@@ -1140,7 +1140,7 @@ body.editor_enable {
         > input {
             &:not(:checked) + span {
                 box-shadow: none;
-                background-image: linear-gradient(0deg, lighten($brand-danger, 5%), darken($brand-danger, 5%));
+                background-image: linear-gradient(0deg, lighten(theme-color('danger'), 5%), darken(theme-color('danger'), 5%));
             }
         }
     }
@@ -1275,7 +1275,7 @@ body.editor_enable {
             content: "";
             z-index: 1000;
             display: block;
-            background-color: $brand-danger;
+            background-color: theme-color('danger');
             opacity: 0.5;
             pointer-events: none;
         }
@@ -1357,7 +1357,7 @@ body .modal {
             }
 
             .well {
-                border-color: $gray-lighter;
+                border-color: gray('200');
                 border-top-width: 0;
             }
 
@@ -1394,7 +1394,7 @@ body .modal {
                     }
                 }
                 &.o_selected .o_image {
-                    border-color: $o-brand-primary;
+                    border-color: $o-brand-odoo;
                     box-shadow: 0px 0px 2px 2px $o-brand-secondary;
                 }
                 &:hover .o_existing_attachment_remove {
@@ -1585,7 +1585,7 @@ body .modal {
                 display: block;
                 width: 100%;
                 height: 1px;
-                background: fade-out(lighten($o-brand-optional, 30%), 0.5);
+                background: fade-out(lighten($o-brand-primary, 30%), 0.5);
                 pointer-events: none;
                 &.grid-2 {
                     top: 66.66%
@@ -1659,7 +1659,7 @@ body .modal {
             }
         }
         .o_link_dialog_preview {
-            border-left: 1px solid $gray-lighter;
+            border-left: 1px solid gray('200');
         }
     }
     // Crop Dialog

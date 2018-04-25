@@ -21,7 +21,7 @@
     }
     .o_notification_counter {
         @include o-position-absolute($top: 20%, $right: 1px);
-        background: $o-brand-optional;
+        background: $o-brand-primary;
         color: white;
         padding: 0em 0.3em;
         font-size: 0.7em;
@@ -42,15 +42,15 @@
             display: flex;
             flex: 0 0 auto;
             justify-content: space-between;
-            border-bottom: 1px solid $gray-lighter-darker;
-            box-shadow: 0 0 2px $gray-lighter-darker;
+            border-bottom: 1px solid gray('400');
+            box-shadow: 0 0 2px gray('400');
             .o_filter_button, .o_new_message {
                 padding: 5px;
             }
             .o_filter_button {
                 color: $o-main-color-muted;
                 &:hover, &.active {
-                    color: $o-brand-optional;
+                    color: $o-brand-primary;
                 }
                 &.active {
                     cursor: default;
@@ -119,7 +119,7 @@
                 padding: 5px;
                 height: 44px;
                 border-bottom: 1px solid #ebebeb;
-                box-shadow: 0 0 2px $gray-lighter-darker;
+                box-shadow: 0 0 2px gray('400');
             }
             .o_mail_systray_dropdown_items {
                 max-height: none;

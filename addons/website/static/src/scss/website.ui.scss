@@ -45,7 +45,7 @@ body.o_connected_user {
             }
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
-                @include button-variant(white, $o-brand-optional, $o-brand-optional);
+                @include button-variant(white, $o-brand-primary, $o-brand-primary);
             }
 
             > .fa-plus, > .fa-pencil {
@@ -524,15 +524,15 @@ body .modal {
 }
 #edit_website_pages {
     th {
-        background-color: $o-brand-primary;
+        background-color: $o-brand-odoo;
         color: white;
     }
     td > a.fa {
         margin-left: 5px;
-        color: $o-brand-primary;
+        color: $o-brand-odoo;
     }
     .fa-check, .fa-eye-slash {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
     }
 }
 

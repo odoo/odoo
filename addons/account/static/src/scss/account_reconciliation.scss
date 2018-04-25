@@ -8,7 +8,7 @@
         &.statement_name {
             @include o-text-overflow;
             &.editable:hover {
-                outline: 1px dashed $o-brand-optional;
+                outline: 1px dashed $o-brand-primary;
                 outline-offset: -1px;
                 cursor: pointer;
             }
@@ -25,7 +25,7 @@
         position: relative;
         display: inline-block;
         .progress-bar {
-            background-color: #7c7bad;
+            background-color: $o-community-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
         }
         .progress-text {
             text-align: center;
@@ -59,7 +59,7 @@
             padding-right: 5px;
         }
         .do_partial_reconcile_true {
-            color: #7c7bad;
+            color: $o-community-color; // FIXME probably supposed to be primary to be auto-adapted in enterprise ?
             padding-right: 5px;
         }
         .do_partial_reconcile_false {
@@ -128,7 +128,7 @@
 
         .cell_action {
             width: 15px;
-            color: $gray;
+            color: gray('700');
             background: #fff;
             border: 0;
             text-align: center;

@@ -105,7 +105,7 @@ div.o_boolean_toggle {
     }
 
     > input:checked + .slider {
-        background-color: $o-brand-optional;
+        background-color: $o-brand-primary;
 
         &:before {
             transform: translate(14px, 0px);
@@ -115,16 +115,16 @@ div.o_boolean_toggle {
 
 // Full bg colors (bootstrap extension)
 .bg-success-full {
-    background-color: $brand-success;
+    background-color: theme-color('success');
 }
 .bg-warning-full {
-    background-color: $brand-warning;
+    background-color: theme-color('warning');
 }
 .bg-danger-full {
-    background-color: $brand-danger;
+    background-color: theme-color('danger');
 }
 .bg-info-full {
-    background-color: $brand-info;
+    background-color: theme-color('info');
 }
 
 .o_web_accesskey_overlay {
@@ -167,16 +167,16 @@ div.o_boolean_toggle {
         @include o-btn-link-variant($body-color, $headings-color);
     }
     &.btn-success, &.text-success {
-        @include o-btn-link-variant($body-color, $brand-success);
+        @include o-btn-link-variant($body-color, theme-color('success'));
     }
     &.btn-warning, &.text-warning {
-        @include o-btn-link-variant($body-color, $brand-warning);
+        @include o-btn-link-variant($body-color, theme-color('warning'));
     }
     &.btn-danger, &.text-danger {
-        @include o-btn-link-variant($body-color, $brand-danger);
+        @include o-btn-link-variant($body-color, theme-color('danger'));
     }
     &.btn-info, &.text-info {
-        @include o-btn-link-variant($body-color, darken($brand-info, 20%));
+        @include o-btn-link-variant($body-color, darken(theme-color('info'), 20%));
     }
 }
 

@@ -6,12 +6,12 @@
     // sidebar
     .o_kanban_examples_dialog_nav {
         flex: 0 0 auto;
-        border-right: 1px solid $gray-lighter-dark;
+        border-right: 1px solid gray('300');
         background: white;
 
         > ul > li {
             margin: 0;
-            border-bottom: 1px solid $gray-lighter-dark;
+            border-bottom: 1px solid gray('300');
 
             > a {
                 padding: 12px 15px;
@@ -23,7 +23,7 @@
             }
             &.active > a {
                 color: $headings-color;
-                border-left-color: $o-brand-optional;
+                border-left-color: $o-brand-primary;
                 font-weight: bold;
             }
         }
@@ -48,11 +48,11 @@
                 .o_kanban_examples_ghost {
                     padding: 5px;
                     margin-top: -1px;
-                    border: thin solid $gray-lighter-dark;
+                    border: thin solid gray('300');
                     background-color: white;
                     .o_ghost_content {
                         height: 12px;
-                        background: $gray-lighter-dark;
+                        background: gray('300');
                         &.o_ghost_tag {
                             display: inline-block;
                             width: 40%;

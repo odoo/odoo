@@ -6,8 +6,8 @@
 // Invalid
 .o_field_invalid {
     &.o_input, .o_input, &.o_form_label {
-        color: $brand-danger!important;
-        border-color: $brand-danger!important; // enterprise o_required_modifier rule overrides this without !important
+        color: theme-color('danger')!important;
+        border-color: theme-color('danger')!important; // enterprise o_required_modifier rule overrides this without !important
     }
 }
 
@@ -119,7 +119,7 @@
                     display: inline-block;
                     margin: 5px 5px 0 0; // FIXME was $o-kanban-inner-hmargin before scss convertion
                     border: 1px solid white;
-                    box-shadow: 0 0 0 1px $gray-lighter-dark;
+                    box-shadow: 0 0 0 1px gray('300');
 
                     > a {
                         display: block;
@@ -225,7 +225,7 @@
 
     // Specific success color for toggle_button widget
     .fa.o_toggle_button_success {
-        color: $brand-success;
+        color: theme-color('success');
     }
 
     // Handle widget
@@ -239,15 +239,15 @@
             margin: 0px 0px 4px 4px;
             padding: 1px 6px;
             color: $o-main-color-muted;
-            border: 1px solid $o-color-silver-dark;
+            border: 1px solid gray('300');
             cursor: pointer;
             &.active {
-                color: $o-brand-optional;
-                border-color: $o-brand-optional;
+                color: $o-brand-primary;
+                border-color: $o-brand-primary;
             }
             &:hover:not(.active) {
-                color: darken($o-color-silver-dark, 30%);
-                border-color: darken($o-color-silver-dark, 30%);
+                color: darken(gray('300'), 30%);
+                border-color: darken(gray('300'), 30%);
             }
         }
     }
@@ -299,7 +299,7 @@
             margin-right: 10px;
             border-radius: 100%;
             overflow: hidden;
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
 
             &:after { // Outside pie border to go over border-radius irregularities
                 content: " ";
@@ -328,7 +328,7 @@
                 border-radius: 100%;
 
                 font-weight: 700;
-                color: $o-brand-primary;
+                color: $o-brand-odoo;
             }
         }
     }
@@ -351,7 +351,7 @@
             width: 100%;
 
             color: white;
-            background-color: $o-brand-optional;
+            background-color: $o-brand-primary;
             opacity: 0;
             transition: opacity ease 400ms;
 
@@ -375,10 +375,10 @@
                     margin: 0px;
                     text-align: center;
                     &.o_select_file_button{
-                        background: $o-brand-optional;
+                        background: $o-brand-primary;
                     }
                     &.o_clear_file_button{
-                        background: $brand-danger;
+                        background: theme-color('danger');
                     }
                 }
             }
@@ -389,7 +389,7 @@
         }
 
         &.o_field_invalid > img {
-            border: 1px solid $brand-danger;
+            border: 1px solid theme-color('danger');
         }
     }
 
@@ -417,9 +417,9 @@
     &.o_field_copy {
         position: relative;
         border-radius: 5px;
-        border: 1px solid $btn-primary-border;
+        border: 1px solid $primary;
         font-size: $font-size-sm;
-        color: $o-brand-optional;
+        color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;
         .o_clipboard_button {

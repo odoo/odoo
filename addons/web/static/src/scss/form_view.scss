@@ -143,7 +143,7 @@
         display: flex;
         justify-content: space-between;
         padding-left: $o-horizontal-padding;
-        border-bottom: 1px solid $gray-lighter-darker;
+        border-bottom: 1px solid gray('400');
         background-color: $o-view-background-color;
 
         > .o_statusbar_buttons, > .o_statusbar_status {
@@ -182,7 +182,7 @@
                 font-weight: bold;
                 position: relative;
                 padding-left: $o-statusbar-arrow-width*2;
-                color: $gray;
+                color: gray('700');
                 border-width: 0 0 0;
                 border-radius: 0;
                 transition: all 0.1s ease 0s;
@@ -192,7 +192,7 @@
                 }
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
-                    border-left: 1px solid $gray-lighter-darker;
+                    border-left: 1px solid gray('400');
                 }
 
                 &:active {
@@ -203,7 +203,7 @@
                     opacity: 1.0;
                     color: $text-muted;
                     pointer-events: none;
-                    border-left: 1px solid $gray-lighter-dark;
+                    border-left: 1px solid gray('300');
                 }
 
                 &:before, &:after {
@@ -221,28 +221,28 @@
 
                 &:not(.disabled) {
                     &:hover, &:active, &:focus {
-                        color: $o-brand-optional;
-                        background-color: $gray-lighter;
+                        color: $o-brand-primary;
+                        background-color: gray('200');
 
                         &:after {
-                            border-left-color: $gray-lighter;
+                            border-left-color: gray('200');
                         }
                     }
                 }
 
                 &:before {
                     right: -$o-statusbar-arrow-width;
-                    border-left-color: $gray-lighter-dark;
+                    border-left-color: gray('300');
                 }
 
                 &.btn-primary.disabled {
-                    color: $o-brand-primary;
+                    color: $o-brand-odoo;
                     font-size: 11px;
-                    background-color: $gray-lighter;
+                    background-color: gray('200');
                     cursor: default;
 
                     &:after {
-                        border-left-color: $gray-lighter;
+                        border-left-color: gray('200');
                     }
                 }
 
@@ -475,7 +475,7 @@
         .oe_subtotal_footer_separator {
             width: 100%;
             text-align: right;
-            border-top: 1px solid $gray-lighter-dark;
+            border-top: 1px solid gray('300');
             font-weight: bold;
             font-size: 1.3em;
         }
@@ -559,7 +559,7 @@
 
     // Timezone widget warning
     .o_tz_warning {
-        color: $brand-danger;
+        color: theme-color('danger');
         cursor: help;
         position: absolute;
         margin-left: -40px;

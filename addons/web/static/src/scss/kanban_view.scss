@@ -12,16 +12,16 @@
 
     .o_kanban_record, .o_kanban_quick_create {
         padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter;
-        border: 1px solid $gray-lighter-dark;
+        border: 1px solid gray('300');
         background-color: white;
 
         @include media-breakpoint-down(sm) {
             padding: $o-kanban-inside-vgutter $o-kanban-inside-hgutter-mobile;
         }
         &:focus, &:focus-within {
-            -webkit-box-shadow: 1px 1px 1px 0px $gray-light;
-            -moz-box-shadow: 1px 1px 1px 0px $gray-light;
-            box-shadow: 1px 1px 1px 0px $gray-light;
+            -webkit-box-shadow: 1px 1px 1px 0px gray('600');
+            -moz-box-shadow: 1px 1px 1px 0px gray('600');
+            box-shadow: 1px 1px 1px 0px gray('600');
             z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
             outline: none;
         }
@@ -43,7 +43,7 @@
     .o_kanban_record {
         position: relative;
         display: inline-block; // Force the creation of a block formatting context to clear float items
-        border-color: $gray-lighter-darker;
+        border-color: gray('400');
         min-width: 150px;
         margin: 0 0 -1px;
 
@@ -124,7 +124,7 @@
             .o_link_muted {
                 color: $body-color;
                 &:hover {
-                    color: $brand-primary;
+                    color: theme-color('primary');
                     text-decoration: underline;
                 }
             }
@@ -305,7 +305,7 @@
     &.o_kanban_grouped {
         min-height: 100%;
         padding: 0;
-        background-color: $gray-lighter;
+        background-color: gray('200');
 
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
@@ -430,7 +430,7 @@
             .o_kanban_add_column {
                 display: inline-block;
                 padding: 10px 14px;
-                background-color: $o-color-silver-dark;
+                background-color: gray('300');
             }
             .o_kanban_title {
                 margin-left: 10px;
@@ -443,7 +443,7 @@
             height: 100%;
             border: none;
             box-shadow: 0 0 20px -10px;
-            background-color: $gray-lighter;
+            background-color: gray('200');
 
             .o_kanban_header {
                 height: 50px;
@@ -464,7 +464,7 @@
             }
 
             .o_kanban_muted_record {
-                background: $gray-lighter-dark;
+                background: gray('300');
                 height: 70px;
                 margin: 10px 0px;
             }

@@ -2,7 +2,7 @@
 .o_timesheet_plan_sale_timesheet {
 
     [type='action'] {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
         cursor: pointer;
     }
 
@@ -47,7 +47,7 @@
             cursor: pointer;
         }
         .o_progress_non_billable_project {
-            background-color: $brand-primary;
+            background-color: theme-color('primary');
             color: white;
             cursor: pointer;
         }
@@ -82,14 +82,14 @@
             text-align: center;
         }
         th.o_right_bordered, td.o_right_bordered {
-            border-right: 2px solid $o-brand-optional;
+            border-right: 2px solid $o-brand-primary;
             text-align: center;
         }
 
         .o_timesheet_forecast_sale_order{
             font-weight: bold;
             & > td:first-child {
-                color: $o-brand-optional;
+                color: $o-brand-primary;
             }
         }
         .o_timesheet_forecast_sale_order_line{
