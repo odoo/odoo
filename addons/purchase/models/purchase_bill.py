@@ -7,7 +7,7 @@ class AccountInvoicePurchase(models.Model):
     _name = 'account.invoice.bill.union'
     _auto = False
     _description = 'Bills & Purchases'
-    _order = "purchase_order_id desc, vendor_bill_id desc"
+    _order = "date desc, purchase_order_id desc, vendor_bill_id desc"
 
     name = fields.Char(string='Reference', readonly=True)
     reference = fields.Char(string='Source', readonly=True)
