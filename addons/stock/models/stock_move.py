@@ -1020,8 +1020,8 @@ class StockMove(models.Model):
             # create the extra moves
             extra_move_quantity = float_round(
                 self.quantity_done - self.product_uom_qty,
-                precision_rounding=self.product_uom.rounding,
-                rounding_method ='UP')
+                precision_rounding=rounding,
+                rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals)
             if extra_move.picking_id:
