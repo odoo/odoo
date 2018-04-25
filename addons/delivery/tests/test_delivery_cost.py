@@ -10,6 +10,12 @@ class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
         super(TestDeliveryCost, self).setUp()
+        # as the tests hereunder assume all the prices in USD, we must ensure
+        # that the company actually uses USD
+        # also, we do it in a new company, to avoid being messed up with by localizations
+        company_usd = self.env['res.company'].create({'name': 'USD company',
+                                                      'currency_id': self.env.ref('base.USD').id})
+        self.env.user.company_id = company_usd.id
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']
@@ -29,9 +35,6 @@ class TestDeliveryCost(common.TransactionCase):
         self.product_2 = self.env.ref('product.product_product_2')
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
-        # as the tests hereunder assume all the prices in USD, we must ensure
-        # that the company actually uses USD
-        self.env.user.company_id.write({'currency_id': self.env.ref('base.USD').id})
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
