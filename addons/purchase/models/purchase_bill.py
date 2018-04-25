@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
-from odoo.tools.float_utils import float_compare
+from odoo import api, fields, models, tools
 
 class AccountInvoicePurchase(models.Model):
     _name = 'account.invoice.bill.union'
@@ -37,7 +36,8 @@ class AccountInvoicePurchase(models.Model):
                     NULL as vendor_bill_id, id as purchase_order_id
                 FROM purchase_order
                 WHERE
-                    invoice_status in ('to invoice', 'no')
+                    state = 'purchase' AND
+                    invoice_status = 'to invoice'
             )""")
 
     def name_get(self):
@@ -76,5 +76,3 @@ class AccountInvoice(models.Model):
         self.vendor_bill_id = self.vendor_bill_purchase_id.vendor_bill_id
         self.vendor_bill_purchase_id = False
         return {}
-
-
