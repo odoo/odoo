@@ -67,7 +67,7 @@
                     invisible="1" context="{'show_total_amount': True}"/>
             </field>
             <field name="vendor_bill_id" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('type', '=', 'in_invoice'), ('state', 'not in', ['draft'])]}</attribute>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1" readonly="0"/>
@@ -93,11 +93,12 @@
         <field name="arch" type="xml">
             <search string="Search Reference Document">
                 <field name="name" string="Reference" filter_domain="['|', ('name','ilike',self), ('reference','=like',str(self)+'%')]"/>
-                <field name="partner_id" operator="child_of"/>
                 <field name="amount"/>
                 <separator/>
-                <filter name="purchase_orders" string="Purchase Orders" domain="[('id', '&lt;', 0))]"/>
-                <filter name="vendor_bills" string="Vendor Bills" domain="[('id', '&gt;', 0)]"/>
+                <field name="partner_id" operator="child_of"/>
+                <separator/>
+                <filter name="purchase_orders" string="Purchase Orders" domain="[('purchase_order_id', '!=', False)]"/>
+                <filter name="vendor_bills" string="Vendor Bills" domain="[('vendor_bill_id', '!=', False)]"/>
             </search>
         </field>
     </record>

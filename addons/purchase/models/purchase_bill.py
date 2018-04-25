@@ -2,12 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools import formatLang
 
 class PurchaseBillUnion(models.Model):
     _name = 'purchase.bill.union'
     _auto = False
     _description = 'Bills & Purchases'
-    _order = "date desc, purchase_order_id desc, vendor_bill_id desc"
+    _order = "purchase_order_id desc, vendor_bill_id desc"
 
     name = fields.Char(string='Reference', readonly=True)
     reference = fields.Char(string='Source', readonly=True)
@@ -37,13 +38,11 @@ class PurchaseBillUnion(models.Model):
                 FROM purchase_order
                 WHERE
                     state = 'purchase' AND
-                    invoice_status = 'to invoice'
+                    invoice_status in ('to invoice', 'no')
             )""")
 
     def name_get(self):
         result = []
-        lang_code = self.env.user.lang
-        lang = self.env['res.lang'].search([('code', '=', lang_code)])
         for doc in self:
             name = doc.name or ''
             if doc.reference:
@@ -51,11 +50,7 @@ class PurchaseBillUnion(models.Model):
             amount = doc.amount
             if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
                 amount = 0.0
-            amt = lang.format('%.' + str(doc.currency_id.decimal_places) + 'f', amount, True, True)
-            if doc.currency_id.position == 'before':
-                name += ': {}{}'.format(doc.currency_id.symbol, amt)
-            else:
-                name += ': {}{}'.format(amt, doc.currency_id.symbol)
+            name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
             result.append((doc.id, name))
         return result
 
