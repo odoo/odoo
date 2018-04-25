@@ -27,7 +27,7 @@ $o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
 // Editor
 $o-we-dropzone-size: 40px !default;
 $o-we-dropzone-border-width: 2px !default;
-$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-primary !default;
+$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
 
 $o-we-handle-edge-size: 1px !default;
 $o-we-handle-border-width: 1px !default;
@@ -86,7 +86,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
 @mixin o-w-preserve-links {
     a:not(.o_btn_preview) {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
 
         &:focus, &:active, &:focus:active {
             outline: none!important;
@@ -114,7 +114,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
     .has-error {
         .form-control {
-            border-color: $state-danger-text;
+            // border-color: $state-danger-text; // FIXME
         }
     }
 
@@ -144,14 +144,14 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 
 @mixin o-w-preserve-tabs {
     .nav-tabs {
-        border-bottom: 1px solid $gray-lighter;
+        border-bottom: 1px solid gray('200');
 
         > li  {
             > a {
                 line-height: 1.42857143;
                 color: $o-we-color-light;
                 &:hover {
-                    border-color: $gray-lighter;
+                    border-color: gray('200');
                 }
             }
 
@@ -159,7 +159,7 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
                 &, &:hover, &:focus {
                     color: $o-we-color-normal;
                     background-color: $o-we-color-paper;
-                    border-color: $gray-lighter;
+                    border-color: gray('200');
                     border-bottom-color: transparent;
                 }
             }
@@ -175,13 +175,13 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
         @include button-size(6px, 12px, 14px, 1.42857143, 0);
 
         &.btn-primary {
-            @include button-variant(white, $o-brand-optional, darken($o-brand-optional,5%));
+            @include button-variant(white, $o-brand-primary, darken($o-brand-primary,5%));
         }
         &.btn-secondary {
             @include button-variant($o-we-color-normal, white, $o-we-color-text-light);
         }
         &.btn-link {
-            @include button-variant($o-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+            @include button-variant($o-brand-primary, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
         }
         &.btn-success {
             @include button-variant(white, $o-we-color-success, darken($o-we-color-success, 5%));
@@ -222,8 +222,6 @@ $o-we-switch-inactive-color: $o-we-color-paper !default;
 // Edition colors
 
 // Colors
-$gray-white: #fff !default;
-
 $color-alpha: #1cc1a9 !default;
 $color-beta: #875A7B !default;
 $color-gamma: #BA3C3D !default;

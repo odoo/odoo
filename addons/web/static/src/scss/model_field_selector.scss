@@ -51,7 +51,7 @@
 
             .o_field_selector_popover_header {
                 color: white;
-                background: $brand-primary;
+                background: theme-color('primary');
                 font-weight: bold;
                 padding: 5px 0 5px 0.4em;
 
@@ -67,14 +67,14 @@
 
                     &.o_prev_page {
                         left: 0;
-                        border-right: 1px solid darken($brand-primary, 10%);
+                        border-right: 1px solid darken(theme-color('primary'), 10%);
                     }
                     &.o_field_selector_close {
                         right: 0;
-                        border-left: 1px solid darken($brand-primary, 10%);
+                        border-left: 1px solid darken(theme-color('primary'), 10%);
                     }
                     &:hover {
-                        background: darken($brand-primary, 10%);
+                        background: darken(theme-color('primary'), 10%);
                     }
                 }
                 &:before {
@@ -82,7 +82,7 @@
                     content: "";
                     border-left: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
                     border-right: $o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
-                    border-bottom: $o-field-selector-arrow-height solid $brand-primary;
+                    border-bottom: $o-field-selector-arrow-height solid theme-color('primary');
                 }
             }
             .o_field_selector_popover_body {
@@ -118,7 +118,7 @@
                 }
             }
             .o_field_selector_popover_footer {
-                background: $brand-primary;
+                background: theme-color('primary');
                 padding: 5px 0.4em;
 
                 > input {

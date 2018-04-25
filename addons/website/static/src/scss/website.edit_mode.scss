@@ -22,7 +22,7 @@
 .o_editable {
     &:not(:empty), &[data-oe-type] {
         &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover {
-            box-shadow: $o-brand-primary 0 0 5px 2px inset;
+            box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }
     }
     &:focus, &[data-oe-type] {
@@ -44,14 +44,14 @@
 
     &.oe_structure.oe_empty, &[data-oe-type=html] {
         &:empty {
-            border: 2px dashed $gray-lighter-darker;
+            border: 2px dashed gray('400');
             margin: 20px;
             padding: 112px 0px;
             text-align: center;
             &:before {
                 content: attr(data-editor-message);
                 font-size: 20px;
-                color: $gray-lighter-darker;
+                color: gray('400');
             }
         }
         > p:empty:only-child {

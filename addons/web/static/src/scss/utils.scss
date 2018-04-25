@@ -233,13 +233,13 @@
 @mixin o-kanban-dropdown-open {
     position: relative;
     background: white;
-    border-color: $gray-lighter-darker;
+    border-color: gray('400');
     z-index: $zindex-dropdown + 1;
 }
 @mixin o-kanban-dropdown-menu {
     @include o-position-absolute($right: -1px);
     margin-top: -1px;
-    border-color: $gray-lighter-darker;
+    border-color: gray('400');
 }
 @mixin o-kanban-colorpicker {
     max-width: 150px;
@@ -249,7 +249,7 @@
         display: inline-block;
         margin: $o-kanban-inner-hmargin $o-kanban-inner-hmargin 0 0;
         border: 1px solid white;
-        box-shadow: 0 0 0 1px $gray-lighter-dark;
+        box-shadow: 0 0 0 1px gray('300');
 
         > a {
             display: block;
@@ -292,7 +292,7 @@
         display: block;
 
         &:hover {
-            background-color: $gray-lighter-dark;
+            background-color: gray('300');
             color: $headings-color;
         }
     }

@@ -5,7 +5,7 @@
     border-radius: 5px;
 
     &.accepted {
-        background-color: $brand-success;
+        background-color: theme-color('success');
     }
 
     &.needsAction {
@@ -13,7 +13,7 @@
     }
 
     &.declined {
-        background-color: $brand-danger;
+        background-color: theme-color('danger');
     }
 }
 
@@ -71,10 +71,10 @@
     }
 
     .o_accepted {
-        color: $brand-success;
+        color: theme-color('success');
     }
     .o_declined {
-        color: $brand-danger;
+        color: theme-color('danger');
     }
 }
 .o_meeting_filter {
@@ -84,7 +84,7 @@
     display: inline-block;
     vertical-align: top;
     &:hover {
-        color: $o-brand-optional;
+        color: $o-brand-primary;
     }
     &.o_meeting_bold {
         font-weight: bold;
