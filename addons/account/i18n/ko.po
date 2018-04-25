@@ -14,7 +14,7 @@
 # eric lee <wndtjr2@yahoo.co.kr>, 2017
 # Jongkwan, Yeom <jongkwanyeom@gmail.com>, 2017
 # Up Link <linkup.way@gmail.com>, 2018
-# link up <link-up@naver.com>, 2018
+# Linkup <link-up@naver.com>, 2018
 # Linda Stockelova <stockeloval@btlnet.com>, 2018
 # Mark Lee <odoos@soti.33mail.com>, 2018
 msgid ""
@@ -1427,6 +1427,11 @@ msgid "Adjustment Tax"
 msgstr "조정 세금"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2089,6 +2094,12 @@ msgstr "은행 조정 사전 설정으로 이동"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "예금거래 명세서"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10041,6 +10052,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

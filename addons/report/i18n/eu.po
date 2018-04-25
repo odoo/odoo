@@ -6,17 +6,18 @@
 # Gorka Toledo <gorka.toledo@gmail.com>, 2017
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
 # oihane <oihanecruce@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eneko <eastigarraga@codesyntax.com>, 2017
 # ibinka lete <ilete@fpbidasoa.net>, 2017
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
+# Naomi Hidalgo <naomihid96@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
+"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +93,7 @@ msgstr "A9  13  37 x 52 mm"
 #. module: report
 #: model:ir.model,name:report.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr ""
+msgstr "Txosten baten pertsonalizazioa baimentzen du."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_report_ids
@@ -263,7 +264,7 @@ msgstr ""
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr ""
+msgstr "Esleitutako txostenak"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -273,7 +274,7 @@ msgstr "Faxa:"
 #. module: report
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
-msgstr ""
+msgstr "27 folioa 210 x330 mm"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_http
@@ -283,7 +284,7 @@ msgstr "HTTP bideratzea"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_spacing
 msgid "Header spacing"
-msgstr ""
+msgstr "Goiburuko tartea"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
@@ -376,24 +377,24 @@ msgstr "Paper Formatu"
 #. module: report
 #: model:ir.actions.act_window,name:report.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr ""
+msgstr "Paper formatuaren konfigurazio orokorra"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
-msgstr ""
+msgstr "Paper formatua"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
 msgid "Paper format *"
-msgstr ""
+msgstr "Paper formatua *"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.paperformat_view_form
 #: model:ir.ui.view,arch_db:report.paperformat_view_tree
 msgid "Paper format configuration"
-msgstr ""
+msgstr "Paper formatuaren konfigurazioa"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_format
@@ -414,13 +415,13 @@ msgstr "Erretratua"
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Kanpoko txostenaren aurreikuspena"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
 #: model:ir.ui.view,arch_db:report.base_config_settings_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Barne txostenaren aurreikuspena"
 
 #. module: report
 #. openerp-web
@@ -432,12 +433,12 @@ msgstr "Inprimatu"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Inprimatutako txostenaren izena"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "QWeb ikuspegia"
 
 #. module: report
 #. openerp-web
@@ -469,7 +470,7 @@ msgstr "Gorde"
 #. module: report
 #: model:ir.model.fields,help:report.field_report_paperformat_format
 msgid "Select Proper Paper size"
-msgstr ""
+msgstr "Aukeratu paperaren tamaina egokia"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -484,12 +485,12 @@ msgstr ""
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Kanpoko txosten baten lagina da."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Barne txosten baten lagina da."
 
 #. module: report
 #: model:ir.model.fields,help:report.field_ir_act_report_xml_print_report_name
@@ -498,12 +499,15 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Hau deskargatuko den txostenaren izena da. Mantendu hutsik, txostenaren "
+"fitxategi izena ez aldatzeko. Python adierazpen bat erabil dezakezu "
+"objektuaren eta denboraren aldagaiekin."
 
 #. module: report
 #: code:addons/report/models/report.py:273
 #, python-format
 msgid "This report is not loaded into the database: %s."
-msgstr ""
+msgstr "Txosten hau ez da datu-basean kargatu: %s."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
@@ -527,7 +531,7 @@ msgstr ""
 #: code:addons/report/models/report.py:164
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
-msgstr ""
+msgstr "Ezin da aurkitu Wkhtmltopdf sisteman. PDF-a ezin da sortu."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -541,12 +545,14 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf huts egin du (errore kodea:%s). Azpiprozesuaren fitxategi "
+"kopurua txikia da edo gehienezko muga gainditu du. Mezua:%s"
 
 #. module: report
 #: code:addons/report/models/report.py:452
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf huts egin du (errore kodea:%s). Mezua:%s"
 
 #. module: report
 #. openerp-web
@@ -556,6 +562,8 @@ msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
 msgstr ""
+"OpenERP abiarazi behar duzu gutxienez bi\n"
+"langileen txostenak PDF bertsioan inprimatzeko."
 
 #. module: report
 #. openerp-web
@@ -577,6 +585,9 @@ msgid ""
 "shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
 "target=\"_blank\">wkhtmltopdf.org</a>"
 msgstr ""
+"Wkhtmltopdf instalazioa hondatuta dago. Txostena html.<br><br><a "
+"href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>-en "
+"erakutsiko da"
 
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings

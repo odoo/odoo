@@ -599,7 +599,7 @@ class Module(models.Model):
         res = [0, 0]    # [update, add]
 
         default_version = modules.adapt_version('1.0')
-        known_mods = self.search([])
+        known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
         # iterate through detected modules and update/create them in db

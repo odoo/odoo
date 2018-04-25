@@ -3,15 +3,16 @@
 # * account_tax_python
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
+# Albena Mincheva <albena_vicheva@abv.bg>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2016\n"
+"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Изчислете размера на данъка, като зададете променливата \"резултат\".\n"
+"\n"
+": param base_amount: float, действителна сума, върху която се прилага данъкът\n"
+": параметър price_unit: float\n"
+": param количество: float\n"
+": param компания: res.company recordset singleton\n"
+": param продукт: продукт.product recordset singleton или None\n"
+": Param партньор: res.partner записи singleton или None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
@@ -61,6 +70,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Определете дали данъкът ще бъде приложен чрез задаване на променливата \"резултат\" на True или False.\n"
+"\n"
+": параметър price_unit: float\n"
+": param количество: плувка\n"
+": param компания: res.company recordset singleton\n"
+": param продукт: продукт.product recordset singleton или None\n"
+": Param партньор: res.partner записи singleton или None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
@@ -72,6 +88,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"Определете дали данъкът ще бъде приложен чрез задаване на променливата \"резултат\" на True или False.\n"
+"\n"
+": параметър price_unit: float\n"
+": param количество: плувка\n"
+": param продукт: продукт.product recordset singleton или None\n"
+": Param партньор: res.partner записи singleton или None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute

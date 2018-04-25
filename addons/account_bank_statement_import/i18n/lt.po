@@ -3,19 +3,21 @@
 # * account_bank_statement_import
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 # Rolandas <info@paninfo.lt>, 2016
 # Rytis Štreimikis <r.streimikis@hotmail.lt>, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Silvija Butko <silvija.butko@gmail.com>, 2018
+# Eimantas <eimantas@focusate.eu>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,7 +113,7 @@ msgstr "Banko sąskaitos išrašo eilutė"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Priklauso naudotojo dabartinei įmonei"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -126,6 +128,8 @@ msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
 msgstr ""
+"Nepavyko atpažinti, kuriam žurnalui importuoti šį išrašą. Prašome pasirinkti"
+" žurnalą rankiniu būdu."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -165,6 +169,8 @@ msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
 msgstr ""
+"Nepavyko apdoroti pateikto failo.\n"
+"Ar instaliavote modulį, kuris palaikytų tokio tipo failus?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -224,6 +230,8 @@ msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
 msgstr ""
+"Parsisiųskite banko išrašą iš savo banko ir importuokite jį čia. Palaikomi "
+"formatai:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -277,7 +285,7 @@ msgstr "Importuoti banko sąskaitos išrašą"
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import_journal_creation
 msgid "Import Bank Statement Journal Creation Wizard"
-msgstr ""
+msgstr "Banko išrašų importavimo žurnalo kūrimo vedlys"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -416,6 +424,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Pasirinkite 'Pardavimai' norėdami atidaryti klientų sąskaitų žurnalus. \n"
+"Pasirinkite 'Pirkimai' tiekėjų sąskaitų žurnalams. \n"
+"Pasirinkite 'grynieji' arba 'bankas' žurnalams, naudojamiems klientų ir tiekėjų mokėjimams. \n"
+"Pasirinkite 'bendra' įvairaus pobūdžio operacijų žurnalams. "
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -473,7 +485,7 @@ msgstr "Valiuta naudota įvedant dokumentą"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "Žurnalo įrašai šiam žurnalui bus vadinami naudojant šį prefiksą."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id

@@ -481,7 +481,7 @@ Source installation requires manually installing dependencies:
 
         $ sudo npm install -g less
 
-  - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
+  - on Windows, `install nodejs <https://nodejs.org/en/download/>`_, reboot (to
     update the :envvar:`PATH`) and install less:
 
     .. code-block:: ps1

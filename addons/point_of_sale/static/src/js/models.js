@@ -1152,7 +1152,8 @@ exports.Orderline = Backbone.Model.extend({
                 if (unit.rounding) {
                     this.quantity    = round_pr(quant, unit.rounding);
                     var decimals = this.pos.dp['Product Unit of Measure'];
-                    this.quantityStr = formats.format_value(round_di(this.quantity, decimals), { type: 'float', digits: [69, decimals]});
+                    this.quantity = round_di(this.quantity, decimals)
+                    this.quantityStr = formats.format_value(this.quantity, { type: 'float', digits: [69, decimals]});
                 } else {
                     this.quantity    = round_pr(quant, 1);
                     this.quantityStr = this.quantity.toFixed(0);
@@ -1979,7 +1980,9 @@ exports.Order = Backbone.Model.extend({
                 }
             })
 
-            unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            if (mapped_included_taxes.length > 0) {
+                unit_price = line.compute_all(mapped_included_taxes, unit_price, 1, this.pos.currency.rounding, true).total_excluded;
+            }
 
             line.set_unit_price(unit_price);
         }

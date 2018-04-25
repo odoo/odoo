@@ -126,7 +126,7 @@ class IrActionsReportXml(models.Model):
     def _compute_report_sxw(self):
         for report in self:
             if report.report_rml:
-                self.report_sxw = report.report_rml.replace('.rml', '.sxw')
+                report.report_sxw = report.report_rml.replace('.rml', '.sxw')
 
     def _report_content(self, name):
         data = self[name + '_content_data']

@@ -3,17 +3,17 @@
 # * marketing_campaign
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Carson Tsai <Ra661tCat@gmail.com>, 2018
-# Michael Yeung, 2018
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # amos lin <seeing@edirect168.com>, 2018
+# Martin Trigaux, 2018
+# Michael Yeung, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: amos lin <seeing@edirect168.com>, 2018\n"
+"Last-Translator: Michael Yeung, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,9 @@ msgid ""
 "<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"<p>您好，</p>\n"
+"<p>很榮幸的向您通知，您已成為我們的黃金級合作夥伴！</p>\n"
+"<p>感謝您的辛苦付出！</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_2
@@ -38,6 +41,9 @@ msgid ""
 "<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"<p>您好，</p>\n"
+"<p>很榮幸的向您通知，您已成為我們的白銀級合作夥伴！</p>\n"
+"<p>感謝您的辛苦付出！</p>\n"
 
 #. module: marketing_campaign
 #: model:mail.template,body_html:marketing_campaign.email_template_1
@@ -47,11 +53,14 @@ msgid ""
 "<p>You will receive your welcome pack via email shortly.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"<p>您好，</p>\n"
+"<p>您將通過電子郵件收到您的歡迎消息。</p>\n"
+"<p>謝謝！</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
 msgid "# of Actions"
-msgstr ""
+msgstr "# 動作"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -59,6 +68,8 @@ msgid ""
 "<span class=\"o_stat_text\">Campaign</span>\n"
 "                            <span class=\"o_stat_text\">Statistics</span>"
 msgstr ""
+"<span class=\"o_stat_text\">行銷活動</span>\n"
+"<span class=\"o_stat_text\">統計數據</span>"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -68,6 +79,8 @@ msgid ""
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
+"一個行銷活動可以有許多小的活動，例如發送信件，列印信件，分配給一個團隊等等\n"
+"這些曉得活動在一些特定情景中被觸發；在第一個合同完成10天後，如果線索還沒有被關閉的話合同生成,等等。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -94,52 +107,52 @@ msgstr "活動"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:384
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "在%(interval_nbr)d %(interval_type)s之後"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "All"
-msgstr "所有"
+msgstr "全部"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "所有記錄（不重複）"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_signal
 msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
-msgstr ""
+msgstr "帶信號的活動可以通過編程方式訪問。請小心，當信號發出去的時候工作項目會自動創建好。"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr "四月"
+msgstr "4月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr "八月"
+msgstr "8月"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Automatic"
-msgstr ""
+msgstr "自動的"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:383
 #, python-format
 msgid "Automatic transition"
-msgstr ""
+msgstr "自動遷移"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
-msgstr ""
+msgstr "啟用此選項，由於條件沒有滿足而未執行的工作項目會被標記為已取消，而不是被刪除。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_campaign_id
@@ -153,44 +166,44 @@ msgstr ""
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Campaign"
-msgstr "行銷活動"
+msgstr "行銷"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr ""
+msgstr "行銷活動"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Campaign Analysis"
-msgstr ""
+msgstr "行銷分析"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_diagram
 msgid "Campaign Editor"
-msgstr ""
+msgstr "行銷編輯器"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
 msgid "Campaign Follow-up"
-msgstr ""
+msgstr "行銷跟進"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
-msgstr ""
+msgstr "行銷細分"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "行銷轉換"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "行銷工作項目"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
@@ -199,7 +212,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_tree
 msgid "Campaigns"
-msgstr "行銷活動"
+msgstr "行銷"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
@@ -209,24 +222,24 @@ msgstr "取消"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Cancel Campaign"
-msgstr ""
+msgstr "取消行銷活動"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Cancel Segment"
-msgstr ""
+msgstr "取消一部分"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Cancel Workitem"
-msgstr ""
+msgstr "取消工作項目"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Cancelled"
-msgstr "取消"
+msgstr "已取消"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
@@ -234,12 +247,12 @@ msgstr "取消"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "選擇此行銷活動需要的資源"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid "Click to create a marketing campaign."
-msgstr ""
+msgstr "點選創建一個行銷活動。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
@@ -254,19 +267,19 @@ msgstr "條件"
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "祝賀！您現在已經是我們的銀牌業務夥伴了！"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "祝賀！您現在已經是我們的金牌業務夥伴了！"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:385
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "裝飾"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_total_cost
@@ -277,7 +290,7 @@ msgstr "成本"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_country_id
 msgid "Country"
-msgstr "國家/地區"
+msgstr "國家"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_uid
@@ -286,7 +299,7 @@ msgstr "國家/地區"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創建人"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_create_date
@@ -295,34 +308,34 @@ msgstr "建立者"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_create_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
-msgstr ""
+msgstr "自行設定操作"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_last_date
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
-msgstr ""
+msgstr "此分段上次同步的日期（自動或手動）"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_done
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "此部分最近關閉或取消的日期"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
-msgstr "日"
+msgstr "天(s)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr "十二月"
+msgstr "12月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -334,6 +347,7 @@ msgid ""
 "records which have the same value for the unique field as other records that"
 " already entered the campaign."
 msgstr ""
+"作為一個附加的篩選條件，用來選擇要放進行銷活動的新記錄。「無重複」選項避免了將已經放進行銷活動的記錄再次放進去。如果行銷活動有「唯一字段」選項，「無重複」還能檢查是否已經有唯一字段值相同的記錄在行銷活動中了。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_display_name
@@ -348,7 +362,7 @@ msgstr "顯示名稱"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "不要刪除工作項目"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -364,39 +378,39 @@ msgstr "完成"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Draft"
-msgstr "草案"
+msgstr "草稿"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
-msgstr ""
+msgstr "不支援複製的行銷活動。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
-msgstr "電郵"
+msgstr "Email"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:586
 #, python-format
 msgid "Email Preview"
-msgstr "預覽郵件"
+msgstr "Email預覽"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "郵件範本"
+msgstr "Email模板"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "預覽郵件範本"
+msgstr "Email模板預覽"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
 msgid "Email Templates"
-msgstr "郵件範本"
+msgstr "Email模板"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_done
@@ -407,19 +421,19 @@ msgstr "結束日期"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_error_msg
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 msgid "Error Message"
-msgstr "錯誤訊息"
+msgstr "錯誤消息"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 #: selection:marketing.campaign.workitem,state:0
 msgid "Exception"
-msgstr "例外"
+msgstr "異常"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 msgid "Exceptions"
-msgstr "異常情況"
+msgstr "異常"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_date
@@ -430,19 +444,19 @@ msgstr "執行日期"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_day
 msgid "Execution Day"
-msgstr ""
+msgstr "執行日期"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_month
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Execution Month"
-msgstr ""
+msgstr "執行月份"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_year
 msgid "Execution Year"
-msgstr ""
+msgstr "執行年度"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -452,7 +466,7 @@ msgstr "二月"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
 msgid "Filter"
-msgstr "過濾器"
+msgstr "篩選"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_ir_filter_id
@@ -462,11 +476,15 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"篩選，選擇屬於此活動段所匹配的資源記錄。\n"
+"可以通過資源列表視圖的高級查詢來創建和保存新的篩選。\n"
+"若沒有設定篩選，所有的都會被選取。\n"
+"在同步模式也可以添加條件到篩選中。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid "Fixed Cost"
-msgstr ""
+msgstr "固定成本"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
@@ -475,11 +493,13 @@ msgid ""
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
 msgstr ""
+"展開此行銷活動的固定成本。您也可以為每個行銷活動指定變動成本或收入。\n"
+"成本與收入之統計將包含在行銷活動報告中。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Follow-Up"
-msgstr "催款"
+msgstr "跟進"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
@@ -493,7 +513,7 @@ msgstr "催款"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -503,7 +523,7 @@ msgstr "小時"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_transition_trigger
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "如何觸發目標工作項目"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_id
@@ -513,12 +533,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_date
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "如果沒有設定日期，此工作項目必須由手工啟動"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
@@ -532,16 +552,17 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"如果指定了某個字段，當渠道運作在「無重複」的模式下時，避免選擇兩條相同的記錄。相同的記錄是指這個唯一字段的值相同的記錄。例如，把CRM線索的「郵箱」字段設定為唯一，就可以避免同一個行銷信件多次發送給相同郵箱。如果沒有指定，「無重複」模式只能避免在輸入行銷活動時插入之前加過的記錄。這裡應該選擇一個容易比較的字段，例如文本字段、整數、下拉列表或簡單的關係字段。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Incoming Transitions"
-msgstr "傳入轉換"
+msgstr "入向轉換"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "這部分初始的開始日期"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_type
@@ -551,22 +572,22 @@ msgstr "間隔單位"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_interval_nbr
 msgid "Interval Value"
-msgstr ""
+msgstr "間隔值"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr "一月"
+msgstr "1月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr "七月"
+msgstr "7月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr "六月"
+msgstr "6月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis___last_update
@@ -576,12 +597,12 @@ msgstr "六月"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition___last_update
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem___last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改日"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_last_date
 msgid "Last Synchronization"
-msgstr ""
+msgstr "最近同步"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_uid
@@ -590,7 +611,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_uid
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新人"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_write_date
@@ -599,77 +620,77 @@ msgstr "最後更新："
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_write_date
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_run
 msgid "Launch Date"
-msgstr ""
+msgstr "發起日期"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr ""
+msgstr "啟動月份"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
 msgid "Lead Automation"
-msgstr ""
+msgstr "線索自動化"
 
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr "經理"
+msgstr "管理員"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Manual Mode"
-msgstr ""
+msgstr "手工模式"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr "三月"
+msgstr "3月"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign"
-msgstr ""
+msgstr "市場行銷"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Marketing Campaign Activities"
-msgstr ""
+msgstr "市場行銷活動"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "市場行銷活動"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "市場行銷細分"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
 msgid "Marketing Campaign Statistics"
-msgstr ""
+msgstr "市場行銷統計"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
 msgid "Marketing Reports"
-msgstr ""
+msgstr "市場報告"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr "五月"
+msgstr "5月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_mode
@@ -681,7 +702,7 @@ msgstr "模式"
 #: code:addons/marketing_campaign/models/marketing_campaign.py:198
 #, python-format
 msgid "Model of filter must be same as resource model of Campaign"
-msgstr ""
+msgstr "篩選條件的模型必須與行銷活動的模型一致"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -694,64 +715,64 @@ msgstr "月"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_name
 msgid "Name"
-msgstr "名稱"
+msgstr "名字"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Newly Created"
-msgstr ""
+msgstr "新創建的"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Newly Modified"
-msgstr ""
+msgstr "新修改"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_to_ids
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Next Activities"
-msgstr "下一個動態"
+msgstr "下一步活動"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_to_id
 msgid "Next Activity"
-msgstr ""
+msgstr "下一個活動"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next Synchronization"
-msgstr ""
+msgstr "下一次同步"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
-msgstr ""
+msgstr "下次同步工作將被設為自動執行"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Normal"
-msgstr "正常"
+msgstr "一般"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr "十一月"
+msgstr "11月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_object_id
 msgid "Object"
-msgstr "物件"
+msgstr "對像"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
-msgstr "十月"
+msgstr "10月"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -760,37 +781,39 @@ msgid ""
 "            to your prospects. You can define a segment (set of conditions) on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
+"odoo的行銷活動允許您自動化的與潛在客戶進行溝通。\n"
+"您可以在潛在客戶以及和客戶上定義片段（一組條件）來實現行銷活動。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "最近一次同步後所創建的新記錄"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
+msgstr "從最近一次同步到現在被修改的記錄（不重複）"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Outgoing Transitions"
-msgstr "匯出轉換"
+msgstr "出向轉換"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
 msgid "Partner"
-msgstr "伙伴"
+msgstr "合作夥伴"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
-msgstr ""
+msgstr "業務夥伴字段"
 
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr "伙伴"
+msgstr "合作夥伴"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -802,18 +825,18 @@ msgstr "預覽"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_from_ids
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Previous Activities"
-msgstr ""
+msgstr "前面的活動"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_activity_from_id
 msgid "Previous Activity"
-msgstr ""
+msgstr "前一個活動"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Process"
-msgstr "處理程序"
+msgstr "處理"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
@@ -825,6 +848,12 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"由Python表達式決定行銷活動是否被執行的，或者被刪除，或者被取消。表達式可以用以下[browsable]變量：\n"
+"   -activity：行銷活動項目\n"
+"   -workitem：行銷活動工作項目\n"
+"   -resource：行銷活動代表的資源對像\n"
+"   -transitions：從此活動出向的行銷活動列表\n"
+"...-re：Python regular expression module"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
@@ -835,7 +864,7 @@ msgstr "報表"
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
 msgid "Reports"
-msgstr "報表"
+msgstr "報告"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -867,7 +896,7 @@ msgstr "資源名稱"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_revenue
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_revenue
 msgid "Revenue"
-msgstr ""
+msgstr "收入"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -890,7 +919,7 @@ msgstr "運行中"
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_search
 msgid "Segment"
-msgstr ""
+msgstr "分段"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -903,12 +932,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_tree
 msgid "Segments"
-msgstr ""
+msgstr "片段"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "September"
-msgstr "九月"
+msgstr "9月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_variable_cost
@@ -917,6 +946,8 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"您可以設定一個變動成本，若您認為每到達這個點的行銷活動項目就將會需要這樣的成本。\n"
+"您可以在報告部分查看成本統計分析結果。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -925,6 +956,8 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
+"設定一個期望的收入，即如果您認為每達到這個點的活動項目都會產生一筆這樣的收入。\n"
+"您可以在報告部分查看到收入統計。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -935,7 +968,7 @@ msgstr "設為草稿"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_signal
 msgid "Signal"
-msgstr ""
+msgstr "信號"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_start
@@ -957,27 +990,27 @@ msgstr "狀態"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "同步模式：所有記錄"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "同步模式：只同步上次同步之後創建的記錄"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Sync mode: only records updated after last sync"
-msgstr ""
+msgstr "同步模式：只同步上次同步後修改了的記錄"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_sync_mode
 msgid "Synchronization mode"
-msgstr ""
+msgstr "同步模式"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_form
 msgid "Synchronize Manually"
-msgstr ""
+msgstr "手工同步"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
@@ -988,38 +1021,42 @@ msgid ""
 " validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
 msgstr ""
+"測試 - 它將直接創建和處理所有行銷活動（無需等待轉換延遲），但不發送電子郵件或產生報告。\n"
+"及時測試 - 它將直接創建和處理所有活動，但不發送電子郵件或生成報告。\n"
+"手動確認 - 廣告功能採普通方式運作，而用戶必須手動驗證所有工作項目。\n"
+"正常 - 廣告功能採普通方式運作，並自動發送所有電子郵件和報告（採用此模式須非常小心，您的動作是在線上的！）"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr ""
+msgstr "直接檢驗"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
 msgid "Test Mode"
-msgstr ""
+msgstr "測試模式"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test in Realtime"
-msgstr ""
+msgstr "及時檢驗"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:401
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
-msgstr ""
+msgstr "注意，前後活動間，若要進行轉換，必須同屬相同的行銷活動"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "活動啟用時執行的操作"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
-msgstr ""
+msgstr "行銷活動的所有工作項目都結束了才可把該行銷活動標記為完成。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:99
@@ -1027,24 +1064,24 @@ msgstr ""
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
-msgstr ""
+msgstr "行銷活動未啟動，還未指定行銷活動的起始活動項目，請指定。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "行銷活動未啟動，因為其不包含任何活動項目。"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/models/marketing_campaign.py:609
 #, python-format
 msgid "The current step for this item has no email or report to preview."
-msgstr ""
+msgstr "這步沒有信件或產生報表。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "此活動項啟用時發送的電子信件"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
@@ -1053,17 +1090,17 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr ""
+msgstr "生成的工作項目會連結到與該記錄相關的業務夥伴上。如果該記錄就是業務夥伴，此字段留空。此字段用於行銷分析或行銷跟進等分析報告。"
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "時間間隔必須是正數或零"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_report_id
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "活動被啟用時生成的報表"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
@@ -1073,16 +1110,20 @@ msgid ""
 "- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
 "- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
 msgstr ""
+"進入此活動時，系統將自動執行的動作類型，如：\n"
+"     - 郵件：通過預先設定之郵件模板發送郵件\n"
+"     - 報表：列印一個設定於模型上的報表，並把它保存到指定的目錄\n"
+"     - 自行設定之操作：執行一個預先設定的操作，例如修改資源記錄的字段"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "此活動在行銷活動開始時啟動。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Time"
-msgstr ""
+msgstr "時間"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -1105,37 +1146,37 @@ msgstr "類型"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid "Unique Field"
-msgstr ""
+msgstr "唯一字段"
 
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
-msgstr ""
+msgstr "可變成本"
 
 #. module: marketing_campaign
 #: model:mail.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
+msgstr "歡迎來到本系統之業務夥伴頻道！"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "透過手工確認"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Workitems"
-msgstr "工作項"
+msgstr "工作項目"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
-msgstr "年"
+msgstr "年(s)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml

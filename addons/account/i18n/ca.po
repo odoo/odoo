@@ -5,9 +5,10 @@
 # Translators:
 # Josep Sànchez <papapep@gmx.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Lluís Dalmau <lluis.dalmau@guifi.net>, 2016
 # Equip de suport <suport@spinvilanova.com>, 2016
 # Eric Antones <eantones@users.noreply.github.com>, 2016
 # Joan Macaya <j.mac.solanes@gmail.com>, 2016
@@ -1635,6 +1636,11 @@ msgid "Adjustment Tax"
 msgstr "Ajustament d'impostos"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2333,6 +2339,12 @@ msgstr "Assentaments de conciliació bancaria predefinits"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Extracte bancari"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -5171,7 +5183,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "In Odoo,"
-msgstr "En Odoo,"
+msgstr "A Odoo,"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:406
@@ -5569,7 +5581,7 @@ msgstr "Facturació i pagaments"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
 msgid "Is zero"
-msgstr "Es zero"
+msgstr "És zero"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_default_credit_account_id
@@ -5706,7 +5718,7 @@ msgstr "Diari"
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "Diari i Empresa"
+msgstr "Diari i empresa"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:253
@@ -6964,7 +6976,7 @@ msgstr "Nombres unitaris d'apertura"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Operation Templates"
-msgstr "Plantilles d'operacions"
+msgstr "Plantilles d'operació"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:1000
@@ -10766,6 +10778,15 @@ msgid ""
 msgstr ""
 "No pot cancel·lar una factura que ja està parcialment pagada. Necessita "
 "trencar la conciliació del pagament relacionat primer."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"No es pot canviar la moneda de l'empresa quan ja hi ha alguns elements"
 
 #. module: account
 #: code:addons/account/models/account.py:180

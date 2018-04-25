@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Collex100, 2016
+# Martin Trigaux, 2017
 # Anishchuk Sergei <anishukserg@l-profit.ru>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Alex Puchkov <ap@alteco.co>, 2017
@@ -12,7 +13,6 @@
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Evgeny <transingularity@gmail.com>, 2017
-# Martin Trigaux, 2017
 # Владимир Куряев <istercul@gmail.com>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
@@ -22,13 +22,14 @@
 # Андрей Гусев <gaussgss@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2018
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2018\n"
+"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14598,6 +14599,18 @@ msgid "Memos pad"
 msgstr "Планшет заметок"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -16372,7 +16385,7 @@ msgstr "Шаблон письма о товаре"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
-msgstr ""
+msgstr "Управление жизненным циклом продукта (ЖЦП)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_extended
@@ -17605,7 +17618,7 @@ msgstr "Поле сериализации"
 #: code:addons/models.py:339
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr "Поле сериализации `% s` не найдено для разреженного поля`% s`!"
+msgstr "Поле сериализации `%s` не найдено для разреженного поля`%s`!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -19723,7 +19736,7 @@ msgstr "Неизвестное поле %r в зависимости %r"
 #: code:addons/base/ir/ir_model.py:321
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
-msgstr "Неизвестное имя поля '% s' в соответствующем поле '% s'"
+msgstr "Неизвестное имя поля '%s' в соответствующем поле '%s'"
 
 #. module: base
 #: code:addons/report_sxw.py:370

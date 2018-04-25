@@ -33,6 +33,9 @@ msgid ""
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
 msgstr ""
+"\n"
+"\n"
+"%s --> 产品单位是 %s (%s) - 库存移动单位是 %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:231
@@ -42,6 +45,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"阻塞: %s"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_dropshipping
@@ -102,11 +108,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*新：库存移动创建时尚未确认。\n"
-"*等待另一个移动：当一个移动正在等待另一个移动时，例如在一个链式流程中，可以看到这个状态。\n"
-"*等待可用性：当采购决议不是直接提交时达到此状态。它可能需要调度程序运行，要制造的组件…\n"
-"*可用：当产品被保留时，它被设置为“可用”。\n"
-"*完成：当货物已经被处理时，状态为“完成”。"
+"* 新建: 当库存移动被创建，还没被确认时。\n"
+"* 等待其它移动: 当需要等待另外一个移库完成时，出现该状态。例如：链式物流.\n"
+"* 等待可用: 当需求还不能被直接了当地解决时，出现该状态。可能需要等调度程序被运行，有个部件在等待制造等等...\n"
+"* 可用: 当产品已经被保留了，状态就被设置为 可用。\n"
+"* 完成: 当这次装运被处理，状态就是“完成”。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -7231,6 +7237,12 @@ msgstr "你不能取消一个标记为‘完成’的库存迁移"
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "不能删除已完成的报废"
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374

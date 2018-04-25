@@ -5,14 +5,14 @@
 # Translators:
 # Arnis Putniņš <arnis.putnins@its1.lv>, 2017
 # JanisJanis <jbojars@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,6 +190,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Localization Module for Dominican Republic\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -261,6 +328,9 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -516,6 +586,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -2641,6 +2714,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Including the following data in the Accounting Standards for Business Enterprises\n"
+"包含企业会计准则以下数据\n"
+"\n"
+"* Chart of Accounts\n"
+"* 科目表模板\n"
+"\n"
+"* Account templates\n"
+"* 科目模板\n"
+"\n"
+"* Tax templates\n"
+"* 税金模板\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -2687,6 +2774,18 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
 "  "
 msgstr ""
+"\n"
+"Indian Accounting: Chart of Account.\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Schedule VI chart of account for indian accounting.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By OpenERP.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -4316,6 +4415,13 @@ msgid ""
 "installed screen. This module then displays this HTML using a web\n"
 "browser.\n"
 msgstr ""
+"\n"
+"Screen Driver\n"
+"=============\n"
+"\n"
+"This module allows the POS client to send rendered HTML to a remotely\n"
+"installed screen. This module then displays this HTML using a web\n"
+"browser.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -5305,6 +5411,16 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"This is the module to manage the accounting chart for Vietnam in Odoo.\n"
+"=========================================================================\n"
+"\n"
+"This module applies to companies based in Vietnamese Accounting Standard (VAS)\n"
+"with Chart of account under Circular No. 200/2014/TT-BTC\n"
+"\n"
+"**Credits:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -7309,7 +7425,7 @@ msgstr "Account Tax Cash Basis"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Account TaxCloud"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -7710,6 +7826,72 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"Adds support for authentication by LDAP server.\n"
+"===============================================\n"
+"This module allows users to login with their LDAP username and password, and\n"
+"will automatically create Odoo users for them on the fly.\n"
+"\n"
+"**Note:** This module only work on servers who have Python's ``ldap`` module installed.\n"
+"\n"
+"Configuration:\n"
+"--------------\n"
+"After installing this module, you need to configure the LDAP parameters in the\n"
+"General Settings menu. Different companies may have different\n"
+"LDAP servers, as long as they have unique usernames (usernames need to be unique\n"
+"in Odoo, even across multiple companies).\n"
+"\n"
+"Anonymous LDAP binding is also supported (for LDAP servers that allow it), by\n"
+"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
+"This does not allow anonymous authentication for users, it is only for the master\n"
+"LDAP account that is used to verify if a user exists before attempting to\n"
+"authenticate it.\n"
+"\n"
+"Securing the connection with STARTTLS is available for LDAP servers supporting\n"
+"it, by enabling the TLS option in the LDAP configuration.\n"
+"\n"
+"For further options configuring the LDAP settings, refer to the ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Security Considerations:\n"
+"------------------------\n"
+"Users' LDAP passwords are never stored in the Odoo database, the LDAP server\n"
+"is queried whenever a user needs to be authenticated. No duplication of the\n"
+"password occurs, and passwords are managed in one place only.\n"
+"\n"
+"Odoo does not manage password changes in the LDAP, so any change of password\n"
+"should be conducted by other means in the LDAP directory directly (for LDAP users).\n"
+"\n"
+"It is also possible to have local Odoo users in the database along with\n"
+"LDAP-authenticated users (the Administrator account is one obvious example).\n"
+"\n"
+"Here is how it works:\n"
+"---------------------\n"
+"    * The system first attempts to authenticate users against the local Odoo\n"
+"      database;\n"
+"    * if this authentication fails (for example because the user has no local\n"
+"      password), the system then attempts to authenticate against LDAP;\n"
+"\n"
+"As LDAP users have blank passwords by default in the local Odoo database\n"
+"(which means no access), the first step always fails and the LDAP server is\n"
+"queried to do the authentication.\n"
+"\n"
+"Enabling STARTTLS ensures that the authentication query to the LDAP server is\n"
+"encrypted.\n"
+"\n"
+"User Template:\n"
+"--------------\n"
+"In the LDAP configuration on the General Settings, it is possible to select a *User\n"
+"Template*. If set, this user will be used as template to create the local users\n"
+"whenever someone authenticates for the first time via LDAP authentication. This\n"
+"allows pre-setting the default groups and menus of the first-time users.\n"
+"\n"
+"**Warning:** if you set a password for the user template, this password will be\n"
+"         assigned as local password for each new LDAP user, effectively setting\n"
+"         a *master password* for these users (until manually changed). You\n"
+"         usually do not want this. One easy way to setup a template user is to\n"
+"         login once with a valid LDAP user, let Odoo create a blank local\n"
+"         user with the same login (and a blank password), then rename this new\n"
+"         user to a username that does not exist in LDAP, and setup its groups\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -8246,7 +8428,7 @@ msgstr "Azerbaidžāna"
 #: code:addons/translate.py:1069
 #, python-format
 msgid "Bad file format: %s"
-msgstr ""
+msgstr "Bad file format: %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -8893,7 +9075,7 @@ msgstr "Check Printing Base"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr ""
+msgstr "Check Printing in Expenses"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
@@ -12167,7 +12349,7 @@ msgstr "Hardware Driver for Weighing Scales"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hardware_drivers
 msgid "Hardware Drivers"
-msgstr ""
+msgstr "Hardware Drivers"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_proxy
@@ -12913,7 +13095,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
 msgid "Indian - Schedule VI Accounting"
-msgstr ""
+msgstr "Indian - Schedule VI Accounting"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -14360,6 +14542,18 @@ msgid "Memos pad"
 msgstr "Memos pad"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -14485,7 +14679,7 @@ msgstr "Missing required value for the field '%s'."
 #: code:addons/base/ir/ir_ui_view.py:345
 #, python-format
 msgid "Missing view architecture."
-msgstr ""
+msgstr "Missing view architecture."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -14693,6 +14887,8 @@ msgid ""
 "Module loading %s failed: file %s could not be processed:\n"
 " %s"
 msgstr ""
+"Module loading %s failed: file %s could not be processed:\n"
+" %s"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_module
@@ -15145,7 +15341,7 @@ msgstr "Object"
 #: code:addons/model.py:152
 #, python-format
 msgid "Object %s doesn't exist"
-msgstr ""
+msgstr "Object %s doesn't exist"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_model
@@ -16076,7 +16272,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_check
 msgid "Print amount in words on checks issued for expenses"
-msgstr ""
+msgstr "Print amount in words on checks issued for expenses"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
@@ -16230,7 +16426,7 @@ msgstr "Provide the field where the record id is stored after the operations."
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
 msgid "Provides support for customer facing displays"
-msgstr ""
+msgstr "Provides support for customer facing displays"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -17132,7 +17328,7 @@ msgstr "Scheduled Actions"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_screen
 msgid "Screen Driver"
-msgstr ""
+msgstr "Screen Driver"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -17191,7 +17387,7 @@ msgstr "See all possible values"
 #: code:addons/common.py:42
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "See http://openerp.com"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_object_field
@@ -18635,6 +18831,9 @@ msgid ""
 "- deletion: you may be trying to delete a record while other records still reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still reference it\n"
+"- creation/update: a mandatory field is not correctly set"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_domain
@@ -19496,6 +19695,7 @@ msgstr "Unknown value '%s' for boolean field '%%(field)s', assuming '%s'"
 msgid ""
 "Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
 msgstr ""
+"Unrecognized extension: must be one of .csv, .po, or .tgz (received .%s)."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search

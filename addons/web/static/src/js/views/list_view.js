@@ -1075,7 +1075,7 @@ ListView.List = Class.extend({
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
             if (value instanceof Array && !_.isEmpty(value)
-                    && !record.get(column.id + '__display')) {
+                    && (!record.get(column.id + '__display') && record.get(column.id + '__display') !== '')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
@@ -1431,7 +1431,7 @@ ListView.Groups = Class.extend({
                     } else if (column.id in group.aggregates) {
                         var r = {};
                         r[column.id] = {value: group.aggregates[column.id]};
-                        $('<td class="oe_number">')
+                        $('<td class="oe_number o_list_number">')
                             .html(column.format(r, {process_modifiers: false}))
                             .appendTo($row);
                     } else {

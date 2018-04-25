@@ -1372,13 +1372,11 @@ var FieldStatus = common.AbstractField.extend({
                 // For field type selection filter values according to
                 // statusbar_visible attribute of the field. For example:
                 // statusbar_visible="draft,open".
-                var select = this.field.selection;
-                for(var i=0; i < select.length; i++) {
-                    var key = select[i][0];
-                    if(key === this.get('value') || !this.options.visible || this.options.visible.indexOf(key) !== -1) {
-                        selection_unfolded.push(select[i]);
-                    }
-                }
+                var restriction = _.isString(this.options.visible) ? this.options.visible.split(',') : [];
+                selection_unfolded = _.filter(this.field.selection, function (val) {
+                    return val[0] === self.get('value') || !self.options.visible || _.contains(restriction, val[0]);
+                });
+
                 return $.when();
             }
         }, this);

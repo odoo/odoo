@@ -41,11 +41,18 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
         if (this.next_action != 'hr_attendance.hr_attendance_action_kiosk_mode' && this.next_action.tag != 'hr_attendance_kiosk_mode') {
             this.stop_listening();
         }
+
         this.attendance = action.attendance;
+        // We receive the check in/out times in UTC
+        // This widget only deals with display, which should be in browser's TimeZone
+        this.attendance.check_in = this.attendance.check_in && moment.utc(this.attendance.check_in).local();
+        this.attendance.check_out = this.attendance.check_out && moment.utc(this.attendance.check_out).local();
+        this.previous_attendance_change_date = action.previous_attendance_change_date && moment.utc(action.previous_attendance_change_date).local();
+
         // check in/out times displayed in the greeting message template.
-        this.attendance.check_in_time = (new Date((new Date(this.attendance.check_in)).valueOf() - (new Date()).getTimezoneOffset()*60*1000)).toTimeString().slice(0,8);
-        this.attendance.check_out_time = this.attendance.check_out && (new Date((new Date(this.attendance.check_out)).valueOf() - (new Date()).getTimezoneOffset()*60*1000)).toTimeString().slice(0,8);
-        this.previous_attendance_change_date = action.previous_attendance_change_date;
+        this.format_time = 'HH:mm:ss';
+        this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
+        this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
         this.employee_name = action.employee_name;
     },
 
@@ -57,13 +64,13 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
 
     welcome_message: function() {
         var self = this;
-        var now = new Date((new Date(this.attendance.check_in)).valueOf() - (new Date()).getTimezoneOffset()*60*1000);
+        var now = this.attendance.check_in.clone();
         this.return_to_main_menu = setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
 
-        if (now.getHours() < 5) {
+        if (now.hours() < 5) {
             this.$('.o_hr_attendance_message_message').append(_t("Good night"));
-        } else if (now.getHours() < 12) {
-            if (now.getHours() < 8 && Math.random() < 0.3) {
+        } else if (now.hours() < 12) {
+            if (now.hours() < 8 && Math.random() < 0.3) {
                 if (Math.random() < 0.75) {
                     this.$('.o_hr_attendance_message_message').append(_t("The early bird catches the worm"));
                 } else {
@@ -72,16 +79,16 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
             } else {
                 this.$('.o_hr_attendance_message_message').append(_t("Good morning"));
             }
-        } else if (now.getHours() < 17){
+        } else if (now.hours() < 17){
             this.$('.o_hr_attendance_message_message').append(_t("Good afternoon"));
-        } else if (now.getHours() < 23){
+        } else if (now.hours() < 23){
             this.$('.o_hr_attendance_message_message').append(_t("Good evening"));
         } else {
             this.$('.o_hr_attendance_message_message').append(_t("Good night"));
         }
         if(this.previous_attendance_change_date){
-            var last_check_out_date = new Date((new Date(this.previous_attendance_change_date)).valueOf() - (new Date()).getTimezoneOffset()*60*1000);
-            if(now.valueOf() - last_check_out_date.valueOf() > 1000*60*60*24*7){
+            var last_check_out_date = this.previous_attendance_change_date.clone();
+            if(now - last_check_out_date > 24*7*60*60*1000){
                 this.$('.o_hr_attendance_random_message').html(_t("Glad to have you back, it's been a while!"));
             } else {
                 if(Math.random() < 0.02){
@@ -93,33 +100,33 @@ var GreetingMessage = Widget.extend(BarcodeHandlerMixin, {
 
     farewell_message: function() {
         var self = this;
-        var now = new Date((new Date(this.attendance.check_out)).valueOf() - (new Date()).getTimezoneOffset()*60*1000);
+        var now = this.attendance.check_out.clone();
         this.return_to_main_menu = setTimeout( function() { self.do_action(self.next_action, {clear_breadcrumbs: true}); }, 5000);
 
         if(this.previous_attendance_change_date){
-            var last_check_in_date = new Date((new Date(this.previous_attendance_change_date)).valueOf() - (new Date()).getTimezoneOffset()*60*1000);
-            if(now.valueOf() - last_check_in_date.valueOf() > 1000*60*60*12){
+            var last_check_in_date = this.previous_attendance_change_date.clone();
+            if(now - last_check_in_date > 1000*60*60*12){
                 this.$('.o_hr_attendance_warning_message').append(_t("Warning! Last check in was over 12 hours ago.<br/>If this isn't right, please contact Human Resources."));
                 clearTimeout(this.return_to_main_menu);
                 this.stop_listening();
-            } else if(now.valueOf() - last_check_in_date.valueOf() > 1000*60*60*8){
+            } else if(now - last_check_in_date > 1000*60*60*8){
                 this.$('.o_hr_attendance_random_message').html(_t("Another good day's work! See you soon!"));
             }
         }
 
-        if (now.getHours() < 12) {
+        if (now.hours() < 12) {
             this.$('.o_hr_attendance_message_message').append(_t("Have a good day!"));
-        } else if (now.getHours() < 14) {
+        } else if (now.hours() < 14) {
             this.$('.o_hr_attendance_message_message').append(_t("Have a nice lunch!"));
             if (Math.random() < 0.05) {
                 this.$('.o_hr_attendance_random_message').html(_t("Eat breakfast as a king, lunch as a merchant and supper as a beggar"));
             } else if (Math.random() < 0.06) {
                 this.$('.o_hr_attendance_random_message').html(_t("An apple a day keeps the doctor away"));
             }
-        } else if (now.getHours() < 17) {
+        } else if (now.hours() < 17) {
             this.$('.o_hr_attendance_message_message').append(_t("Have a good afternoon"));
         } else {
-            if (now.getHours() < 18 && Math.random() < 0.2) {
+            if (now.hours() < 18 && Math.random() < 0.2) {
                 this.$('.o_hr_attendance_message_message').append(_t("Early to bed and early to rise, makes a man healthy, wealthy and wise"));
             } else {
                 this.$('.o_hr_attendance_message_message').append(_t("Have a good evening"));

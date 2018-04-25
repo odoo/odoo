@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -31,7 +30,7 @@ class CrmLead(models.Model):
     @api.model
     def retrieve_sales_dashboard(self):
         res = super(CrmLead, self).retrieve_sales_dashboard()
-        date_today = date.today()
+        date_today = fields.Date.from_string(fields.Date.context_today(self))
 
         res['invoiced'] = {
             'this_month': 0,

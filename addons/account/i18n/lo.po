@@ -4,7 +4,7 @@
 # 
 # Translators:
 # ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2017
 # Amkha VAYAPHATH <amkha.nazou@gmail.com>, 2017
 # Aefgh Threenine <aefgh3962@gmail.com>, 2017
@@ -1446,6 +1446,11 @@ msgid "Adjustment Tax"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2106,6 +2111,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "ບັນຊີສຳຮອງເງິນຝາກທະນາຄານ"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -9830,7 +9841,7 @@ msgstr "​ເຕື່ອນ"
 #: code:addons/account/models/account_invoice.py:499
 #, python-format
 msgid "Warning for %s"
-msgstr "​ເຕື່ອນ ເພື່ອ %S"
+msgstr "​ເຕື່ອນ ເພື່ອ %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -10050,6 +10061,14 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

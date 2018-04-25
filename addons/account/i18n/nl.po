@@ -8,7 +8,7 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # Volluta <volluta@tutanota.com>, 2016
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2016
@@ -1632,6 +1632,11 @@ msgid "Adjustment Tax"
 msgstr "Aanpassingsboeking"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr "Tellingsoort"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2334,6 +2339,12 @@ msgstr "Voorinstellingen tbv afletteren banken"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Bankafschrift"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Bankafschrift %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10782,6 +10793,16 @@ msgid ""
 msgstr ""
 "U kunt gedeeltelijk betaalde facturen niet annuleren. U dient de "
 "afgeletterde betaling eerst ongedaan te maken."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"Het is niet mogelijk de valuta van het bedrijf te wijzigen omdat er al "
+"financiële boekingen zijn gemaakt."
 
 #. module: account
 #: code:addons/account/models/account.py:180

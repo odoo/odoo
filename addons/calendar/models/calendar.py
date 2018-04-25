@@ -842,7 +842,7 @@ class Meeting(models.Model):
     @api.multi
     def _compute_color_partner(self):
         for meeting in self:
-            meeting.color_partner_id = meeting.user_id.partner_id.id
+            meeting.color_partner_id = meeting.sudo().user_id.partner_id.id
 
     @api.constrains('start_datetime', 'stop_datetime', 'start_date', 'stop_date')
     def _check_closing_date(self):

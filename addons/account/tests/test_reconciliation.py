@@ -24,7 +24,8 @@ class TestReconciliation(AccountingTestCase):
         self.currency_swiss_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_euro_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_euro_id})
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_euro_id, company.id])
         self.account_rcv = partner_agrolait.property_account_receivable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
         self.account_rsa = partner_agrolait.property_account_payable_id or self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
         self.product = self.env.ref("product.product_product_4")
@@ -619,3 +620,39 @@ class TestReconciliation(AccountingTestCase):
         # Checking if the direction of the move is correct
         full_rec_payable = full_rec_move.line_ids.filtered(lambda l: l.account_id == self.account_rsa)
         self.assertEqual(full_rec_payable.balance, 18.75)
+
+    def test_unreconcile(self):
+        # Use case:
+        # 2 invoices paid with a single payment. Unreconcile the payment with one invoice, the
+        # other invoice should remain reconciled.
+        inv1 = self.create_invoice(invoice_amount=10, currency_id=self.currency_usd_id)
+        inv2 = self.create_invoice(invoice_amount=20, currency_id=self.currency_usd_id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 100,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_usd.id,
+        })
+        payment.post()
+        credit_aml = payment.move_line_ids.filtered('credit')
+
+        # Check residual before assignation
+        self.assertAlmostEquals(inv1.residual, 10)
+        self.assertAlmostEquals(inv2.residual, 20)
+
+        # Assign credit and residual
+        inv1.assign_outstanding_credit(credit_aml.id)
+        inv2.assign_outstanding_credit(credit_aml.id)
+        self.assertAlmostEquals(inv1.residual, 0)
+        self.assertAlmostEquals(inv2.residual, 0)
+
+        # Unreconcile one invoice at a time and check residual
+        credit_aml.with_context(invoice_id=inv1.id).remove_move_reconcile()
+        self.assertAlmostEquals(inv1.residual, 10)
+        self.assertAlmostEquals(inv2.residual, 0)
+        credit_aml.with_context(invoice_id=inv2.id).remove_move_reconcile()
+        self.assertAlmostEquals(inv1.residual, 10)
+        self.assertAlmostEquals(inv2.residual, 20)

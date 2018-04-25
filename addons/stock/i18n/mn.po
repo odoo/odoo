@@ -5437,7 +5437,7 @@ msgstr "Кодын Дараалал"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per company!"
-msgstr "Код компаний хэмжээнд үл давхцах байх ёстой!"
+msgstr "Код компанийн хэмжээнд үл давхцах байх ёстой!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_origin
@@ -7607,6 +7607,12 @@ msgstr "'Хийгдсэн' хөдөлгөөнийг цуцлах боломжг�
 #, python-format
 msgid "You cannot delete a scrap which is done."
 msgstr "Хийгдсэн хаягдлыг устгах боломжгүй."
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:103
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:374

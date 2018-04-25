@@ -3,7 +3,7 @@
 # * lunch
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
@@ -12,13 +12,14 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # lhmflexerp <lhm@flexerp.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
 "PO-Revision-Date: 2016-09-07 08:58+0000\n"
-"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2018\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"- Klik på <span class=\"fa fa-phone text-success\"></span> for at meddele, at ordren er bestilt <br>\n"
+"                - Klik på <span class=\"fa fa-check text-success\"></span> for at meddele, at ordren er modtaget <br>\n"
+"                - Klik på <span class=\"fa fa-times-circle text-danger\"></span> det røde X for at meddele, at ordren ikke er tilgængelig"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -41,6 +45,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"- Klik på <span class=\"fa fa-phone text-success\"></span> for at meddele, at ordren er bestilt <br>\n"
+"                - Klik på <span class=\"fa fa-check text-success\"></span> for at meddele, at ordren er modtaget <br>\n"
+"                - Klik på <span class=\"fa fa-times-circle text-danger\"></span> det røde X for at meddele, at ordren ikke er tilgængelig"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -111,7 +118,7 @@ msgstr "Og"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Archive/Unarchive"
-msgstr ""
+msgstr "Arkiv / Annuller arkivering"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
@@ -127,7 +134,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
 msgid "Between"
-msgstr ""
+msgstr "Mellem"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -137,7 +144,7 @@ msgstr "Af medarbejder"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "Efter bestilling"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -147,7 +154,7 @@ msgstr "Af Bruger"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Vendor"
-msgstr ""
+msgstr "Af leverandør"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
@@ -314,7 +321,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_menu_payment
 msgid "Employee Payments"
-msgstr ""
+msgstr "Medarbejderbetalinger"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_order_line_lucky_is_max_budget
@@ -375,6 +382,8 @@ msgid ""
 "Here you can see the employees' payment. A payment is a cash move from the "
 "employee to the company."
 msgstr ""
+"Her kan du se medarbejderens betaling. En betaling er en flytning af "
+"kontanter fra medarbejderen til virksomheden."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier

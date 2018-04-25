@@ -5,14 +5,16 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 老窦 北京 <2662059195@qq.com>, 2018
-# e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2018
+# Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:28+0000\n"
 "PO-Revision-Date: 2017-06-23 13:28+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,18 +41,6 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: "
-"10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" "
-"src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
-"style=\"height:auto; width:150px; background-color: #cccccc; margin: "
-"16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style"
-"=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-"
-"height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; "
-"display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: "
-"center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #875A7B; border: 1px solid "
-"#875A7B; border-radius:3px\" class=\"o_default_snippet_text\" "
-"href=\"${object.website_url}\"><strong></strong></a></p>"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -71,18 +61,21 @@ msgid ""
 "    </a>\n"
 "</p>\n"
 msgstr ""
-"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: "
-"10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" "
-"src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" "
-"style=\"height:auto; width:150px; background-color: #cccccc; margin: "
-"16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style"
-"=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-"
-"height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; "
-"display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: "
-"center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #875A7B; border: 1px solid "
-"#875A7B; border-radius:3px\" class=\"o_default_snippet_text\" "
-"href=\"${object.website_url}\"><strong></strong></a></p>"
+"\n"
+"<p>您好,</p>\n"
+"<p>\n"
+"    您有新的 ${object.slide_type} <strong>${object.name}</strong> 已于 ${object.channel_id.name} 发布到 ${format_tz(object.write_date, tz=user.tz)}\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a href=\"${object.website_url}\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
+"    </a>\n"
+"</p>\n"
+"<p style=\"text-align: center; margin-top: 10px;\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
+"        请留意查看 <strong>${object.name}</strong>\n"
+"    </a>\n"
+"</p>\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -109,7 +102,7 @@ msgstr "${user.name} 向你分享了 ${object.slide_type}!"
 msgid ""
 "(Un)archiving a channel automatically (un)archives its slides. Do you want "
 "to proceed?"
-msgstr ""
+msgstr "自动（取消）归档渠道（取消）归档其幻灯片。是否继续？"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -440,6 +433,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
+"无法从url 中获取数据。文档或访问权限不可用。\n"
+" 这是已收到的回复：%s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:307
@@ -516,6 +511,9 @@ msgid ""
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
+"了解适合任何业务规模和用例的一体化业务管理软件解决方案。\n"
+"\n"
+" 欲了解更多内容，请访问 https://odoo.com "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
@@ -571,6 +569,10 @@ msgid ""
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
 msgstr ""
+"下载 Odoo 超棒的时间表，了解时间跟踪和员工管理可以变得多么轻松！\n"
+"\n"
+"Chrome: http://bit.ly/2613LcY\n"
+"iOS: http://bit.ly/1ZUZsZD"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
@@ -881,7 +883,7 @@ msgstr "视频数量"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_2
 msgid "Odoo All-in-One Software Demonstration"
-msgstr ""
+msgstr "Odoo 一体化软件演示"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -1194,6 +1196,9 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
+"告别手动打印和扫描。转投带有 Odoo 标志的电子签名！\n"
+"\n"
+" 欲了解更多内容，请访问 https://www.odoo.com/page/sign"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form

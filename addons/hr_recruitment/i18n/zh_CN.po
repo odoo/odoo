@@ -7,13 +7,14 @@
 # liAnGjiA <liangjia@qq.com>, 2016
 # Bo Cao, 2017
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,16 @@ msgid ""
 "%endif\n"
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
-msgstr "<p/><p><strong/></p><p/>"
+msgstr ""
+"\n"
+"<p>各位：</p>\n"
+"<p>很高兴宣布，<strong>${object.name} </strong> 将\n"
+"加入我们，担任 ${object.job_id.name}\n"
+"%if object.department_id:\n"
+"    部门：${object.department_id.name}。\n"
+"%endif\n"
+"。</p>\n"
+"<p>请大家表示欢迎并给予帮助。</p>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -118,7 +128,7 @@ msgstr "有效"
 msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
-msgstr "<b/><br/><i/>"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id

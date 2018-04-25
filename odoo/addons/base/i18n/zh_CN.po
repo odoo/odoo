@@ -27,13 +27,14 @@
 # zpq001 <zpq001@live.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -360,7 +361,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"[object with reference: %s - %s]"
+"[对象参考: %s - %s]"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_invoice_bba
@@ -9958,7 +9959,7 @@ msgstr "克罗地亚-会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
 msgid "Croatia - RRIF 2012 COA - Accounting Reports"
-msgstr ""
+msgstr "克罗地亚 - RRIF 2012 COA - 会计报表"
 
 #. module: base
 #: model:res.country,name:base.cu
@@ -10301,7 +10302,7 @@ msgstr "默认值或动作引用"
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
 msgid "Default website theme to showcase customization possibilities."
-msgstr ""
+msgstr "通过默认的网站主题来展示自定义的可能性。"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_contract_asset
@@ -10392,7 +10393,7 @@ msgstr "说明HTML"
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_themes
 msgid "Design gorgeous mails"
-msgstr ""
+msgstr "设计美观的邮件"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing
@@ -10772,7 +10773,7 @@ msgid ""
 "Either customer (no user), either shared user. Indicated the current partner"
 " is a customer without access or with a limited access created for sharing "
 "data."
-msgstr ""
+msgstr "要么是客户（无用户），要么是共享用户。表明当前的业务伙伴是无权访问共享数据或访问权限受限的客户。"
 
 #. module: base
 #: model:res.country,name:base.sv
@@ -11826,7 +11827,7 @@ msgstr "通用表格控制"
 msgid ""
 "Generic Wizard to Import Bank Statements. Includes the import of files in "
 ".OFX format"
-msgstr ""
+msgstr "导入银行对账单的通用向导。包括 .OFX 格式的文件导入"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form
@@ -14066,6 +14067,8 @@ msgid ""
 "Manage partner tags to better classify them for tracking and analysis purposes.\n"
 "                    A partner may have several categories and categories have a hierarchical structure: a partner with a category has also the parent category."
 msgstr ""
+"管理业务伙伴标签，优化分类，轻松进行跟踪和分析。\n"
+"一个业务伙伴可能同时属于多个类别，不同类别之间具有相对的层次结构：属于某一类别的业务伙伴还可以具有父类别。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -14239,6 +14242,18 @@ msgstr "会员管理"
 #: model:ir.module.module,shortdesc:base.module_note_pad
 msgid "Memos pad"
 msgstr "记事簿"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
@@ -15914,7 +15929,7 @@ msgstr "打印美国支票"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_check
 msgid "Print amount in words on checks issued for expenses"
-msgstr ""
+msgstr "在用于支付费用的支票上打印金额（以文字形式）"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
@@ -15931,7 +15946,7 @@ msgstr "打印和发送供应商的基本模块"
 msgid ""
 "Print and Send Provider Base Module. Print and send your invoice with a "
 "Postal Provider. This required to install a module implementing a provider."
-msgstr ""
+msgstr "打印和发送提供程序基础模块。打印支票并通过邮政服务提供程序发送。这需要安装实施提供程序的模块。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_print_sale
@@ -16064,7 +16079,7 @@ msgstr "在操作后提供保存记录的id的字段。"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
 msgid "Provides support for customer facing displays"
-msgstr ""
+msgstr "提供面向客户的展示"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -16183,7 +16198,7 @@ msgstr "质量管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
 msgid "Quality Management with MRP"
-msgstr ""
+msgstr "通过 MRP 进行质量管理"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -16215,7 +16230,7 @@ msgstr "报价单，销售订单，开票"
 msgid ""
 "Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes"
 " inside the view definition"
-msgstr ""
+msgstr "Qweb 视图不能在记录中定义“组”。在视图定义中使用“组”属性"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -16742,7 +16757,7 @@ msgstr "SEPA 信用转账"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_sepa
 msgid "SEPA Credit Transfer in Expenses"
-msgstr ""
+msgstr "费用中的 SEPA 信用转账"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_port
@@ -16876,7 +16891,7 @@ msgstr "销售工时表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid_sale
 msgid "Sales Timesheet: Grid Support"
-msgstr ""
+msgstr "销售时间表：网格支持"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_mrp
@@ -16933,7 +16948,7 @@ msgstr "保存附件的前缀"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_maintenance
 msgid "Schedule and manage maintenance on machine and tools."
-msgstr ""
+msgstr "安排和管理机器和工具的维护。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event
@@ -16958,7 +16973,7 @@ msgstr "安排的动作"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_screen
 msgid "Screen Driver"
-msgstr ""
+msgstr "屏幕驱动程序"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
@@ -17649,12 +17664,12 @@ msgstr "库存"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mobile
 msgid "Stock Barcode in Mobile"
-msgstr ""
+msgstr "移动设备中的库存条码"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mobile
 msgid "Stock Barcode scan in Mobile"
-msgstr ""
+msgstr "移动设备中的库存条码扫描"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -18000,12 +18015,12 @@ msgstr "税号"
 msgid ""
 "Tax Identification Number. Fill it if the company is subjected to taxes. "
 "Used by the some of the legal statements."
-msgstr ""
+msgstr "税务标识号。如果公司需要缴税，请填写。在一些法律声明中使用。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_taxcloud
 msgid "TaxCloud make it easy for business to comply with sales tax law"
-msgstr ""
+msgstr "TaxCloud 使企业轻松遵守营业税法"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
@@ -18125,6 +18140,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO 国家代码使用两个字符。\n"
+" 您可以使用此字段进行快速搜索。"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:280
@@ -18142,6 +18159,8 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"分隔符的格式应该类似 [,n]，其中 0 < n：从个位数字开始。以 -1 结束分隔。例如，[3,2,-1] 将 106500 "
+"表示为1,06,500；[1,2,-1] 将其表示为 106,50,0；[3] 将其表示为 106,500。在每种情况中将 ',' 做为千位分隔符。"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:66
@@ -18152,6 +18171,8 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"分隔符的格式应该类似 [,n]，其中 0 < n：从个位数字开始。以 -1 结束分隔。例如，[3,2,-1] 将 106500 "
+"表示为1,06,500；[1,2,-1] 将其表示为 106,50,0；[3] 将其表示为 106,500。在每种情况中提供千位分隔符。"
 
 #. module: base
 #: code:addons/base/module/module.py:666
@@ -18218,7 +18239,7 @@ msgstr ""
 msgid ""
 "The corresponding related field, if any. This must be a dot-separated list "
 "of field names."
-msgstr ""
+msgstr "相应的相关字段（如果有的话）。这必须是由点分隔的字段名称列表。"
 
 #. module: base
 #: sql_constraint:res.currency:0
@@ -18239,7 +18260,7 @@ msgstr "目的地有效。"
 #: code:addons/base/ir/ir_model.py:438
 #, python-format
 msgid "The field '%s' cannot be removed because the field '%s' depends on it."
-msgstr ""
+msgstr "字段 '%s' 不能删除，因为字段 '%s' 依赖于它。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -18330,7 +18351,7 @@ msgstr "这个筛选应用的菜单动作。如果留空，筛选将应用于这
 msgid ""
 "The model name can only contain lowercase characters, digits, underscores "
 "and dots."
-msgstr ""
+msgstr "型号名称只能包含小写字符、数字、下划线和点。"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:98
@@ -18428,7 +18449,7 @@ msgstr "业务伙伴的时区，用来在打印的报表上面输出适当的日
 msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
-msgstr ""
+msgstr "主报表文件的路径（取决于报表类型），或者如果内容位于其他字段中，则为空"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_rml
@@ -18503,7 +18524,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:419
 #, python-format
 msgid "The table %r if used for other, possibly incompatible fields."
-msgstr ""
+msgstr "如果此表 ％r 用于其他可能不兼容的字段。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_model
@@ -18624,7 +18645,7 @@ msgstr "该模块将触发以下模块卸载。"
 msgid ""
 "This theme module is exclusively for master to keep the support of "
 "Bootswatch themes which were previously part of the website module in 8.0."
-msgstr ""
+msgstr "这个主题模块专门用于管理，以保持对 Bootswatch 主题的支持，这些主题以前是网站模块 8.0 的一部分。"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_thousands_sep
@@ -18634,17 +18655,17 @@ msgstr "千位分隔符"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Ticketing, Support, Issues"
-msgstr ""
+msgstr "工单、支持、问题"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
 msgid "Ticketing, Support, Livechat"
-msgstr ""
+msgstr "工单、支持、在线聊天"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_slides
 msgid "Ticketing, Support, Slides"
-msgstr ""
+msgstr "工单、支持、幻灯片"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_time_format
@@ -18755,7 +18776,7 @@ msgstr "将要升级的"
 #, python-format
 msgid ""
 "To enable it, make sure this directory exists and is writable on the server:"
-msgstr ""
+msgstr "要启用它，请确保此目录存在并可在服务器上写入："
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -19343,6 +19364,11 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
+"将 HR 资源用于游戏化过程。\n"
+"\n"
+"人力资源专员现在可以管理挑战和徽章。\n"
+"这使得用户可以向员工（而非简单用户）发送徽章。\n"
+"收到的徽章显示在用户个人资料中。"
 
 #. module: base
 #: selection:ir.actions.server,use_relational_model:0
@@ -19359,7 +19385,7 @@ msgstr "使用格式 '%s'"
 #: model:ir.model.fields,help:base.field_ir_model_fields_relation_table
 msgid ""
 "Used for custom many2many fields to define a custom relation table name"
-msgstr ""
+msgstr "用于自定义多对多字段，以定义自定义的关系表名称"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_usage
@@ -19374,7 +19400,7 @@ msgstr "用户登录入系统"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_sequence
 msgid "Used to order Companies in the company switcher"
-msgstr ""
+msgstr "用于在公司切换器中对公司进行排序"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_type
@@ -19773,7 +19799,7 @@ msgstr "网页编辑器"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
-msgstr ""
+msgstr "Web 企业版"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
@@ -19834,7 +19860,7 @@ msgstr "网站表单生成器"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_form
 msgid "Website Form Helpdesk"
-msgstr ""
+msgstr "网站形式帮助台"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
@@ -19849,12 +19875,12 @@ msgstr "网站谷歌地图"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
 msgid "Website Helpdesk"
-msgstr ""
+msgstr "网站帮助台"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr ""
+msgstr "网站 IM 在线聊天帮助台"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
@@ -19934,7 +19960,7 @@ msgstr "网站销售库存-网站配送信息"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr ""
+msgstr "网站幻灯片帮助台"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
@@ -20302,7 +20328,7 @@ msgstr "你不能创建递归的合作伙伴层级。"
 #: code:addons/base/ir/ir_ui_view.py:314
 #, python-format
 msgid "You cannot create recursive inherited views."
-msgstr ""
+msgstr "您不能创建递归继承视图。"
 
 #. module: base
 #: code:addons/base/res/res_users.py:340

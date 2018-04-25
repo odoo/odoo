@@ -6,7 +6,7 @@
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # ilan kl <ilan@qaroads.co.il>, 2017
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2017
 # Moshe Flam <pashute@gmail.com>, 2017
@@ -12045,6 +12045,18 @@ msgid "Memos pad"
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -17267,7 +17279,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "מיפוי ערך"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_binary
@@ -17496,7 +17508,7 @@ msgstr "מחסן"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Warehouse Management Barcode Scanning"
-msgstr ""
+msgstr "ניהול מחסן סריקת ברקוד"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -18050,13 +18062,13 @@ msgstr ""
 #: code:addons/base/res/res_partner.py:320
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
-msgstr ""
+msgstr "לא ניתן ליצור היררכיות שותפים רקורסיביות."
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:314
 #, python-format
 msgid "You cannot create recursive inherited views."
-msgstr ""
+msgstr "לא ניתן ליצור תצוגות יורשת רקורסיבית."
 
 #. module: base
 #: code:addons/base/res/res_users.py:340
@@ -18082,7 +18094,7 @@ msgstr "ק"
 #: code:addons/base/res/res_lang.py:230
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
-msgstr ""
+msgstr "לא ניתן למחוק את השפה שהיא השפה המועדפת של המשתמש!"
 
 #. module: base
 #: code:addons/base/ir/ir_values.py:412
@@ -18102,6 +18114,8 @@ msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
 "But the latter module is not available in your system."
 msgstr ""
+"אתה מנסה לשדרג מודול %s  מודול זה תלוי בודול: %s.\n"
+"אבל מודול זה אינו זמין במערכת שלך."
 
 #. module: base
 #: code:addons/base/module/module.py:284
@@ -18116,6 +18130,8 @@ msgid ""
 "You try to upgrade the module %s that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"אתה מנסה לשדרג מודול %s  מודול זה תלוי במודול: %s.\n"
+"אבל מודול זה אינו זמין במערכת שלך."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
@@ -18123,6 +18139,8 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr ""
+"תוכל להגדיר הרשאות גישה נוספות על ידי עריכת המשתמש החדש שנוצר בתפריט 'הגדרות"
+" / משתמשים'."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:206
@@ -18139,7 +18157,7 @@ msgstr ""
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
 "instead"
-msgstr ""
+msgstr "כנראה השרת שלך לא תומך ב SSL, האם את רוצה לנסות STARTTLS במקומה"
 
 #. module: base
 #: model:res.country,name:base.yu
@@ -18274,7 +18292,7 @@ msgstr "לדוג': מר"
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "לדוג': מנהל מכירות"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -18296,22 +18314,22 @@ msgstr "לדוג': www.odoo.com"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr ""
+msgstr "מסחר אלקטרוני"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
 msgid "eCommerce Delivery"
-msgstr ""
+msgstr "מסחר אלקטרוני אספקה"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_options
 msgid "eCommerce Optional Products"
-msgstr ""
+msgstr "מסחר אלקטרוני מוצרים אופציוניליים"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr ""
+msgstr "email@yourcompany.com"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -18358,7 +18376,7 @@ msgstr ""
 #: selection:base.language.install,state:0
 #: selection:base.module.update,state:0
 msgid "init"
-msgstr ""
+msgstr "אתחל"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form

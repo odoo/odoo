@@ -3,10 +3,11 @@
 # * account
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
+# krnkris, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # gezza <geza.nagy@oregional.hu>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
 # picibucor <picibucor@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -1627,6 +1628,11 @@ msgid "Adjustment Tax"
 msgstr "Adó kikerekítés"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2329,6 +2335,12 @@ msgid "Bank Statement"
 msgstr "Bankkivonat"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Bankkivonat tételsor"
@@ -2542,7 +2554,7 @@ msgstr "Lehet látható?"
 #: model:ir.ui.view,arch_db:account.view_account_payment_from_invoices
 #: model:ir.ui.view,arch_db:account.view_account_payment_invoice_form
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2588,7 +2600,7 @@ msgstr "Elvetés: visszatérítés létrehozás és egyeztetés"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavonva"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -4048,7 +4060,7 @@ msgstr "Ne habozzon megteeni"
 #. module: account
 #: selection:account.invoice.report,state:0
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10794,6 +10806,14 @@ msgid ""
 msgstr ""
 "Nem vonhat vissza részben kiegyenlített számlát. Először egyeztetetlenné, "
 "könyveletlenné kell tennie az ide vonatkozó fizetéseket."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

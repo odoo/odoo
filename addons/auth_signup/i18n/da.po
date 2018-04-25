@@ -3,7 +3,7 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
 # peso <peer.sommerlund@gmail.com>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
@@ -114,6 +114,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"<p>Kære ${object.name},</p>\n"
+"    <p>\n"
+"        Du er blevet inviteret til at oprette forbindelse til \"${object.company_id.name}\" for at få adgang til dine dokumenter i Odoo.\n"
+"    </p>\n"
+"    <p>\n"
+"        For at acceptere invitationen skal du klikke på følgende link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Godkend invitation til \"${object.company_id.name}\"</a>\n"
+"    </div>\n"
+"    <p>Med venlig hilsen,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sendt af ${user.company_id.name} der anvender <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email

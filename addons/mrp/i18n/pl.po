@@ -6,20 +6,22 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
 # zbik2607 <darek@krokus.com.pl>, 2016
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2016
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2016
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2016
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
+# Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,7 +116,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Wydajność</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -266,6 +268,8 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
+"Zlecenie produkcyjne, oparte na zestawieniu materiałowe, będzie\n"
+"                 zużywać surowce i wytwarzać gotowe produkty."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -372,6 +376,9 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Średnie opóźnienie w dniach do wytworzenia tego produktu. W przypadku "
+"wielopoziomowej specyfikacji materiałowej zostaną dodane czasy realizacji "
+"komponentów."
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
@@ -592,7 +599,7 @@ msgstr "Zmień ilość produktów"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
 msgid "Check Produced Qty"
-msgstr ""
+msgstr "Sprawdź wyprodukowaną ilość"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -830,7 +837,7 @@ msgstr "Bieżąca ilość"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
 msgid "Currently Produced Quantity"
-msgstr ""
+msgstr "Obecna ilość w produkcji"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -1591,7 +1598,7 @@ msgstr "Dane główne"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "Harmonogram produkcji mistrza (MPS)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_message
@@ -3530,7 +3537,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit

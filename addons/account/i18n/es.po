@@ -7,14 +7,14 @@
 # José Vicente <txusev@gmail.com>, 2016
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2016
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Gustavo Valverde <g.valverde02@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Gustavo Valverde, 2016
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
 # ulises aldana <rauleo88@hotmail.com>, 2016
 # Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
@@ -1664,6 +1664,11 @@ msgid "Adjustment Tax"
 msgstr "Impuesto de ajuste"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2362,6 +2367,12 @@ msgstr "Preconfiguración del asiento de conciliación bancaria"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Extracto bancario"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -10792,6 +10803,14 @@ msgid ""
 msgstr ""
 "No puede cancelar una factura parcialmente pagada. Necesita deshacer la "
 "conciliación de los asientos de pago relacionados primero."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

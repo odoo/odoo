@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 from odoo import api, fields, models
-
 
 class MakeProcurement(models.TransientModel):
     _name = 'make.procurement'
@@ -64,9 +64,14 @@ class MakeProcurement(models.TransientModel):
         """ Creates procurement order for selected product. """
         ProcurementOrder = self.env['procurement.order']
         for wizard in self:
+            # we set the time to noon to avoid the date to be changed because of timezone issues
+            date = fields.Datetime.from_string(wizard.date_planned)
+            date = date + datetime.timedelta(hours=12)
+            date = fields.Datetime.to_string(date)
+
             procurement = ProcurementOrder.create({
                 'name': 'INT: %s' % (self.env.user.login),
-                'date_planned': wizard.date_planned,
+                'date_planned': date,
                 'product_id': wizard.product_id.id,
                 'product_qty': wizard.qty,
                 'product_uom': wizard.uom_id.id,

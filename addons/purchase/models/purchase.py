@@ -324,8 +324,8 @@ class PurchaseOrder(models.Model):
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
-        if self.company_id.po_lock == 'lock':
-            self.write({'state': 'done'})
+        self.filtered(
+            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -1174,5 +1174,6 @@ class MailComposeMessage(models.TransientModel):
     @api.multi
     def send_mail(self, auto_commit=False):
         if self._context.get('default_model') == 'purchase.order' and self._context.get('default_res_id'):
+            self = self.with_context(mail_post_autofollow=True)
             self.mail_purchase_order_on_send()
-        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
+        return super(MailComposeMessage, self).send_mail(auto_commit=auto_commit)

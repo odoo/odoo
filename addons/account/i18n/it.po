@@ -30,13 +30,15 @@
 # Giuliano Lotta <giuliano.lotta@gmail.com>, 2016
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2017
 # Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018
+# David Minneci <david@numeko.it>, 2018
+# Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Cesare Cugnasco <cesare.cugnasco@gmail.com>, 2018\n"
+"Last-Translator: Marco Calcagni <mcalcagni@dinamicheaziendali.it>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1075,6 +1077,8 @@ msgstr "Una riga contabile selezionata è già stata riconciliata"
 #, python-format
 msgid "A selected statement line was already reconciled with an account move."
 msgstr ""
+"Una linea di istruzioni selezionata era già stata riconciliata con uno "
+"spostamento dell’account."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:218
@@ -1576,6 +1580,11 @@ msgid "Adjustment Tax"
 msgstr "Compensazione fiscale"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1619,6 +1628,10 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"L' E.C. per partner storico è un report dettagliato dei crediti per "
+"intervalli. Odoo calcola una tabella del saldo del credito per data di "
+"inizio. Quindi, se tu richiedi un intervallo di 30 giorni, Odoo genera "
+"un’analisi dei creditori per il mese passato, i due mesi passati e così via."
 
 #. module: account
 #. openerp-web
@@ -2270,6 +2283,12 @@ msgstr "Scritture predefinite riconciliazione bancaria"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Estratto Conto Bancario"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Estratto conto bancario %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -4643,6 +4662,8 @@ msgid ""
 "Get your bank statements from you bank and import them through plaid.com.\n"
 "-This installs the module account_plaid."
 msgstr ""
+"Ottieni l'estratto conto bancario dalla tua banca e importalo tramite plaid.com.\n"
+"-Questo installa il modulo account_plaid."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_csv
@@ -4650,6 +4671,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .CSV format.\n"
 "-This installs the module account_bank_statement_import_csv."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .CSV\n"
+"-Questo installa il modulo account_bank_statement_import_csv."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_ofx
@@ -4657,6 +4680,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .OFX format.\n"
 "-This installs the module account_bank_statement_import_ofx."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .OFX\n"
+"-Questo installa il modulo account_bank_statement_import_ofx."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_bank_statement_import_qif
@@ -4664,6 +4689,8 @@ msgid ""
 "Get your bank statements from your bank and import them in Odoo in the .QIF format.\n"
 "-This installs the module account_bank_statement_import_qif."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali in Odoo nel formato .QIF\n"
+"-Questo installa il modulo account_bank_statement_import_qif."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_module_account_yodlee
@@ -4671,6 +4698,8 @@ msgid ""
 "Get your bank statements from your bank and import them through yodlee.com.\n"
 "-This installs the module account_yodlee."
 msgstr ""
+"Ottieni gli estratti conto bancari dalla tua banca e importali tramite yodlee.com.\n"
+"-Questo installa il modulo account_yodlee."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -10647,6 +10676,14 @@ msgid ""
 msgstr ""
 "Non è possibile eliminare una fattura che è parzialmente pagata. È "
 "necessario prima annullare la riconciliazione dei relativi pagamenti."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

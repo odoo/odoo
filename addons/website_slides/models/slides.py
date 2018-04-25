@@ -351,7 +351,7 @@ class Slide(models.Model):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
-                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
+                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
