@@ -2550,6 +2550,47 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars on archiving records update counter', function (assert) {
+        assert.expect(4);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="active"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "36",
+            "counter should contain the correct value");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "1 yop",
+            "the counter progressbars should be correctly displayed");
+
+        // archive all records of the second columns
+        kanban.$('.o_kanban_group:eq(1) .o_column_archive').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "0 yop",
+            "the counter progressbars should have been correctly updated");
+
+        kanban.destroy();
+    });
+
     QUnit.test('drag & drop records grouped by m2o with progressbar', function (assert) {
         assert.expect(4);
 

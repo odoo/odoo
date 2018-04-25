@@ -740,7 +740,7 @@ var MockServer = Class.extend({
      */
     _mockReadProgressBar: function (model, kwargs) {
         var domain = kwargs.domain;
-        var groupBy = kwargs.groupBy;
+        var groupBy = kwargs.group_by;
         var progress_bar = kwargs.progress_bar;
 
         var records = this._getRecords(model, domain || []);
