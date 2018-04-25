@@ -987,7 +987,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('buttons in form view', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var rpcCount = 0;
 
@@ -1018,6 +1018,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_form_statusbar button').length, 2,
             "should have 2 buttons in the statusbar");
+        assert.strictEqual(form.$('button[name="post"]').length, 1,
+            "'name' attribute of buttons is transmitted to the rendered html element");
 
         assert.strictEqual(form.$('.o_form_statusbar button:visible').length, 1,
             "should have only 1 visible button in the statusbar");

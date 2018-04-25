@@ -529,7 +529,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _renderButtonFromNode: function (node, options) {
         var btnOptions = {
-            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'name', 'attrs', 'modifiers', 'options'),
+            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options'),
             icon: node.attrs.icon,
         };
         if (options && options.extraClass) {
