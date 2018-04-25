@@ -383,7 +383,7 @@ class AccountInvoice(models.Model):
         new_lines = self.env['account.invoice.line']
         for line in self.vendor_bill_id.invoice_line_ids:
             new_lines += new_lines.new(line._prepare_invoice_line())
-        self.invoice_line_ids = new_lines
+        self.invoice_line_ids += new_lines
         self.payment_term_id = self.vendor_bill_id.payment_term_id
         self.vendor_bill_id = False
         return {}
