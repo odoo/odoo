@@ -528,17 +528,6 @@ class StockMove(models.Model):
             raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.name,))
         credit_value = debit_value
 
-        if self.product_id.cost_method == 'average' and self.company_id.anglo_saxon_accounting:
-            # in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
-            # account books the real purchase price, while the stock account books the average price. The difference is
-            # booked in the dedicated price difference account.
-            if self.location_dest_id.usage == 'supplier' and self.origin_returned_move_id and self.origin_returned_move_id.purchase_line_id:
-                debit_value = self.origin_returned_move_id.price_unit * qty
-            # in case of a customer return in anglo saxon mode, for products in average costing method, the stock valuation
-            # is made using the original average price to negate the delivery effect.
-            if self.location_id.usage == 'customer' and self.origin_returned_move_id:
-                debit_value = self.origin_returned_move_id.price_unit * qty
-                credit_value = debit_value
         partner_id = (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
         debit_line_vals = {
             'name': self.name,
