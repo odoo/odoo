@@ -79,8 +79,7 @@ class CustomerPortal(CustomerPortal):
         return request.render("project.portal_my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
-        groupby = kw.get('groupby', 'project') #TODO master fix this
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby='project', **kw):
         values = self._prepare_portal_layout_values()
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
@@ -162,7 +161,6 @@ class CustomerPortal(CustomerPortal):
             'date': date_begin,
             'date_end': date_end,
             'projects': projects,
-            'tasks': tasks, #TODO master remove this, grouped_tasks is enough
             'grouped_tasks': grouped_tasks,
             'page_name': 'task',
             'archive_groups': archive_groups,
