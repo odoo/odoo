@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     commitment_date = fields.Datetime(compute='_compute_commitment_date', string='Commitment Date', store=True,
                                       help="Date by which the products are sure to be delivered. This is "
                                            "a date that you can promise to the customer, based on the "
-                                           "Product Lead Times.")
+                                           "Product Lead Times.", copy=False)
     requested_date = fields.Datetime('Requested Date', readonly=True, states={'draft': [('readonly', False)],
                                      'sent': [('readonly', False)]}, copy=False,
                                      help="Date by which the customer has requested the items to be "
