@@ -3587,6 +3587,34 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('keyboard navigation on kanban when the focus is on a link that' +
+     'has an action and the kanban has no oe_kanban_global_... class', function(assert){
+        assert.expect(1)
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<div><a type="edit">Edit</a></div>' +
+                '</t></templates></kanban>',
+        });
+
+        testUtils.intercept(kanban, 'switch_view', function (event) {
+            assert.deepEqual(event.data, {
+                view_type: 'form',
+                res_id: 1,
+                mode: 'edit',
+                model: 'partner',
+            },'When selecting focusing a card and hitting ENTER, the first link or button is clicked');
+        });
+        kanban.$('.o_kanban_record').first().focus().trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ENTER,
+            which: $.ui.keyCode.ENTER,
+        }));
+
+        kanban.destroy();
+    });
 });
 
 });
