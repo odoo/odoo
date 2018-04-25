@@ -486,9 +486,19 @@ class StockMove(models.Model):
         }
 
     def _do_unreserve(self):
-        if any(move.state in ('done', 'cancel') for move in self):
-            raise UserError(_('Cannot unreserve a done move'))
-        self.mapped('move_line_ids').unlink()
+        moves_to_unreserve = self.env['stock.move']
+        for move in self:
+            if move.state == 'cancel':
+                # We may have cancelled move in an open picking in a "propagate_cancel" scenario.
+                continue
+            if move.state == 'done':
+                if move.scrapped:
+                    # We may have done move in an open picking in a scrap scenario.
+                    continue
+                else:
+                    raise UserError(_('Cannot unreserve a done move'))
+            moves_to_unreserve |= move
+        moves_to_unreserve.mapped('move_line_ids').unlink()
         return True
 
     def _push_apply(self):
@@ -1010,8 +1020,8 @@ class StockMove(models.Model):
             # create the extra moves
             extra_move_quantity = float_round(
                 self.quantity_done - self.product_uom_qty,
-                precision_rounding=self.product_uom.rounding,
-                rounding_method ='UP')
+                precision_rounding=rounding,
+                rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals)
             if extra_move.picking_id:

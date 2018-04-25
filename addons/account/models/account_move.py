@@ -1135,19 +1135,22 @@ class AccountMoveLine(models.Model):
 
         #create an empty move that will hold all the exchange rate adjustments
         exchange_move = False
-        if aml_to_balance_currency:
+        if aml_to_balance_currency and any([residual for dummy, residual in aml_to_balance_currency.values()]):
             exchange_move = self.env['account.move'].create(
                 self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=self[0].company_id))
 
         for currency, values in aml_to_balance_currency.items():
             aml_to_balance = values[0]
             total_amount_currency = values[1]
-            #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
-            aml_recs, partial_recs = self.env['account.partial.reconcile'].create_exchange_rate_entry(aml_to_balance, 0.0, total_amount_currency, currency, exchange_move)
+            if total_amount_currency:
+                #eventually create journal entries to book the difference due to foreign currency's exchange rate that fluctuates
+                aml_recs, partial_recs = self.env['account.partial.reconcile'].create_exchange_rate_entry(aml_to_balance, 0.0, total_amount_currency, currency, exchange_move)
 
-            #add the ecxhange rate line and the exchange rate partial reconciliation in the et of the full reconcile
-            self |= aml_recs
-            partial_rec_set |= partial_recs
+                #add the ecxhange rate line and the exchange rate partial reconciliation in the et of the full reconcile
+                self |= aml_recs
+                partial_rec_set |= partial_recs
+            else:
+                aml_to_balance.reconcile()
 
         if exchange_move:
             exchange_move.post()
@@ -1175,8 +1178,9 @@ class AccountMoveLine(models.Model):
             rec_move_ids += account_move_line.matched_credit_ids
         if self.env.context.get('invoice_id'):
             current_invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
+            aml_to_keep = current_invoice.move_id.line_ids | current_invoice.move_id.line_ids.mapped('full_reconcile_id.exchange_move_id.line_ids')
             rec_move_ids = rec_move_ids.filtered(
-                lambda r: (r.debit_move_id + r.credit_move_id) & current_invoice.move_id.line_ids
+                lambda r: (r.debit_move_id + r.credit_move_id) & aml_to_keep
             )
         return rec_move_ids.unlink()
 
