@@ -1,33 +1,30 @@
-cache: pip
+language: python
+sudo: false
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache/pip
+
+python:
+  - "2.7.13"
 
 addons:
   apt:
-    sources:
-      - pov-wkhtmltopdf
     packages:
       - expect-dev  # provides unbuffer utility
-      - python-lxml # because pip installation is slow
       - poppler-utils # document index
       - antiword # document index
-      - python-ldap # auth_ldap
-      - wkhtmltopdf # report_webkit
-
-language: python
-sudo: false
-
-python:
-  - "2.7"
 
 env:
   global:
   - VERSION="9.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
+  - WKHTMLTOPDF_VERSION="0.12.4"
+  - EXCLUDE="hw_escpos,hw_scanner,theme_bootswatch"
   matrix:
-  - INCLUDE=applications
-  - INCLUDE=no_applications TESTS="1"
-  - INCLUDE=localization
+  - INCLUDE="applications"
+  - INCLUDE="no_applications" TESTS="1"
+  - INCLUDE="localization"
 
-virtualenv:
-  system_site_packages: true
 
 before_install:
   - "export DISPLAY=:99.0"
@@ -39,13 +36,11 @@ install:
   - travis_install_nightly
   - rm -rf ${HOME}/${ODOO_REPO#*/}-${VERSION}; ln -s ${HOME}/build/${ODOO_REPO} ${HOME}/${ODOO_REPO#*/}-${VERSION}
   - pip install gengo
-  - export EXCLUDE=hw_scanner,hw_escpos,theme_bootswatch
   - cp ${HOME}/maintainer-quality-tools/cfg/.coveragerc .
 
 script:
   - if [ $INCLUDE = 'applications' ]; then
         export INCLUDE=$(getaddons.py -m --only-applications ${HOME}/build/${ODOO_REPO}/openerp/addons ${HOME}/build/${ODOO_REPO}/addons);
-        find ${HOME} -name __init__.py -exec sed -i  "/import test_crawl/d" {} \; ;
     elif [ $INCLUDE = 'no_applications' ]; then
         export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${HOME}/build/${ODOO_REPO}/addons);
     elif [ $INCLUDE = 'localization' ]; then
