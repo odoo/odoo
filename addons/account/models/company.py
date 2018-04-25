@@ -57,7 +57,10 @@ If you have any queries regarding your account, Please contact us.
 Thank you in advance for your cooperation.
 Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
-    
+    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold", help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
+                                                                                                       This is useful if you install accounting after having used invoicing for some time and
+                                                                                                       don't want to reconcile all the past payments with bank statements.""")
+
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
     invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
