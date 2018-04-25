@@ -125,7 +125,7 @@ QUnit.module('base_settings_tests', {
         });
 
         actionManager.doAction(1);
-        actionManager.$('button[name="4"]').click();
+        actionManager.$('button:first').click();
         $('.o_control_panel .breadcrumb li a').click();
         assert.verifySteps([
             'load_views', // initial setting action
