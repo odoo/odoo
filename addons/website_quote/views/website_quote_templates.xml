@@ -17,7 +17,7 @@
   <template id="pricing" name="Price">
       <section id="quote">
             <h1 class="page-header">Pricing</h1>
-            <t t-foreach="doc.order_lines_layouted()" t-as="pages">
+            <t t-foreach="quotation.order_lines_layouted()" t-as="pages">
             <table class="table wq-table">
                 <thead>
                     <tr>
@@ -128,6 +128,7 @@
                     </tr>
                 </tbody>
             </table>
+             <p style="page-break-before:always;"> </p>
         </t>
       </section>
       <section id="terms" class="container" t-if="quotation.note">
