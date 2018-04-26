@@ -604,8 +604,9 @@ class AccountMoveLine(models.Model):
             # If we still have residual value, it means that this move might need to be balanced using an exchange rate entry
             if aml.amount_residual != 0 or aml.amount_residual_currency != 0:
                 if not to_balance.get(aml.currency_id):
-                    to_balance[aml.currency_id] = self.env['account.move.line']
-                to_balance[aml.currency_id] += aml
+                    to_balance[aml.currency_id] = [self.env['account.move.line'], 0]
+                to_balance[aml.currency_id][0] += aml
+                to_balance[aml.currency_id][1] += aml.amount_residual != 0 and aml.amount_residual or aml.amount_residual_currency
         # Check if reconciliation is total
         # To check if reconciliation is total we have 3 differents use case:
         # 1) There are multiple currency different than company currency, in that case we check using debit-credit
@@ -617,14 +618,17 @@ class AccountMoveLine(models.Model):
             (multiple_currency and float_compare(total_debit, total_credit, precision_rounding=digits_rounding_precision) == 0):
             exchange_move_id = False
             # Eventually create a journal entry to book the difference due to foreign currency's exchange rate that fluctuates
-            if to_balance:
+            if to_balance and any([residual for aml, residual in to_balance.values()]):
                 exchange_move = self.env['account.move'].create(
                     self.env['account.full.reconcile']._prepare_exchange_diff_move(move_date=maxdate, company=amls[0].company_id))
                 part_reconcile = self.env['account.partial.reconcile']
-                for aml_to_balance in to_balance.values():
-                    rate_diff_amls, rate_diff_partial_rec = part_reconcile.create_exchange_rate_entry(aml_to_balance, exchange_move)
-                    amls += rate_diff_amls
-                    partial_rec_ids += rate_diff_partial_rec.ids
+                for aml_to_balance, total in to_balance.values():
+                    if total:
+                        rate_diff_amls, rate_diff_partial_rec = part_reconcile.create_exchange_rate_entry(aml_to_balance, exchange_move)
+                        amls += rate_diff_amls
+                        partial_rec_ids += rate_diff_partial_rec.ids
+                    else:
+                        aml_to_balance.reconcile()
                 exchange_move.post()
                 exchange_move_id = exchange_move.id
             #mark the reference of the full reconciliation on the exchange rate entries and on the entries
