@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.osv.orm import except_orm
 from odoo.tests import tagged
-from odoo.tools.datetime import datetime, timedelta
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -13,8 +13,8 @@ class TestPeriodState(AccountingTestCase):
     def setUp(self):
         super(TestPeriodState, self).setUp()
         self.user_id = self.env.user
-        self.day_before_yesterday = datetime.now() - timedelta(2)
-        self.yesterday = datetime.now() - timedelta(1)
+        self.day_before_yesterday = date.today().add(days=-2)
+        self.yesterday = date.today().add(days=-1)
         #make sure there is no unposted entry
         draft_entries = self.env['account.move'].search([('date', '<=', self.yesterday), ('state', '=', 'draft')])
         if draft_entries:

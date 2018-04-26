@@ -1754,7 +1754,7 @@ class AccountPaymentTerm(models.Model):
 
     @api.one
     def compute(self, value, date_ref=False):
-        date_ref = fields.Date.from_string(date_ref or fields.Date.today())
+        date_ref = fields.Date.from_string(date_ref) or fields.Date.today()
         amount = value
         sign = value < 0 and -1 or 1
         result = []

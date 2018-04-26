@@ -1222,10 +1222,7 @@ class AccountPartialReconcile(models.Model):
     @api.depends('debit_move_id.date', 'credit_move_id.date')
     def _compute_max_date(self):
         for rec in self:
-            rec.max_date = max(
-                rec.debit_move_id.date,
-                rec.credit_move_id.date
-            )
+            rec.max_date = max(rec.debit_move_id.date, rec.credit_move_id.date)
 
     @api.model
     def _prepare_exchange_diff_partial_reconcile(self, aml, line_to_reconcile, currency):

@@ -69,7 +69,7 @@
                 <filter string="My Invoices" name="my_invoice" domain="[('user_id', '=', uid)]"/>
                 <separator/>
                 <field name="date"/>
-                <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', datetime.today().end_of('year')),('date','&gt;=',datetime.today().start_of('year'))]" help="Journal invoices with period in current year"/>
+                <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', datetime.date.today().end_of('year')),('date','&gt;=',datetime.date.today().start_of('year'))]" help="Journal invoices with period in current year"/>
                 <separator/>
                 <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>

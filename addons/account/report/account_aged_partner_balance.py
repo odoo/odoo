@@ -3,7 +3,7 @@
 from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
-from odoo.tools.datetime import date, datetime, relativedelta
+from odoo.tools.datetime import date, relativedelta
 
 
 class ReportAgedPartnerBalance(models.AbstractModel):
@@ -231,7 +231,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             'doc_model': model,
             'data': data['form'],
             'docs': docs,
-            'time': datetime.now(),
             'get_partner_lines': movelines,
             'get_direction': total,
             'company_id': self.env['res.company'].browse(

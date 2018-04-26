@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tools.datetime import timedelta, datetime
 import calendar
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.exceptions import UserError
+from odoo.tools.datetime import timedelta, datetime
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import date_utils
 

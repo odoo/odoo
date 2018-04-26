@@ -544,7 +544,7 @@
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="unpaid" string="Open" domain="[('state', '=', 'open')]"/>
                     <filter name="paid" string="Paid" domain="[('state', '=', 'paid')]"/>
-                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', datetime.today()), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
+                    <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', datetime.date.today()), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id" string="Salesperson" domain="[('share','=', False)]"/>
