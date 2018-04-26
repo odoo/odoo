@@ -16,6 +16,8 @@ from odoo.tools import image
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
 from odoo.addons.website.models.website import slug
+from odoo.http import request
+from odoo.addons.website.models.website import url_for
 
 
 class Channel(models.Model):
@@ -348,10 +350,11 @@ class Slide(models.Model):
     embed_code = fields.Text('Embed Code', readonly=True, compute='_get_embed_code')
 
     def _get_embed_code(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
-                record.embed_code = '<iframe src="%s/slides/embed/%s?page=1" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (base_url, record.id, 315, 420)
+                slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
+                record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
