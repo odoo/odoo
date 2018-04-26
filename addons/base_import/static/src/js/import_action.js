@@ -184,26 +184,33 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         });
     },
     setup_float_format_picker: function () {
-        var sug_query = function (q) {
-                    var suggestions = [
-                        {id: ',', text: _t("Comma")},
-                        {id: '.', text: _t("Dot")},
-                    ];
-                    if (q.term) {
-                        suggestions.unshift({id: q.term, text: q.term});
-                    }
-                    q.callback({results: suggestions});
-                };
+        var sub_query = function (q, options) {
+            var suggestions = [
+                {id: ',', text: _t("Comma")},
+                {id: '.', text: _t("Dot")},
+            ];
+            if (options && options.no_separator) {
+                suggestions.push({id: '', text: _t("No Separator")});
+            }
+            if (q.term) {
+                suggestions.unshift({id: q.term, text: q.term});
+            }
+            q.callback({results: suggestions});
+        };
         this.$('input.oe_import_float_thousand_separator').select2({
             width: '160px',
-            query: sug_query,
+            query: function (q) {
+                sub_query(q, {no_separator: true})
+            },
             initSelection: function (e, c) {
                 return c({id: ',', text: _t("Comma")});
             },
         });
         this.$('input.oe_import_float_decimal_separator').select2({
             width: '160px',
-            query: sug_query,
+            query: function (q) {
+                sub_query(q);
+            },
             initSelection: function (e, c) {
                 return c({id: ',', text: _t("Dot")});
             },
