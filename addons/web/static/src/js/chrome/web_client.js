@@ -157,27 +157,10 @@ return AbstractWebClient.extend({
         });
     },
     on_menu_action: function(options) {
-        var self = this;
-        return this.menu_dm.add(data_manager.load_action(options.action_id))
-            .then(function (result) {
-                return self.action_mutex.exec(function() {
-                    var completed = $.Deferred();
-                    self.action_manager.doAction(result, {
-                        clear_breadcrumbs: true,
-                        action_menu_id: options.id,
-                    }).fail(function() {
-                        self.menu.open_menu(options.previous_menu_id);
-                    }).always(function() {
-                        completed.resolve();
-                    });
-                    setTimeout(function() {
-                        completed.resolve();
-                    }, 2000);
-                    // We block the menu when clicking on an element until the action has correctly finished
-                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
-                    return completed;
-                });
-            });
+        this.action_manager.doAction(options.action_id, {
+            clear_breadcrumbs: true,
+            action_menu_id: options.id,
+        });
     },
     toggle_fullscreen: function(fullscreen) {
         this._super(fullscreen);
