@@ -256,7 +256,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
-            tools.config["init"]["all"] = 1
+            tools.config["init"]["base"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:
                 tools.config["demo"]['all'] = 1
@@ -299,7 +299,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
             module_names = [k for k, v in tools.config['init'].items() if v]
-            if module_names:
+            if 'all' in module_names:
+                # `installe = False` translates into 'uninstallable' state
+                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'not like', 'theme_%') ])
+                if modules:
+                    odules.button_install()
+            elif module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:
                     modules.button_install()
