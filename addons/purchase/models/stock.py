@@ -38,16 +38,19 @@ class StockMove(models.Model):
         """ Returns the unit price for the move"""
         self.ensure_one()
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
-            line = self.purchase_line_id
-            order = line.order_id
-            price_unit = line.price_unit
-            if line.taxes_id:
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
-            if line.product_uom.id != line.product_id.uom_id.id:
-                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
-            if order.currency_id != order.company_id.currency_id:
-                price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
-            return price_unit
+            # In case of return of return, do not get the price on the purchase line but use the
+            # sandard price.
+            if not(self._is_in() and self.origin_returned_move_id):
+                line = self.purchase_line_id
+                order = line.order_id
+                price_unit = line.price_unit
+                if line.taxes_id:
+                    price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
+                if line.product_uom.id != line.product_id.uom_id.id:
+                    price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+                if order.currency_id != order.company_id.currency_id:
+                    price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+                return price_unit
         return super(StockMove, self)._get_price_unit()
 
     def _prepare_extra_move_vals(self, qty):
