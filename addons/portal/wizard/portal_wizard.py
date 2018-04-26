@@ -164,6 +164,7 @@ class PortalWizardUser(models.TransientModel):
             'email': extract_email(self.email),
             'login': extract_email(self.email),
             'partner_id': self.partner_id.id,
+            'name': self.partner_id.name,
             'company_id': company_id,
             'company_ids': [(6, 0, [company_id])],
         })
