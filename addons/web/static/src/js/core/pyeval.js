@@ -380,6 +380,30 @@ datetime.datetime = py.type('datetime', null, {
         }
         return py.PY_call(datetime.datetime, params);
     },
+    start_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, 1]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.datetime, [this.year, 1, 1]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day, 23, 59, 59]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.datetime, [this.year, 12, 31, 23, 59, 59]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
     strftime: function () {
         var self = this;
         var args = py.PY_parseArgs(arguments, 'format');
@@ -519,6 +543,30 @@ datetime.date = py.type('date', null, {
     },
     weekday: function () {
         return  py.float.fromJSON((this.toordinal().toJSON()+6)%7);
+    },
+    start_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.date, [this.year, this.month, 1]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.date, [this.year, 1, 1]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.date, [this.year, 12, 31]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
     },
     fromJSON: function (year, month, day) {
         return py.PY_call(datetime.date, [year, month, day]);
