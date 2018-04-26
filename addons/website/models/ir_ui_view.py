@@ -55,9 +55,9 @@ class View(models.Model):
     def filter_duplicate(self):
         """ Filter current recordset only keeping the most suitable view per distinct key """
         filtered = self.env['ir.ui.view']
-        for dummy, group in groupby(self, key=lambda record: record.key):
+        for dummy, group in groupby(self.sorted('key'), key=lambda record: record.key):
             filtered += sorted(group, key=lambda record: record._sort_suitability_key())[0]
-        return filtered
+        return filtered.sorted(key=lambda view: (view.priority, view.id))
 
     @api.model
     def _view_obj(self, view_id):
