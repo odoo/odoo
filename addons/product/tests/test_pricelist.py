@@ -17,6 +17,8 @@ class TestPricelist(TransactionCase):
         self.uom_kgm_id = self.ref('uom.product_uom_kgm')
 
         self.public_pricelist = self.env.ref('product.list0')
+         # EUR, it could have been altered by another moduel's demo data
+        self.public_pricelist.currency_id = self.env['res.currency'].browse(1)
         self.sale_pricelist_id = self.env['product.pricelist'].create({
             'name': 'Sale pricelist',
             'item_ids': [(0, 0, {
