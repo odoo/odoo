@@ -6,3 +6,4 @@ from . import hr
 from . import hr_timesheet
 from . import res_config_settings
 from . import project
+from . import res_users

@@ -65,6 +65,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/account_dashboard_setup_bar.xml',
         'wizard/account_report_tax_view.xml',
         'views/report_tax.xml',
+        'views/res_users_views.xml',
         'data/service_cron_reverse.xml',
     ],
     'demo': [

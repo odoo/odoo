@@ -141,11 +141,6 @@
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
                         <group>
-                            <label for="groups_id" string="Access Rights"
-                                    attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
-                            <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
-                            </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
                         </group>
@@ -181,12 +176,36 @@
                         </div>
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
+                                <group string="User Type" name="user_type" groups="base.group_no_one">
+                                    <field name="group_base_user" groups="base.group_no_one"/>
+                                </group>
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
                                     <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>
-                                <field name="groups_id"/>
+                                <group string="Application Accesses" name="applications"/>
+                                <group string="Technical Settings" name="technical" groups="base.group_no_one" col="8">
+                                    <!-- TODO: Hide the no_one group -->
+                                    <label for="has_group_no_one" colspan="3"/>
+                                    <div>
+                                        <field name='has_group_no_one' colspan="1" class="oe_inline"/>
+                                    </div>
+                                </group>
+                                <group string="Extra Rights" name="extra" groups="base.group_no_one" col="8">
+                                    <label for="has_group_multi_company" colspan="3"/>
+                                    <div>
+                                        <field name='has_group_multi_company' colspan="1" class="oe_inline"/>
+                                    </div>
+                                    <label for="has_group_multi_currency" colspan="3"/>
+                                    <div>
+                                        <field name='has_group_multi_currency' colspan="1" class="oe_inline"/>
+                                    </div>
+                                    <label for="has_group_partner_manager" colspan="3"/>
+                                    <div>
+                                        <field name='has_group_partner_manager' colspan="1" class="oe_inline"/>
+                                    </div>
+                                </group>
                             </page>
                             <page string="Preferences">
                                 <group>
@@ -203,12 +222,27 @@
                                     <field name="signature"/>
                                 </group>
                             </page>
+                            <page string="Groups" groups="base.group_no_one">
+                                <group>
+                                    <field name="groups_id"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-
+        <record id="res_users_view_form_administation" model="ir.ui.view">
+            <field name="name">res.users.view.form.administration</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="view_users_form"/>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <group name="applications" position="inside">
+                    <field name="group_administration_user"/>
+                </group>
+            </field>
+        </record>
         <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.tree</field>
             <field name="model">res.users</field>
@@ -268,16 +302,6 @@
                 </search>
             </field>
         </record>
-        <record id="user_groups_view" model="ir.ui.view">
-            <field name="name">res.users.groups</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="view_users_form"/>
-            <field name="arch" type="xml">
-                <!-- dummy, will be modified by groups -->
-                <field name="groups_id" position="after"/>
-            </field>
-        </record>
-        <!-- dummy update on group, to force the view above to be update -->
         <record model="res.groups" id="group_no_one"/>
         <record id="action_res_users" model="ir.actions.act_window">
             <field name="name">Users</field>

@@ -13,3 +13,4 @@ from . import res_config_settings
 from . import sale_layout
 from . import sales_team
 from . import ir_model_fields
+from . import res_users

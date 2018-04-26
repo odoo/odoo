@@ -23,11 +23,11 @@ class TestPurchaseRequisition(common.TransactionCase):
         # Create a user as 'Purchase Requisition Manager'
         self.res_users_purchase_requisition_manager = self.ResUser.create({'company_id': self.res_company_id, 'name': 'Purchase requisition Manager', 'login': 'prm', 'email': 'requisition_manager@yourcompany.com'})
         # Added groups for Purchase Requisition Manager.
-        self.res_users_purchase_requisition_manager.group_id = self.ref('purchase.group_purchase_manager')
+        self.res_users_purchase_requisition_manager.groups_id = [(4, self.ref('purchase.group_purchase_manager'), False)]
         # Create a user as 'Purchase Requisition User'
         self.res_users_purchase_requisition_user = self.ResUser.create({'company_id': self.res_company_id, 'name': 'Purchase requisition User', 'login': 'pru', 'email': 'requisition_user@yourcompany.com'})
         # Added groups for Purchase Requisition User.
-        self.res_users_purchase_requisition_user.group_id = self.ref('purchase.group_purchase_user')
+        self.res_users_purchase_requisition_user.groups_id = [(4, self.ref('purchase.group_purchase_user'), False)]
 
         # In order to test process of the purchase requisition ,create requisition
         self.requisition1 = self.env['purchase.requisition'].create({'line_ids': [(0, 0, {'product_id': self.product_09_id, 'product_qty': 10.0, 'product_uom_id': self.product_09_uom_id})]})
