@@ -1,7 +1,7 @@
 from odoo import api
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tests import tagged
-from odoo.tools.datetime import date
+from odoo.tools.datetime import date, datetime
 from odoo import api
 import unittest
 
@@ -272,7 +272,7 @@ class TestReconciliation(AccountingTestCase):
         # We update the currency rate of the currency USD in order to force the gain/loss exchanges in next steps
         rateUSDbis = env.ref("base.rateUSDbis")
         rateUSDbis.write({
-            'name': date.today(),
+            'name': datetime.today(),
             'rate': 0.033,
         })
         # We create a customer invoice of 2.00 USD
