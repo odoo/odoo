@@ -318,6 +318,29 @@ QUnit.module('core', function () {
 
     });
 
+    QUnit.test('date.start_of', function (assert) {
+        assert.expect(3);
+
+        var d = pyEval.context().datetime;
+        var a = d.date.fromJSON(2002, 3, 2);
+        var ctx = {a: a, date: d.date};
+        assert.ok(py.eval('a.start_of("day") == date(2002, 3, 2)', ctx));
+        assert.ok(py.eval('a.start_of("month") == date(2002, 3, 1)', ctx));
+        assert.ok(py.eval('a.start_of("year") == date(2002, 1, 1)', ctx));
+
+    });
+
+    QUnit.test('date.end_of', function (assert) {
+        assert.expect(2);
+
+        var d = pyEval.context().datetime;
+        var a = d.date.fromJSON(2002, 3, 2);
+        var ctx = {a: a, date: d.date};
+        assert.ok(py.eval('a.end_of("day") == date(2002, 3, 2)', ctx));
+        assert.ok(py.eval('a.end_of("year") == date(2002, 12, 31)', ctx));
+
+    });
+
     QUnit.test('relativedelta', function (assert) {
         assert.expect(5);
 
@@ -407,6 +430,29 @@ QUnit.module('core', function () {
             '   .strftime("%Y-%m-%d %H:%M:%S")',
             pyEval.context());
         assert.strictEqual(result, "2012-02-15 00:00:00");
+    });
+
+    QUnit.test('datetime.start_of', function (assert) {
+        assert.expect(3);
+
+        var d = pyEval.context().datetime;
+        var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
+        var ctx = {a: a, datetime: d.datetime};
+        assert.ok(py.eval('a.start_of("day") == datetime(2002, 3, 2, 0, 0, 0)', ctx));
+        assert.ok(py.eval('a.start_of("month") == datetime(2002, 3, 1, 0, 0, 0)', ctx));
+        assert.ok(py.eval('a.start_of("year") == datetime(2002, 1, 1, 0, 0, 0)', ctx));
+
+    });
+
+    QUnit.test('datetime.end_of', function (assert) {
+        assert.expect(2);
+
+        var d = pyEval.context().datetime;
+        var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
+        var ctx = {a: a, datetime: d.datetime};
+        assert.ok(py.eval('a.end_of("day") == datetime(2002, 3, 2, 23, 59, 59)', ctx));
+        assert.ok(py.eval('a.end_of("year") == datetime(2002, 12, 31, 23, 59, 59)', ctx));
+
     });
 
     QUnit.module('pyeval (eval domain contexts)', {
