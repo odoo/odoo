@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.sale.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <group name="technical" position="inside">
+                <label for="has_group_warning_sale" colspan="3"/>
+                <div>
+                    <field name='has_group_warning_sale' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_sale_layout" colspan="3"/>
+                <div>
+                    <field name='has_group_sale_layout' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_delivery_invoice_address" colspan="3"/>
+                <div>
+                    <field name='has_group_delivery_invoice_address' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_show_price_subtotal" colspan="3"/>
+                <div>
+                    <field name='has_group_show_price_subtotal' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_show_price_total" colspan="3"/>
+                <div>
+                    <field name='has_group_show_price_total' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_discount_per_so_line" colspan="3"/>
+                <div>
+                    <field name='has_group_discount_per_so_line' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_proforma_sales" colspan="3"/>
+                <div>
+                    <field name='has_group_proforma_sales' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_proforma_sales" colspan="3"/>
+                <div>
+                    <field name='has_group_proforma_sales' colspan="1" class="oe_inline"/>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

@@ -3,10 +3,11 @@
 
 from odoo import api, fields, models
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    event_count = fields.Integer("Events", compute='_compute_event_count', help="Number of events the partner has participated.")
+    event_count = fields.Integer("Events Count", compute='_compute_event_count', help="Number of events the partner has participated.")
 
     def _compute_event_count(self):
         for partner in self:
