@@ -50,7 +50,6 @@ RUN apt-get update -qq &&  \
         python3-vobject \
         python3-werkzeug \
         python3-xlsxwriter \
-        python3-yaml -y && \
     rm -rf /var/lib/apt/lists/*
 
 RUN echo "PS1=\"[\u@nightly-tests] # \"" > ~/.bashrc
