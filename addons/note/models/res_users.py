@@ -58,7 +58,7 @@ GROUP BY id"""
         notes_count = self.env['note.note'].search_count([('user_id', '=', self.env.uid)])
         if notes_count:
             note_index = next((index for (index, a) in enumerate(activities) if a["model"] == "note.note"), None)
-            note_label = ("%s (%d)") % (_('Notes'), notes_count)
+            note_label = _('Notes')
             if note_index is not None:
                 activities[note_index]['name'] = note_label
             else:
