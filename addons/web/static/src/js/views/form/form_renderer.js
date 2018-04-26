@@ -395,6 +395,16 @@ var FormRenderer = BasicRenderer.extend({
     _renderHeaderButton: function (node) {
         var $button = this._renderButtonFromNode(node);
 
+        // Current API of odoo for rendering buttons is "if classes are given
+        // use those on top of the 'btn' and 'btn-{size}' classes, otherwise act
+        // as if 'btn-default' class was given". The problem is that, for header
+        // buttons only, we allowed users to only indicate their custom classes
+        // without having to explicitely ask for the 'btn-default' class to be
+        // added. We force it so here when no bootstrap btn type class is found.
+        if ($button.not('.btn-primary, .btn-default, .btn-link, .btn-success, .btn-info, .btn-warning, .btn-danger').length) {
+            $button.addClass('btn-default');
+        }
+
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
