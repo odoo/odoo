@@ -80,6 +80,20 @@ ListRenderer.include({
             this._super.apply(this, arguments);
         }
     },
+    _renderBodyCell: function (record, node, index, options) {
+        var $cell = this._super.apply(this, arguments);
+        if (this.sectionLine && record.data.line_type === 'section') {
+            if ($cell.hasClass('o_handle_cell')) {
+                return $cell;
+            } else if ($cell.hasClass('product_name')) {
+                var nbrColumns = this.addTrashIcon ? this._getNumberOfCols() - 2: this._getNumberOfCols();
+                $cell.attr('colspan', nbrColumns);
+            } else {
+                return $cell.addClass('o_hidden');
+            }
+        }
+        return $cell;
+    },
     _renderRows: function () {
         var self = this;
         var $rows = this._super.apply(this, arguments);
