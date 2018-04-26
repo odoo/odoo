@@ -1183,7 +1183,7 @@ class SaleOrderLine(models.Model):
             on SO lines. This method is a hook: since analytic line are used for timesheet,
             expense, ...  each use case should provide its part of the domain.
         """
-        return [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
+        return ['&', ('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
 
     @api.multi
     def _analytic_compute_delivered_quantity(self):
