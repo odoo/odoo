@@ -207,11 +207,12 @@ return {
      *
      * @param {Object} options
      * @param {Object} [options.attrs] - Attributes to put on the button element
-     * @param {string} [options.attrs.type="button"]
-     * @param {string} [options.attrs.class="btn-default"]
-     *        Note: automatically completed with "btn btn-X" (@see options.size
-     *        for the value of X)
-     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.attrs.type='button']
+     * @param {string} [options.attrs.class='btn-default']
+     *        Note: automatically completed with "btn btn-X"
+     *        (@see options.size for the value of X)
+     * @param {string} [options.size='sm'] - @see options.attrs.class
+     *        Note: use 'md' for no sizing class
      * @param {string} [options.icon]
      *        The specific fa icon class (for example "fa-home") or an URL for
      *        an image to use as icon.
@@ -219,15 +220,28 @@ return {
      * @returns {jQuery}
      */
     renderButton: function (options) {
-        var params = options.attrs || {};
-        params.type = params.type || 'button';
-        var classes = 'btn-default';
-        if (params.class) {
-            classes = params.class.replace(/\boe_highlight\b/g, 'btn-primary')
-                                  .replace(/\boe_link\b/g, 'btn-link');
+        var jQueryParams = _.extend({
+            type: 'button',
+        }, options.attrs || {});
+
+        var extraClasses = jQueryParams.class;
+        if (extraClasses) {
+            // If we got extra classes, check if old oe_highlight/oe_link
+            // classes are given and switch them to the right classes (those
+            // classes have no style associated to them anymore).
+            // TODO ideally this should be dropped at some point.
+            extraClasses = extraClasses.replace(/\boe_highlight\b/g, 'btn-primary')
+                                       .replace(/\boe_link\b/g, 'btn-link');
         }
-        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + classes;
-        var $button = $('<button/>', params);
+
+        jQueryParams.class = 'btn';
+        if (options.size !== 'md') {
+            jQueryParams.class += (' btn-' + (options.size || 'sm'));
+        }
+        jQueryParams.class += (' ' + (extraClasses || 'btn-default'));
+
+        var $button = $('<button/>', jQueryParams);
+
         if (options.icon) {
             if (options.icon.substr(0, 3) === 'fa-') {
                 $button.append($('<i/>', {
@@ -244,6 +258,7 @@ return {
                 text: options.text,
             }));
         }
+
         return $button;
     },
     /**
