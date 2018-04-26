@@ -137,6 +137,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                     if (elementWithAccessKey.length) {
                         if (this.BrowserDetection.isOsMac() ||
                             !this.BrowserDetection.isBrowserChrome()) { // on windows and linux, chrome does not prevent the default of the accesskeys
+                            elementWithAccessKey[0].focus();
                             elementWithAccessKey[0].click();
                             if (keyDownEvent.preventDefault) keyDownEvent.preventDefault(); else keyDownEvent.returnValue = false;
                             if (keyDownEvent.stopPropagation) keyDownEvent.stopPropagation();
