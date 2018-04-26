@@ -126,6 +126,11 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                         }
                     }
                 });
+
+                var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
+                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
+                    elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
+                });
                 this._addAccessKeyOverlays();
             }
             if (keyDownEvent.altKey && !keyDownEvent.ctrlKey && keyDownEvent.key.length === 1) { // we don't want to catch the Alt key down, only the characters A to Z and number keys
