@@ -331,7 +331,9 @@ class PaymentTransaction(osv.Model):
         return [(language.code, language.name) for language in languages]
 
     def _default_partner_country_id(self, cr, uid, context=None):
-        comp = self.pool['res.company'].browse(cr, uid, context.get('company_id', 1), context=context)
+        Company = self.pool['res.company']
+        company_id = Company.search(cr, uid, [], limit=1, order='id', context=context)
+        comp = Company.browse(cr, uid, context.get('company_id', company_id), context=context)
         return comp.country_id.id
 
     _columns = {
