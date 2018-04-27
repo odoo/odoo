@@ -31,6 +31,7 @@
             var odoo = <t t-raw="json.dumps({
                 'csrf_token': request.csrf_token(None),
                 'session_info': session_info,
+                'login_number': login_number,
                 'debug': debug,
             })"/>;
         </script>

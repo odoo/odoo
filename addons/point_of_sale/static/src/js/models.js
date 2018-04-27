@@ -242,7 +242,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'login_number', 'payment_method_ids'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids'],
         domain: function(self){
             var domain = [
                 ['state','=','opened'],
@@ -253,6 +253,7 @@ exports.PosModel = Backbone.Model.extend({
         },
         loaded: function(self, pos_sessions, tmp){
             self.pos_session = pos_sessions[0];
+            self.pos_session.login_number = odoo.login_number;
             self.config_id = self.config_id || self.pos_session && self.pos_session.config_id[0];
             tmp.payment_method_ids = pos_sessions[0].payment_method_ids;
         },

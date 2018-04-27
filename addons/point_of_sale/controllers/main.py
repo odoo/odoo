@@ -34,12 +34,12 @@ class PosController(http.Controller):
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
-        pos_session.login()
         # The POS only work in one company, so we enforce the one of the session in the context
         session_info = request.env['ir.http'].session_info()
         session_info['user_context']['allowed_company_ids'] = pos_session.company_id.ids
         context = {
-            'session_info': session_info
+            'session_info': session_info,
+            'login_number': pos_session.login(),
         }
         return request.render('point_of_sale.index', qcontext=context)
 

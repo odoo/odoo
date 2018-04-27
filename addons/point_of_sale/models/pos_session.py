@@ -220,9 +220,11 @@ class PosSession(models.Model):
 
     def login(self):
         self.ensure_one()
+        login_number = self.login_number + 1
         self.write({
-            'login_number': self.login_number + 1,
+            'login_number': login_number,
         })
+        return login_number
 
     def action_pos_session_open(self):
         # second browse because we need to refetch the data from the DB for cash_register_id
