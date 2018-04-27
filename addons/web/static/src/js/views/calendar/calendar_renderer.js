@@ -463,6 +463,13 @@ return AbstractRenderer.extend({
      */
     _renderEvents: function () {
         this.$calendar.fullCalendar('removeEvents');
+        for (var k in this.state.data) {
+            var key = this.state.data[k].color_index
+            // check if the key is a css color
+            if (typeof key === 'string' && key.match(/^((#[A-F0-9]{3})|(#[A-F0-9]{6})|((hsl|rgb)a?\(\s*(?:(\s*\d{1,3}%?\s*),?){3}(\s*,[0-9.]{1,4})?\))|)$/i)) {
+                this.state.data[k].color = this.state.data[k].color_index
+            }
+        }
         this.$calendar.fullCalendar('addEventSource', this.state.data);
     },
     /**
