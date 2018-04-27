@@ -130,7 +130,7 @@ class FleetVehicle(models.Model):
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
 
-    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)")
+    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)", track_visibility="onchange")
 
 
 class FleetVehicleModel(models.Model):
