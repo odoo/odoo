@@ -66,6 +66,17 @@ class FleetVehicle(models.Model):
             acquisition_date = vehicle._get_acquisition_date()
             vehicle.name += u" \u2022 " + str(round(vehicle.total_depreciated_cost, 2)) + u" \u2022 " + acquisition_date
 
+    @api.model
+    def create(self, vals):
+        res = super(FleetVehicle, self).create(vals)
+        if not res.log_contracts:
+            self.env['fleet.vehicle.log.contract'].create({
+                'vehicle_id': res.id,
+                'recurring_cost_amount_depreciated': res.model_id.default_recurring_cost_amount_depreciated,
+                'purchaser_id': res.driver_id.id,
+            })
+        return res
+
     def _get_acquisition_date(self):
         self.ensure_one()
         return babel.dates.format_date(
