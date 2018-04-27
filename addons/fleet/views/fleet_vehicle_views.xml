@@ -11,6 +11,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="open_assignation_logs" string="Drivers History" type="object" class="oe_stat_button" icon="fa-history"/>
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
@@ -83,6 +84,7 @@
                                 <field name="odometer_unit"/>
                             </div>
                             <field name="acquisition_date" />
+                            <field name="first_contract_date"/>
                             <field name="car_value" />
                             <field name="residual_value"/>
                         </group>
@@ -111,6 +113,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                 </div>
             </form>
@@ -128,8 +131,6 @@
                 <field name="vin_sn" />
                 <field name="acquisition_date" />
                 <field name="state_id"/>
-                <field name="odometer"/>
-                <field name="odometer_unit" />
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1" />
                 <field name="contract_renewal_total" invisible="1"/>
@@ -177,6 +178,9 @@
                 <field name="contract_renewal_name" />
                 <field name="contract_renewal_total" />
                 <field name="contract_count" />
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -214,6 +218,9 @@
                                     </span>
                                 </a>
                             </div>
+                            <div class="o_kanban_inline_block">
+                                <field name="activity_ids" widget="kanban_activity"/>
+                            </div>
                         </div>
                     </t>
                 </templates>
@@ -227,6 +234,7 @@
         <field name="res_model">fleet.vehicle</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_groupby_status': 1}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Create a new vehicle
@@ -238,6 +246,7 @@
 
     <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
     <menuitem action="fleet_vehicle_action" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="fleet_group_user"/>
+    <menuitem action="fleet_vehicle_model_action" parent="fleet_vehicles" id="fleet_vehicle_model_menu" sequence="11"/>
 
    <record id='fleet_vehicle_odometer_view_form' model='ir.ui.view'>
         <field name="name">fleet.vehicle.odometer.form</field>
@@ -435,5 +444,18 @@
     </record>
 
     <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="89"/>
+
+    <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="arch" type="xml">
+            <tree string="Assignation Logs" editable="bottom">
+                <field name="vehicle_id" invisible="1"/>
+                <field name="driver_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </tree>
+        </field>
+    </record>
 
 </odoo>

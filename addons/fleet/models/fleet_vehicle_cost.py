@@ -103,7 +103,7 @@ class FleetVehicleLogContract(models.Model):
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
-    purchaser_id = fields.Many2one('res.partner', 'Contractor', default=lambda self: self.env.user.partner_id.id,
+    purchaser_id = fields.Many2one('res.partner', 'Driver', default=lambda self: self.env.user.partner_id.id,
         help='Person to which the contract is signed for')
     ins_ref = fields.Char('Contract Reference', size=64, copy=False)
     state = fields.Selection([
@@ -117,7 +117,7 @@ class FleetVehicleLogContract(models.Model):
         track_visibility="onchange",
         copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Float('Recurring Cost Amount', 
+    cost_generated = fields.Float('Recurring Cost Amount', track_visibility="onchange",
         help="Costs paid at regular intervals, depending on the cost frequency. "
         "If the cost frequency is set to unique, the cost will be logged at the start date")
     cost_frequency = fields.Selection([
