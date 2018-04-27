@@ -73,10 +73,6 @@ class FleetVehicle(models.Model):
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
     residual_value = fields.Float()
 
-    _sql_constraints = [
-        ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
-    ]
-
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
         for record in self:
