@@ -300,7 +300,36 @@ class AccountVoucher(models.Model):
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'payment_id': self._context.get('payment_id'),
             }
-            self.env['account.move.line'].with_context(apply_taxes=True).create(move_line)
+            # Create one line per tax and fix debit-credit for the move line if there are tax included
+            if (line.tax_ids):
+                tax_group = line.tax_ids.compute_all(line.price_unit, line.currency_id, line.quantity, line.product_id, self.partner_id)
+                if move_line['debit']: move_line['debit'] = tax_group['total_excluded']
+                if move_line['credit']: move_line['credit'] = tax_group['total_excluded']
+                for tax_vals in tax_group['taxes']:
+                    if tax_vals['amount']:
+                        tax = self.env['account.tax'].browse([tax_vals['id']])
+                        account_id = (amount > 0 and tax_vals['account_id'] or tax_vals['refund_account_id'])
+                        if not account_id: account_id = line.account_id.id
+                        temp = {
+                            'account_id': account_id,
+                            'name': line.name + ' ' + tax_vals['name'],
+                            'tax_line_id': tax_vals['id'],
+                            'move_id': move_id,
+                            'date': self.account_date,
+                            'partner_id': self.partner_id.id,
+                            'debit': tax_vals['amount'] > 0 and tax_vals['amount'] or 0.0,
+                            'credit': tax_vals['amount'] < 0 and -tax_vals['amount'] or 0.0,
+                            'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
+                        }
+                        if company_currency != current_currency:
+                            ctx = {}
+                            if self.account_date:
+                                ctx['date'] = self.account_date
+                            temp['currency_id'] = current_currency.id
+                            temp['amount_currency'] = company_currency._convert(tax_vals['amount'], current_currency, line.company_id, self.account_date or fields.Date.today(), round=True)
+                        self.env['account.move.line'].create(temp)
+
+            self.env['account.move.line'].create(move_line)
         return line_total
 
     @api.multi
