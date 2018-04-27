@@ -79,12 +79,13 @@ class Partner(models.Model):
             'subtype': message.subtype_id,
         }
 
-    @api.multi
-    def _notify(self, message, record, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
+    @api.model
+    def _notify(self, message, rdata, record, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
         :param message: mail.message record to notify;
+        :param rdata: recipient data (see mail.message _notify);
         :param record: optional record on which the message was posted;
         :param force_send: tells whether to send notification emails within the
           current transaction or to use the email queue;
@@ -94,7 +95,7 @@ class Partner(models.Model):
           notification templates);
         :param mail_auto_delete: delete notification emails once sent;
         """
-        if not self.ids:
+        if not rdata:
             return True
 
         template_xmlid = message.layout if message.layout else 'mail.message_notification_email'
@@ -117,9 +118,11 @@ class Partner(models.Model):
             base_mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(message, records=record))
 
         # classify recipients: actions / no action
-        recipients = self.env['mail.thread']._notify_classify_recipients_on_records(message, self, records=record)
+        recipients = self.env['mail.thread']._notify_classify_recipients_on_records(message, rdata, records=record)
 
-        emails = self.env['mail.mail']
+        Mail = self.env['mail.mail'].sudo()
+        emails = self.env['mail.mail'].sudo()
+        email_pids = set()
         recipients_nbr, recipients_max = 0, 50
         for group_tpl_values in [group for group in recipients.values() if group['recipients']]:
             # generate notification email content
@@ -129,7 +132,7 @@ class Partner(models.Model):
             mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name)
 
             # send email
-            for email_chunk in split_every(50, group_tpl_values['recipients'].ids):
+            for email_chunk in split_every(50, group_tpl_values['recipients']):
                 recipient_values = self.env['mail.thread']._notify_email_recipients_on_records(message, email_chunk, records=record)
                 create_values = {
                     'body_html': mail_body,
@@ -137,19 +140,23 @@ class Partner(models.Model):
                 }
                 create_values.update(base_mail_values)
                 create_values.update(recipient_values)
-                emails |= self.env['mail.mail'].create(create_values)
+                recipient_ids = [r[1] for r in create_values.get('recipient_ids', [])]
+                email = Mail.create(create_values)
 
-        # update notifications
-        for email in emails:
-            notifications = self.env['mail.notification'].sudo().search([
-                ('mail_message_id', '=', email.mail_message_id.id),
-                ('res_partner_id', 'in', email.recipient_ids.ids)])
-            notifications.write({
-                'mail_id': email.id,
-                'is_email': True,
-                'is_read': True,  # handle by email discards Inbox notification
-                'email_status': 'ready',
-            })
+                if email and recipient_ids:
+                    notifications = self.env['mail.notification'].sudo().search([
+                        ('mail_message_id', '=', email.mail_message_id.id),
+                        ('res_partner_id', 'in', list(recipient_ids))
+                    ])
+                    notifications.write({
+                        'is_email': True,
+                        'mail_id': email.id,
+                        'is_read': True,  # handle by email discards Inbox notification
+                        'email_status': 'ready',
+                    })
+
+                emails |= email
+                email_pids.update(recipient_ids)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system

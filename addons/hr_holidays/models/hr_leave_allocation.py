@@ -509,8 +509,9 @@ class HolidaysAllocation(models.Model):
             ref_action = self._notify_get_action_link('controller', controller='/allocation/refuse')
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
+        holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id
         new_group = (
-            'group_hr_holidays_user', lambda partner: bool(partner.user_ids) and any(user.has_group('hr_holidays.group_hr_holidays_user') for user in partner.user_ids), {
+            'group_hr_holidays_user', lambda pdata: pdata['type'] == 'user' and holiday_user_group_id in pdata['groups'], {
                 'actions': hr_actions,
             })
 
