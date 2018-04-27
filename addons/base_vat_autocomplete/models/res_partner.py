@@ -44,16 +44,11 @@ class ResPartner(models.Model):
                     return (result.group(1), result.group(2))
             return False
 
-        try:
-            partner_vat = partner.compact_vat_number(partner.vat)
-            result = partner.vies_vat_check(partner_vat[:2], partner_vat[2:])
-        except:
-            # Avoid blocking the client when the service is unreachable/unavailable
-            return False, {}
+        partner_vat = self.compact_vat_number(vat)
+        result = self.vies_vat_check(partner_vat[:2], partner_vat[2:])
 
         if not result:
             return False, {}
-
         partner_name = False
         partner_address = {}
         if result['name'] != '---':
@@ -102,13 +97,14 @@ class ResPartner(models.Model):
                 if not partner.name and partner_name:
                     partner.name = partner_name
 
-                #set the address fields
-                for field, value in partner_address.items():
-                    partner[field] = value
-                    non_set_address_fields.remove(field)
-                for field in non_set_address_fields:
-                    if partner[field]:
-                        partner[field] = False
+                if partner_address:
+                    #set the address fields
+                    for field, value in partner_address.items():
+                        partner[field] = value
+                        non_set_address_fields.remove(field)
+                    for field in non_set_address_fields:
+                        if partner[field]:
+                            partner[field] = False
 
 
 class ResCompany(models.Model):

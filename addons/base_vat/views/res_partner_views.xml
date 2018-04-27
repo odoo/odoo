@@ -9,7 +9,7 @@
                 </xpath>
 
                 <xpath expr="//label[@for='street']" position="before">
-                    <field name="base_vat_check_status" invisible="0"/>
+                    <field name="base_vat_check_status" invisible="1"/>
                     <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': ['|', ('base_vat_check_status', '!=', 'wrong'), ('vat','=',False)]}"/>
                     <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_check_status', '!=', 'verified')]}"/>
                     <field name="vat" string="VAT" attrs="{'invisible': [('vat','!=',False)]}"/>

@@ -109,7 +109,7 @@ class ResPartner(models.Model):
         '''
         if not ustr(country_code).encode('utf-8').isalpha():
             return False
-        check_func_name = 'check_vat_' + country_code
+        check_func_name = 'check_vat_' + country_code.lower()
         check_func = getattr(self, check_func_name, None) or getattr(vatnumber, check_func_name, None)
         if not check_func:
             # No VAT validation available, default to check that the country code exists
