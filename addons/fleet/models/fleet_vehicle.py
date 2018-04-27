@@ -34,6 +34,7 @@ class FleetVehicle(models.Model):
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
+    first_contract_date = fields.Date(string="First Contract Date", default=fields.Date.today)
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_stage_ids',
