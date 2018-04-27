@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from ast import literal_eval
 import babel
 from dateutil.relativedelta import relativedelta
 
@@ -349,6 +350,10 @@ class SaleTimesheetController(http.Controller):
             action.update({
                 'name': _('Tasks'),
                 'domain': domain,
-                'context': request.env.context,  # erase original context to avoid default filter
+                'context': dict(request.env.context),  # erase original context to avoid default filter
             })
+            # if only one project, add it in the context as default value
+            tasks = request.env['project.task'].sudo().search(literal_eval(domain))
+            if len(tasks.mapped('project_id')) == 1:
+                action['context']['default_project_id'] = tasks.mapped('project_id')[0].id
         return action
