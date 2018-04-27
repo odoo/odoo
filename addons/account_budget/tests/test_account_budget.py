@@ -2,10 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import TestAccountBudgetCommon
-from odoo.fields import Date
 from odoo.tests import tagged
-
-from odoo.tools import datetime
+from odoo.tools.datetime import date
 
 # ---------------------------------------------------------
 # Tests
@@ -14,12 +12,14 @@ from odoo.tools import datetime
 class TestAccountBudget(TestAccountBudgetCommon):
 
     def test_account_budget(self):
+        # today, next year
+        day = date.today().add(years=1)
 
         # Creating a crossovered.budget record
         budget = self.env['crossovered.budget'].create({
-            'date_from': datetime.datetime.now().start_of('year') + datetime.relativedelta(years=1),
-            'date_to': datetime.datetime.now().end_of('year') + datetime.relativedelta(years=1),
-            'name': 'Budget %s' % (datetime.datetime.now().year + 1),
+            'date_from': day.start_of('year'),
+            'date_to': day.end_of('year'),
+            'name': 'Budget %s' % (day.year),
             'state': 'draft'
         })
 
@@ -28,16 +28,16 @@ class TestAccountBudget(TestAccountBudgetCommon):
         self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': self.ref('analytic.analytic_partners_camp_to_camp'),
-            'date_from': datetime.datetime.now().start_of('year') + datetime.relativedelta(years=1),
-            'date_to': datetime.datetime.now().end_of('year') + datetime.relativedelta(years=1),
+            'date_from': day.start_of('year'),
+            'date_to': day.end_of('year'),
             'general_budget_id': self.account_budget_post_purchase0.id,
             'planned_amount': 10000.0,
         })
         self.env['crossovered.budget.lines'].create({
             'crossovered_budget_id': budget.id,
             'analytic_account_id': self.ref('analytic.analytic_our_super_product'),
-            'date_from': datetime.datetime.now().replace(month=9, day=1) + datetime.relativedelta(years=1),
-            'date_to': datetime.datetime.now().replace(month=9, day=30) + datetime.relativedelta(years=1),
+            'date_from': day.replace(month=9, day=1),
+            'date_to': day.replace(month=9, day=30),
             'general_budget_id': self.account_budget_post_sales0.id,
             'planned_amount': 400000.0,
         })
