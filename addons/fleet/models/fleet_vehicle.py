@@ -10,7 +10,7 @@ class FleetVehicle(models.Model):
     _inherit = 'mail.thread'
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
-    _order = 'license_plate asc'
+    _order = 'license_plate asc, acquisition_date asc'
 
     def _get_default_state(self):
         state = self.env.ref('fleet.vehicle_state_active', raise_if_not_found=False)
