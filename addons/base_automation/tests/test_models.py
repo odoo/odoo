@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
-from odoo.tools.datetime import relativedelta
 
 
 class LeadTest(models.Model):
@@ -30,7 +29,7 @@ class LeadTest(models.Model):
             if not record.priority:
                 record.deadline = False
             else:
-                record.deadline = record.create_date + relativedelta(days=3)
+                record.deadline = record.create_date.add(days=3)
 
 class LineTest(models.Model):
     _name = "base.automation.line.test"
