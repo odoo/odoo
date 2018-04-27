@@ -593,7 +593,7 @@ class StockMove(models.Model):
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
             moves_to_unlink.write({'propagate': False})
             moves_to_unlink._action_cancel()
-            moves_to_unlink.unlink()
+            moves_to_unlink.sudo().unlink()
         return (self | self.env['stock.move'].concat(*moves_to_merge)) - moves_to_unlink
 
     def _get_relevant_state_among_moves(self):
