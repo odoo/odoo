@@ -219,7 +219,10 @@ class FleetVehicle(models.Model):
             if len(changes) > 0:
                 self.message_post(body=", ".join(changes))
 
-            return super(FleetVehicle, self).write(vals)
+        res = super(FleetVehicle, self).write(vals)
+        if 'active' in vals and not vals['active']:
+            self.mapped('log_contracts').write({'active': False})
+        return res
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
