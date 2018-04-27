@@ -1062,8 +1062,8 @@ class Message(models.Model):
             message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
         if rdata['partners']:
             message_values['needaction_partner_ids'] = [(6, 0, [r['id'] for r in rdata['partners']])]
-        if self.model and self.res_id and hasattr(self.env[self.model], 'message_get_message_notify_values'):
-            message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
+        if message_values and record and hasattr(record, 'message_get_message_notify_values'):
+            message_values.update(record.message_get_message_notify_values(self, message_values))
         if message_values:
             self.write(message_values)
 
@@ -1076,9 +1076,10 @@ class Message(models.Model):
                 ('id', 'in', email_pids),
                 ('channel_ids', 'in', email_cids),
                 ('email', '!=', self.author_id.email or self.email_from),
-            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
+            ])._notify(self, record, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
 
-        self.env['res.partner'].sudo().browse(inbox_pids)._notify_by_chat(self)
+        if inbox_pids:
+            self.env['res.partner'].sudo().browse(inbox_pids)._notify_by_chat(self)
 
         if rdata['channels']:
             self.env['mail.channel'].sudo().browse([r['id'] for r in rdata['channels']])._notify(self)
