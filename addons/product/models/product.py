@@ -230,9 +230,9 @@ class ProductProduct(models.Model):
         for supplier_info in self.seller_ids:
             if supplier_info.name.id == self._context.get('partner_id'):
                 product_name = supplier_info.product_name or self.default_code
+                self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
         else:
-            product_name = self.name
-        self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
+            self.partner_ref = self.name_get()[0][1]
 
     @api.one
     @api.depends('image_variant', 'product_tmpl_id.image')
