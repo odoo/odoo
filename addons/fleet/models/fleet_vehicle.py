@@ -32,7 +32,8 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Log Count')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
-    acquisition_date = fields.Date('Immatriculation Date', required=False, help='Date when the vehicle has been immatriculated')
+    acquisition_date = fields.Date('Immatriculation Date', required=False,
+        default=fields.Date.today, help='Date when the vehicle has been immatriculated')
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, 
         help='Current state of the vehicle', ondelete="set null")
