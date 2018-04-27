@@ -59,10 +59,10 @@
     <t t-if="context &amp;&amp; context.active_model">
         <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
             <t t-if="context.journal_id">
-                <button class="button_back_to_statement btn btn-default btn-sm" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
+                <button class="button_back_to_statement btn btn-default" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
             </t>
             <t t-if="context['active_model'] === 'account.bank.statement'">
-                <button class="button_close_statement btn btn-primary btn-sm" style="display: inline-block;">Close statement</button>
+                <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
             </t>
         </p>
     </t>
@@ -74,8 +74,8 @@
         <table class="accounting_view">
             <caption>
                 <div class="pull-right o_buttons">
-                    <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'd-none'}">Validate</button>
-                    <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
+                    <button t-attf-class="o_validate btn btn-default #{!state.balance.type ? '' : 'd-none'}">Validate</button>
+                    <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
                     <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'd-none'}">Select a partner or choose a counterpart</span>
                 </div>
             </caption>
@@ -107,9 +107,9 @@
 <t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
     <t t-jquery=".o_buttons" t-operation="replace">
         <div class="pull-right o_buttons">
-            <button t-attf-class="o_validate btn btn-default btn-sm #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
-            <button t-attf-class="o_reconcile btn btn-primary btn-sm #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
-            <button t-attf-class="o_no_valid btn btn-default btn-sm #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
+            <button t-attf-class="o_validate btn btn-default #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
+            <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
+            <button t-attf-class="o_no_valid btn btn-default #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
         </div>
     </t>
     <t t-jquery=".accounting_view tbody" t-operation="append">
@@ -156,7 +156,7 @@
 
 <div t-name="reconciliation.line.create">
     <div class="quick_add">
-        <div class="btn-group btn-group-sm o_reconcile_models" t-if="state.reconcileModels">
+        <div class="btn-group o_reconcile_models" t-if="state.reconcileModels">
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
             </t>

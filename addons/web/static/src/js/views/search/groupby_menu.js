@@ -78,7 +78,7 @@ var GroupByMenu = DropdownMenu.extend({
         if (options && options.headerStyle === 'primary') {
             style = {
                 el: {class: 'btn-group o_graph_groupbys_menu o_dropdown', attrs: {'role': 'group'}},
-                mainButton: {class: 'btn btn-primary btn-sm dropdown-toggle'},
+                mainButton: {class: 'btn btn-primary dropdown-toggle'},
             };
         }
         var dropdownHeader = {

@@ -44,7 +44,7 @@
 
         <!-- Add a button to open the full composer dialog -->
         <t t-jquery=".o_composer_button_add_attachment" t-operation="after">
-            <button tabindex="6" class="btn btn-sm btn-icon fa fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
+            <button tabindex="6" class="btn btn-icon fa fa-expand o_composer_button_full_composer" type="button" title="Full composer" aria-label="Full composer"/>
         </t>
     </t>
 
@@ -57,13 +57,13 @@
         @param {boolean} [scheduleActivityButton]
     -->
     <t t-name="mail.chatter.Buttons">
-        <button t-if="newMessageButton" type="button" class="btn btn-sm btn-link o_chatter_button_new_message" title="Send a message" disabled="disabled">
+        <button t-if="newMessageButton" type="button" class="btn btn-link o_chatter_button_new_message" title="Send a message" disabled="disabled">
             Send message
         </button>
-        <button t-if="logNoteButton" class="btn btn-sm btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified." disabled="disabled">
+        <button t-if="logNoteButton" class="btn btn-link o_chatter_button_log_note" title="Log a note. Followers will not be notified." disabled="disabled">
             Log note
         </button>
-        <button t-if="scheduleActivityButton" class="btn btn-sm btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
+        <button t-if="scheduleActivityButton" class="btn btn-link o_chatter_button_schedule_activity" title="Log or schedule an activity" disabled="disabled">
             <i class="fa fa-clock-o" role="img" aria-label="Dates" title="Dates"/> <t t-if="isMobile">Activity</t><t t-else="">Schedule activity</t>
         </button>
     </t>

@@ -115,7 +115,7 @@ CalendarRenderer.include({
         this.$googleButton = $();
         if (this.model === "calendar.event") {
             this.$googleButton = $('<button/>', {type: 'button', html: _t("Sync with <b>Google</b>")})
-                                .addClass('o_google_sync_button oe_button btn btn-sm btn-default')
+                                .addClass('o_google_sync_button oe_button btn btn-default')
                                 .prepend($('<img/>', {
                                     src: "/google_calendar/static/src/img/calendar_32.png",
                                 }))

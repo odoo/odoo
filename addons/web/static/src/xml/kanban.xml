@@ -2,7 +2,7 @@
 
 <t t-name="KanbanView.buttons">
     <div>
-        <button type="button" t-attf-class="btn #{btnClass} btn-sm o-kanban-button-new" accesskey="c">
+        <button type="button" t-attf-class="btn #{btnClass} o-kanban-button-new" accesskey="c">
             <t t-esc="create_text || _t('Create')"/>
         </button>
     </div>
@@ -53,7 +53,7 @@
                 <div class="input-group">
                     <input type="text" class="o_input" placeholder="Column title"/>
                     <span class="input-group-btn">
-                        <button class="btn btn-sm btn-primary o_kanban_add" type="button">Add</button>
+                        <button class="btn btn-primary o_kanban_add" type="button">Add</button>
                     </span>
                 </div>
                 <t t-if="widget.examples">
@@ -70,9 +70,9 @@
 
 <t t-name="KanbanView.RecordQuickCreate.buttons">
     <div>
-        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-sm btn-primary o_kanban_edit">Edit</button>
-        <button class="btn btn-sm btn-default o_kanban_cancel ml8">Discard</button>
+        <button class="btn btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-primary o_kanban_edit">Edit</button>
+        <button class="btn btn-default o_kanban_cancel ml8">Discard</button>
     </div>
 </t>
 

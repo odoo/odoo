@@ -510,7 +510,7 @@
                             </h4>
                             <span class="btn-group pull-right" role="group">
                                 <t t-foreach="stages" t-as="stage">
-                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="pull-right btn btn-sm opp-stage-button #{'btn-default' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
+                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="pull-right btn opp-stage-button #{'btn-default' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
                                         <span t-field="stage.name"/>
                                     </button>
                                 </t>
@@ -536,7 +536,7 @@
                 <div class="panel-body">
                     <div class="col-md-6">
                         <div>
-                            <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Contact</button>
+                            <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-primary" style="margin-bottom: 10px;">Edit Contact</button>
                             <div role="dialog" class="modal fade modal_edit_contact">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
@@ -651,7 +651,7 @@
                     </div>
                     <div class="col-md-6">
                         <div>
-                            <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Opportunity</button>
+                            <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-primary" style="margin-bottom: 10px;">Edit Opportunity</button>
                             <div role="dialog" class="modal fade modal_edit_opp">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
