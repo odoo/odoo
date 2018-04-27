@@ -93,8 +93,8 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.partner_root'),ref('base.res_partner_12')])]"/>
             <field name="name">Changes in Designing</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1')])]"/>
-            <field name="start" eval="datetime.today().replace(day=22)"/>
-            <field name="stop" eval="datetime.today().replace(day=22)"/>
+            <field name="start" eval="datetime.date.today().replace(day=22)"/>
+            <field name="stop" eval="datetime.date.today().replace(day=22)"/>
             <field name="allday" eval="True"/>
             <field name="state">open</field>
         </record>
@@ -118,8 +118,8 @@
             <field name="partner_ids" eval="[(6,0,[ref('base.res_partner_4')])]"/>
             <field name="name">Presentation of the new Calendar</field>
             <field name="categ_ids" eval="[(6,0,[ref('categ_meet1'), ref('categ_meet2')])]"/>
-            <field name="start" eval="datetime.today().replace(day=16)"/>
-            <field name="stop" eval="datetime.today().replace(day=16)"/>
+            <field name="start" eval="datetime.date.today().replace(day=16)"/>
+            <field name="stop" eval="datetime.date.today().replace(day=16)"/>
             <field name="duration" eval="8.5"/>
             <field name="allday" eval="True"/>
             <field name="state">draft</field>
