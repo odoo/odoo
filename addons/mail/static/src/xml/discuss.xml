@@ -231,7 +231,9 @@
                         <span class="fa fa-mail-reply"/> You:
                     </t>
                     <t t-else="">
-                        <t t-esc="channel.last_message.displayed_author"/>:
+                        <t t-if="channel.last_message.displayed_author">
+                            <t t-esc="channel.last_message.displayed_author"/>:
+                        </t>
                     </t>
                     <t t-raw="channel.last_message_preview"/>
                 </div>

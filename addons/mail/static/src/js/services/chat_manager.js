@@ -119,6 +119,7 @@ var ChatManager =  AbstractService.extend({
 
         this.messages = [];
         this.channels = [];
+        this.messageFailures = [];
         this.channelsPreviewDef;
         this.channelDefs = {};
         this.unreadConversationCounter = 0;
@@ -285,7 +286,8 @@ var ChatManager =  AbstractService.extend({
         var self = this;
         var channelsPreview = _.map(channels, function (channel) {
             var info;
-            if (channel.channel_ids && _.contains(channel.channel_ids,"channel_inbox")) {
+            if ((channel.channel_ids && _.contains(channel.channel_ids, "channel_inbox")) || channel.id === "mail_failure") {
+                // this is a hack to preview messages and mail failure
                 // map inbox(mail_message) data with existing channel/chat template
                 info = _.pick(channel,
                     'id', 'body', 'avatar_src', 'res_id', 'model', 'module_icon',
@@ -299,7 +301,9 @@ var ChatManager =  AbstractService.extend({
                 info.name = info.record_name || info.subject || info.displayed_author;
                 info.image_src = info.module_icon || info.avatar_src;
                 info.message_id = info.id;
-                info.id = 'channel_inbox';
+                if (channel.id !== "mail_failure") {
+                    info.id = 'channel_inbox';
+                }
                 return info;
             }
             info = _.pick(channel, 'id', 'is_chat', 'name', 'status', 'unread_counter');
@@ -419,6 +423,14 @@ var ChatManager =  AbstractService.extend({
             }
         }
         return result;
+    },
+    /**
+     * Returns a list of mail failures
+     *
+     * @return {Object[]} list of channels
+     */
+    getMessageFailures: function () {
+        return this.messageFailures;
     },
     /**
      * Get all listeners of a channel.
@@ -1215,6 +1227,7 @@ var ChatManager =  AbstractService.extend({
             _.each(result.channel_slots, function (channels) {
                 _.each(channels, self._addChannel.bind(self));
             });
+            self.messageFailures = result.mail_failures;
             self.needactionCounter = result.needaction_inbox_counter || 0;
             self.starredCounter = result.starred_counter || 0;
             self.moderationCounter = result.moderation_counter;
@@ -1636,6 +1649,42 @@ var ChatManager =  AbstractService.extend({
         this.chatBus.trigger('update_moderation_counter');
     },
     /**
+     * Add or remove failure when receiving a failure update message
+     * @private
+     * @param  {Object} data
+     */
+    _manageMessageFailureNotification: function (data) {
+        var self = this;
+        _.each(data.elements, function (updateMessage) {
+
+            var isAddFailure = _.some(updateMessage.notifications, function(notif) {
+                return notif[0] === 'exception' || notif[0] === 'bounce';
+            });
+            var res = _.find(self.messageFailures, {'message_id': updateMessage.message_id});
+            if (res) {
+                var index = _.findIndex(self.messageFailures, res);
+                if (isAddFailure) {
+                    self.messageFailures[index] = updateMessage;
+                } else {
+                    self.messageFailures.splice(index, 1);
+                }
+            } else if (isAddFailure) {
+                self.messageFailures.push(updateMessage);
+            } 
+            var message = _.findWhere(self.messages, { id: updateMessage.message_id });
+            if (message) {
+                if (isAddFailure) {
+                    message.customer_email_status = "exception";
+                } else{
+                    message.customer_email_status = "sent";
+                }
+                self._updateMessageNotificationStatus(updateMessage, message);
+                self.chatBus.trigger('update_message', message);
+            }
+        });
+        this.chatBus.trigger('update_needaction', this.needactionCounter);
+    },
+    /**
      * Updates channel_inbox when a message has marked as read.
      *
      * @private
@@ -1738,6 +1787,8 @@ var ChatManager =  AbstractService.extend({
             this._manageTransientMessageNotification(data);
         } else if (data.type === 'activity_updated') {
             this._manageActivityUpdateNotification(data);
+        } else if (data.type === 'mail_failure') {
+            this._manageMessageFailureNotification(data);
         } else {
             this._manageChatSessionNotification(data);
         }
@@ -1883,7 +1934,28 @@ var ChatManager =  AbstractService.extend({
         channel.unread_counter = counter;
         this.chatBus.trigger("update_channel_unread_counter", channel);
     },
-
+    /**
+     * Update the message notification status of message based on update_message
+     *
+     * @private
+     * @param {Object} updateMessage
+     * @param {Object[]} updateMessage.notifications
+     */
+    _updateMessageNotificationStatus: function (updateMessage, message) {
+        _.each(updateMessage.notifications, function (notif, id, list) {
+            var partnerName = notif[1];
+            var notifStatus = notif[0];
+            var res = _.find(message.customer_email_data, function(entry){ 
+                return entry[0] === parseInt(id);
+            });
+            if (res) {
+                res[2] = notifStatus;
+            } else {
+                message.customer_email_data.push([parseInt(id), partnerName, notifStatus]);
+            }
+        });
+    },
+    
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

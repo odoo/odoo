@@ -102,6 +102,12 @@ class MailThread(models.AbstractModel):
     message_needaction_counter = fields.Integer(
         'Number of Actions', compute='_get_message_needaction',
         help="Number of messages which requires an action")
+    message_has_error = fields.Boolean(
+        'Message Delivery error', compute='_compute_message_has_error', search='_search_message_has_error',
+        help="If checked, some messages have a delivery error.")
+    message_has_error_counter = fields.Integer(
+        'Number of error', compute='_compute_message_has_error',
+        help="Number of messages with delivery error")
 
     @api.one
     @api.depends('message_follower_ids')
@@ -207,6 +213,26 @@ class MailThread(models.AbstractModel):
     @api.model
     def _search_message_needaction(self, operator, operand):
         return [('message_ids.needaction', operator, operand)]
+
+    @api.multi
+    def _compute_message_has_error(self):
+        self._cr.execute(""" SELECT msg.res_id, COUNT(msg.res_id) FROM mail_message msg
+                             RIGHT JOIN mail_message_res_partner_needaction_rel rel
+                             ON rel.mail_message_id = msg.id AND rel.email_status in ('exception','bounce')
+                             WHERE msg.author_id = %s AND msg.model = %s AND msg.res_id in %s
+                             GROUP BY msg.res_id""",
+                         (self.env.user.partner_id.id, self._name, tuple(self.ids),))
+        res = dict()
+        for result in self._cr.fetchall():
+            res[result[0]] = result[1]
+
+        for record in self:
+            record.message_has_error_counter = res.get(record.id, 0)
+            record.message_has_error = bool(record.message_has_error_counter)
+
+    @api.model
+    def _search_message_has_error(self, operator, operand):
+        return [('message_ids.has_error', operator, operand)]
 
     # ------------------------------------------------------
     # CRUD overrides for automatic subscription and logging

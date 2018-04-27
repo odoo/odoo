@@ -56,6 +56,7 @@ MockServer.include({
             'mention_partner_suggestions': [],
             'shortcodes': [],
             'menu_id': false,
+            'mail_failures': [],
         });
     },
 
