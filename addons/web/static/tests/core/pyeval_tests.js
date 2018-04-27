@@ -438,9 +438,15 @@ QUnit.module('core', function () {
         var d = pyEval.context().datetime;
         var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
         var ctx = {a: a, datetime: d.datetime};
-        assert.ok(py.eval('a.start_of("day") == datetime(2002, 3, 2, 0, 0, 0)', ctx));
-        assert.ok(py.eval('a.start_of("month") == datetime(2002, 3, 1, 0, 0, 0)', ctx));
-        assert.ok(py.eval('a.start_of("year") == datetime(2002, 1, 1, 0, 0, 0)', ctx));
+        assert.strictEqual(
+            py.eval('a.start_of("day").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-02 00:00:00");
+        assert.strictEqual(
+            py.eval('a.start_of("month").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-01 00:00:00");
+        assert.strictEqual(
+            py.eval('a.start_of("year").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-01-01 00:00:00");
 
     });
 
@@ -450,8 +456,12 @@ QUnit.module('core', function () {
         var d = pyEval.context().datetime;
         var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
         var ctx = {a: a, datetime: d.datetime};
-        assert.ok(py.eval('a.end_of("day") == datetime(2002, 3, 2, 23, 59, 59)', ctx));
-        assert.ok(py.eval('a.end_of("year") == datetime(2002, 12, 31, 23, 59, 59)', ctx));
+        assert.strictEqual(
+            py.eval('a.end_of("day").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-02 23:59:59");
+        assert.strictEqual(
+            py.eval('a.end_of("year").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-12-31 23:59:59");
 
     });
 
