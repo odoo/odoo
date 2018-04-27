@@ -89,7 +89,7 @@ class StockMoveLine(models.Model):
     @api.constrains('product_uom_qty')
     def check_reserved_done_quantity(self):
         for move_line in self:
-            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
+            if move_line.move_id.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
     @api.onchange('product_id', 'product_uom_id')
@@ -184,7 +184,7 @@ class StockMoveLine(models.Model):
                 vals['move_id'] = new_move.id
 
         ml = super(StockMoveLine, self).create(vals)
-        if ml.state == 'done':
+        if ml.move_id.state == 'done':
             if ml.product_id.type == 'product':
                 Quant = self.env['stock.quant']
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -217,7 +217,7 @@ class StockMoveLine(models.Model):
         # case of stock.move's split.
         # TODO Move me in the update
         if 'product_uom_qty' in vals:
-            for ml in self.filtered(lambda m: m.state in ('partially_available', 'assigned') and m.product_id.type == 'product'):
+            for ml in self.filtered(lambda m: m.move_id.state in ('partially_available', 'assigned') and m.product_id.type == 'product'):
                 if not ml.location_id.should_bypass_reservation():
                     qty_to_decrease = ml.product_qty - ml.product_uom_id._compute_quantity(vals['product_uom_qty'], ml.product_id.uom_id, rounding_method='HALF-UP')
                     try:
@@ -242,7 +242,7 @@ class StockMoveLine(models.Model):
                 updates[key] = self.env[model].browse(vals[key])
 
         if updates:
-            for ml in self.filtered(lambda ml: ml.state in ['partially_available', 'assigned'] and ml.product_id.type == 'product'):
+            for ml in self.filtered(lambda ml: ml.move_id.state in ['partially_available', 'assigned'] and ml.product_id.type == 'product'):
                 if not ml.location_id.should_bypass_reservation():
                     try:
                         Quant._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
@@ -335,7 +335,7 @@ class StockMoveLine(models.Model):
     def unlink(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
-            if ml.state in ('done', 'cancel'):
+            if ml.move_id.state in ('done', 'cancel'):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
             # Unlinking a move line should unreserve.
             if ml.product_id.type == 'product' and not ml.location_id.should_bypass_reservation() and not float_is_zero(ml.product_qty, precision_digits=precision):
