@@ -24,7 +24,8 @@ class FleetVehicle(models.Model):
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
     driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
-    model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
+    model_id = fields.Many2one('fleet.vehicle.model', 'Model',
+        track_visibility="onchange", required=True, help='Model of the vehicle')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
@@ -39,6 +40,7 @@ class FleetVehicle(models.Model):
     color = fields.Char(help='Color of the vehicle')
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_stage_ids',
+        track_visibility="onchange",
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
@@ -202,31 +204,6 @@ class FleetVehicle(models.Model):
 
     @api.multi
     def write(self, vals):
-        """
-        This function write an entry in the openchatter whenever we change important information
-        on the vehicle like the model, the drive, the state of the vehicle or its license plate
-        """
-        for vehicle in self:
-            changes = []
-            if 'model_id' in vals and vehicle.model_id.id != vals['model_id']:
-                value = self.env['fleet.vehicle.model'].browse(vals['model_id']).name
-                oldmodel = vehicle.model_id.name or _('None')
-                changes.append(_("Model: from '%s' to '%s'") % (oldmodel, value))
-            if 'driver_id' in vals and vehicle.driver_id.id != vals['driver_id']:
-                value = self.env['res.partner'].browse(vals['driver_id']).name
-                olddriver = (vehicle.driver_id.name) or _('None')
-                changes.append(_("Driver: from '%s' to '%s'") % (olddriver, value))
-            if 'state_id' in vals and vehicle.state_id.id != vals['state_id']:
-                value = self.env['fleet.vehicle.state'].browse(vals['state_id']).name
-                oldstate = vehicle.state_id.name or _('None')
-                changes.append(_("State: from '%s' to '%s'") % (oldstate, value))
-            if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
-                old_license_plate = vehicle.license_plate or _('None')
-                changes.append(_("License Plate: from '%s' to '%s'") % (old_license_plate, vals['license_plate']))
-
-            if len(changes) > 0:
-                self.message_post(body=", ".join(changes))
-
         res = super(FleetVehicle, self).write(vals)
         if 'driver_id' in vals and vals['driver_id']:
             self.create_driver_history(vals['driver_id'])
