@@ -37,7 +37,7 @@ class IrModuleModule(models.Model):
             views = self.env['ir.ui.view'].browse(IrModelData.search([('module', '=', module.name),
                                                                       ('model', '=', 'ir.ui.view')]).mapped('res_id'))
             views.write({
-                'module_id': module.id
+                'theme_id': module.id
             })
 
     @api.model

@@ -23,7 +23,7 @@ class View(models.Model):
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', compute='_compute_page_ids', store=False)
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
-    module_id = fields.Many2one('ir.module.module')  # todo jov rename to theme_module_id or something
+    theme_id = fields.Many2one('ir.module.module')
 
     @api.one
     def _compute_first_page_id(self):
@@ -84,12 +84,12 @@ class View(models.Model):
             _logger.info('%s is updating view %s (ID: %s)', theme_name, xml_id.complete_name, view.id)
 
             # check if a previously copied view for this theme already exists
-            theme_specific_view = self.env['ir.ui.view'].search([('key', '=', view.key), ('module_id', '=', module_being_updated.id)])
+            theme_specific_view = self.env['ir.ui.view'].search([('key', '=', view.key), ('theme_id', '=', module_being_updated.id)])
             if theme_specific_view:
                 view = theme_specific_view
                 _logger.info('diverting write to %s (ID: %s)', view.name, view.id)
             else:
-                view = view.copy({'module_id': module_being_updated.id})
+                view = view.copy({'theme_id': module_being_updated.id})
                 _logger.info('created new theme-specific view %s (ID: %s)', view.name, view.id)
 
         return view
@@ -173,13 +173,13 @@ class View(models.Model):
         domain = super(View, self)._get_inheriting_views_arch_domain(view_id, model)
         current_website = self.env['website'].browse(self._context.get('website_id'))
 
-        website_views_domain = [('module_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
+        website_views_domain = [('theme_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
         # when rendering for the website we have to include inactive views
         # we will prefer inactive website-specific views over active generic ones
         if current_website:
             domain = [leaf for leaf in domain if 'active' not in leaf]
             if current_website.theme_ids:
-                theme_views_domain = [('module_id', 'in', current_website.theme_ids.ids)]
+                theme_views_domain = [('theme_id', 'in', current_website.theme_ids.ids)]
                 website_views_domain = expression.OR([website_views_domain, theme_views_domain])
 
         return expression.AND([website_views_domain, domain])
@@ -202,8 +202,8 @@ class View(models.Model):
         if 'website_id' in self._context and not isinstance(xml_id, pycompat.integer_types):
             current_website = self.env['website'].browse(self._context.get('website_id'))
             key_domain = [('key', '=', xml_id)]
-            theme_views_domain = [('module_id', 'in', current_website.theme_ids.ids)]
-            website_views_domain = [('module_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
+            theme_views_domain = [('theme_id', 'in', current_website.theme_ids.ids)]
+            website_views_domain = [('theme_id', '=', False), '|', ('website_id', '=', False), ('website_id', '=', current_website.id)]
             domain = expression.AND([expression.OR([theme_views_domain, website_views_domain]), key_domain])
 
             view = self.search(domain, order='website_id', limit=1)
