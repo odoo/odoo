@@ -60,13 +60,19 @@
                                     <span>View</span>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action">
-                                        <t t-if="journal_type == 'bank'">Bank Statements</t>
-                                        <t t-if="journal_type == 'cash'">Cash Statements</t>
-                                    </a>
+                                    <a type="object" name="open_action">Statements</a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Search Operations</a>
+                                    <a type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Operations</a>
+                                </div>
+                                <div>
+                                    <a type="object" name="open_collect_money">Customer Payments</a>
+                                </div>
+                                <div>
+                                    <a type="object" name="open_spend_money">Vendor Payments</a>
+                                </div>
+                                <div>
+                                    <a type="object" name="open_transfer_money">Internal Transfers</a>
                                 </div>
                                 <div>
                                     <a type="object" name="open_action" context="{'action_name': 'action_account_moves_all_a'}" groups="base.group_no_one">Journal Items</a>
@@ -79,30 +85,26 @@
                                 </div>
                                 <div name="bank_cash_commands">
                                     <t t-if="journal_type == 'bank'">
-                                        <a type="object" name="create_bank_statement">Transaction</a>
+                                        <a type="object" name="create_bank_statement">Statement</a>
                                     </t>
                                     <t t-if="journal_type == 'cash'">
-                                        <a type="object" name="create_cash_statement">Transaction</a>
+                                        <a type="object" name="create_cash_statement">Statement</a>
                                     </t>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_spend_money">Send Money</a>
+                                    <a type="object" name="create_customer_payment">Customer Payment</a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_collect_money">Receive Money</a>
+                                    <a type="object" name="create_supplier_payment">Vendor Payment</a>
                                 </div>
                                 <div>
-                                    <a type="object" name="open_transfer_money">Internal Transfer</a>
+                                    <a type="object" name="create_internal_transfer">Internal Transfer</a>
                                 </div>
                             </div>
 
                              <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
                                 <div class="o_kanban_card_manage_title">
                                     <span>Reconciliation</span>
-                                </div>
-                                <div>
-                                    <a t-if="dashboard.number_to_reconcile > 0" type="object" name="action_open_reconcile">Reconcile</a>
-                                    <span t-if="dashboard.number_to_reconcile == 0" class="text-muted">Nothing to Reconcile</span>
                                 </div>
                                 <div>
                                     <a type="object" name="open_action_with_context" context="{'action_name': 'action_account_reconcile_model', 'use_domain': True}" groups="account.group_account_manager">Reconciliation Models</a>

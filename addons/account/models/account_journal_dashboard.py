@@ -5,7 +5,7 @@ from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
 
 class account_journal(models.Model):
@@ -374,19 +374,18 @@ class account_journal(models.Model):
         return self.open_payments_action('transfer')
 
     @api.multi
-    def open_payments_action(self, payment_type):
-        ctx = self._context.copy()
-        ctx.update({
-            'default_payment_type': payment_type,
-            'default_journal_id': self.id
-        })
-        ctx.pop('group_by', None)
-        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_payments')
-        if action_rec:
-            action = action_rec.read([])[0]
-            action['context'] = ctx
-            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
-            return action
+    def open_payments_action(self, payment_type, mode='tree'):
+        if payment_type == 'outbound':
+            action_ref = 'account.action_account_payments_payable'
+        elif payment_type == 'transfer':
+            action_ref = 'account.action_account_payments_transfer'
+        else:
+            action_ref = 'account.action_account_payments'
+        [action] = self.env.ref(action_ref).read()
+        action['context'] = dict(safe_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
+        if mode == 'form':
+            action['views'] = [[False, 'form']]
+        return action
 
     @api.multi
     def open_action_with_context(self):
@@ -416,6 +415,21 @@ class account_journal(models.Model):
             'context': "{'default_journal_id': " + str(self.id) + "}",
         })
         return action
+
+    @api.multi
+    def create_customer_payment(self):
+        """return action to create a customer payment"""
+        return self.open_payments_action('inbound', mode='form')
+
+    @api.multi
+    def create_supplier_payment(self):
+        """return action to create a supplier payment"""
+        return self.open_payments_action('outbound', mode='form')
+
+    @api.multi
+    def create_internal_transfer(self):
+        """return action to create a internal transfer"""
+        return self.open_payments_action('transfer', mode='form')
 
     #####################
     # Setup Steps Stuff #

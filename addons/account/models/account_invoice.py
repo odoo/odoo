@@ -1368,7 +1368,7 @@ class AccountInvoice(models.Model):
             refund_invoice = self.create(values)
             invoice_type = {'out_invoice': ('customer invoices credit note'),
                 'in_invoice': ('vendor bill credit note')}
-            message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a>") % (invoice_type[invoice.type], invoice.id, invoice.number)
+            message = _("This %s has been created from: <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s") % (invoice_type[invoice.type], invoice.id, invoice.number, description)
             refund_invoice.message_post(body=message)
             new_invoices += refund_invoice
         return new_invoices

@@ -92,8 +92,8 @@
                     <field name="partner_id" />
                     <field name="journal_id" />
                     <field name="company_id" groups="base.group_multi_company" />
-                    <filter string="Outgoing Payments" domain="[('payment_type','=','outbound')]" name="outbound_filter"/>
-                    <filter string="Incoming Payments" domain="[('payment_type','=','inbound')]" name="inbound_filter"/>
+                    <filter string="Vendor Payments" domain="[('payment_type','=','outbound')]" name="outbound_filter"/>
+                    <filter string="Customer Payments" domain="[('payment_type','=','inbound')]" name="inbound_filter"/>
                     <filter string="Transfers" domain="[('payment_type','=','transfer')]" name="transfers_filter"/>
                     <separator/>
                     <filter string="Draft" domain="[('state','=','draft')]" name='state_draft'/>
@@ -206,6 +206,23 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{'default_payment_type': 'outbound', 'default_partner_type': 'supplier', 'search_default_outbound_filter': 1}</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="view_account_supplier_payment_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Register a payment
+                </p><p>
+                  Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_account_payments_transfer" model="ir.actions.act_window">
+            <field name="name">Internal Transfers</field>
+            <field name="res_model">account.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
+            <field name="context">{'default_payment_type': 'transfer', 'search_default_transfers_filter': 1}</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_supplier_payment_tree"/>
             <field name="help" type="html">
