@@ -90,3 +90,11 @@ class ProductCategory(models.Model):
         'account.account', string="Price Difference Account",
         company_dependent=True,
         help="This account will be used to value price difference between purchase price and accounting cost.")
+
+
+class ProductSupplierinfo(models.Model):
+    _inherit = "product.supplierinfo"
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        self.currency_id = self.name.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
