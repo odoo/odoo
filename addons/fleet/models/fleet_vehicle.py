@@ -7,7 +7,7 @@ from odoo import api, fields, models, _
 
 
 class FleetVehicle(models.Model):
-    _inherit = 'mail.thread'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle'
     _description = 'Information on a vehicle'
     _order = 'license_plate asc, acquisition_date asc'
