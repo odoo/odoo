@@ -1052,7 +1052,7 @@ var SnippetsMenu = Widget.extend({
                 if (moduleID) {
                     $snippet.addClass('o_snippet_install');
                     var $installBtn = $('<a/>', {
-                        class: 'btn btn-primary btn-sm o_install_btn',
+                        class: 'btn btn-primary o_install_btn',
                         target: '_blank',
                         href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
                         text: _t("Install"),

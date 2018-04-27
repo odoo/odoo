@@ -2760,7 +2760,7 @@ QUnit.module('Views', {
                         '<t t-name="kanban-box">' +
                             '<div>' +
                                 '<field name="foo"/>' +
-                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary pull-right btn-sm" name="channel_join_and_get_info">Join</button>' +
+                                '<button type="object" attrs="{\'invisible\':[\'|\', (\'bar\',\'=\',True), (\'category_ids\', \'!=\', [])]}" class="btn btn-primary pull-right" name="channel_join_and_get_info">Join</button>' +
                             '</div>' +
                         '</t>' +
                     '</templates>' +

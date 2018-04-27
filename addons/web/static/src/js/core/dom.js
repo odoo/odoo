@@ -211,8 +211,7 @@ return {
      * @param {string} [options.attrs.class='btn-default']
      *        Note: automatically completed with "btn btn-X"
      *        (@see options.size for the value of X)
-     * @param {string} [options.size='sm'] - @see options.attrs.class
-     *        Note: use 'md' for no sizing class
+     * @param {string} [options.size] - @see options.attrs.class
      * @param {string} [options.icon]
      *        The specific fa icon class (for example "fa-home") or an URL for
      *        an image to use as icon.
@@ -235,8 +234,8 @@ return {
         }
 
         jQueryParams.class = 'btn';
-        if (options.size !== 'md') {
-            jQueryParams.class += (' btn-' + (options.size || 'sm'));
+        if (options.size) {
+            jQueryParams.class += (' btn-' + options.size);
         }
         jQueryParams.class += (' ' + (extraClasses || 'btn-default'));
 

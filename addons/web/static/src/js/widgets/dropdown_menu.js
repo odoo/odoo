@@ -49,7 +49,7 @@ var DropdownMenu = Widget.extend({
         // the style used is the one used in the search view
         this.dropdownStyle = dropdownHeader.style || {
                 el: {class: 'btn-group o_dropdown', attrs: {}},
-                mainButton: {class: 'o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle'},
+                mainButton: {class: 'o_dropdown_toggler_btn btn btn-default dropdown-toggle'},
             };
         this.items = items;
         _.each(this.items, this._prepareItem.bind(this));

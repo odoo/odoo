@@ -12,16 +12,16 @@
             <ul class="o_mail_systray_dropdown dropdown-menu" role="menu">
                 <li role="menuitem" t-if="widget.isMobile()">
                     <div class="o_mail_systray_mobile_header">
-                        <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
+                        <button type="button" class="btn btn-default o_new_message"> New message </button>
                     </div>
                 </li>
                 <li role="menuitem" t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
                     <div>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button active"> All </button>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='chat'> Chat </button>
-                        <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='channels'> Channels </button>
+                        <button type="button" class="btn btn-link o_filter_button active"> All </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='chat'> Chat </button>
+                        <button type="button" class="btn btn-link o_filter_button" data-filter='channels'> Channels </button>
                     </div>
-                    <button type="button" class="btn btn-sm btn-link o_new_message"> New message </button>
+                    <button type="button" class="btn btn-link o_new_message"> New message </button>
                 </li>
                 <li role="menuitem" class="o_mail_systray_dropdown_items"/>
                 <li role="menuitem" t-if="widget.isMobile()">
