@@ -7,6 +7,7 @@ var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
 var ListRenderer = require('web.ListRenderer');
 
+var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
 QUnit.module('Dashboard', {
@@ -554,6 +555,95 @@ QUnit.test('dashboard intercepts custom events triggered by sub controllers', fu
 
     testUtils.unpatch(ListController);
     board.destroy();
+});
+
+QUnit.test('save actions to dashboard', function (assert) {
+    assert.expect(4);
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.strictEqual(args.action_id, 1,
+                    "should save the correct action");
+                assert.strictEqual(args.view_mode, 'list',
+                    "should save the correct view type");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+    });
+
+    assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+        "should display the list view");
+    assert.strictEqual($('.o_add_to_dashboard_link').length, 1,
+        "should allow the 'Add to dashboard' feature");
+
+    // add this action to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
+});
+
+QUnit.test('save to dashboard actions with flag keepSearchView', function (assert) {
+    assert.expect(4);
+
+    var actionManager = createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,graph': '<graph><field name="foo"/></graph>',
+            'partner,false,list': '<list><field name="foo"/></list>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.strictEqual(args.action_id, 2,
+                    "should save the correct action");
+                assert.strictEqual(args.view_mode, 'graph',
+                    "should save the correct view type");
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    // execute a first action
+    actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'list']],
+    });
+
+    // execute another action with flag 'keepSearchView' and add it to dashboard
+    var options = {keepSearchView: true};
+    actionManager.doAction({
+        id: 2,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'graph']],
+    }, options);
+
+    assert.strictEqual(actionManager.$('.o_graph').length, 1,
+        "should display the graph view");
+    assert.strictEqual($('.o_add_to_dashboard_link').length, 1,
+        "should allow the 'Add to dashboard' feature (this is the same searchview)");
+
+    // add this action to dashboard
+    $('.o_add_to_dashboard_button').click();
+
+    actionManager.destroy();
 });
 
 });
