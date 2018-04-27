@@ -193,6 +193,13 @@ class FleetVehicle(models.Model):
         else:
             self.image_medium = False
 
+    @api.model
+    def create(self, vals):
+        res = super(FleetVehicle, self).create(vals)
+        if 'driver_id' in vals and vals['driver_id']:
+            res.create_driver_history(vals['driver_id'])
+        return res
+
     @api.multi
     def write(self, vals):
         """
@@ -221,9 +228,19 @@ class FleetVehicle(models.Model):
                 self.message_post(body=", ".join(changes))
 
         res = super(FleetVehicle, self).write(vals)
+        if 'driver_id' in vals and vals['driver_id']:
+            self.create_driver_history(vals['driver_id'])
         if 'active' in vals and not vals['active']:
             self.mapped('log_contracts').write({'active': False})
         return res
+
+    def create_driver_history(self, driver_id):
+        for vehicle in self:
+            self.env['fleet.vehicle.assignation.log'].create({
+                'vehicle_id': vehicle.id,
+                'driver_id': driver_id,
+                'date_start': fields.Date.today(), 
+            })
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -275,6 +292,17 @@ class FleetVehicle(models.Model):
         if 'driver_id' in init_values:
             return 'fleet.mt_fleet_driver_updated'
         return super(FleetVehicle, self)._track_subtype(init_values)
+
+    def open_assignation_logs(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Assignation Logs',
+            'view_mode': 'tree',
+            'res_model': 'fleet.vehicle.assignation.log',
+            'domain': [('vehicle_id', '=', self.id)],
+            'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}
+        }
 
 
 class FleetVehicleOdometer(models.Model):
@@ -333,3 +361,14 @@ class FleetServiceType(models.Model):
         ('contract', 'Contract'),
         ('service', 'Service')
         ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')
+
+
+class FleetVehicleAssignationLog(models.Model):
+    _name = "fleet.vehicle.assignation.log"
+    _description = "Drivers history on a vehicle"
+    _order = "date_start"
+
+    vehicle_id = fields.Many2one('fleet.vehicle', string="Vehicle", required=True)
+    driver_id = fields.Many2one('res.partner', string="Driver", required=True)
+    date_start = fields.Date(string="Start Date")
+    date_end = fields.Date(string="End Date")
