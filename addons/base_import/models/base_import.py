@@ -214,10 +214,7 @@ class Import(models.TransientModel):
                     is_datetime = cell.value % 1 != 0.0
                     # emulate xldate_as_datetime for pre-0.9.3
                     dt = datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
-                    if not is_datetime:
-                        dt = date.from_date(dt)
-
-                    values.append(str(dt))
+                    values.append(str(dt if is_datetime else dt.date()))
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
                 elif cell.ctype is xlrd.XL_CELL_ERROR:
