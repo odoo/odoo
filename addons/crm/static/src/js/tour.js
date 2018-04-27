@@ -58,7 +58,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_opportunity_form .o_chatter_button_new_message",
     content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
-    position: "top"
+    position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_opportunity_form',
