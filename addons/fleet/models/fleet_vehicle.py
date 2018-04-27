@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 
 class FleetVehicle(models.Model):
@@ -227,6 +228,17 @@ class FleetVehicle(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['fleet.vehicle.state'].search([], order=order)
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        domain = args or []
+        domain = expression.AND([domain, [('name', operator, name)]])
+        access_rights_uid = name_get_uid or self._uid
+        partners = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=access_rights_uid)
+        if partners:
+            domain = expression.OR([domain, ['|', ('driver_id', 'in', partners.ids), ('driver_id', '=', False)]])
+        rec = self._search(domain, limit=limit, access_rights_uid=access_rights_uid)
+        return rec.name_get()
 
     @api.multi
     def return_action_to_open(self):
