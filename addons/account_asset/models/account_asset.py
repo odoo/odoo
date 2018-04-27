@@ -6,7 +6,7 @@ import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_is_zero
-from odoo.tools.datetime import date, relativedelta, datetime
+from odoo.tools.datetime import date, relativedelta
 
 
 class AccountAssetCategory(models.Model):
