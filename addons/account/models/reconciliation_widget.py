@@ -267,7 +267,7 @@ class AccountReconciliation(models.AbstractModel):
         res_alias = is_partner and 'p' or 'a'
 
         query = ("""
-            SELECT {0} account_id, account_name, account_code, max_date,
+            SELECT {0} account_id, company_id, account_name, account_code, max_date,
                    to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked
             FROM (
                     SELECT {1}
@@ -275,6 +275,7 @@ class AccountReconciliation(models.AbstractModel):
                         a.id AS account_id,
                         a.name AS account_name,
                         a.code AS account_code,
+                        a.company_id as company_id,
                         MAX(l.write_date) AS max_date
                     FROM
                         account_move_line l
@@ -302,7 +303,7 @@ class AccountReconciliation(models.AbstractModel):
                             {7}
                             AND l.amount_residual < 0
                         )
-                    GROUP BY {8} a.id, a.name, a.code, {res_alias}.last_time_entries_checked
+                    GROUP BY {8} a.id, a.company_id, a.name, a.code, {res_alias}.last_time_entries_checked
                     ORDER BY {res_alias}.last_time_entries_checked
                 ) as s
             WHERE (last_time_entries_checked IS NULL OR max_date > last_time_entries_checked)
