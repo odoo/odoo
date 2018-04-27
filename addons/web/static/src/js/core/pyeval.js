@@ -398,6 +398,8 @@ datetime.datetime = py.type('datetime', null, {
         var unit = args.unit.toJSON();
         if (unit === "day") {
             return py.PY_call(datetime.datetime, [this.year, this.month, this.day, 23, 59, 59]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, days_in_month(this.year, this.month), 23, 59, 59]);
         } else if (unit === "year") {
             return py.PY_call(datetime.datetime, [this.year, 12, 31, 23, 59, 59]);
         } else {
@@ -562,6 +564,8 @@ datetime.date = py.type('date', null, {
         var unit = args.unit.toJSON();
         if (unit === "day") {
             return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.date, [this.year, this.month, days_in_month(this.year, this.month)]);
         } else if (unit === "year") {
             return py.PY_call(datetime.date, [this.year, 12, 31]);
         } else {
