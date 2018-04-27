@@ -382,13 +382,13 @@ class account_payment(models.Model):
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
     def _compute_reconciled_invoice_ids(self):
         for record in self:
-            invoices_set = set()
-            invoices_set.update(record.move_line_ids.mapped('matched_debit_ids.debit_move_id.invoice_id.id') + record.move_line_ids.mapped('matched_credit_ids.credit_move_id.invoice_id.id'))
-            record.reconciled_invoice_ids = self.env['account.invoice'].browse(invoices_set)
+            record.reconciled_invoice_ids = (record.move_line_ids.mapped('matched_debit_ids.debit_move_id.invoice_id') |
+                                            record.move_line_ids.mapped('matched_credit_ids.credit_move_id.invoice_id'))
             record.has_invoices = bool(record.reconciled_invoice_ids)
 
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
+        self.ensure_one()
         # Set partner_id domain
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
