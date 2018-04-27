@@ -112,6 +112,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
                 </div>
             </form>
@@ -178,6 +179,9 @@
                 <field name="contract_renewal_name" />
                 <field name="contract_renewal_total" />
                 <field name="contract_count" />
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
 
                 <templates>
                     <t t-name="kanban-box">
@@ -214,6 +218,9 @@
                                         class="fa fa-exclamation-triangle" t-att-style="'color:red;'">
                                     </span>
                                 </a>
+                            </div>
+                            <div class="o_kanban_inline_block">
+                                <field name="activity_ids" widget="kanban_activity"/>
                             </div>
                         </div>
                     </t>
