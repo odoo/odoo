@@ -33,7 +33,7 @@ def calendar_id2real_id(calendar_id=None, with_date=False):
             real_id = res[0]
             if with_date:
                 real_date = datetime.from_string(res[1])
-                end = real_date + timedelta(hours=with_date)
+                end = real_date.add(hours=with_date)
                 return (int(real_id), real_date, end)
             return int(real_id)
     return calendar_id and int(calendar_id) or calendar_id
@@ -285,11 +285,11 @@ class AlarmManager(models.AbstractModel):
                 COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'UTC'
-            ) + interval '3' minute, now() at time zone 'UTC')"""
+                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+            ) + interval '3' minute, now() at time zone 'utc')"""
         else:
             # now + given seconds
-            first_alarm_max_value = "(now() at time zone 'UTC' + interval '%s' second )"
+            first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
             tuple_params += (seconds,)
 
         self._cr.execute("""
@@ -297,7 +297,7 @@ class AlarmManager(models.AbstractModel):
                     SELECT *
                         FROM ( %s WHERE cal.active = True ) AS ALL_EVENTS
                        WHERE ALL_EVENTS.first_alarm < %s
-                         AND ALL_EVENTS.last_event_date > (now() at time zone 'UTC')
+                         AND ALL_EVENTS.last_event_date > (now() at time zone 'utc')
                    """ % (delta_request, base_request, first_alarm_max_value), tuple_params)
 
         for event_id, first_alarm, last_alarm, first_meeting, last_meeting, min_duration, max_duration, rule in self._cr.fetchall():
@@ -882,16 +882,12 @@ class Meeting(models.Model):
     def _inverse_dates(self):
         for meeting in self:
             if meeting.allday:
+                # stop is set to 6 PM in user timezone
                 enddate = meeting.stop_date.astimezone(self.env.user.tz)
-                enddate = enddate.replace(hour=18)
-                enddate = enddate.astimezone(UTC)
-                meeting.stop = enddate
-
-                startdate = meeting.start_date
+                meeting.stop = enddate.replace(hour=18).astimezone(UTC)
+                # start is set to 8 AM in user timezone
                 startdate = meeting.start_date.astimezone(self.env.user.tz)
-                startdate = startdate.replace(hour=8)  # Set 8 AM in localtime
-                startdate = startdate.astimezone(UTC)  # Convert to UTC
-                meeting.start = startdate
+                meeting.start = startdate.replace(hour=8).astimezone(UTC)
             else:
                 meeting.start = meeting.start_datetime
                 meeting.stop = meeting.stop_datetime
@@ -929,7 +925,7 @@ class Meeting(models.Model):
         if self.start_datetime:
             start = self.start_datetime
             self.start = self.start_datetime
-            self.stop = start + timedelta(hours=self.duration)
+            self.stop = start.add(hours=self.duration)
 
     ####################################################
     # Calendar Business, Reccurency, ...
@@ -1240,8 +1236,7 @@ class Meeting(models.Model):
     def _rrule_parse(self, rule_str, data, date_start):
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
-        ddate = fields.Datetime.from_string(date_start)
-        rule = rrule.rrulestr(rule_str, dtstart=ddate)
+        rule = rrulestr(rule_str, dtstart=date_start)
 
         if rule._freq > 0 and rule._freq < 4:
             data['rrule_type'] = rrule_type[rule._freq]
@@ -1289,9 +1284,7 @@ class Meeting(models.Model):
             :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
         """
         self.ensure_one()
-        date = self.start
-
-        date = date.replace(tzinfo=UTC).astimezone(tz)
+        date = self.start.replace(tzinfo=UTC).astimezone(tz)
 
         if interval == 'day':
             # Day number (1-31)
