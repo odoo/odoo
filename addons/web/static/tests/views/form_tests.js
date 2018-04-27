@@ -1077,7 +1077,7 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(form.$('button.btn.btn-sm i.fa.fa-check').length, 1,
+        assert.strictEqual(form.$('button.btn i.fa.fa-check').length, 1,
                         "should contain a button with correct content");
 
         assert.strictEqual(form.$('.o_form_statusbar button').length, 2,
@@ -1142,37 +1142,37 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-default',
             "header buttons without any class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-primary',
             "header buttons with bootstrap primary class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-primary',
             "header buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-default',
             "header buttons with bootstrap default class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-link',
             "header buttons with bootstrap link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="5"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="5"]').attr('class'), 'btn btn-link',
             "header buttons with oe_link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-sm btn-success',
+        assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-success',
             "header buttons with bootstrap state class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn btn-sm o_this_is_a_button btn-default',
+        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn o_this_is_a_button btn-default',
             "header buttons with custom classes should receive the correct classes");
-        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-default',
             "sheet header buttons without any class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-primary',
             "sheet buttons with bootstrap primary class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-sm btn-primary',
+        assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-primary',
             "sheet buttons with oe_highlight class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-sm btn-default',
+        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-default',
             "sheet buttons with bootstrap default class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-link',
             "sheet buttons with bootstrap link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="13"]').attr('class'), 'btn btn-sm btn-link',
+        assert.strictEqual(form.$('button[name="13"]').attr('class'), 'btn btn-link',
             "sheet buttons with oe_link class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="14"]').attr('class'), 'btn btn-sm btn-success',
+        assert.strictEqual(form.$('button[name="14"]').attr('class'), 'btn btn-success',
             "sheet buttons with bootstrap state class should receive the correct classes");
-        assert.strictEqual(form.$('button[name="15"]').attr('class'), 'btn btn-sm o_this_is_a_button',
+        assert.strictEqual(form.$('button[name="15"]').attr('class'), 'btn o_this_is_a_button',
             "sheet buttons with custom classes should receive the correct classes");
 
         form.destroy();

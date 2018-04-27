@@ -310,7 +310,7 @@
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li>
             <div class="dropup">
-                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
                     <span class="caret ml4"/>
                 </button>

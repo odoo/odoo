@@ -359,7 +359,7 @@ QUnit.module('Views', {
         assert.equal($modal.find('.o_data_cell').text(), 'Awsome',
             'There should be one item in the list of the modal');
 
-        $modal.find('.btn.btn-sm.btn-primary').click();
+        $modal.find('.btn.btn-primary').click();
 
         form.destroy();
     });

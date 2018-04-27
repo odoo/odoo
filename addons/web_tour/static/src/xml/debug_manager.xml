@@ -26,7 +26,7 @@
             <tr t-foreach="tours" t-as="tour">
                 <td><t t-esc="tour"/></td>
                 <td><t t-esc="tours[tour].url"/></td>
-                <td><button type="button" class="btn btn-sm btn-primary fa fa-play o_start_tour" t-att-data-name="tour" aria-label="Tour" title="Tour"/></td>
+                <td><button type="button" class="btn btn-primary fa fa-play o_start_tour" t-att-data-name="tour" aria-label="Tour" title="Tour"/></td>
             </tr>
         </table>
     </div>

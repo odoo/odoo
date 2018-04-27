@@ -168,7 +168,7 @@ renderer.tplPopovers = function (lang, options) {
 
     var $alt = $('<div class="btn-group"/>');
     $alt.appendTo($imagePopover.find('.popover-content'));
-    $alt.append('<button class="btn btn-default btn-sm btn-small" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
+    $alt.append('<button class="btn btn-default" data-event="alt"><strong>' + _t('Description') + ': </strong><span class="o_image_alt"/></button>');
 
     //////////////// link popover
 
