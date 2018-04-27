@@ -140,6 +140,7 @@ class Partner(models.Model):
                 ('mail_message_id', '=', email.mail_message_id.id),
                 ('res_partner_id', 'in', email.recipient_ids.ids)])
             notifications.write({
+                'mail_id': email.id,
                 'is_email': True,
                 'is_read': True,  # handle by email discards Inbox notification
                 'email_status': 'ready',

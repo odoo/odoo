@@ -5,8 +5,8 @@ var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
+var time = require('web.time');
 var Widget = require('web.Widget');
-
 var QWeb = core.qweb;
 
 /**
@@ -34,19 +34,23 @@ var MessagingMenu = Widget.extend({
         this.$filter_buttons = this.$('.o_filter_button');
         this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
         this.filter = false;
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.on("update_needaction", this, this.update_counter);
-        chatBus.on("update_channel_unread_counter", this, this.update_counter);
-        this.call('chat_manager', 'isReady').then(this.update_counter.bind(this));
+        var self = this;
+        this.call('chat_manager', 'isReady').then(function () {
+            self.update_counter();
+            var chatBus = self.call('chat_manager', 'getChatBus');
+            chatBus.on('update_needaction', self, self.update_counter);
+            chatBus.on('update_channel_unread_counter', self, self.update_counter);
+        });
         return this._super();
     },
     is_open: function () {
         return this.$el.hasClass('open');
     },
     update_counter: function () {
+        var messageFailures = this.call('chat_manager', 'getMessageFailures');
         var needactionCounter = this.call('chat_manager', 'getNeedactionCounter');
         var unreadConversationCounter = this.call('chat_manager', 'getUnreadConversationCounter');
-        var counter =  needactionCounter + unreadConversationCounter;
+        var counter =  needactionCounter + unreadConversationCounter + messageFailures.length;
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
         if (this.is_open()) {
@@ -55,7 +59,6 @@ var MessagingMenu = Widget.extend({
     },
     update_channels_preview: function () {
         var self = this;
-
         // Display spinner while waiting for channels preview
         this.$channels_preview.html(QWeb.render('Spinner'));
         this.call('chat_manager', 'isReady').then(function () {
@@ -69,6 +72,28 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
+            var formatedFailures = [];
+            var messageFailures = self.call('chat_manager', 'getMessageFailures');
+            _.each(messageFailures, function (messageFailure) {
+                var model = messageFailure.model;
+                var existingFailure = _.findWhere(formatedFailures, { model: model });
+                if (existingFailure) {
+                    if (existingFailure.res_id !== messageFailure.res_id) {
+                        existingFailure.res_id = null;
+                        existingFailure.record_name = messageFailure.model_name;//for display, will be used as subject
+                    }
+                    existingFailure.unread_counter ++;
+                } else {
+                    messageFailure = _.clone(messageFailure);
+                    messageFailure.unread_counter = 1;
+                    messageFailure.id = "mail_failure";
+                    messageFailure.body = "An error occured sending an email";
+                    messageFailure.date = moment(time.str_to_datetime(messageFailure.last_message_date));
+                    messageFailure.displayed_author = "";
+                    formatedFailures.push(messageFailure);
+                }
+            });
+            channels = _.union(channels, formatedFailures);
             self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'})
                 .then(function (messages) {
                     var res = [];
@@ -115,8 +140,10 @@ var MessagingMenu = Widget.extend({
         this.call('chat_window_manager', 'openChat');
     },
 
-    // Handlers
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
     /**
      * When a channel is clicked on, we want to open chat/channel window
      *
@@ -126,7 +153,7 @@ var MessagingMenu = Widget.extend({
     _onClickChannel: function (event) {
         var self = this;
         var channelID = $(event.currentTarget).data('channel_id');
-        if (channelID === 'channel_inbox') {
+        if (channelID === 'channel_inbox' || channelID === 'mail_failure') {
             var resID = $(event.currentTarget).data('res_id');
             var resModel = $(event.currentTarget).data('res_model');
             if (resModel && resID) {
@@ -135,6 +162,16 @@ var MessagingMenu = Widget.extend({
                     res_model: resModel,
                     views: [[false, 'form']],
                     res_id: resID
+                });
+            } else if (resModel) {
+                this.do_action({
+                    name: "Mail failures",
+                    type: 'ir.actions.act_window',
+                    view_mode: 'kanban,list,form',
+                    views: [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                    target: 'current',
+                    res_model: resModel,
+                    domain: [['message_has_error', '=', true]],
                 });
             } else {
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})

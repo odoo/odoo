@@ -224,6 +224,7 @@ class MailController(http.Controller):
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),
             'channel_slots': request.env['mail.channel'].channel_fetch_slot(),
+            'mail_failures': request.env['mail.message'].message_fetch_failed(),
             'commands': request.env['mail.channel'].get_mention_commands(),
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),

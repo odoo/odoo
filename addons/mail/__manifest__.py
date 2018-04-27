@@ -12,6 +12,7 @@
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'wizard/mail_resend_message_views.xml',
         'views/mail_message_subtype_views.xml',
         'views/mail_tracking_views.xml',
         'views/mail_message_views.xml',

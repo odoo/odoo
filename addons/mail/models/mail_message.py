@@ -4,11 +4,13 @@
 import logging
 import re
 
+from operator import itemgetter
 from email.utils import formataddr
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
+from odoo.tools import groupby
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
@@ -81,6 +83,9 @@ class Message(models.Model):
     needaction = fields.Boolean(
         'Need Action', compute='_get_needaction', search='_search_needaction',
         help='Need Action')
+    has_error = fields.Boolean(
+        'Has error', compute='_compute_has_error', search='_search_has_error',
+        help='Has error')
     channel_ids = fields.Many2many(
         'mail.channel', 'mail_message_mail_channel_rel', string='Channels')
     # notifications
@@ -114,6 +119,9 @@ class Message(models.Model):
         ('rejected', 'Rejected')], string="Moderation Status", index=True)
     moderator_id = fields.Many2one('res.users', string="Moderated By", index=True)
     need_moderation = fields.Boolean('Need moderation', compute='_compute_need_moderation', search='_search_need_moderation')
+    #keep notification layout informations to be able to generate mail again
+    layout = fields.Char('Layout', copy=False)  # xml id of layout
+    layout_values = fields.Char('Notification values', copy=False)
 
     @api.multi
     def _get_needaction(self):
@@ -130,6 +138,20 @@ class Message(models.Model):
         if operator == '=' and operand:
             return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', False)]
         return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', True)]
+
+    @api.multi
+    def _compute_has_error(self):
+        error_from_notification = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', self.ids),
+            ('email_status', 'in', ('bounce', 'exception'))]).mapped('mail_message_id')
+        for message in self:
+            message.has_error = message in error_from_notification
+
+    @api.multi
+    def _search_has_error(self, operator, operand):
+        if operator == '=' and operand:
+            return [('notification_ids.email_status', 'in', ('bounce', 'exception'))]
+        return ['!', ('notification_ids.email_status', 'in', ('bounce', 'exception'))]  # this wont work and will be equivalent to "not in" beacause of orm restrictions. Dont use "has_error = False"
 
     @api.depends('starred_partner_ids')
     def _get_starred(self):
@@ -350,7 +372,7 @@ class Message(models.Model):
                                 if partner.id in partner_tree]
 
             customer_email_data = []
-            for notification in message.notification_ids.filtered(lambda notif: notif.res_partner_id.partner_share and notif.res_partner_id.active):
+            for notification in message.notification_ids.filtered(lambda notif: notif.email_status in ('bounce', 'exception', 'canceled') or (notif.res_partner_id.partner_share and notif.res_partner_id.active)):
                 customer_email_data.append((partner_tree[notification.res_partner_id.id][0], partner_tree[notification.res_partner_id.id][1], notification.email_status))
 
             attachment_ids = []
@@ -374,6 +396,11 @@ class Message(models.Model):
             })
 
         return True
+
+    @api.multi
+    def message_fetch_failed(self):
+        messages = self.search([('has_error', '=', True), ('author_id.id', '=', self.env.user.partner_id.id), ('res_id', '!=', 0), ('model', '!=', False)])
+        return messages._format_mail_failures()
 
     @api.model
     def message_fetch(self, domain, limit=20):
@@ -460,6 +487,37 @@ class Message(models.Model):
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
         return message_values
+
+    @api.multi
+    def _format_mail_failures(self):
+        """
+        A shorter message to notify a failure update
+        """
+        failures_infos = []
+        # for each channel, build the information header and include the logged partner information
+        for message in self:
+            info = {
+                'message_id': message.id,
+                'record_name': message.record_name,
+                'model_name': self.env['ir.model']._get(message.model).display_name,
+                'uuid': message.message_id,
+                'res_id': message.res_id,
+                'model': message.model,
+                'last_message_date': message.date,
+                'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
+                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids)
+            }
+            failures_infos.append(info)
+        return failures_infos
+
+    @api.multi
+    def _notify_failure_update(self):
+        authors = {}
+        for author, author_messages in groupby(self, itemgetter('author_id')):
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', author.id),
+                {'type': 'mail_failure', 'elements': self.env['mail.message'].concat(*author_messages)._format_mail_failures()}
+            )
 
     #------------------------------------------------------
     # mail_message internals
@@ -939,8 +997,16 @@ class Message(models.Model):
         # remove author from notified partners
         if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
             partners_sudo = partners_sudo - self_sudo.author_id
-        # update message, with maybe custom values
+            
+        # list channels and partner by notification type
+        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
+        notif_partners = partners_sudo.filtered(lambda partner: 'inbox' in partner.mapped('user_ids.notification_type'))
+        email_partner = partners_sudo - notif_partners
+
+        #update message, with maybe custom values
         message_values = {}
+        if email_partner:
+            message_values = {'layout': layout, 'layout_values': repr(values)}
         if channels_sudo:
             message_values['channel_ids'] = [(6, 0, channels_sudo.ids)]
         if partners_sudo:
@@ -953,13 +1019,10 @@ class Message(models.Model):
         # notify partners and channels
         # those methods are called as SUPERUSER because portal users posting messages
         # have no access to partner model. Maybe propagating a real uid could be necessary.
-        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
-        notif_partners = partners_sudo.filtered(lambda partner: 'inbox' in partner.mapped('user_ids.notification_type'))
-
-        if email_channels or partners_sudo - notif_partners:
+        if email_channels or email_partner:
             partners_sudo.search([
                 '|',
-                ('id', 'in', (partners_sudo - notif_partners).ids),
+                ('id', 'in', (email_partner).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
             ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, values=values)
