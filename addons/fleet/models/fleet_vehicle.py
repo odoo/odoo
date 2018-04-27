@@ -269,6 +269,13 @@ class FleetVehicle(models.Model):
         )
         return res
 
+    @api.multi
+    def _track_subtype(self, init_values):
+        self.ensure_one()
+        if 'driver_id' in init_values:
+            return 'fleet.mt_fleet_driver_updated'
+        return super(FleetVehicle, self)._track_subtype(init_values)
+
 
 class FleetVehicleOdometer(models.Model):
     _name = 'fleet.vehicle.odometer'
