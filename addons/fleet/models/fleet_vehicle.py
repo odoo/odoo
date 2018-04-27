@@ -35,7 +35,8 @@ class FleetVehicle(models.Model):
     acquisition_date = fields.Date('Immatriculation Date', required=False,
         default=fields.Date.today, help='Date when the vehicle has been immatriculated')
     color = fields.Char(help='Color of the vehicle')
-    state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, 
+    state_id = fields.Many2one('fleet.vehicle.state', 'State',
+        default=_get_default_state, group_expand='_read_group_stage_ids',
         help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
@@ -222,6 +223,10 @@ class FleetVehicle(models.Model):
                 self.message_post(body=", ".join(changes))
 
             return super(FleetVehicle, self).write(vals)
+
+    @api.model
+    def _read_group_stage_ids(self, stages, domain, order):
+        return self.env['fleet.vehicle.state'].search([], order=order)
 
     @api.multi
     def return_action_to_open(self):
