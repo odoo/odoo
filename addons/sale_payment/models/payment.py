@@ -3,6 +3,7 @@
 import logging
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -84,8 +85,16 @@ class PaymentTransaction(models.Model):
         # force_company needed for company_dependent fields
         ctx_company = {'company_id': self.sale_order_id.company_id.id,
                        'force_company': self.sale_order_id.company_id.id}
-        created_invoice = self.sale_order_id.with_context(**ctx_company).action_invoice_create()
-        created_invoice = self.env['account.invoice'].browse(created_invoice).with_context(**ctx_company)
+
+        # We might fail to create the invoice because there is no invoiceable lines. This will
+        # raise a UserError and break the workflow. Better catch the error.
+        try:
+            created_invoice = self.sale_order_id.with_context(**ctx_company).action_invoice_create()
+            created_invoice = self.env['account.invoice'].browse(created_invoice).with_context(**ctx_company)
+        except UserError:
+            _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
+                            self.acquirer_id.provider, self.sale_order_id.name, self.sale_order_id.id, exc_info=True)
+            return
 
         if created_invoice:
             _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',
