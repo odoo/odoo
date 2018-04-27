@@ -11,6 +11,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button name="open_assignation_logs" string="Drivers History" type="object" class="oe_stat_button" icon="fa-history"/>
                         <button name="return_action_to_open"
                             type="object"
                             class="oe_stat_button"
@@ -444,5 +445,18 @@
     </record>
 
     <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="89"/>
+
+    <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
+        <field name="name">fleet.vehicle.assignation.log.view.tree</field>
+        <field name="model">fleet.vehicle.assignation.log</field>
+        <field name="arch" type="xml">
+            <tree string="Assignation Logs" editable="bottom">
+                <field name="vehicle_id" invisible="1"/>
+                <field name="driver_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </tree>
+        </field>
+    </record>
 
 </odoo>
