@@ -591,7 +591,8 @@ class account_payment(models.Model):
         move.post()
 
         #reconcile the invoice receivable/payable line(s) with the payment
-        self.invoice_ids.register_payment(counterpart_aml)
+        if self.invoice_ids:
+            self.invoice_ids.register_payment(counterpart_aml)
 
         return move
 
