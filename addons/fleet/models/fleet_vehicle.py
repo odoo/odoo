@@ -19,7 +19,7 @@ class FleetVehicle(models.Model):
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     active = fields.Boolean('Active', default=True, track_visibility="onchange")
     company_id = fields.Many2one('res.company', 'Company')
-    license_plate = fields.Char(required=True, track_visibility="onchange",
+    license_plate = fields.Char(track_visibility="onchange",
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
     driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
