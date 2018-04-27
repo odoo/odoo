@@ -120,11 +120,18 @@ class FleetVehicle(models.Model):
                     atn = car_value * min(0.18, (0.055 + 0.001 * (co2 - reference))) * magic_coeff
             return max(1280, atn) / 12.0
 
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
+        self.car_value = self.model_id.default_car_value
+        self.co2 = self.model_id.default_co2
+        self.fuel_type = self.model_id.default_fuel_type
+
 
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
 
     recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)")
+
 
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'
