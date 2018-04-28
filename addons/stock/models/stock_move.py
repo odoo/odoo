@@ -852,6 +852,12 @@ class StockMove(models.Model):
             taken_quantity = self.product_uom._compute_quantity(taken_quantity_move_uom, self.product_id.uom_id, rounding_method='HALF-UP')
 
         quants = []
+
+        if self.product_id.tracking == 'serial':
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(taken_quantity, int(taken_quantity), precision_digits=rounding) != 0:
+                taken_quantity = 0
+
         try:
             if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
                 quants = self.env['stock.quant']._update_reserved_quantity(
@@ -867,7 +873,6 @@ class StockMove(models.Model):
             taken_quantity = 0
 
         # Find a candidate move line to update or create a new one.
-
         for reserved_quant, quantity in quants:
             to_update = self.move_line_ids.filtered(lambda m: m.product_id.tracking != 'serial' and
                                                     m.location_id.id == reserved_quant.location_id.id and m.lot_id.id == reserved_quant.lot_id.id and m.package_id.id == reserved_quant.package_id.id and m.owner_id.id == reserved_quant.owner_id.id)
@@ -1100,7 +1105,7 @@ class StockMove(models.Model):
                             pass
 
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
-                move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move})
+                move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move, 'product_uom_qty': 0})
             move.move_line_ids._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
