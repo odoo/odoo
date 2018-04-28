@@ -46,7 +46,7 @@ class IrModuleModule(models.Model):
             theme_deps = module.get_upstream_theme_dependencies()
             websites = self.env['website'].search([]).filtered(lambda w: len(theme_deps - w.theme_ids) == 0)
             if websites:
-                _logger.info('auto-installing %s on %s (theme_deps: %s, website theme_ids: %s)', module.name, websites.mapped('name'), theme_deps, [w.theme_ids for w in websites])
+                _logger.info('auto-installing %s on %s', module.name, websites.mapped('name'))
                 websites.write({'theme_ids': [(4, module.id, 0)]})
                 module._assign_views()
 
@@ -54,18 +54,33 @@ class IrModuleModule(models.Model):
                 module._make_demo_data_website_specific(websites[0])
 
     @api.multi
-    def _make_demo_data_website_specific(self, website):
+    def _get_module_data(self, model_name):
         IrModelData = self.env['ir.model.data']
-        Menu = self.env['website.menu']
-        Page = self.env['website.page']
+        records = self.env[model_name]
 
         for module in self:
-            menus = Menu.browse(IrModelData.search([('module', '=', module.name), ('model', '=', 'website.menu')]).mapped('res_id'))
+            records |= self.env[model_name].browse(IrModelData.search([('module', '=', module.name), ('model', '=', model_name)]).mapped('res_id'))
+
+        return records
+
+    @api.multi
+    def _make_demo_data_website_specific(self, website):
+        for module in self:
+            menus = module._get_module_data('website.menu')
             menus.with_context(no_cow=True).write({'website_id': website.id})
 
-            pages = Page.browse(IrModelData.search([('module', '=', module.name), ('model', '=', 'website.page')]).mapped('res_id'))
+            pages = module._get_module_data('website.page')
             pages.with_context(no_cow=True).write({'website_ids': [(6, 0, [website.id])]})
             pages.with_context(no_cow=True).mapped('view_id').write({'website_id': website.id})
+
+    @api.multi
+    def _remove_website_specific_demo_data(self, website):
+        for module in self:
+            menus = module._get_module_data('website.menu')
+            menus.filtered(lambda menu: menu.website_id == website).unlink()
+
+            pages = module._get_module_data('website.page')
+            pages.with_context(no_cow=True).write({'website_ids': [(3, website.id, 0)]})
 
     @api.model
     def update_list(self):
@@ -144,6 +159,7 @@ class IrModuleModule(models.Model):
             current_website = Website.get_current_website()
             current_website.installed_theme_id -= modules_belonging_to_theme
             current_website.theme_ids -= modules_belonging_to_theme
+            modules_belonging_to_theme._remove_website_specific_demo_data(current_website)
             _logger.info('removed %s from %s', modules_belonging_to_theme.mapped('name'), current_website.name)
             return True
         else:
