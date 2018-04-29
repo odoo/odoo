@@ -3636,7 +3636,7 @@ var BasicModel = AbstractModel.extend({
                             r._changes[fieldName] = rec.id;
                             many2ones[fieldName] = true;
                         } else if (_.contains(['one2many', 'many2many'], fieldType)) {
-                            var x2mCommands = commands[0][2][fieldName];
+                            var x2mCommands = value[2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
                         } else {
                             r._changes[fieldName] = self._parseServerValue(field, r._changes[fieldName]);
@@ -3842,6 +3842,10 @@ var BasicModel = AbstractModel.extend({
                     var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
                     _.each(emptyGroupsIDs, function (groupID) {
                         list.data.push(groupID);
+                        var emptyGroup = self.localData[groupID];
+                        // this attribute hasn't been updated in the previous
+                        // loop for empty groups
+                        emptyGroup.aggregateValues = {};
                     });
                 }
                 return $.when.apply($, defs).then(function () {

@@ -47,6 +47,9 @@ msgid ""
 "\n"
 "Blocking: %s"
 msgstr ""
+"\n"
+"\n"
+"Bloklama: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:308
@@ -70,6 +73,12 @@ msgid ""
 " * Done: has been processed, can't be modified or cancelled anymore.\n"
 " * Cancelled: has been cancelled, can't be confirmed anymore."
 msgstr ""
+" * Taslak: henüz onaylanmamış ve onaylanana kadar planlanmayacaktır\n"
+"* Başka Bir İşlem Bekliyor: otomatik olarak hazır olmadan önce yürütülmek üzere başka bir hareket bekliyor (örn. Sipariş Verme Akışı)\n"
+"* Bekliyor: Eğer göndermek için hazır değilse, gerekli ürünler saklanamaz\n"
+"* Hazır: Ürün saklanmış ve gönderilmeye hazır. Eğer sevkıyat poliçesi 'olabildiğince çabuk' ise herhangi bir ürün saklandığında gönderilecektir. \n"
+"* Yapıldı: işlem gerçekleşmiş, değiştirilemez ve iptal edilemez.\n"
+"* İptal Edildi: iptal edilmiştir, artık onaylanamaz."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -116,6 +125,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Tedarikçi Lokasyonu: Tedarikçilerinizden gelen ürünlerin kaynak konumunu temsil eden sanal konum\n"
+"* Görünüm: Deponuz için, alt konumlarını birleştiren bir hiyerarşik yapı oluşturan sanal konum; doğrudan ürünleri içeremez\n"
+"* İç Konum: Kendi depolarınızdaki fiziksel konumlar,\n"
+"* Müşteri Konumu: Müşterilerinize gönderilen ürünler için hedef konumu temsil eden sanal konum\n"
+"* Envanter: Stok seviyelerini düzeltmek için envanter operasyonları muadili olarak görev yapan sanal konum(Fiziksel envanterler)\n"
+"* Satınalma: Kaynak (tedarikçi veya üretim) henüz bilinmiyorken satınalma operasyonları geçici muadili olarak görev yapan sanal konum. Satınalma zamanlayıcısı çalışmayı durdurduğunda, bu konum boş olmalıdır.\n"
+"* Üretim: Üretim operasyonları için sanal muadil: bu konum işlenmemiş materyalleri sarf ederek tamamlanmış ürün oluşturur\n"
+"* Transit Konumları: Şirket içi veya depolar arası operasyonlarda kullanılması gereken muhatap konum "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -702,7 +719,7 @@ msgstr "Klasik bir satış akışı aşağıdaki gibidir:"
 #: code:addons/stock/models/stock_move_line.py:86
 #, python-format
 msgid "A done move line should never have a reserved quantity."
-msgstr ""
+msgstr "Bir bitmiş hareket satırında rezerve edilmiş miktar olmamalıdır."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -719,7 +736,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:76
 #, python-format
 msgid "A serial number should only be linked to a single product."
-msgstr ""
+msgstr "Bir seri numarası sadece bir ürüne bağlanmış olmalıdır."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_type
@@ -772,6 +789,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Deponuzda ki ürün hareketleri işlemlerini yönetmek için rota ekleyin ve özelleştirin: Örn. Mal kabul > kalite kontrol > gelen ürünlerin depolanması, seçim > paketleme > giden ürünün sevkıyatı.\n"
+"Ayrıca gelen ürünleri göndermek için belirli alt konumları depo konum stratejinizde ayarlayabilirsiniz. ( Örn. belirli ambarlar, raflar)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -782,6 +801,8 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Deponuzda ki ürün hareketleri işlemlerini yönetmek için rota ekleyin ve özelleştirin: Örn. Mal kabul > kalite kontrol > gelen ürünlerin depolanması, seçim > paketleme > giden ürünün sevkıyatı.\n"
+"Ayrıca gelen ürünleri göndermek için belirli alt konumları depo konum stratejinizde ayarlayabilirsiniz. ( Örn. belirli ambarlar, raflar)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -864,7 +885,7 @@ msgstr "Taşınmaya hazır paketlere izin ver"
 #: code:addons/stock/models/stock_quant.py:82
 #, python-format
 msgid "An incoming date cannot be set to an untracked product."
-msgstr ""
+msgstr "Geliş tarihi izlenmeyen ürüne ayarlanamaz."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_2
@@ -919,6 +940,8 @@ msgid ""
 "Are you sure you want to confirm this operation? This may lead to "
 "inconsistencies in your inventory."
 msgstr ""
+"Bu operasyonu onaylamak istediğinize emin misiniz? Bu stoğunuzda "
+"tutarsızlığa neden olabilir."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -1130,6 +1153,11 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
+"Varsayılan olarak, sistem kaynak konumdaki stoktan alacak ve pasif olarak "
+"stok durumunun uygun olmasını bekleyecektir. Diğer olasılık, ürün toplamak "
+"için kaynak konumda doğrudan bir satınalma yaratmanıza (dolayısıyla mevcut "
+"stoğunuzu yok saymanıza) olanak tanır. Bağlantılı hareket oluşturmak ve bir "
+"önceki hareketi beklemek istiyorsak, bu ikinci seçenek daha uygun olabilir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1231,12 +1259,12 @@ msgstr "Ürün Miktarını Değiştir"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Change must be higher than"
-msgstr ""
+msgstr "Değişiklik daha yüksek olmalıdır"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_move_id
 msgid "Change to a better name"
-msgstr ""
+msgstr "Daha iyi bir isimle değiştir"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -1246,7 +1274,7 @@ msgstr "Uygunluk Kontrolü"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_has_packages
 msgid "Check the existence of destination packages on move lines"
-msgstr ""
+msgstr "Hareket satırlarındaki paketlerin var olan hedeflerini kontrol edin."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_line_exist
@@ -1308,7 +1336,7 @@ msgstr "Yeni bir transfer oluşturmak için burayı tıklayın."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_scrap
 msgid "Click here to scrap products."
-msgstr ""
+msgstr "Ürünleri hurdaya ayırmak için tıklayınız."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -1333,7 +1361,7 @@ msgstr "Rota eklemek için tıklayın."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Click to create a new operation type."
-msgstr ""
+msgstr "Yeni bir operasyon türü oluşturmak için tıklayınız."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -1542,7 +1570,7 @@ msgstr "Bekleyen Transfer Sayısı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Counterpart Locations"
-msgstr ""
+msgstr "Karşı Konum"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1720,7 +1748,7 @@ msgstr "Kümülatif Miktar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
 msgid "Current Destination Location"
-msgstr ""
+msgstr "Mevcut Hedef Konumu"
 
 #. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
@@ -1740,7 +1768,7 @@ msgstr "Mevcut Transfer Hareketi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
 msgid "Current Source Location"
-msgstr ""
+msgstr "Mevcut Kaynak Konumu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -1798,7 +1826,7 @@ msgstr "Müşteriler"
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "DATE"
-msgstr ""
+msgstr "TARİH"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
@@ -2032,7 +2060,7 @@ msgstr "Teslimat Emirleri"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_lot
 msgid "Delivery Packages"
-msgstr ""
+msgstr "Teslimat Paketi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
@@ -2123,13 +2151,13 @@ msgstr "Hedef Konum"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Location:"
-msgstr ""
+msgstr "Hedef Konum :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_move_dest_ids
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Destination Moves"
-msgstr ""
+msgstr "Hedef Hareket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_result_package_id
@@ -2140,7 +2168,7 @@ msgstr "Hedef Paket"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Destination Package :"
-msgstr ""
+msgstr "Hedef Paketi :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
@@ -2152,7 +2180,7 @@ msgstr "Hedef Rota"
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
-msgstr ""
+msgstr "Detaylı Operasyonlar"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2162,7 +2190,7 @@ msgstr "Detaylar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_details_visible
 msgid "Details Visible"
-msgstr ""
+msgstr "Görünür Detaylar"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_procure_method
@@ -2257,7 +2285,7 @@ msgstr "Tarihe Göre Yapılan Transferler "
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Don’t propagate scheduling changes through chains of operations"
-msgstr ""
+msgstr "Zamanlama değişikliklerini işlem zincirleriyle yaymayın"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2301,12 +2329,12 @@ msgstr "Son"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
 msgid "Entire Package"
-msgstr ""
+msgstr "Bütün Paket"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
 msgid "Entire Package Detail"
-msgstr ""
+msgstr "Bütün Paket Detayı"
 
 #. module: stock
 #. openerp-web
@@ -2468,12 +2496,12 @@ msgstr "Kimden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_from_loc
 msgid "From Loc"
-msgstr ""
+msgstr "Nereden?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_reserved_availability
 msgid "From Supplier"
-msgstr ""
+msgstr "Tedarikçiden"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_complete_name
@@ -2541,6 +2569,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get informative or blocking warnings on partners"
 msgstr ""
+"İş ortaklarınız hakkında bilgilendirici ya da engelleyici uyarıları alın."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_fixed_putaway_strat_sequence
@@ -2603,7 +2632,7 @@ msgstr "Paket İşlemi mi?"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_packages
 msgid "Has Packages"
-msgstr ""
+msgstr "Paketleri Var"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_has_scrap_move
@@ -2803,6 +2832,8 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
+"Eğer seçim kilitlenmemiş ise,ilk talebi düzenleyebilir (bir taslak seçimi "
+"için) ya da miktarı tamamlayabilirsiniz (yapılmış seçimler için)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2816,6 +2847,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will show which products are reserved "
 "(lot/serial number, source location, source package)."
 msgstr ""
+"Eğer kutucuk işaretli ise, Odoo odoo hangi ürünlerin rezerve olduğunu "
+"gösterecek (lot/seri numarası, kaynak konumu, kaynak paketi)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_show_operations
@@ -2825,6 +2858,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
+"Eğer kutucuk işaretli ise, seçim satırları detaylı stok operasyonlarını "
+"temsil eder. Eğer değilse, seçim satırları stok işlemlerinin bir toplamını "
+"temsil eder."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_create_lots
@@ -2935,7 +2971,7 @@ msgstr "Transfer"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr ""
+msgstr "Satış sipariş onayından hemen sonra "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2945,7 +2981,7 @@ msgstr "Sol üstteki tuşu kullanarak içe aktarın"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
 msgid "In Entire Package"
-msgstr ""
+msgstr "Bütün Paket İçinde"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3230,7 +3266,7 @@ msgstr "Envanter Satırı"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr ""
+msgstr "Envanter Satırları"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3251,7 +3287,7 @@ msgstr "Envanter Zararı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Product"
-msgstr ""
+msgstr "Stok Ürün"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_name
@@ -3315,7 +3351,7 @@ msgstr "Kilitli"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
 msgid "Is Processed"
-msgstr ""
+msgstr "İşlendi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
@@ -3331,12 +3367,12 @@ msgstr "Hurda Konumu Mu?"
 #: model:ir.model.fields,field_description:stock.field_stock_move_is_initial_demand_editable
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_is_initial_demand_editable
 msgid "Is initial demand editable"
-msgstr ""
+msgstr "İlk talep düzenlenebilir"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_is_quantity_done_editable
 msgid "Is quantity done editable"
-msgstr ""
+msgstr "Gerçekleşmiş miktar düzenlenebilir"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3392,13 +3428,13 @@ msgstr "Aynı anda kısmen veya tüm teslim edilecek malların belirtir"
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "LOCATION"
-msgstr ""
+msgstr "KONUM"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "LOT/SERIAL NUMBER"
-msgstr ""
+msgstr "LOT/SERİ NUMARASI"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_13
@@ -3588,7 +3624,7 @@ msgstr "Bağlantılı Hareketler"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "List view of lines"
-msgstr ""
+msgstr "Satırların görünümünü düzenle"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
@@ -3700,7 +3736,7 @@ msgstr "Lot/Seri"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Lot/Serial :"
-msgstr ""
+msgstr "Lot/Seri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_lot_id
@@ -3743,6 +3779,8 @@ msgid ""
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
 msgstr ""
+"Lotlar, gelen sevkiyatlarda, iç transferlerde ve giden teslimatlar da operasyon türü ayarlarına göre kodlandırılmış olabilir.\n"
+"                       İzleme her ürünün üzerinden yapılandırılabilir: Lot / Seri takibi, Seri Numarası takibi yok."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -3794,12 +3832,12 @@ msgstr "Lot / Seri Numaralarını Yönetin"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr ""
+msgstr "Birden Fazla Stok Konumu Yönetin"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
 msgid "Manage Multiple Warehouses"
-msgstr ""
+msgstr "Birden Fazla Depo Yönetin"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_lot
@@ -3824,7 +3862,7 @@ msgstr "Ürün üretim zincirlerini yönetin"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Manage product packages (e.g. pack of 6 bottles, box of 10 pieces)"
-msgstr ""
+msgstr "Ürün paketlerinizi yönetin (örn: 6'lı şişeleme, 10 parçalı kutular)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3844,7 +3882,7 @@ msgstr "Manuel Operasyon"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Manually or based on automatic scheduler"
-msgstr ""
+msgstr "Manuel ya da otomatik zamanlayıcı"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -3943,7 +3981,7 @@ msgstr "Hareket"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Move Detail"
-msgstr ""
+msgstr "Hareket Detayı"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -3965,7 +4003,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 #: model:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Move Lines"
-msgstr ""
+msgstr "Hareket Satırları"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_procure_method
@@ -4010,12 +4048,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_adv_location
 msgid "Multi-Step Routes"
-msgstr ""
+msgstr "Çok Adımlı Rotalar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_multi_warehouses
 msgid "Multi-Warehouses"
-msgstr ""
+msgstr "Çoklu Depo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4050,7 +4088,7 @@ msgstr "Yeni"
 #: code:addons/stock/models/stock_picking.py:597
 #, python-format
 msgid "New Move:"
-msgstr ""
+msgstr "Yeni Hareket :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty_new_quantity
@@ -4076,7 +4114,7 @@ msgstr "Uyarı Yok"
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_propagation_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_use_propagation_minimum_delta
 msgid "No Rescheduling Propagation"
-msgstr ""
+msgstr "Planlanmayan Yayılma"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -4092,14 +4130,14 @@ msgstr "Negatif (-) miktara izin verilmez"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "No operation made on this lot."
-msgstr ""
+msgstr "Bu lotta operasyon yapılmadı"
 
 #. module: stock
 #: code:addons/stock/models/procurement.py:185
 #, python-format
 msgid ""
 "No procurement rule found. Please verify the configuration of your routes"
-msgstr ""
+msgstr "Satış kuralı bulunamadı. Lütfen rota yapılandırmalarınızı doğrulayın."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:55
@@ -4143,7 +4181,7 @@ msgstr "Notlar"
 #: code:addons/stock/models/stock_picking.py:544
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "Uygunluğu kontrol edebilecek bir şey yok."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4268,7 +4306,7 @@ msgstr "Bir ürün kategorisi"
 #: code:addons/stock/models/stock_inventory.py:111
 #, python-format
 msgid "One product for a specific owner"
-msgstr ""
+msgstr "Belirli mal sahibi için bir ürün"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:107
@@ -4297,6 +4335,7 @@ msgid ""
 "Operation Type determines the way the picking should be shown in the view, "
 "reports, ..."
 msgstr ""
+"Operasyon türü toplama yolunun raporlarda gösterilme biçimini belirler,..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
@@ -4380,7 +4419,7 @@ msgstr "Siparişin Miktarı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Orders processed today or scheduled for today"
-msgstr ""
+msgstr "Bugün işlenen ya da bugün planlanan siparişler"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -4440,7 +4479,7 @@ msgstr "Çıkış Konumu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer_overprocessed_product_name
 msgid "Overprocessed Product Name"
-msgstr ""
+msgstr "Fazla işlem görmüş ürün adı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_partner_id
@@ -4463,7 +4502,7 @@ msgstr "Sahibi "
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Owner :"
-msgstr ""
+msgstr "Mal Sahibi :"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_partner_id
@@ -4486,13 +4525,13 @@ msgstr "Kâr&Zarar Miktarı"
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:6
 #, python-format
 msgid "PRINT"
-msgstr ""
+msgstr "YAZDIR"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "PRODUCT"
-msgstr ""
+msgstr "ÜRÜN"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:216
@@ -4533,7 +4572,7 @@ msgstr "İçeriği ile birlikte paket barkodu"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "Package Content"
-msgstr ""
+msgstr "Paket İçeriği"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4549,7 +4588,7 @@ msgstr "Paket Referansı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Reference:"
-msgstr ""
+msgstr "Paket Referansı:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -4565,7 +4604,7 @@ msgstr "Paket Türü"
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Package Type:"
-msgstr ""
+msgstr "Paket Türü"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4774,7 +4813,7 @@ msgstr "Pivot"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
-msgstr ""
+msgstr "Planlanan Transfer"
 
 #. module: stock
 #: model:ir.model,name:stock.model_web_planner
@@ -4785,7 +4824,7 @@ msgstr "Planlayıcı"
 #: code:addons/stock/models/stock_picking.py:649
 #, python-format
 msgid "Please add some lines to move"
-msgstr ""
+msgstr "Hareket için lütfen satır ekleyiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:823
@@ -4802,7 +4841,7 @@ msgstr "Lütfen sıfır olmayan bir miktar girin."
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Positive Stock"
-msgstr ""
+msgstr "Pozitif Stok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_packaging
@@ -4812,7 +4851,7 @@ msgstr "Tercih Edilen Paketleme"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_route_ids
 msgid "Preferred route"
-msgstr ""
+msgstr "Tercih edilen rota"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -4843,17 +4882,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr ""
+msgstr "İşlem operasyonları barkodlarla birlikte daha hızlı"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process picking in batch per worker"
-msgstr ""
+msgstr "Toplama işlemlerini, çalışan başına toplama olarak işleyin."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
 msgid "Processed more than initial demand"
-msgstr ""
+msgstr "İlk talepten daha fazla ürün işlendi."
 
 #. module: stock
 #: selection:stock.location,usage:0
@@ -4917,7 +4956,7 @@ msgstr "Tedarikler"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_produce_line_ids
 msgid "Produce Line"
-msgstr ""
+msgstr "Üretim Hattı "
 
 #. module: stock
 #: code:addons/stock/models/product.py:347
@@ -5042,11 +5081,13 @@ msgid ""
 "Product this lot/serial number contains. You cannot change it anymore if it "
 "has already been moved."
 msgstr ""
+"Ürün bu lot/seri numaralarını içeriyor. Eğer numaralar taşındıysa bunu "
+"değiştiremezsiniz."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_has_tracking
 msgid "Product with Tracking"
-msgstr ""
+msgstr "İzlenen Ürün"
 
 #. module: stock
 #: model:stock.location,name:stock.location_production
@@ -5139,12 +5180,12 @@ msgstr "Yerleştirme Stratejisi"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Put in Pack"
-msgstr ""
+msgstr "Pakete Koy"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Put your products in packs (e.g. parcels, boxes) and track them"
-msgstr ""
+msgstr "Ürünlerinizi pakete koyun (örn: koliler, kutular) ve onları izleyin"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_putaway
@@ -5155,7 +5196,7 @@ msgstr "Yerleştirme"
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 msgid "QUANTITY"
-msgstr ""
+msgstr "MİKTAR"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_qty_multiple
@@ -5185,7 +5226,7 @@ msgstr "Kalite Kontrol Konumu"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
-msgstr ""
+msgstr "Miktar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast_quantity
@@ -5202,7 +5243,7 @@ msgstr "Miktar"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Quantity :"
-msgstr ""
+msgstr "Miktar :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_quantity_done
@@ -5241,7 +5282,7 @@ msgstr "Miktar negatif olamaz"
 #: code:addons/stock/models/stock_move.py:611
 #, python-format
 msgid "Quantity decreased!"
-msgstr ""
+msgstr "Miktar azaldı!"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
@@ -5261,6 +5302,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods arriving to the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
+"Gelmesi gereken ürünlerin miktarı\n"
+"Tek Stok Konumu içeriğinde, bu konuma gelen malları ve alt malları içerir.\n"
+"Tek Depolu içeriğinde, bu Depo Konumuna gelen malları ve alt malları içerir.\n"
+"Yoksa 'iç Tipli' mallar herhangi bir Stok Konumuna gelebilir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_outgoing_qty
@@ -5270,6 +5315,10 @@ msgid ""
 "In a context with a single Warehouse, this includes goods leaving the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods leaving any Stock Location with 'internal' type."
 msgstr ""
+"Gitmesii gereken ürünlerin miktarı\n"
+"Tek Stok Konumu içeriğinde, bu konumdan giden malları ve alt malları içerir.\n"
+"Tek Depolu içeriğinde, bu Depo Konumundan giden malları ve alt malları içerir.\n"
+"Yoksa 'iç Tipli' mallar herhangi bir Stok Konumuna gelebilir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_quantity
@@ -5284,6 +5333,7 @@ msgid ""
 "Quantity of reserved products in this quant, in the default unit of measure "
 "of the product"
 msgstr ""
+"Ürünün varsayılan ölçü biriminde, bu miktardaki ayrılmış ürünlerin miktarı."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
@@ -5302,7 +5352,7 @@ msgstr "Stoklar"
 #: code:addons/stock/models/stock_quant.py:70
 #, python-format
 msgid "Quants cannot be created for consumables or services."
-msgstr ""
+msgstr "Miktarlar hizmet ya da tüketilebilirlik için oluşturulamaz."
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_12
@@ -5337,7 +5387,7 @@ msgstr "Gerçek Miktar"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_qty
 msgid "Real Reserved Quantity"
-msgstr ""
+msgstr "Gerçek Rezerve Miktarı"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_route_id
@@ -5419,7 +5469,7 @@ msgstr "Belgenin Referansı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
-msgstr ""
+msgstr "Lot, ambalaj, konum kaydet."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5485,6 +5535,8 @@ msgid ""
 "Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. \n"
 " This option allows to not propagate the rescheduling if the change is not critical."
 msgstr ""
+"Yeniden planlama herhangi bir operasyon zincirine uygular (örn: Sipariş Emri, Topla- Paketle- Sevk Et). MTO satışları için,   müşteri için beklenen teslimat tarihini, bir tedarikçi gecikmesi etkiler (gelecek zamana güncellenen) .\n"
+"Eğer değişim çok önemli değilse, bu seçenek yeniden planlamanın yayılmasına izin vermez."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5494,6 +5546,8 @@ msgid ""
 " impacts the expected delivery date to the customer. This option allows to "
 "not propagate the rescheduling if the change is not critical."
 msgstr ""
+"Yeniden planlama herhangi bir operasyon zincirine uygular (örn: Sipariş Emri, Topla- Paketle- Sevk Et). MTO satışları için, müşteri için beklenen teslimat tarihini, bir tedarikçi gecikmesi etkiler (gelecek zamana güncellenen) .\n"
+"Eğer değişim çok önemli değilse, bu seçenek yeniden planlamanın yayılmasına izin vermez."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_procurement_jit
@@ -5503,7 +5557,7 @@ msgstr "Rezervasyon"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Reservations"
-msgstr ""
+msgstr "Rezervasyonlar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_uom_qty
@@ -5516,7 +5570,7 @@ msgstr "Rezerve"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserved_quantity
 msgid "Reserved Quantity"
-msgstr ""
+msgstr "Ayrılan Miktar"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_module_procurement_jit
@@ -5525,6 +5579,10 @@ msgid ""
 "is advised to better manage priorities in case of long customer lead times "
 "or/and frequent stock-outs."
 msgstr ""
+"Teslimat emirlerinde manuel olarak rezerve ederek veya stok planlayıcısını "
+"çalıştırmak, müşteri güvenli teslimat tampon süresinin uzun olması ve / veya"
+" stokların sık sık tükenmesi durumunda önceliklerin daha iyi yönetilmesini "
+"sağlar."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5727,6 +5785,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
+"Hurdaya çıkan bir ürün stoktan düşülecektir. Ürün raporlama amacıyla "
+"kullanılmak hurda konumuna düşecek. "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5741,7 +5801,7 @@ msgstr "Envanter Arama"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr ""
+msgstr "Stok Satırları Arama "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_filter
@@ -5839,12 +5899,12 @@ msgstr "İlgili Depo"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Putaway Strategies on Locations"
-msgstr ""
+msgstr "Konumlardaki Yerleştirme Stratejilerini Ayarlama"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set Warehouse Routes"
-msgstr ""
+msgstr "Depo Rotalarını Ayarla"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category_removal_strategy_id
@@ -5863,7 +5923,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set owner on stored products"
-msgstr ""
+msgstr "Depolanmış ürünlerin sahibini ayarla."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5953,6 +6013,10 @@ msgid ""
 " labels and request carrier picking at your warehouse to ship to the "
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
+"Nakliye bağlantıları, doğru nakliye maliyetlerini hesaplamaya, gönderim "
+"etiketlerini basmaya ve müşteriye gönderilmek üzere depoda taşıyıcı seçimini"
+" talep etmeyi sağlar. Gönderim bağlantılarını teslimat yöntemlerinden "
+"uygulayın."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_code
@@ -5967,7 +6031,7 @@ msgstr "Kısa adı depo tanımlamak için kullanın"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_check_availability
 msgid "Show Check Availability"
-msgstr ""
+msgstr "Uygunluk Kontrolünü Göster"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_show_operations
@@ -5978,17 +6042,17 @@ msgstr "Operasyon Detaylarını Göster"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
 msgid "Show Lots Text"
-msgstr ""
+msgstr "Lot Metinlerini Göster"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_mark_as_todo
 msgid "Show Mark As Todo"
-msgstr ""
+msgstr "Yapılacak Olarak İşaretlenenleri Göster"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_operations
 msgid "Show Operations"
-msgstr ""
+msgstr "Operasyonları Göster"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_reserved
@@ -5998,7 +6062,7 @@ msgstr "Rezerveyi Göster"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_validate
 msgid "Show Validate"
-msgstr ""
+msgstr "Doğrulamayı Göster"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6039,7 +6103,7 @@ msgstr "Kaynak Konumu"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr ""
+msgstr "Kaynak Konumu :"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_package_id
@@ -6050,7 +6114,7 @@ msgstr "Kaynak Paket"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
 msgid "Source Package :"
-msgstr ""
+msgstr "Kaynak Paketi :"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_location_src_id
@@ -6209,7 +6273,7 @@ msgstr "Stok Miktarı"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
 msgid "Stock Quantity History"
-msgstr ""
+msgstr "Stok Miktarının Geçmişi"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6243,6 +6307,8 @@ msgid ""
 "Store products in specific locations of your warehouse (e.g. bins, racks) "
 "and to track inventory accordingly."
 msgstr ""
+"Ürünlei deponuzda belirli konumlarda depolayın ( varil, raf vs) ve stoğunuza"
+" göre takip edin."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_supplied_wh_id
@@ -6297,6 +6363,8 @@ msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
 msgstr ""
+"Kontrol kullanılabilirlik düğmesinin gösterilip gösterilmeyeceğini "
+"hesaplamak için kullanılan teknik alan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_mark_as_todo
@@ -6304,11 +6372,14 @@ msgid ""
 "Technical field used to compute whether the mark as todo button should be "
 "shown."
 msgstr ""
+"Yapılacak olarak işaretlenen düğmenin gösterilip gösterilmeyeceğini "
+"hesaplamak için kullanılan teknik alan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_validate
 msgid "Technical field used to compute whether the validate should be shown."
 msgstr ""
+"Onayın gösterilip gösterilmeyeceğini hesaplamak için kullanılan teknik alan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6334,12 +6405,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_produce_line_ids
 msgid "Technical link to see which line was produced with this. "
-msgstr ""
+msgstr "Bununla hangi hattın üretildiğini görmek için teknik bağlantı."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_consume_line_ids
 msgid "Technical link to see who consumed what. "
-msgstr ""
+msgstr "Kimin ne tükettiğini görmek için teknik bağlantı."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
@@ -6364,6 +6435,9 @@ msgid ""
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
 msgstr ""
+"'Manuel Operasyon' değeri,mevcut adımdan sonra bir stok hareketi "
+"oluşturacaktır. 'Otomatik Adım Ekleme Yok' ile, konum orijinal harekette "
+"değiştirilir."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6441,6 +6515,13 @@ msgid ""
 "point. That way, it is always known where we need to go and that is why they"
 " are preferred over push rules."
 msgstr ""
+"Bir satış siparişi, yeniden sipariş kuralı, başka hareketler gibi satışlar "
+"tarafından temsil edilen talep, çözüm için satın alma kuralının "
+"uygulanmasına  ihtiyaç duyar. Satın alma  kuralının uygulanmasına bağlı "
+"olarak bir satın alma siparişini, üretim siparişini ya da başka bir hareketi"
+" tetikler. Bu yol, ters siparişteki başlangıç noktasındaki orijinal talep "
+"ile bitiş noktasına kadar zincir oluşturan yoldur. Bu yol,her zaman nereye "
+"gidilmesi gerektiğini ve bu yüzden itme kuralları sayesinde tercih edilir."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -6474,6 +6555,10 @@ msgid ""
 "                On the operation type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
 msgstr ""
+"Operasyon türü sistemi, her stok operasyonunda, görünümlerini buna göre "
+"değiştirecek belirli bir türe atamanıza izin verir. Operasyon tipinde, "
+"örneğin müşteriye göstermesi gerekiyorsa, paketlemede varsayılan olarak "
+"gerekli olup olmadığını belirtebilirsiniz."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_id
@@ -6505,7 +6590,7 @@ msgstr "Bu stok hareketini oluşturan satınalma kuralı"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "The product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_push_rule_id
@@ -6516,6 +6601,7 @@ msgstr "Bu stok hareketini oluşturan itme kuralı"
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The quotation becomes a Sales Order and a Transfer Order is created"
 msgstr ""
+"Teklif bir Satış Siparişi haline gelir ve bir Teslimat Emri oluşturulur"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:266
@@ -6614,6 +6700,9 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
+"Bu operasyon türü ile manuel toplama oluşturduğunuzda, bu varsayılan hedef "
+"konumdur. Ancak değiştirmek mümkündür veya başka rotalar seçilebilir. Boş "
+"ise, iş ortağı kartının üzerindeki müşteri konumunu kontrol edecektir"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -6623,6 +6712,9 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
+"Bu operasyon türü ile manuel toplama oluşturduğunuzda, bu varsayılan hedef "
+"konumdur. Ancak değiştirmek mümkündür veya başka rotalar seçilebilir. Boş "
+"ise, iş ortağı kartının üzerindeki müşteri konumunu kontrol edecektir"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -6636,7 +6728,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
 msgid "This is the operation type that will be put on the stock moves"
-msgstr ""
+msgstr "Bu, stok hareketlerine koyulacak olan bir operasyon türüdür."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -6665,7 +6757,7 @@ msgstr ""
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
-msgstr ""
+msgstr "Bu konum kullanımı, ürünleri içerdiğinden görüntüyü değiştiremez."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -6776,12 +6868,15 @@ msgid ""
 "Those are the entire packages of a picking shown in the view of detailed "
 "operations"
 msgstr ""
+"Bunlar, detaylı operasyon görüntüsünde gösterilen toplama paketlerinin "
+"tümüdür."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
 msgid ""
 "Those are the entire packages of a picking shown in the view of operations"
 msgstr ""
+"Bunlar, operasyon görüntüsünde gösterilen toplama paketlerinin tümüdür."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
@@ -6801,7 +6896,7 @@ msgstr "Yapılacak"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_to_loc
 msgid "To Loc"
-msgstr ""
+msgstr "Nereye?"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6891,6 +6986,8 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n"
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
+"Devam eden seri numaraları ve lotlar üzerindeki tarihleri izleyin: Önceki en iyi, çıkarılan, ömrünün bitmesi, uyarı.\n"
+"Bu tarihler ürün değerlerine bağlı olarak oluşturulan  seri/lot numaralarında otomatik olarak ayarlanır."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6899,11 +6996,14 @@ msgid ""
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
 msgstr ""
+"Devam eden seri numaraları ve lotlar üzerindeki tarihleri izleyin: Önceki en"
+" iyi, çıkarılan, ömrünün bitmesi, uyarı. Bu tarihler ürün değerlerine bağlı "
+"olarak oluşturulan  seri/lot numaralarında otomatik olarak ayarlanır."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Track product location in your warehouse"
-msgstr ""
+msgstr "Deponuzdaki ürün konumunu izleyin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_tracking
@@ -7121,7 +7221,7 @@ msgstr "Varolan Lot/Seri numaraları kullanın"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes and putaway strategies"
-msgstr ""
+msgstr "Kendi rotanızı ve yerleştirme stratejinizi kullanın"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_sequence
@@ -7360,6 +7460,12 @@ msgid ""
 "finished product manual manufacturing order. In other cases, it is important"
 " to use pull rules where you know where you are going based on a demand."
 msgstr ""
+"Bir hareketin bir konuma öngörüldüğü zaman, itme kuralı  bir sonraki konuma "
+"otomatik olarak bir hareket oluşturacaktır. Bu esas olarak sadece manuel "
+"işlemler oluştururken gereklidir, örn. 2/3 adımlı manuel satın alma siparişi"
+" veya 2/3 adımlı ürün manuel bitmiş ürün siparişi. Diğer durumlarda, talep "
+"üzerine nereye gideceğinizi bildiğiniz durumlarda çekme kurallarını "
+"kullanmak önemlidir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_warehouse_selectable
@@ -7415,6 +7521,8 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
+"Toplama tamamlanmamış ise, başlangıç talebinin değişmesine izin verir. Eğer "
+"toplama tamamlanmış ise, tamamlanmış miktarların değişimine izin verir."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -7458,13 +7566,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr ""
+msgstr "Toplama onayından sonra hareket eklenip eklenmediği"
 
 #. module: stock
 #: model:product.product,name:stock.test_quant_product
 #: model:product.template,name:stock.test_quant_product_product_template
 msgid "Whiteboard"
-msgstr ""
+msgstr "Beyaz Tahta"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
@@ -7487,6 +7595,11 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
+"Ürün stoğunuz için kullandığınızdan daha küçük bir ölçü birimi "
+"kullanıyorsunuz. Bu ayrılan miktardaki yuvarlama problemine sebep olabilir! "
+"Stoğunuzu değerlendirmek ya da daha küçük bir değer için yuvarlama "
+"hassasiyetinizi daha küçük bir değere değiştirmek için, olabilecek daha "
+"küçük bir ölçü birimin kullanmalısınız. (örn: 0.00001)"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -7556,6 +7669,9 @@ msgid ""
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
 msgstr ""
+"Stok hareketlerinde mevcut olarak ayrılmış bir ürün türünü "
+"değiştiremezsiniz. Eğer tür değişikliğine ihtiyacınız varsa, stok "
+"hareketlerinde ayrılmayan olarak belirlemelisiniz."
 
 #. module: stock
 #: code:addons/stock/models/product.py:502
@@ -7576,18 +7692,20 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
+"Eğer toplanma tamamlanmışsa, ürün hareketini silemezsiniz. Sadece "
+"tamamlanmış miktarı düzeltebilirsiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:116
 #, python-format
 msgid "You can not enter negative quantities!"
-msgstr ""
+msgstr "Negatif miktar giremezsiniz!"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:398
 #, python-format
 msgid "You can only adjust stockable products."
-msgstr ""
+msgstr "Sadece stoklanabilir ürünleri ayarlayabilirsiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:1073
@@ -7657,6 +7775,8 @@ msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\"."
 msgstr ""
+"Ürünleri \"görünüm\" türündeki bir yere götüremez veya ürünlere teslim "
+"edemezsiniz."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:152
@@ -7666,6 +7786,8 @@ msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
 "numbers encoded."
 msgstr ""
+"Aynı seri numarasını iki kere kullanamazsınız. Lütfen kodlanmış seri "
+"numarasını düzeltin."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:672
@@ -7679,7 +7801,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:656
 #, python-format
 msgid "You cannot validate a transfer if you have not processed any quantity."
-msgstr ""
+msgstr "Eğer hiçbir miktar belirtmediyseniz, bir transferi onaylayamazsınız."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -7707,7 +7829,7 @@ msgstr "İlk talepten daha az ürün işlediniz."
 msgid ""
 "You have processed more than what was initially\n"
 "                    planned for the product"
-msgstr ""
+msgstr "Ürün için en başta ne planlandıysa bundan daha fazlasını yaptınız"
 
 #. module: stock
 #: code:addons/stock/models/product.py:304
@@ -7733,7 +7855,7 @@ msgstr ""
 #: code:addons/stock/models/stock_location.py:98
 #, python-format
 msgid "You have to set a name for this location."
-msgstr ""
+msgstr "Bu konum için bir isim ayarlayın."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -7767,7 +7889,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:1047
 #, python-format
 msgid "You should not put the contents of a package in different locations."
-msgstr ""
+msgstr "Farklı konumlara, bir paket içeriği koymamalısınız."
 
 #. module: stock
 #: code:addons/stock/models/product.py:369
@@ -7777,6 +7899,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
+"Bu ürün için hala bazı aktif ihtiyaç kurallarınız var. Lütfen önce bunları "
+"silin ya da arşivleyin."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:318
@@ -7838,7 +7962,7 @@ msgstr "barkod.rule"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_bpost
 msgid "bpost"
-msgstr ""
+msgstr "bpost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7855,7 +7979,7 @@ msgstr "gün"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "days to be propagated"
-msgstr ""
+msgstr "Yayılma günleri"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -7935,7 +8059,7 @@ msgstr "iPod"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "in"
-msgstr ""
+msgstr "içinde"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7950,7 +8074,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 msgid "is not available in sufficient quantity"
-msgstr ""
+msgstr "yeterli miktar mevcut değil"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7964,7 +8088,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sales order form to see Transfer Order"
-msgstr ""
+msgstr "Satış siparişi üzerinde Transfer Emri'ni görmek için"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast

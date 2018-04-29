@@ -27,8 +27,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: Thư Lê <thu.ltv@komit-consulting.com>, 2018\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
@@ -41,13 +41,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 " * Trạng thái 'Dự thảo' được sử dụng khi một người dùng ghi nhận một hoá đơn mới và chưa xác nhận.\n"
-" * Trạng thái 'Pro-forma' được sử dụng làm một bước chuyển tiếp giữa 'Dự thảo' và 'Mở'. Hoá đơn Pro-forma không có số hoá đơn.\n"
 " * Trạng thái 'Mở' là trạng thái mà hoá đơn đã được thẩm định/xác nhận, được cấp một mã số duy nhất trong hệ thống và chưa được thanh toán hết.\n"
 " * Trạng thái 'Đã thanh toán' được tự động thiết lập cho hoá đơn khi hoá đơn được thanh toán hết. Các bút toán sổ nhật ký liên quan có thể đã hoặc chưa đối soát.\n"
 " * Trạng thái 'Đã huỷ bỏ' là trạng thái của hoá đơn bị huỷ bỏ bởi người dùng."
@@ -127,7 +125,7 @@ msgstr ", nếu phân hệ kế toán hoặc mua hàng đã được cài đặt
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr ""
+msgstr "- Số Đầu tiên:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -174,7 +172,7 @@ msgstr ": Sổ cái"
 #: code:addons/account/models/account.py:539
 #, python-format
 msgid ": Refund"
-msgstr "Hoàn tiền"
+msgstr ": Hoàn tiền"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -195,13 +193,23 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name},</p>\n"
+"<p>Cám ơn bạn đã thanh toán.<br/>Đây là biên lai thanh toán <strong>${(object.name or '').replace('/','-')}</strong> giá trị <strong>${format_amount(object.amount, object.currency_id)}</strong> từ ${object.company_id.name}.</p>\n"
+"<p>Nếu bạn có bất kỳ câu hỏi hay thắc mắc, đừng ngần ngại liên lạc với chúng tôi.</p>\n"
+"<p>Trân trọng,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -4095,7 +4103,7 @@ msgstr "Mô tả trên hoá đơn"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_account_id
 msgid "Destination Account"
-msgstr ""
+msgstr "Tài khoản Đích"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply
@@ -4432,11 +4440,6 @@ msgid "Enable Comparison"
 msgstr "Kích hoạt So sánh"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
-msgid "Enable payment followup management"
-msgstr "Kích hoạt quản lý theo dõi thanh toán"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
 msgstr "Kết thúc"
@@ -4617,7 +4620,7 @@ msgstr "Tháng Hai"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_state_ids
 msgid "Federal States"
-msgstr ""
+msgstr "Bang/Tỉnh"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0

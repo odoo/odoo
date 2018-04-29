@@ -108,6 +108,16 @@ var KanbanController = BasicController.extend({
         return groupedByM2o;
     },
     /**
+     * @param {number[]} ids
+     * @private
+     * @returns {Deferred}
+     */
+    _resequenceColumns: function (ids) {
+        var state = this.model.get(this.handle, {raw: true});
+        var model = state.fields[state.groupedBy[0]].relation;
+        return this.model.resequence(model, ids, this.handle);
+    },
+    /**
      * This method calls the server to ask for a resequence.  Note that this
      * does not rerender the user interface, because in most case, the
      * resequencing operation has already been displayed by the renderer.
@@ -156,6 +166,10 @@ var KanbanController = BasicController.extend({
     _onAddColumn: function (event) {
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
+            var state = self.model.get(self.handle, {raw: true});
+            var ids = _.pluck(state.data, 'res_id').filter(_.isNumber);
+            return self._resequenceColumns(ids);
+        }).then(function () {
             return self.update({}, {reload: false});
         }).then(function () {
             self._updateButtons();
@@ -428,9 +442,7 @@ var KanbanController = BasicController.extend({
      */
     _onResequenceColumn: function (event) {
         var self = this;
-        var state = this.model.get(this.handle, {raw: true});
-        var model = state.fields[state.groupedBy[0]].relation;
-        this.model.resequence(model, event.data.ids, this.handle).then(function () {
+        this._resequenceColumns(event.data.ids).then(function () {
             self._updateEnv();
         });
     },

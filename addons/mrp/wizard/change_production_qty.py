@@ -43,7 +43,8 @@ class ChangeProductionQty(models.TransientModel):
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
             if wizard.product_qty < produced:
-                raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
+                format_qty = '%.{precision}f'.format(precision=precision)
+                raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (format_qty % produced, format_qty % produced))
             production.write({'product_qty': wizard.product_qty})
             done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
             qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
