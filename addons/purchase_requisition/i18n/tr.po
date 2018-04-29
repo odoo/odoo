@@ -130,7 +130,7 @@ msgstr "Tedarikçi Seçimi"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
+msgstr "Açık Sipariş"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -141,7 +141,7 @@ msgstr ""
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Call for Tenders"
-msgstr ""
+msgstr "Teklif Çağrısı"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -158,7 +158,7 @@ msgstr "İptal Edildi"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:115
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr ""
+msgstr "Bu teklifle ilişkili anlaşma tarafından iptal edildi."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -238,7 +238,7 @@ msgstr "Görünüm Adı"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "Otomatik olarak RfQ satırı oluşturamazsınız."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -248,7 +248,7 @@ msgstr "Biten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__move_dest_id
 msgid "Downstream Move"
-msgstr ""
+msgstr "Satışa Dönük Hareket"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -266,7 +266,7 @@ msgstr "Bitiş Ayı"
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr ""
+msgstr "Satın alma anlaşma örnekleri teklif çağrısı ve açık sipariş içerir."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -275,6 +275,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
+"Açık Sipariş için, belirli zaman aralıkları için bir sözleşme kaydedebilir "
+"ve bu anlaşma daghilindeki ürünler belirlenen fiyattan sipariş "
+"edebilirsiniz."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -296,11 +299,15 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"Bir teklif çağrısında, ihtiyacınız olan ürünü kaydedebilir ve tedarikçiler "
+"için RfQ lar oluşturabilirsiniz. Teklifler kaydedildikten sonra bunları "
+"inceleyebilir ve karşılaştırabilir, bazılarını doğrulayabilir ve diğerlerini"
+" iptal edebilirsiniz."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
-msgstr ""
+msgstr "Müzakerede"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_supplierinfo
@@ -356,7 +363,7 @@ msgstr "Yeni Teklif"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__order_count
 msgid "Number of Orders"
-msgstr ""
+msgstr "Sipariş Sayısı"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
@@ -491,7 +498,7 @@ msgstr "Satınalma Talep Satırı"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Purchase Tender"
-msgstr ""
+msgstr "Satın Alma Teklifi"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -576,6 +583,8 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Sadece bir teklif talebi (özel) seçin: Satın alma siparişi onaylandığında, kalan satın alma siparişini iptal edin.\n"
+"Birden çok RFQ seçin: Birden fazla satın alma siparişine izin verir. Satın alma siparişinin onaylanması durumunda kalan siparişler iptal edilmez."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -585,7 +594,7 @@ msgstr "Sıra"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Set quantities manually"
-msgstr ""
+msgstr "Miktarı manuel olarak ayarlayın"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -632,7 +641,7 @@ msgstr "Şartlar ve Koşullar"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr ""
+msgstr "Tüm ürünlerin alındığı beklenen ve planlanan teslimat tarihi ."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:94
@@ -660,12 +669,12 @@ msgstr "Birim Fiyat"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Anlaşma satırları kullan"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Anlaşma miktarı kullan"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -721,6 +730,8 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
+"Satın alma isteği kapanmadan önce, her RfQ  ya iptal etmeli ya da "
+"onaylamalısınız."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

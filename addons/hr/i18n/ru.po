@@ -14,13 +14,14 @@
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 14:10+0000\n"
 "PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Dmitry sky <d.v.selitsky@gmail.com>, 2017\n"
+"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,7 +131,7 @@ msgstr "Компания"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__resource_calendar_id
 msgid "Company Working Hours"
-msgstr ""
+msgstr "Рабочие часы компании"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
@@ -287,6 +288,7 @@ msgid ""
 "Enter here the private address of the employee, not the one linked to your "
 "company."
 msgstr ""
+"Сюда следует вводить личный адрес сотрудника, не связанный с компанией."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:310
@@ -556,6 +558,9 @@ msgid ""
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves, recruitments, etc."
 msgstr ""
+"В Odoo структура отдела используется, чтобы управлять всеми документами,\n"
+"                относящимися к сотрудникам отдела: расходыми, табелями,\n"
+"                отгулами, рекрутиногом и т.п."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -595,12 +600,12 @@ msgstr "Должность"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 msgid "Private Address"
-msgstr ""
+msgstr "Личный адрес"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Private Information"
-msgstr ""
+msgstr "Личная информация"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -658,6 +663,8 @@ msgid ""
 "Set default calendar used to compute time allocation for leaves, timesheets,"
 " ..."
 msgstr ""
+"Выберите календарь по умолчанию, который используется для распределения "
+"рабочего времени табелях, отуглах и т.д."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__state
@@ -677,17 +684,17 @@ msgstr "Настройки"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_org_chart
 msgid "Show Organizational Chart"
-msgstr ""
+msgstr "Показать организационную структуру"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form"
-msgstr ""
+msgstr "Показать организационную структуру в карточке сотрудника"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Show organizational chart on employee form."
-msgstr ""
+msgstr "Показать организационную структуру в карточке сотрудника."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -760,7 +767,7 @@ msgstr "Теги"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_address_home_a_company
 msgid "The employee adress has a company linked"
-msgstr ""
+msgstr "Адрес сотрудника привязан к адресу компании"
 
 #. module: hr
 #: sql_constraint:hr.job:0
@@ -809,6 +816,9 @@ msgid ""
 "                                            This private address is used in the expense report reimbursement document.\n"
 "                                            It should be different from the work address."
 msgstr ""
+"Введите личный(домашний) адрес сотрудника.\n"
+"                                            Они используется в документах по возмещениям расходов и пр.\n"
+"                                            Должен отличаться от рабочего адреса."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
@@ -823,7 +833,7 @@ msgstr "Пользователи"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "Vacancies :"
-msgstr ""
+msgstr "Вакансии :"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -855,7 +865,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Рабочий адрес"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -865,7 +875,7 @@ msgstr "Рабочая эл. почта"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Work Information"
-msgstr ""
+msgstr "Информация по работе"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_location
@@ -880,7 +890,7 @@ msgstr "Рабочий сотовый телефон"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "Work Organization"
-msgstr ""
+msgstr "Организация работы"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
