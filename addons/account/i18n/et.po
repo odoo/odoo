@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: Hedi Hunt <Hedi.Hunt@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -31,16 +31,10 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * 'Mustand' staatus on kasutusel kui kasutaja loob uue kinnitamata arve.\n"
-" * 'Ettemaks' staatus on kasutusel kui kasutaja loob arve, millel ei ole arve numbrit.\n"
-" * 'Avatud' staatus on kasutusel kui kasutaja loob arve ja genereeritakse arve number. Arve jääb avatuks, kuni arve märgitakse makstuks.\n"
-" * 'Makstud' staatus määratakse automaatselt, kui arve tasutakse. Seotud andmikukanded võivad olla aga ei pea olema sobitatud. \n"
-" * 'Tühistatud' staatus määratakse siis, kui kasutaja tühistab arve."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -192,7 +186,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -256,71 +250,6 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
-"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                            Invoice ${object.record_name}\n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"          </table>\n"
-"    </td>\n"
-"  </tr>\n"
-"  <!-- CONTENT -->\n"
-"  <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
-"                <tbody>\n"
-"                    <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                        ${object.body | safe}\n"
-"                    </td>\n"
-"                </tbody>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                        ${company.name}<br/>\n"
-"                        ${company.phone or ''}\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                        % if company.email:\n"
-"                        <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
-"                        % endif\n"
-"                        % if company.website:\n"
-"                        <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                        ${company.website}\n"
-"                        </a>\n"
-"                        % endif\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <tr>\n"
-"        <td align=\"center\">\n"
-"             <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -595,7 +524,7 @@ msgstr "<span> Kuni </span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Journal Entries</span>"
-msgstr "<span>Andmiku kanded</span>"
+msgstr "<span>Andmike kanded</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1142,7 +1071,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Andmiku kanne sisaldab mitut kirjet, mis võivad olla kas deebet- või "
+"Andmiku kanne sisaldab mitut kanderida, mis võivad olla kas deebet- või "
 "kreedit-tehingud."
 
 #. module: account
@@ -1750,6 +1679,21 @@ msgid "Adjustment Tax"
 msgstr "Korrigeerimise maks"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1886,7 +1830,7 @@ msgid ""
 msgstr ""
 "Kõik käsitsi loodud uued andmiku kanded on tavaliselt staatusega "
 "“Kinnitamata”, aga sa saad vastava andmiku seadistada nii, et see staatus "
-"jääks vahele. Sellisel juhul käituvad need nagu andmikukanded, mis on "
+"jääks vahele. Sellisel juhul käituvad need nagu andmike kanded, mis on "
 "dokumentide kinnitamise süsteemi poolt automaatselt loodud (arved, "
 "pangaväljavõtted…) ja need luuakse “Kinnitatud” staatusega."
 
@@ -1896,7 +1840,7 @@ msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
 msgstr ""
-"Kõik valitud andmiku kanded kinnitatakse ja kajastatakse. Neid ei saa enam "
+"Kõik valitud andmike kanded kinnitatakse ja kajastatakse. Neid ei saa enam "
 "tagantjärgi muuta."
 
 #. module: account
@@ -1974,7 +1918,7 @@ msgstr "Lubab kasutada analüütilist raamatupidamist"
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 #, python-format
 msgid "Amount"
-msgstr "Kogus"
+msgstr "Summa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_amount_currency
@@ -3001,7 +2945,7 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Vali, kui see konto lubab arvete ja maksete sobitamist andmiku kirjetel."
+"Vali, kui see konto lubab arvete ja maksete sobitamist andmike kanderidadel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence
@@ -3096,7 +3040,7 @@ msgstr "Vajuta,  et luua müügiarve."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Click to create a journal entry."
-msgstr "Vajuta, et luua andmikukanne."
+msgstr "Vajuta, et luua andmiku kanne."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -3334,7 +3278,7 @@ msgid ""
 "Compute the counter part accounts of this journal item for this journal "
 "entry. This can be needed in reports."
 msgstr ""
-"Arvuta kirje vastaskontod sellele andmiku kirjele. See võib olla vajalik "
+"Arvuta kanderea vastaskontod sellele andmiku kandele. See võib olla vajalik "
 "aruandluses."
 
 #. module: account
@@ -3440,7 +3384,7 @@ msgid ""
 "Confirming this will create automatically a journal entry with the "
 "difference in the profit/loss account set on the cash journal."
 msgstr ""
-"Selle kinnitamine loob automaatsed andmikukanded, millel on erinevus raha "
+"Selle kinnitamine loob automaatsed andmiku kanded, millel on erinevus raha "
 "andmikus seadistatud kasumi/kahjumi kontoga ."
 
 #. module: account
@@ -3798,7 +3742,7 @@ msgstr "Kreeditsumma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Kreedit andmiku kanded, mis on sobitatud selle andmiku kannetega."
+msgstr "Kreedit andmiku kanderida, mis on sobitatud selle andmiku kannetega."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -4081,7 +4025,7 @@ msgstr "Deebetsumma"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Deebet andmiku kanded, mis on sobitatud selle andmiku kannetega."
+msgstr "Deebet andmiku kanderida, mis on sobitatud selle andmiku kannetega."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -5520,8 +5464,8 @@ msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
 msgstr ""
-"Selleks, et pangaväljavõtte rida kustutada, pead selle enne tühistama, et "
-"seotud andmiku kanded saaks kustutada."
+"Selleks, et pangaväljavõtte rida kustutada, pead selle esmalt tühistama, et "
+"seotud andmiku kanderead kustutada."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:199
@@ -5530,8 +5474,8 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
-"Selleks, et pangaväljavõtet kustutada, pead selle enne tühistama, et seotud "
-"andmiku kanded saaks kustutada."
+"Selleks, et pangaväljavõtet kustutada, pead selle esmalt tühistama, et "
+"seotud andmiku kanderead kustutada."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:144
@@ -5849,7 +5793,6 @@ msgstr "Arveldatud"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -5939,7 +5882,7 @@ msgid ""
 "invoice has been reconciled with one or several journal entries of payment."
 msgstr ""
 "See näitab, et arve on makstud ja selle andmiku kanne on sobitatud ühe või "
-"mitme andmikukande maksega. "
+"mitme andmiku kande maksega. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_sent
@@ -5962,7 +5905,7 @@ msgid ""
 "entry again and cancel it thanks to a regular revert."
 msgstr ""
 "Ei ole lubatud kustutada makset, mis on loonud andmiku kande, sest see "
-"tekitaks tühimiku numeratsiooni. Tuleks taasluua andmikukanne ja siis see "
+"tekitaks tühimiku numeratsiooni. Tuleks taasluua andmiku kanne ja siis see "
 "tühistada tagasipööramise kaudu."
 
 #. module: account
@@ -6052,38 +5995,38 @@ msgstr "Andmik ja partner"
 #: model:ir.ui.view,arch_db:account.view_move_tree
 #, python-format
 msgid "Journal Entries"
-msgstr "Andmikukanded"
+msgstr "Andmike kanded"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Month"
-msgstr "Andmikukanded kuude kaupa"
+msgstr "Andmike kanded kuude kaupa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_id
 #: model:ir.model.fields,field_description:account.field_account_move_line_move_id
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Journal Entry"
-msgstr "Andmikukanne"
+msgstr "Andmiku kanne"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_move_name
 #: model:ir.model.fields,field_description:account.field_account_invoice_move_name
 #: model:ir.model.fields,field_description:account.field_account_payment_move_name
 msgid "Journal Entry Name"
-msgstr "Andmikukande nimetus"
+msgstr "Andmiku kande nimetus"
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "Andmikukande number"
+msgstr "Andmiku kande number"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "Andmiku kanne"
+msgstr "Andmiku kanderida"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_label
@@ -6091,7 +6034,7 @@ msgstr "Andmiku kanne"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_label
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Journal Item Label"
-msgstr "Andmiku kande silt"
+msgstr "Andmiku kanderea silt"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:399
@@ -6120,7 +6063,7 @@ msgstr "Andmiku kande silt"
 #: model:ir.ui.view,arch_db:account.view_move_line_tree
 #, python-format
 msgid "Journal Items"
-msgstr "Andmike kirjed"
+msgstr "Andmike kanderead"
 
 #. module: account
 #. openerp-web
@@ -6128,7 +6071,7 @@ msgstr "Andmike kirjed"
 #: model:ir.actions.client,name:account.action_manual_reconcile
 #, python-format
 msgid "Journal Items to Reconcile"
-msgstr "Sobitamist vajavad andmike kirjed"
+msgstr "Sobitamist vajavad andmike kanderead"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_name
@@ -6148,7 +6091,7 @@ msgstr "Käesoleva aasta arved andmikus"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Andmike kirjed, kus vastavuse number pole määratud "
+msgstr "Andmike kanderead, kus vastavuse number on määramata"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_account_opening_journal_id
@@ -6569,7 +6512,7 @@ msgstr "Kohustus"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_id
 msgid "Link to the automatically generated Journal Items."
-msgstr "Link automaatselt loodud andmiku kirjete juurde."
+msgstr "Link automaatselt loodud andmiku kanderea juurde."
 
 #. module: account
 #: selection:account.account.type,type:0
@@ -6796,7 +6739,7 @@ msgstr "Sobitatud deebet"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_reconciled_line_ids
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Sobitatud andmike kirjed"
+msgstr "Sobitatud andmike kanderead"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_full_reconcile_form
@@ -7137,17 +7080,6 @@ msgid "Normal Text"
 msgstr "Tavatekst"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr "Mitte mustand"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "Maksmata"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:254
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
@@ -7263,9 +7195,9 @@ msgid ""
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
 msgstr ""
-"Odoo genereerib automaatselt ühe andmikukande ühe \n"
-"                raamatupidamise dokumendi kohta: arve, kreeditarve, maksed,\n"
-"                pangaväljavõtted jne. Seega peaks sa käsitsi andmikukandeid\n"
+"Odoo genereerib automaatselt ühe andmiku kande ühe \n"
+"                raamatupidamisdokumendi kohta: arve, kreeditarve, maksed,\n"
+"                pangaväljavõtted jne. Seega peaks sa käsitsi andmike kandeid\n"
 "                tegema ainult mitmesuguste muude tegevuste jaoks."
 
 #. module: account
@@ -7317,9 +7249,9 @@ msgid ""
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
 msgstr ""
-"Kui arve mustandid on kinnitatud, siis ei saa neid enam\n"
+"Kui arve mustand on kinnitatud, siis ei saa arvet enam\n"
 "                        muuta. Arved saavad unikaalse numbri ja andmiku\n"
-"                        kirjed luuakse kontoplaani."
+"                        kanderead luuakse kontoplaani."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7395,13 +7327,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Avatud"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7430,7 +7363,7 @@ msgstr "Algsaldode kanne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_opening_opening_move_line_ids
 msgid "Opening Journal Items"
-msgstr "Algsaldode andmike kirjed"
+msgstr "Algsaldode andmike kanderead"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_opening_move_posted
@@ -7483,7 +7416,7 @@ msgid ""
 "regular revert of it in case you want to cancel it."
 msgstr ""
 "Tegevus ei ole lubatud. Kuna väljavõtte rida sai juba numbri, ei saa seda "
-"täielikult sobitada olemasolevate andmiku kannetega, sest muidu tuleks "
+"täielikult sobitada olemasolevate andmike kannetega, sest muidu tuleks "
 "tühimik numbrite järjekorda. Peaksid looma kande ja koostama tagasipööramise"
 " kui soovite seda tühistada."
 
@@ -7593,12 +7526,13 @@ msgstr "Pakend"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Makstud"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Tasutud müügiarved"
@@ -8088,7 +8022,7 @@ msgstr "Postitatud erinevus"
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 #: model:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Post Journal Entries"
-msgstr "Postita andmikukanded"
+msgstr "Postita andmike kanded"
 
 #. module: account
 #: selection:account.move,state:0 selection:account.payment,state:0
@@ -8101,12 +8035,12 @@ msgstr "Postitatud"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Postitatud andmikukanded"
+msgstr "Postitatud andmike kanded"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Postitatud andmike kirjed"
+msgstr "Postitatud andmike kanderead"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -8139,7 +8073,7 @@ msgstr "Säilita tasakaal silt"
 #: model:ir.model,name:account.model_account_reconcile_model
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr "Eelseadistus, et luua andmikukandeid arvete ja maksete sobitamises"
+msgstr "Eelseadistus, et luua andmike kandeid arvete ja maksete sobitamises"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -8451,7 +8385,7 @@ msgstr "Sobita pangaväljavõtteid"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Reconciling journal entries"
-msgstr "Andmikukannete sobitamine"
+msgstr "Andmike kannete sobitamine"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
@@ -8879,7 +8813,7 @@ msgstr "Otsi arvet"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr "Otsi andmikukannet"
+msgstr "Otsi andmiku kanderidu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8933,7 +8867,7 @@ msgstr "Teine andmik"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template_second_label
 msgid "Second Journal Item Label"
-msgstr "Teine andmikukande silt"
+msgstr "Teine andmiku kanderea silt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_second_tax_id
@@ -9255,7 +9189,7 @@ msgstr "Väljavõte"
 #: code:addons/account/models/account_bank_statement.py:245
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr "Avaldus %s on kinnitatud, loodi andmikukanded."
+msgstr "Avaldus %s on kinnitatud, loodi andmiku kanderead."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_line_form
@@ -9956,7 +9890,7 @@ msgstr "Ettevõtte kontonumber peab olema kordumatu!"
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
 msgstr ""
-"Majandusüksus, mida kasutatakse arveraamatu sissekannetes selle arve jaoks"
+"Majandusüksus, mida kasutatakse andmiku sissekannetes selle arve jaoks"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_currency_id
@@ -10174,13 +10108,13 @@ msgstr "Makset ei saa töödelda, sest arve ei ole avatud!"
 msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
-msgstr "Järelejäänud summa andmiku kandes kande valuutas."
+msgstr "Järelejäänud summa andmiku kandereal kande valuutas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_amount_residual
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
-msgstr "Järelejäänud summa andmiku kandes ettevõtte valuutas."
+msgstr "Järelejäänud summa andmiku kandereal ettevõtte valuutas."
 
 #. module: account
 #: code:addons/account/models/account_move.py:489
@@ -10189,7 +10123,7 @@ msgid ""
 "The selected account of your Journal Entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Valitud konto andmikukandes sunnib kasutama teist valuutat. Teise valuuta "
+"Valitud konto andmiku kandes sunnib kasutama teist valuutat. Teise valuuta "
 "saab eemaldada kontolt."
 
 #. module: account
@@ -10247,7 +10181,7 @@ msgstr "Andmikus %s  %s ei ole defineeritud kontot sularaha erinevuste kohta."
 #: code:addons/account/wizard/account_validate_account_move.py:18
 #, python-format
 msgid "There is no journal items in draft state to post."
-msgstr "Ei ole ühtegi andmiku kannet mustand staatuses"
+msgstr "Mustandis ei ole ühtegi andmiku kanderida"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1714
@@ -10417,7 +10351,7 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"See väli sisaldab nummerdamise informatsiooni andmiku kannete kohta selles "
+"See väli sisaldab nummerdamise informatsiooni andmike kannete kohta selles "
 "andmikus."
 
 #. module: account
@@ -10432,8 +10366,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Seda välja kasutatakse väljaminekute ja sissetulekute arveraamatu "
-"sissekannete jaoks. Saad seada piirkuupäeva selle rea maksmisele. "
+"Seda välja kasutatakse väljaminekute ja sissetulekute andmike kannete jaoks."
+" Saad seada piirkuupäeva selle rea maksmisele. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_partner_name
@@ -10471,7 +10405,8 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its "
 "company."
 msgstr ""
-"Andmik sisaldab juba kandeid, seega  ei saa muuta enam seotud ettevõtet."
+"Andmik sisaldab juba kanderidasid, seega  ei saa muuta enam seotud "
+"ettevõtet."
 
 #. module: account
 #: code:addons/account/models/account.py:496
@@ -10479,7 +10414,7 @@ msgstr ""
 msgid ""
 "This journal already contains items, therefore you cannot modify its short "
 "name."
-msgstr "Andmik sisaldab juba kandeid, seega ei saa muuta enam lühikoodi."
+msgstr "Andmik sisaldab juba kanderidasid, seega ei saa muuta enam lühikoodi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_accounting_report_label_filter
@@ -10596,7 +10531,7 @@ msgid ""
 "This wizard will validate all journal entries selected. Once journal entries"
 " are validated, you can not update them anymore."
 msgstr ""
-"See viisard kinnitab kõik valitud andmikukanded. Kui kanded on kinnitatud "
+"See viisard kinnitab kõik valitud andmike kanded. Kui kanded on kinnitatud, "
 "siis ei saa neid enam muuta."
 
 #. module: account
@@ -10605,7 +10540,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Neid saab kasutada andmikukande kiireks loomiseks, kui sobitad\n"
+"Neid saab kasutada andmiku kanderidade kiireks loomiseks, kui sobitad\n"
 "                 pangaväljavõtet või kontosid."
 
 #. module: account
@@ -10684,7 +10619,6 @@ msgid "Total"
 msgstr "Kokku"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Täiskogus"
@@ -10735,41 +10669,41 @@ msgstr "Ilma maksudeta kokku"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
 msgid "Total amount in the currency of the company, negative for credit note."
-msgstr "Kogusumma ettevõtte valuutas, negatiivne kreeditarvetel."
+msgstr "Kogu summa ettevõtte valuutas, negatiivne kreeditarvetel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
-msgstr "Kogusumma ettevõtte valuutas, negatiivne kreeditarvetel."
+msgstr "Kogu summa ettevõtte valuutas, negatiivne kreeditarvetel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr "Kogusumma ettevõtte valuutas, negatiivne kreeditarvetel."
+msgstr "Kogu summa ettevõtte valuutas, negatiivne kreeditarvetel."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
 #: model:ir.model.fields,help:account.field_res_users_credit
 msgid "Total amount this customer owes you."
-msgstr "Kogusumma, mis see klient sulle võlgneb."
+msgstr "Kogu summa, mis see klient sulle võlgneb."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_total
 msgid "Total amount with taxes"
-msgstr "Kogusumma maksudega"
+msgstr "Kogu summa maksudega"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal
 msgid "Total amount without taxes"
-msgstr "Kogusumma maksudeta"
+msgstr "Kogu summa maksudeta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit
 #: model:ir.model.fields,help:account.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Kogusumma, mida peate maksma sellele tarnijale."
+msgstr "Kogu summa, mida peate maksma sellele tarnijale."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_total_company_signed
@@ -10943,12 +10877,12 @@ msgstr "Sisestamata"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Postitamata andmiku kanded"
+msgstr "Postitamata andmike kanded"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Postitamata andmikukanded"
+msgstr "Postitamata andmiku kanderead"
 
 #. module: account
 #. openerp-web
@@ -11085,9 +11019,9 @@ msgid ""
 "should not have this option set."
 msgstr ""
 "Kasutatakse aruannetes, saamaks teada, kas peaksime arvesse võtma andmiku "
-"kirjeid täiesti algusest või ainult aruandeaastast.  Kontoliigid, mis tuleks"
-" igal aruandeaastal nullida (nagu kulud, tulud ...), ei peaks seda võimalust"
-" omama."
+"kanderead täiesti algusest või ainult aruandeaastast.  Kontoliigid, mis "
+"tuleks igal aruandeaastal nullida (nagu kulud, tulud ...), ei peaks seda "
+"võimalust omama."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_reference
@@ -11442,8 +11376,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"Sa saad märkida selle kasti, et märgistada andmikukanne kui õigustüli seotud"
-" partneriga"
+"Sa saad märkida selle kasti, et märgistada andmiku kanderea kui õigustüli "
+"seotud partneriga"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -11467,7 +11401,7 @@ msgid ""
 "used in an account journal item. If you need to change the unit of measure, "
 "you may deactivate this product."
 msgstr ""
-"Te ei saa muuta toote mõõtühikut, mida on juba kasutatud andmiku kirje "
+"Te ei saa muuta toote mõõtühikut, mida on juba kasutatud andmiku kanderea "
 "kontona. Kui te peate muutma toote mõõtühikut, siis on teil võimalik toode "
 "deaktiveerida."
 
@@ -11536,7 +11470,7 @@ msgid ""
 "You cannot change the currency of the company since some journal items "
 "already exist"
 msgstr ""
-"Ettevõtte valuutat ei saa enam muuta, sest juba on tehtud andmiku kandeid."
+"Ettevõtte valuutat ei saa enam muuta, sest juba on tehtud andmike kanderead."
 
 #. module: account
 #: code:addons/account/models/account.py:235
@@ -11545,7 +11479,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
-"Sa ei saa muuta omanikettevõtet kontol, mis juba sisaldab andmikukandeid."
+"Sa ei saa muuta omanikettevõtet kontol, mis juba sisaldab andmike "
+"kanderidasid."
 
 #. module: account
 #: code:addons/account/models/account.py:242
@@ -11564,7 +11499,7 @@ msgid ""
 "You cannot create journal items with a secondary currency without filling "
 "both 'currency' and 'amount currency' field."
 msgstr ""
-"Te ei saa luua andmikukandeid teise valuutaga ilma, et täidaksite nii "
+"Te ei saa luua andmiku kanderidasid teise valuutaga ilma, et täidaksite nii "
 "\"valuuta\" kui ka \"valuuta summa\" välja."
 
 #. module: account
@@ -11603,7 +11538,7 @@ msgstr ""
 #: code:addons/account/models/account.py:248
 #, python-format
 msgid "You cannot do that on an account that contains journal items."
-msgstr "Te ei saa teha seda kontol, mis sisaldab andmikukandeid."
+msgstr "Te ei saa teha seda kontol, mis sisaldab andmiku kanderidasid."
 
 #. module: account
 #: code:addons/account/models/account_move.py:1344
@@ -11612,7 +11547,7 @@ msgid ""
 "You cannot do this modification on a posted journal entry, you can just change some non legal fields. You must revert the journal entry to cancel it.\n"
 "%s."
 msgstr ""
-"Te ei saa seda muudatust teha postitatud andmikukandel ning saate muuta vaid mõnda mitte-õiguslikku välja. Te peate tagasi võtma andmikukande, et seda tühistada.\n"
+"Te ei saa seda muudatust teha postitatud andmiku kandel ning saate muuta vaid mõnda mitte-õiguslikku välja. Te peate tagasi võtma andmiku kande, et seda tühistada.\n"
 "%s."
 
 #. module: account
@@ -11656,7 +11591,7 @@ msgid ""
 "First you should set the journal to allow cancelling entries."
 msgstr ""
 "Te ei saa muuta postitatud kannet selles andmikus.\n"
-"Esmalt peaksite määrama, et selles andmikus on kannate tühistamine lubatud."
+"Esmalt peaksite määrama, et selles andmikus on kannete tühistamine lubatud."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:783
@@ -11709,8 +11644,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
-"Te ei saa kinnitada arvet negatiivse kogusummaga. Te peaksite koostama selle"
-" asemel kreeditarve."
+"Te ei saa kinnitada arvet negatiivse kogu summaga. Te peaksite koostama "
+"selle asemel kreeditarve."
 
 #. module: account
 #. openerp-web
@@ -11940,7 +11875,7 @@ msgstr "kood"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "create a journal entry"
-msgstr "loo andmikukanne"
+msgstr "loo andmiku kanne"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form

@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-04-27 14:48+0000\n"
+"PO-Revision-Date: 2018-04-27 14:48+0000\n"
 "Last-Translator: Ants Peetsalu <ants@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -147,7 +147,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -251,13 +251,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
@@ -277,13 +270,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Done</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
@@ -298,10 +284,24 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Paid</span>"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Done</span>"
 msgstr ""
 
 #. module: sale
@@ -326,6 +326,7 @@ msgstr "<strong>Kuupäev:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
 msgstr "<strong>Aegumiskuupäev:</strong>"
 
@@ -1447,6 +1448,7 @@ msgid "No longer edit orders once confirmed"
 msgstr "Ära muuda kinnitatud tellimusi"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1454,13 +1456,6 @@ msgid ""
 msgstr ""
 "Kui pakkumisest saab müügitellimus, siis see liigutatakse pakkumiste\n"
 "                nimekirjast müügitellimuste nimekirja."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1694,11 +1689,6 @@ msgstr "Partneri riik"
 #: selection:res.config.settings,portal_confirmation_options:0
 msgid "Payment"
 msgstr "Makse"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Payment Acquirers"
-msgstr "Pangalingid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -2223,6 +2213,12 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Müü ja osta tooteid erinevates mõõtühikutes"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Müü mitu toodet ühes pakendis"
@@ -2649,6 +2645,22 @@ msgid "Track Service"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
+msgid "USPS"
+msgstr "USPS"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:570
+#, python-format
+msgid "Uncategorized"
+msgstr "Kategoriseerimata"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2795,6 +2807,7 @@ msgid "Your Order has been confirmed."
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
@@ -2802,13 +2815,6 @@ msgid ""
 msgstr ""
 "Kui pakkumine on koostatud, siis kinnita müügitellimus,\n"
 "                seejärel koosta arve ning oota makse laekumist."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2819,6 +2825,11 @@ msgid ""
 msgstr ""
 "Kui pakkumine on koostatud, siis kinnita müügitellimus, seejärel koosta arve"
 " ning oota makse laekumist."
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
+msgid "bpost"
+msgstr "bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

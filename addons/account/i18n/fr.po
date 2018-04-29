@@ -63,7 +63,6 @@
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2017
 # Jeanjean Noname <monsieur.spock@gmail.com>, 2017
 # Paul-Hervé Meyer <paulherve.meyer@mail.novancia.fr>, 2017
-# Elliot DRAKE <monsieur.byte@gmail.com>, 2017
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2017
 # Davy <cottet_davy@yahoo.fr>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
@@ -77,8 +76,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -91,14 +90,12 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 "* L'état \"Brouillon\" est utilisé lorsqu'un utilisateur est en train de saisir ou de modifier une nouvelle facture non confirmée.\n"
-"* L'état \"Pro-forma\" est utilisé lorsque la facture n'a pas de numéro de facture.\n"
-"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, un numéro de facture est généré. La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
+"* L'état 'Ouvert' est utilisé lorsque l'utilisateur crée une facture, celle-ci a alors un numéro de facture La facture reste dans ce statut \"Ouvert\" jusqu'à ce qu'elle soit payée.\n"
 "* L'état 'Payé' est affecté automatiquement lorsque la facture est payée. Ses écritures dans les journaux connexes peuvent ou non être réconciliées.\n"
 "* L'état \"Annulé\" est utilisé lorsque l'utilisateur annule la facture."
 
@@ -246,13 +243,23 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Chèr(e) ${object.partner_id.name},</p>\n"
+"<p>Merci pour votre règlement. <br/> Voici le reçu de votre paiement <strong>${(object.name or '').replace('/','-')}</strong> d'un montant de <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.</p>\n"
+"<p>Si vous avez des questions, pensez à nous contacter.</p>\n"
+"<p>Sincères salutations,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -318,7 +325,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -430,6 +437,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Cher ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Voici, en pièce jointe, votre \n"
+"% if object.number:\n"
+"facture <strong>${object.number}</strong>\n"
+"% else:\n"
+"facture\n"
+"% endif\n"
+"% if object.origin:\n"
+"(avec la référence ${object.origin})\n"
+"% endif\n"
+", son montant s'élève à <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"émis par ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Voir la facture</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Cette facture est déjà payée.</p>\n"
+"% else:\n"
+"    <p>Merci de procéder au payement dès que possible.</p>\n"
+"% endif\n"
+"\n"
+"<p>Merci,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1824,6 +1875,21 @@ msgstr "Adresse"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
 msgstr "Taxe d'ajustement"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -6019,7 +6085,6 @@ msgstr "Facturée"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -7322,17 +7387,6 @@ msgid "Normal Text"
 msgstr "Texte standard"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr "Pas un brouillon"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "Non payées"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:254
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
@@ -7587,13 +7641,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Ouvert"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7787,12 +7842,13 @@ msgstr "Localisation comptable"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Payée"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Factures payées"
@@ -10972,7 +11028,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Montant total"
