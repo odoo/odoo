@@ -669,7 +669,9 @@ def call_kw_model(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {})
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
+    with recs.env.norecompute():
+        result = method(recs, *args, **kwargs)
+    recs.recompute()
     return downgrade(method, result, recs, args, kwargs)
 
 def call_kw_multi(method, self, args, kwargs):
@@ -677,7 +679,9 @@ def call_kw_multi(method, self, args, kwargs):
     context, args, kwargs = split_context(method, args, kwargs)
     recs = self.with_context(context or {}).browse(ids)
     _logger.debug("call %s.%s(%s)", recs, method.__name__, Params(args, kwargs))
-    result = method(recs, *args, **kwargs)
+    with recs.env.norecompute():
+        result = method(recs, *args, **kwargs)
+    recs.recompute()
     return downgrade(method, result, recs, args, kwargs)
 
 def call_kw(model, name, args, kwargs):
