@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -24,16 +24,10 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n"
-" * 'Proforma' faturanın Proforma durumunda olması ve bu durumda fatura numaralandırılmaz.\n"
-" * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı fatutaryı ödemeyinceye kadar açık durumdadır.\n"
-" * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış  yada uzlaştırılmamış olamsıyla ilgilidir.\n"
-" * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -186,7 +180,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -1693,6 +1687,21 @@ msgid "Adjustment Tax"
 msgstr "Vergi Düzeltme"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1885,7 +1894,7 @@ msgstr "Nakit yuvarlama yönetimine izin ver."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Nakit esaslı olarak vergilerin yapılandırılmasına izin ver."
+msgstr "Nakit esaslı olarak vergileme yapılandırmasına izin ver."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1954,7 +1963,7 @@ msgstr "Ödeme Tutarı"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
 msgid "Amount Rounding"
-msgstr "Yuvarlama miktarı."
+msgstr "Yuvarlama Tutarı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -2134,7 +2143,7 @@ msgstr "Yalnızca sevk ve fatura ülkesi grupla eşleşiyorsa uygula."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template_country_group_id
 msgid "Apply only if delivery or invoicing country match the group."
-msgstr "Sadece teslimat ve faturalama ülkeleri eşleşiyor ise uygula."
+msgstr "Sadece teslimat veya faturalama ülkeleri eşleşiyor ise uygula."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_country_id
@@ -2220,12 +2229,12 @@ msgstr "Otomatik Girişler"
 #: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
-msgstr "Otomatik Denkleştirme "
+msgstr "Otomatik Denkleştirme Kalemi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
-msgstr "Otomatik Döviz Kuru"
+msgstr "Otomatik Döviz Kurları"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2343,8 +2352,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Ödenecek fatura için Banka Hesap Numarası. Eğer bir Müşteri Faturası ya da "
-"Tedarikçi İade/Fiyat Farkı Faturası ise Şirket Banka Hesap No'su, yoksa İş "
-"Ortağı Banka Hesap No'su . "
+"Tedarikçi İade/Fiyat Farkı Faturası ise Şirket Banka Hesap Numarası, aksi "
+"taktirde İş Ortağı Banka Hesap Numarası . "
 
 #. module: account
 #. openerp-web
@@ -2407,7 +2416,7 @@ msgstr "Banka Hesap Özeti"
 #: code:addons/account/models/account_bank_statement.py:935
 #, python-format
 msgid "Bank Statement %s"
-msgstr "Hesap Durumu"
+msgstr "Hesap Özeti"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -2692,8 +2701,8 @@ msgid ""
 "this invoice."
 msgstr ""
 "Uzlaştırılmış fatura üzerinde iade/fiyat farkı yapılamaz. Öncelikle fatura "
-"uzlaştırması bozulabilir, daha sonra iade/fiyat farkı faturaya "
-"yansıtılabilir. "
+"uzlaştırması kaldırılır, daha sonra bu fatura için iade/fiyat farkı "
+"oluşturulabilir. "
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
@@ -2799,7 +2808,7 @@ msgstr "Nakit Yuvarlama Yöntemi"
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Nakit Çevirileri"
+msgstr "Nakit Yuvarlamaları"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2960,7 +2969,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Bu yevmiyeden aynı sıradaki faturaları ve iade/fiyat farklarını görmek "
-"istemiyorsanız lütfen bu kutuyu işaretleyin."
+"istemiyorsanız lütfen bu seçim alanını işaretleyin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -3443,7 +3452,9 @@ msgstr "Gelir Maliyeti"
 msgid ""
 "Could not install new chart of account as there are already accounting "
 "entries existing"
-msgstr "Daha önce muhasebe kartı oluşturduğunuz için yeni kart yüklenemedi."
+msgstr ""
+"Daha önce muhasebe kayıtları oluşturduğunuz için yeni hesap planı "
+"yüklenemedi."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_counterpart
@@ -3899,7 +3910,7 @@ msgstr "Müşteriler"
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
 msgid "DOWN"
-msgstr "DOWN"
+msgstr "AŞAĞIYA"
 
 #. module: account
 #. openerp-web
@@ -5823,7 +5834,6 @@ msgstr "Faturalandı"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -7116,17 +7126,6 @@ msgid "Normal Text"
 msgstr "Normal Metin"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr "Taslak Değil"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "Ödenmemiş"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:254
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
@@ -7375,13 +7374,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Açık"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7573,12 +7573,13 @@ msgstr "Paket"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Ödendi"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Ödenmiş Faturalar"
@@ -10700,7 +10701,6 @@ msgid "Total"
 msgstr "Toplam"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Toplam Tutar"

@@ -14,6 +14,7 @@
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
 # Collex100, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
@@ -35,14 +36,13 @@
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2017
 # Yuriy Ney <kwizardn@gmail.com>, 2018
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
-"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
+"Last-Translator: Yuriy Ney <kwizardn@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,16 +54,10 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-"Когда пользователь создаёт новый неподтверждённый счёт, то используется статус «Черновик».\n"
-"Когда у счёта нет номера, используется статус «Проформа».\n"
-"Когда пользователь создаёт счёт, для которого генерируется номер, используется статус «Открыт». Этот статус сохраняется до тех пор пока пользователь не оплатит счёт.\n"
-"Статус «Оплачен» устанавливается автоматически после оплаты счёта. Синхронизация соответствующих записей в журнале не гарантирована.\n"
-"Статус «Отменён» используется, когда пользователь отменяет счёт."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -140,7 +134,7 @@ msgstr ", если учетная запись или покупка устан�
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr ""
+msgstr "- Первый номер:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -214,7 +208,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -1699,6 +1693,21 @@ msgid "Adjustment Tax"
 msgstr "Корректировка налога"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1883,7 +1892,7 @@ msgstr "Разрешить печать чеков и депозиты"
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr ""
+msgstr "Разрешает управление округлением наличности"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2156,7 +2165,7 @@ msgstr "Применить если партнеру указано значен
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr ""
+msgstr "Применять правильный НДС для цифровых продуктов, продаваемых в ЕС"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2781,19 +2790,19 @@ msgstr "Кассы"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_group_cash_rounding
 msgid "Cash Rounding"
-msgstr ""
+msgstr "Округление наличных денег"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr ""
+msgstr "Способ округления наличности"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.rounding_list_action
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr ""
+msgstr "Округления наличности"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3270,7 +3279,7 @@ msgstr "Написать письмо"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr ""
+msgstr "Рассчитывать налоги на основании почтовых кодов (только для США)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
@@ -3513,7 +3522,7 @@ msgstr "Создать модель"
 #. module: account
 #: model:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
-msgstr ""
+msgstr "Создайте первое округление наличности"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4065,7 +4074,7 @@ msgstr "Налог с продаж по умолчанию"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_id
 msgid "Default Sales Tax"
-msgstr "Налог с Продаж по умолчанию"
+msgstr "Налог с продаж по умолчанию"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tax_ids
@@ -4079,7 +4088,7 @@ msgstr "Налоги по умолчанию"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied to local transactions"
-msgstr ""
+msgstr "Налоги, применяемые по умолчанию к местным сделкам"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4089,14 +4098,14 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash."
-msgstr ""
+msgstr "Определите минимальную размерность(монетку) при расчетах наличными"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_cash_rounding_id
 msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
-msgstr ""
+msgstr "Определяет минимальную размерность(монетку) при расчетах наличными"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -4458,7 +4467,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_l10n_eu_service
 msgid "EU Digital Goods VAT"
-msgstr ""
+msgstr "НДС на цифровые товары по правилам ЕС"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:166
@@ -4737,7 +4746,7 @@ msgstr "Налогово-бюджетная информация"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Localization"
-msgstr ""
+msgstr "Налоговая локализация"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_position_id
@@ -4893,7 +4902,7 @@ msgstr "Все операции по этому счету принудител�
 #: code:addons/account/report/account_tax.py:13
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Не найдены данные в форме, отчет не сформирован"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:93
@@ -4993,6 +5002,7 @@ msgstr "Начать"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
 msgstr ""
+"Получайте уведомления при фактурировании счетов по определенным клиентам"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5139,7 +5149,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr ""
+msgstr "Как рассчитывается сумма налогов в заказах и счетах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_id
@@ -5802,7 +5812,6 @@ msgstr "Счёт выставлен"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -5858,7 +5867,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_is_rounding_line
 msgid "Is a rounding line in case of cash rounding."
-msgstr ""
+msgstr "Позиция к округлению в случае наличного расчета"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_is_difference_zero
@@ -6588,7 +6597,7 @@ msgstr "РАЗНОЕ"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Mail your invoices in one-click using"
-msgstr ""
+msgstr "Отправляйте ваши счета в один клик, используя "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6609,7 +6618,7 @@ msgstr "Основная валюта компании."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Main currency of your company"
-msgstr ""
+msgstr "Базовая валюта вашей компании"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6715,7 +6724,7 @@ msgstr "Март"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Margin Analysis"
-msgstr ""
+msgstr "Анализ прибылей"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_bank_journal_form
@@ -6856,7 +6865,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr ""
+msgstr "Следите за маржинальностью ваших продуктов по инвойсам"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -7087,17 +7096,6 @@ msgstr "Нормальный дебитор"
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
 msgstr "Обычный Текст"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "Не Оплачен"
 
 #. module: account
 #. openerp-web
@@ -7347,13 +7345,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Открыть"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7545,12 +7544,13 @@ msgstr "Упаковка"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Оплачено"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Оплаченные Счета-фактуры"
@@ -7666,7 +7666,7 @@ msgstr "Прошлые"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Pay your bills in one-click using Euro SEPA service"
-msgstr ""
+msgstr "Оплачивайте ваши счета в один клик, используя сервис Euro SEPA"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_payable
@@ -8687,22 +8687,22 @@ msgstr "Правый источник"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr "Глобальное Округление"
+msgstr "Округление итого"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr "Округление по Строке"
+msgstr "Округление по строкам"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.rounding_form_view
 msgid "Rounding Form"
-msgstr ""
+msgstr "Округление"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_is_rounding_line
 msgid "Rounding Line"
-msgstr ""
+msgstr "Округление по строкам"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_rounding_method
@@ -8718,12 +8718,12 @@ msgstr "Точность округления"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_strategy
 msgid "Rounding Strategy"
-msgstr ""
+msgstr "Стратегия округления"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.rounding_tree_view
 msgid "Rounding Tree"
-msgstr ""
+msgstr "Дерево округления"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
@@ -8761,12 +8761,12 @@ msgstr "Продажи"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr ""
+msgstr "Налог с продаж"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_rate
 msgid "Sales Tax(%)"
-msgstr "Налог с Продаж(%)"
+msgstr "Налог с продаж(%)"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:33
@@ -9165,6 +9165,8 @@ msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
 msgstr ""
+"Укажите, каким способом будут делаться округления в счетах до необходимой "
+"точности."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_date_from
@@ -9374,7 +9376,7 @@ msgstr "Налоговое Заявление"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr "Метод Округления при Расчете Налога"
+msgstr "Метод округления при расчете налога"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_tax_cash_basis_rec_id
@@ -9550,6 +9552,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
+"Налоги, фискальные позиции план счетов и правовые особенности вашей страны"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance
@@ -9884,6 +9887,9 @@ msgid ""
 "The cash rounding cannot be computed because the difference must be added on the biggest tax found and no tax are specified.\n"
 "Please set up a tax or change the cash rounding method."
 msgstr ""
+"Невозможно рассчитать округления, потому что разница должна быть отнесена к "
+"самому большому налогу, но налоги не указаны. Пожалуйста, укажите "
+"применяемый налог или измените правило денежного округления."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_chart_template_id
@@ -10176,7 +10182,7 @@ msgstr "Последовательность журнала%s дезактиви
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding_method
 msgid "The tie-breaking rule used for float rounding operations"
-msgstr ""
+msgstr "Правило округления, используемое в операциях с дробными числами"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
@@ -10647,7 +10653,6 @@ msgid "Total"
 msgstr "Всего"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Итоговая сумма"
@@ -10722,12 +10727,12 @@ msgstr "Итоговая сумма долга покупателя перед �
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_total
 msgid "Total amount with taxes"
-msgstr ""
+msgstr "Итого с налогами"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal
 msgid "Total amount without taxes"
-msgstr ""
+msgstr "Итого без налогов"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_debit

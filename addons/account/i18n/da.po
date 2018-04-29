@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 15:37+0000\n"
-"PO-Revision-Date: 2018-03-12 15:37+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -37,16 +37,10 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
-" * Statussen 'Kladde' anvendes når en bruger er ved at indtaste en ny og ubekræftet Faktura\n"
-" * Statussen 'Pro-forma' anvendes når fakturaen ikke har et fakturanummer.\n"
-" * Statussen 'Åben' anvendes når en bruger opretter faktura, og et fakturanummer genereres. Den forbliver i åben status, indtil brugeren betaler fakturaen.\n"
-" * Statussen 'Betalt' angives automatisk når fakturaen er betalt. Dens relaterede journalposteringer kan både være udlignede og uudlignede.\n"
-" * Statussen 'Annulleret' anvendes når brugeren annullerer fakturaen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -198,7 +192,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -1690,6 +1684,21 @@ msgid "Adjustment Tax"
 msgstr "Justeret skat"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2609,7 +2618,7 @@ msgstr "Efter produktkategori"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr "Af salgsperson"
+msgstr "Per sælger"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_active
@@ -5802,7 +5811,6 @@ msgstr "Faktureret"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -7088,17 +7096,6 @@ msgid "Normal Text"
 msgstr "Normal tekst"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr "Ikke kladde"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "Ikke betalt"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:254
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
@@ -7348,13 +7345,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Åben"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7546,12 +7544,13 @@ msgstr "Pakke"
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Betalt"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Betalte fakturaer"
@@ -10621,7 +10620,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Beløb i alt"
