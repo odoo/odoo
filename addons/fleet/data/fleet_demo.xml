@@ -1410,7 +1410,7 @@
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="datetime.today().start_of('year')" />
         <field name="start_date" eval="datetime.today().start_of('year')" />
-        <field name="expiration_date" eval="datetime.now() + datetime.timedelta(5)" />
+        <field name="expiration_date" eval="datetime.today().add(days=5)" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Daily leasing contract</field>
@@ -1448,7 +1448,7 @@
         <field name="cost_subtype_id" ref="type_contract_leasing"/>
         <field name="date" eval="datetime.today().start_of('year')" />
         <field name="start_date" eval="datetime.today().start_of('year')" />
-        <field name="expiration_date" eval="datetime.today() + datetime.timedelta(-1)" />
+        <field name="expiration_date" eval="datetime.today().add(days=-1)" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_2" />
         <field name="notes">Weekly leasing contract</field>

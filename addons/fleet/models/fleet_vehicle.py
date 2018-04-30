@@ -150,7 +150,7 @@ class FleetVehicle(models.Model):
         else:
             search_operator = 'not in'
         today = fields.Date.context_today(self)
-        limit_date = today + relativedelta(days=+15)
+        limit_date = today.add(days=15)
         self.env.cr.execute("""SELECT cost.vehicle_id,
                         count(contract.id) AS contract_number
                         FROM fleet_vehicle_cost cost

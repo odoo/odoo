@@ -77,9 +77,7 @@ class FleetVehicleLogContract(models.Model):
     _order = 'state desc,expiration_date'
 
     def compute_next_year_date(self, strdate):
-        oneyear = relativedelta(years=1)
-        start_date = fields.Date.from_string(strdate)
-        return start_date + oneyear
+        return fields.Date.from_string(strdate).add(years=1)
 
     @api.model
     def default_get(self, default_fields):
@@ -192,7 +190,7 @@ class FleetVehicleLogContract(models.Model):
             diffdate = (enddate - startdate)
             default = {
                 'date': fields.Date.context_today(self),
-                'start_date': element.expiration_date + relativedelta(days=1),
+                'start_date': element.expiration_date.add(days=1),
                 'expiration_date': enddate + diffdate,
             }
             newid = element.copy(default).id
@@ -260,7 +258,7 @@ class FleetVehicleLogContract(models.Model):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
         date_today = fields.Date.today()
-        in_fifteen_days = date_today + relativedelta(days=+15)
+        in_fifteen_days = date_today.add(days=+15)
         nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', in_fifteen_days)])
 
         nearly_expired_contracts.write({'state': 'diesoon'})
