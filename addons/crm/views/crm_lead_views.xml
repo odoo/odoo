@@ -695,8 +695,8 @@
 
                     <filter string="To Close This Month" name="close_this_month" domain="[
                                 '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + datetime.relativedelta(day=1))),
-                                ('date_deadline', '&lt;=', (context_today() + datetime.relativedelta(months=1, day=1, days=-1))),
+                                ('date_deadline', '&gt;=', (context_today().start_of('month'))),
+                                ('date_deadline', '&lt;=', (context_today().end_of('month'))),
                             ]"/>
                     <separator/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
