@@ -30,30 +30,25 @@
         @include o-flex(1, 1, auto);
         overflow: auto;
         padding: 15px;
+        font-size: 14px;
 
         .o_livechat_no_feedback {
-            padding-top: 20px;
-            text-align: right;
-            font-size: 12px;
-
-            > em {
-                cursor: pointer;
-            }
+            text-decoration: underline;
+            cursor: pointer;
         }
 
         .o_livechat_rating_feedback_text {
-            text-align: justify;
+            margin-top: 65px;
         }
 
         .o_livechat_rating_choices {
-            margin: 10px 0;
-            text-align: center;
+            margin: 40px 0;
 
             > img {
-                width: 50px;
+                width: 65px;
                 opacity: 0.60;
                 cursor: pointer;
-                margin: 5px;
+                margin: 10px;
                 &:hover, &.selected {
                     opacity: 1;
                 }
