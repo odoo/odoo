@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, tools
+from odoo import tools
 from odoo.modules.module import get_module_resource
 from odoo.tests import common
-from odoo.tools.datetime import date, relativedelta
+from odoo.tools.datetime import date
 
 
 class TestHrPayrollAccount(common.TransactionCase):
@@ -58,8 +58,8 @@ class TestHrPayrollAccount(common.TransactionCase):
 
         # Create account journal.
         self.hr_contract_john = self.env['hr.contract'].create({
-            'date_end': fields.Date.today() + relativedelta(years=1),
-            'date_start': fields.Date.today(),
+            'date_end': date.today().add(years=1),
+            'date_start': date.today(),
             'name': 'Contract for John',
             'wage': 5000.0,
             'type_id': self.ref('hr_contract.hr_contract_type_emp'),
