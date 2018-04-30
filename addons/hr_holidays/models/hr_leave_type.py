@@ -69,7 +69,7 @@ class HolidaysType(models.Model):
                                            default=lambda self: 'leave' if self.limit else 'both', string='Available For Employee :',
                                            help='This leave type will be available on Leave / Allocation request based on selected value')
 
-    validity_start = fields.Date("Start Date", default=fields.Date.today(),
+    validity_start = fields.Date("Start Date", default=fields.Date.today,
                                  help='Adding validity to types of leaves so that it cannot be selected outside'
                                  'this time period')
     validity_stop = fields.Date("End Date")
