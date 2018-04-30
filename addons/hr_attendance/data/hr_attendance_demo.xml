@@ -12,14 +12,14 @@
         </record>
 
         <record id="attendance_root1" model="hr.attendance">
-            <field eval="datetime.today().replace(hour=8) + datetime.relativedelta(days=-1)" name="check_in"/>
-            <field eval="datetime.today().replace(hour=12) + datetime.relativedelta(days=-1)" name="check_out"/>
+            <field eval="datetime.today().add(days=-1).replace(hour=8)" name="check_in"/>
+            <field eval="datetime.today().add(days=-1).replace(hour=12)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_root"/>
         </record>
 
         <record id="attendance_root2" model="hr.attendance">
-            <field eval="datetime.today().replace(hour=13) + datetime.relativedelta(days=-1)" name="check_in"/>
-            <field eval="datetime.today().replace(hour=18) + datetime.relativedelta(days=-1)" name="check_out"/>
+            <field eval="datetime.today().add(days=-1).replace(hour=13)" name="check_in"/>
+            <field eval="datetime.today().add(days=-1).replace(hour=18)" name="check_out"/>
             <field name="employee_id" ref="hr.employee_root"/>
         </record>
 
