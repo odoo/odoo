@@ -10,9 +10,9 @@ class PayslipLinesContributionRegister(models.TransientModel):
     _description = 'PaySlip Lines by Contribution Registers'
 
     date_from = fields.Date(string='Date From', required=True,
-        default=date.today().start_of('month'))
+        default=lambda self: date.today().start_of('month'))
     date_to = fields.Date(string='Date To', required=True,
-        default=date.today().end_of('month'))
+        default=lambda self: date.today().end_of('month'))
 
     @api.multi
     def print_report(self):

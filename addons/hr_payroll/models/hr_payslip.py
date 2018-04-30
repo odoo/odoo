@@ -8,8 +8,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.datetime import datetime, relativedelta, date
-from odoo.tools.datetime import time as datetime_time
+from odoo.tools.datetime import date, datetime, time as datetime_time
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -449,7 +448,7 @@ class HrPayslip(models.Model):
         date_to = self.date_to
         contract_ids = []
 
-        ttyme = datetime.fromtimestamp(time.mktime(date_from))
+        ttyme = date_from
         locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
