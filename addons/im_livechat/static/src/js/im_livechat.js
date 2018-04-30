@@ -304,7 +304,7 @@ var Feedback = Widget.extend({
 
     events: {
         'click .o_livechat_rating_choices img': 'on_click_smiley',
-        'click .o_livechat_no_feedback em': 'on_click_no_feedback',
+        'click .o_livechat_no_feedback span': 'on_click_no_feedback',
         'click .o_rating_submit_button': 'on_click_send',
     },
 
