@@ -106,24 +106,14 @@ class SaleOrder(models.Model):
     @api.multi
     def action_view_timesheet(self):
         self.ensure_one()
-        action = self.env.ref('hr_timesheet.act_hr_timesheet_line')
-        list_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_tree').id
-        form_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_form').id
+        action = self.env.ref('hr_timesheet.timesheet_action_all').read()[0]
+        action['context'] = self.env.context  # erase default filters
 
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[list_view_id, 'tree'], [form_view_id, 'form']],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
         if self.timesheet_count > 0:
-            result['domain'] = "[('id','in',%s)]" % self.timesheet_ids.ids
+            action['domain'] = [('so_line', 'in', self.order_line.ids)]
         else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
 
 class SaleOrderLine(models.Model):
