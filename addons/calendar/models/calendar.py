@@ -1284,7 +1284,7 @@ class Meeting(models.Model):
             :return unicode: Formatted date or time (as unicode string, to prevent jinja2 crash)
         """
         self.ensure_one()
-        date = self.start.replace(tzinfo=UTC).astimezone(tz)
+        date = self.start.astimezone(tz)
 
         if interval == 'day':
             # Day number (1-31)
