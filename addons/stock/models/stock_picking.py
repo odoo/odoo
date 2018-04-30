@@ -633,7 +633,7 @@ class Picking(models.Model):
             # # Link existing moves or add moves when no one is related
             for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
-                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 
+                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id)
                 if moves: #could search move that needs it the most (that has some quantities left)
                     ops.move_id = moves[0].id
                 else:
