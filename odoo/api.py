@@ -1002,6 +1002,18 @@ class Cache(object):
             if name != 'id' and key in self._data[field].get(record.id, ()):
                 yield field
 
+    def get_records_to_prefetch(self, model, field, prefetch_ids):
+        """ Return the records of ``model`` that have no value for ``field`` """
+        key = field.cache_key(model)
+        null_cache = dict() # optimized for __contains__
+        field_cache = self._data[field]
+        ids = [
+            record_id
+            for record_id in prefetch_ids
+            if key not in self._data[field].get(record_id, null_cache)
+        ]
+        return model.browse(ids)
+        
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
         key = field.cache_key(model)

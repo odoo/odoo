@@ -4774,8 +4774,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             Return at most ``limit`` records.
         """
         ids0 = self._prefetch[self._name]
-        ids1 = set(self.env.cache.get_records(self, field)._ids)
-        recs = self.browse([it for it in ids0 if it and it not in ids1])
+        recs = self.env.cache.get_records_to_prefetch(self, field, ids0)
         if limit and len(recs) > limit:
             recs = self + (recs - self)[:(limit - len(self))]
         return recs
