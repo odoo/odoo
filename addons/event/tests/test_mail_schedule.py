@@ -12,8 +12,8 @@ class TestMailSchedule(TestEventCommon):
     def test_00_event_mail_schedule(self):
         """ Test mail scheduling for events """
         now = fields.datetime.now()
-        event_date_begin = now + datetime.relativedelta(days=1)
-        event_date_end = now + datetime.relativedelta(days=3)
+        event_date_begin = now.add(days=1)
+        event_date_end = now.add(days=3)
 
         test_event = self.Event.sudo(self.user_eventmanager).create({
             'name': 'TestEventMail',
@@ -63,7 +63,7 @@ class TestMailSchedule(TestEventCommon):
         # check before event scheduler
         schedulers = self.EventMail.search([('event_id', '=', test_event.id), ('interval_type', '=', 'before_event')])
         self.assertEqual(len(schedulers), 1, 'event: wrong scheduler creation')
-        self.assertEqual(schedulers[0].scheduled_date, event_date_begin + datetime.relativedelta(days=-1), 'event: incorrect scheduled date')
+        self.assertEqual(schedulers[0].scheduled_date, event_date_begin.add(days=-1), 'event: incorrect scheduled date')
 
         # execute event reminder scheduler explicitly
         schedulers[0].execute()
