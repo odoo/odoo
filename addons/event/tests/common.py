@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.tests import common
-from odoo.tools.datetime import datetime, timedelta
+from odoo.tools.datetime import datetime
 
 
 class TestEventCommon(common.TransactionCase):
@@ -42,8 +42,8 @@ class TestEventCommon(common.TransactionCase):
 
         self.event_0 = self.env['event.event'].create({
             'name': 'TestEvent',
-            'date_begin': datetime.today() + timedelta(days=1),
-            'date_end': datetime.today() + timedelta(days=15),
+            'date_begin': datetime.today().add(days=1),
+            'date_end': datetime.today().add(days=15),
             'registration_ids': [(0, 0, {
                 'partner_id': self.user_eventuser.partner_id.id,
             })]

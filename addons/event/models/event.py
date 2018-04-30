@@ -274,7 +274,7 @@ class EventEvent(models.Model):
             date_end = event.date_end
             dates = [fields.Datetime.context_timestamp(event, dt) for dt in [date_begin, date_end] if dt]
             dates = sorted(set(dates))
-            result.append((event.id, '%s (%s)' % (event.name, ' - '.join([str(event_date) for event_date in dates]))))
+            result.append((event.id, '%s (%s)' % (event.name, ' - '.join(str(dt) for dt in dates))))
         return result
 
     @api.model
