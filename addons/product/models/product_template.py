@@ -142,7 +142,7 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:
-            p.product_variant_id = p.product_variant_ids[:1].id
+            p.product_variant_id = p.product_variant_ids.sorted(key=lambda x: x.price)[:1].id
 
     @api.multi
     def _compute_currency_id(self):
