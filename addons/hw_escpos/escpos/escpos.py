@@ -523,7 +523,7 @@ class Escpos:
         if code:
             self._raw(code)
         else:
-            raise exception.BarcodeCodeError()
+            raise BarcodeCodeError()
 
     def receipt(self,xml):
         """
