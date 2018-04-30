@@ -35,10 +35,10 @@ $o-wsale-wizard-label-completed: $state-success-text;
         @media (min-width: $screen-sm-min) {
             margin-top: $tmp-dot-radius + $o-wsale-wizard-thickness*3.5;
             float: left;
-            width: 100%/3;
+            width: percentage(1/3);
 
             .o_wizard_has_extra_step + & {
-                width: 100%/4;
+                width: percentage(1/4);
             }
         }
         @media (max-width: $screen-xs-max) {
