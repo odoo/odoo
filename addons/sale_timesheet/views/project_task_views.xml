@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="//a[@t-if='record.allow_timesheets.raw_value']" position="replace">
-                <a t-if="record.allow_timesheets.raw_value" name="action_view_timesheet" type="object" class="o_project_kanban_box o_project_timesheet_box" groups="hr_timesheet.group_hr_timesheet_user">
+                <a t-if="record.allow_timesheets.raw_value" name="action_view_timesheet" type="object" class="o_project_kanban_box o_project_timesheet_box" groups="project.group_project_manager">
                     <div>
                         <span class="o_label">Overview</span>
                     </div>
