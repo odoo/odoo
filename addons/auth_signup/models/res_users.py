@@ -26,11 +26,11 @@ class ResUsers(models.Model):
 
         # In case we have no value
         if not value:
-            return TRUE_DOMAIN if negative else FALSE_DOMAIN
+            return expression.TRUE_DOMAIN if negative else expression.FALSE_DOMAIN
 
         if operator in ['in', 'not in']:
             if len(value) > 1:
-                return FALSE_DOMAIN if negative else TRUE_DOMAIN
+                return expression.FALSE_DOMAIN if negative else expression.TRUE_DOMAIN
             if value[0] == 'new':
                 comp = '!=' if negative else '='
             if value[0] == 'active':
