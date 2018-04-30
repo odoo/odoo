@@ -1441,32 +1441,35 @@ class MailThread(models.AbstractModel):
                         filename = tools.decode_smtp_header(filename)
                 encoding = part.get_content_charset()  # None if attachment
 
+                part_payload = part.get_payload(decode=True)
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
                     inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_payload(decode=True), {'cid': inner_cid}))
+                    if part_payload:
+                        attachments.append(self._Attachment(filename, part_payload, {'cid': inner_cid}))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
+                    if part_payload:
+                        attachments.append(self._Attachment(filename or 'attachment', part_payload, {}))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_payload(decode=True),
+                    body = tools.append_content_to_html(body, tools.ustr(part_payload,
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
+                    html = tools.ustr(part_payload, encoding, errors='replace')
                     if not append_content:
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
                 # 4) Anything else -> attachment
-                else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))
+                elif part_payload:
+                    attachments.append(self._Attachment(filename or 'attachment', part_payload, {}))
 
         body, attachments = self._message_extract_payload_postprocess(message, body, attachments)
         return body, attachments
@@ -1732,6 +1735,8 @@ class MailThread(models.AbstractModel):
                 continue
             if isinstance(content, pycompat.text_type):
                 content = content.encode('utf-8')
+            elif content is None:
+                continue
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(content),
