@@ -17,7 +17,9 @@ class TestPayment(AccountingTestCase):
         self.currency_chf_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_eur_id = self.env.ref("base.EUR").id
-        self.env.ref('base.main_company').write({'currency_id': self.currency_eur_id})
+
+        company = self.env.ref('base.main_company')
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.currency_eur_id, company.id])
         self.product = self.env.ref("product.product_product_4")
         self.payment_method_manual_in = self.env.ref("account.account_payment_method_manual_in")
         self.payment_method_manual_out = self.env.ref("account.account_payment_method_manual_out")
@@ -318,3 +320,53 @@ class TestPayment(AccountingTestCase):
         self.assertEqual(payment_id.payment_type, 'outbound')
         self.assertEqual(payment_id.partner_id, self.partner_china_exp)
         self.assertEqual(payment_id.partner_type, 'supplier')
+
+    def test_payment_and_writeoff_in_other_currency(self):
+        # Use case:
+        # Company is in EUR, create a customer invoice for 25 EUR and register payment of 25 USD.
+        # Mark invoice as fully paid with a write_off
+        # Check that all the aml are correctly created.
+        invoice = self.create_invoice(amount=25, type='out_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_payable.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)]
+            })
+        payment.post()
+        self.check_journal_items(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 16.35, 'credit': 0.0, 'amount_currency': 25.0, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_payable.id, 'debit': 8.65, 'credit': 0.0, 'amount_currency': 13.22, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 25.0, 'amount_currency': -38.22, 'currency_id': self.currency_usd_id},
+        ])
+        # Use case:
+        # Company is in EUR, create a vendor bill for 25 EUR and register payment of 25 USD.
+        # Mark invoice as fully paid with a write_off
+        # Check that all the aml are correctly created.
+        invoice = self.create_invoice(amount=25, type='in_invoice', currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        # register payment on invoice
+        payment = self.payment_model.create({'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'supplier',
+            'partner_id': self.partner_agrolait.id,
+            'amount': 25,
+            'currency_id': self.currency_usd_id,
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.account_payable.id,
+            'journal_id': self.bank_journal_euro.id,
+            'invoice_ids': [(4, invoice.id, None)]
+            })
+        payment.post()
+        self.check_journal_items(payment.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 16.35, 'credit': 0.0, 'amount_currency': 25.0, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_payable.id, 'debit': 0.0, 'credit': 8.65, 'amount_currency': -13.22, 'currency_id': self.currency_usd_id},
+            {'account_id': self.account_receivable.id, 'debit': 0.0, 'credit': 7.7, 'amount_currency': -11.78, 'currency_id': self.currency_usd_id},
+        ])

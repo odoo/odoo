@@ -6,17 +6,18 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
+# nle_odoo, 2017
 # ook rio <riokoko5@gmail.com>, 2017
 # Tim Siu Lai <tl@roomsfor.hk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -100,11 +101,11 @@ msgstr ""
 "    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
-"                <p>ご担当者 ${object.partner_id.name} 様,</p><br/>\n"
-"                <p>ご注文 <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> の処理が確認できました。</p><br/>\n"
+"                <p>ご担当者 ${object.partner_id.name} 様</p><br/>\n"
+"                <p>ご注文 <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> を承りました。</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>見積、受注、請求書をオンラインで見ることができます。 <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">オンラインポータル</a>.</p><br/>\n"
+"                <p>ご自分の見積、販売オーダ、請求書は <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">オンラインポータル</a>で照会いただけます。</p><br/>\n"
 "                % endif\n"
 "\n"
 "                <p>ご不明な点がございましたら、お気軽にお問い合わせください。</p><br/>\n"
@@ -127,11 +128,6 @@ msgstr ""
 "</div>"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "! You can"
-msgstr "! できますよ"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -152,6 +148,7 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -1088,12 +1085,6 @@ msgid "Optional Products Lines"
 msgstr "オプションプロダクト明細"
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:210
-#, python-format
-msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr "%s によって支払われた注文。 トランザクション：%s。 金額：%s。"
-
-#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
 msgstr "私たちのオファー"
@@ -1301,7 +1292,7 @@ msgstr "見積顧客参照済"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
 msgid "Quote Date:"
-msgstr "見積日付："
+msgstr "見積日:"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1344,7 +1335,7 @@ msgstr "販売見積テンプレート"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "受注明細"
+msgstr "販売オーダ明細"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_order_id
@@ -1670,6 +1661,11 @@ msgid "Yearly upgrade training sessions when a new version is released"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "You can"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
@@ -1739,19 +1735,9 @@ msgid "Your order ${object.name} is confirmed"
 msgstr "注文${object.name} が確認されました"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
 msgstr "お支払いが承認されました。"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your payment has been received, thank you for your trust."
-msgstr "あなたのお支払いを受領しました、あなたの信頼に感謝します。"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your transaction is waiting confirmation."
-msgstr "あなたの取引は確認待ちです。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1786,18 +1772,25 @@ msgstr "ください。"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled"
-msgstr "キャンセル済です"
+msgid ""
+"for\n"
+"                          any questions."
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated"
-msgstr "すでに検証済みです"
+msgid "has already been cancelled!"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent"
-msgstr "まだ送信されていません"
+msgid "has already been validated!"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent!"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

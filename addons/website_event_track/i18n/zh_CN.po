@@ -3,11 +3,11 @@
 # * website_event_track
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# fausthuang, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -17,14 +17,16 @@
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Jeff Yu <jeff.yu@elico-corp.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jeff Yu <jeff.yu@elico-corp.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +55,23 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"\n"
+" \n"
+" 亲爱的 \n"
+" \n"
+" 我们很高兴通知您，我们已采纳并确认您针对活动  ${object.event_id.name} 提出的建议 ${object.name}。\n"
+" \n"
+" 您将会在此处找到更多详细信息：\n"
+" \n"
+" \n"
+" 查看活动\n"
+" \n"
+" \n"
+" \n"
+"此致，\n"
+"\n"
+"<div><p><t t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: 16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a></div></p><p></p></div>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -139,6 +158,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
+"跟踪的看板状态表示影响跟踪的特殊情况：\n"
+" * 灰色为默认情况\n"
+" * 红色表示此跟踪的进程正受到阻止\n"
+" * 绿色表示跟踪将进入下一阶段"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -148,7 +171,7 @@ msgstr "关于作者"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_is_done
 msgid "Accepted Stage"
-msgstr ""
+msgstr "已接受阶段"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_active
@@ -219,7 +242,7 @@ msgstr "提议"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "已取消阶段"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -251,7 +274,7 @@ msgstr "会议"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of ${object.name}"
-msgstr ""
+msgstr "${object.name} 确认"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -291,6 +314,10 @@ msgid ""
 "    You will use these stages in order to track the progress in\n"
 "    solving an event track."
 msgstr ""
+"定义从\n"
+" 创建跟踪到关闭跟踪的活动中所使用的步骤。\n"
+" 您将使用这些阶段以便跟踪\n"
+" 解决活动跟踪的进度。"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -371,7 +398,7 @@ msgstr "活动地点"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "Event Sponsor"
-msgstr ""
+msgstr "活动赞助商"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
@@ -428,6 +455,8 @@ msgid ""
 "Find out what people see and say about this event,\n"
 "                        and join the conversation."
 msgstr ""
+"了解人们对此次活动的看法和评论，\n"
+" 并加入讨论。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_fold
@@ -452,7 +481,7 @@ msgstr "绿色"
 #. module: website_event_track
 #: selection:event.track,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "灰色"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -518,7 +547,7 @@ msgstr "ID"
 msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
-msgstr ""
+msgstr "如果在跟踪到达这一步时，设置发送电子邮件给客户。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -717,7 +746,7 @@ msgstr "建议关闭！"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_website_track_proposal
 msgid "Proposals on Website"
-msgstr ""
+msgstr "关于网站的建议"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -807,17 +836,17 @@ msgstr "演讲人简介"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_email
 #, python-format
 msgid "Speaker Email"
-msgstr ""
+msgstr "发言人电子邮件"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_name
 msgid "Speaker Name"
-msgstr ""
+msgstr "发言人姓名"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_partner_phone
 msgid "Speaker Phone"
-msgstr ""
+msgstr "发言人电话"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:179
@@ -985,7 +1014,7 @@ msgstr "追踪"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr ""
+msgstr "跟踪受阻"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_date
@@ -1005,17 +1034,17 @@ msgstr "专场地点"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Track Proposals on Website"
-msgstr ""
+msgstr "跟踪关于网站的建议"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr ""
+msgstr "跟踪已就绪"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr ""
+msgstr "下一阶段的跟踪已就绪"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
@@ -1030,7 +1059,7 @@ msgstr "专场阶段"
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr ""
+msgstr "跟踪阶段"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -1047,7 +1076,7 @@ msgstr "专场标签"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr ""
+msgstr "跟踪受阻"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_track_count
@@ -1060,28 +1089,28 @@ msgstr "专场"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type_website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr ""
+msgstr "跟踪关于网站的建议"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid ""
 "Tracks define the schedule of your event. These can be a talk, a round "
 "table, a meeting, etc."
-msgstr ""
+msgstr "跟踪定义活动的日程安排。可以是谈话、圆桌会议、会议等"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 msgid ""
 "Tracks define the schedule of your event. These can bea talk, a round table,"
 " a meeting, etc."
-msgstr ""
+msgstr "跟踪定义活动的日程安排。可以是谈话、圆桌会议、会议等"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type_website_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
-msgstr ""
+msgstr "在网站上跟踪"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search

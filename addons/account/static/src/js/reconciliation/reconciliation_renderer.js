@@ -354,7 +354,21 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         // reconciliation_proposition
         var $props = this.$('.accounting_view tbody').empty();
-        var props = _.filter(state.reconciliation_proposition, {'display': true});
+
+        // loop state propositions
+        var props = [];
+        var nb_debit_props = 0;
+        var nb_credit_props = 0;
+        _.each(state.reconciliation_proposition, function (prop) {
+            if (prop.display) {
+                props.push(prop);
+                if (prop.amount < 0)
+                    nb_debit_props += 1;
+                else if (prop.amount > 0)
+                    nb_credit_props += 1;
+            }
+        });
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -362,18 +376,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-
-            if ((state.balance.amount_currency !== 0 || line.partial_reconcile) && props.length === 1 &&
-                    line.already_paid === false &&
-                    (
-                        (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
-                        (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
-                    ) {
+            if (line.already_paid === false &&
+                ((state.balance.amount_currency < 0 || line.partial_reconcile) && nb_credit_props == 1
+                    && line.amount > 0 && state.st_line.amount > 0 && state.st_line.amount < line.amount) ||
+                ((state.balance.amount_currency > 0 || line.partial_reconcile) && nb_debit_props == 1
+                    && line.amount < 0 && state.st_line.amount < 0 && state.st_line.amount > line.amount)) {
                 var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
                 var text;
                 if (line.partial_reconcile) {
                     text = _t("Undo the partial reconciliation.");
-                    $cell.text(state.st_line.amount_str);
+                    $cell.text(line.write_off_amount_str);
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }
@@ -415,14 +427,15 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 this._renderCreate(state);
             }
             var data = this.model.get(this.handleCreateRecord).data;
-            this.model.notifyChanges(this.handleCreateRecord, state.createForm);
-            var record = this.model.get(this.handleCreateRecord);
-            _.each(this.fields, function (field, fieldName) {
-                if (self._avoidFieldUpdate[fieldName]) return;
-                if (fieldName === "partner_id") return;
-                if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                    field.reset(record);
-                }
+            this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
+                var record = self.model.get(self.handleCreateRecord);
+                _.each(self.fields, function (field, fieldName) {
+                    if (self._avoidFieldUpdate[fieldName]) return;
+                    if (fieldName === "partner_id") return;
+                    if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                        field.reset(record);
+                    }
+                });
             });
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
@@ -613,7 +626,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     /**
      * @private
      */
-    _onFilterChange: function () {
+    _onFilterChange: function (event) {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
     },
     /**
@@ -626,7 +639,8 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             return;
         }
         if(event.keyCode === 13) {
-            if (_.findWhere(this.model.lines, {mode: 'create'}).balance.amount) {
+            var created_lines = _.findWhere(this.model.lines, {mode: 'create'});
+            if (created_lines && created_lines.balance.amount) {
                 this._onCreateProposition();
             }
             return;

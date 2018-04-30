@@ -110,7 +110,8 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/history', type="json", auth="public")
     def history_pages(self, pid, channel_uuid, page_history=None):
-        channel = request.env['mail.channel'].search([('uuid', '=', channel_uuid)])
+        partner_ids = (pid, request.env.user.partner_id.id)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', channel_uuid), ('channel_partner_ids', 'in', partner_ids)])
         if channel:
             channel._send_history_message(pid, page_history)
         return True

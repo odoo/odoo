@@ -263,6 +263,10 @@ class PaymentTokenStripe(models.Model):
 
 
     def _stripe_create_customer(self, token, description=None, acquirer_id=None):
+        if token.get('error'):
+            _logger.error('payment.token.stripe_create_customer: Token error:\n%s', pprint.pformat(token['error']))
+            raise Exception(token['error']['message'])
+
         if token['object'] != 'token':
             _logger.error('payment.token.stripe_create_customer: Cannot create a customer for object type "%s"', token.get('object'))
             raise Exception('We are unable to process your credit card information.')
@@ -270,10 +274,6 @@ class PaymentTokenStripe(models.Model):
         if token['type'] != 'card':
             _logger.error('payment.token.stripe_create_customer: Cannot create a customer for token type "%s"', token.get('type'))
             raise Exception('We are unable to process your credit card information.')
-
-        if token.get('error'):
-            _logger.error('payment.token.stripe_create_customer: Token error:\n%s', pprint.pformat(token['error']))
-            raise Exception(token['error']['message'])
 
         payment_acquirer = self.env['payment.acquirer'].browse(acquirer_id or self.acquirer_id.id)
         url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()

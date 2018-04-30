@@ -502,7 +502,9 @@ var OrderWidget = PosBaseWidget.extend({
             }else if( mode === 'discount'){
                 order.get_selected_orderline().set_discount(val);
             }else if( mode === 'price'){
-                order.get_selected_orderline().set_unit_price(val);
+                var selected_orderline = order.get_selected_orderline();
+                selected_orderline.price_manually_set = true;
+                selected_orderline.set_unit_price(val);
             }
     	}
     },
@@ -1170,8 +1172,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
             var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
-            if ( this.new_client ) {
-                order.fiscal_position = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+            if ( this.new_client && this.new_client.property_account_position_id ) {
+                var client_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+                order.fiscal_position = client_fiscal_position_id || default_fiscal_position_id;
                 order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
                 order.fiscal_position = default_fiscal_position_id;
@@ -1277,9 +1280,14 @@ var ClientListScreenWidget = ScreenWidget.extend({
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
             },function(type,err){
+                var error_body = _t('Your Internet connection is probably down.');
+                if (err.data) {
+                    var except = err.data;
+                    error_body = except.arguments && except.arguments[0] || except.message || error_body;
+                }
                 self.gui.show_popup('error',{
                     'title': _t('Error: Could not Save Changes'),
-                    'body': _t('Your Internet connection is probably down.'),
+                    'body': error_body,
                 });
             });
     },
@@ -1967,17 +1975,6 @@ var PaymentScreenWidget = ScreenWidget.extend({
             return false;
         }
 
-        var plines = order.get_paymentlines();
-        for (var i = 0; i < plines.length; i++) {
-            if (plines[i].get_type() === 'bank' && plines[i].get_amount() < 0) {
-                this.gui.show_popup('error',{
-                    'message': _t('Negative Bank Payment'),
-                    'comment': _t('You cannot have a negative amount in a Bank payment. Use a cash payment method to return money to the customer.'),
-                });
-                return false;
-            }
-        }
-
         if (!order.is_paid() || this.invoicing) {
             return false;
         }
@@ -2038,6 +2035,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
+                order.finalized = false;
                 if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),

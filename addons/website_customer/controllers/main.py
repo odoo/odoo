@@ -24,7 +24,7 @@ class WebsiteCustomer(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
+        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs, '/customers/country')
         countries = env['res.partner'].sudo().read_group(dom, ['id', 'country_id'], groupby='country_id')
         for country in countries:

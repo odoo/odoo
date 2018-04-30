@@ -240,7 +240,7 @@ var Domain = collections.Tree.extend({
      */
     stringToArray: function (domain, evalContext) {
         if (!_.isString(domain)) return _.clone(domain);
-        return pyeval.eval("domain", domain || "[]", evalContext);
+        return pyeval.eval("domain", domain ? domain.replace(/%%/g, '%') : "[]", evalContext);
     },
     /**
      * Makes implicit "&" operators explicit in the given JS prefix-array

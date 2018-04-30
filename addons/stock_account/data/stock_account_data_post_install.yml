@@ -54,9 +54,11 @@
                       'company_id': company_id,
                       'fields_id': field_id,
                       'value': value,
-                      'res_id': 'product.category,'+str(ref('product.product_category_all')),
                   }
-                  properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id), ('value_reference', '!=', False)])
-                  if not properties:
-                      #create the property
+                  properties = PropertyObj.search([('name', '=', record), ('company_id', '=', company.id)])
+                  if properties:
+                      # the property exist: modify it
+                      properties.write(vals)
+                  else:
+                      # create the property
                       PropertyObj.create(vals)

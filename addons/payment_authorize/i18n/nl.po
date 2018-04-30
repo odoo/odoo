@@ -3,16 +3,16 @@
 # * payment_authorize
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -30,16 +30,6 @@ msgstr "API Login Id"
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
 msgid "API Transaction Key"
 msgstr "API Transactiesleutel"
-
-#. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:67
-#, python-format
-msgid ""
-"Authorize.net Error Message(s):\n"
-" %s"
-msgstr ""
-"Authorize.net fout bericht(en):\n"
-"%s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
@@ -82,6 +72,14 @@ msgid "How to get paid with Authorize.Net"
 msgstr "Hoe betaald te worden met Authorize.Net"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:61
+#, python-format
+msgid ""
+"If you don't have any account, please ask your salesperson to update your "
+"profile. "
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Betaling verwerver"
@@ -90,6 +88,18 @@ msgstr "Betaling verwerver"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:63
+#, python-format
+msgid "Please complete your profile. "
+msgstr "Gelieve uw profiel te voltooien."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:58
+#, python-format
+msgid "Please sign in to complete your profile."
+msgstr "Gelieve aan te melden om uw profiel te voltooien."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
@@ -108,6 +118,14 @@ msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Aanmaken van klant profiel op Authorize.NET mislukt."
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:55
+#, python-format
+msgid ""
+"The transaction cannot be processed because some contact details are missing"
+" or invalid: "
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
@@ -120,14 +138,10 @@ msgstr ""
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase.If you manage subscriptions (recurring "
-"invoicing), you need it to automatically charge the customer when you issue "
-"an invoice."
+"and to reuse it for a later purchase. If you manage subscriptions (recurring"
+" invoicing), you need it to automatically charge the customer when you issue"
+" an invoice."
 msgstr ""
-"Deze optie staat het klanten toe om een credit card op te slaan als betaling"
-" token and het later opnieuw te gebruiken. Wanneer uw abonnementen beheert "
-"(terugkerende factuur), heeft u het nodig om klanten de factuur in rekening "
-"te brengen."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token

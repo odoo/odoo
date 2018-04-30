@@ -74,6 +74,6 @@ class IrModelField(models.Model):
 
     def _instanciate_attrs(self, field_data):
         attrs = super(IrModelField, self)._instanciate_attrs(field_data)
-        if field_data.get('track_visibility'):
+        if attrs and field_data.get('track_visibility'):
             attrs['track_visibility'] = field_data['track_visibility']
         return attrs

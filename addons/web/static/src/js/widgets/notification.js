@@ -1,7 +1,6 @@
 odoo.define('web.notification', function (require) {
 "use strict";
 
-var core = require('web.core');
 var Widget = require('web.Widget');
 
 var Notification = Widget.extend({
@@ -47,6 +46,13 @@ var Notification = Widget.extend({
 
 var Warning = Notification.extend({
     template: 'Warning',
+    /**
+     * @override
+     */
+    start: function () {
+        this.$el.addClass('o_error');
+        return this._super.apply(this, arguments);
+    },
 });
 
 var NotificationManager = Widget.extend({

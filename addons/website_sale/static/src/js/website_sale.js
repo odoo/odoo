@@ -88,18 +88,34 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $(oe_website_sale).on("change", 'input[name="add_qty"]', function (event) {
             var product_ids = [];
-            var product_dom = $(".js_product .js_add_cart_variants[data-attribute_value_ids]");
+            var product_dom = $(event.target).closest(".js_product").find("ul.js_add_cart_variants");
             var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
             if (!product_dom.length) {
+                // if variants in list view, update variant price based on quantity
+                var $list_products = $(event.target).closest('.js_product').find('.js_product_change');
+                if ($list_products.length) {
+                    ajax.jsonRpc("/shop/get_unit_price", 'call', {
+                        'product_ids': _.map($list_products, function (variant) {
+                            return parseInt(variant.value);
+                        }),
+                        'add_qty': parseInt(qty)
+                    }).then(function (data) {
+                        _.each(data, function (value, key) {
+                            $list_products.filter('[value="'+key+'"]').data('price', value);
+                        });
+                        $list_products.filter(':checked').change();
+                    });
+                }
                 return;
             }
             var attribute_value_ids = product_dom.data("attribute_value_ids");
             if(_.isString(attribute_value_ids)) {
                 attribute_value_ids = JSON.parse(attribute_value_ids.replace(/'/g, '"'));
+                // set permanent reference so modifications are kept
+                product_dom.data('attribute_value_ids', attribute_value_ids);
             }
             _.each(attribute_value_ids, function(entry) {
                 product_ids.push(entry[0]);});
-            var qty = $(event.target).closest('form').find('input[name="add_qty"]').val();
 
             if ($("#product_detail").length) {
                 // display the reduction from the pricelist in function of the quantity
@@ -109,7 +125,7 @@ odoo.define('website_sale.website_sale', function (require) {
                     for(var j=0; j < current.length; j++){
                         current[j][2] = data[current[j][0]];
                     }
-                    product_dom.attr("data-attribute_value_ids", JSON.stringify(current)).trigger("change");
+                    product_dom.trigger("change");
                 });
             }
         });
@@ -210,8 +226,7 @@ odoo.define('website_sale.website_sale', function (require) {
             $('input[name="'+$input.attr("name")+'"]').add($input).filter(function () {
                 var $prod = $(this).closest('*:has(input[name="product_id"])');
                 return !$prod.length || +$prod.find('input[name="product_id"]').val() === product_id;
-            }).val(new_qty);
-            $input.change();
+            }).val(new_qty).change();
             return false;
         });
 
@@ -380,7 +395,7 @@ odoo.define('website_sale.website_sale', function (require) {
         });
 
         $('div.js_product', oe_website_sale).each(function () {
-            $('input.js_product_change', this).first().trigger('change');
+            $('input.js_product_change', this).first().prop('checked', 'checked').trigger('change');
         });
 
         $('.js_add_cart_variants', oe_website_sale).each(function () {

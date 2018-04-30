@@ -3,15 +3,15 @@
 # * hr_attendance
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Talway <9010446@qq.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # Liping Wang <lynn.config@gmail.com>, 2017
-# Bo Cao <cao.poobo@hotmail.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 msgid ""
@@ -32,7 +32,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:55
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "\"签出\"时间不能早于\"签入\"时间。"
+msgstr "\"签退\"时间不能早于\"签到\"时间。"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:29
@@ -56,7 +56,7 @@ msgstr "<span class =“o_stat_text”>考勤</ span>"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr "一天一苹果医生远离我"
+msgstr "一天一苹果，医生远离我"
 
 #. module: hr_attendance
 #. openerp-web
@@ -104,7 +104,7 @@ msgstr "工牌 ID"
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
-msgstr "无法为%(empl_name)s 创建新的出勤记录, 因为 %(datetime)s, 员工尚未签出"
+msgstr "无法为%(empl_name)s 创建新的出勤记录, 因为 %(datetime)s, 员工尚未签退"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:72
@@ -113,13 +113,13 @@ msgstr "无法为%(empl_name)s 创建新的出勤记录, 因为 %(datetime)s, �
 msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
-msgstr "无法为%(empl_name)s 创建新的出勤记录, 该员工已在 %(datetime)s中签入"
+msgstr "无法为%(empl_name)s 创建新的出勤记录, 该员工已在 %(datetime)s中签到"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
-msgstr "无法对多个员工执行签入或签出。"
+msgstr "无法对多个员工执行签到或签退。"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:122
@@ -128,7 +128,7 @@ msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
 "check in. Your attendances have probably been modified manually by human "
 "resources."
-msgstr "在 %(empl_name)s上无法执行签出, 无法找到相应的签入。您的出勤可能已由人力资源手动修改。"
+msgstr "在 %(empl_name)s上无法执行签退, 无法找到相应的签到。您的出勤可能已由人力资源手动修改。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
@@ -220,7 +220,7 @@ msgstr "配置"
 msgid ""
 "Create a few employees to be able to select an employee here and perform his"
 " check in / check out."
-msgstr "创建几个员工, 以便能够在这里选择一个员工并执行他的签入/签出。"
+msgstr "创建几个员工, 以便能够在这里选择一个员工并执行他的签到/签退。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
@@ -252,7 +252,7 @@ msgstr "显示名称"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:123
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr "早睡早起, 使人健康, 富有和聪明"
+msgstr "早睡早起，使男人健康，富有和明智"
 
 #. module: hr_attendance
 #. openerp-web
@@ -277,7 +277,7 @@ msgstr "员工照片"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
-msgstr "员工 PIN"
+msgstr "员工PIN"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -306,14 +306,14 @@ msgstr "允许使用PIN"
 #: code:addons/hr_attendance/static/src/js/my_attendances.js:29
 #, python-format
 msgid "Error : Could not find employee linked to user"
-msgstr "错误: 找不到与用户链接的员工"
+msgstr "错误：找不到与用户关联的员工"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:35
 #, python-format
 msgid "Error : Could not find employee linked to user."
-msgstr "错误: 找不到与用户链接的员工。"
+msgstr "错误：找不到与用户关联的员工。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -334,7 +334,7 @@ msgstr "先到先得"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:85
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr "很高兴你回来了, 已经有一段时间了!"
+msgstr "很高兴你回来了，已经有些时日了！"
 
 #. module: hr_attendance
 #. openerp-web
@@ -363,7 +363,7 @@ msgstr "早上好"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:80
 #, python-format
 msgid "Good night"
-msgstr "晚上好"
+msgstr "晚安"
 
 #. module: hr_attendance
 #. openerp-web
@@ -382,28 +382,28 @@ msgstr "分组"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:120
 #, python-format
 msgid "Have a good afternoon"
-msgstr "下午好"
+msgstr "祝您下午好"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:111
 #, python-format
 msgid "Have a good day!"
-msgstr "祝你今天开心！"
+msgstr "祝您有美好的一天！"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:125
 #, python-format
 msgid "Have a good evening"
-msgstr "晚上好"
+msgstr "祝您晚上愉快"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "吃顿美味的午餐!"
+msgstr "去吃顿美味的午餐吧！"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -437,12 +437,12 @@ msgstr "请求无效，请返回主菜单。"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
 msgid "Kiosk Mode"
-msgstr "Kiosk模式"
+msgstr "信息亭模式"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last Attendance"
-msgstr "上次出勤"
+msgstr "最后一次出勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -493,7 +493,7 @@ msgstr "我的出勤"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr "无签退"
+msgstr "未签退"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
@@ -519,21 +519,21 @@ msgstr "PIN"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_pin
 msgid "PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration)."
-msgstr "在Kiosk模式下用于签到/签退的PIN（如果在配置中启用）。"
+msgstr "在信息亭模式下用于签到/签退的PIN（如果在配置中启用）。"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:62
 #, python-format
 msgid "Please enter your PIN to check in"
-msgstr "请输入你的PIN签到"
+msgstr "请输入您的PIN签到"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:59
 #, python-format
 msgid "Please enter your PIN to check out"
-msgstr "请输入你的PIN签退"
+msgstr "请输入您的PIN签退"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -546,12 +546,12 @@ msgstr "如果您希望看到任何内容，请确保您使用了正确的筛选
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:82
 #, python-format
 msgid "Please return to the main menu."
-msgstr "请退回到主菜单"
+msgstr "请返回到主菜单"
 
 #. module: hr_attendance
 #: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
-msgstr "打印狗牌？"
+msgstr "打印工牌"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
@@ -563,7 +563,7 @@ msgstr "报告"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:13
 #, python-format
 msgid "Scan your badge"
-msgstr "扫描你的工牌"
+msgstr "扫描您的工牌"
 
 #. module: hr_attendance
 #. openerp-web
@@ -612,7 +612,7 @@ msgstr "早起的鸟儿有虫吃"
 msgid ""
 "The employee will have access to the \"My Attendances\" menu to check in and"
 " out from his session"
-msgstr "员工将有权访问  “我的出勤 “ 菜单, 在会话中进行签入和签出。"
+msgstr "员工将有权访问  “我的出勤 “ 菜单, 在会话中进行签到和签退。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -626,7 +626,7 @@ msgstr "用户将获得权限访问人力资源的考勤菜单，使他能够管
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
-msgstr "用户必须输入他的PIN才能在公司屏幕上手动签入和签出。"
+msgstr "用户必须输入他的PIN才能在公司屏幕上手动签到和签退。"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -641,7 +641,7 @@ msgstr "今日"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes to check in in Kiosk Mode"
-msgstr "使用PIN码在Kiosk模式下登录"
+msgstr "使用PIN码在信息亭模式下登录"
 
 #. module: hr_attendance
 #. openerp-web
@@ -650,7 +650,7 @@ msgstr "使用PIN码在Kiosk模式下登录"
 msgid ""
 "Warning! Last check in was over 12 hours ago.<br/>If this isn't right, "
 "please contact Human Resources."
-msgstr "警告！ 最后一次签入时间超过12小时。<br/>如果不正确，请联系人力资源部。"
+msgstr "警告！ 距离最后一次签到时间超过12小时。<br/>如果不正确，请联系人力资源部。"
 
 #. module: hr_attendance
 #. openerp-web
@@ -666,7 +666,7 @@ msgstr "欢迎"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:11
 #, python-format
 msgid "Welcome to"
-msgstr "欢迎"
+msgstr "欢迎莅临"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -677,7 +677,7 @@ msgstr "工作时数"
 #: code:addons/hr_attendance/models/hr_employee.py:79
 #, python-format
 msgid "Wrong PIN"
-msgstr "错误 PIN"
+msgstr "错误的PIN"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:105

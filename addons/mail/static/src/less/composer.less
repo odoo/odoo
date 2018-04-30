@@ -269,6 +269,7 @@
         img {
             width: @o-mail-attachment-image-size;
             height: @o-mail-attachment-image-size;
+            image-orientation: from-image; // Only supported in Firefox
         }
         .o_image_overlay{
             display: none;
@@ -370,6 +371,9 @@
                 .o-flex-display();
                 justify-content: center;
                 align-items: center;
+                img {
+                    image-orientation: from-image; // Only supported in Firefox
+                }
                 img, video {
                     max-width: 100%;
                     max-height: 100%;

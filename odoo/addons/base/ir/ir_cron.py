@@ -71,6 +71,7 @@ class ir_cron(models.Model):
 
     @api.multi
     def method_direct_trigger(self):
+        self.check_access_rights('write')
         for cron in self:
             self.sudo(user=cron.user_id.id).ir_actions_server_id.run()
         return True

@@ -229,7 +229,7 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_exceptions_domain(self):
-        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False)]
+        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False), ('state', 'not in', ('cancel', 'done', 'draft'))]
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
@@ -237,7 +237,7 @@ class ProcurementGroup(models.Model):
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
 
         # Search all confirmed stock_moves and try to assign them
-        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
+        confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed'), ('product_uom_qty', '!=', 0.0)], limit=None, order='priority desc, date_expected asc')
         for moves_chunk in split_every(100, confirmed_moves.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:

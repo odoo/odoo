@@ -5,8 +5,9 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Martin Trigaux, 2017
-# James Yu <james.168@163.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
 # fausthuang, 2017
+# James Yu <james.168@163.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
@@ -16,13 +17,14 @@
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +39,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"- 单击<span class=\"fa fa-phone text-success\"></span>宣布订购订单<br> \n"
+" - 单击<span class=\"fa fa-check text-success\"></span>宣布收到订单<br> \n"
+" - 单击<span class=\"fa fa-times-circle text-danger\"></span>红色的 X 宣布订单不可用"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -45,6 +50,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"- 单击<span class=\"fa fa-phone text-success\"></span>宣布订购订单<br> \n"
+" - 单击<span class=\"fa fa-check text-success\"></span>宣布收到订单<br> \n"
+" - 单击<span class=\"fa fa-times-circle text-danger\"></span>宣布订单不可用"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -64,13 +72,13 @@ msgid ""
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
 "现金转移可以是费用或付款。<br>\n"
-"                费用是在收到订单时自动生成。<br>\n"
-"                付款则代表公司给员工报销。"
+"                费用在收到订单时自动创建。<br>\n"
+"                付款代表公司给员工报销。"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
 msgid "A product is defined by its name, category, price and vendor."
-msgstr "通过产品的名称,类别,价格和供应商来定义一个产品。"
+msgstr "通过产品的名称、类别、价格和供应商来定义一个产品。"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_active
@@ -104,6 +112,8 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"提醒功能用于提醒员工与午餐订单相关的可能问题。\n"
+" 要创建午餐提醒您必须定义其循环，即执行提醒和显示信息的时间间隔。"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -113,13 +123,13 @@ msgstr "金额"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_end_hour
 msgid "And"
-msgstr "和"
+msgstr "与"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 #: model:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Archived"
-msgstr "归档"
+msgstr "已归档"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
@@ -139,7 +149,7 @@ msgstr "介于:"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "By Employee"
-msgstr "员工"
+msgstr "按员工"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -189,7 +199,7 @@ msgstr "现金转移"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash Move Balance"
-msgstr ""
+msgstr "现金转移余额"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -496,22 +506,22 @@ msgstr "午餐订单"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "午餐：归档/还原产品"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "午餐：取消用餐"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Lunch: Order meals"
-msgstr ""
+msgstr "午餐：订餐"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "午餐：收到餐食"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -650,12 +660,12 @@ msgstr "付款"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
 msgid "Previous Order"
-msgstr ""
+msgstr "先前的订单"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "先前的订单小工具"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -823,7 +833,7 @@ msgstr "你的订单日期是过去的时间"
 msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
-msgstr ""
+msgstr "未记录先前订单。单击“我的午餐”然后创建新增午餐订单。"
 
 #. module: lunch
 #. openerp-web

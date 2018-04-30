@@ -140,7 +140,8 @@ var Activity = AbstractActivityField.extend({
                     nbPlannedActivities: nbActivities.planned,
                     nbTodayActivities: nbActivities.today,
                     nbOverdueActivities: nbActivities.overdue,
-                    date_format: time.getLangDatetimeFormat(),
+                    date_format: time.getLangDateFormat(),
+                    datetime_format: time.getLangDatetimeFormat(),
                 }));
             } else {
                 self.$el.empty();

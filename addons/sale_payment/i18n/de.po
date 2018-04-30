@@ -3,7 +3,7 @@
 # * sale_payment
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
@@ -12,13 +12,18 @@
 # e2f_de_t6 <e2f_de_t6@outlook.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Wolfgang Taferner, 2018
+# key six <mobile.umts@gmail.com>, 2018
+# e2f FFE <e2f_de_FFE@outlook.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-07 15:45+0000\n"
-"PO-Revision-Date: 2017-11-07 15:45+0000\n"
-"Last-Translator: DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +32,24 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:111
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:124
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
 msgstr "<%s> Transaktion (%s) fehlgeschlagen: <%s>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:118
+#: code:addons/sale_payment/models/payment.py:131
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
 msgstr "<%s>Transaktion (%s) ungültiger Status: %s"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:126
+#: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
 msgstr "<%s> Transaktion (%s) Bestellbestätigung fehlgeschlagen: <%s>"
@@ -78,6 +88,12 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Transaktionen</strong>"
 
 #. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:54
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr "Betrag stimmt nicht überein (%s)"
+
+#. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
 msgstr "Anzahl ausstehender Transaktionen"
@@ -100,7 +116,7 @@ msgstr "Offene Rechnung"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payments"
-msgstr ""
+msgstr "Offene Rechnungen"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:52
@@ -133,18 +149,13 @@ msgid "Number of transactions to capture"
 msgstr "Anzahl zu erfassender Transaktionen"
 
 #. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
-msgid "Order successfully paid."
-msgstr "Bestellung erfolgreich bezahlt."
-
-#. module: sale_payment
-#: code:addons/sale_payment/controllers/payment.py:50
+#: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
 msgstr "Zahlen"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:187
+#: code:addons/sale_payment/models/payment.py:200
 #, python-format
 msgid "Pay Now"
 msgstr "Jetzt kaufen"
@@ -167,12 +178,12 @@ msgstr "Zahlungstransaktion"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payment to Capture"
-msgstr ""
+msgstr "Zu erfassende Zahlung"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Zu erfassende Zahlungen"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
@@ -185,6 +196,11 @@ msgid "Quotation"
 msgstr "Angebot"
 
 #. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
+msgid "Sale Order State"
+msgstr "Verkaufsauftragsstatus"
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
 msgstr "Vertriebskanal"
@@ -193,6 +209,17 @@ msgstr "Vertriebskanal"
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:55
+#, python-format
+msgid ""
+"The sale order was not confirmed despite response from the acquirer (%s): SO"
+" amount is %r but acquirer replied with %r."
+msgstr ""
+"Der Verkaufsauftrag wurde trotz Antwort des Zahlungsanbieters (%s) nicht "
+"bestätigt: Betrag des Verkaufsauftrags ist %r, aber der Zahlungsanbieter hat"
+" mit %r geantwortet."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -249,3 +276,8 @@ msgstr "Fehler beim Verarbeiten Ihrer Zahlung: ungültige Kreditkarten-ID."
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Transaktionen"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Ihre Zahlung wurde genehmigt."

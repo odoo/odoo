@@ -3,23 +3,22 @@
 # * website_quote
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Lord Cobol <mattias@invaliddesign.com>, 2017
+# Martin Trigaux, 2017
+# Lord Cobol, 2017
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
 # Daniel Forslund <daniel.forslund@gmail.com>, 2017
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # Haojun Zou <apollo_zhj@msn.com>, 2017
 # Jonathan S <jonathan.c.strom@gmail.com>, 2017
-# Robin Chatfield <robin.chatfield@gmail.com>, 2017
 # lasch a <bmail440@gmail.com>, 2017
 # Patrik Lermon <patrik.lermon@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Patrik Lermon <patrik.lermon@gmail.com>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -82,11 +81,6 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "! You can"
-msgstr "! Du kan"
-
-#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -107,6 +101,7 @@ msgid "&amp;nbsp;"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -1026,12 +1021,6 @@ msgid "Optional Products Lines"
 msgstr "Tilläggsproduktrader"
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:210
-#, python-format
-msgid "Order paid by %s. Transaction: %s. Amount: %s."
-msgstr ""
-
-#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
 msgstr ""
@@ -1596,6 +1585,11 @@ msgid "Yearly upgrade training sessions when a new version is released"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "You can"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
@@ -1660,19 +1654,9 @@ msgid "Your order ${object.name} is confirmed"
 msgstr ""
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
+#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 msgid "Your payment has been authorized."
 msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your payment has been received, thank you for your trust."
-msgstr ""
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "Your transaction is waiting confirmation."
-msgstr "Din transaktion väntar på bekräftelse."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1709,17 +1693,24 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled"
+msgid ""
+"for\n"
+"                          any questions."
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated"
+msgid "has already been cancelled!"
 msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent"
+msgid "has already been validated!"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "has not yet been sent!"
 msgstr ""
 
 #. module: website_quote

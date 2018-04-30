@@ -302,7 +302,8 @@ class Import(models.TransientModel):
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
-                if val == '':
+                val = val.strip()
+                if not val:
                     continue
                 # value might have the currency symbol left or right from the value
                 val = self._remove_currency_symbol(val)
@@ -587,6 +588,7 @@ class Import(models.TransientModel):
         thousand_separator = options.get('float_thousand_separator', ' ')
         decimal_separator = options.get('float_decimal_separator', '.')
         for line in data:
+            line[index] = line[index].strip()
             if not line[index]:
                 continue
             line[index] = line[index].replace(thousand_separator, '').replace(decimal_separator, '.')

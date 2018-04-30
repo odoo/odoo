@@ -1,7 +1,6 @@
 odoo.define('web.pivot_tests', function (require) {
 "use strict";
 
-var Context = require('web.Context');
 var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
@@ -739,7 +738,33 @@ QUnit.module('Views', {
             },
         });
 
-        $('.o_pivot_download').click();
+        pivot.$buttons.find('.o_pivot_download').click();
+        pivot.destroy();
+    });
+
+    QUnit.test('can download a file without data', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records = [];
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            session: {
+                get_file: function (args) {
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        pivot.$buttons.find('.o_pivot_download').click();
         pivot.destroy();
     });
 

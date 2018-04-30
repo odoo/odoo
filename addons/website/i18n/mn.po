@@ -3,7 +3,7 @@
 # * website
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 # Batzul B <batzul.active@gmail.com>, 2017
 # nasaaskii <nasaaskii@gmail.com>, 2017
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: BATKHUYAG GANBOLD <gbatkhuyag@gmail.com>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -94,6 +94,15 @@ msgid ""
 "(e.g. business name, location) tends to improve your ranking in search "
 "engines and consequently increases your traffic. Do it:"
 msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
+msgstr ""
+",\n"
+"                                                      #1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -1352,11 +1361,6 @@ msgid "Create Page"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Create a"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
 msgstr ""
@@ -1761,6 +1765,11 @@ msgid "Feature Two"
 msgstr ""
 
 #. module: website
+#: model:ir.model,name:website.model_ir_model_fields
+msgid "Fields"
+msgstr "Талбарууд"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "Finally don't try to make all your content accessible from the main menu or the footer.\n"
@@ -1799,7 +1808,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "Follow all the"
-msgstr ""
+msgstr "."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2106,7 +2115,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7239
+#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
 #: model:ir.model.fields,field_description:website.field_website_page_id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
@@ -2233,6 +2242,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_menu_is_visible
 #: model:ir.model.fields,field_description:website.field_website_page_is_visible
 msgid "Is Visible"
 msgstr ""
@@ -2259,7 +2269,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:209
+#: code:addons/website/static/src/js/content/website_root.js:212
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2358,7 +2368,7 @@ msgstr "Өнгөрсөн долоо хоног"
 #: code:addons/website/static/src/xml/website.backend.xml:111
 #, python-format
 msgid "Last Year"
-msgstr ""
+msgstr "Сүүлийн жил"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2547,6 +2557,11 @@ msgstr "Модел"
 #: model:ir.model.fields,field_description:website.field_website_page_model_data_id
 msgid "Model Data"
 msgstr ""
+
+#. module: website
+#: model:ir.model,name:website.model_ir_model
+msgid "Models"
+msgstr "Модел"
 
 #. module: website
 #. openerp-web
@@ -2777,6 +2792,11 @@ msgid "Open Source ERP"
 msgstr "Нээлттэй Эхтэй ERP"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Open Source eCommerce"
+msgstr "Нээлттэй эхтэй эКоммерц"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
 msgstr ""
@@ -2995,6 +3015,11 @@ msgid ""
 msgstr ""
 "Таны орчинд холбоотой бусад хүмүүсийн блог, форум, вэбсайтууд дээр контент "
 "нэм."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Powered by"
+msgstr "Дэмжсэн"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -3580,6 +3605,9 @@ msgid ""
 "                        typed the address incorrectly, but it has most probably been removed due\n"
 "                        to the recent website reorganisation."
 msgstr ""
+"Таны хайсан хуудас олдсонгүй; та хаягаа буруу\n"
+"                        бичсэн байх магадлалтай, гэхдээ вебийн дахин зохион байгуулалтаас болж\n"
+"                        хуудас устгагдсан байж магадгүй."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -4199,7 +4227,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:4
 #, python-format
 msgid "Welcome to your"
-msgstr ""
+msgstr "Тавтай морил, энэ бол "
 
 #. module: website
 #. openerp-web
@@ -4486,11 +4514,6 @@ msgid "found(s)"
 msgstr "олдсон"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "free website"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
@@ -4664,11 +4687,6 @@ msgstr "website.published.mixin"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "will help you:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "with"
 msgstr ""
 
 #. module: website

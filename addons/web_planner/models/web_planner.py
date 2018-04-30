@@ -59,6 +59,7 @@ class Planner(models.Model):
         action = self.env.ref(action_xml_id, False)
         if action:
             params['action'] = action.id
+            params['view_type'] = action.view_type or view_type
         else:
             params['model'] = 'ir.module.module'
         # setting the module

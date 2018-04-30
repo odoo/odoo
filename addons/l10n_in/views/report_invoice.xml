@@ -73,21 +73,21 @@
                             <td class="text-right" t-if="is_cgst">
                                 <t t-foreach="tax_datas[l.id]" t-as="tax_data">
                                     <t t-if="tag_cgst_id in tax_data['tag_ids']">
-                                        <t t-esc="tax_data['amount']"/>
+                                        <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                     </t>
                                 </t>
                             </td>
                             <td class="text-right" t-if="is_cgst">
                                 <t t-foreach="tax_datas[l.id]" t-as="tax_data">
                                     <t t-if="tag_sgst_id in tax_data['tag_ids']">
-                                        <t t-esc="tax_data['amount']"/>
+                                        <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                     </t>
                                 </t>
                             </td>
                             <td class="text-right" t-if="is_igst">
                                 <t t-foreach="tax_datas[l.id]" t-as="tax_data">
                                     <t t-if="tag_igst_id in tax_data['tag_ids']">
-                                        <t t-esc="tax_data['amount']"/>
+                                        <t t-esc="tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                     </t>
                                 </t>
                             </td>
@@ -95,10 +95,10 @@
                             <td class="text-right" t-if="is_cess">
                                 <t t-foreach="tax_datas[l.id]" t-as="tax_data">
                                     <t t-if="tag_cess_id in tax_data['tag_ids']">
-                                        <t t-set="total_cess" t-value="total_cess + tax_data['amount']"/>
+                                        <t t-set="total_cess" t-value="total_cess + tax_data['amount']" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                                     </t>
                                 </t>
-                                <t t-esc="total_cess"/>
+                                <t t-esc="total_cess" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                             </td>
                         </t>
                     </tr>

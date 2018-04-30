@@ -3,17 +3,18 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Link-Up <linkup.way@gmail.com>, 2017
-# nle_odoo <nle@odoo.com>, 2018
-# link up <link-up@naver.com>, 2018
+# Martin Trigaux, 2017
+# Mark Lee <odoos@soti.33mail.com>, 2017
+# Up Link <linkup.way@gmail.com>, 2017
+# nle_odoo, 2018
+# Linkup <link-up@naver.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: link up <link-up@naver.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +87,7 @@ msgstr ""
 "<p>\n"
 "아래내용을 확인하시기 바랍니다.\n"
 "% if ctx.get('proforma')\n"
-"견적송장이 첨부됩니다.\n"
+"견적인보이스이 첨부됩니다.\n"
 "% else\n"
 "the ${doc_name} <strong>${object.name}</strong>\n"
 "% endif\n"
@@ -120,12 +121,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template_sales_count
 msgid "# Sales"
-msgstr "판매"
+msgstr "# 판매"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "송장 개수"
+msgstr "# 인보이스"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -135,13 +136,13 @@ msgstr "# 명세"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr "#의 주문"
+msgstr "# 주문"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "판매 주문"
+msgstr "# 판매주문"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -356,8 +357,8 @@ msgid ""
 "<span class=\"hidden-xs\">Sales Order #</span>\n"
 "                      <span class=\"visible-xs\">Ref.</span>"
 msgstr ""
-"<span class=\"hidden-xs\">주문 #</span>\n"
-"                      <span class=\"visible-xs\">참고</span>"
+"<span class=\"hidden-xs\">판매주문 #</span>\n"
+"                      <span class=\"visible-xs\">참조</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -419,7 +420,7 @@ msgid ""
 "class=\"hidden-xs\"> Invoiced</span></span>"
 msgstr ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
-"class=\"hidden-xs\"> 송장발행완료</span></span>"
+"class=\"hidden-xs\"> 인보이스발행완료</span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -433,7 +434,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span> 견적 송장 # </span>"
+msgstr "<span> 견적 인보이스 # </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -463,12 +464,12 @@ msgstr "<strong>회계 위치 참고:</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoices</strong>"
-msgstr "<strong>송장</strong>"
+msgstr "<strong>인보이스</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Invoicing Address</strong>"
-msgstr "<strong>송장 주소</strong>"
+msgstr "<strong>인보이스 주소</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -569,12 +570,12 @@ msgstr "페이지 나누기 추가"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
 msgid "Add subtotal"
-msgstr "소계 추가"
+msgstr "소계 추가하기"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "판매 주문 상의 주소"
+msgstr "판매주문상의 주소"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:156
@@ -586,13 +587,13 @@ msgstr "선불: %s"
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "All Channels Sales Orders"
-msgstr "모든 판매채널의 판매 주문"
+msgstr "모든채널의 판매주문"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "All Channels Sales Orders Analysis"
-msgstr "모든 판매채널의 판매 주문 분석"
+msgstr "모든채널의 판매주문 분석"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
@@ -607,12 +608,12 @@ msgstr "할인을 별도로 입력하는 것을 허용합니다."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "고객에게 견적송장 전송을 허용합니다"
+msgstr "고객에게 견적인보이스 전송을 허용합니다"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "견적 송장 전송을 허용합니다."
+msgstr "견적 인보이스 전송을 허용합니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -623,25 +624,25 @@ msgstr "금액"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
 msgid "Amount Invoiced"
-msgstr "송장 발행 완료 금액"
+msgstr "인보이스된 금액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr "송장 발행 대상 금액"
+msgstr "인보이스할 금액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "송장발행할 견적서 금액"
+msgstr "인보이스발행할 견적서 금액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr "분석적 계정"
+msgstr "분석계정"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -747,7 +748,7 @@ msgstr "만약 견적서를 승인없이 바로 고객에게 전송할 경우 �
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to set an invoicing target for this sales channel."
-msgstr "송장을 이 판매채널에 반영하려면 이 체크박스에 체크하세요."
+msgstr "인보이스을 이 판매채널에 반영하려면 이 체크박스에 체크하세요."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -806,7 +807,7 @@ msgstr "주문에 운송비용을 계산합니다."
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
 msgid "Configuration"
-msgstr "환경 설정"
+msgstr "환경설정"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -832,7 +833,7 @@ msgstr "쿠폰&프로모션"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
-msgstr "송장 작성"
+msgstr "인보이스 작성하기"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -846,7 +847,7 @@ msgstr "새로운 판매를 위한 첫 번째 단계인 견적작성을 시작�
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr "송장 작성 및 보기"
+msgstr "인보이스 작성 및 보기"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
@@ -872,12 +873,12 @@ msgstr "작성 날짜"
 #: model:ir.model.fields,field_description:sale.field_sale_order_currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_currency_id
 msgid "Currency"
-msgstr "유통"
+msgstr "통화"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Current Year Sales"
-msgstr "현재연도 판매"
+msgstr "당해년도 판매"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
@@ -900,7 +901,7 @@ msgstr "고객 참조"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Customer Taxes"
-msgstr "고객 세금"
+msgstr "고객 부가세"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
@@ -969,7 +970,7 @@ msgstr "배송 소요 시간"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr "현재 송장의 배송 주소"
+msgstr "현재 인보이스의 배송 주소"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
@@ -1018,7 +1019,7 @@ msgstr "할인율 (%)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
 msgid "Discount Policy"
-msgstr "할인 방침"
+msgstr "할인정책"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
@@ -1088,7 +1089,7 @@ msgstr "%s%%의 계약금"
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "계약금은 판매주문에서 송장을 생성할때 만들어집니다. 판매주문을 복사하여도 계약금은 복사되지 않습니다."
+msgstr "계약금은 판매주문에서 인보이스을 생성할때 만들어집니다. 판매주문을 복사하여도 계약금은 복사되지 않습니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1133,14 +1134,14 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"이 보고서에서 고객에게 청구 된 금액에 대한 전반적인 내용를 확인할 수 있습니다. 검색 도구는 또한 송장발행 보고서를 개인 설정하는 데 "
-"사용할 수 있으므로 이 분석을 필요에 맞게 사용 할 수 있습니다."
+"이 보고서에서 고객에게 청구 된 금액에 대한 전반적인 내용를 확인할 수 있습니다. 검색 도구는 또한 인보이스발행 보고서를 개인 설정하는 "
+"데 사용할 수 있으므로 이 분석을 필요에 맞게 사용 할 수 있습니다."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "송장 발행 완료"
+msgstr "인보이스 발행 완료"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1186,7 +1187,7 @@ msgstr "ID"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "판매를 잠글경우 더이상 수정불가합니다. 그러나 송장발행이나 납품은 가능합니다."
+msgstr "판매를 잠글경우 더이상 수정불가합니다. 그러나 인보이스발행이나 납품은 가능합니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1215,59 +1216,59 @@ msgstr "잘못된 주문"
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
 msgid "Invoice"
-msgstr "송장"
+msgstr "인보이스"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr "%s지급된 송장"
+msgstr "%s지급된 인보이스"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
 msgid "Invoice Address"
-msgstr "송장 발행 주소"
+msgstr "인보이스 발행 주소"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "승인된 송장"
+msgstr "승인된 인보이스"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "작성된 송장"
+msgstr "작성된 인보이스"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "송장 명세"
+msgstr "인보이스 명세"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_invoice_lines
 msgid "Invoice Lines"
-msgstr "송장 명세"
+msgstr "인보이스 명세"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Invoice Order"
-msgstr "주문 송장"
+msgstr "주문 인보이스"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr "판매 주문 송장"
+msgstr "판매 주문 인보이스"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_invoice_status
 msgid "Invoice Status"
-msgstr "송장 상태"
+msgstr "인보이스 상태"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
 msgid "Invoice address for current sales order."
-msgstr "현재 판매 주문의 송장 발행 주소"
+msgstr "현재 판매 주문의 인보이스 발행 주소"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
@@ -1280,39 +1281,39 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr "납품된 건에 대해 송장발행"
+msgstr "납품된 건에 대해 인보이스발행"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr "주문받은 건에 대해 송장 발행"
+msgstr "주문받은 건에 대해 인보이스 발행"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr "송장발행가능 명세"
+msgstr "인보이스발행가능 명세"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr "송장발행 가능한 행(계약금 공제)"
+msgstr "인보이스발행 가능한 행(계약금 공제)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
 msgid "Invoiced"
-msgstr "송장 발행됨"
+msgstr "인보이스 발행됨"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:825
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Invoiced Quantity"
-msgstr "송장발행된 수량"
+msgstr "인보이스발행된 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr "이번달 발행된 송장"
+msgstr "이번달 발행된 인보이스"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -1320,17 +1321,17 @@ msgstr "이번달 발행된 송장"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "송장"
+msgstr "인보이스"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "송장 분석"
+msgstr "인보이스 분석"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "송장 통계"
+msgstr "인보이스 통계"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1338,14 +1339,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"송장은 승인전 검사가 가능하도록 \n"
+"인보이스은 승인전 검사가 가능하도록 \n"
 "초안으로 작성됩니다."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr "송장:공급가액 합계"
+msgstr "인보이스:공급가액 합계"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1354,29 +1355,29 @@ msgstr "송장:공급가액 합계"
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
-msgstr "송장 발행"
+msgstr "인보이스"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr "송장 정책"
+msgstr "인보이스 정책"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
 msgid "Invoicing Target"
-msgstr "송장발행 대상"
+msgstr "인보이스 대상"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
-msgstr "송장 발행 주소"
+msgstr "인보이스 주소:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr "송장 발행 및 배송 주소 :"
+msgstr "인보이스 발행 및 배송 주소 :"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
@@ -1387,6 +1388,14 @@ msgstr "계약금"
 #: model:ir.model.fields,field_description:sale.field_sale_order_is_expired
 msgid "Is expired"
 msgstr "만료됨"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1474,8 +1483,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"주문에서 수량을 수동으로 설정합니다. : 송장에 자동으로 생성되지 않고, 수동으로 수량을 입력하여 반영합니다. \n"
-"타임시트의 연락처 : 송장에 관련 타임시트에 추적된 시간을 반영합니다. \n"
+"주문에서 수량을 수동으로 설정합니다. : 인보이스에 자동으로 생성되지 않고, 수동으로 수량을 입력하여 반영합니다. \n"
+"타임시트의 연락처 : 인보이스에 관련 타임시트에 추적된 시간을 반영합니다. \n"
 "업무생성 및 시간 추적 : 확인된 확인주문기준으로 업무가 생성되며 작업시간이 반영됩니다."
 
 #. module: sale
@@ -1594,7 +1603,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "송장 할 내용 없음"
+msgstr "인보이스 할 내용 없음"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1606,12 +1615,12 @@ msgstr "주문 확정과 고객에게 제품을 배송한 사이의 일자"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr "송장발행할 견적서 수"
+msgstr "인보이스발행할 견적서 수"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "송장발행할 주문 수"
+msgstr "인보이스발행할 주문 수"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1623,7 +1632,7 @@ msgid ""
 msgstr ""
 "견적서가 승인되면, 판매주문으로 변경됩니다. \n"
 "<i>판매주문</i>메뉴에서 납품요청 또는 서비스를 통해 \n"
-"송장을 발행하거나 수금이 가능합니다."
+"인보이스을 발행하거나 수금이 가능합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
@@ -1722,7 +1731,7 @@ msgstr "%s 를 통해 승인된 주문"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "송장 발행 대상 주문"
+msgstr "인보이스 발행 대상 주문"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1743,8 +1752,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
-"주문된 수량 : 송장에 고객이 주문한 수량을 반영합니다.\n"
-"납품된 수량 : 송장에 공급업체가 납품한 수량을 반영합니다.(시간 또는 납품)"
+"주문된 수량 : 인보이스에 고객이 주문한 수량을 반영합니다.\n"
+"납품된 수량 : 인보이스에 공급업체가 납품한 수량을 반영합니다.(시간 또는 납품)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1767,13 +1776,13 @@ msgstr "주문"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "송장 발행 대상 주문"
+msgstr "인보이스 발행해야할 주문건"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "상향 판매 주문"
+msgstr "연쇄판매 유도할 주문건"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1781,7 +1790,7 @@ msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
-msgstr "상향 판매 주문은 <i>주문된 수량</i>보다 납품된 수량이 많을 때 반영되는 송장에 대한 규칙입니다."
+msgstr "상향 판매 주문은 <i>주문된 수량</i>보다 납품된 수량이 많을 때 반영되는 인보이스에 대한 규칙입니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1791,7 +1800,7 @@ msgstr "기타 정보"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "견적 송장"
+msgstr "견적 인보이스"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
@@ -1828,7 +1837,7 @@ msgstr "지불 조건"
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
 msgid "Personalize sales order and invoice report"
-msgstr "개인에 맞게 판매주문과 송장발행 보고서를 만듭니다"
+msgstr "개인에 맞게 판매주문과 인보이스발행 보고서를 만듭니다"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:353
@@ -1913,12 +1922,12 @@ msgstr "인쇄"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "견적 송장"
+msgstr "견적 인보이스"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "견적 송장"
+msgstr "견적 인보이스"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1989,7 +1998,7 @@ msgstr "납품된 수량"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr "송장 발행된 수량"
+msgstr "인보이스 발행된 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
@@ -1999,12 +2008,12 @@ msgstr "주문된 수량"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr "송장 발행 대상 수량"
+msgstr "인보이스 발행 대상 수량"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "판매주문에서 송장 발행 대상 수량"
+msgstr "판매주문에서 인보이스 발행 대상 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -2111,7 +2120,7 @@ msgstr "견적 및 판매"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "송장 재발행 비용"
+msgstr "인보이스 재발행 비용"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:87
@@ -2141,7 +2150,7 @@ msgstr "보고서 양식 카테고리"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "보고"
+msgstr "보고서"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2149,17 +2158,18 @@ msgstr "보고"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
-msgstr "매출"
+msgstr "판매"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "판매 선납 송장"
+msgstr "판매 선납 인보이스"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -2216,7 +2226,7 @@ msgstr "매출 정보"
 #: model:res.request.link,name:sale.req_link_sale_order
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
-msgstr "판매 주문"
+msgstr "판매주문"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
@@ -2243,7 +2253,7 @@ msgstr "판매 주문 내역"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "송장 발행 준비가 완료된 판매 주문 내역"
+msgstr "인보이스 발행 준비가 완료된 판매 주문 내역"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2348,7 +2358,7 @@ msgstr "다양한 포장당 단위를 판매"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "견적 송장 전송"
+msgstr "견적 인보이스 전송"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2382,14 +2392,14 @@ msgstr "서비스"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr "송장발행 달성목표 설정"
+msgstr "인보이스발행 달성목표 설정"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:25
 #, python-format
 msgid "Set an invoicing target: "
-msgstr "송장발행 달성목표 설정"
+msgstr "인보이스발행 달성목표 설정"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2591,7 +2601,7 @@ msgstr "회계분석에 연동된 판매주문%s은 비용 등록 전에 승인�
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr "사전 송장이 발행된 금액, 세금 제외"
+msgstr "사전 인보이스이 발행된 금액, 세금 제외"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_analytic_account_id
@@ -2611,7 +2621,7 @@ msgstr ""
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "선금 송장으로 발행 된 제품은 '서비스' 유형 이어야만 합니다. 다른 제품을 사용하거나이 제품을 업데이트하십시오."
+msgstr "선금 인보이스으로 발행 된 제품은 '서비스' 유형 이어야만 합니다. 다른 제품을 사용하거나이 제품을 업데이트하십시오."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:147
@@ -2621,7 +2631,7 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"선금 송장으로 발행 된 제품의 송장 정책이 \"주문 수량\"으로 설정되어 있어야 합니다. 예금 송장을 만들려면 예금 상품을 "
+"선금 인보이스으로 발행 된 제품의 인보이스 정책이 \"주문 수량\"으로 설정되어 있어야 합니다. 예금 인보이스을 만들려면 예금 상품을 "
 "업데이트하십시오."
 
 #. module: sale
@@ -2662,7 +2672,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
 msgid "There is no invoiceable line."
-msgstr "송장발행가능 명세가 없습니다."
+msgstr "인보이스발행가능 명세가 없습니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2691,8 +2701,8 @@ msgid ""
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
 "이 보고서는 귀하의 견적과 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, "
-"상품 등). 송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에"
-" 있는 송장 분석 보고서를 사용할 수 있습니다."
+"상품 등). 인보이스 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 "
+"프로그램에 있는 인보이스 분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -2704,8 +2714,8 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "이 보고서는 귀하의 견적에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 등). "
-"송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 있는 송장 "
-"분석 보고서를 사용할 수 있습니다."
+"인보이스 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 있는 "
+"인보이스 분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2717,8 +2727,8 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "이 보고서는 귀하의 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 "
-"등). 송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 있는"
-" 송장 분석 보고서를 사용할 수 있습니다."
+"등). 인보이스 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 "
+"있는 인보이스 분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -2732,7 +2742,7 @@ msgstr "프로젝트상의 타임시트(판매주문/프로젝트 당 1운임)"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "To Invoice"
-msgstr "송장 발행 대상"
+msgstr "인보이스 발행 대상"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2873,7 +2883,7 @@ msgstr "경고"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
 msgid "What do you want to invoice?"
-msgstr "송장 발행 대상은 어떤 것입니니까?"
+msgstr "인보이스 발행 대상은 어떤 것입니니까?"
 
 #. module: sale
 #. openerp-web
@@ -2905,12 +2915,12 @@ msgstr ""
 msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
-msgstr "모든 주문과 송장을 일괄적 또는 각각 선택할 수 있습니다. "
+msgstr "모든 주문과 인보이스을 일괄적 또는 각각 선택할 수 있습니다. "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "송장발행이 준비된 모든 주문을 확인할 수 있습니다."
+msgstr "인보이스발행이 준비된 모든 주문을 확인할 수 있습니다."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:229
@@ -2924,7 +2934,7 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
-"견적서 승인에서 판매주문으로, 이후 송장발행과 대금지급까지\n"
+"견적서 승인에서 판매주문으로, 이후 인보이스발행과 대금지급까지\n"
 "동작은 효율적으로 흘러가야합니다."
 
 #. module: sale
@@ -2943,7 +2953,7 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
 msgstr ""
-"견적서 승인에서 판매주문으로, 이후 송장발행과 대금지급까지\n"
+"견적서 승인에서 판매주문으로, 이후 인보이스발행과 대금지급까지\n"
 "동작은 효율적으로 흘러가야합니다."
 
 #. module: sale

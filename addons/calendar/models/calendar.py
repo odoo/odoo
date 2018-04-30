@@ -434,7 +434,7 @@ class AlarmManager(models.AbstractModel):
 
         result = False
         if alarm.type == 'email':
-            result = meeting.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
+            result = meeting.attendee_ids.filtered(lambda r: r.state != 'declined')._send_mail_to_attendees('calendar.calendar_template_meeting_reminder', force_send=True)
         return result
 
     def do_notif_reminder(self, alert):
@@ -823,7 +823,7 @@ class Meeting(models.Model):
     attendee_ids = fields.One2many('calendar.attendee', 'event_id', 'Participant', ondelete='cascade')
     partner_ids = fields.Many2many('res.partner', 'calendar_event_res_partner_rel', string='Attendees', states={'done': [('readonly', True)]}, default=_default_partners)
     alarm_ids = fields.Many2many('calendar.alarm', 'calendar_alarm_calendar_event_rel', string='Reminders', ondelete="restrict", copy=False)
-    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='# Meetings Highlight')
+    is_highlighted = fields.Boolean(compute='_compute_is_highlighted', string='Is the Event Highlighted')
 
     @api.multi
     def _compute_attendee(self):
@@ -1478,7 +1478,7 @@ class Meeting(models.Model):
                     partners_to_notify = meeting.partner_ids.ids
                     event_attendees_changes = attendees_create and real_ids and attendees_create[real_ids[0]]
                     if event_attendees_changes:
-                        partners_to_notify.append(event_attendees_changes['removed_partners'].ids)
+                        partners_to_notify.extend(event_attendees_changes['removed_partners'].ids)
                     self.env['calendar.alarm_manager'].notify_next_alarm(partners_to_notify)
 
             if (values.get('start_date') or values.get('start_datetime') or

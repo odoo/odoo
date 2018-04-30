@@ -5,19 +5,18 @@
 # Translators:
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Volluta <volluta@tutanota.com>, 2017
-# Melroy van den Berg <webmaster1989@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Volluta <volluta@tutanota.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,7 +96,7 @@ msgstr ""
 "% if object.origin:\n"
 "(met referentie: ${object.origin} )\n"
 "% endif\n"
-"met een totaal van <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"met een totaal van <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong>\n"
 "van ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -1417,6 +1416,16 @@ msgid "Is expired"
 msgstr "Is vervallen"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+"Het is niet toegestaan om de volgende velden aan te passen in een geblokkeerde order:\n"
+"%s"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -2196,6 +2205,7 @@ msgstr "Rapportages"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2397,7 +2407,7 @@ msgstr "Verkoop producten per meervoud van eenheid # per verpakking"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Stuur PRO-FORMA factuur"
+msgstr "Verstuur PRO-FORMA factuur"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form

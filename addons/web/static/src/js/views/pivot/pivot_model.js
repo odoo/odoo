@@ -135,7 +135,7 @@ var PivotModel = AbstractModel.extend({
     exportData: function () {
         var measureNbr = this.data.measures.length;
         var headers = this._computeHeaders();
-        var measureRow = measureNbr > 1 ? _.last(headers) : [];
+        var measureRow = measureNbr >= 1 ? _.last(headers) : [];
         var rows = this._computeRows();
         var i, j, value;
         headers[0].splice(0,1);
@@ -545,7 +545,6 @@ var PivotModel = AbstractModel.extend({
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {
                 self.data.has_data = false;
-                return;
             }
             self._prepareData(data);
         });

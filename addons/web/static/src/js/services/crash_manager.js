@@ -103,7 +103,7 @@ var CrashManager = core.Class.extend({
         if (!this.active) {
             return;
         }
-        new Dialog(this, {
+        return new Dialog(this, {
             size: 'medium',
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
@@ -149,10 +149,10 @@ var CrashManager = core.Class.extend({
             clipboard.destroy();
         });
 
-        dialog.open();
+        return dialog.open();
     },
     show_message: function(exception) {
-        this.show_error({
+        return this.show_error({
             type: _t("Odoo Client Error"),
             message: exception,
             data: {debug: ""}

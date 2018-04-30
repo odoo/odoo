@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Hamed Mohammadi <hamed@dehongi.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Hamid Darabi <hamid.darabi@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Hamid Darabi, 2017
 # hamid hvbnet <hvbnet@yahoo.com>, 2017
 # ifaraz ir <ifarazir@gmail.com>, 2017
 # mehdi samadi <mehsamadi@gmail.com>, 2017
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
@@ -2139,6 +2139,7 @@ msgstr "دسته‌بندی مادر"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr ""
@@ -2163,6 +2164,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "اطلاعات پرداخت"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "تراکنش پرداخت"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3422,6 +3428,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
 msgstr ""
 
 #. module: website_sale

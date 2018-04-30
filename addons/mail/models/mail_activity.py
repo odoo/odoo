@@ -318,6 +318,15 @@ class MailActivityMixin(models.AbstractModel):
         return [('activity_ids.summary', operator, operand)]
 
     @api.multi
+    def write(self, vals):
+        # Delete activities of archived record.
+        if 'active' in vals and vals['active'] is False:
+            self.env['mail.activity'].sudo().search(
+                [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
+            ).unlink()
+        return super(MailActivityMixin, self).write(vals)
+
+    @api.multi
     def unlink(self):
         """ Override unlink to delete records activities through (res_model, res_id). """
         record_ids = self.ids

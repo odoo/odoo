@@ -11,12 +11,13 @@ import odoo
 from odoo import api, SUPERUSER_ID
 
 
-
 def uninstall_hook(cr, registry):
     def update_dashboard_graph_model(dbname):
         db_registry = odoo.modules.registry.Registry.new(dbname)
         with api.Environment.manage(), db_registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
+            if 'account.invoice.report' in env:
+                env['account.invoice.report'].init()
             if 'crm.team' in env:
                 recs = env['crm.team'].search([])
                 for rec in recs:

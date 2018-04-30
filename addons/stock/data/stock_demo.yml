@@ -343,11 +343,6 @@
     record_chi_out = self.browse(ref('outgoing_chicago_warehouse1'))
     if record.state != 'done' and record_chi_in.state != 'done' and record_chi_out.state != 'done':
         self.browse([
-            ref('outgoing_shipment_main_warehouse'),
-            ref('outgoing_chicago_warehouse3'),
-            ref('outgoing_shipment_main_warehouse2')
-        ]).force_assign()
-        self.browse([
             ref('outgoing_shipment_main_warehouse1'),
             ref('incomming_chicago_warehouse1'),
             ref('outgoing_chicago_warehouse1')

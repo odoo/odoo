@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var rpc = require('web.rpc');
+var time = require('web.time');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -98,7 +99,7 @@ var PortalChatter = Widget.extend({
     preprocessMessages: function(messages){
         _.each(messages, function(m){
             m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
-            m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(m.date).format('MMMM Do YYYY, h:mm:ss a'));
+            m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
         });
         return messages;
     },

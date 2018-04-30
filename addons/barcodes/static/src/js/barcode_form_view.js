@@ -155,7 +155,7 @@ FormController.include({
             id: candidate.id,
             data: candidateChanges,
         };
-        return this.model.notifyChanges(this.handle, changes);
+        return this.model.notifyChanges(this.handle, changes, {notifyChange: activeBarcode.notifyChange});
     },
     /**
      * @private
@@ -211,6 +211,8 @@ FormController.include({
      * @param {OdooEvent} event
      * @param {string} event.data.name: the current field name
      * @param {string} [event.data.fieldName] optional for x2many sub field
+     * @param {boolean} [event.data.notifyChange] optional for x2many sub field
+     *     do not trigger on change server side if a candidate has been found
      * @param {string} [event.data.quantity] optional field to increase quantity
      * @param {Object} [event.data.commands] optional added methods
      *     can use comand with specific barcode (with ReservedBarcodePrefixes)
@@ -225,7 +227,9 @@ FormController.include({
             handle: this.handle,
             target: event.target,
             widget: event.target.attrs && event.target.attrs.widget,
+            setQuantityWithKeypress: !! event.data.setQuantityWithKeypress,
             fieldName: event.data.fieldName,
+            notifyChange: (event.data.notifyChange !== undefined) ? event.data.notifyChange : true,
             quantity: event.data.quantity,
             commands: event.data.commands || {},
             candidate: this.activeBarcode[name] && this.activeBarcode[name].handle === this.handle ?
@@ -319,7 +323,7 @@ FormController.include({
 
         // only catch the event if we're not focused in
         // another field and it's a number
-        if (!$(event.target).is('body') || !/[0-9]/.test(character)) {
+        if (!$(event.target).is('body, .modal') || !/[0-9]/.test(character)) {
             return;
         }
 

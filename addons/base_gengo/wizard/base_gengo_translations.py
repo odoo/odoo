@@ -62,9 +62,9 @@ class BaseGengoTranslations(models.TransientModel):
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'res.company',
-            'res_id': self.env.user.company_id.id,
-            'target': 'current',
+            'res_model': 'res.config.settings',
+            'target': 'inline',
+            'context': {'module' : 'general_settings'},
             }
 
     @api.model

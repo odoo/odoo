@@ -52,9 +52,7 @@
                                             <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <t t-esc="dashboard['money_amount']['invoiced']"/>
-                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['invoiced']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </td>
                                         <td>Invoiced</td>
                                     </tr>
@@ -68,9 +66,7 @@
                                         </td>
                                         <td>Fixed</td>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <t t-esc="dashboard['money_amount']['to_invoice']"/>
-                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['to_invoice']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </td>
                                         <td>To invoice</td>
                                     </tr>
@@ -84,9 +80,7 @@
                                         </td>
                                         <td>No task found</td>
                                         <td class="o_timesheet_plan_dashboard_cell">
-                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <t t-esc="dashboard['money_amount']['cost']"/>
-                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </td>
                                         <td>Cost</td>
                                     </tr>
@@ -110,9 +104,7 @@
                                         <td></td>
                                         <td></td>
                                         <td class="o_timesheet_plan_dashboard_total">
-                                            <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
-                                            <t t-esc="dashboard['money_amount']['total']"/>
-                                            <t t-if="currency.position == 'after'" t-esc="currency.symbol"/>
+                                            <t t-esc="dashboard['money_amount']['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                                         </td>
                                         <td><b>Total</b></td>
                                     </tr>

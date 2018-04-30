@@ -136,12 +136,12 @@ QUnit.test('field html_frame widget', function (assert) {
         model: 'mass.mailing',
         data: this.data,
         arch: '<form string="Partners">' +
-                '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                '<field name="body" widget="html_frame" options="{\'editor_url\': \'/logo\'}"/>' +
             '</form>',
         res_id: 1,
         session: {user_context: {lang: "en_us"}},
         mockRPC: function (route) {
-            if (_.str.startsWith(route, '/test')) {
+            if (_.str.startsWith(route, '/logo')) {
                 // those tests will be executed twice, once in readonly and once in edit
                 assert.ok(route.search('model=mass.mailing') > 0,
                     "the route should specify the correct model");
@@ -200,7 +200,7 @@ QUnit.test('html_frame does not crash when saving in readonly', function (assert
         data: this.data,
         arch: '<form string="Partners">' +
                 '<sheet>' +
-                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/logo\'}"/>' +
                 '</sheet>' +
             '</form>',
         res_id: 1,
@@ -208,7 +208,7 @@ QUnit.test('html_frame does not crash when saving in readonly', function (assert
             if (args.method) {
                 assert.step(args.method);
             }
-            if (_.str.startsWith(route, '/test')) {
+            if (_.str.startsWith(route, '/logo')) {
                 // manually call the callback to simulate that the iframe has
                 // been loaded (note: just the content, not the editor)
                 window.odoo[$.deparam(route).callback + '_content'].call();
@@ -237,7 +237,7 @@ QUnit.test('html_frame does not crash when saving in edit mode (editor not loade
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="display_name"/>' +
-                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/logo\'}"/>' +
                 '</sheet>' +
             '</form>',
         res_id: 1,
@@ -245,7 +245,7 @@ QUnit.test('html_frame does not crash when saving in edit mode (editor not loade
             if (args.method) {
                 assert.step(args.method);
             }
-            if (_.str.startsWith(route, '/test')) {
+            if (_.str.startsWith(route, '/logo')) {
                 // manually call the callback to simulate that the iframe has
                 // been partially loaded (just the content, not the editor)
                 window.odoo[$.deparam(route).callback + '_content']();
@@ -279,7 +279,7 @@ QUnit.test('html_frame saving in edit mode (editor and content fully loaded)', f
         arch: '<form string="Partners">' +
                 '<sheet>' +
                     '<field name="display_name"/>' +
-                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/logo\'}"/>' +
                 '</sheet>' +
             '</form>',
         res_id: 1,
@@ -290,7 +290,7 @@ QUnit.test('html_frame saving in edit mode (editor and content fully loaded)', f
                     writeDeferred.resolve();    
                 }
             }
-            if (_.str.startsWith(route, '/test')) {
+            if (_.str.startsWith(route, '/logo')) {
                 // manually call the callback to simulate that the iframe has
                 // been fully loaded (content + editor)
                 var callback = $.deparam(route).callback;

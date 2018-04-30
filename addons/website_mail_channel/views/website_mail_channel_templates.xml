@@ -300,7 +300,7 @@
                 </div>
             </li>
         </ul>
-        <p t-if="messages and msg_more_count > 0 and thread_header" class="well well-sm">
+        <p t-if="messages and (msg_more_count or 0) > 0 and thread_header" class="well well-sm">
             <button class="fa btn-link o_mg_read_more"
                 t-attf-data-href="/groups/#{slug(group)}/#{slug(thread_header)}/get_replies"
                 t-attf-data-msg-id="#{messages[-1].id}">

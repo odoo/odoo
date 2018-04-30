@@ -872,7 +872,12 @@ registry.background = SnippetOption.extend({
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
 
-        var _editor = new widget.MediaDialog(this, {}, null, $image[0]).open();
+        var $editable = this.$target.closest('.o_editable');
+        var options = {
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),
+        };
+        var _editor = new widget.MediaDialog(this, options, null, $image[0]).open();
         _editor.opened(function () {
             _editor.$('[href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
         });

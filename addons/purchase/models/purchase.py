@@ -327,7 +327,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_approve(self, force=False):
-        self.write({'state': 'purchase'})
+        self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
         self._create_picking()
         if self.company_id.po_lock == 'lock':
             self.write({'state': 'done'})
@@ -702,7 +702,7 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_qty
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
@@ -726,7 +726,14 @@ class PurchaseOrderLine(models.Model):
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            template['product_uom_qty'] = diff_quantity
+            quant_uom = self.product_id.uom_id
+            get_param = self.env['ir.config_parameter'].sudo().get_param
+            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
+                template['product_uom'] = quant_uom.id
+                template['product_uom_qty'] = product_qty
+            else:
+                template['product_uom_qty'] = diff_quantity
             res.append(template)
         return res
 
@@ -916,22 +923,8 @@ class ProcurementRule(models.Model):
         for line in po.order_line:
             if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
                 if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
-                    procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
-                    seller = product_id._select_seller(
-                        partner_id=partner,
-                        quantity=line.product_qty + procurement_uom_po_qty,
-                        date=po.date_order and po.date_order[:10],
-                        uom_id=product_id.uom_po_id)
-
-                    price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, values['company_id']) if seller else 0.0
-                    if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
-                        price_unit = seller.currency_id.compute(price_unit, po.currency_id)
-
-                    po_line = line.write({
-                        'product_qty': line.product_qty + procurement_uom_po_qty,
-                        'price_unit': price_unit,
-                        'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
-                    })
+                    vals = self._update_purchase_order_line(product_id, product_qty, product_uom, values, line, partner)
+                    po_line = line.write(vals)
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
@@ -954,6 +947,24 @@ class ProcurementRule(models.Model):
             uom_id=product_uom)
 
         return schedule_date - relativedelta(days=int(seller.delay))
+
+    def _update_purchase_order_line(self, product_id, product_qty, product_uom, values, line, partner):
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        seller = product_id._select_seller(
+            partner_id=partner,
+            quantity=line.product_qty + procurement_uom_po_qty,
+            date=line.order_id.date_order and line.order_id.date_order[:10],
+            uom_id=product_id.uom_po_id)
+
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, values['company_id']) if seller else 0.0
+        if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
+            price_unit = seller.currency_id.compute(price_unit, line.order_id.currency_id)
+
+        return {
+            'product_qty': line.product_qty + procurement_uom_po_qty,
+            'price_unit': price_unit,
+            'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
+        }
 
     @api.multi
     def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):

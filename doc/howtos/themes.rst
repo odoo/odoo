@@ -377,27 +377,37 @@ Imagine that we want to create a specific layout for a Services page.
 For this page, we need to add a list of services to the top and give the client the possibility of setting the rest of the page’s layout using snippets.
 
 Inside your *views* folder, create a **pages.xml** file and add the
-default Odoo markup.  Inside ``<odoo>`` create a ``<template>`` tag, set the
-``page`` attribute to ``True`` and add your code into it.
+default Odoo markup.  Inside ``<odoo>``, instead of defining a ``<template>``,
+we will create a *page* object.
 
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
 
-       <!-- === Services Page === -->
-       <template name="Services page" id="website.services" page="True">
-         <h1>Our Services</h1>
-           <ul class="services">
-             <li>Cloud Hosting</li>
-             <li>Support</li>
-             <li>Unlimited space</li>
-           </ul>
-         </template>
+        <!-- === Services Page === -->
+        <record id="services_page" model="website.page">
+            <field name="name">Services page</field>
+            <field name="website_published">True</field>
+            <field name="url">/services</field>
+            <field name="type">qweb</field>
+            <field name="key">theme_tutorial.services_page</field>
+            <field name="arch" type="xml">
+                <t t-name="theme_tutorial.services_page_template">
+                    <h1>Our Services</h1>
+                    <ul class="services">
+                        <li>Cloud Hosting</li>
+                        <li>Support</li>
+                        <li>Unlimited space</li>
+                    </ul>
+                </t>
+            </field>
+        </record>
 
-     </odoo>
+    </odoo>
 
-The page title will be the template ID. In our case *Services* (from ``website.services``)
+As you can see, pages come with many additional properties like the *name* or
+the *url* where it is reachable.
 
 We successfully created a new page layout, but we haven't told the
 system **how to use it**. To do that, we can use **QWeb**. Wrap the
@@ -405,21 +415,30 @@ html code into a ``<t>`` tag, like in this example.
 
 .. code-block:: xml
 
-   <!-- === Services Page === -->
-   <template name="Services page" id="website.services" page="True">
-     <t t-call="website.layout">
-       <div id="wrap">
-         <div class="container">
-           <h1>Our Services</h1>
-           <ul class="services">
-             <li>Cloud Hosting</li>
-             <li>Support</li>
-             <li>Unlimited space</li>
-           </ul>
-         </div>
-       </div>
-     </t>
-   </template>
+    <!-- === Services Page === -->
+    <record id="services_page" model="website.page">
+        <field name="name">Services page</field>
+        <field name="website_published">True</field>
+        <field name="url">/services</field>
+        <field name="type">qweb</field>
+        <field name="key">theme_tutorial.services_page</field>
+        <field name="arch" type="xml">
+            <t t-name="theme_tutorial.services_page_template">
+                <t t-call="website.layout">
+                    <div id="wrap">
+                        <div class="container">
+                            <h1>Our Services</h1>
+                            <ul class="services">
+                                <li>Cloud Hosting</li>
+                                <li>Support</li>
+                                <li>Unlimited space</li>
+                            </ul>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </field>
+    </record>
 
 Using ``<t t-call="website.layout">`` we will extend the Odoo
 default page layout with our code.
@@ -432,32 +451,79 @@ can fill with snippets. To achieve this, just create a ``div`` with
 
 .. code-block:: xml
 
-   <?xml version="1.0" encoding="utf-8" ?>
-   <odoo>
+    <?xml version="1.0" encoding="utf-8" ?>
+    <odoo>
 
-   <!-- === Services Page === -->
-   <template name="Services page" id="website.services" page="True">
-     <t t-call="website.layout">
-      <div id="wrap">
-        <div class="container">
-          <h1>Our Services</h1>
-          <ul class="services">
-            <li>Cloud Hosting</li>
-            <li>Support</li>
-            <li>Unlimited space</li>
-          </ul>
-          <!-- === Snippets' area === -->
-          <div class="oe_structure" />
-        </div>
-      </div>
-     </t>
-   </template>
+        <!-- === Services Page === -->
+        <record id="services_page" model="website.page">
+            <field name="name">Services page</field>
+            <field name="website_published">True</field>
+            <field name="url">/services</field>
+            <field name="type">qweb</field>
+            <field name="key">theme_tutorial.services_page</field>
+            <field name="arch" type="xml">
+                <t t-name="theme_tutorial.services_page_template">
+                    <t t-call="website.layout">
+                        <div id="wrap">
+                            <div class="container">
+                                <h1>Our Services</h1>
+                                <ul class="services">
+                                    <li>Cloud Hosting</li>
+                                    <li>Support</li>
+                                    <li>Unlimited space</li>
+                                </ul>
 
-   </odoo>
+                                <!-- === Snippets' area === -->
+                                <div class="oe_structure" />
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
+    </odoo>
 
 .. tip::
 
    You can create as many snippet areas as you like and place them anywhere in your pages.
+
+It is worth mentioning there is an alternative to create pages using the
+``<template>`` directive we saw before.
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="utf-8" ?>
+    <odoo>
+
+        <!-- === Services Page === -->
+        <template id="services_page_template">
+            <t t-call="website.layout">
+                <div id="wrap">
+                    <div class="container">
+                        <h1>Our Services</h1>
+                        <ul class="services">
+                            <li>Cloud Hosting</li>
+                            <li>Support</li>
+                            <li>Unlimited space</li>
+                        </ul>
+
+                        <!-- === Snippets' area === -->
+                        <div class="oe_structure" />
+                    </div>
+                </div>
+            </t>
+        </template>
+        <record id="services_page" model="website.page">
+            <field name="name">Services page</field>
+            <field name="website_published">True</field>
+            <field name="url">/services</field>
+            <field name="view_id" ref="services_page_template"/>
+        </record>
+
+    </odoo>
+
+This would allow your page content to be further customized using ``<xpath>``.
 
 Our page is almost ready. Now all we have to do is add **pages.xml** in our **__manifest__.py** file
 
@@ -472,7 +538,7 @@ Update your theme
 
 .. image:: theme_tutorial_assets/img/restart.png
 
-Great, our Services page is ready and you’ll be able to access it by navigating to ``/yourwebsite/page/services``.
+Great, our Services page is ready and you’ll be able to access it by navigating to ``<yourwebsite>/services`` (the URL we chose above).
 
 You will notice that it's possible to drag/drop snippets underneath the
 *Our Services* list.
@@ -487,12 +553,12 @@ copy/paste the following code.
 
   <record id="services_page_link" model="website.menu">
     <field name="name">Services</field>
-    <field name="url">/page/services</field>
+    <field name="page_id" ref="services_page"/>
     <field name="parent_id" ref="website.main_menu" />
     <field name="sequence" type="int">99</field>
   </record>
 
-This code will add a link to the main menu.
+This code will add a link to the main menu, referring to the page we created.
 
 .. image:: theme_tutorial_assets/img/services_page_menu.png
    :class: shadow-0

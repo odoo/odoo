@@ -14,7 +14,7 @@ class AccountAnalyticLine(models.Model):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
         return result
 
-    task_id = fields.Many2one('project.task', 'Task')
+    task_id = fields.Many2one('project.task', 'Task', index=True)
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
     employee_id = fields.Many2one('hr.employee', "Employee")

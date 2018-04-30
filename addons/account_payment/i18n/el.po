@@ -7,10 +7,10 @@
 # George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,13 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Συναλλαγές</strong>"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: code:addons/account_payment/models/payment.py:80
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -99,11 +105,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
 msgstr "Τιμολόγιο"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "Το τιμολόγιο έχει πληρωθεί επιτυχώς."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
@@ -153,6 +154,14 @@ msgstr "Συναλλαγές Πληρωμής"
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
 msgstr "Κατάσταση"
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:81
+#, python-format
+msgid ""
+"The invoice was not confirmed despite response from the acquirer (%s): "
+"invoice amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -219,3 +228,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "Συναλλαγές"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""

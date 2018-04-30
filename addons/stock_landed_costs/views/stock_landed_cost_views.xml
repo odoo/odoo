@@ -22,7 +22,7 @@
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"/>
+                                <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done'), ('picking_type_code', '!=', 'internal')]"/>
                             </group>
                             <group>
                                 <field name="account_journal_id"/>

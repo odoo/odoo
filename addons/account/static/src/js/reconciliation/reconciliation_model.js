@@ -524,17 +524,37 @@ var StatementModel = BasicModel.extend({
      */
     togglePartialReconcile: function (handle) {
         var line = this.getLine(handle);
-        var props = _.filter(line.reconciliation_proposition, {'invalid': false});
-        var prop = props[0];
-        if (props.length !== 1 || Math.abs(line.st_line.amount) >= Math.abs(prop.amount)) {
+
+        // Retrieve the toggle proposition
+        var selected;
+        _.each(line.reconciliation_proposition, function (prop) {
+            if (!prop.invalid) {
+                if (((line.balance.amount < 0 || !line.partial_reconcile) && prop.amount > 0 && line.st_line.amount > 0 && line.st_line.amount < prop.amount) ||
+                    ((line.balance.amount > 0 || !line.partial_reconcile) && prop.amount < 0 && line.st_line.amount < 0 && line.st_line.amount > prop.amount)) {
+                    selected = prop;
+                    return false;
+                }
+            }
+        });
+
+        // If no toggled proposition found, reject it
+        if (selected == null)
             return $.Deferred().reject();
-        }
-        prop.partial_reconcile = !prop.partial_reconcile;
-        if (!prop.partial_reconcile) {
+
+        // Inverse partial_reconcile value
+        selected.partial_reconcile = !selected.partial_reconcile;
+        if (!selected.partial_reconcile) {
             return this._computeLine(line);
         }
+
+        // Compute the write_off
+        var format_options = { currency_id: line.st_line.currency_id };
+        selected.write_off_amount = selected.amount + line.balance.amount;
+        selected.write_off_amount_str = field_utils.format.monetary(Math.abs(selected.write_off_amount), {}, format_options);
+        selected.write_off_amount_str = selected.write_off_amount_str.replace('&nbsp;', ' ');
+
         return this._computeLine(line).then(function () {
-            if (prop.partial_reconcile) {
+            if (selected.partial_reconcile) {
                 line.balance.amount = 0;
                 line.balance.type = 1;
                 line.mode = 'inactive';
@@ -627,6 +647,7 @@ var StatementModel = BasicModel.extend({
                     return isNaN(prop.id);
                 }), self._formatToProcessReconciliation.bind(self, line)),
             };
+
             // If the lines are not fully balanced, create an unreconciled amount.
             // line.st_line.currency_id is never false here because its equivalent to
             // statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.journal_id.company_id.currency_id (Python-side).
@@ -1051,8 +1072,9 @@ var StatementModel = BasicModel.extend({
         // Do not forward port in master. @CSN will change this
         var amount = prop.computed_with_tax && -prop.base_amount || -prop.amount;
         if (prop.partial_reconcile === true) {
-            amount = -line.st_line.amount;
+            amount = -prop.write_off_amount;
         }
+
         var result = {
             name : prop.label,
             debit : amount > 0 ? amount : 0,

@@ -33,13 +33,15 @@
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # ShiGang Chen <jjfxb@live.cn>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: ShiGang Chen <jjfxb@live.cn>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +139,92 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"\n"
+"% set company = ctx.get('company', user.company_id)\n"
+"<div>\n"
+"% if ctx.get('has_button_access'):\n"
+"<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
+"        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
+"    </div>\n"
+"</div>\n"
+"% endif\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<tbody><tr>\n"
+"    <td valign=\"center\">\n"
+"        % if ctx.get('has_button_access'):\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('has_button_follow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        % elif ctx.get('has_button_unfollow'):\n"
+"        % if ctx.get('has_button_access'):\n"
+"           |\n"
+"        % endif\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        % endif\n"
+"\n"
+"        % if ctx.get('actions'):\n"
+"        % for action in ctx['actions']:\n"
+"        |\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
+"        % endfor\n"
+"        % endif\n"
+"    </td>\n"
+"    <td valign=\"center\" align=\"right\">\n"
+"        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;\" alt=\"${company.name}\">\n"
+"    </td>\n"
+"</tr>\n"
+"<tr>\n"
+"    <td colspan=\"2\" style=\"text-align:center;\">\n"
+"        <hr width=\"100%\"\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
+"        <p style=\"background-color: #f2dede; padding: 5px; margin-bottom: 16px;\">\n"
+"            <strong>内部通信</strong>: 回复将发布内部注释。关注者不会收到任何电子邮件通知。\n"
+"        </p>\n"
+"        % endif\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"</div>\n"
+"% endif\n"
+"<div>\n"
+"    ${object.body | safe}\n"
+"</div>\n"
+"% if ctx.get('tracking'):\n"
+"    <ul>\n"
+"    % for tracking in ctx['tracking']\n"
+"        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>\n"
+"    % endfor\n"
+"    </ul>\n"
+"% endif\n"
+"\n"
+"% if ctx.get('signature'):\n"
+"    ${ctx['signature'] | safe}\n"
+"% endif\n"
+"<br/>\n"
+"<p style=\"color: #555555;\">\n"
+"    发件人\n"
+"    % if ctx.get('website_url'):\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"    % endif\n"
+"    ${ctx.get('company_name')}\n"
+"    % if ctx.get('website_url'):\n"
+"    </a>\n"
+"    % endif\n"
+"    using\n"
+"    <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
+"</p>\n"
+"</div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:674
@@ -213,14 +301,14 @@ msgstr "(从"
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
-msgstr ""
+msgstr "* 笑脸仅用于 HTML 代码显示图像 * 文本 (默认值) 用于以文本代替另一文本"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:49
 #, python-format
 msgid ", due on"
-msgstr ""
+msgstr "，截至"
 
 #. module: mail
 #. openerp-web
@@ -260,6 +348,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+" 您可以通过键入 <b>@ 用户名</b>提及某人，这将吸引它的注意力。<br>\n"
+" 您可以通过键入 <b># 渠道</b>提及渠道。<br>\n"
+" 您可以通过键入 <b>/ 命令</b>执行命令。<br>\n"
+" 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:584
@@ -314,7 +407,7 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct "
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
-msgstr ""
+msgstr "<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要首先使用设置应用邀请用户。</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -325,6 +418,8 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
+"<p>在此向渠道成员<b>写消息</b>。</p><p>您可以使用 <i>'@' </i>通知某人或用 <i>'#' </i>链接另一渠道。用 "
+"<i>'/'</i> 开头编辑消息获得可以使用命令的列表。</p>"
 
 #. module: mail
 #. openerp-web
@@ -335,6 +430,7 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>通过渠道可以轻松跨越不同主题和组别组织信息。</p><p>尝试<b>创建您的第一个渠道</b>（例如，销售、营销、产品矩阵、工作之余的聚会等）。</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -363,6 +459,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+" 如果您想发送符合您搜索标准的所有记录，请选中此框：\n"
+"</span> \n"
+" <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+" 如果您想仅使用选中的记录，请不要选中此选择框：\n"
+"</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -392,6 +494,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+" 与当前搜索过滤器匹配的所有记录都将以邮件发送，\n"
+" 不仅仅是在列表视图中选中的 ID。\n"
+" </strong><br/>\n"
+" 在列表中选中的所有记录都将发送电子邮件。<br/>\n"
+" 确认该向导可能需要几分钟阻止您的浏览器。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
@@ -404,6 +512,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>仅使用列表视图中选中的记录。</strong><br/>\n"
+" 在列表中选中的所有记录都将发送电子邮件。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -608,7 +718,7 @@ msgstr "添加关注者"
 #: code:addons/mail/models/ir_actions.py:36
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr ""
+msgstr "仅在邮件线程模型上可以添加关注者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
@@ -784,7 +894,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
-msgstr ""
+msgstr "附件通过模型/res_id 链接到文档并通过该字段链接到消息。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -932,7 +1042,7 @@ msgstr "抄送收件人（可以在这里使用占位符）"
 #: model:ir.model.fields,help:mail.field_mail_activity_activity_category
 #: model:ir.model.fields,help:mail.field_mail_activity_type_category
 msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
+msgstr "类别可能触发特定行为，例如，打开日历视图"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_activity_category
@@ -1479,7 +1589,7 @@ msgstr "相关单据的显示名称"
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr ""
+msgstr "不要在文档通信历史中保留电子邮件副本（仅限群发邮件）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1764,7 +1874,7 @@ msgstr "字段"
 #: code:addons/mail/models/ir_model.py:24
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr ""
+msgstr "字段“电子邮件线程”不能更改为“假”。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_desc
@@ -2034,7 +2144,7 @@ msgstr "关注中"
 #: model:ir.model.fields,help:mail.field_mail_activity_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome 图标，例如，fa-task"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -2336,7 +2446,7 @@ msgstr "如果选中”退出“，这个联系人拒绝接收群发邮件和市
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
-msgstr ""
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2344,7 +2454,7 @@ msgstr ""
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
-msgstr ""
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送。可以使用 Jinja2 占位符。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings_alias_domain
@@ -3538,7 +3648,7 @@ msgstr "行动数量"
 msgid ""
 "Number of days before executing the action. It allows to plan the action "
 "deadline."
-msgstr ""
+msgstr "执行操作前的天数。允许计划操作截止日期。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_needaction_counter
@@ -3679,7 +3789,7 @@ msgstr "Odoo"
 #, python-format
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
-msgstr ""
+msgstr "Odoo 现在有权限在该设备上发送本地通知。"
 
 #. module: mail
 #. openerp-web
@@ -3695,7 +3805,7 @@ msgstr "Odoo需要你的许可进行"
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
-msgstr ""
+msgstr "Odoo 没有权限在该设备上发送本地通知。"
 
 #. module: mail
 #. openerp-web
@@ -3746,7 +3856,7 @@ msgstr "变更时"
 msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
-msgstr ""
+msgstr "如果消息标有星号，您可以随时返回并在此进行查看。"
 
 #. module: mail
 #. openerp-web
@@ -4063,14 +4173,14 @@ msgstr "播放此视频"
 #: code:addons/mail/static/src/js/chatter_composer.js:158
 #, python-format
 msgid "Please complete customer's informations"
-msgstr ""
+msgstr "请填写客户的信息"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/many2many_tags_email.js:84
 #, python-format
 msgid "Please complete customer's informations and email"
-msgstr ""
+msgstr "请填写客户的信息和电子邮件"
 
 #. module: mail
 #. openerp-web
@@ -4086,6 +4196,9 @@ msgid ""
 "- Emails: notifications are sent to your email\n"
 "- Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"关于如何处理聊天通知的策略：\n"
+"-电子邮件：向电子邮件发送通知 \n"
+"-Odoo：在 Odoo 收件箱中显示通知"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_contact
@@ -4601,7 +4714,7 @@ msgstr "表情符"
 msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
-msgstr ""
+msgstr "如果活动应特定于某个模型并且在管理其他模型的活动时不可用，请指定一个模型。"
 
 #. module: mail
 #. openerp-web
@@ -4675,6 +4788,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_sub_model_object_field
@@ -4781,12 +4898,12 @@ msgstr "测试邮件模型"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_test_simple
 msgid "Test Simple Chatter Record"
-msgstr ""
+msgstr "测试简单的聊天记录"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "html 转义码替换快捷方式"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4840,18 +4957,18 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "在聊天消息中，必须替换掉的快捷方式"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_unicode_source
 msgid "The source is replaced by this unicode character in the Chat Messages"
-msgstr ""
+msgstr "在聊天消息中，以该 unicode 字符替换源"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "该模板可使用的文档类型"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -4960,7 +5077,7 @@ msgstr "在此群中讨论的话题 ..."
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
-msgstr ""
+msgstr "在单独的模型中存储跟踪值。该字段允许重建跟踪以及生成模型统计数据。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields_track_visibility
@@ -5005,13 +5122,13 @@ msgstr "UUID"
 #: code:addons/mail/models/mail_mail.py:235
 #, python-format
 msgid "Unable to connect to SMTP Server"
-msgstr ""
+msgstr "无法连接到 SMTP 服务器"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:31
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
-msgstr ""
+msgstr "无法发送电子邮件，请配置发件人的电子邮件地址。"
 
 #. module: mail
 #. openerp-web
@@ -5197,7 +5314,7 @@ msgstr "从频道退订"
 #: code:addons/mail/models/mail_template.py:510
 #, python-format
 msgid "Unsupported report type %s found."
-msgstr ""
+msgstr "发现不支持的报告类型 %s。"
 
 #. module: mail
 #. openerp-web
@@ -5268,6 +5385,8 @@ msgid ""
 "and Enterprise versions. Online users already benefit from a ready-to-use "
 "email server (@mycompany.odoo.com)."
 msgstr ""
+"在社区和企业版本中，发送/接收电子邮件需要使用自己的电子邮件服务器。在线用户已受益于随时可用的电子邮件服务器 "
+"(@mycompany.odoo.com)。"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:670
@@ -5291,6 +5410,9 @@ msgid ""
 " If you remove a follower, he won't be notified of any email or discussion on this document.\n"
 " Do you really want to remove this follower ?"
 msgstr ""
+"警告！\n"
+" 如果删除一个关注者，任何关于此文档的电子邮件或讨论都不再向其通知。\n"
+" 真的想要删除这个关注者吗 ?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -5312,7 +5434,7 @@ msgstr "如果关系型字段被选为第一个字段，这个字段显示这个
 #: model:ir.model.fields,help:mail.field_ir_model_fields_track_visibility
 msgid ""
 "When set, every modification to this field will be tracked in the chatter."
-msgstr ""
+msgstr "当设置完毕时，在聊天中，将追踪对该字段的每一次修改。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_is_log
@@ -5323,7 +5445,7 @@ msgstr "该消息是否是一个内部备注(注释模式)"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_is_mail_thread
 msgid "Whether this model supports messages and notifications."
-msgstr ""
+msgstr "该模型是否支持消息和通知。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -5450,14 +5572,14 @@ msgstr "你从<b>%s</b>取消订阅."
 #: code:addons/mail/static/src/xml/client_action.xml:217
 #, python-format
 msgid "You:"
-msgstr ""
+msgstr "您："
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_field.js:83
 #, python-format
 msgid "Your message has not been sent."
-msgstr ""
+msgstr "您的消息尚未发送。"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:30
@@ -5469,7 +5591,7 @@ msgstr "你的模板需要定义email_from"
 #: code:addons/mail/models/mail_thread.py:966
 #, python-format
 msgid "alias %s: %s"
-msgstr ""
+msgstr "别名 %s: %s"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
@@ -5498,6 +5620,8 @@ msgid ""
 "done\n"
 "        by"
 msgstr ""
+"操作\n"
+"人员"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -5523,12 +5647,12 @@ msgstr "关注者"
 #: code:addons/mail/static/src/xml/activity.xml:30
 #, python-format
 msgid "for"
-msgstr ""
+msgstr "由于"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
-msgstr ""
+msgstr "从:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -5550,7 +5674,7 @@ msgstr "不正确配置的别名"
 #: code:addons/mail/models/mail_alias.py:278
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr ""
+msgstr "别名配置错误（未知参考记录）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -5571,20 +5695,20 @@ msgstr "mail.alias.mixin"
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "模型 %s 不接受文档创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "模型 %s 不接受文档更新"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
-msgstr ""
+msgstr "模型 %s 不接受文档更新，回退到文档创建"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -5617,14 +5741,14 @@ msgstr "在"
 msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
-msgstr ""
+msgstr "发布无模型消息应使用无效 res_id（私人信息），收到 %"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
 #, python-format
 msgid ""
 "posting a message without model should be with a parent_id (private message)"
-msgstr ""
+msgstr "发布无模型消息应使用 parent_id（私人信息）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
@@ -5659,13 +5783,13 @@ msgstr "记录："
 #: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "回复缺失文档 (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
-msgstr ""
+msgstr "回复缺失文档 (%s,%s)，回退到新的文档创建"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -5676,7 +5800,7 @@ msgstr "res.config.settings"
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "正在重置 thread_id"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:254

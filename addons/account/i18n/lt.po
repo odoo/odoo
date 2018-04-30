@@ -13,17 +13,18 @@
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2017
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2017
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
+# vaalds <vaalds@gmail.com>, 2017
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# Valdemar St <vaalds@gmail.com>, 2017
+# Eimantas Nejus <eimantas@focusate.eu>, 2017
 # Anatolij, 2017
-# Paulius Sladkevičius <paulius@hbee.eu>, 2017
+# Paulius Sladkevičius <paulius@versada.eu>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
-"Last-Translator: Paulius Sladkevičius <paulius@hbee.eu>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"Last-Translator: Paulius Sladkevičius <paulius@versada.eu>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,12 +104,6 @@ msgstr "%s (Kopija)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1110,6 +1105,11 @@ msgstr "Įspėjimas gali būti nustatytas partneriui (Sąskaita)"
 #, python-format
 msgid "Account"
 msgstr "Sąskaita"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2156,7 +2156,7 @@ msgstr "Laukia pamokėjimo"
 #: code:addons/account/models/chart_template.py:189
 #, python-format
 msgid "BILL"
-msgstr "MOKĖJIMAI"
+msgstr "SĄSKAITA"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -6814,14 +6814,6 @@ msgid "No detail"
 msgstr "Nėra detalių"
 
 #. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
@@ -7873,6 +7865,7 @@ msgid "Print checks to pay your vendors"
 msgstr ""
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id
@@ -11564,7 +11557,7 @@ msgstr "klientų sąrašas"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "Tėvinė įmonė"
+msgstr "tėvinė įmonė"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

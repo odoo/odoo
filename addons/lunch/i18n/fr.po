@@ -5,7 +5,7 @@
 # Translators:
 # Bertrand LATOUR <divoir@gmail.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
@@ -21,15 +21,17 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Martin Malorni <mmalorni@gmail.com>, 2017
 # Micky Jault <micky037@hotmail.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Florian Hatat, 2017
 # Loic <loic.richard2@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Loic <loic.richard2@gmail.com>, 2017\n"
+"Last-Translator: fr trans <e2ffr05@hotmail.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +121,8 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"Les alertes permettent d'avertir les employés des éventuels problèmes concernant leurs commandes de déjeuner.\n"
+"                Pour créer une alerte de déjeuner, vous devez définir sa récurrence, l'intervalle de temps pendant lequel l'alerte doit être exécutée et le message à afficher."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -139,7 +143,7 @@ msgstr "Archivé"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
 msgid "Balance Visible"
-msgstr ""
+msgstr "Solde visible"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
@@ -149,7 +153,7 @@ msgstr "Entre"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
 msgid "Between:"
-msgstr ""
+msgstr "Entre :"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -206,7 +210,7 @@ msgstr "Déplacement de trésorerie"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash Move Balance"
-msgstr ""
+msgstr "Solde des transactions"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -520,22 +524,22 @@ msgstr "Commande de repas"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "Déjeuner : archiver/restaurer des produits"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Déjeuner : annuler des repas"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Lunch: Order meals"
-msgstr ""
+msgstr "Déjeuner : commander des repas"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Déjeuner : recevoir des repas"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -612,19 +616,20 @@ msgstr "Note"
 #: code:addons/lunch/models/lunch.py:225
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Seul votre responsable des déjeuners peut annuler une commande."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Seul votre responsable des déjeuners peut traiter une commande."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:214
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr ""
+"Seul votre responsable des déjeuners peut définir une commande comme reçue."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -681,7 +686,7 @@ msgstr "Commande précédente"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "Widget de commande précédente"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -767,7 +772,7 @@ msgstr "Reçu"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
 msgid "Recurrence"
-msgstr ""
+msgstr "Récurrence"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -853,6 +858,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"Il n'y a aucune commande précédente enregistrée. Cliquez sur « Mon déjeuner "
+"» puis créez une nouvelle commande de déjeuner."
 
 #. module: lunch
 #. openerp-web

@@ -418,6 +418,8 @@ class IrHttp(models.AbstractModel):
         try:
             _, path = rule.build(arguments)
             assert path is not None
+        except odoo.exceptions.MissingError:
+            return cls._handle_exception(werkzeug.exceptions.NotFound())
         except Exception as e:
             return cls._handle_exception(e)
 

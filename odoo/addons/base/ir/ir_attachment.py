@@ -8,6 +8,7 @@ import mimetypes
 import os
 import re
 from collections import defaultdict
+import uuid
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
@@ -280,7 +281,7 @@ class IrAttachment(models.Model):
     public = fields.Boolean('Is public document')
 
     # for external access
-    access_token = fields.Char('Access Token')
+    access_token = fields.Char('Access Token', groups="base.group_user")
 
     # the field 'datas' is computed and may use the other fields below
     datas = fields.Binary(string='File Content', compute='_compute_datas', inverse='_inverse_datas')
@@ -437,6 +438,14 @@ class IrAttachment(models.Model):
         values = self._check_contents(values)
         self.browse().check('write', values=values)
         return super(IrAttachment, self).create(values)
+
+    @api.one
+    def generate_access_token(self):
+        if self.access_token:
+            return self.access_token
+        access_token = str(uuid.uuid4())
+        self.write({'access_token': access_token})
+        return access_token
 
     @api.model
     def action_get(self):

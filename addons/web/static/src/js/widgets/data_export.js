@@ -455,7 +455,7 @@ var DataExport = Dialog.extend({
             Dialog.alert(this, _t("Please select fields to export..."));
             return;
         }
-        exported_fields.unshift({name: 'id', label: 'External ID'});
+        exported_fields.unshift({name: 'id', label: _t('External ID')});
 
         var export_format = this.$export_format_inputs.filter(':checked').val();
 

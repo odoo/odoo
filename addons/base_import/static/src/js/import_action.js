@@ -137,6 +137,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'create',
                 args: [{res_model: this.res_model}],
+                kwargs: {context: session.user_context},
             });
     },
     renderButtons: function() {
@@ -280,6 +281,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'parse_preview',
                 args: [this.id, this.import_options()],
+                kwargs: {context: session.user_context},
             }).done(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);

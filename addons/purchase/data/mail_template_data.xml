@@ -28,7 +28,7 @@ Here is, in attachment, a ${object.state in ('draft', 'sent') and 'request for q
 % if object.origin:
     (RFQ origin: ${object.origin})
 % endif
-amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
+amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
 from ${object.company_id.name}.
 </p>
 
@@ -68,7 +68,7 @@ Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'req
 % if object.origin:
     (RFQ origin: ${object.origin})
 % endif
-amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>
+amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
 from ${object.company_id.name}.
 </p>
 

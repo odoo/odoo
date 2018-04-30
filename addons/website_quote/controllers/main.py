@@ -45,8 +45,8 @@ class sale_quote(http.Controller):
         else:
             Order = request.env['sale.order'].search([('id', '=', order_id)])
         # Log only once a day
-        if Order and request.session.get('view_quote') != now and request.env.user.share:
-            request.session['view_quote'] = now
+        if Order and request.session.get('view_quote_%s' % Order.id) != now and request.env.user.share:
+            request.session['view_quote_%s' % Order.id] = now
             body = _('Quotation viewed by customer')
             _message_post_helper(res_model='sale.order', res_id=Order.id, message=body, token=token, message_type='notification', subtype="mail.mt_note", partner_ids=Order.user_id.sudo().partner_id.ids)
         if not Order:

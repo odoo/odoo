@@ -890,7 +890,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         var def = window.Notification && window.Notification.requestPermission();
         if (def) {
             def.then(function (value) {
-                if (value === 'denied') {
+                if (value !== 'granted') {
                     utils.send_notification(self, _t('Permission denied'),
                         _t('Odoo will not have the permission to send native notifications on this device.'));
                 } else {

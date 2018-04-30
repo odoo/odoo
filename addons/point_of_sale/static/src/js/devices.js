@@ -93,8 +93,9 @@ var JobQueue = function(){
 
 var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
     init: function(parent,options){
-        mixins.PropertiesMixin.init.call(this,parent);
+        mixins.PropertiesMixin.init.call(this);
         var self = this;
+        this.setParent(parent);
         options = options || {};
 
         this.pos = parent;

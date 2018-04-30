@@ -292,7 +292,7 @@ def split_context(method, args, kwargs):
         Return a triple ``context, args, kwargs``.
     """
     pos = len(getargspec(method).args) - 1
-    if pos < len(args):
+    if len(args) > 0 and pos < len(args):
         return args[pos], args[:pos], kwargs
     else:
         return kwargs.pop('context', None), args, kwargs
@@ -1012,6 +1012,17 @@ class Cache(object):
             if key in field_record_cache
         ]
         return model.browse(ids)
+
+    def copy(self, records, env):
+        """ Copy the cache of ``records`` to ``env``. """
+        src = records
+        dst = records.with_env(env)
+        for field, field_cache in self._data.items():
+            src_key = field.cache_key(src)
+            dst_key = field.cache_key(dst)
+            for record_id, record_cache in field_cache.items():
+                if src_key in record_cache:
+                    record_cache[dst_key] = record_cache[src_key]
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """

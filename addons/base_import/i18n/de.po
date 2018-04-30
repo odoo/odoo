@@ -3,23 +3,25 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
+# Renzo Meister, 2017
 # Thomas Neu <t.neu@runbox.com>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
-# Andi <flimflam@salasar.de>, 2017
+# Andi, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Niki Waibel, 2017
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Niki Waibel <niki.waibel@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,13 +58,13 @@ msgstr "Abbrechen"
 #: code:addons/base_import/models/base_import.py:596
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Spalte %s enthält fehlerhafte Werte (Wert: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:618
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Spalte %s enthält fehlerhafte Werte. Fehler in der Zeile %d: %s"
 
 #. module: base_import
 #. openerp-web
@@ -139,6 +141,13 @@ msgid "Decimal Separator:"
 msgstr "Dezimal Trennzeichen:"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:71
+#, python-format
+msgid "Defer parent/child computation"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_display_name
@@ -182,7 +191,7 @@ msgstr "Zeichensatz:"
 #: code:addons/base_import/models/base_import.py:620
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Fehler bei der Analyse des Datums [%s:L%d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:227
@@ -305,8 +314,18 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:88
-#: code:addons/base_import/static/src/xml/base_import.xml:147
+#: code:addons/base_import/static/src/xml/base_import.xml:69
+#, python-format
+msgid ""
+"If the model uses parent/child relations, computing the"
+"                      parent / child relation occurs on every line, and lead"
+" to a slower import.                     Defering it can speed up import."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:97
+#: code:addons/base_import/static/src/xml/base_import.xml:156
 #, python-format
 msgid "Import"
 msgstr "Import"
@@ -391,7 +410,7 @@ msgstr "Datei Laden"
 #: code:addons/base_import/static/src/xml/base_import.xml:56
 #, python-format
 msgid "Map your columns to import"
-msgstr ""
+msgstr "Ordnen Sie die Spalten zum Importieren zu"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_res_model
@@ -474,7 +493,7 @@ msgstr "Trennzeichen:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show fields of relation fields (advanced)"
-msgstr ""
+msgstr "Felder mit Beziehungsfeldern anzeigen (erweitert)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -500,7 +519,7 @@ msgstr "Tabulator"
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Import testen"
 
 #. module: base_import
 #. openerp-web

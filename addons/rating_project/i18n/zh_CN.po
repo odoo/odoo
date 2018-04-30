@@ -10,13 +10,15 @@
 # waveyeung <waveyeung@qq.com>, 2017
 # fausthuang, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:12+0000\n"
 "PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +102,69 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"\n"
+"% set access_token = object.rating_get_access_token()\n"
+" <table style=\"width:600px;margin:5px auto;\">\n"
+" <tbody>\n"
+" <tr><td>\n"
+" <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"</td> <td style=\"text-align:right;vertical-align:middle;\">\n"
+" 满意度调查\n"
+"</td></tr> \n"
+"</tbody> \n"
+"</table> \n"
+" <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\"><tbody><tr><td style=\"padding:15px 20px 10px 20px;\"><p>\\</p>n \n"
+" \n"
+" 您好<p>，\n"
+" 请花些时间为<strong>与</strong>已分配到 <strong>${object.rating_get_rated_partner_id().name} 的任务 \"${object.name}\"\n"
+" 相关的服务进行评价。\\</strong></p><p>n 我们期待您的</p></td></tr></tbody>反馈。这会帮助我们不断改进。请<tr><td style=\"padding:10px 20px\"><table style=\"width:100%;border-top:1px solid #e1e1e1;\" summary=\"o_mail_notification\"><tr><td style=\"text-align:center;\"><h2 style=\"font-weight:300;font-size:18px;\">告知您对服务的感受：\n"
+"</h2> \n"
+"（<div style=\"text-color: #888888\">请单击其中一个</div></td></tr><tr><td style=\"padding:10px 10px;\"><table style=\"width:100%;text-align:center;\"><tr><td><a href=\"/rating/${access_token}/10\"><img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/></a></td><td><a href=\"/rating/${access_token}/5\"><img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/></a></td><td><a href=\"/rating/${access_token}/1\"><img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/></a></td></tr></table></td></tr></table>表情）)\n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+" \n"
+"</td></tr><tr><td style=\"padding:15px 20px 10px 20px;\"/></tr> ${(object.user_id.signature or '')| safe}\\</table><table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\"><tbody lilt=\"split=0\"><tr lilt=\"split=0\"><td style=\"padding-top:10px;color:#afafaf;\">n \n"
+" \n"
+" \n"
+" \n"
+" \n"
+"</td></tr></tbody> %</table> if<tbody lilt=\"split=1\"><tr lilt=\"split=1\">object.project_id.rating_status == 'stage'：\n"
+" 已发送该客户调查，因为您的任务已移动至阶段 ${object.stage_id.name}\n"
+" % endif\n"
+" % if object.project_id.rating_status == 'periodic'：\n"
+" 只要该任务在 ${object.stage_id.name} 阶段便会发送此客户调查。\n"
+" % endif\n"
+" Odoo 项目将会为${object.project_id.company_id.name} 自动发送电子邮件</tr></tbody><p><b/></p><p><b/><b/></p><p><a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\" target=\"_blank\"/><a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\"/></p>\n"
+" \n"
+" \n"
+" \n"
+"\n"
+"</div>"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
@@ -114,7 +179,7 @@ msgstr "% 任务"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/>尚无评级"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -128,6 +193,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"当客户回复此阶段的反馈请求时，会自动修改看板状态。\n"
+" * 客户的良好反馈会将看板状态更新为“准备进入新阶段”（绿色标识）。\n"
+" *中等或不好的反馈会将看板状态设置为“阻止”（红色标识）。\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
@@ -146,14 +214,14 @@ msgstr "客户评价任务"
 msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
-msgstr ""
+msgstr "任务的客户评级。如果您尚无评级，请更改项目设置以便激活评级。"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
 msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
-msgstr ""
+msgstr "任务/问题的客户评级。如果您尚无评级，请更改项目设置以便激活评级。"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
@@ -171,6 +239,8 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"编辑项目阶段并\n"
+" 在您想要激活评级的阶段上设置电子邮件模板。"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
@@ -191,6 +261,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"如何获得客户反馈？\n"
+"- 改变阶段时评级：当任务/问题拉到另一个阶段时将发送电子邮件\n"
+"- 定期评级：将定期发送电子邮件\n"
+"\n"
+" 请记住，为想要获得客户反馈的阶段设置电子邮件模板。"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -198,7 +273,7 @@ msgid ""
 "If set and if the project's rating configuration is 'Rating when changing "
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
-msgstr ""
+msgstr "如果设置，且项目评级配置为“改变阶段时评级”，那么当任务达到此步骤时，将会给客户发送电子邮件。"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -235,7 +310,7 @@ msgstr "一个月一次"
 msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
-msgstr ""
+msgstr "过去 30 天，满意评级百分比。从‘更多’菜单获取评级详细信息。"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -253,7 +328,7 @@ msgstr "项目"
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "项目：发送评级"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -263,7 +338,7 @@ msgstr "每季度"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
 msgid "Rated tasks"
-msgstr ""
+msgstr "评级任务"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
@@ -284,12 +359,12 @@ msgstr "点评频率"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "评级请求截止日期"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Rating for tasks"
-msgstr ""
+msgstr "任务评级"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -305,17 +380,17 @@ msgstr "点评"
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "%s 评级"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
 msgid "Ratings on tasks"
-msgstr ""
+msgstr "任务评级"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "设置电子邮件模板到阶段"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task
@@ -336,7 +411,7 @@ msgstr "任务阶段"
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
 msgid "There is no rating for tasks of this project at the moment."
-msgstr ""
+msgstr "目前没有此项目任务的评级。"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating

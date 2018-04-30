@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Quim - eccit <quim@eccit.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-08 13:21+0000\n"
-"PO-Revision-Date: 2017-11-08 13:21+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 14:33+0000\n"
+"PO-Revision-Date: 2018-02-19 14:33+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3681,7 +3682,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -3795,6 +3796,44 @@ msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"Install it if you use the Point of Sale app to sell to individuals.\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_certification
+msgid ""
+"\n"
+"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
+"\n"
+"    Security: chaining algorithm to verify the inalterability\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
+"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
 
 #. module: base
@@ -4160,6 +4199,19 @@ msgid ""
 "This module contains most code coming from odoo v10 website_portal. Purpose\n"
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
+msgid ""
+"\n"
+"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
+"\n"
+"The module adds following features:\n"
+"\n"
+"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
+"\n"
 msgstr ""
 
 #. module: base
@@ -5762,11 +5814,6 @@ msgid "Accounting & Finance"
 msgstr "Comptabilitat i Finances "
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
-msgid "Accounting &amp; Finance"
-msgstr "Comptabilitat &amp; Finances"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr ""
@@ -5910,6 +5957,11 @@ msgid "Actions"
 msgstr "Accions"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
+msgid "Activate more currencies"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -5935,6 +5987,11 @@ msgstr "Actiu"
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
 msgstr "Afegir el cost d'entrega a la venda en línia "
+
+#. module: base
+#: selection:ir.actions.server,state:0
+msgid "Add Followers"
+msgstr "Afegir seguidors "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
@@ -6252,13 +6309,6 @@ msgstr ""
 "que no són comptables."
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid ""
-"Also you will find here all the related documents and download it by "
-"clicking on any individual document."
-msgstr ""
-
-#. module: base
 #: code:addons/base/ir/ir_fields.py:378
 #, python-format
 msgid ""
@@ -6482,8 +6532,8 @@ msgstr "Argentina - Informes Comptables"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along withthe view tag"
-msgstr "Arguments enviats al client juntament amb l'etiqueta de vista"
+msgid "Arguments sent to the client along with the view tag"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -6621,6 +6671,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
+msgstr ""
+
+#. module: base
+#: selection:ir.actions.server,usage:0
+msgid "Automated Action"
 msgstr ""
 
 #. module: base
@@ -7600,14 +7655,14 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to attach a new document."
+msgstr "Premi aquí per afegir un nou documento."
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Premi aquí per crear una vista personalitzada"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to create new documents."
-msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8232,6 +8287,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr ""
 
@@ -8466,7 +8522,6 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -8836,6 +8891,25 @@ msgstr "Dia: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Dies"
+
+#. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Benvolgut/da,\n"
+"\n"
+"Els nostres registres indiquen que consta algun pagament fora de termini al vostre compte. Vegeu-ne els detalls més avall.\n"
+"Si ja l'heu liquidat, podeu obviar el present missatge. En cas contrari, agrairem que liquideu bon punt pugueu la quantitat més avall esmentada. Quedem a la vostra disposició per qualsevol dubte o aclariment.\n"
+"Gràcies d'avançada per la vostra atenció.\n"
+"Salutacions cordials."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -10074,6 +10148,12 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr "El camp \"Tipus\" no és pot modificar als models."
 
 #. module: base
+#: code:addons/base/ir/ir_ui_view.py:1016
+#, python-format
+msgid "Field %r used in attributes must be present in view but is missing:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr "Camp Ajuda"
@@ -10394,6 +10474,23 @@ msgstr "França - Informes Comptables "
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
 msgstr "França - FEC"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
+msgid ""
+"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
+msgid ""
+"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -11324,6 +11421,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
+#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "ID de l'acció si està definida a l'arxiu XML"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "ID del registre objectiu en la base de dades"
@@ -11396,11 +11498,8 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level(this is very verbose and may include confidential info!)"
+"log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"Si està habilitat, la sortida completa de les sessions SMTP seran escrites "
-"al registre del servidor al nivell DEBUG (això és molt detallat i pot "
-"incloure informació confidencial!)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_rule_global
@@ -16833,8 +16932,8 @@ msgstr "Prospecció"
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created recordon the record on used"
-" by the server action."
+"Provide the field used to link the newly created record on the record on "
+"used by the server action."
 msgstr ""
 
 #. module: base
@@ -17856,6 +17955,11 @@ msgid "Sell based on timesheets"
 msgstr "Vendes basades en fulls de temps "
 
 #. module: base
+#: selection:ir.actions.server,state:0
+msgid "Send Email"
+msgstr "Enviar Correu"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_account
 #: model:ir.module.module,summary:base.module_account_invoicing
 msgid "Send Invoices and Track Payments"
@@ -18785,11 +18889,12 @@ msgstr "Nom tècnic"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
+#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Configuració tècnica"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:750
+#: code:addons/base/ir/ir_translation.py:760
 #, python-format
 msgid "Technical Translations"
 msgstr "Traduccions tècniques"
@@ -18866,6 +18971,12 @@ msgid "Thailand - Accounting Reports"
 msgstr "Tailàndia - Informes Comptables"
 
 #. module: base
+#: code:addons/base/res/res_users.py:290
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -18878,11 +18989,9 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression.Please "
+"The Selection Options expression is not a valid Pythonic expression. Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
-"L'expressió d'opcions de selecció no és una expressió Pythonica vàlida. "
-"Proporcioneu una expressió en el format [('clau', 'Etiqueta'), ...]."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_grouping
@@ -19780,12 +19889,9 @@ msgstr "Panell de Twitter"
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids anygap in the sequence (while "
+"later is slower than the former but forbids any gap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
-"S'ofereixen dues implementacions d'objectes seqüència: 'Estàndard' i 'Sense "
-"buits'. L'última és més lenta que la primera, però prohibeix qualsevol buit "
-"en la seqüència (mentre que són possibles en la primera)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_type
@@ -21168,13 +21274,10 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
-" do the trick."
+"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
+"should do the trick."
 msgstr ""
-"Su servidor OpenERP no suporta SMTP sota SSL. Pot utilitzar STARTTLS al seu "
-"lloc. Si es necessita SSL, una actualització a Python 2.6 al servidor pot "
-"funcionar."
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477

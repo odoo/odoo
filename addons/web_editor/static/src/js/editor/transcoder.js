@@ -18,18 +18,12 @@ function getMatchedCSSRules(a) {
         var sheets = document.styleSheets;
         for (i = sheets.length-1 ; i >= 0 ; i--) {
             var rules;
-            if (sheets[i].rules) {
-                rules = sheets[i].rules;
-            } else {
-                // try...catch because Firefox not able to enumerate
-                // document.styleSheets[].cssRules[] for cross-domain sheets.
-                try {
-                    rules = sheets[i].cssRules;
-                } catch (e) {
-                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                    continue;
-                }
-                rules = sheets[i].cssRules;
+            // try...catch because browser may not able to enumerate rules for cross-domain sheets
+            try {
+                rules = sheets[i].rules || sheets[i].cssRules;
+            } catch (e) {
+                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                continue;
             }
             if (rules) {
                 for (r = rules.length-1; r >= 0; r--) {
@@ -141,6 +135,20 @@ function getMatchedCSSRules(a) {
         delete style['text-decoration-line'];
         delete style['text-decoration-color'];
         delete style['text-decoration-style'];
+    }
+
+    // text-align inheritance does not seem to get past <td> elements on some
+    // mail clients
+    if (style['text-align'] === 'inherit') {
+        var $el = $(a).parent();
+        do {
+            var align = $el.css('text-align');
+            if (_.indexOf(['left', 'right', 'center', 'justify'], align) >= 0) {
+                style['text-align'] = align;
+                break;
+            }
+            $el = $el.parent();
+        } while (!$el.is('html'));
     }
 
     return style;
@@ -259,10 +267,40 @@ function styleToClass($editable) {
     $c.remove();
 }
 
+/**
+ * Converts css display for attachment link to real image.
+ * Without this post process, the display depends on the css and the picture
+ * does not appear when we use the html without css (to send by email for e.g.)
+ *
+ * @param {jQuery} $editable
+ */
+function attachmentThumbnailToLinkImg($editable) {
+    $editable.find('a[href*="/web/content/"][data-mimetype]:empty').each(function () {
+        var $link = $(this);
+        var $img = $('<img/>')
+            .attr('src', $link.css('background-image').replace(/(^url\(['"])|(['"]\)$)/g, ''))
+            .css('height', Math.max(1, $link.height()) + 'px')
+            .css('width', Math.max(1, $link.width()) + 'px');
+        $link.append($img);
+    });
+}
+
+/**
+ * Revert attachmentThumbnailToLinkImg changes
+ *
+ * @see attachmentThumbnailToLinkImg
+ * @param {jQuery} $editable
+ */
+function linkImgToAttachmentThumbnail($editable) {
+    $editable.find('a[href*="/web/content/"][data-mimetype] > img').remove();
+}
+
 return {
     fontToImg: fontToImg,
     imgToFont: imgToFont,
     classToStyle: classToStyle,
     styleToClass: styleToClass,
+    attachmentThumbnailToLinkImg: attachmentThumbnailToLinkImg,
+    linkImgToAttachmentThumbnail: linkImgToAttachmentThumbnail,
 };
 });

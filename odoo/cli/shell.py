@@ -63,6 +63,7 @@ class Shell(Command):
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
+            local_vars['__name__'] = '__main__'
             exec(sys.stdin.read(), local_vars)
         else:
             if 'env' not in local_vars:

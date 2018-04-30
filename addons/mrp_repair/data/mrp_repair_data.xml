@@ -20,7 +20,7 @@
                 (with reference: ${object.origin} )
                 % endif
                 % if object.invoice_method != 'none':
-                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>
+                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>
                 % endif
                 </p>
                 <p>You can reply to this email if you have any questions.</p>

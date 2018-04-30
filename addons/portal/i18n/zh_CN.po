@@ -18,13 +18,15 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,6 +61,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    亲爱的 ${object.user_id.name or ''}，\n"
+"</p>\n"
+"<p>\n"
+"    您已获得访问 ${user.company_id.name}'s ${object.wizard_id.portal_id.name} 的权限。\n"
+"</p>\n"
+"<p>\n"
+"    您的登录账户信息为：\n"
+"</p>\n"
+"<ul>\n"
+"    <li>用户名：${object.user_id.login or ''}</li>\n"
+"    <li>门户：<a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>数据库：${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"    您可以通过以下 URL 设置或更改密码：\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -68,7 +93,7 @@ msgstr "<b>登录</b>"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span id=\"search_label\">Search</span> <span class=\"caret\"/>"
-msgstr ""
+msgstr "<span id=\"search_label\">搜索</span><span class=\"caret\"/>"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -107,7 +132,7 @@ msgstr "清除"
 #: code:addons/portal/static/src/xml/portal_signature.xml:27
 #, python-format
 msgid "Click here to see your document."
-msgstr ""
+msgstr "单击此处查看您的文档。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -162,7 +187,7 @@ msgstr "创建时间"
 #: model:ir.model.fields,help:portal.field_project_task_portal_url
 #: model:ir.model.fields,help:portal.field_sale_order_portal_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "客户门户 URL"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_display_name
@@ -176,7 +201,7 @@ msgstr "显示名称"
 #: code:addons/portal/static/src/xml/portal_signature.xml:14
 #, python-format
 msgid "Draw your signature"
-msgstr ""
+msgstr "绘制您的签名"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
@@ -193,7 +218,7 @@ msgstr "Email线程"
 #: code:addons/portal/wizard/portal_wizard.py:130
 #, python-format
 msgid "Group %s is not a portal"
-msgstr ""
+msgstr "组 %s 不是门户"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin_id
@@ -274,7 +299,7 @@ msgstr "下一个"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "糟糕！出错了。请尝试重新加载页面并登录。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -300,7 +325,7 @@ msgstr "门户访问管理"
 #: model:ir.model.fields,field_description:portal.field_project_task_portal_url
 #: model:ir.model.fields,field_description:portal.field_sale_order_portal_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "门户访问 URL"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -317,7 +342,7 @@ msgstr "前一个"
 #: code:addons/portal/static/src/js/portal_chatter.js:101
 #, python-format
 msgid "Published on %s"
-msgstr ""
+msgstr "已在 %s 上发布"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -388,7 +413,7 @@ msgstr "用户能够添加或删除的门户"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:11
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "目前没有任何评论。"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -575,7 +600,7 @@ msgstr "你的个人设置里必须要输入电子邮件地址才能发送邮件
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "您的联系人详细信息"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -586,7 +611,7 @@ msgstr "你的详细信息"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "您的文档"
 
 #. module: portal
 #. openerp-web
@@ -637,7 +662,7 @@ msgstr "登入"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "portal.mixin"
-msgstr ""
+msgstr "portal.mixin"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details

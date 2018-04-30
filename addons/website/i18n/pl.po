@@ -3,14 +3,14 @@
 # * website
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
 # Michał <michal.gorecki@esnc.pl>, 2017
 # zbik2607 <darek@krokus.com.pl>, 2017
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2017
-# Jaroslaw Kaczmarski <jarek.pl@gmail.com>, 2017
+# Jaroslaw Kaczmarski, 2017
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2017
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
 # Tadeusz Karpiński <tadeusz.karpinski@openglobe.pl>, 2017
@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
 "Last-Translator: Monika Grzelak <m.e.grzelak@gmail.com>, 2017\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
@@ -102,6 +102,15 @@ msgid ""
 msgstr ""
 "(np. nazwa firmy, lokalizacja) podnoszą zwykle pozycję w rankingu "
 "wyszukiwarek, co zwiększa liczbę osób odwiedzających stronę. Zrób to:"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
+msgstr ""
+",\n"
+"                                                      numer jeden"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -1430,11 +1439,6 @@ msgid "Create Page"
 msgstr "Tworzenie strony"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Create a"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
 msgstr "Utwórz Projekt Google i pobierz klucz"
@@ -1844,6 +1848,11 @@ msgid "Feature Two"
 msgstr "Funkcjonalność nr 2"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_model_fields
+msgid "Fields"
+msgstr "Pola"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid ""
 "Finally don't try to make all your content accessible from the main menu or the footer.\n"
@@ -2187,7 +2196,7 @@ msgstr "Jak uzyskać numer do śledzenia"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7239
+#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
 #: model:ir.model.fields,field_description:website.field_website_page_id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
@@ -2314,6 +2323,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_menu_is_visible
 #: model:ir.model.fields,field_description:website.field_website_page_is_visible
 msgid "Is Visible"
 msgstr "Jest widoczne"
@@ -2340,7 +2350,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:209
+#: code:addons/website/static/src/js/content/website_root.js:212
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2630,6 +2640,11 @@ msgid "Model Data"
 msgstr "Dane modelu"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_model
+msgid "Models"
+msgstr "Modele"
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
@@ -2856,6 +2871,11 @@ msgid "Open Source ERP"
 msgstr "Open Source ERP"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Open Source eCommerce"
+msgstr "Open Source eCommerce"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
 msgstr "Optymalizuj SEO"
@@ -3075,6 +3095,11 @@ msgid ""
 "your environment."
 msgstr ""
 "Pisz na blogach innych osób, forach i stronach związanych z twoją branżą."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Powered by"
+msgstr "Zasilane przez"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -4541,11 +4566,6 @@ msgid "found(s)"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "free website"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
@@ -4718,11 +4738,6 @@ msgstr "website.published.mixin"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "will help you:"
 msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "with"
-msgstr "z"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500

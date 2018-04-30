@@ -7,14 +7,13 @@
 # Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
-# Aleksander, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 07:40+0000\n"
-"PO-Revision-Date: 2018-01-10 07:40+0000\n"
-"Last-Translator: Aleksander, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:42+0000\n"
+"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,12 +92,6 @@ msgstr "%s (kopi)"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopi)"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.portal_invoice_report
-#: model:ir.ui.view,arch_db:account.report_invoice_document
-msgid "&amp;nbsp;"
-msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -1108,6 +1101,11 @@ msgstr "Advarsel kan settes på en partner (konto)"
 #, python-format
 msgid "Account"
 msgstr "Konto"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
+msgid "Account Accountant"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2851,7 +2849,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
 #, python-format
 msgid "Choose Accounting Template"
-msgstr ""
+msgstr "Velg regnskapsmal"
 
 #. module: account
 #. openerp-web
@@ -3827,10 +3825,10 @@ msgstr ""
 "Til den det måtte angå,\n"
 "\n"
 "Vi tillater oss å minne om vårt tilgodehavende. Se detaljer nedenfor.\n"
-"Dersom beløpet allerede er betalt, kan du se bort i fra dette varslet. Hvis ikke bes de betale det totale beløpet som angitt nedenfor.\n"
-"Har du noen spørsmål ang. ditt kundeforhold, vennligst kontakt oss.\n"
+"Hvis beløpet allerede er betalt, kan du se bort fra dette varselet. Hvis ikke, ber vi om at det totale beløpet betales som angitt nedenfor.\n"
+"Har du noen spørsmål angående ditt kundeforhold, vennligst kontakt oss.\n"
 "\n"
-"På forhånd takk for at ditt samarbeid.\n"
+"På forhånd takk!\n"
 "Med vennlig hilsen,"
 
 #. module: account
@@ -6778,14 +6776,6 @@ msgid "No detail"
 msgstr "Ingen detaljer"
 
 #. module: account
-#: code:addons/account/models/company.py:274
-#, python-format
-msgid ""
-"No miscellaneous journal could be found. Please create one before "
-"proceeding."
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
@@ -7829,6 +7819,7 @@ msgid "Print checks to pay your vendors"
 msgstr "Skriv ut sjekker for å betale leverandørene dine"
 
 #. module: account
+#: model:ir.model,name:account.model_product_product
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_id

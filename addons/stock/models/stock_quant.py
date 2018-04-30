@@ -440,7 +440,7 @@ class QuantPackage(models.Model):
 
     def unpack(self):
         for package in self:
-            move_lines_to_remove = self.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
+            move_lines_to_remove = package.move_line_ids.filtered(lambda move_line: move_line.state != 'done')
             if move_lines_to_remove:
                 move_lines_to_remove.write({'result_package_id': False})
             else:

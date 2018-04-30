@@ -9,13 +9,14 @@
 # Martin Trigaux, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
+# morioka hiromichi <hiromichi.morioka@pro-spire.co.jp>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: morioka hiromichi <hiromichi.morioka@pro-spire.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -580,7 +581,7 @@ msgstr "<strong>必須事項</strong><br/>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>Next actions:</strong>"
-msgstr "<strong>次のアクション：</strong>"
+msgstr "<strong>次のアクション:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -590,7 +591,7 @@ msgstr "<strong>オーダ詳細:</strong>"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "<strong>Payment Acquirer:</strong>"
-msgstr ""
+msgstr "<strong>支払方法:</strong>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -811,7 +812,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Accessories: screen, mouse"
-msgstr "アクセサリー：スクリーン、マウス"
+msgstr "アクセサリ: スクリーン、マウス"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
@@ -1143,7 +1144,7 @@ msgstr "最初のプロダクトを作成するには、右上の<i>新規</i>�
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart
 msgid "Click here"
-msgstr ""
+msgstr "ここをクリック"
 
 #. module: website_sale
 #. openerp-web
@@ -2273,6 +2274,7 @@ msgstr "親カテゴリ"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "今支払う"
@@ -2297,6 +2299,11 @@ msgstr "決済サービス"
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "支払情報"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "決済トランザクション"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2974,7 +2981,7 @@ msgstr "eコマースで複数画像表示"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Sign Up"
-msgstr ""
+msgstr "サインアップ"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -3127,7 +3134,7 @@ msgstr "より高価な選択肢を提案する"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr "推奨アクセサリー："
+msgstr "推奨アクセサリ:"
 
 #. module: website_sale
 #: model:sale.order.line,website_description:website_sale.website_sale_order_line_11
@@ -3408,7 +3415,7 @@ msgstr "インポートテンプレートを使用して、すぐにカタログ
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr "買物かごを見る ("
+msgstr "カートを見る ("
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
@@ -3609,6 +3616,11 @@ msgstr "参照"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "あなたのカートは空です！"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "お支払いが承認されました。"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

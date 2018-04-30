@@ -76,7 +76,8 @@ bus.Bus = Widget.extend({
             this.last_partners_presence_check = now;
         }
         var data = {channels: self.channels, last: self.last, options: options};
-        session.rpc('/longpolling/poll', data, {shadow : true}).then(function(result) {
+        // The backend has a maximum cycle time of 50 seconds so give +10 seconds
+        session.rpc('/longpolling/poll', data, {shadow : true, timeout: 60000}).then(function(result) {
             self.on_notification(result);
             if(!self.stop){
                 self.poll();

@@ -15,7 +15,9 @@ Running the server
 
 .. option:: -d <database>, --database <database>
 
-    database used when installing or updating modules.
+    database(s) used when installing or updating modules.
+    Providing a comma-separated list restrict access to databases provided in
+    list.
 
 .. option:: -i <modules>, --init <modules>
 
@@ -54,7 +56,7 @@ Running the server
         Maximum allowed virtual memory per worker. If the limit is exceeded,
         the worker is killed and recycled at the end of the current request.
 
-        Defaults to 640MB.
+        Defaults to 2048MB.
 
     .. option:: --limit-memory-hard <limit>
 
@@ -62,7 +64,7 @@ Running the server
         immediately killed without waiting for the end of the current request
         processing.
 
-        Defaults to 768MB.
+        Defaults to 2560MB.
 
     .. option:: --limit-time-cpu <limit>
 
@@ -165,6 +167,44 @@ database
       databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
       ``Odoo``).
 
+    Since version 11, it's also possible to restrict access to a given database
+    listen by using the --database parameter and specifying a comma-separated
+    list of databases
+
+    When combining the two parameters, db-filter superseed the comma-separated
+    database list for restricting database list, while the comma-separated list
+    is used for performing requested operations like upgrade of modules.
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$
+
+    Restrict access to databases whose name starts with 11
+
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase
+    
+    .. code-block:: bash
+
+        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
+    .. code-block:: bash
+
+        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to databases whose name starts with 11,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
@@ -173,6 +213,13 @@ database
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
+    
+.. option:: --db_sslmode
+
+    Control the SSL security of the connection between Odoo and PostgreSQL.
+    Value should bve one of 'disable', 'allow', 'prefer', 'require',
+    'verify-ca' or 'verify-full'
+    Default value is 'prefer'
 
 built-in HTTP
 -------------

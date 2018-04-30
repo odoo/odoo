@@ -96,14 +96,16 @@ return Widget.extend({
         }
         var user_context = this.getSession().user_context;
         var search = this.searchview.build_search_data();
-        var view_manager = this.findAncestor(function (a) {
-                // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
-                return 'active_view' in a;
-            });
-        var view_context = view_manager ? view_manager.active_view.controller.getContext() : {};
+        // DO NOT FORWARDPORT THIS
+        var controllerContext;
+        this.trigger_up('get_controller_context', {
+            callback: function (ctx) {
+                controllerContext = ctx;
+            },
+        });
         var results = pyeval.eval_domains_and_contexts({
                 domains: search.domains,
-                contexts: [user_context].concat(search.contexts.concat(view_context || [])),
+                contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
                 group_by_seq: search.groupbys || [],
             });
         if (!_.isEmpty(results.group_by)) {

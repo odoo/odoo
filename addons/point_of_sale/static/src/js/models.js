@@ -728,6 +728,7 @@ exports.PosModel = Backbone.Model.extend({
 
             deferred.resolve();
         };
+        img.crossOrigin = 'use-credentials';
         img.src = url;
 
         return deferred;
@@ -1303,6 +1304,7 @@ exports.Orderline = Backbone.Model.extend({
         this.type = 'unit';
         this.selected = false;
         this.id = orderline_id++;
+        this.price_manually_set = false;
 
         if (options.price) {
             this.set_unit_price(options.price);
@@ -1343,6 +1345,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.price = this.price;
         orderline.type = this.type;
         orderline.selected = false;
+        orderline.price_manually_set = this.price_manually_set;
         return orderline;
     },
     set_product_lot: function(product){
@@ -1393,7 +1396,7 @@ exports.Orderline = Backbone.Model.extend({
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
-        if(! keep_price){
+        if(! keep_price && ! this.price_manually_set){
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
             this.order.fix_tax_included_price(this);
         }
@@ -2230,7 +2233,11 @@ exports.Order = Backbone.Model.extend({
     set_pricelist: function (pricelist) {
         var self = this;
         this.pricelist = pricelist;
-        _.each(this.get_orderlines(), function (line) {
+
+        var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
+            return ! line.price_manually_set;
+        });
+        _.each(lines_to_recompute, function (line) {
             line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity()));
             self.fix_tax_included_price(line);
         });
@@ -2353,7 +2360,7 @@ exports.Order = Backbone.Model.extend({
         this.assert_editable();
         var newPaymentline = new exports.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
         if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
-            newPaymentline.set_amount( Math.max(this.get_due(),0) );
+            newPaymentline.set_amount( this.get_due() );
         }
         this.paymentlines.add(newPaymentline);
         this.select_paymentline(newPaymentline);
@@ -2517,10 +2524,10 @@ exports.Order = Backbone.Model.extend({
                 }
             }
         }
-        return round_pr(Math.max(0,due), this.pos.currency.rounding);
+        return round_pr(due, this.pos.currency.rounding);
     },
     is_paid: function(){
-        return this.get_due() === 0;
+        return this.get_due() <= 0;
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){

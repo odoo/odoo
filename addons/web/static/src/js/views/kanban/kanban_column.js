@@ -103,7 +103,7 @@ var KanbanColumn = Widget.extend({
             // should find a way to use the touch events to make sortable work.
             this.$el.sortable({
                 connectWith: '.o_kanban_group',
-                containment: this.draggable ? '.o_kanban_view' : 'parent',
+                containment: this.draggable ? false : 'parent',
                 revert: 0,
                 delay: 0,
                 items: '> .o_kanban_record:not(.o_updating)',

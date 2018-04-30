@@ -9,13 +9,14 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +28,19 @@ msgstr ""
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+msgstr "<%s> 个交易 (%s) 发票确认失败：<%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
 #, python-format
 msgid "<%s> transaction (%s) failed : <%s>"
-msgstr ""
+msgstr "<%s> 个交易 (%s) 失败：<%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "<%s> 个交易 (%s) 无效状态：%s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -87,7 +88,13 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>交易</strong>"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: code:addons/account_payment/models/payment.py:80
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -99,11 +106,6 @@ msgstr "如果我们在服务器存储你的支付信息,订阅将自动支付�
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
 msgstr "发票"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "发票已成功支付."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
@@ -155,20 +157,28 @@ msgid "Status"
 msgstr "状态"
 
 #. module: account_payment
+#: code:addons/account_payment/models/payment.py:81
+#, python-format
+msgid ""
+"The invoice was not confirmed despite response from the acquirer (%s): "
+"invoice amount is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
-msgstr ""
+msgstr "处理您的付款时出现一处错误：无法验证发票。"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
-msgstr ""
+msgstr "处理您的付款时出现一处错误：无效的发票状态。 "
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "处理您的付款时出现一处错误：无效发票。"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -203,3 +213,8 @@ msgstr "您有一个付款的错误：无效的信用卡号"
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "交易"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""

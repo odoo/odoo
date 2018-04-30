@@ -3,9 +3,9 @@
 # * auth_signup
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
-# Henri W Sirkia <henri@sirkia.es>, 2017
+# Martin Trigaux, 2017
+# Antonio Trueba, 2017
+# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
@@ -14,13 +14,14 @@
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
+# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Ana Juaristi <ajuaristio@gmail.com>, 2017\n"
+"Last-Translator: e2f_EPV Translator <e2f_EPV@outlook.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,10 +71,10 @@ msgstr ""
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
 "    <p>Estimad@ ${object.name},</p>\n"
-"    <p>Una petición de de reinicio de contraseña a sido pedida para la cuenta de Odoo asociada a esta cuenta de email.</p>\n"
-"    <p>Puede cambiar la contraseña siguiendo el siguiente enlace que sera valido las siguientes 24 horas:</p>\n"
+"    <p>Es requerida una petición de reinicio de contraseña para la cuenta de Odoo asociada a esta cuenta de email.</p>\n"
+"    <p>Puede cambiar la contraseña siguiendo el siguiente enlace que será valido las siguientes 24 horas:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
-"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Cambie contraseña</a>\n"
+"        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Cambiar contraseña</a>\n"
 "    </div>\n"
 "    <p>Si no esperaba este mensaje puede ignorarlo de forma segura.</p>\n"
 "    <p>Un saludo,</p>\n"
@@ -190,6 +191,39 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Estimado/a ${object.name}:</p>\n"
+"    <p>\n"
+"        Su cuenta se ha creado correctamente.\n"
+"    </p>\n"
+"    <p>\n"
+"        Usuario: ${object.email}\n"
+"        <br/>\n"
+"        Contraseña: ${ctx['password']}\n"
+"    </p>\n"
+"    <p>\n"
+"        Puede acceder a su cuenta desde el siguiente enlace:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Ir a Mi cuenta</a>\n"
+"    </div>\n"
+"    <p>Un saludo,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Enviado por ${user.company_id.name} utilizando <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -344,7 +378,7 @@ msgstr "Nunca conectado"
 #: code:addons/auth_signup/controllers/main.py:73
 #, python-format
 msgid "No login provided."
-msgstr "No se ha facilitado ningún login"
+msgstr "No se ha facilitado ningún inicio de sesión"
 
 #. module: auth_signup
 #: selection:res.config.settings,auth_signup_uninvited:0
@@ -359,23 +393,23 @@ msgstr "Contraseña"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "Reiniciar contraseña"
+msgstr "Reinicio de Contraseña"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Restablecer contraseña"
+msgstr "Reinicio de contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:121
 #, python-format
 msgid "Passwords do not match; please retype them."
-msgstr "La contraseña no coincide, por favor, vuelva a escribirla."
+msgstr "La contraseña no coincide; por favor, vuelva a escribirla."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr "Restablecer contraseña"
+msgstr "Restablecer Contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:110
@@ -439,13 +473,13 @@ msgstr "El acceso no está permitido a usuarios que no hayan sido invitados"
 #: code:addons/auth_signup/models/res_partner.py:146
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr ""
+msgstr "El token de registro \"%s\" ya no es válido"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:142
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr ""
+msgstr "El token de registro \"%s\" no es válido"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state

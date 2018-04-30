@@ -5,6 +5,7 @@ var config = require('web.config');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -581,6 +582,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection is reset on reload', function (assert) {
+        assert.expect(5);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no record selected)");
+
+        // select first record
+        var $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        $firstRowSelector.click();
+        assert.ok($firstRowSelector.is(':checked'), "first row should be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '10',
+            "total should be 10 (first record selected)");
+
+        // reload
+        list.reload();
+        $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        assert.notOk($firstRowSelector.is(':checked'),
+            "first row should no longer be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no more record selected)");
+
+        list.destroy();
+    });
+
     QUnit.test('aggregates are computed correctly', function (assert) {
         assert.expect(4);
 
@@ -656,6 +691,25 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
             "current total should now be 37");
+        list.destroy();
+    });
+
+    QUnit.test('aggregates are formatted according to field widget', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux" widget="float_time" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:24',
+            "total should be formatted as a float_time");
+
         list.destroy();
     });
 
@@ -1928,7 +1982,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -1962,9 +2016,14 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 3,
             "the foo field widget parent cell should now be readonly again");
 
-        // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        list.$('thead').click();
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered as editable again");
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
+            "the foo field widget parent cell should not be readonly again");
+
+        // Click outside to leave edition mode
+        list.$el.click();
 
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
             "there should be 2 readonly foo cells in readonly mode");
@@ -2692,10 +2751,13 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('grouped list are not editable', function (assert) {
+    QUnit.test('grouped list are not editable (ungrouped first)', function (assert) {
         // Editable grouped list views are not supported, so the purpose of this
         // test is to check that when a list view is grouped, its editable
         // attribute is ignored
+        // In this test, the view isn't grouped at the beginning, so it is first
+        // editable, and then it is reloaded with a groupBy and is no longer
+        // editable
         assert.expect(5);
 
         var list = createView({
@@ -2731,6 +2793,59 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('grouped list are not editable (grouped first)', function (assert) {
+        // Editable grouped list views are not supported, so the purpose of this
+        // test is to check that when a list view is grouped, its editable
+        // attribute is ignored
+        // In this test, the view is grouped at the beginning, so it isn't
+        // editable, and then it is reloaded with no groupBy and becomes editable
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/><field name="bar"/></tree>',
+            intercepts: {
+                switch_view: function (event) {
+                    var resID = event.data.res_id || false;
+                    assert.step('switch view ' + event.data.view_type + ' ' + resID);
+                },
+            },
+            groupBy: ['bar'],
+        });
+
+        // the view being grouped, it is not editable, so clicking on a record
+        // should open the form view
+        list.$('.o_group_header:first').click(); // open first group
+        list.$('.o_data_cell:first').click();
+
+        // for the same reason, clicking on 'Create' should open the form view
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            "two switch view to form should have been requested");
+
+        // reload without groupBy
+        list.reload({groupBy: []});
+
+        // as the view is no longer grouped, it is editable, so clicking on a
+        // row should switch it in edition
+        list.$('.o_data_cell:first').click();
+
+        assert.verifySteps(['switch view form 1', 'switch view form false'],
+            "no more switch view should have been requested");
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "a row should be in edition");
+
+        // clicking on the body should leave the edition
+        $('body').click();
+        assert.strictEqual(list.$('.o_selected_row').length, 0,
+            "the row should no longer be in edition");
+
+        list.destroy();
+    });
+
     QUnit.test('field values are escaped', function (assert) {
         assert.expect(1);
         var value = '<script>throw Error();</script>';
@@ -2758,6 +2873,28 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        list.$('input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should have 4 data row in list");
+        assert.strictEqual(list.$('tr.o_data_row.o_selected_row').length, 0,
+            "no rows should be selected");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        list.destroy();
+    });
+
+    QUnit.test('pressing ESC discard the current line changes (with required)', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo" required="1"/></tree>',
         });
 
         list.$buttons.find('.o_list_button_add').click();
@@ -3222,6 +3359,61 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row').length, 2,
             'should display 2 data rows');
         list.destroy();
+    });
+
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        var params = {
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="date"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="m2o"/>' +
+                    '<field name="o2m"/>' +
+                    '<field name="m2m"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="datetime"/>' +
+                    '<field name="reference"/>' +
+                '</tree>',
+        };
+
+        var list = createView(params);
+        list.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        list = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        list.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber+1, "every widget must be destroyed exept the parent");
+
+        list.destroy();
+
+        testUtils.unpatch(mixins.ParentedMixin);
     });
 
 });

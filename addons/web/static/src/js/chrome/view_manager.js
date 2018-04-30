@@ -46,6 +46,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         push_state: function(event) {
             this.do_push_state(event.data);
         },
+        get_controller_context: '_onGetControllerContext',
         switch_to_previous_view: '_onSwitchToPreviousView',
     },
     /**
@@ -631,6 +632,21 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    // DO NOT FORWARDPORT THIS
+    /**
+     * Handles a context request: provides to the caller the context of the
+     * active controller.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.callback used to send the requested context
+     */
+    _onGetControllerContext: function (ev) {
+        ev.stopPropagation();
+        var controller = this.active_view && this.active_view.controller;
+        var context = controller && controller.getContext();
+        ev.data.callback(context);
+    },
     /**
      * This handler is probably called by a sub form view when the user discards
      * its value.  The usual result of this is that we switch back to the

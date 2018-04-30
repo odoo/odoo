@@ -606,6 +606,55 @@ class StockMove(TransactionCase):
         quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
         self.assertEqual(len(quants), 0)
 
+    def test_mixed_tracking_reservation_8(self):
+        """ Send one product tracked by lot to a customer. In your stock, there are one tracked and
+        one untracked quant. Reserve the move, then edit the lot to one not present in stock. The
+        system will update the reservation and use the untracked quant. Now unreserve, no error
+        should happen
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product2.id,
+        })
+
+        # at first, we only make the tracked quant available in stock to make sure this one is selected
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_mixed_tracking_reservation_7',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot1.id)
+
+        # change the lot_id to one not available in stock while an untracked quant is available
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product2.id,
+        })
+        move1.move_line_ids.lot_id = lot2
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot2.id)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+
+        # unreserve
+        move1._do_unreserve()
+
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(len(move1.move_line_ids), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
         the receipt move line.
@@ -755,6 +804,28 @@ class StockMove(TransactionCase):
         customer_quants = self.env['stock.quant']._gather(self.product1, self.customer_location)
         self.assertEqual(customer_quants.quantity, 30)
         self.assertEqual(customer_quants.reserved_quantity, 0)
+
+    def test_availability_5(self):
+        """ Check that rerun action assign only create new stock move
+        lines instead of adding quantity in existing one.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 2.0)
+        # move from shelf1
+        move = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 4.0)
+        move._action_assign()
+
+        self.assertEqual(len(move.move_line_ids), 4.0)
 
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
@@ -2285,19 +2356,18 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location, lot_id=lot2, package_id=package1), 1.0)
 
     def test_immediate_validate_1(self):
-        """ Create a picking and simulates validate button effect.
-            Move line quantity should be set to their reservation quantity automatically
+        """ In a picking with a single available move, clicking on validate without filling any
+        quantities should open a wizard asking to process all the reservation (so, the whole move).
         """
-        owner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].create({'name': 'Jean'})
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
-            'partner_id': owner.id,
+            'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,
         })
-        # move from shelf1
         self.env['stock.move'].create({
-            'name': 'test_edit_moveline_1',
+            'name': 'test_immediate_validate_1',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'picking_id': picking.id,
@@ -2308,29 +2378,28 @@ class StockMove(TransactionCase):
         picking.action_confirm()
         picking.action_assign()
         res_dict = picking.button_validate()
+        self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         wizard.process()
-
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
 
     def test_immediate_validate_2(self):
-        """ Create a picking and simulates validate button effect.
-            Move line quantity should be set to their reservation quantity automatically.
-            If the Initial demand quantity is greater than the available quantity. It should only
-            set the quantity done to the available(reserved) quantity and create a backorder with the
-            remaining quantity.
+        """ In a picking with a single partially available move, clicking on validate without
+        filling any quantities should open a wizard asking to process all the reservation (so, only
+        a part of the initial demand). Validating this wizard should open another one asking for
+        the creation of a backorder. If the backorder is created, it should contain the quantities
+        not processed.
         """
-        owner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].create({'name': 'Jean'})
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 5.0)
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'partner_id': owner.id,
+            'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
-        # move from shelf1
         self.env['stock.move'].create({
-            'name': 'test_edit_moveline_1',
+            'name': 'test_immediate_validate_2',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
@@ -2340,67 +2409,96 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
+        # Only 5 products are reserved on the move of 10, click on `button_validate`.
         res_dict = picking.button_validate()
+        self.assertEqual(res_dict.get('res_model'), 'stock.immediate.transfer')
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
         res_dict_for_back_order = wizard.process()
+        self.assertEqual(res_dict_for_back_order.get('res_model'), 'stock.backorder.confirmation')
         backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        # Chose to create a backorder.
         backorder_wizard.process()
 
-        self.assertEqual(len(picking.move_lines.move_line_ids), 1)
+        # Only 5 products should be processed on the initial move.
+        self.assertEqual(picking.move_lines.state, 'done')
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
-        self.assertEqual(picking.move_lines.move_line_ids.qty_done, 5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
 
+        # The backoder should contain a move for the other 5 produts.
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(len(backorder), 1.0)
         self.assertEqual(backorder.move_lines.product_uom_qty, 5.0)
 
     def test_immediate_validate_3(self):
-        """ Create a picking and simulates validate button effect.
-            In case of a force assign it should ignore the reserved quantity and set
-            the quantity done to the initial demand. It should also create the move line.
+        """ In a picking with two moves, one partially available and one unavailable, clicking
+        on validate without filling any quantities should open a wizard asking to process all the
+        reservation (so, only a part of one of the moves). Validating this wizard should open
+        another one asking for the creation of a backorder. If the backorder is created, it should
+        contain the quantities not processed.
         """
-        owner = self.env['res.partner'].create({'name': 'Jean'})
+        product5 = self.env['product.product'].create({
+            'name': 'Product 5',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'partner_id': owner.id,
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_dest_id': self.pack_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
         })
-        # move from shelf1
-        self.env['stock.move'].create({
-            'name': 'test_edit_moveline_1',
+        product1_move = self.env['stock.move'].create({
+            'name': 'product1_move',
             'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_dest_id': self.pack_location.id,
             'picking_id': picking.id,
             'product_id': self.product1.id,
             'product_uom': self.uom_unit.id,
-            'product_uom_qty': 10.0,
+            'product_uom_qty': 100,
+        })
+        product5_move = self.env['stock.move'].create({
+            'name': 'product3_move',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'picking_id': picking.id,
+            'product_id': product5.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100,
         })
         picking.action_confirm()
-        picking.force_assign()
-        res_dict = picking.button_validate()
-        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        picking.action_assign()
 
-        self.assertEqual(picking.move_lines.quantity_done, 10.0)
-        # Check move_lines data
-        self.assertEqual(len(picking.move_lines.move_line_ids), 1)
-        self.assertEqual(picking.move_lines.move_line_ids.qty_done, 10.0)
-        self.assertEqual(picking.move_lines.move_line_ids.product_qty, 0.0)
-        # Check quants data
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, allow_negative=True), -10.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
+        # product1_move should be partially available (1/100), product5_move should be totally
+        # unavailable (0/100)
+        self.assertEqual(product1_move.state, 'partially_available')
+        self.assertEqual(product5_move.state, 'confirmed')
+
+        action = picking.button_validate()
+        self.assertEqual(action.get('res_model'), 'stock.immediate.transfer')
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        action = wizard.process()
+        self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
+        self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
+        wizard = self.env[(action.get('res_model'))].browse(action.get('res_id'))
+        wizard.process()
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(len(backorder), 1.0)
+
+        # The backorder should contain 99 product1 and 100 product5.
+        for backorder_move in backorder.move_lines:
+            if backorder_move.product_id.id == self.product1.id:
+                self.assertEqual(backorder_move.product_qty, 99)
+            elif backorder_move.product_id.id == product5.id:
+                self.assertEqual(backorder_move.product_qty, 100)
 
     def test_immediate_validate_4(self):
-        """ Create a picking and simulates validate button effect.
-            If the product is tracked by lot. The user should set the lot
-            and the quantity done himself before validate. Otherwise it should
-            return a UserError.
+        """ In a picking with a single available tracked by lot move, clicking on validate without
+        filling any quantities should open an UserError.
         """
-        owner = self.env['res.partner'].create({'name': 'Jean'})
+        partner = self.env['res.partner'].create({'name': 'Jean'})
         lot1 = self.env['stock.production.lot'].create({
             'name': 'lot1',
             'product_id': self.product3.id,
@@ -2409,12 +2507,12 @@ class StockMove(TransactionCase):
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
-            'partner_id': owner.id,
+            'partner_id': partner.id,
             'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         # move from shelf1
         self.env['stock.move'].create({
-            'name': 'test_edit_moveline_1',
+            'name': 'test_immediate_validate_4',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_id': picking.id,
@@ -2424,10 +2522,11 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
+        # No quantites/lot filled, it should raise.
         with self.assertRaises(UserError):
             picking.button_validate()
         picking.move_lines.move_line_ids[0].qty_done = 5.0
-        # We do not need to catch wizard since everything is already defined and the action_done will be processed immediately
+        # All the information are present (lots and quantities), the wizard won't be opened.
         picking.button_validate()
 
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
@@ -2464,9 +2563,9 @@ class StockMove(TransactionCase):
         return picking
 
     def test_immediate_validate_5(self):
-        """ Create a picking and simulates validate button effect.
-            Test that tracked products can be received without specifying a serial
-            number when the picking type is configured that way.
+        """ In a receipt with a single tracked by serial numbers move, clicking on validate without
+        filling any quantities nor lot should open an UserError except if the picking type is
+        configured to allow otherwise.
         """
         picking_type_id = self.env.ref('stock.picking_type_in')
         product_id = self.product2
@@ -2484,23 +2583,17 @@ class StockMove(TransactionCase):
         self.assertEqual(picking.state, 'done')
 
     def test_immediate_validate_6(self):
-        """ Create a picking and simulates validate button effect.
-            This tests three cases:
-            - if a user has processed no quantities and at least one product is tracked,
-              he should specify lots
-            - if a user has processed some quantities then it's ok because a backorder
-              will be created for the ones not filled in
-            - if a user overprocesses a move he will be asked to confirm if this is ok
+        """ In a receipt picking with two moves, one tracked and one untracked, clicking on
+        validate without filling any quantities should displays an UserError as long as no quantity
+        done and lot_name is set on the tracked move. Now if the user validates the picking, the
+        wizard telling the user all reserved quantities will be processed will NOT be opened. This
+        wizard is only opene if no quantities were filled. So validating the picking at this state
+        will open another wizard asking for the creation of a backorder. Now, if the user processed
+        on the second move more than the reservation, a wizard will ask him to confirm.
         """
         picking_type = self.env.ref('stock.picking_type_in')
         picking_type.use_create_lots = True
         picking_type.use_existing_lots = False
-        lot1 = self.env['stock.production.lot'].create({
-            'name': 'lot1',
-            'product_id': self.product3.id,
-        })
-        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
-        self.env['stock.quant']._update_available_quantity(self.product3, self.stock_location, 1, lot_id=lot1)
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2526,16 +2619,15 @@ class StockMove(TransactionCase):
         })
         picking.action_confirm()
         picking.action_assign()
+
         with self.assertRaises(UserError):
             picking.button_validate()
-
         product3_move.move_line_ids[0].qty_done = 1
-        # should still complain about lots because no lot_{name,id} was set
         with self.assertRaises(UserError):
             picking.button_validate()
-
         product3_move.move_line_ids[0].lot_name = '271828'
         action = picking.button_validate()  # should open backorder wizard
+
         self.assertTrue(isinstance(action, dict), 'Should open backorder wizard')
         self.assertEqual(action.get('res_model'), 'stock.backorder.confirmation')
 
@@ -2543,6 +2635,33 @@ class StockMove(TransactionCase):
         action = picking.button_validate()  # should request confirmation
         self.assertTrue(isinstance(action, dict), 'Should open overprocessing wizard')
         self.assertEqual(action.get('res_model'), 'stock.overprocessed.transfer')
+
+    def test_immediate_validate_7(self):
+        """ In a picking with a single unavailable move, clicking on validate without filling any
+        quantities should display an UserError telling the user he cannot process a picking without
+        any processed quantity.
+        """
+        partner = self.env['res.partner'].create({'name': 'Jean'})
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': partner.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        self.env['stock.move'].create({
+            'name': 'test_immediate_validate_2',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_id': picking.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        # No products are reserved on the move of 10, click on `button_validate`.
+        with self.assertRaises(UserError):
+            picking.button_validate()
 
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({

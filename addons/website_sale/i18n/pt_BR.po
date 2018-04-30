@@ -8,7 +8,7 @@
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2017
 # danimaribeiro <danimaribeiro@gmail.com>, 2017
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Rui Andrada <shingonoide@gmail.com>, 2017
 # Peter Leaf <pablleaf@gmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
@@ -16,15 +16,15 @@
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2017
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2017
 # Hélio Dias de Brito Teixeira <helio.dbt@gmail.com>, 2017
-# SILMAR PINHEIRO VIANA <pinheirosilmar@gmail.com>, 2017
-# Danilo Rodrigues <danilo.i997@hotmail.com>, 2017
+# Silmar <pinheirosilmar@gmail.com>, 2017
+# Danilo Rodrigues, 2017
 # mariana rodrigues <mariana12v@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: mariana rodrigues <mariana12v@gmail.com>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -2229,6 +2229,7 @@ msgstr "Categoria superior(pai)"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:756
+#: model:ir.ui.view,arch_db:website_sale.payment
 #, python-format
 msgid "Pay Now"
 msgstr "Pagar agora"
@@ -2253,6 +2254,11 @@ msgstr "Métodos de Pagamento"
 #: model:ir.ui.view,arch_db:website_sale.report_shop_saleorder_document
 msgid "Payment Information"
 msgstr "Informação do Pagamento"
+
+#. module: website_sale
+#: model:ir.model,name:website_sale.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transação do Pagamento"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3562,6 +3568,11 @@ msgstr "Sua Referência"
 #: model:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "Your cart is empty!"
 msgstr "Seu carrinho está vazio!"
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart

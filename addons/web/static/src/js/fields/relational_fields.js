@@ -1007,7 +1007,10 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onDiscardChanges: function (ev) {
-        ev.data.fieldName = this.name;
+        if (ev.target !== this) {
+            ev.stopPropagation();
+            this.trigger_up('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
+        }
     },
     /**
      * Called when the renderer asks to edit a line, in that case simply tells
@@ -1104,6 +1107,7 @@ var FieldX2Many = AbstractField.extend({
      * @param {OdooEvent} event
      */
     _onResequence: function (event) {
+        event.stopPropagation();
         var self = this;
         this.trigger_up('freeze_order', {id: this.value.id});
         var rowIDs = event.data.rowIDs.slice();

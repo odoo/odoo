@@ -3,19 +3,19 @@
 # * event
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# Bohdan Lisnenko, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # zhanna shewchuk <zhanna_shewchuk@rambler.ru>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Zoriana Zaiats, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,18 +82,6 @@ msgid ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
-"                            <td style=\"padding:25px 0px; text-align:center;\">\n"
-"                                <p>\n"
-"                                    Don't forget to <strong>add it to your calendar</strong>:\n"
-"                                </p>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
@@ -163,6 +151,16 @@ msgid ""
 "                            </tr>\n"
 "                        </table>\n"
 "                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Add this event to your calendar</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -385,22 +383,10 @@ msgstr "%s (копія)"
 
 #. module: event
 #: model:event.event,description:event.event_0
-msgid ""
-"1 business room: to discuss implementation methodologies, best sales "
-"practices, etc."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "1 workshop room: mainly for developers."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"2 technical rooms: one dedicated to advanced Odoo developers, one for new "
-"developers."
-msgstr ""
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "5 Intensive Days"
+msgstr "5 інтенсивних днів"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -414,27 +400,29 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_0
 msgid ""
-"<em>(OpenElec Applications reserves the right to cancel, re-name or re-"
-"locate<br>the event or change the dates on which it is held.)</em>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
+" Programming</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">вивчити "
+"<i>програмування Odoo</i></font>"
 
 #. module: event
 #: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
 msgid ""
-"<em>(YourCompany reserves the right to cancel, re-name or re-locate<br>the "
-"event or change the dates on which it is held.)</em>"
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
+"<i>technical aspects</i></font>"
 msgstr ""
+"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">вивчити "
+"<i>технічні аспекти</i></font>"
 
 #. module: event
-#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_3
 msgid ""
-"<em>If you wish to make a presentation, please send your topic proposal as "
-"soon as possible for approval to Mr. Famke Jenssens at ngh (a) yourcompany "
-"(dot) com. The presentations should be, for example, a presentation of a "
-"community module, a case study, methodology feedback, technical, etc. Each "
-"presentation must be in English.</em>"
+"<font style=\"font-size: 24px;\">to learn <i>business applications "
+"development</i></font>"
 msgstr ""
+"<font style=\"font-size: 24px;\">вивчити <i>розробку бізнес-"
+"додатків</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -446,10 +434,46 @@ msgstr ""
 "<b>До</b>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to create dynamic page interacting with the ORM.</i>"
+msgstr ""
+"<i>Ви зможете створювати динамічні сторінки, що взаємодіють з ORM.</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop a full application with backend and user "
+"interface.</i>"
+msgstr ""
+"<i>Ви зможете розробляти повноцінні додатки з бек-ендом та персональним "
+"інтерфейсом.</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
+msgstr ""
+"<i>Ви зможете розробляти прості динамічні компоненти в HTML-сторінках.</i>"
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr " <i>до</i>"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "<small>John Doe, CEO</small>"
+msgstr "<small>John Doe, Генеральний директор</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -460,14 +484,20 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "<strong>5-days Technical Training</strong>"
+msgid ""
+"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
+"developers who need to grasp knowledge of the <strong>business applications "
+"development </strong>process. This course is for new developers or for IT "
+"professionals eager to learn more about technical aspects.</span>"
 msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "<strong>Cancellation Policy: </strong>"
-msgstr ""
+"<span style=\"text-align: -webkit-center; \">Даний курс розрахований на "
+"розробників, які хочуть отримати знання щодо процесу <strong>розробки "
+"програм для бізнесу </strong>. Це курс для розробників-новачків і "
+"професіоналів, які хочуть дізнатися більше про технічні аспекти "
+"розробки.</span>"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -475,16 +505,8 @@ msgid "<strong>Conference on Business Apps</strong>"
 msgstr "Конференція з Бізнес-додатків"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "<strong>Course summary:</strong>"
-msgstr ""
-
-#. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "<strong>Functional Webinar</strong>"
-msgstr ""
-
-#. module: event
 #: model:event.event,description:event.event_3
 msgid ""
 "<strong>Having attended this course, participants should be able "
@@ -493,45 +515,33 @@ msgstr "<strong>Відвідавши цей курс, учасники мати�
 
 #. module: event
 #: model:event.event,description:event.event_0
-msgid "<strong>Join us to our main event of the year: the Open Days</strong>"
-msgstr ""
-
-#. module: event
 #: model:event.event,description:event.event_1
-msgid "<strong>Objective:</strong>"
-msgstr ""
-
-#. module: event
 #: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
 msgid "<strong>Objectives:</strong>"
 msgstr "<strong>Мета:</strong>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "<strong>Our prices include:</strong>"
 msgstr "<strong>В ціну входить:</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
 msgid "<strong>Program:</strong>"
 msgstr "<strong>План:</strong>"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
-msgid "<strong>Requirements</strong>"
-msgstr ""
+msgid "<strong>Requirements:</strong>"
+msgstr "<strong>Вимоги:</strong>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid "<strong>What's new for this year?</strong>"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "<strong>Where to find us:</strong>"
 msgstr "<strong>Де нас знайти:</strong>"
 
@@ -548,17 +558,17 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Advanced JQuery"
+msgstr "Розширений JQuery"
+
+#. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "After each registration"
 msgstr "Після кожної реєстрації"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"After registering, you will receive a link and password by email before the "
-"start of the session. If you have a problem to connect, please contact us at"
-msgstr ""
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -579,14 +589,11 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "Ask your questions to our expert;"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "Assess whether your expectations are met;"
-msgstr ""
+#: model:event.event,description:event.event_3
+msgid "Arrays"
+msgstr "Списки"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -684,17 +691,37 @@ msgid "Before the event"
 msgstr "До початку"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "Best regards,"
 msgstr "З повагою, "
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Bootstrap CSS"
+msgstr "Bootstrap CSS"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
 msgstr "Візьміть з собою свій лептоп."
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Building a Full Application"
+msgstr "Створити повноцінний додаток"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Calling the ORM"
+msgstr "Виклик ORM"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -728,11 +755,6 @@ msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
 msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (USA)"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "Chaussée de Namur 69, 1300 Wavre, Belgium"
-msgstr ""
-
-#. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
 msgstr ""
@@ -760,7 +782,7 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: event
-#: code:addons/event/models/event.py:475
+#: code:addons/event/models/event.py:481
 #, python-format
 msgid "Compose Email"
 msgstr "Створити лист"
@@ -774,11 +796,6 @@ msgstr "Конференція"
 #: model:event.event,name:event.event_2
 msgid "Conference on Business Apps"
 msgstr "Конференція з Бізнес-додатків"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -828,9 +845,23 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Controllers and Views"
+msgstr "Контроль та перегляди"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
 msgstr "Країна"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Course Summary"
+msgstr "Підсумок курсу"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
@@ -855,16 +886,37 @@ msgid "Created on"
 msgstr "Дата створення"
 
 #. module: event
-#: code:addons/event/models/event.py:438
+#: code:addons/event/models/event.py:444
 #, python-format
 msgid "Customer"
 msgstr "Клієнт"
 
 #. module: event
-#: code:addons/event/models/event.py:440
+#: code:addons/event/models/event.py:446
 #, python-format
 msgid "Customer Email"
 msgstr "Email клієнта"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 1"
+msgstr "День 1"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 2"
+msgstr "День 2"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Day 3"
+msgstr "День 3"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -883,14 +935,11 @@ msgid "Description"
 msgstr "Опис"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
 msgstr "Розробити новий модуль для окремої програми"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "Discover how to navigate in our software;"
-msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_display_name
@@ -909,6 +958,13 @@ msgid "Display order"
 msgstr "Порядок відображення"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Dive into Strings"
+msgstr "Зануритись у Рядки"
+
+#. module: event
 #: selection:event.event,state:0
 msgid "Done"
 msgstr "Виконано"
@@ -921,13 +977,6 @@ msgid ""
 msgstr ""
 "Під час цієї конференції наша команда надасть детальний огляд наших бізнес-"
 "додатків. Ви будете знати всі переваги його використання."
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"Each session lasts approximately one hour and is free, we just ask you to "
-"register to receive access codes."
-msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -1101,17 +1150,6 @@ msgid "Events in New state"
 msgstr "Змінили статус"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"Every year we invite our community, partners and end-users to come and meet "
-"us! It's the ideal event to get together and present new features, roadmap "
-"of future versions, achievements of the software, workshops, training "
-"sessions, etc.... This event is also an opportunity to showcase our "
-"partners' case studies, methodology or developments. Be there and see "
-"directly from the source the features of the version 8!"
-msgstr ""
-
-#. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
 msgstr "Виставка"
@@ -1132,9 +1170,7 @@ msgid "Finish Event"
 msgstr "Завершення заходу"
 
 #. module: event
-#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "For any additional information, please contact us at"
 msgstr "За додатковою інформацією, зв'яжіться з нами"
 
@@ -1160,11 +1196,6 @@ msgstr ""
 " не буде затверджено (натисніть 0, щоб ігнорувати це правило)"
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid "For more information on the program, please explore"
-msgstr ""
-
-#. module: event
 #: model:event.event,name:event.event_1
 msgid "Functional Webinar"
 msgstr "Вебінар-практикум"
@@ -1173,6 +1204,13 @@ msgstr "Вебінар-практикум"
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
 msgstr "Функціональний потік основних додатків;"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Functions"
+msgstr "Функції"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1186,10 +1224,35 @@ msgid "Having attended this conference, participants should be able to:"
 msgstr "Відвідавши цей курс, учасники матимуть змогу:"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Hello World"
+msgstr "Привіт, світ!"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Hour(s)"
 msgstr "Година (години)"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "How to Debug"
+msgstr "Як налагодити"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid ""
+"I did not expect such a great learning experience. I feel like I can develop"
+" anything now."
+msgstr ""
+"Я не очікував такого чудового досвіду навчання. Я відчуваю, що зараз я можу "
+"розвивати щось."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_id
@@ -1216,28 +1279,51 @@ msgstr ""
 "встановлено на \"Скасовано\"."
 
 #. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"If you have a question<strong> concerning the content of the "
-"training</strong>, please contact"
-msgstr ""
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
 msgstr "Безпосередньо"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
 msgstr "Встановіть та адмініструйте свій власний сервер;"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Integrated Help"
+msgstr "Комплексна допомога"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_nbr
 msgid "Interval"
 msgstr "Інтервал"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to JQuery"
+msgstr "Вступ до JQuery"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to Javascript"
+msgstr "Вступ до Javascript"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Introduction to QWeb"
+msgstr "Вступ до QWeb"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1315,8 +1401,12 @@ msgstr "Розташування"
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_2
 #: model:event.event,description:event.event_3
+msgid "Loops"
+msgstr "Повторення"
+
+#. module: event
+#: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
 msgstr "Luigi Roni, старший менеджер подій"
 
@@ -1399,17 +1489,17 @@ msgid "Minimum Registrations"
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Modules"
+msgstr "Модулі"
+
+#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Month(s)"
 msgstr "Місяць (місяці)"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"More information about our Headquarter office (directions, transports, "
-"parking, hotels, ...), please have a look at"
-msgstr ""
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1423,7 +1513,7 @@ msgid "No more available seats."
 msgstr "Не залишилося вільних місць."
 
 #. module: event
-#: code:addons/event/models/event.py:357
+#: code:addons/event/models/event.py:363
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Не залишилося вільних місць."
@@ -1443,6 +1533,20 @@ msgstr "Кількість учасників"
 #: model:ir.model.fields,help:event.field_res_users_event_count
 msgid "Number of events the partner has participated."
 msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Official Website"
+msgstr "Офіційний сайт Odoo "
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Odoo Web Client"
+msgstr "Клієнт Odoo Web "
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1492,12 +1596,6 @@ msgid "Open Days in Los Angeles"
 msgstr "Відкриті дні у Лос-Анджелесі"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, United States"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
 msgid "Organizer"
 msgstr "Організатор"
@@ -1508,6 +1606,8 @@ msgid "Participant"
 msgstr "Учасник"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
@@ -1517,6 +1617,8 @@ msgstr ""
 " мови програмування Python."
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
@@ -1555,6 +1657,20 @@ msgstr "Менеджмент проектів, Управління персон
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
 msgstr ""
 "Купівля, продаж та посилення Управління закупівлями, Фінансовий облік."
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Python Objects"
+msgstr "Об'єкти Python"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Read Great Contents"
+msgstr "Читати великий зміст"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1623,9 +1739,23 @@ msgid "Registration mail"
 msgstr "Реєстраційний лист"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Report Engine"
+msgstr "Генератор звітів"
+
+#. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
 msgstr "Звітування"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Requirements"
+msgstr "Вимоги"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
@@ -1743,41 +1873,7 @@ msgid "Technical Training"
 msgstr "Технічна підготовка"
 
 #. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The Open Days are preceded by 2 days of optional training sessions for "
-"experts! We propose 3 different training sessions, 2 days each."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"The organization of the training session has related costs. Due to these "
-"costs, cancellations made less than 2 weeks (14 calendar days) prior to the "
-"start of the training session is a subject to a fee. This fee can be up to a"
-" maximum of 1000€ per cancellation request."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The plenary sessions in the morning will be shorter and we will give more "
-"time for thematical meetings, conferences, workshops and tutorial sessions "
-"in the afternoon."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"The whole event is open to all public! We ask a participation fee of 49.50€ "
-"for the costs for the 3 days (morning coffee, coffee breaks, drinks, "
-"sandwiches for lunch and the surprising beer party of Wednesday evening) but"
-" it's optional. For those who do not want to contribute, there is a free "
-"ticket, therefore, catering is not inclued."
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event.py:301
+#: code:addons/event/models/event.py:307
 #, python-format
 msgid ""
 "There are already attendees who attended this event. Please reset it to "
@@ -1785,26 +1881,15 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid ""
-"These webinars allow companies interested in our software, to assess whether"
-" the solution meets their needs, and can adapt to the scope of their "
-"project."
-msgstr ""
-
-#. module: event
 #: model:event.event,description:event.event_3
 msgid ""
-"This course is dedicated to partners, integrators and developers who need to"
-" grasp knowledge about the business applications development process and for"
-" new developers or for IT professionals eager to learn more about technical "
-"aspects."
+"This course help me build my first application within a month. Definetly "
+"worth its price."
 msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid "This event and all the conferences are in english!"
-msgstr ""
+"Цей курс допоміг мені створити свій перший додаток за місяць. Безсумнівно, "
+"вартий своїх грошей."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1812,11 +1897,6 @@ msgstr ""
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 msgstr "Це поле містить шаблон листа, що надсилатиметься автоматично"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid "This webinar helps participants to:"
-msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
@@ -1830,6 +1910,13 @@ msgid "Timezone"
 msgstr "Часовий пояс"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "To get more information, visit the"
+msgstr "Детальніша інформація на"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
 msgstr "Маршрути і розклад"
@@ -1838,6 +1925,13 @@ msgstr "Маршрути і розклад"
 #: model:event.type,name:event.event_type_4
 msgid "Training"
 msgstr "Тренінг"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Training Center Module"
+msgstr "Модуль центру підготовки"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_type
@@ -1867,6 +1961,15 @@ msgid "Unconfirmed Seat Reservations"
 msgstr "Непідтверджені зарезервовані місця"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Underscore"
+msgstr "Підкреслити"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
 msgstr "Розуміти концепти та архітектуру розвитку;"
@@ -1919,9 +2022,11 @@ msgid "User"
 msgstr "Користувач"
 
 #. module: event
+#: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
-msgid "View full flow: purchasing, sales, project management, accounting;"
-msgstr ""
+#: model:event.event,description:event.event_3
+msgid "Variables &amp; Operators"
+msgstr "Змінні та оператори"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -1944,41 +2049,40 @@ msgstr ""
 "впевнені, що хочете її підтвердити?"
 
 #. module: event
-#: model:event.event,description:event.event_1
-msgid "We are looking forward to meeting you online,"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"We strongly recommend to book your flight tickets and/or hotel reservations "
-"2 weeks prior to the training. If the training is cancelled 2 weeks in "
-"advance, you'll be notified by email."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"Webinars are online demonstrations where one of our team members explains "
-"the main features and benefits of our online offer through an online "
-"conference. We can therefore directly answer any questions you may have "
-"through a Q&amp;A."
-msgstr ""
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Week(s)"
 msgstr "Тиждень (тижні)"
 
 #. module: event
-#: code:addons/event/models/event.py:414
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What do people say about this course?"
+msgstr "Що кажуть про цей курс?"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "What you will learn?"
+msgstr "Що ви дізнаєтесь?"
+
+#. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
+#: model:event.event,description:event.event_3
+msgid "Workflows"
+msgstr "Робочі процеси"
+
+#. module: event
+#: code:addons/event/models/event.py:420
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:416
+#: code:addons/event/models/event.py:422
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr ""
@@ -1999,6 +2103,8 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "бейдж_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
 msgstr "напої та ланч; "
@@ -2010,47 +2116,29 @@ msgstr "event.confirm"
 
 #. module: event
 #: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
 msgid "events@odoo.com"
 msgstr ""
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "events@yourcompany.com"
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "http://bit.ly/VD8J67."
-msgstr ""
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid "https://www.odoo.com/services/technical-training"
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event.py:497
+#: code:addons/event/models/event.py:503
 #, python-format
 msgid "in %d days"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:507
 #, python-format
 msgid "next month"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:505
 #, python-format
 msgid "next week"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:509
 #, python-format
 msgid "on "
 msgstr ""
@@ -2061,18 +2149,20 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: event
-#: code:addons/event/models/event.py:493
+#: code:addons/event/models/event.py:499
 #, python-format
 msgid "today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:495
+#: code:addons/event/models/event.py:501
 #, python-format
 msgid "tomorrow"
 msgstr ""
 
 #. module: event
+#: model:event.event,description:event.event_0
+#: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
 msgstr "навчальний матеріал."

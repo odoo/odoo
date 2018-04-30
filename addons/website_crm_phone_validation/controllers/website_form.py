@@ -4,8 +4,6 @@
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.http import request, route
 
-import json
-
 
 class WebsiteForm(WebsiteForm):
 
@@ -32,17 +30,13 @@ class WebsiteForm(WebsiteForm):
         else:
             record = data.get('record', {})
             phone_fields = self._get_phone_fields_to_validate()
-            country = self._get_country()
-            invalid_fields = {}
+            country = request.env['res.country'].browse(record.get('country_id'))
+            contact_country = country.exists() and country or self._get_country()
             for phone_field in phone_fields:
                 if not record.get(phone_field):
                     continue
                 number = record[phone_field]
-                try:
-                    request.env[model_name].phone_format(number, country)
-                except Exception as error:
-                    invalid_fields[phone_field] = error.args[0]
-            if invalid_fields:
-                return json.dumps({'error_fields': invalid_fields})
+                fmt_number = request.env[model_name].phone_format(number, contact_country)
+                request.params.update({phone_field: fmt_number})
 
         return super(WebsiteForm, self).website_form(model_name, **kwargs)

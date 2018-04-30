@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Jesper Carstensen <info@danodoo.dk>, 2017
 # lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-02-19 13:43+0000\n"
+"PO-Revision-Date: 2018-02-19 13:43+0000\n"
 "Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,13 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Transaktioner</strong>"
 
 #. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
+#: code:addons/account_payment/models/payment.py:80
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/controllers/payment.py:52
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -101,11 +107,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
 msgid "Invoice"
 msgstr "Faktura"
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "Faktura betalt med succes."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
@@ -155,6 +156,14 @@ msgstr "Betalingstransaktioner"
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
 msgstr "Status"
+
+#. module: account_payment
+#: code:addons/account_payment/models/payment.py:81
+#, python-format
+msgid ""
+"The invoice was not confirmed despite response from the acquirer (%s): "
+"invoice amount is %r but acquirer replied with %r."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -220,3 +229,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "Transaktioner"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Din betaling er blevet godkendt."

@@ -232,7 +232,7 @@ class CrmTeam(models.Model):
                 values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'week':
-            weeks_in_start_year = int(date(start_date.year, 12, 31).isocalendar()[1])
+            weeks_in_start_year = int(date(start_date.year, 12, 28).isocalendar()[1]) # This date is always in the last week of ISO years
             for week in range(0, (end_date.isocalendar()[1] - start_date.isocalendar()[1]) % weeks_in_start_year + 1):
                 short_name = get_week_name(start_date + relativedelta(days=7 * week), locale)
                 values.append({x_field: short_name, y_field: 0})

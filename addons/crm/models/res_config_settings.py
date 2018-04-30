@@ -10,7 +10,7 @@ class ResConfigSettings(models.TransientModel):
     crm_alias_prefix = fields.Char('Default Alias Name for Leads')
     generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
-    module_crm_phone_validation = fields.Boolean("Phone Validation")
+    module_crm_phone_validation = fields.Boolean("Phone Formatting")
     module_web_clearbit = fields.Boolean("Customer Autocomplete")
 
     def _find_default_lead_alias_id(self):
@@ -33,7 +33,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.onchange('generate_lead_from_alias')
     def _onchange_generate_lead_from_alias(self):
-        self.crm_alias_prefix = 'info' if self.generate_lead_from_alias else False
+        self.crm_alias_prefix = (self.crm_alias_prefix or 'info') if self.generate_lead_from_alias else False
 
     @api.model
     def get_values(self):

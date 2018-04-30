@@ -14,10 +14,12 @@ class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(CustomerPortal, self)._prepare_portal_layout_values()
-        values.update({
-            'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
-            'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
-        })
+        Project = request.env['project.project']
+        Task = request.env['project.task']
+        # portal users can't view projects they don't follow
+        projects = Project.sudo().search([('privacy_visibility', '=', 'portal')])
+        values['project_count'] = Project.search_count([('id', 'in', projects.ids)])
+        values['task_count'] = Task.search_count([('project_id', 'in', projects.ids)])
         return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
@@ -77,8 +79,6 @@ class CustomerPortal(CustomerPortal):
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
         values = self._prepare_portal_layout_values()
-        domain = [('project_id.privacy_visibility', '=', 'portal')]
-
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Title'), 'order': 'name'},
@@ -96,7 +96,9 @@ class CustomerPortal(CustomerPortal):
             'all': {'input': 'all', 'label': _('Search in All')},
         }
         # extends filterby criteria with project (criteria name is the project id)
-        projects = request.env['project.project'].search([('privacy_visibility', '=', 'portal')])
+        # Note: portal users can't view projects they don't follow
+        projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
+        domain = [('project_id', 'in', projects.ids)]
         for proj in projects:
             searchbar_filters.update({
                 str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
