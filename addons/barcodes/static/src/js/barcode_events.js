@@ -61,7 +61,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 name: 'barcode',
                 type: 'text',
                 css: {
-                    'position': 'absolute',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'transform': 'translateY(-50%)',
                     'opacity': 0,
                 },
             });
