@@ -102,7 +102,7 @@ function PhantomTest() {
     // ----------------------------------------------------
     // run test
     // ----------------------------------------------------
-    this.run = function(url_path, code, ready) {
+    this.run = function(url_path, code, ready, ready_timeout) {
         var url = self.origin + url_path;
         code = code || "true";
         ready = ready || "true";
@@ -132,7 +132,7 @@ function PhantomTest() {
                     console.log("PhantomTest.run: condition statified, executing: " + code);
                     self.page.evaluate(function (code) { return eval(code); }, code);
                     console.log("PhantomTest.run: execution launched, waiting for console.log('ok')...");
-                });
+                }, ready_timeout);
             }
         });
     };
@@ -141,5 +141,5 @@ function PhantomTest() {
 // js mode or jsfile mode
 if(system.args.length === 2) {
     pt = new PhantomTest();
-    pt.run(pt.options.url_path, pt.options.code, pt.options.ready);
+    pt.run(pt.options.url_path, pt.options.code, pt.options.ready, pt.options.ready_timeout);
 }

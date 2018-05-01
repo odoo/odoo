@@ -498,7 +498,7 @@ class HttpCase(TransactionCase):
                         odoo.tools.misc.dumpstacks()
                         t0 = t1
 
-    def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, **kw):
+    def phantom_js(self, url_path, code, ready="window", login=None, timeout=60, ready_timeout=10, **kw):
         """ Test js code running in the browser
         - optionnally log as 'login'
         - load page given by url_path
@@ -519,6 +519,7 @@ class HttpCase(TransactionCase):
             'url_path': url_path,
             'code': code,
             'ready': ready,
+            'ready_timeout': ready_timeout,
             'timeout' : timeout,
             'session_id': self.session_id,
         }
