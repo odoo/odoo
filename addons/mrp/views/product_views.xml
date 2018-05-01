@@ -47,7 +47,12 @@
         <menuitem id="menu_mrp_product_form"
             name="Products"
             action="product_template_action"
-            parent="menu_mrp_bom"/>
+            parent="menu_mrp_bom" sequence="1"/>
+
+        <menuitem id="product_variant_mrp" name="Product Variants"
+            action="product.product_normal_action"
+            parent="menu_mrp_bom" groups="product.group_product_variant" sequence="2"/>
+
 
         <record id="product_template_form_view_bom_button" model="ir.ui.view">
             <field name="name">product.template.procurement</field>
