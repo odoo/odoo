@@ -256,7 +256,7 @@ class MaintenanceEquipment(models.Model):
 class MaintenanceRequest(models.Model):
     _name = 'maintenance.request'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = 'Maintenance Requests'
+    _description = 'Maintenance Request'
     _order = "id desc"
 
     @api.returns('self')
@@ -353,6 +353,13 @@ class MaintenanceRequest(models.Model):
             self.activity_feedback(['maintenance.mail_act_maintenance_request'])
         if 'schedule_date' in vals:
             self.activity_update()
+        return res
+
+    def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
+        res = super(MaintenanceRequest, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
+        if updated_values.get('technician_user_id'):
+            technician_user = self.env['res.users'].browse(updated_values['technician_user_id'])
+            res.append((technician_user.partner_id.id, subtype_ids, 'maintenance.message_maintenance_responsible_assigned'))
         return res
 
     def activity_update(self):
