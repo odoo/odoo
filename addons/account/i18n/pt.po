@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-02-20 02:49+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-04-18 15:16+0000\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -692,7 +692,7 @@ msgstr "<strong>Movimentos Alvo</strong>"
 msgid ""
 "<strong>Test the following three scenarios in order to assist you in "
 "familiarizing yourself with Odoo:</strong>"
-msgstr ""
+msgstr "<strong>Teste os três cenários seguintes para se familizarizar com o Odoo:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1916,7 +1916,7 @@ msgstr "Extratos bancários estão totalmente reconciliados."
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3611,7 +3611,7 @@ msgstr "Saldo Final"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
 msgid "Ending Cashbox"
-msgstr ""
+msgstr "Cashbox Final"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4810,7 +4810,7 @@ msgid ""
 "                            data to import and balances to set. If you plan to do so, \n"
 "                            we recommend you start using Odoo for invoicing and payments \n"
 "                            now, and then move all other accounting transactions at a later time."
-msgstr ""
+msgstr "É prática comum alterar o seu software contabilístico \n                            no fim do ano fiscal. Isto permite-lhe ter menos \n                            dados para importar e saldos a definir. Se está a  pensar em fazê-lo, \n                           , recomendamos que comece a usar o Odoo para faturação e pagamentos primeiro\n                             e mais tarde proceda às restantes transações contabilísticas."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9233,6 +9233,14 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr "Não pode cancelar uma fatura que está parcialmente paga. Precisa de desreconciliar primeiro as entradas do pagamento relacionado."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr "Não pode alterar a empresa dona de uma conta que já contém itens de diário."
 
 #. module: account
 #: code:addons/account/models/account.py:162

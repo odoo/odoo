@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2018-02-21 06:18+0000\n"
+"PO-Revision-Date: 2018-04-20 03:14+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -107,7 +107,7 @@ msgstr "Оронгийн хэмжээ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
 msgid "# of Lines"
-msgstr ""
+msgstr "# Мөрийн тоо"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
@@ -5384,7 +5384,7 @@ msgstr "Үндсэн гарчиг 1(тод,доогуур зураастай)"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr ""
+msgstr "Компанийн үндсэн валют."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6656,7 +6656,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_proforma_invoices
 msgid "Pro-forma Invoices"
-msgstr ""
+msgstr "Урьдчилсан нэхэмжлэхүүд"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -6677,7 +6677,7 @@ msgstr "Барааны ангилал"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "Барааны Тоо хэмжээ"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -6746,7 +6746,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Purchase"
-msgstr ""
+msgstr "Худалдан авалт"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
@@ -6948,7 +6948,7 @@ msgstr "Лавлагаа"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_uom_name
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Хэмжих нэгжийн код"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -7564,7 +7564,7 @@ msgstr "Төлөв"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line_subtotal
 msgid "Subtotal"
-msgstr ""
+msgstr "Дэд дүн"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -8007,7 +8007,7 @@ msgstr "Бүртгэлийн код болон нэр компанийн хэм�
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr ""
+msgstr "Дансны код нь компанийн хэмжээнд үл давхцах байх ёстой !"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_commercial_partner_id
@@ -8510,7 +8510,7 @@ msgstr "Гарчиг 3 (бүдүүн, арай жижиг)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr ""
+msgstr "Нэхэмжлэх"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_tree
@@ -8546,7 +8546,7 @@ msgstr "<strong>Олон валют сонголт</strong> хэрэглэх:"
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_cashbox
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "Нийт"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_tree
@@ -8802,7 +8802,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_invoice_amount_untaxed_signed
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Татваргүй Дүн"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9229,6 +9229,14 @@ msgstr "Түгжсэн %s огнооноос урагших бичилтийг �
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account

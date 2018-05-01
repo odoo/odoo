@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2018-03-19 15:53+0000\n"
-"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>\n"
+"PO-Revision-Date: 2018-04-17 20:09+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2531,7 +2531,7 @@ msgid ""
 "\n"
 "Override community website features\n"
 "    "
-msgstr ""
+msgstr "\nZastąp funkcje community website\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -11896,6 +11896,18 @@ msgid "Model"
 msgstr "Model"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: code:addons/base/ir/ir_model.py:454
 #, python-format
 msgid "Model %s does not exist!"
@@ -14764,7 +14776,7 @@ msgstr "Użytkownik do współdzielenia"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
 msgid "Share and Publish Videos, Presentations and Documents"
-msgstr ""
+msgstr "Udostępniaj i Publikuj Filmy, Prezentacje i Dokumenty"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -15351,7 +15363,7 @@ msgstr "Dodatkowe argumenty"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bootswatch
 msgid "Support for Bootswatch themes in master"
-msgstr ""
+msgstr "Wsparcie dla motywów Bootswatch w trybie master"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_issue
@@ -15898,7 +15910,7 @@ msgstr "Nazwa grupy nie może rozpoczynać się od \"-\""
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "Nazwa grupy musi być unikalna w obrębie aplikacji!"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -17478,7 +17490,7 @@ msgstr ""
 msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
-msgstr ""
+msgstr "Zależnie, czy wartości dla tego pola mogą być tłumaczone (włącza mechanizm tłumaczenia dla tego pola)"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
@@ -17720,7 +17732,7 @@ msgstr "Nie możesz skasować języka który jest aktywny!\nProszę najpierw dea
 #: code:addons/base/res/res_lang.py:205
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
-msgstr ""
+msgstr "Nie możesz usunąć języka, który jest Preferowanym Językiem Użytkownika!"
 
 #. module: base
 #: code:addons/base/res/res_users.py:343
