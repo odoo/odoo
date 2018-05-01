@@ -465,6 +465,8 @@ class Home(http.Controller):
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
+        if request.params.get('login', False):
+            request.params['login'] = request.params['login'].lower().strip()
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
             return http.redirect_with_hash(redirect)
 
