@@ -16,7 +16,7 @@ addons:
 env:
   global:
   - VERSION="11.0" ODOO_REPO="OCA/OCB" LINT_CHECK="0" WEBSITE_REPO="1"
-  - EXCLUDE="hw_blackbox_be,hw_escpos,hw_proxy,hw_scale,hw_scanner,theme_bootswatch"
+  - EXCLUDE="hw_escpos,hw_scanner,theme_bootswatch"
   - WKHTMLTOPDF_VERSION="0.12.4"
   matrix:
   - INCLUDE="applications"
@@ -39,7 +39,6 @@ install:
 script:
   - if [ $INCLUDE = 'applications' ]; then
         export INCLUDE=$(getaddons.py -m --only-applications ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
-        sed -i "/import test_crawl/d" ${TRAVIS_BUILD_DIR}/addons/website/tests/__init__.py ;
     elif [ $INCLUDE = 'no_applications' ]; then
         export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${TRAVIS_BUILD_DIR}/addons);
     elif [ $INCLUDE = 'localization' ]; then
