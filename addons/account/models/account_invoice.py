@@ -624,6 +624,26 @@ class AccountInvoice(models.Model):
             invoice.message_subscribe(partner_ids)
         return invoice
 
+    @api.model
+    def get_empty_list_help(self, help_message):
+        if self.env.context.get('force_reload_help') and self.env.context.get('type') == 'in_invoice':
+            Journal = self.env['account.journal']
+            journals = Journal.browse(self._context.get('default_journal_id')) or Journal.search([('type', '=', 'purchase')])
+
+            if journals:
+                links = ''
+                for journal in journals.filtered(lambda j: j.alias_domain and j.alias_id.alias_name):
+                    email = format(journal.alias_id.alias_name) + "@" + format(journal.alias_domain)
+                    links += "<a id='o_mail_test' href='mailto:{}'>{}</a>".format(email, email) + ", "
+                if links:
+                    help_message = _('%s Or share one of the email(s) to your vendor to receive bill %s.') % (help_message, links[:-2])
+                else:
+                    help_message = _('''%s Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
+                                                  '''to allow draft vendor bills to be created through sending an email.''') % (help_message, journals[0].id, journals[0].id)
+            else:
+                help_message += _('<p>You can control the invoice from your vendor based on what you purchased or received.</p>')
+        return super(AccountInvoice, self).get_empty_list_help(help_message)
+
     @api.multi
     def compute_taxes(self):
         """Function used in other module to compute the taxes on a fresh invoice created (onchanges did not applied)"""
@@ -1234,7 +1254,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def action_cancel(self):
         if self.filtered(lambda inv: inv.type == 'in_invoice' and inv.state == 'draft' and not inv.partner_id):
-            raise UserError(_("You can not cancel a bill without Vendor."))
+            raise UserError(_("You can not cancel a bill without a Vendor."))
         moves = self.env['account.move']
         for inv in self:
             if inv.move_id:
