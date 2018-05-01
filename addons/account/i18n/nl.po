@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-03-29 09:06+0000\n"
+"PO-Revision-Date: 2018-04-20 11:33+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -9233,6 +9233,14 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr "U kunt gedeeltelijk betaalde facturen niet annuleren. U dient de afgeletterde betaling eerst ongedaan te maken."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr "Het is niet mogelijk de valuta van het bedrijf te wijzigen omdat er al financiële boekingen zijn gemaakt."
 
 #. module: account
 #: code:addons/account/models/account.py:162
