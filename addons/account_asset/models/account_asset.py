@@ -72,7 +72,8 @@ class AccountAssetAsset(models.Model):
     value = fields.Float(string='Gross Value', required=True, readonly=True, digits=0, states={'draft': [('readonly', False)]}, oldname='purchase_value')
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=True, states={'draft': [('readonly', False)]},
         default=lambda self: self.env.user.company_id.currency_id.id)
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, related="category_id.company_id", store=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]},
+        default=lambda self: self.env['res.company']._company_default_get('account.asset.asset'))
     note = fields.Text()
     category_id = fields.Many2one('account.asset.category', string='Category', required=True, change_default=True, readonly=True, states={'draft': [('readonly', False)]})
     date = fields.Date(string='Date', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=fields.Date.context_today, oldname="purchase_date")
