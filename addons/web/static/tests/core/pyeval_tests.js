@@ -348,7 +348,7 @@ QUnit.module('core', function () {
     });
 
     QUnit.test('relativedelta', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         assert.strictEqual(
             py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
@@ -370,8 +370,67 @@ QUnit.module('core', function () {
             py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
                     pyEval.context()),
             '2015-02-02');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20) + relativedelta(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-02-01 16:07:30');
     });
 
+    QUnit.test('datetime.add', function (assert) {
+        assert.expect(3);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-02-01 16:07:30');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(months=3, hours=2, minutes=30)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-05-01 16:07:20');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(years=3)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2015-02-01 13:37:20');
+    });
+
+    //QUnit.test('datetime.subtract', function (assert) {
+    //    assert.expect(3);
+    //    assert.strictEqual(
+    //        py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+    //                pyEval.context()),
+    //        '2012-02-01 11:07:10');
+    //    assert.strictEqual(
+    //        py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(months=3, hours=2, minutes=30)).strftime('%Y-%m-%d %H:%M:%S')",
+    //                pyEval.context()),
+    //        '2011-11-01 11:07:20');
+    //    assert.strictEqual(
+    //        py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(years=3)).strftime('%Y-%m-%d %H:%M:%S')",
+    //                pyEval.context()),
+    //        '2009-02-01 13:37:20');
+    //});
+
+    QUnit.test('date.add', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).add(months=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2012-05-01');
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).add(years=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2015-02-01');
+    });
+
+    //QUnit.test('date.subtract', function (assert) {
+    //    assert.expect(2);
+    //    assert.strictEqual(
+    //        py.eval("(datetime.date(2012, 2, 1).subtract(months=3)).strftime('%Y-%m-%d')",
+    //                pyEval.context()),
+    //        '2011-11-01');
+    //    assert.strictEqual(
+    //        py.eval("(datetime.date(2012, 2, 1).subtract(years=3)).strftime('%Y-%m-%d')",
+    //                pyEval.context()),
+    //        '2009-02-01');
+    //});
 
     QUnit.test('timedelta', function (assert) {
         assert.expect(4);
