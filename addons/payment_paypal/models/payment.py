@@ -197,7 +197,7 @@ class TxPaypal(models.Model):
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
             try:
-                # datetime don't recognize abbreviations PDT/PST
+                # datetime doesn't recognize abbreviations PDT/PST
                 tzinfos = {
                     'PST': -8 * 3600,
                     'PDT': -7 * 3600,
