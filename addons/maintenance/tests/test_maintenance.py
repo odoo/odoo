@@ -3,7 +3,7 @@
 
 
 from odoo.tests.common import TransactionCase
-from odoo.tools.datetime import date, datetime, relativedelta
+from odoo.tools.datetime import date, datetime
 
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
@@ -91,7 +91,7 @@ class TestEquipment(TransactionCase):
         maintenance_request_cron = self.maintenance_request.create({
             'name': 'Need a special calibration',
             'technician_user_id': self.user.id,
-            'request_date': datetime.now() + relativedelta(days=7),
+            'request_date': datetime.now().add(days=7),
             'maintenance_type': 'preventive',
             'owner_user_id': self.user.id,
             'equipment_id': equipment_cron.id,
