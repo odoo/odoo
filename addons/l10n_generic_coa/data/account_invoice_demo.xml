@@ -89,7 +89,7 @@
             <field name="reference_type">none</field>
             <field name="payment_term_id" ref="account.account_payment_term_immediate"/>
             <field name="type">out_invoice</field>
-            <field name="date_invoice" eval="datetime.today() + datetime.timedelta(days=-15)"/>
+            <field name="date_invoice" eval="datetime.today().add(days=-15)"/>
         </record>
         <record id="demo_invoice_followup_line_1" model="account.invoice.line">
             <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_02').partner_ref"/>
