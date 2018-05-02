@@ -106,7 +106,7 @@ var GreetingMessage = AbstractAction.extend({
         if(this.previous_attendance_change_date){
             var last_check_in_date = this.previous_attendance_change_date.clone();
             if(now - last_check_in_date > 1000*60*60*12){
-                this.$('.o_hr_attendance_warning_message').append(_t("Warning! Last check in was over 12 hours ago.<br/>If this isn't right, please contact Human Resources."));
+                this.$('.o_hr_attendance_warning_message').show().append(_t("<b>Warning! Last check in was over 12 hours ago.</b><br/>If this isn't right, please contact Human Resource staff"));
                 clearTimeout(this.return_to_main_menu);
                 this.activeBarcode = false;
             } else if(now - last_check_in_date > 1000*60*60*8){
