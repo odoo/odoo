@@ -904,7 +904,7 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
-                <filter string="This Year" name="year" domain="[('create_date','&lt;=', datetime.today().end_of('year')),('create_date','&gt;=',datetime.today().start_of('year'))]"/>
+                <filter string="This Year" name="year" domain="[('create_date','&lt;=', datetime.now().end_of('year')),('create_date','&gt;=',datetime.now().start_of('year'))]"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
