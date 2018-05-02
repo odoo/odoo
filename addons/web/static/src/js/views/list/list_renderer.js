@@ -628,23 +628,7 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _renderSelectionBar: function () {
-        var values = {
-            title: _.str.sprintf('All %s records of this page are selected', this.state.data.length),
-            action_type: 'select_all',
-            action_label: _.str.sprintf('Select all %s', this.state.count)
-        };
-        if (this.allSelected) {
-            this.$el.find('.o_list_view_select_all').remove();
-            // make thead input checked if all records are selected.
-            // so that we can get domain while exporting records.
-            this.$('thead .o_list_record_selector input').prop('checked', true);
-            values = {
-                title: _.str.sprintf('All %s records are selected', this.state.count),
-                action_type: 'clear_selection',
-                action_label: 'Clear Selection'
-            };
-        }
-        this.$el.prepend(qweb.render('ListView.SelectAll', values));
+        this.$el.prepend(qweb.render('ListView.SelectAll', {all_selected: this.allSelected, state: this.state}));
     },
     /**
      * A 'selector' is the small checkbox on the left of a record in a list
@@ -767,6 +751,7 @@ var ListRenderer = BasicRenderer.extend({
                                 && this.state.count > this.selection.length;
         // TO-DO check for groupBy
         if (this.hasSelectionBar && isAllSelected) {
+            this.$el.find('.o_list_view_select_all').remove();
             this._renderSelectionBar();
         }
         this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });
@@ -823,6 +808,10 @@ var ListRenderer = BasicRenderer.extend({
         var actionType = $(event.currentTarget).data('action-type');
         if (actionType == 'select_all') {
             this.allSelected = true;
+            this.$el.find('.o_list_view_select_all').remove();
+            // make thead input checked if all records are selected.
+            // so that we can get domain while exporting records.
+            this.$('thead .o_list_record_selector input').prop('checked', true);
             this._renderSelectionBar();
         } else {
             this.$('.o_list_record_selector input').prop('checked', false);
