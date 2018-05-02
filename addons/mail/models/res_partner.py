@@ -232,6 +232,8 @@ class Partner(models.Model):
     @api.multi
     def _notify_by_chat(self, message):
         """ Broadcast the message to all the partner since """
+        if not self:
+            return
         message_values = message.message_format()[0]
         notifications = []
         for partner in self:

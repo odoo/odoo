@@ -71,13 +71,13 @@ class MailMail(models.Model):
                     new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
-        body = self.env['mail.thread']._replace_local_links(body)
-
-        # generate tracking URL
-        if self.statistics_ids:
+            # generate tracking URL
             tracking_url = self._get_tracking_url()
             if tracking_url:
                 body = tools.append_content_to_html(body, tracking_url, plaintext=False, container_tag='div')
+
+        body = self.env['mail.thread']._replace_local_links(body)
+
         return body
 
     @api.multi
@@ -97,8 +97,9 @@ class MailMail(models.Model):
     @api.multi
     def _postprocess_sent_message(self, mail_sent=True):
         for mail in self:
-            if mail_sent is True and mail.statistics_ids:
-                mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
-            elif mail_sent is False and mail.statistics_ids:
-                mail.statistics_ids.write({'exception': fields.Datetime.now()})
+            if mail.mailing_id:
+                if mail_sent is True and mail.statistics_ids:
+                    mail.statistics_ids.write({'sent': fields.Datetime.now(), 'exception': False})
+                elif mail_sent is False and mail.statistics_ids:
+                    mail.statistics_ids.write({'exception': fields.Datetime.now()})
         return super(MailMail, self)._postprocess_sent_message(mail_sent=mail_sent)
