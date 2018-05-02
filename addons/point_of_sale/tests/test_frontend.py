@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.api import Environment
-from odoo.tools.datetime import date, timedelta
+from odoo.tools.datetime import date
 
 import odoo.tests
 
@@ -182,10 +182,10 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         today = date.today()
-        one_week_ago = today - timedelta(weeks=1)
-        two_weeks_ago = today - timedelta(weeks=2)
-        one_week_from_now = today + timedelta(weeks=1)
-        two_weeks_from_now = today + timedelta(weeks=2)
+        one_week_ago = today.subtract(weeks=1)
+        two_weeks_ago = today.subtract(weeks=2)
+        one_week_from_now = today.add(weeks=1)
+        two_weeks_from_now = today.add(weeks=2)
 
         env['product.pricelist'].create({
             'name': 'Dates',
