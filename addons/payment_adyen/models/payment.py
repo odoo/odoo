@@ -15,7 +15,6 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_adyen.controllers.main import AdyenController
 from odoo.tools.pycompat import to_native
-from odoo.tools.datetime import relativedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -120,7 +119,7 @@ class AcquirerAdyen(models.Model):
         # tmp
 
         if self.provider == 'adyen' and len(self.adyen_skin_hmac_key) == 64:
-            tmp_date = fields.Date.today() + relativedelta(days=1)
+            tmp_date = fields.Date.today().add(days=1)
 
             values.update({
                 'merchantReference': values['reference'],
@@ -138,7 +137,7 @@ class AcquirerAdyen(models.Model):
             values['merchantSig'] = self._adyen_generate_merchant_sig_sha256('in', values)
 
         else:
-            tmp_date = fields.Date.today() + relativedelta(days=1)
+            tmp_date = fields.Date.today().add(days=1)
 
             values.update({
                 'merchantReference': values['reference'],

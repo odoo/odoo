@@ -16,8 +16,6 @@ from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
 from odoo.tools import ustr
 from odoo.tools.float_utils import float_compare, float_repr, float_round
-from odoo.tools.float_utils import float_compare, float_repr
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools.datetime import date, datetime
 
 _logger = logging.getLogger(__name__)
