@@ -229,10 +229,18 @@ class ProductProduct(models.Model):
     def _compute_partner_ref(self):
         for supplier_info in self.seller_ids:
             if supplier_info.name.id == self._context.get('partner_id'):
-                product_name = supplier_info.product_name or self.default_code
+                product_name = supplier_info.product_name or self._compute_full_name()
         else:
-            product_name = self.name
+            product_name = self._compute_full_name()
         self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
+
+    def _compute_full_name(self):
+        self.ensure_one()
+        # display only the attributes with multiple possible values on the template
+        variable_attributes = self.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
+        variant = self.attribute_value_ids._variant_name(variable_attributes)
+        name = variant and '%s (%s)' % (self.name, variant) or self.name
+        return name
 
     @api.one
     @api.depends('image_variant', 'product_tmpl_id.image')
@@ -377,11 +385,7 @@ class ProductProduct(models.Model):
 
         result = []
         for product in self.sudo():
-            # display only the attributes with multiple possible values on the template
-            variable_attributes = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id')
-            variant = product.attribute_value_ids._variant_name(variable_attributes)
-
-            name = variant and "%s (%s)" % (product.name, variant) or product.name
+            name = product._compute_full_name()
             sellers = []
             if partner_ids:
                 sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
