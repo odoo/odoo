@@ -1023,6 +1023,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 # this is a stored computed field, check for recomputation
                 recs = record._recompute_check(self)
                 if recs:
+                    # recompute only record not in cache (usefull when norecompute env).
                     recs = record._in_cache_without(self)
                     recs = recs.with_prefetch(record._prefetch)
                     if recs:
