@@ -126,9 +126,7 @@ class MailActivity(models.Model):
         for record in self.filtered(lambda activity: activity.date_deadline):
             today = today_default
             if record.user_id.tz:
-                today_utc = datetime.utcnow()
-                today_tz = today_utc.astimezone(record.user_id.tz)
-                today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+                today = datetime.utcnow().astimezone(record.user_id.tz).date()
 
             date_deadline = record.date_deadline
             diff = (date_deadline - today)

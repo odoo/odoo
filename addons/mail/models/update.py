@@ -28,16 +28,14 @@ class PublisherWarrantyContract(AbstractModel):
 
         dbuuid = IrParamSudo.get_param('database.uuid')
         db_create_date = IrParamSudo.get_param('database.create_date')
-        limit_date = datetime.datetime.now()
-        limit_date = limit_date - datetime.timedelta(15)
-        limit_date_str = limit_date
+        limit_date = datetime.datetime.now().subtract(days=15)
         nbr_users = Users.search_count([('active', '=', True)])
-        nbr_active_users = Users.search_count([("login_date", ">=", limit_date_str), ('active', '=', True)])
+        nbr_active_users = Users.search_count([("login_date", ">=", limit_date), ('active', '=', True)])
         nbr_share_users = 0
         nbr_active_share_users = 0
         if "share" in Users._fields:
             nbr_share_users = Users.search_count([("share", "=", True), ('active', '=', True)])
-            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date_str), ('active', '=', True)])
+            nbr_active_share_users = Users.search_count([("share", "=", True), ("login_date", ">=", limit_date), ('active', '=', True)])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
         apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
