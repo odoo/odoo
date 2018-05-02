@@ -2003,7 +2003,13 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
 };
 
 $(document).on('click keyup', function () {
-    var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
+    var current_range = {};
+    try {
+        current_range = range.create() || {};
+    } catch (e) {
+        // if range is on Restricted element ignore error
+    }
+    var $popover = $(current_range.sc).closest('[contenteditable]');
     var popover_history = ($popover.data()||{}).NoteHistory;
     if(!popover_history || popover_history == history) return;
     var editor = $popover.parent('.note-editor');
