@@ -504,8 +504,8 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name"/>
-                        <field name="user_id" options="{'no_open': True}"/>
+                        <field name="name" string = "Task Title"/>
+                        <field name="user_id" options="{'no_open': True,'no_create': True}"/>
                     </group>
                 </form>
             </field>

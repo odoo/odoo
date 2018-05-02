@@ -24,15 +24,22 @@ tour.register('project_tour', {
     position: 'right',
 }, {
     trigger: '.o_open_tasks',
-    content: _t('This will create new project and redirect us to its tasks.'),
-    position: 'right',
+    content: _t('This will create a new project and redirect us to its stages.'),
+    position: 'top',
     run: function (actions) {
         actions.auto('.modal:visible .btn.btn-primary');
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create input",
-    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. Specification &gt; Development &gt; Done</i>"),
-    position: "right"
+    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In Progress - Done</i>"),
+    position: "bottom",
+}, {
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
+    auto: true,
+}, {
+    trigger: ".o_kanban_project_tasks .o_column_quick_create input",
+    content: _t("Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In Progress - Done</i>"),
+    position: "bottom",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
     auto: true,
@@ -40,7 +47,7 @@ tour.register('project_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_project_tasks',
     content: _t('Let\'s create your first task.'),
-    position: 'right',
+    position: 'bottom',
     width: 200,
 }, {
     trigger: '.o_kanban_quick_create input.o_field_char[name=name]',
@@ -58,9 +65,14 @@ tour.register('project_tour', {
     content: _t("<b>Star tasks</b> to mark team priorities."),
     position: "bottom",
 }, {
-    trigger: ".o_kanban_record",
+    trigger: ".o_kanban_record .oe_kanban_content",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("Click on a card to get the details of the task."),
+    position: "bottom",
+}, {
+    trigger: ".o_kanban_record .oe_kanban_content",
+    extra_trigger: '.o_kanban_project_tasks',
+    content: _t("Click on the card to write more information about it and collaborate with your coworkers."),
     position: "bottom",
 }, {
     trigger: ".o_form_button_edit",
@@ -87,7 +99,7 @@ tour.register('project_tour', {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_form_project_tasks.o_form_readonly',
     content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
-    position: "bottom"
+    position: "right"
 }, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="base.menu_administration"], .oe_menu_toggler[data-menu-xmlid="base.menu_administration"]',
@@ -95,13 +107,16 @@ tour.STEPS.MENU_MORE, {
     position: "bottom"
 }, {
     trigger: ".o_web_settings_dashboard .o_user_emails",
-    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
-    position: "right"
-}, tour.STEPS.TOGGLE_HOME_MENU,
-tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"], .oe_menu_toggler[data-menu-xmlid="project.menu_main_pm"]',
-    content: _t("Good job! You completed the Project Management tour."),
-    position: 'bottom',
+    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line and press Enter.</i>"),
+    position: "right",
+    run: function(actions){
+        actions.text('test@example.com');
+    }
+}, {
+    trigger: ".o_web_settings_dashboard_invite",
+    content: _t("<b>Enter valid email address and click on Invite button</b> to invite new users. "),
+    position: "right",
+
 }]);
 
 });
