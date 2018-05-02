@@ -32,6 +32,6 @@ class WebSuite(odoo.tests.HttpCase):
             filename = asset['filename']
             if not filename or asset['atype'] != 'text/javascript':
                 continue
-            with open(filename, 'r') as fp:
-                if RE_ONLY.search(fp.read()):
+            with open(filename, 'rb') as fp:
+                if RE_ONLY.search(fp.read().decode('utf-8')):
                     self.fail("`QUnit.only()` used in file %r" % asset['url'])

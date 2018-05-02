@@ -53,7 +53,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                        navigator.userAgent.match(/iPod/i) ||
                        navigator.userAgent.match(/BlackBerry/i) ||
                        navigator.userAgent.match(/Windows Phone/i);
-        this.isChromeMobile = isMobile && window.chrome;
+        this.isChromeMobile = isMobile && navigator.userAgent.match(/Chrome/i);
 
         // Creates an input who will receive the barcode scanner value.
         if (this.isChromeMobile) {
@@ -61,7 +61,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
                 name: 'barcode',
                 type: 'text',
                 css: {
-                    'position': 'absolute',
+                    'position': 'fixed',
+                    'top': '50%',
+                    'transform': 'translateY(-50%)',
                     'opacity': 0,
                 },
             });

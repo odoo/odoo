@@ -2331,6 +2331,50 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldOne2Many');
 
+    QUnit.test('one2many with two inline views', function (assert) {
+        assert.expect(1);
+
+        // The inline list view has and uses a field that the inline form view doesn't have
+        // We need to test that returning from the form view to the list view unfolds smoothly
+        // Even if a field needed in the list is not set in the form
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="display_name" attrs="{\'readonly\': [(\'turtle_foo\', \'=\', \'lol\')]}"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="display_name"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // Add a record with the form view
+        form.$('.o_field_x2many_list .o_field_x2many_list_row_add a').click();
+        var modal = $('.modal-dialog');
+        // Fill in the only field
+        modal.find('input[name=display_name]').val('lol').trigger('input');
+        // Save the record
+        modal.find('.btn-primary').first().click();
+
+        // Now back to the list, verifying that the record is present
+        var $newRecord = form.$('.o_field_x2many_list tbody .o_data_row').eq(1);
+        assert.equal($newRecord.find('.o_data_cell').eq(1).text(), 'lol',
+            'We should have created a record in the One2Many');
+
+        form.destroy();
+    });
+    
     QUnit.test('one2many list editable with cell readonly modifier', function (assert) {
         assert.expect(4);
 
@@ -5699,7 +5743,7 @@ QUnit.module('relational_fields', {
                 rpcCount++;
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [[0, args.args[1].p[0][1], {
-                        int_field: 123, product_id: 41
+                        int_field: 123, product_id: 41, foo: false,
                     }]]);
                 }
                 return this._super(route, args);
