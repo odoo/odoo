@@ -168,6 +168,11 @@ class AccountInvoice(models.Model):
                         valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
+                        if self.type == 'in_refund':
+                            valuation_stock_move = valuation_stock_move.filtered(lambda m: m._is_out())
+                        elif self.type == 'in_invoice':
+                            valuation_stock_move = valuation_stock_move.filtered(lambda m: m._is_in())
+
                         if valuation_stock_move:
                             valuation_price_unit_total = 0
                             valuation_total_qty = 0

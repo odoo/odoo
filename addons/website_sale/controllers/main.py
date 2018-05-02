@@ -12,6 +12,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -756,9 +757,11 @@ class WebsiteSale(http.Controller):
             bootstrap_formatting= True
         )
 
-        acquirers = request.env['payment.acquirer'].search(
-            [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
-        )
+        domain = expression.AND([
+            ['&', ('website_published', '=', True), ('company_id', '=', order.company_id.id)],
+            ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
+        ])
+        acquirers = request.env['payment.acquirer'].search(domain)
 
         values['access_token'] = order.access_token
         values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]

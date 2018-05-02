@@ -92,7 +92,7 @@ class PurchaseOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
         for order in self:
-            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+            if order.picking_ids and all([x.state in ['done', 'cancel'] for x in order.picking_ids]):
                 order.is_shipped = True
 
     READONLY_STATES = {
@@ -1054,7 +1054,7 @@ class ProcurementRule(models.Model):
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and 'group_id' in values and values['group_id'].id) or False
+                (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
 
         return {
             'partner_id': partner.id,

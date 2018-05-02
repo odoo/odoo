@@ -260,8 +260,12 @@ function get_file(options) {
                 if (options.error) {
                     var body = this.contentDocument.body;
                     var nodes = body.children.length === 0 ? body.childNodes : body.children;
-                    var node = nodes[1] || nodes[0];
-                    options.error(JSON.parse(node.textContent));
+                    options.error({
+                        message: nodes.length > 1 ? nodes[1].textContent : '',
+                        data: {
+                            title: nodes.length > 0 ? nodes[0].textContent : '',
+                        },
+                    });
                 }
             } finally {
                 complete();

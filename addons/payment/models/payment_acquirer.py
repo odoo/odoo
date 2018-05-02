@@ -9,6 +9,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
+from odoo import api, SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +20,11 @@ def _partner_format_address(address1=False, address2=False):
 
 def _partner_split_name(partner_name):
     return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
+
+
+def create_missing_journal_for_acquirers(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['payment.acquirer']._create_missing_journal_for_acquirers()
 
 
 class PaymentAcquirer(models.Model):
@@ -52,6 +58,9 @@ class PaymentAcquirer(models.Model):
     _description = 'Payment Acquirer'
     _order = 'website_published desc, sequence, name'
 
+    def _get_default_view_template_id(self):
+        return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
+
     name = fields.Char('Name', required=True, translate=True)
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
@@ -62,7 +71,8 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', required=True)
+        'ir.ui.view', 'Form Button Template', required=True,
+        default=_get_default_view_template_id)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
@@ -197,6 +207,58 @@ class PaymentAcquirer(models.Model):
         """
         return dict(authorize=[], tokenize=[], fees=[])
 
+    @api.multi
+    def _prepare_account_journal_vals(self):
+        '''Prepare the values to create the acquirer's journal.
+        :return: a dictionary to create a account.journal record.
+        '''
+        self.ensure_one()
+        account_vals = self.env['account.journal']._prepare_liquidity_account(
+            self.name, self.company_id, None, 'bank')
+        account_vals['user_type_id'] = self.env.ref('account.data_account_type_current_assets').id
+        account_vals['reconcile'] = True
+        account = self.env['account.account'].create(account_vals)
+        return {
+            'name': self.name,
+            'code': self.name.upper(),
+            'sequence': 999,
+            'type': 'bank',
+            'company_id': self.company_id.id,
+            'default_debit_account_id': account.id,
+            'default_credit_account_id': account.id,
+            # Show the journal on dashboard if the acquirer is published on the website.
+            'show_on_dashboard': self.website_published,
+            # Don't show payment methods in the backend.
+            'inbound_payment_method_ids': [],
+            'outbound_payment_method_ids': [],
+        }
+
+    @api.model
+    def _create_missing_journal_for_acquirers(self, company=None):
+        '''Create the journal for active acquirers.
+        We want one journal per acquirer. However, we can't create them during the 'create' of the payment.acquirer
+        because every acquirers are defined on the 'payment' module but is active only when installing their own module
+        (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
+        is already installed.
+        '''
+        # Search for installed acquirers modules.
+        # If this method is triggered by a post_init_hook, the module is 'to install'.
+        # If the trigger comes from the chart template wizard, the modules are already installed.
+        acquirer_modules = self.env['ir.module.module'].search(
+            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
+        acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
+
+        # Search for acquirers having no journal
+        company = company or self.env.user.company_id
+        acquirers = self.env['payment.acquirer'].search(
+            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+
+        journals = self.env['account.journal']
+        for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
+            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
+            journals += acquirer.journal_id
+        return journals
+
     @api.model
     def create(self, vals):
         image_resize_images(vals)
@@ -209,7 +271,13 @@ class PaymentAcquirer(models.Model):
 
     @api.multi
     def toggle_website_published(self):
-        self.write({'website_published': not self.website_published})
+        ''' When clicking on the website publish toggle button, the website_published is reversed and
+        the acquirer journal is set or not in favorite on the dashboard.
+        '''
+        self.ensure_one()
+        self.website_published = not self.website_published
+        if self.journal_id:
+            self.journal_id.show_on_dashboard = self.website_published
         return True
 
     @api.multi
