@@ -12,4 +12,22 @@
         Each modification on the master page is automatically applied to all translated versions.
     </p>
 </div>
+
+    <div t-name="web_editor.ImageAttributeTranslateDialog">
+        <t t-foreach="widget.translation" t-as="attr">
+            <t t-set="value" t-value="widget.translation[attr].innerHTML"/>
+            <div class="form-group">
+                <label><t t-esc="widget.attributeString[attr] or attr"/></label>
+                <input t-attf-class="form-control #{attr === 'src' ? 'hidden' : ''}" t-att-value="value" t-att-data-attr="attr"/>
+                <div t-if="attr === 'src'" class="row">
+                    <div class="col-md-4">
+                        <a href="#" class="thumbnail translate_img_preview">
+                            <img t-att-src="value" title="Click to change image"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </div>
+
 </templates>

@@ -143,7 +143,7 @@ TRANSLATED_ELEMENTS = {
 
 # which attributes must be translated
 TRANSLATED_ATTRS = {
-    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
+    'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'src', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
 }
 

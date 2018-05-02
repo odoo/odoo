@@ -32,7 +32,7 @@ from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
-from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS, SKIPPED_ELEMENTS
 from odoo.tools.image import image_data_uri
 
 _logger = logging.getLogger(__name__)
@@ -182,6 +182,7 @@ xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
+SKIPPED_ELEMENTS_RE = re.compile(r"//(%s)\b" % "|".join(SKIPPED_ELEMENTS))
 WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 READONLY = re.compile(r"\breadonly\b")
 
@@ -311,8 +312,9 @@ actual arch.
         for node in arch.xpath('//*[@position]'):
             # inheritance may not use a translated attribute as selector
             if node.tag == 'xpath':
+                skip_element = SKIPPED_ELEMENTS_RE.search(node.get('expr', ''))
                 match = TRANSLATED_ATTRS_RE.search(node.get('expr', ''))
-                if match:
+                if not skip_element and match:
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
                 if WRONGCLASS.search(node.get('expr', '')):
@@ -323,7 +325,7 @@ actual arch.
                     )
             else:
                 for attr in TRANSLATED_ATTRS:
-                    if node.get(attr):
+                    if not node.tag in SKIPPED_ELEMENTS and node.get(attr):
                         message = "View inheritance may not use attribute %r as a selector." % attr
                         self.raise_view_error(message, self.id)
         return True

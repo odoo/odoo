@@ -81,6 +81,67 @@ var AttributeTranslateDialog = weWidgets.Dialog.extend({
     }
 });
 
+var ImageAttributeTranslateDialog = weWidgets.Dialog.extend({
+    template: 'web_editor.ImageAttributeTranslateDialog',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/web_editor/static/src/xml/translator.xml']
+    ),
+    events: {
+        'change input': '_onChange',
+        'keyup input': '_onChange',
+        'click .translate_img_preview': '_onClickImagePreview',
+    },
+    /**
+     * @constructor
+     */
+    init: function (parent, options, node) {
+        this._super(parent, _.extend({
+            title: _t("Translate Image Attribute"),
+            buttons: [
+                {text:  _t("Close"), close: true},
+            ],
+        }, options || {}));
+        this.translation = $(node).data('translation');
+        this.attributeString = {alt: _t("Description"), title: _t("Tooltip"), src: _t("Image")};
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Apply translation when changes perform
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onChange: function (ev) {
+        var $input = $(ev.currentTarget);
+        var node = this.translation[$input.data('attr')];
+        var $node = $(node);
+        var value = $input.val();
+        $node.html(value).trigger('change', node);
+        $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
+        this.trigger_up('rte_change', {target: node});
+    },
+    /**
+     * Open media dialog to select translate image
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickImagePreview: function (ev) {
+        var self = this;
+        var $image = $(ev.currentTarget).find('img');
+        var _editor = new weWidgets.MediaDialog(this, {
+            onlyImages: true,
+        }, null, $image).open();
+        _editor.on('save', this, function () {
+            self.$('input[data-attr="src"]').attr('value', $image.attr('src')).change();
+        });
+    },
+});
+
 var TranslatorInfoDialog = Dialog.extend({
     template: 'web_editor.TranslatorInfoDialog',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
@@ -135,7 +196,7 @@ var TranslatorMenuBar = Widget.extend({
         var $edit = $target.find('[data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field]');
         $edit.filter(':has([data-oe-translation-id], [data-oe-model][data-oe-id][data-oe-field])').attr('data-oe-readonly', true);
         this.$target = $edit.not('[data-oe-readonly]');
-        var attrs = ['placeholder', 'title', 'alt'];
+        var attrs = ['placeholder', 'alt', 'title', 'src'];
         _.each(attrs, function (attr) {
             $target.find('['+attr+'*="data-oe-translation-id="]').filter(':empty, input, select, textarea, img').each(function () {
                 var $node = $(this);
@@ -306,7 +367,11 @@ var TranslatorMenuBar = Widget.extend({
                 return;
             }
 
-            new AttributeTranslateDialog(self, {}, ev.target).open();
+            if (_.contains(['IMG', 'IMAGE'], $(ev.currentTarget).prop('tagName'))) {
+                new ImageAttributeTranslateDialog(self, {}, ev.target).open();
+            } else {
+                new AttributeTranslateDialog(self, {}, ev.target).open();
+            }
         });
     },
     /**

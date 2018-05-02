@@ -783,6 +783,69 @@ class TestTemplating(ViewCase):
             " the main view's"
         )
 
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_img_src_xpath(self):
+        """ Checks that the image src attribute should not use for inheritance """
+        view1 = self.View.create({
+            'name': 'magan',
+            'type': 'qweb',
+            'arch': '<root><img src="path_first"/></root>'
+        })
+        with self.assertRaises(ValidationError):
+            view2 = self.View.create({
+                'name': "chhagan",
+                'type': 'qweb',
+                'inherit_id': view1.id,
+                'arch': """
+                    <xpath expr="//img[contains(@src, 'path_first')]" position="replace">
+                        <img src="path_second"></script>
+                    </xpath>
+                """
+            })
+        with self.assertRaises(ValidationError):
+            view3 = self.View.create({
+                'name': "lagan",
+                'type': 'qweb',
+                'inherit_id': view1.id,
+                'arch': """
+                    <img src="path_second" position="replace">
+                        <img src="path_third"></img>
+                    </img>
+                """
+            })
+
+
+    def test_src_xpath(self):
+        """ Checks that the script src attribute should be use for inheritance """
+        view1 = self.View.create({
+            'name': 'magan',
+            'type': 'qweb',
+            'arch': '<root><script src="path_first"/></root>'
+        })
+        view2 = self.View.create({
+            'name': "chhagan",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="//script[contains(@src, 'path_first')]" position="replace">
+                    <script src="path_second"></script>
+                </xpath>
+            """
+        })
+        view3 = self.View.create({
+            'name': "lagan",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <script src="path_second" position="replace">
+                    <script src="path_third"></script>
+                </script>
+            """
+        })
+        self.assertTrue(view1)
+        self.assertTrue(view2)
+        self.assertTrue(view3)
+
 
 class TestViews(ViewCase):
 
