@@ -406,6 +406,34 @@ datetime.datetime = py.type('datetime', null, {
             throw new Error('ValueError: ' + unit);
         }
     },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days,
+            'hours': args.hours,
+            'minutes': args.minutes,
+            'seconds': args.seconds
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': -args.years,
+            'months': -args.months,
+            'days': -args.days,
+            'hours': -args.hours,
+            'minutes': -args.minutes,
+            'seconds': -args.seconds
+        }));
+    },
     strftime: function () {
         var self = this;
         var args = py.PY_parseArgs(arguments, 'format');
@@ -504,6 +532,26 @@ datetime.date = py.type('date', null, {
              && this.month === other.month
              && this.day === other.day)
             ? py.True : py.False;
+    },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': -args.years,
+            'months': -args.months,
+            'days': -args.days
+        }));
     },
     replace: function () {
         var args = py.PY_parseArgs(arguments, [
@@ -621,13 +669,15 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = _.map(('year month day '
-                + 'years months weeks days '
+var args = _.map(('year month day hour minute second '
+                + 'years months weeks days hours minutes seconds '
                 + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
     switch (arg) {
     case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'hours':case 'minutes':case 'seconds':
         return [arg, zero];
     case 'year':case 'month':case 'day':case 'weekday':
+    case 'hour':case 'minute': case 'second':
     case 'yearday':case 'nlyearday':
         return [arg, null];
     default:
@@ -710,10 +760,13 @@ var relativedelta = py.type('relativedelta', null, {
         this._has_time = 0;
     },
     __add__: function (other) {
-        if (!py.PY_isInstance(other, datetime.date)) {
+        // TODO: test this whole mess
+        var withTime = false;
+        if (py.PY_isInstance(other, datetime.datetime)) {
+            withTime = true;
+        } else if (!py.PY_isInstance(other, datetime.date)) {
             return py.NotImplemented;
         }
-        // TODO: test this whole mess
         var year = (asJS(this.ops.year) || asJS(other.year)) + asJS(this.ops.years);
         var month = asJS(this.ops.month) || asJS(other.month);
         var months;
@@ -741,6 +794,12 @@ var relativedelta = py.type('relativedelta', null, {
             day: py.float.fromJSON(day)
         };
 
+        if (withTime) {
+            repl.hour = py.float.fromJSON(asJS(this.ops.hour) || asJS(other.hour));
+            repl.minute = py.float.fromJSON(asJS(this.ops.minute) || asJS(other.minute));
+            repl.second = py.float.fromJSON(asJS(this.ops.second) || asJS(other.second));
+        }
+
         var days = asJS(this.ops.days);
         if (py.PY_isTrue(this.ops.leapdays) && month > 2 && _utils.isleap(year)) {
             days += asJS(this.ops.leapdays);
@@ -749,7 +808,10 @@ var relativedelta = py.type('relativedelta', null, {
         var ret = py.PY_add(
             py.PY_call(py.PY_getAttr(other, 'replace'), repl),
             py.PY_call(datetime.timedelta, {
-                days: py.float.fromJSON(days)
+                days: py.float.fromJSON(days),
+                hours: this.ops.hours,
+                minutes: this.ops.minutes,
+                seconds: this.ops.seconds
             })
         );
 
@@ -787,10 +849,16 @@ var relativedelta = py.type('relativedelta', null, {
             months: py.PY_negative(this.ops.months),
             days: py.PY_negative(this.ops.days),
             leapdays: this.ops.leapdays,
+            hours: py.PY_negative(this.ops.hours),
+            minutes: py.PY_negative(this.ops.minutes),
+            seconds: py.PY_negative(this.ops.seconds),
             year: this.ops.year,
             month: this.ops.month,
             day: this.ops.day,
-            weekday: this.ops.weekday
+            weekday: this.ops.weekday,
+            hour: this.ops.hour,
+            minute: this.ops.minute,
+            second: this.ops.second
         });
     }
 });
