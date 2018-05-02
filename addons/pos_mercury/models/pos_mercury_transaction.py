@@ -8,7 +8,7 @@ from odoo import models, api, service
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 from odoo.tools import misc
-from odoo.tools.datetime import date, timedelta
+from odoo.tools.datetime import date
 
 
 class MercuryTransaction(models.Model):
@@ -114,7 +114,7 @@ class MercuryTransaction(models.Model):
     # deleted after 6 months
     @api.model
     def cleanup_old_tokens(self):
-        expired_creation_date = (date.today() - timedelta(days=6 * 30))
+        expired_creation_date = date.today().subtract(months=6)
 
         for order in self.env['pos.order'].search([('create_date', '<', expired_creation_date)]):
             order.ref_no = ""

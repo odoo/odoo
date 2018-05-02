@@ -87,13 +87,13 @@ class CrmTeam(models.Model):
                 )
                 if self.dashboard_graph_group_pos == 'day':
                     for data_point in order_data:
-                        result.append({'x_value': fields.Date.to_string((fields.Datetime.strptime(data_point.get('date:day'), "%d %b %Y"))), 'y_value': data_point.get('price_total')})
+                        result.append({'x_value': fields.Date.to_string((datetime.strptime(data_point.get('date:day'), "%d %b %Y"))), 'y_value': data_point.get('price_total')})
                 elif self.dashboard_graph_group_pos == 'week':
                     for data_point in order_data:
                         result.append({'x_value': int(data_point.get('date:week')[1:3]), 'y_value': data_point.get('price_total')})
                 elif self.dashboard_graph_group_pos == 'month':
                     for data_point in order_data:
-                        result.append({'x_value': fields.Datetime.strptime(data_point.get('date:month'), "%B %Y").month, 'y_value': data_point.get('price_total')})
+                        result.append({'x_value': datetime.strptime(data_point.get('date:month'), "%B %Y").month, 'y_value': data_point.get('price_total')})
             return result
 
         return super(CrmTeam, self)._graph_data(start_date, end_date)

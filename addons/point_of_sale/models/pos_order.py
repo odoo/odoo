@@ -10,7 +10,6 @@ from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons import decimal_precision as dp
-from odoo.tools.datetime import timedelta, UTC
 
 _logger = logging.getLogger(__name__)
 
@@ -1042,7 +1041,7 @@ class ReportSaleDetails(models.AbstractModel):
             date_stop = fields.Datetime.from_string(date_stop)
         else:
             # stop by default today 23:59:59
-            date_stop = today + timedelta(days=1, seconds=-1)
+            date_stop = today.end_of('day')
 
         # avoid a date_stop smaller than date_start
         date_stop = max(date_stop, date_start)
