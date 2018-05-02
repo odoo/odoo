@@ -52,6 +52,16 @@ class StockMoveLine(models.Model):
     reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
+    _sql_constraints = [
+        ('_check_positive_qty_done',
+         'CHECK(qty_done >= 0)',
+         "You can not enter negative quantities!"),
+         
+         ('check_reserved_done_quantity',
+         "CHECK(state != 'done' or abs(round(product_uom_qty, 6))<=0.000001 )",
+         'A done move line should never have a reserved quantity.'),
+    ]
+
     def _compute_location_description(self):
         for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
@@ -85,12 +95,6 @@ class StockMoveLine(models.Model):
             picking_id = ml.picking_id
             ml.in_entire_package = picking_id and picking_id.picking_type_entire_packs and picking_id.state != 'done'\
                                    and ml.result_package_id and ml.result_package_id in picking_id.entire_package_ids
-
-    @api.constrains('product_uom_qty')
-    def check_reserved_done_quantity(self):
-        for move_line in self:
-            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
-                raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
@@ -145,11 +149,6 @@ class StockMoveLine(models.Model):
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
-
-    @api.constrains('qty_done')
-    def _check_positive_qty_done(self):
-        if any([ml.qty_done < 0 for ml in self]):
-            raise ValidationError(_('You can not enter negative quantities!'))
 
     def _get_similar_move_lines(self):
         self.ensure_one()
