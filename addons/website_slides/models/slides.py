@@ -17,7 +17,7 @@ from odoo.tools import image
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
 from odoo.http import request
-from odoo.addons.website.models.website import url_for
+from odoo.addons.http_routing.models.ir_http import url_for
 
 
 class Channel(models.Model):
