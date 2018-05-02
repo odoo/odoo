@@ -538,8 +538,8 @@
             <search string="Operations">
                 <field name="workcenter_id"/>
                 <filter string="Today" name="today" domain="[('date_start','&gt;=',datetime.today())]"/>
-                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',datetime.today())]"/>
-                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',datetime.today())]"/>
+                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',datetime.today().start_of('month'))]"/>
+                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',datetime.today().start_of('year'))]"/>
                 <separator/>
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>

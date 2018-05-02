@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools.datetime import relativedelta
 
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
@@ -106,7 +105,7 @@ class MrpWorkcenter(models.Model):
     def _compute_blocked_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently ??
         data = self.env['mrp.workcenter.productivity'].read_group([
-            ('date_start', '>=', fields.Datetime.now() - relativedelta(months=1)),
+            ('date_start', '>=', fields.Datetime.now().subtract(months=1)),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '!=', 'productive')],
@@ -119,7 +118,7 @@ class MrpWorkcenter(models.Model):
     def _compute_productive_time(self):
         # TDE FIXME: productivity loss type should be only losses, probably count other time logs differently
         data = self.env['mrp.workcenter.productivity'].read_group([
-            ('date_start', '>=', fields.Datetime.now() - relativedelta(months=1)),
+            ('date_start', '>=', fields.Datetime.now().subtract(months=1)),
             ('workcenter_id', 'in', self.ids),
             ('date_end', '!=', False),
             ('loss_type', '=', 'productive')],
@@ -139,7 +138,7 @@ class MrpWorkcenter(models.Model):
     @api.multi
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder'].read_group([
-            ('date_start', '>=', fields.Datetime.now() - relativedelta(months=1)),
+            ('date_start', '>=', fields.Datetime.now().subtract(months=1)),
             ('workcenter_id', 'in', self.ids),
             ('state', '=', 'done')], ['duration_expected', 'workcenter_id', 'duration'], ['workcenter_id'], lazy=False)
         duration_expected = dict((data['workcenter_id'][0], data['duration_expected']) for data in wo_data)

@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
-from odoo.tools.datetime import datetime, relativedelta
+from odoo.tools.datetime import datetime
 
 
 class MrpWorkorder(models.Model):
@@ -473,7 +473,7 @@ class MrpWorkorder(models.Model):
                     not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
-                maxdate = timeline.date_start + relativedelta(minutes=wo.duration_expected - wo.duration)
+                maxdate = timeline.date_start.add(minutes=wo.duration_expected - wo.duration)
                 enddate = datetime.now()
                 if maxdate > enddate:
                     timeline.write({'date_end': enddate})
