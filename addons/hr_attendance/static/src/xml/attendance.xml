@@ -47,11 +47,11 @@
                     <t t-if="!widget.use_pin">
                         <t t-if="widget.employee_state=='checked_in'">
                             <h2>Check out</h2>
-                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-out fa-sign-in"/>
+                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-out"/>
                         </t>
                         <t t-if="widget.employee_state=='checked_out'">
                             <h2>Check in</h2>
-                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-out fa-sign-out"/>
+                            <a class="fa btn-primary o_hr_attendance_sign_in_out_icon fa-sign-in"/>
                         </t>
                     </t>
                     <t t-if="widget.use_pin">
