@@ -514,9 +514,7 @@ class MassMailing(models.Model):
         return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
 
     def _compute_next_departure(self):
-        cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
-        str2dt = fields.Datetime.from_string
-        cron_time = str2dt(cron_next_call)
+        cron_time = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
         for mass_mailing in self:
             if mass_mailing.schedule_date:
                 schedule_date = mass_mailing.schedule_date
