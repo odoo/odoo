@@ -126,12 +126,13 @@ class Partner(models.Model):
                                 s = 3
                 if s == 4:
                     for mline in partner.member_lines:
-                        mline_test = not mline.date_from or mline.date_from < today
-                        mline_test = mline_test and (not mline.date_to or mline.date_to < today)
-                        mline_test = mline_test and (not mline.date_from or (mline.date_to and mline.date_from <= mline.date_to))
-                        mline_test = mline_test and mline.account_invoice_line
-                        mline_test = mline_test and mline.account_invoice_line.invoice_id.state == 'paid'
-                        if mline_test:
+                        if (
+                            (not mline.date_from or mline.date_from < today)
+                            and (not mline.date_to or mline.date_to < today)
+                            and (not mline.date_from or (mline.date_to and mline.date_from <= mline.date_to))
+                            and mline.account_invoice_line
+                            and mline.account_invoice_line.invoice_id.state == 'paid'
+                        ):
                             s = 5
                         else:
                             s = 6
