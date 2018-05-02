@@ -640,42 +640,42 @@
         <record id="mrp_workcenter_efficiency_0" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
             <field name="loss_id" ref="block_reason7"/>
-            <field name="date_start" eval="datetime.now() - datetime.relativedelta(days=5)"/>
-            <field name="date_end" eval="datetime.now() - datetime.relativedelta(days=2)"/>
+            <field name="date_start" eval="datetime.now().subtract(days=5)"/>
+            <field name="date_end" eval="datetime.now().subtract(days=2)"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_1" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
             <field name="loss_id" ref="block_reason0"/>
-            <field name="date_start" eval="datetime.now() - datetime.timedelta(hours=5)"/>
-            <field name="date_end" eval="datetime.now() - datetime.timedelta(hours=3)"/>
+            <field name="date_start" eval="datetime.now().subtract(hours=5)"/>
+            <field name="date_end" eval="datetime.now().subtract(hours=3)"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_2" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
             <field name="loss_id" ref="block_reason1"/>
-            <field name="date_start" eval="datetime.now() - datetime.timedelta(days=5, hours=4)"/>
-            <field name="date_end" eval="datetime.now() - datetime.timedelta(days=5, hours=3)"/>
+            <field name="date_start" eval="datetime.now().subtract(days=5, hours=4)"/>
+            <field name="date_end" eval="datetime.now().subtract(days=5, hours=3)"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_3" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="loss_id" ref="block_reason7"/>
-            <field name="date_start" eval="datetime.now() - datetime.relativedelta(days=5)"/>
-            <field name="date_end" eval="datetime.now() - datetime.relativedelta(days=3)"/>
+            <field name="date_start" eval="datetime.now().subtract(days=5)"/>
+            <field name="date_end" eval="datetime.now().subtract(days=3)"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_4" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="loss_id" ref="block_reason0"/>
-            <field name="date_start" eval="datetime.now() - datetime.timedelta(days=5,hours=5)"/>
-            <field name="date_end" eval="datetime.now() - datetime.timedelta(days=5,hours=1)"/>
+            <field name="date_start" eval="datetime.now().subtract(days=5, hours=5)"/>
+            <field name="date_end" eval="datetime.now().subtract(days=5, hours=1)"/>
         </record>
 
         <record id="mrp_workcenter_efficiency_5" model="mrp.workcenter.productivity">
             <field name="workcenter_id" ref="mrp_workcenter_1"/>
             <field name="loss_id" ref="block_reason1"/>
-            <field name="date_start" eval="datetime.now() - datetime.timedelta(hours=1)"/>
+            <field name="date_start" eval="datetime.now().subtract(hours=1)"/>
         </record>
 
         <function model="mrp.production" name="action_assign">
