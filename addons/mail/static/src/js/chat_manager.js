@@ -149,7 +149,16 @@ function make_message (data) {
     _.each(_.keys(emoji_substitutions), function (key) {
         var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
         var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
+        var msg_bak = msg.body;
         msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+emoji_substitutions[key]+'</span> ');
+
+        // Idiot-proof limit. If the user had the amazing idea of copy-pasting thousands of emojis,
+        // the image rendering can lead to memory overflow errors on some browsers (e.g. Chrome).
+        // Set an arbitrary limit to 200 from which we simply don't replace them (anyway, they are
+        // already replaced by the unicode counterpart).
+        if (_.str.count(msg.body, 'o_mail_emoji') > 200) {
+            msg.body = msg_bak;
+        }
     });
 
     function property_descr(channel) {
