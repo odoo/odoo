@@ -845,7 +845,8 @@ class Orderpoint(models.Model):
         days = self.lead_days or 0.0
         if self.lead_type == 'supplier':
             # These days will be substracted when creating the PO
-            days += self.product_id._select_seller().delay or 0.0
+            qty = self.env.context.get('product_qty', 0.0)
+            days += self.product_id._select_seller(quantity=qty).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
@@ -853,7 +854,7 @@ class Orderpoint(models.Model):
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
         return {
             'name': self.name,
-            'date_planned': date or self._get_date_planned(datetime.today()),
+            'date_planned': date or self.with_context(product_qty=product_qty)._get_date_planned(datetime.today()),
             'product_id': self.product_id.id,
             'product_qty': product_qty,
             'company_id': self.company_id.id,
