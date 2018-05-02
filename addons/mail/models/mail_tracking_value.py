@@ -84,7 +84,7 @@ class MailTracking(models.Model):
                     result.append(record['%s_value_datetime' % type])
             elif record.field_type == 'date':
                 if record['%s_value_datetime' % type]:
-                    new_date = record['%s_value_datetime' % type]
+                    new_date = record['%s_value_datetime' % type].date()
                     result.append(new_date)
                 else:
                     result.append(record['%s_value_datetime' % type])

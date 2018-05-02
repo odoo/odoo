@@ -413,13 +413,12 @@ class MailThread(models.AbstractModel):
                 created on-the-fly by the templates)
             - unused since at least one day (create_date and write_date)
         """
-        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        limit_date_str = limit_date
+        limit_date = datetime.datetime.utcnow().subtract(days=1)
         self.env['ir.attachment'].search([
             ('res_model', '=', 'mail.compose.message'),
             ('res_id', '=', 0),
-            ('create_date', '<', limit_date_str),
-            ('write_date', '<', limit_date_str)]
+            ('create_date', '<', limit_date),
+            ('write_date', '<', limit_date)]
         ).unlink()
         return True
 
