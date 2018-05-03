@@ -285,7 +285,7 @@ class Warehouse(models.Model):
                 reception_route.pull_ids.unlink()
                 reception_route.push_ids.unlink()
             else:
-                reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
+                warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
             routings = routes_data[warehouse.id][warehouse.reception_steps]
             push_rules_list, pull_rules_list = warehouse._get_push_pull_rules_values(
