@@ -14,7 +14,7 @@ class FleetVehicle(models.Model):
     _order = 'license_plate asc, acquisition_date asc'
 
     def _get_default_state(self):
-        state = self.env.ref('fleet.vehicle_state_active', raise_if_not_found=False)
+        state = self.env.ref('fleet.fleet_vehicle_state_registered', raise_if_not_found=False)
         return state and state.id or False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
