@@ -17,8 +17,8 @@
 # fausthuang, 2017
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
-# Siyuan Gu <siyuancn@hotmail.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
+# Siyuan Gu <siyuancn@hotmail.com>, 2017
 # Joray <13637815@qq.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
@@ -32,7 +32,6 @@
 # Bo Cao, 2017
 # LIN Yu <yu_lin@me.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
-# 钟小华 <mackz@sina.com>, 2017
 # Maie <m@maie.name>, 2017
 # 仁东 郑 <msntop@outlook.com>, 2017
 # Noah McDermott <Noah_mcdermott@northwestschools.net>, 2017
@@ -7983,7 +7982,7 @@ msgstr "管理"
 #: model:ir.model.fields,help:base.field_res_country_state_name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr "管理国家或地区的分类。"
+msgstr "管理国家/地区或地区的分类。"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:907 code:addons/base/ir/ir_model.py:1019
@@ -9999,17 +9998,17 @@ msgstr "国家"
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Country"
-msgstr "国家"
+msgstr "国家/地区"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_phone_code
 msgid "Country Calling Code"
-msgstr "国家长途区号"
+msgstr "国家/地区长途区号"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_code
 msgid "Country Code"
-msgstr "国家代码"
+msgstr "国家/地区代码"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_group
@@ -10017,22 +10016,22 @@ msgstr "国家代码"
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 #: model:ir.ui.view,arch_db:base.view_country_group_tree
 msgid "Country Group"
-msgstr "国家组"
+msgstr "国家/地区组"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_country_group_ids
 msgid "Country Groups"
-msgstr "国家分组"
+msgstr "国家/地区分组"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_name
 msgid "Country Name"
-msgstr "国家名称"
+msgstr "国家/地区名称"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "国家州/省"
+msgstr "国家地区州/省"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_create
@@ -11037,7 +11036,7 @@ msgstr "在相关文档上显示一个选择来打印这个报告"
 msgid ""
 "Display and manage the list of all countries group. You can create or delete"
 " country group to make sure the ones you are working on will be maintained."
-msgstr "显示和管理所有国家群组的列表。你可以创建或删除国家群组，以确保你正在使用的国家群组被维护。"
+msgstr "显示和管理所有国家/地区群组的列表。你可以创建或删除国家/地区群组，以确保你正在使用的国家/地区群组被维护。"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -11058,13 +11057,13 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
-"显示用于属于该国家的地址的格式。\n"
+"显示用于属于该国家/地区的地址的格式。\n"
 "\n"
 "您可以在地址的所有字段中使用 python 样式的字符串模式（例如，使用“%(street)s”来显示字段“street”）加上\n"
 "%(state_name)s：州的名称\n"
 "%(state_code)s：州代码\n"
-"%(country_name)s：国家名称\n"
-"%(country_code)s：国家代码"
+"%(country_name)s：国家/地区名称\n"
+"%(country_code)s：国家/地区代码"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
@@ -13212,7 +13211,7 @@ msgstr "ISO 代号"
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_import_code
 msgid "ISO Language and Country code, e.g. en_US"
-msgstr "ISO语言和国家代码，例如en_US"
+msgstr "ISO语言和国家/地区代码，例如en_US"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_iso_code
@@ -21661,7 +21660,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"ISO 国家代码使用两个字符。\n"
+"ISO 国家/地区代码使用两个字符。\n"
 " 您可以使用此字段进行快速搜索。"
 
 #. module: base
@@ -21723,7 +21722,7 @@ msgstr "选择的公司不属于此用户允许访问的公司。"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr "国家代码须唯一 !"
+msgstr "国家/地区代码须唯一 !"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -21733,7 +21732,7 @@ msgstr "语言代码必须唯一!"
 #. module: base
 #: sql_constraint:res.country.state:0
 msgid "The code of the state must be unique by country !"
-msgstr "国家代码须唯一！"
+msgstr "国家/地区代码须唯一！"
 
 #. module: base
 #: sql_constraint:res.company:0
@@ -21849,7 +21848,7 @@ msgstr "以下 模块没有安装 或未知: %s"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country_name
 msgid "The full name of the country."
-msgstr "国家全名。"
+msgstr "国家/地区全名。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_user_id
@@ -21893,7 +21892,7 @@ msgstr "该字段所属的模型"
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The name of the country must be unique !"
-msgstr "国家名必须唯一！"
+msgstr "国家/地区名必须唯一！"
 
 #. module: base
 #: code:addons/base/res/res_users.py:152
