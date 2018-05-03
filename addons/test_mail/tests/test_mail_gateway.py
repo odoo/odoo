@@ -475,17 +475,15 @@ class TestMailgateway(BaseFunctionalTest, MockEmails):
         """ Testing private discussion between partners. """
         msg1_pids = [self.env.user.partner_id.id, self.partner_1.id]
 
-        # Do: Raoul writes to Bert and Administrator, with a thread_model in context that should not be taken into account
-        msg1 = self.env['mail.thread'].with_context({
-            'thread_model': 'mail.test'
-        }).sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment')
+        # Do: Raoul writes to Bert and Administrator, with a model specific by parameter that should not be taken into account
+        msg1 = self.env['mail.thread'].sudo(self.user_employee).message_post(partner_ids=msg1_pids, subtype='mail.mt_comment', model='mail.test')
 
         # Test: message recipients
         msg = self.env['mail.message'].browse(msg1.id)
         self.assertEqual(msg.partner_ids, self.env.user.partner_id | self.partner_1,
                          'message_post: private discussion: incorrect recipients')
         self.assertEqual(msg.model, False,
-                         'message_post: private discussion: context key "thread_model" not correctly ignored when having no res_id')
+                         'message_post: private discussion: parameter model not correctly ignored when having no res_id')
         # Test: message-id
         self.assertIn('openerp-private', msg.message_id, 'message_post: private discussion: message-id should contain the private keyword')
 
