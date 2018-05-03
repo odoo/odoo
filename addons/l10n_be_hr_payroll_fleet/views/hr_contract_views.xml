@@ -18,7 +18,18 @@
             <xpath expr="//field[@name='car_atn']" position="after">
                 <field name="company_car_total_depreciated_cost" invisible="1"/>
             </xpath>
-            
+            <group name="yearly_advantages" position="after">
+                <group string="Company Car" attrs="{'invisible': [('car_id', '=', False)]}">
+                    <field name="acquisition_date"/>
+                    <field name="car_value"/>
+                    <field name="fuel_type"/>
+                    <field name="co2"/>
+                    <field name="driver_id"/>
+                    <field name="car_open_contracts_count"/>
+                    <field name="recurring_cost_amount_depreciated" attrs="{'invisible': [('car_open_contracts_count', '!=', 1)]}"/>
+                    <field name="car_atn"/>
+                </group>
+            </group>
         </field>
     </record>
 </odoo>

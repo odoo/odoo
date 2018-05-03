@@ -18,6 +18,15 @@ class HrContract(models.Model):
     new_car = fields.Boolean('Request a new car')
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
+    acquisition_date = fields.Date(related='car_id.acquisition_date')
+    car_value = fields.Float(related="car_id.car_value")
+    fuel_type = fields.Selection(related="car_id.fuel_type")
+    co2 = fields.Float(related="car_id.co2")
+    driver_id = fields.Many2one('res.partner', related="car_id.driver_id")
+    car_open_contracts_count = fields.Integer(compute='_compute_car_open_contracts_count')
+    recurring_cost_amount_depreciated = fields.Float(
+        compute='_compute_recurring_cost_amount_depreciated',
+        inverse="_inverse_recurring_cost_amount_depreciated")
 
     @api.depends('car_id', 'new_car', 'new_car_model_id', 'car_id.total_depreciated_cost',
         'car_id.atn', 'new_car_model_id.default_atn', 'new_car_model_id.default_total_depreciated_cost',
@@ -31,6 +40,29 @@ class HrContract(models.Model):
             elif contract.new_car and contract.new_car_model_id:
                 contract.car_atn = contract.new_car_model_id.default_atn
                 contract.company_car_total_depreciated_cost = contract.new_car_model_id.default_total_depreciated_cost
+
+    @api.depends('car_id.log_contracts.state')
+    def _compute_car_open_contracts_count(self):
+        for contract in self:
+            contract.car_open_contracts_count = len(contract.car_id.log_contracts.filtered(
+                lambda c: c.state == 'open').ids)
+
+    @api.depends('car_open_contracts_count', 'car_id.log_contracts.recurring_cost_amount_depreciated')
+    def _compute_recurring_cost_amount_depreciated(self):
+        for contract in self:
+            if contract.car_open_contracts_count == 1:
+                contract.recurring_cost_amount_depreciated = contract.car_id.log_contracts.filtered(
+                    lambda c: c.state == 'open'
+                ).recurring_cost_amount_depreciated
+            else:
+                contract.recurring_cost_amount_depreciated = 0.0
+
+    def _inverse_recurring_cost_amount_depreciated(self):
+        for contract in self:
+            if contract.car_open_contracts_count == 1:
+                contract.car_id.log_contracts.filtered(
+                    lambda c: c.state == 'open'
+                ).recurring_cost_amount_depreciated = contract.recurring_cost_amount_depreciated
 
     @api.depends('name')
     def _compute_available_cars_amount(self):
