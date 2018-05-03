@@ -425,14 +425,11 @@ datetime.datetime = py.type('datetime', null, {
             ['years', py.None], ['months', py.None], ['days', py.None],
             ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
         ]);
-        return py.PY_add(this, py.PY_call(relativedelta, {
-            'years': -args.years,
-            'months': -args.months,
-            'days': -args.days,
-            'hours': -args.hours,
-            'minutes': -args.minutes,
-            'seconds': -args.seconds
-        }));
+        var params = {};
+        for(var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : py.float.fromJSON(-asJS(args[key])));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
     },
     strftime: function () {
         var self = this;
@@ -547,11 +544,11 @@ datetime.date = py.type('date', null, {
         var args = py.PY_parseArgs(arguments, [
             ['years', py.None], ['months', py.None], ['days', py.None],
         ]);
-        return py.PY_add(this, py.PY_call(relativedelta, {
-            'years': -args.years,
-            'months': -args.months,
-            'days': -args.days
-        }));
+        var params = {};
+        for(var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : -asJS(args[key]));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
     },
     replace: function () {
         var args = py.PY_parseArgs(arguments, [
