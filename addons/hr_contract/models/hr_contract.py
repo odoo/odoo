@@ -84,6 +84,8 @@ class Contract(models.Model):
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no")
     visa_no = fields.Char('Visa No', related="employee_id.visa_no")
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire")
+    reported_to_secretariat = fields.Boolean('Social Secretariat',
+        help='Green this button when the contract information has been transfered to the social secretariat.')
 
     def _expand_states(self, states, domain, order):
         return [key for key, val in type(self).state.selection]
