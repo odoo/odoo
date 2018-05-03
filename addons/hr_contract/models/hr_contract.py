@@ -56,7 +56,7 @@ class Contract(models.Model):
     name = fields.Char('Contract Reference', required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
-    type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
+    type_id = fields.Many2one('hr.contract.type', string="Employee Category", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
     job_id = fields.Many2one('hr.job', string='Job Position')
     date_start = fields.Date('Start Date', required=True, default=fields.Date.today,
         help="Start date of the contract.")
