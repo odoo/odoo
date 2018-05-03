@@ -68,6 +68,7 @@
                                     <group string="Position">
                                         <field name="department_id"/>
                                         <field name="job_id"/>
+                                        <field name="job_title"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                         <field name="resource_calendar_id" required="1"/>
@@ -94,19 +95,38 @@
                                             This private address is used in the expense report reimbursement document.
                                             It should be different from the work address.
                                         </div>
+                                        <field name="emergency_contact"/>
+                                        <field name="emergency_phone"/>
+                                        <field name="km_home_work" groups="hr.group_hr_user"/>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
                                         <field name="marital"/>
+                                        <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                        <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}" groups="hr.group_hr_user"/>
+                                        <field name="children"/>
                                     </group>
                                     <group string="Birth">
                                         <field name="birthday"/>
+                                        <field name="place_of_birth" groups="hr.group_hr_user"/>
+                                        <field name="country_of_birth" groups="hr.group_hr_user"/>
                                     </group>
                                     <group string="Work Permit" name="work_permit">
                                         <field name="visa_no"/>
                                         <field name="permit_no"/>
                                         <field name="visa_expire"/>
                                     </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                        <field name="study_school"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="google_drive_link" widget="url"/>
+                                </group>
+                                <group>
+                                    <field name="additional_note"/>
                                 </group>
                             </page>
                             <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">

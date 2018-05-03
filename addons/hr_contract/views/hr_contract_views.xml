@@ -38,12 +38,6 @@
                             <field name="vehicle_distance"/>
                         </group>
                     </xpath>
-                    <xpath expr="//field[@name='marital']" position="after">
-                        <field name="children"/>
-                    </xpath>
-                    <xpath expr="//field[@name='birthday']" position="after">
-                        <field name="place_of_birth"/>
-                    </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}"/>
                     </xpath>
