@@ -43,7 +43,6 @@ class TestHrPayrollAccount(common.TransactionCase):
             'marital': 'single',
             'name': 'John',
             'bank_account_id': self.res_partner_bank.bank_id.id,
-            'vehicle_distance': 0.0,
         })
 
         self.hr_structure_softwaredeveloper = self.env['hr.payroll.structure'].create({
