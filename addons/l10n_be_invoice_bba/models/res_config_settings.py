@@ -23,4 +23,4 @@ class ResConfigSettings(models.TransientModel):
         if self.out_inv_comm_algorithm == 'none':
             self.out_inv_comm_type = 'none'
         else:
-            self.out_inv_comm_type = 'bba'
+            self.out_inv_comm_type = 'struct_comm'

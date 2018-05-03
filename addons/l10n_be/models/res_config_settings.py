@@ -7,4 +7,4 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    module_l10n_be_invoice_bba = fields.Boolean(string='BBA Structured Communication')
+    module_l10n_be_invoice = fields.Boolean(string='Structured Communication')

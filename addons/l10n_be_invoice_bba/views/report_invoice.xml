@@ -2,7 +2,7 @@
 <odoo>
     <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='total']" position="after">
-            <p t-if="o.reference_type=='bba' and o.reference">
+            <p t-if="o.reference_type=='struct_comm' and o.reference">
                 Please use the following structured communication for your payment : <b><span t-field="o.reference"/></b>
             </p>
         </xpath>

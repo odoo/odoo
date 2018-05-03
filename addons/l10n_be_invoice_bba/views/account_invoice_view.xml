@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Adapt Customer Invoices to support bba structured communication -->   
-    <record id="customer_invoice_bbacomm_form" model="ir.ui.view">
+    <!-- Adapt Customer Invoices to support structured communication -->
+    <record id="customer_invoice_structcomm_form" model="ir.ui.view">
       <field name="name">account.invoice.form.inherit</field>
       <field name="model">account.invoice</field>
       <field name="inherit_id" ref="account.invoice_form"/>
       <field name="arch" type="xml">
         <xpath expr="//page[@name='other_info']//field[@name='name']" position="after">
               <field name="reference_type" invisible="1"/>
-              <field name="reference" string="BBA Structured Communication" attrs="{'readonly':[('state','!=','draft')], 'invisible': [('reference_type','=','none')]}"/>
+              <field name="reference" string="Structured Communication" attrs="{'readonly':[('state','!=','draft')], 'invisible': [('reference_type','=','none')]}"/>
         </xpath>
       </field>
     </record>
