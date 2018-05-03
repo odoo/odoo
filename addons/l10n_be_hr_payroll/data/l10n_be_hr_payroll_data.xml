@@ -433,7 +433,7 @@ elif salary &lt;= 2461.27:
         <field name="sequence">70</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
-result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+result = bool(contract.transport_mode_car and contract.car_atn)
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
@@ -467,7 +467,7 @@ result = contract.car_atn
         <field name="sequence">160</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
-result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+result = bool(contract.transport_mode_car and contract.car_atn)
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">

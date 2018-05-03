@@ -9,12 +9,9 @@ from odoo.exceptions import ValidationError
 class HrContract(models.Model):
     _inherit = 'hr.contract'
 
-    transport_mode = fields.Selection([
-        ('company_car', 'Company car'),
-        ('public_transport', 'Public Transport'),
-        ('others', 'Other'),
-    ], string="Transport", default='company_car',
-    help="Transport mode the employee uses to go to work.")
+    transport_mode_car = fields.Boolean('Uses company car')
+    transport_mode_public = fields.Boolean('Uses public transportation')
+    transport_mode_others = fields.Boolean('Uses another transport mode')
     car_atn = fields.Monetary(string='ATN Company Car')
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
     thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
@@ -119,16 +116,19 @@ class HrContract(models.Model):
             else:
                 contract.wage = contract.wage_with_holidays
 
-    @api.depends('transport_mode', 'company_car_total_depreciated_cost',
-        'public_transport_reimbursed_amount', 'others_reimbursed_amount')
+    @api.depends('transport_mode_car', 'transport_mode_public', 'transport_mode_others',
+        'company_car_total_depreciated_cost', 'public_transport_reimbursed_amount', 'others_reimbursed_amount')
     def _compute_transport_employer_cost(self):
+        # Don't call to super has we ovewrite the method
         for contract in self:
-            if contract.transport_mode == 'company_car':
-                contract.transport_employer_cost = contract.company_car_total_depreciated_cost
-            elif contract.transport_mode == 'public_transport':
-                contract.transport_employer_cost = contract.public_transport_reimbursed_amount
-            elif contract.transport_mode == 'others':
-                contract.transport_employer_cost = contract.others_reimbursed_amount
+            transport_employer_cost = 0.0
+            if contract.transport_mode_car:
+                transport_employer_cost += contract.company_car_total_depreciated_cost
+            if contract.transport_mode_public:
+                transport_employer_cost += contract.public_transport_reimbursed_amount
+            if contract.transport_mode_others:
+                transport_employer_cost += contract.others_reimbursed_amount
+            contract.transport_employer_cost = transport_employer_cost
 
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
@@ -210,14 +210,14 @@ class HrContract(models.Model):
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
 
-    @api.onchange('transport_mode')
+    @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
-        if self.transport_mode != 'company_car':
+        if not self.transport_mode_car:
             self.fuel_card = 0
             self.company_car_total_depreciated_cost = 0
-        if self.transport_mode != 'others':
+        if not self.transport_mode_others:
             self.others_reimbursed_amount = 0
-        if self.transport_mode != 'public_transports':
+        if not self.transport_mode_public:
             self.public_transport_reimbursed_amount = 0
 
     @api.onchange('mobile', 'mobile_plus')

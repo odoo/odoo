@@ -16,6 +16,7 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True)
     available_cars_amount = fields.Integer(compute='_compute_available_cars_amount', string='Number of available cars')
     new_car = fields.Boolean('Request a new car')
+    # YTI: Check if could be removed
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
     acquisition_date = fields.Date(related='car_id.acquisition_date')
@@ -82,10 +83,10 @@ class HrContract(models.Model):
         self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
         return {'domain': {'car_id': self._get_available_cars_domain()}}
 
-    @api.onchange('transport_mode')
+    @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
         super(HrContract, self)._onchange_transport_mode()
-        if self.transport_mode != 'company_car':
+        if not self.transport_mode_car:
             self.car_id = False
             self.new_car_model_id = False
 
