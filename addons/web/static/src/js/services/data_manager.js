@@ -204,25 +204,6 @@ return core.Class.extend({
     _invalidate: function (cache, key) {
         delete cache[key];
     },
-        // Attribute that contains for each viewType the fields for
-        // that viewType as defaults and
-        // All the fields of the other viewTypes
-        // useful to ensure that every field is present
-        // when swithcing from view to view
-        attrs.mergeViewsFields = {};
-        _.each(attrs.views, function(firstObj, firstViewType) {
-            if (!attrs.mergeViewsFields[firstViewType]) {
-                attrs.mergeViewsFields[firstViewType] = {};
-            }
-            _.defaults(attrs.mergeViewsFields[firstViewType], firstObj.fields);
-
-            // We need to double-traverse the attrs.views to ensure
-            // every viewType contains all the other's fields
-            _.each(attrs.views, function(secondObj, secondViewType) {
-                _.defaults(attrs.mergeViewsFields[firstViewType], secondObj.fields);
-            });
-        });
-
 });
 
 });
