@@ -85,6 +85,13 @@ class HrContract(models.Model):
     eco_checks = fields.Monetary("Eco Vouchers",
         default=lambda self: self.get_attribute('eco_checks', 'default_value'),
         help="Yearly amount the employee receives in the form of eco vouchers.")
+    ip = fields.Boolean(default=False, track_visibility="onchange")
+    ip_wage_rate = fields.Float(string="IP percentage", help="Should be between 0 and 100 %")
+
+    @api.constrains('ip_wage_rate')
+    def _check_ip_wage_rate(self):
+        if self.filtered(lambda contract: contract.ip_wage_rate < 0 or contract.ip_wage_rate > 100):
+            raise ValidationError(_('The IP rate on wage should be between 0 and 100'))
 
     @api.depends('holidays', 'wage', 'final_yearly_costs')
     def _compute_wage_with_holidays(self):
