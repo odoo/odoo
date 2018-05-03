@@ -351,6 +351,8 @@ class Slide(models.Model):
 
     def _get_embed_code(self):
         base_url = request and request.httprequest.url_root or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        if base_url[-1] == '/':
+            base_url = base_url[:-1]
         for record in self:
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
