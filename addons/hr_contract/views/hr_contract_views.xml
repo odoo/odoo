@@ -69,6 +69,8 @@
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <separator/>
+                    <filter string="To Report to Social Secretariat" name="to_report" domain="[('reported_to_secretariat', '=', False)]"/>
+                    <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
@@ -108,6 +110,7 @@
                         </group>
                         <group>
                             <field name="type_id"/>
+                            <field name="reported_to_secretariat" widget="toggle_button" options='{"active": "Reported to the social secretariat", "inactive": "To report to the social secretariat"}'/>
                         </group>
                     </group>
                     <notebook>
