@@ -38,6 +38,7 @@ install:
 
 script:
   - if [ $INCLUDE = 'applications' ]; then
+        sed -i "s/self.url_open(url)/self.url_open(url, timeout=100)/g" ${TRAVIS_BUILD_DIR}/addons/website/tests/test_crawl.py;
         export INCLUDE=$(getaddons.py -m --only-applications ${TRAVIS_BUILD_DIR}/odoo/addons ${TRAVIS_BUILD_DIR}/addons);
     elif [ $INCLUDE = 'no_applications' ]; then
         export INCLUDE=$(getaddons.py -m --exclude-applications --exclude-localization ${TRAVIS_BUILD_DIR}/addons);
