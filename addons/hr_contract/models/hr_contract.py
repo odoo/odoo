@@ -14,8 +14,6 @@ class Employee(models.Model):
 
     manager = fields.Boolean(string='Is a Manager')
     medic_exam = fields.Date(string='Medical Examination Date', groups="hr.group_hr_user")
-    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user")
-    children = fields.Integer(string='Number of Children', groups="hr.group_hr_user")
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     vehicle_distance = fields.Integer(
         string='Home-Work Dist.', help="In kilometers", groups="hr.group_hr_user")
