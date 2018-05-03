@@ -19,7 +19,7 @@ class Employee(models.Model):
     vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
     vehicle_distance = fields.Integer(
         string='Home-Work Dist.', help="In kilometers", groups="hr.group_hr_user")
-    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Contracts')
+    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts')
     contract_id = fields.Many2one('hr.contract', compute='_compute_contract_id', string='Current Contract', help='Latest contract of the employee')
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
 
