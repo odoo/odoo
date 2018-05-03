@@ -19,10 +19,10 @@
         <field name="model">link.tracker</field>
         <field name="inherit_id" ref="link_tracker.view_link_tracker_filter"/>
         <field name="arch" type="xml">
-           <search>
-                <field name="mass_mailing_id"/>
+        	<xpath expr="//field[@name='url']" position="after">
+        		<field name="mass_mailing_id"/>
                 <field name="mass_mailing_campaign_id"/>
-            </search>
+        	</xpath>
         </field>
     </record>
 
