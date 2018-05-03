@@ -216,9 +216,7 @@ class MailComposer(models.TransientModel):
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
             Mail = self.env['mail.mail']
-            ActiveModel = self.env[wizard.model if wizard.model else 'mail.thread']
-            if not hasattr(ActiveModel, 'message_post'):
-                ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
+            ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
             if wizard.composition_mode == 'mass_post':
                 # do not send emails directly but use the queue instead
                 # add context key to avoid subscribing the author
@@ -248,7 +246,7 @@ class MailComposer(models.TransientModel):
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails |= Mail.create(mail_values)
                     else:
-                        ActiveModel.browse(res_id).message_post(
+                        post_params = dict(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             notif_layout=notif_layout,
@@ -257,6 +255,9 @@ class MailComposer(models.TransientModel):
                                 'mail_auto_delete': wizard.template_id.auto_delete if wizard.template_id else False,
                             },
                             **mail_values)
+                        if ActiveModel._name == 'mail.thread' and wizard.model:
+                            post_params['model'] = wizard.model
+                        ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)

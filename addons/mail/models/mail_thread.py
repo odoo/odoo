@@ -1274,8 +1274,6 @@ class MailThread(models.AbstractModel):
                 if thread_id:
                     raise ValueError("Posting a message without model should be with a null res_id, to create a private message.")
                 thread = self.env['mail.thread']
-            if not hasattr(thread, 'message_post'):
-                thread = self.env['mail.thread'].with_context(thread_model=model)
 
             # replies to internal message are considered as notes, but parent message
             # author is added in recipients to ensure he is notified of a private answer
@@ -1287,7 +1285,11 @@ class MailThread(models.AbstractModel):
                     partner_ids = [(4, parent_message.author_id.id)]
             else:
                 subtype = 'mail.mt_comment'
-            new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
+
+            post_params = dict(subtype=subtype, partner_ids=partner_ids, **message_dict)
+            if not hasattr(thread, 'message_post'):
+                post_params['model'] = model
+            new_msg = thread.message_post(**post_params)
 
             if original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
@@ -1379,23 +1381,17 @@ class MailThread(models.AbstractModel):
                                       when creating the new thread record.
                                       Be careful, these values may override
                                       any other values coming from the message.
-           :param dict context: if a ``thread_model`` value is present
-                                in the context, its value will be used
-                                to determine the model of the record
-                                to create (instead of the current model).
            :rtype: int
            :return: the id of the newly created thread object
         """
         data = {}
         if isinstance(custom_values, dict):
             data = custom_values.copy()
-        model = self._context.get('thread_model') or self._name
-        RecordModel = self.env[model]
-        fields = RecordModel.fields_get()
-        name_field = RecordModel._rec_name or 'name'
+        fields = self.fields_get()
+        name_field = self._rec_name or 'name'
         if name_field in fields and not data.get('name'):
             data[name_field] = msg_dict.get('subject', '')
-        return RecordModel.create(data)
+        return self.create(data)
 
     @api.multi
     def message_update(self, msg_dict, update_vals=None):
@@ -1887,10 +1883,9 @@ class MailThread(models.AbstractModel):
         model = False
         if self.ids:
             self.ensure_one()
-            model = self._context.get('thread_model', False) if self._name == 'mail.thread' else self._name
+            model = kwargs.get('model', False) if self._name == 'mail.thread' else self._name
             if model and model != self._name and hasattr(self.env[model], 'message_post'):
-                RecordModel = self.env[model].with_context(thread_model=None)  # TDE: was removing the key ?
-                return RecordModel.browse(self.ids).message_post(
+                return self.env[model].browse(self.ids).message_post(
                     body=body, subject=subject, message_type=message_type,
                     subtype=subtype, parent_id=parent_id, attachments=attachments,
                     notif_layout=notif_layout, notif_values=notif_values, **kwargs)
