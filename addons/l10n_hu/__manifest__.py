@@ -20,7 +20,7 @@ This module consists :
  """,
     'author': 'InnOpen Group Kft',
     'website': 'http://www.innopen.eu',
-    'depends': ['account'],
+    'depends': ['l10n_base_hu', 'account'],
     'data': [
         'data/l10n_hu_chart_data.xml',
         'data/account.account.template.csv',
@@ -29,7 +29,6 @@ This module consists :
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
-        'data/res.bank.csv',
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
     ],
