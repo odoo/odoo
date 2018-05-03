@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
+        <field name="amount_python_compute">
+result = contract.wage_with_holidays
+        </field>
+    </record>
+
 <!-- CONTRIBUTION REGISTERS -->
     <record id="res_partner_onss" model="res.partner">
         <field name="name">Office National de Sécurité Sociale (ONSS)</field>
