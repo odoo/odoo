@@ -72,7 +72,8 @@ class HrContract(models.Model):
         help="Number of days of paid leaves the employee gets per year.")
     holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
-    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays', string="Wage update with holidays retenues")
+    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays',
+        track_visibility='onchange', string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
         track_visibility="onchange",
         help="Monthly net amount the employee receives.")
