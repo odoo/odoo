@@ -877,7 +877,7 @@ class StockMove(models.Model):
             to_update = self.move_line_ids.filtered(lambda m: m.product_id.tracking != 'serial' and
                                                     m.location_id.id == reserved_quant.location_id.id and m.lot_id.id == reserved_quant.lot_id.id and m.package_id.id == reserved_quant.package_id.id and m.owner_id.id == reserved_quant.owner_id.id)
             if to_update:
-                to_update[0].with_context(bypass_reservation_update=True).product_uom_qty += self.product_id.uom_id._compute_quantity(quantity, to_update.product_uom_id, rounding_method='HALF-UP')
+                to_update[0].with_context(bypass_reservation_update=True).product_uom_qty += self.product_id.uom_id._compute_quantity(quantity, to_update[0].product_uom_id, rounding_method='HALF-UP')
             else:
                 if self.product_id.tracking == 'serial':
                     for i in range(0, int(quantity)):
@@ -895,7 +895,7 @@ class StockMove(models.Model):
         assigned_moves = self.env['stock.move']
         partially_available_moves = self.env['stock.move']
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
-            if move.location_id.usage in ('supplier', 'inventory', 'production', 'customer')\
+            if move.location_id.should_bypass_reservation()\
                     or move.product_id.type == 'consu':
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):

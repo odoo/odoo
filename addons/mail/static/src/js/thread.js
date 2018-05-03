@@ -328,6 +328,7 @@ var Thread = Widget.extend({
      * @param {MouseEvent} event
      */
     _onAttachmentView: function (event) {
+        event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
         if (activeAttachmentID) {
             var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
