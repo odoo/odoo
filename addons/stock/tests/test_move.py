@@ -1120,6 +1120,47 @@ class StockMove(TransactionCase):
         for quant in quants:
             self.assertEqual(quant.reserved_quantity, 0)
 
+    def test_unreserve_6(self):
+        """ In a situation with a negative and a positive quant, reserve and unreserve.
+        """
+        q1 = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'quantity': -10,
+            'reserved_quantity': 0,
+        })
+
+        q2 = self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'quantity': 30.0,
+            'reserved_quantity': 10.0,
+        })
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_unreserve_6',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+        self.assertEqual(move1.move_line_ids.product_qty, 10)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
+        self.assertEqual(q2.reserved_quantity, 20)
+
+        move1._do_unreserve()
+        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(len(move1.move_line_ids), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 10.0)
+        self.assertEqual(q2.reserved_quantity, 10)
+
     def test_link_assign_1(self):
         """ Test the assignment mechanism when two chained stock moves try to move one unit of an
         untracked product.
