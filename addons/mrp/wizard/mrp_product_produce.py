@@ -177,9 +177,9 @@ class MrpProductProduceLine(models.TransientModel):
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
-    qty_to_consume = fields.Float('To Consume')
+    qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
-    qty_done = fields.Float('Done')
+    qty_done = fields.Float('Done', digits=dp.get_precision('Product Unit of Measure'))
     move_id = fields.Many2one('stock.move')
 
     @api.onchange('lot_id')
