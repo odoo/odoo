@@ -54,6 +54,7 @@ class Contract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char('Contract Reference', required=True)
+    active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', string='Employee')
     department_id = fields.Many2one('hr.department', string="Department")
     type_id = fields.Many2one('hr.contract.type', string="Employee Category", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
