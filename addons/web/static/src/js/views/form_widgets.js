@@ -454,6 +454,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         var self = this;
         var dialog = new common.DomainEditorDialog(this, {
             res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
+            context: self.build_context(),
             default_domain: this.get('value'),
             title: this.get('effective_readonly') ? _t('Selected records') : _t('Select records...'),
             readonly: this.get('effective_readonly'),
