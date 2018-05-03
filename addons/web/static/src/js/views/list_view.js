@@ -315,7 +315,7 @@ var ListView = View.extend({
 
                 this._limit = new_state.limit;
                 this.current_min = new_state.current_min;
-                this.reload_content().then(function() {
+                this.reload_content_when_ready().then(function() {
                     // Reset the scroll position to the top on page changed only
                     if (!limit_changed) {
                         self.set_scrollTop(0);
@@ -452,6 +452,12 @@ var ListView = View.extend({
         });
         return reloaded.promise();
     }),
+    /**
+     * Proxy allowing override when reload_content can't be called directly
+     */
+    reload_content_when_ready: function() {
+        return this.reload_content.apply(this, arguments);
+    },
     reload: function () {
         return this.reload_content();
     },
