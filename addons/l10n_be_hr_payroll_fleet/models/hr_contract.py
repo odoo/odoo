@@ -8,7 +8,6 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
 
     car_id = fields.Many2one('fleet.vehicle', string='Company Car',
-        domain=lambda self: self._get_available_cars_domain(),
         default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
         track_visibility="onchange",
         help="Employee's company car.")
@@ -74,12 +73,6 @@ class HrContract(models.Model):
         max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=1000)
         for contract in self:
             contract.max_unused_cars = int(max_unused_cars)
-
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        super(HrContract, self)._onchange_employee_id()
-        self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
-        return {'domain': {'car_id': self._get_available_cars_domain()}}
 
     @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
