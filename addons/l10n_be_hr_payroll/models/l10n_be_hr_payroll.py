@@ -22,7 +22,7 @@ class HrContract(models.Model):
 
     # Employer costs fields
     final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs', readonly=False,
-        string='Total Employee Cost', groups="hr.group_hr_manager",
+        string='Employee Budget', groups="hr.group_hr_manager",
         track_visibility="onchange",
         help="Total yearly cost of the employee for the employer.")
     monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True,
