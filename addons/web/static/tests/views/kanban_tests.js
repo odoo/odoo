@@ -3222,7 +3222,8 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('column progressbars on archiving records update counter', function (assert) {
+    // XXX test deactivated in saas~11.2 as kanban archiving has been removed (and readded in saas~11.3)
+    QUnit.skip('column progressbars on archiving records update counter', function (assert) {
         assert.expect(4);
 
         // add active field on partner model and make all records active
@@ -3332,7 +3333,7 @@ QUnit.module('Views', {
             "Initial count should be Three");
         kanban.$('.bg-success-full').click();
         var lastCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
-        assert.strictEqual(lastCount, 0,
+        assert.strictEqual(lastCount, 1,
             "kanban counters should vary according to what subgroup is selected");
 
         kanban.destroy();
