@@ -391,30 +391,24 @@ def list_db_incompatible(databases):
     """
     incompatible_databases = []
     server_version = '.'.join(str(v) for v in version_info[:2])
-    # open our own pool to be able to open and close database connections side-effect free
-    pool = odoo.sql_db.ConnectionPool(len(databases))
-    try:
-        for database_name in databases:
-            db, info = odoo.sql_db.connection_info_for(database_name)
-            if db != database_name:
-                raise ValueError('URI connections not allowed')
-            with odoo.sql_db.Connection(pool, db, info).cursor() as cr:
-                if odoo.tools.table_exists(cr, 'ir_module_module'):
-                    cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
-                    base_version = cr.fetchone()
-                    if not base_version or not base_version[0]:
-                        incompatible_databases.append(database_name)
-                    else:
-                        # e.g. 10.saas~15
-                        local_version = '.'.join(base_version[0].split('.')[:2])
-                        if local_version != server_version:
-                            incompatible_databases.append(database_name)
-                else:
+    for database_name in databases:
+        with odoo.sql_db.db_connect(database_name).cursor() as cr:
+            if odoo.tools.table_exists(cr, 'ir_module_module'):
+                cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
+                base_version = cr.fetchone()
+                if not base_version or not base_version[0]:
                     incompatible_databases.append(database_name)
-        return incompatible_databases
-    finally:
-        # release connections
-        pool.close_all()
+                else:
+                    # e.g. 10.saas~15
+                    local_version = '.'.join(base_version[0].split('.')[:2])
+                    if local_version != server_version:
+                        incompatible_databases.append(database_name)
+            else:
+                incompatible_databases.append(database_name)
+        if database_name in incompatible_databases:
+            # release connections
+            odoo.sql_db.close_db(database_name)
+    return incompatible_databases
 
 
 def exp_list(document=False):
