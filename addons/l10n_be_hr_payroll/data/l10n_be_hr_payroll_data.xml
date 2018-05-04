@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
+        <field name="amount_python_compute">
+result = contract.wage_with_holidays
+        </field>
+    </record>
+
 <!-- CONTRIBUTION REGISTERS -->
     <record id="res_partner_onss" model="res.partner">
         <field name="name">Office National de Sécurité Sociale (ONSS)</field>
@@ -84,6 +90,18 @@
         <field name="code">SSC</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
+
+    <record id="hr_salary_rule_category_ip_part" model="hr.salary.rule.category">
+        <field name="name">IP. Part.</field>
+        <field name="code">IP. PART</field>
+        <field name="parent_id" ref="hr_payroll.ALW"/>
+    </record>
+
+    <record id="hr_salary_rule_category_gross_with_ip" model="hr.salary.rule.category">
+        <field name="name">Total Gross</field>
+        <field name="code">GROSSIP</field>
+    </record>
+
 <!-- HR SALARY RULES-->
     <record id="hr_payroll_rules_maj" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_salary"/> 
@@ -152,6 +170,33 @@ elif salary &lt;= 2510.47:
     result = 213.48 - (0.2369 * (salary - 1609.47))
         </field>
     </record>
+
+    <record id="hr_salary_rule_gross_with_ip" model="hr.salary.rule">
+        <field name="name">Total Gross</field>
+        <field name="sequence">90</field>
+        <field name="code">GROSSIP</field>
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_salary_rule_category_gross_with_ip"/>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+    </record>
+
+    <record id="hr_salary_rule_ip_part" model="hr.salary.rule">
+        <field name="category_id" ref="hr_salary_rule_category_ip_part"/>
+        <field name="name">Intellectual Property</field>
+        <field name="code">IP.PART</field>
+        <field name="sequence">91</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">
+result = bool(contract.ip)
+        </field>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">
+result = - categories.GROSSIP * contract.ip_wage_rate / 100.0
+        </field>
+    </record>
+
     <record id="hr_payroll_rules_mis_ex_onss_1" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_category_spec_soc_contribution"/>
         <field name="name">Special social cotisation</field>
@@ -394,7 +439,7 @@ elif salary &lt;= 2461.27:
         <field name="sequence">70</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
-result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+result = bool(contract.transport_mode_car and contract.car_atn)
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
@@ -428,7 +473,7 @@ result = contract.car_atn
         <field name="sequence">160</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
-result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
+result = bool(contract.transport_mode_car and contract.car_atn)
         </field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
@@ -500,6 +545,34 @@ result = -contract.car_atn
         <field name="condition_python">result = bool(contract.representation_fees)</field>
         <field name="amount_python_compute">result = contract.representation_fees</field>
     </record>
+    <record id="hr_salary_rule_ip" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Intellectual Property</field>
+        <field name="code">IP</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">172</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_python_compute">result = categories.GROSSIP * contract.ip_wage_rate / 100.0</field>
+    </record>
+    <record id="hr_salary_rule_ip_deduction" model="hr.salary.rule">
+        <field name="category_id" ref="l10n_be_hr_payroll.hr_payroll_head_div_net"/>
+        <field name="name">Intellectual Property Income Deduction</field>
+        <field name="code">IP.DED</field>
+        <field name="amount_select">code</field>
+        <field name="sequence">173</field>
+        <field name="condition_select">python</field>
+        <field name="condition_python">result = bool(contract.ip)</field>
+        <field name="amount_python_compute">
+tax_rate = 0.15
+ip_amount = categories.GROSSIP * contract.ip_wage_rate / 100.0
+if ip_amount &gt;= 0.0 and ip_amount &lt;= 15660:
+    tax_rate = tax_rate / 2.0
+elif ip_amount &gt; 15660 and ip_amount &lt;=31320:
+    tax_rate = tax_rate * 3.0 / 4.0
+result = -min(ip_amount * tax_rate, 11745) 
+        </field>
+    </record>
     <record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
         <field name="name">Net Supplement</field>
@@ -546,7 +619,10 @@ result = -contract.car_atn
             ref('hr_payroll_rules_suppl_net'),
             ref('hr_payroll_rules_retained_net'),
             ref('hr_salary_rule_pp_reduction_employees'),
-
+            ref('hr_salary_rule_ip'),
+            ref('hr_salary_rule_ip_deduction'),
+            ref('hr_salary_rule_ip_part'),
+            ref('hr_salary_rule_gross_with_ip')
         ])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
         <field name="parent_id" ref="hr_payroll.structure_base"/>
