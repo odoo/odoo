@@ -8,7 +8,6 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
 
     car_id = fields.Many2one('fleet.vehicle', string='Company Car',
-        domain=lambda self: self._get_available_cars_domain(),
         default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
         track_visibility="onchange",
         help="Employee's company car.")
@@ -16,13 +15,21 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True)
     available_cars_amount = fields.Integer(compute='_compute_available_cars_amount', string='Number of available cars')
     new_car = fields.Boolean('Request a new car')
+    # YTI: Check if could be removed
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
     max_unused_cars = fields.Integer(compute='_compute_max_unused_cars')
+    acquisition_date = fields.Date(related='car_id.acquisition_date')
+    car_value = fields.Float(related="car_id.car_value")
+    fuel_type = fields.Selection(related="car_id.fuel_type")
+    co2 = fields.Float(related="car_id.co2")
+    driver_id = fields.Many2one('res.partner', related="car_id.driver_id")
+    car_open_contracts_count = fields.Integer(compute='_compute_car_open_contracts_count')
+    recurring_cost_amount_depreciated = fields.Float(
+        compute='_compute_recurring_cost_amount_depreciated',
+        inverse="_inverse_recurring_cost_amount_depreciated")
 
     @api.depends('car_id', 'new_car', 'new_car_model_id', 'car_id.total_depreciated_cost',
-        'car_id.atn', 'new_car_model_id.default_atn', 'new_car_model_id.default_total_depreciated_cost',
-        'car_id.co2_fee', 'car_id.log_contracts', 'car_id.log_contracts.state', # YTI TODO: Store total_depreciated_costs on
-        'car_id.log_contracts.recurring_cost_amount_depreciated') # the fleet vehicle to avoid these dependencies
+        'car_id.atn', 'new_car_model_id.default_atn', 'new_car_model_id.default_total_depreciated_cost')
     def _compute_car_atn_and_costs(self):
         for contract in self:
             if not contract.new_car and contract.car_id:
@@ -31,6 +38,29 @@ class HrContract(models.Model):
             elif contract.new_car and contract.new_car_model_id:
                 contract.car_atn = contract.new_car_model_id.default_atn
                 contract.company_car_total_depreciated_cost = contract.new_car_model_id.default_total_depreciated_cost
+
+    @api.depends('car_id.log_contracts.state')
+    def _compute_car_open_contracts_count(self):
+        for contract in self:
+            contract.car_open_contracts_count = len(contract.car_id.log_contracts.filtered(
+                lambda c: c.state == 'open').ids)
+
+    @api.depends('car_open_contracts_count', 'car_id.log_contracts.recurring_cost_amount_depreciated')
+    def _compute_recurring_cost_amount_depreciated(self):
+        for contract in self:
+            if contract.car_open_contracts_count == 1:
+                contract.recurring_cost_amount_depreciated = contract.car_id.log_contracts.filtered(
+                    lambda c: c.state == 'open'
+                ).recurring_cost_amount_depreciated
+            else:
+                contract.recurring_cost_amount_depreciated = 0.0
+
+    def _inverse_recurring_cost_amount_depreciated(self):
+        for contract in self:
+            if contract.car_open_contracts_count == 1:
+                contract.car_id.log_contracts.filtered(
+                    lambda c: c.state == 'open'
+                ).recurring_cost_amount_depreciated = contract.recurring_cost_amount_depreciated
 
     @api.depends('name')
     def _compute_available_cars_amount(self):
@@ -44,16 +74,10 @@ class HrContract(models.Model):
         for contract in self:
             contract.max_unused_cars = int(max_unused_cars)
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        super(HrContract, self)._onchange_employee_id()
-        self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
-        return {'domain': {'car_id': self._get_available_cars_domain()}}
-
-    @api.onchange('transport_mode')
+    @api.onchange('transport_mode_car', 'transport_mode_public', 'transport_mode_others')
     def _onchange_transport_mode(self):
         super(HrContract, self)._onchange_transport_mode()
-        if self.transport_mode != 'company_car':
+        if not self.transport_mode_car:
             self.car_id = False
             self.new_car_model_id = False
 
