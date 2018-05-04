@@ -16,6 +16,7 @@ class BadgeUser(models.Model):
     _order = "create_date desc"
     _rec_name = "badge_name"
 
+    email = fields.Char(related='user_id.email', type="char", string="Email", readonly=True)
     user_id = fields.Many2one('res.users', string="User", required=True, ondelete="cascade", index=True)
     sender_id = fields.Many2one('res.users', string="Sender", help="The user who has send the badge")
     badge_id = fields.Many2one('gamification.badge', string='Badge', required=True, ondelete="cascade", index=True)

@@ -103,7 +103,6 @@
                         <page name="extra" string="Extra Info">
                             <group>
                                 <group string="Email">
-                                    <field name="opt_out"/>
                                     <field name="message_bounce" readonly="1" groups="base.group_no_one"/>
                                 </group>
                                 <group string="Tracking" groups="base.group_multi_company,base.group_no_one" name="categorization">
@@ -390,10 +389,6 @@
                     <separator />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
-                    <separator />
-                    <filter string="Exclude Opt Out"
-                            name='not_opt_out' domain="[('opt_out', '=', False)]"
-                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -558,7 +553,6 @@
                                     </div>
                                     <field name="function"/>
                                     <field name="mobile"/>
-                                    <field name="opt_out"/>
                                 </group>
                                 <group string="Marketing">
                                     <field name="campaign_id" />

@@ -220,5 +220,11 @@ virginie@agrolait.fr</pre></field>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
+
+        <!-- opt-out record in global blacklist -->
+        <record id="mail_blacklist_1" model="mail.blacklist">
+            <field name="name">Carol Cartridge</field>
+            <field name="email">cc@example.com</field>
+        </record>
     </data>
 </odoo>

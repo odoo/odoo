@@ -20,13 +20,6 @@
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month']}</field>
         </record>
-        <record id="filter_contact_unsubscription" model="ir.filters">
-            <field name="name">List Unsubscription</field>
-            <field name="model_id">mail.mass_mailing.contact</field>
-            <field name="user_id" eval="False"/>
-            <field name="domain">[('opt_out','=',True)]</field>
-            <field name="context">{'group_by': ['unsubscription_date:month']}</field>
-        </record>
 
         <record model="ir.ui.view" id="view_mail_mass_mailing_contact_search">
             <field name="name">mail.mass_mailing.contact.search</field>
@@ -37,8 +30,6 @@
                         string="Name / Email"/>
                     <field name="tag_ids"/>
                     <field name="list_ids"/>
-                    <separator/>
-                    <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
                     <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
                     <group expand="0" string="Group By">
@@ -60,7 +51,6 @@
                     <field name="company_name"/>
                     <field name="email"/>
                     <field name="message_bounce"/>
-                    <field name="opt_out"/>
                 </tree>
             </field>
         </record>
@@ -133,13 +123,11 @@
                             </group>
                             <group>
                                 <field name="create_date" readonly="1"/>
-                                <field name="unsubscription_date"/>
                                 <label for="message_bounce"/>
                                 <div class="o_row">
                                     <field name="message_bounce"/>
                                     <span> times</span>
                                 </div>
-                                <field name="opt_out"/>
                             </group>
                         </group>
                         <field name="list_ids"/>
@@ -175,7 +163,6 @@
             <field name="res_model">mail.mass_mailing.contact</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
-            <field name="context">{'search_default_not_opt_out': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a contact in your address book
@@ -191,7 +178,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_ids', 'in', [active_id])]</field>
-            <field name="context">{'search_default_not_opt_out': 1, 'default_list_ids': [(4,active_id)]}</field>
+            <field name="context">{'default_list_ids': [(4,active_id)]}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new recipient
@@ -503,8 +490,7 @@
                                 <field name="mailing_model_real" invisible="1"/>
                                 <field name="mailing_domain" widget="domain"
                                     attrs="{'invisible': [('mailing_model_name', '=', 'mail.mass_mailing.list')]}"
-                                    options="{'model': 'mailing_model_real'}"
-                                    context="{'search_default_not_opt_out':1}">
+                                    options="{'model': 'mailing_model_real'}">
                                 </field>
                                 <div attrs="{'invisible': [('mailing_model_name', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>

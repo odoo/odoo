@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mail_blacklist_view_tree" model="ir.ui.view">
+        <field name="name">mail.blacklist.tree</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <tree string="Email Blacklist">
+                <field name="create_date" string="Blacklist Date"/>
+                <field name="name"/>
+                <field name="company_id"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_form" model="ir.ui.view">
+        <field name="name">mail.blacklist.form</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <form string="Add Email Blacklist">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. John Smith"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"  string="Blacklist Date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_search" model="ir.ui.view">
+        <field name="name">mail.blacklist.search</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="email"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_action" model="ir.actions.act_window">
+        <field name="name">Blacklist</field>
+        <field name="res_model">mail.blacklist</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="mail_blacklist_view_tree"/>
+        <field name="search_view_id" ref="mail_blacklist_view_search"/>
+    </record>
+
+    <!-- Technical Menu: -->
+    <menuitem id="mail_blacklist_menu" name="Blacklist" action="mail_blacklist_action" parent="base.menu_email"/>
+</odoo>

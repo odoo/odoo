@@ -44,30 +44,4 @@
             </div>
         </div>
     </template>
-
-    <template id="unsubscribed">
-        <div class="container mt8">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <h1 class="page-header">Mailing Subscriptions</h1>
-
-                    <div class="alert alert-success text-center" role="status">
-                        <p>You have been successfully <strong>unsubscribed</strong>!</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="page_unsubscribe" name="Unsubscribe">
-        <t t-call="website.layout">
-            <t t-call="website_mass_mailing.unsubscribe"/>
-        </t>
-    </template>
-
-    <template id="page_unsubscribed" name="Unsubscribed">
-        <t t-call="website.layout">
-            <t t-call="website_mass_mailing.unsubscribed"/>
-        </t>
-    </template>
 </odoo>

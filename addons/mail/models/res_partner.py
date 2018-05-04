@@ -20,9 +20,6 @@ class Partner(models.Model):
     _mail_flat_thread = False
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
-    opt_out = fields.Boolean(
-        'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-                        "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
     channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
 
     @api.multi

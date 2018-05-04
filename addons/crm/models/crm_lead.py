@@ -80,9 +80,6 @@ class Lead(models.Model):
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
     contact_name = fields.Char('Contact Name')
     partner_name = fields.Char("Customer Name", index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
-    opt_out = fields.Boolean(string='Opt-Out', oldname='optout',
-        help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-             "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing.")
     type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], index=True, required=True,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity',
         help="Type is used to separate Leads and Opportunities")

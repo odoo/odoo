@@ -279,20 +279,25 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_composer_mass_mail(self):
         test_record_2 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test2'})
+        test_record_3 = self.env['mail.test.simple'].with_context(self._quick_create_ctx).create({'name': 'Test3', 'email_from': 'herry@example.com'})
+
+        # create blacklist record
+        self.env['mail.blacklist'].create({'email': 'herry@example.com'})
 
         composer = self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': self.test_record._name,
             'default_res_id': False,
-            'active_ids': [self.test_record.id, test_record_2.id]
+            'active_ids': [self.test_record.id, test_record_2.id, test_record_3.id]
         }).sudo(self.user_employee).create({
             'subject': 'Testing ${object.name}',
             'body': '<p>${object.name}</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
+
         composer.with_context({
             'default_res_id': -1,
-            'active_ids': [self.test_record.id, test_record_2.id]
+            'active_ids': [self.test_record.id, test_record_2.id, test_record_3.id]
         }).send_mail()
 
         # check mail_mail
@@ -300,6 +305,10 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         for mail in mails:
             self.assertEqual(mail.recipient_ids, self.partner_1 | self.partner_2,
                              'compose wizard: mail_mail mass mailing: mail.mail in mass mail incorrect recipients')
+
+        # check blacklisted failed email
+        failed_mails = self.env['mail.mail'].search([('state', '=', 'cancel')])
+        self.assertEqual(len(failed_mails), 1)
 
         # check message on test_record
         message1 = self.test_record.message_ids[0]

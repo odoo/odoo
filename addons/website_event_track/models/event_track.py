@@ -57,6 +57,7 @@ class Track(models.Model):
 
     name = fields.Char('Title', required=True, translate=True)
     active = fields.Boolean(default=True)
+    email = fields.Char(related='user_id.email', type="char", string="Email", readonly=True)
     user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', 'Speaker')
     partner_name = fields.Char('Speaker Name')

@@ -21,12 +21,6 @@ class MassMailController(MassMailController):
                 super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
                 return request.render('website_mass_mailing.page_unsubscribed')
 
-    @route('/mail/mailing/unsubscribe', type='json', auth='none')
-    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
-        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-        if mailing.exists():
-            mailing.update_opt_out(email, opt_in_ids, False)
-            mailing.update_opt_out(email, opt_out_ids, True)
 
     @route('/website_mass_mailing/is_subscriber', type='json', website=True, auth="public")
     def is_subscriber(self, list_id, **post):
@@ -38,7 +32,7 @@ class MassMailController(MassMailController):
 
         is_subscriber = False
         if email:
-            contacts_count = request.env['mail.mass_mailing.contact'].sudo().search_count([('list_ids', 'in', [int(list_id)]), ('email', '=', email), ('opt_out', '=', False)])
+            contacts_count = request.env['mail.mass_mailing.contact'].sudo().search_count([('list_ids', 'in', [int(list_id)]), ('email', '=', email)])
             is_subscriber = contacts_count > 0
 
         return {'is_subscriber': is_subscriber, 'email': email}
@@ -55,8 +49,6 @@ class MassMailController(MassMailController):
         if not contact_ids:
             # inline add_to_list as we've already called half of it
             Contacts.create({'name': name, 'email': email, 'list_ids': [(6,0,[int(list_id)])]})
-        elif contact_ids.opt_out:
-            contact_ids.opt_out = False
         # add email to session
         request.session['mass_mailing_email'] = email
         return True

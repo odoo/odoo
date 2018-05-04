@@ -17,6 +17,7 @@
         'views/mail_tracking_views.xml',
         'views/mail_message_views.xml',
         'views/mail_mail_views.xml',
+        'views/mail_blacklist_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',

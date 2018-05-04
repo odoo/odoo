@@ -3,6 +3,7 @@
 import base64
 
 import werkzeug
+from psycopg2 import IntegrityError
 
 from odoo import _, exceptions, http
 from odoo.http import request
@@ -19,23 +20,17 @@ class MassMailController(http.Controller):
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-        if mailing.exists():
-            res_id = res_id and int(res_id)
-            res_ids = []
-            if mailing.mailing_model_name == 'mail.mass_mailing.list':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([
-                    ('email', '=', email),
-                    ('list_ids', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
-                ])
-                res_ids = contacts.ids
-            else:
-                res_ids = [res_id]
-
+        res_id = res_id and int(res_id)
+        if mailing and res_id:
             right_token = mailing._unsubscribe_token(res_id, email)
+            msg = _('You have been unsubscribed successfully')
             if not consteq(str(token), right_token):
                 raise exceptions.AccessDenied()
-            mailing.update_opt_out(email, res_ids, True)
-            return _('You have been unsubscribed successfully')
+            try:
+                request.env['mail.blacklist'].sudo().create({'email': email})
+            except IntegrityError:
+                msg = _('You are already unsubscribed ')
+            return msg
 
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')
     def track_mail_open(self, mail_id, **post):

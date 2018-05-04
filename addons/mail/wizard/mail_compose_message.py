@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import logging
 import re
 
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
+_logger = logging.getLogger(__name__)
 
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
@@ -284,6 +286,9 @@ class MailComposer(models.TransientModel):
             records = self.env[self.model].browse(res_ids)
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
+        total_blacklisted_email = 0
+        res_model = self.env[self.model]
+        mail_field = 'email' if 'email' in res_model._fields else 'email_from'
         for res_id in res_ids:
             # static wizard (mail.message) values
             mail_values = {
@@ -300,9 +305,11 @@ class MailComposer(models.TransientModel):
                 'mail_activity_type_id': self.mail_activity_type_id.id,
             }
 
+            # fetch model record
+            res_record = res_model.browse(res_id)
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
+                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=res_record))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
@@ -322,6 +329,13 @@ class MailComposer(models.TransientModel):
                 mail_values['body_html'] = mail_values.get('body', '')
                 mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
 
+                # implement a global blacklist table, to easily share it and update it.
+                res_email = res_record[mail_field]
+                blacklist_email = self.env['mail.blacklist'].search([('email', '=', res_email)])
+                if res_email and blacklist_email:
+                    mail_values['state'] = 'cancel'
+                    total_blacklisted_email += 1
+
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
                 attachment_ids = []
@@ -335,6 +349,11 @@ class MailComposer(models.TransientModel):
                 )
 
             results[res_id] = mail_values
+        if total_blacklisted_email:
+            _logger.info("Mailing %s targets blacklist: %s emails", self.model, total_blacklisted_email)
+        else:
+            _logger.info("Mailing %s targets no blacklist available", self.model)
+
         return results
 
     #------------------------------------------------------
