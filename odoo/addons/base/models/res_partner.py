@@ -106,13 +106,14 @@ class PartnerCategory(models.Model):
         return res
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         if name:
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
             args = [('name', operator, name)] + args
-        return self.search(args, limit=limit).name_get()
+        partner_category_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(partner_category_ids).name_get()
 
 
 class PartnerTitle(models.Model):
@@ -635,7 +636,8 @@ class Partner(models.Model):
                                             count=count, access_rights_uid=access_rights_uid)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        self = self.sudo(name_get_uid or self.env.uid)
         if args is None:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
@@ -682,7 +684,7 @@ class Partner(models.Model):
                 return self.browse(partner_ids).name_get()
             else:
                 return []
-        return super(Partner, self).name_search(name, args, operator=operator, limit=limit)
+        return super(Partner, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model
     def find_or_create(self, email):

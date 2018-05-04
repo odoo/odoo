@@ -227,11 +227,10 @@ class FleetVehicle(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         domain = args or []
         domain = expression.AND([domain, [('name', operator, name)]])
-        access_rights_uid = name_get_uid or self._uid
-        partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=access_rights_uid)
+        partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
         if partner_ids:
             domain = expression.OR([domain, ['|', ('driver_id', 'in', partner_ids), ('driver_id', '=', False)]])
-        rec = self._search(domain, limit=limit, access_rights_uid=access_rights_uid)
+        rec = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
         return self.browse(rec).name_get()
 
     @api.multi

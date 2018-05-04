@@ -82,12 +82,12 @@ class Currency(models.Model):
             currency.date = currency.rate_ids[:1].name
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        results = super(Currency, self).name_search(name, args, operator=operator, limit=limit)
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        results = super(Currency, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
         if not results:
             name_match = CURRENCY_DISPLAY_PATTERN.match(name)
             if name_match:
-                results = super(Currency, self).name_search(name_match.group(1), args, operator=operator, limit=limit)
+                results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
         return results
 
     @api.multi
@@ -255,14 +255,14 @@ class CurrencyRate(models.Model):
     ]
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=80):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator in ['=', '!=']:
             try:
                 date_format = '%Y-%m-%d'
                 if self._context.get('lang'):
-                    langs = self.env['res.lang'].search([('code', '=', self._context['lang'])])
-                    if langs:
-                        date_format = langs.date_format
+                    lang_id = self.env['res.lang']._search([('code', '=', self._context['lang'])], access_rights_uid=name_get_uid)
+                    if lang_id:
+                        date_format = self.browse(lang_id).date_format
                 name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
             except ValueError:
                 try:
@@ -271,4 +271,4 @@ class CurrencyRate(models.Model):
                     return []
                 name = ''
                 operator = 'ilike'
-        return super(CurrencyRate, self).name_search(name, args=args, operator=operator, limit=limit)
+        return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)

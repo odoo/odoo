@@ -360,27 +360,27 @@ class ProductTemplate(models.Model):
                 for template in self]
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
         if not name or any(term[0] == 'id' for term in (args or [])):
-            return super(ProductTemplate, self).name_search(name=name, args=args, operator=operator, limit=limit)
+            return super(ProductTemplate, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
         Product = self.env['product.product']
         templates = self.browse([])
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            products_ns = Product.name_search(name, args+domain, operator=operator)
+            products_ns = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid)
             products = Product.browse([x[0] for x in products_ns])
             templates |= products.mapped('product_tmpl_id')
             if (not products) or (limit and (len(templates) > limit)):
                 break
 
         # re-apply product.template order + name_get
-        return super(ProductTemplate, self).name_search(
+        return super(ProductTemplate, self)._name_search(
             '', args=[('id', 'in', list(set(templates.ids)))],
-            operator='ilike', limit=limit)
+            operator='ilike', limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
     def price_compute(self, price_type, uom=False, currency=False, company=False):

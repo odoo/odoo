@@ -97,12 +97,12 @@ class Location(models.Model):
         return ret_list
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ search full name and barcode """
         if args is None:
             args = []
-        recs = self.search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit)
-        return recs.name_get()
+        location_ids = self._search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(location_ids).name_get()
 
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''

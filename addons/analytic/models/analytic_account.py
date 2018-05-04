@@ -142,16 +142,16 @@ class AccountAnalyticAccount(models.Model):
         return res
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
-            return super(AccountAnalyticAccount, self).name_search(name, args, operator, limit)
+            return super(AccountAnalyticAccount, self)._name_search(name, args, operator, limit, name_get_uid=name_get_uid)
         args = args or []
         domain = ['|', ('code', operator, name), ('name', operator, name)]
-        partners = self.env['res.partner'].search([('name', operator, name)], limit=limit)
-        if partners:
-            domain = ['|'] + domain + [('partner_id', 'in', partners.ids)]
-        recs = self.search(domain + args, limit=limit)
-        return recs.name_get()
+        partners_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=name_get_uid)
+        if partners_ids:
+            domain = ['|'] + domain + [('partner_id', 'in', partners_ids)]
+        analytic_account_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(analytic_account_ids).name_get()
 
 
 class AccountAnalyticLine(models.Model):

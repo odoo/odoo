@@ -1249,14 +1249,14 @@ class AccountInvoice(models.Model):
         return result
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
-        recs = self.browse()
+        invoice_ids = []
         if name:
-            recs = self.search([('number', '=', name)] + args, limit=limit)
-        if not recs:
-            recs = self.search([('name', operator, name)] + args, limit=limit)
-        return recs.name_get()
+            invoice_ids = self._search([('number', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not invoice_ids:
+            invoice_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(invoice_ids).name_get()
 
     @api.model
     def _refund_cleanup_lines(self, lines):

@@ -42,15 +42,15 @@ class Bank(models.Model):
         return result
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         domain = []
         if name:
             domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
-        banks = self.search(domain + args, limit=limit)
-        return banks.name_get()
+        bank_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(bank_ids).name_get()
 
 
 class ResPartnerBank(models.Model):
@@ -86,7 +86,7 @@ class ResPartnerBank(models.Model):
             bank.acc_type = 'bank'
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         pos = 0
         while pos < len(args):
             if args[pos][0] == 'acc_number':
@@ -100,4 +100,4 @@ class ResPartnerBank(models.Model):
                     value = '%' + value + '%'
                 args[pos] = ('sanitized_acc_number', op, value)
             pos += 1
-        return super(ResPartnerBank, self).search(args, offset, limit, order, count=count)
+        return super(ResPartnerBank, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
