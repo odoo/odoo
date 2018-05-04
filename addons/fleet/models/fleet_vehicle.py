@@ -228,11 +228,11 @@ class FleetVehicle(models.Model):
         domain = args or []
         domain = expression.AND([domain, [('name', operator, name)]])
         access_rights_uid = name_get_uid or self._uid
-        partners = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=access_rights_uid)
-        if partners:
-            domain = expression.OR([domain, ['|', ('driver_id', 'in', partners.ids), ('driver_id', '=', False)]])
+        partner_ids = self.env['res.partner']._search([('name', operator, name)], access_rights_uid=access_rights_uid)
+        if partner_ids:
+            domain = expression.OR([domain, ['|', ('driver_id', 'in', partner_ids), ('driver_id', '=', False)]])
         rec = self._search(domain, limit=limit, access_rights_uid=access_rights_uid)
-        return rec.name_get()
+        return self.browse(rec).name_get()
 
     @api.multi
     def return_action_to_open(self):
