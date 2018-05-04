@@ -76,7 +76,7 @@
     </t>
 
     <t t-name="DocumentViewer">
-        <div class="modal o_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog" aria-hidden="true">
             <t t-call="DocumentViewer.Content"/>
 
             <t t-if="widget.attachment.length != 1">
