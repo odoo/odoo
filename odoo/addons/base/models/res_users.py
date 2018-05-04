@@ -231,6 +231,10 @@ class Users(models.Model):
         'Contact Creation', compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='base.group_partner_manager')
 
+    has_group_private_addresses = fields.Boolean(
+        'Access to Private Addresses', compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='base.group_private_addresses')
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
