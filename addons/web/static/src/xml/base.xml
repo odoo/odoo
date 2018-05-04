@@ -116,7 +116,7 @@
 
 <t t-name="Notification">
     <div t-attf-class="o_notification #{widget.className}" t-translation="off">
-        <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
+        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close"/>
         <div class="o_notification_title">
             <span t-attf-class="o_icon fa fa-3x #{widget.icon}"/>
             <t t-raw="widget.title"/>
@@ -604,9 +604,9 @@
 </t>
 <t t-name="DomainNode.ControlPanel">
     <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel">
-        <button class="btn o_domain_delete_node_button"><i class="fa fa-times"/></button>
-        <button class="btn o_domain_add_node_button"><i class="fa fa-plus-circle"/></button>
-        <button class="btn o_domain_add_node_button" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+        <button class="btn o_domain_delete_node_button" title="Delete node"><i class="fa fa-times"/></button>
+        <button class="btn o_domain_add_node_button" title="Add node"><i class="fa fa-plus-circle"/></button>
+        <button class="btn o_domain_add_node_button" title="Add branch" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
     </div>
 </t>
 <t t-name="DomainTree.OperatorSelector">
@@ -731,9 +731,9 @@
     </div>
     <div t-if="!widget.options.readonly" class="o_field_selector_popover hidden" tabindex="0">
         <div class="o_field_selector_popover_header text-center">
-            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page"/>
+            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous"/>
             <div class="o_field_selector_title"/>
-            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close"/>
+            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close"/>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
@@ -830,7 +830,7 @@
         <t t-set="color" t-value="el[colorField] || 0"/>
         <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text"><t t-esc="el.display_name"/></span>
-            <span t-if="!readonly" class="fa fa-times o_delete"/>
+            <span t-if="!readonly" class="fa fa-times o_delete" title="Delete"/>
         </span>
     </t>
 </t>

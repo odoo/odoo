@@ -573,7 +573,7 @@
                                 </t>
                                     
                                 <td class='col-name' > <t t-esc='line.name' /> </td>
-                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete"> <i class='fa fa-times-circle' /> </td>
                             </tr>
                         </t>
                         <t t-if='!line.selected'>
@@ -586,7 +586,7 @@
                                      </t>
                                 </td>
                                 <td class='col-name'> <t t-esc='line.name' /> </td>
-                                <td class='delete-button' t-att-data-cid='line.cid'> <i class='fa fa-times-circle' /> </td>
+                                <td class='delete-button' t-att-data-cid='line.cid' aria-label="Delete"> <i class='fa fa-times-circle' /> </td>
                             </tr>
                         </t>
                     </t>
@@ -1330,7 +1330,7 @@
     <t t-name="DebugWidget">
         <div class="debug-widget oe_hidden">
             <h1>Debug Window</h1>
-            <div class="toggle"><i class='fa fa-times' /></div>
+            <div class="toggle" title="Dismiss"><i class='fa fa-times' /></div>
             <div class="content">
                 <p class="category">Electronic Scale</p>
                 <ul>
