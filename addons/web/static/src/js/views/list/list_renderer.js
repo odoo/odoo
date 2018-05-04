@@ -44,7 +44,7 @@ var ListRenderer = BasicRenderer.extend({
         'keypress thead tr td': '_onKeyPress',
         'keydown tr': '_onKeyDown',
         'keydown thead tr': '_onKeyDown',
-        'click .o_list_view_select_action': '_onClickSelectAction',
+        'click .o_list_view_select_action': '_onClickSelectionBarAction',
     },
     /**
      * @constructor
@@ -214,7 +214,7 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      */
-    _removeSelectionBar: function () {
+    _removeAllSelectorBar: function () {
         this.allSelected = false;
         this.$el.find('.o_list_view_select_all').remove();
     },
@@ -627,8 +627,8 @@ var ListRenderer = BasicRenderer.extend({
      *
      * @private
      */
-    _renderSelectionBar: function () {
-        this.$el.prepend(qweb.render('ListView.SelectAll', {all_selected: this.allSelected, state: this.state}));
+    _renderAllSelectorBar: function () {
+        this.$el.prepend(qweb.render('ListView.SelectAll', {hasAllSelector: this.allSelected, state: this.state}));
     },
     /**
      * A 'selector' is the small checkbox on the left of a record in a list
@@ -752,7 +752,7 @@ var ListRenderer = BasicRenderer.extend({
         // TO-DO check for groupBy
         if (this.hasSelectionBar && isAllSelected) {
             this.$el.find('.o_list_view_select_all').remove();
-            this._renderSelectionBar();
+            this._renderAllSelectorBar();
         }
         this.trigger_up('selection_changed', { selection: this.selection, allSelected: this.allSelected });
         this._updateFooter();
@@ -804,18 +804,22 @@ var ListRenderer = BasicRenderer.extend({
             }
         }
     },
-    _onClickSelectAction: function (event) {
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClickSelectionBarAction: function (event) {
+        event.preventDefault();
         var actionType = $(event.currentTarget).data('action-type');
         if (actionType == 'select_all') {
             this.allSelected = true;
             this.$el.find('.o_list_view_select_all').remove();
-            // make thead input checked if all records are selected.
-            // so that we can get domain while exporting records.
+            // make thead input checked if all records are selected. so that we can get domain while exporting records.
             this.$('thead .o_list_record_selector input').prop('checked', true);
-            this._renderSelectionBar();
+            this._renderAllSelectorBar();
         } else {
             this.$('.o_list_record_selector input').prop('checked', false);
-            this._removeSelectionBar();
+            this._removeAllSelectorBar();
         }
         this._updateSelection();
     },
@@ -828,7 +832,7 @@ var ListRenderer = BasicRenderer.extend({
         this._updateSelection();
         if (!$(ev.currentTarget).find('input').prop('checked')) {
             this.$('thead .o_list_record_selector input').prop('checked', false);
-            this._removeSelectionBar();
+            this._removeAllSelectorBar();
         }
     },
     /**
@@ -860,7 +864,7 @@ var ListRenderer = BasicRenderer.extend({
         var checked = $(ev.currentTarget).prop('checked') || false;
         this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         if (!checked) {
-            this._removeSelectionBar();
+            this._removeAllSelectorBar();
         }
         this._updateSelection();
     },

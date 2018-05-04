@@ -955,11 +955,7 @@ class DataSet(http.Controller):
     def call_kw_with_domain(self, model, method, args, kwargs):
         context = kwargs.get('context')
         if context and context.get('active_domain') and model == context.get('active_model'):
-            ctx = {
-                'active_domain': context.get('active_domain'),
-                'active_model': context.get('active_model')
-            }
-            records = request.env[model].with_context(ctx).get_active_records()
+            records = request.env[model].with_context(context).get_active_records()
             # change ids to all active domain records ids
             args[0] = records.ids
         return self._call_kw(model, method, args, kwargs)

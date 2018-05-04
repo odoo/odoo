@@ -397,13 +397,16 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
         var context = _.extend(records[0].getContext(), session.user_context, options);
-        return this._rpc({
-                route: '/web/dataset/call_kw_with_domain',
-                model: modelName,
-                method: 'unlink',
-                args: [_.pluck(records, 'res_id')],
-                context: context,
-            })
+        var params = {
+            model: modelName,
+            method: 'unlink',
+            args: [_.pluck(records, 'res_id')],
+            context: context,
+        };
+        if (options && options.active_domain) {
+            params['route'] = '/web/dataset/call_kw_with_domain';
+        }
+        return this._rpc(params)
             .then(function () {
                 _.each(records, function (record) {
                     var parent = record.parentID && self.localData[record.parentID];
@@ -1176,13 +1179,16 @@ var BasicModel = AbstractModel.extend({
             return self.localData[recordID].res_id;
         });
         var context = _.extend(this.localData[parentID].getContext(), session.user_context, options);
-        return this._rpc({
-                 route: '/web/dataset/call_kw_with_domain',
-                model: parent.model,
-                method: 'write',
-                args: [resIDs, { active: value }],
-                context: context,
-            })
+        var params = {
+            model: parent.model,
+            method: 'write',
+            args: [resIDs, { active: value }],
+            context: context,
+        };
+        if (options && options.active_domain) {
+            params['route'] = '/web/dataset/call_kw_with_domain';
+        }
+        return this._rpc(params)
             .then(function () {
                 // optionally clear the DataManager's cache
                 self._invalidateCache(parent);

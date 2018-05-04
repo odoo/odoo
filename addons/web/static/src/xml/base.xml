@@ -408,7 +408,7 @@
         <t t-set="action_title" t-value="'All '+ state.data.length +' records of this page are selected'"/>
         <t t-set="action_type" t-value="'select_all'"/>
         <t t-set="action_label" t-value="'Select all '+ state.count +' records'"/>
-        <t t-if="all_selected">
+        <t t-if="hasAllSelector">
             <t t-set="action_title" t-value="'All '+ state.count +' records are selected'"/>
             <t t-set="action_type" t-value="'clear_selection'"/>
             <t t-set="action_label" t-value="'Clear Selection'"/>
