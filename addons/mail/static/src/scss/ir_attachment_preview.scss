@@ -1,46 +1,55 @@
-.o_kanban_view .o_kanban_record .o_attachment_view {
-    &.o_document_preview {
-        cursor: zoom-in;
-    }
-    position: relative;
-    overflow: hidden;
-    height: 70px;
-    &:hover > i {
-        opacity: 0.7;
-    }
-    &:hover > .o_attachment_image {
-        @include o-transform(scale(1));
-    }
-    > i {
-        @include o-position-absolute(0, 0, 0, 0);
-        margin: auto;
-    }
-    .o_attachment_image {
-        @include o-position-absolute(0, 0, 0, 0);
-        @include o-transform(scale(1.05));
-        @include o-transition(all, 0.3s);
-        margin: auto;
-    }
-    .o_attachment_preview {
-        height: 100%;
-        width: 100%;
-        @include o-position-absolute($bottom: 0px);
-        .o_download_content {
-            @include o-position-absolute($right: 10px, $bottom: 5px);
+.o_kanban_view .o_kanban_record {
+    .oe_kanban_vignette {
+        .oe_name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
         }
-        .o_overlay_download {
-            height: 38px;
-            width: 38px;
+    }
+    .o_attachment_view {
+        &.o_document_preview {
+            cursor: zoom-in;
+        }
+        position: relative;
+        overflow: hidden;
+        height: 70px;
+        &:hover > i {
+            opacity: 0.7;
+        }
+        &:hover > .o_attachment_image {
+            @include o-transform(scale(1));
+        }
+        > i {
             @include o-position-absolute(0, 0, 0, 0);
             margin: auto;
         }
-        &.o_image_overlay {
-            @include o-position-absolute($bottom: 0px);
-            @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
-            @include o-linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
+        .o_attachment_image {
+            @include o-position-absolute(0, 0, 0, 0);
+            @include o-transform(scale(1.05));
             @include o-transition(all, 0.3s);
+            margin: auto;
+        }
+        .o_attachment_preview {
             height: 100%;
             width: 100%;
+            @include o-position-absolute($bottom: 0px);
+            .o_download_content {
+                @include o-position-absolute($right: 10px, $bottom: 5px);
+            }
+            .o_overlay_download {
+                height: 38px;
+                width: 38px;
+                @include o-position-absolute(0, 0, 0, 0);
+                margin: auto;
+            }
+            &.o_image_overlay {
+                @include o-position-absolute($bottom: 0px);
+                @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
+                @include o-linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
+                @include o-transition(all, 0.3s);
+                height: 100%;
+                width: 100%;
+            }
         }
     }
 }
