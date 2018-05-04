@@ -4,7 +4,7 @@
 import time
 from datetime import datetime
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -273,6 +273,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.product_qty, 5)
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationWithCOA(AccountingTestCase):
     def setUp(self):
         super(TestStockValuationWithCOA, self).setUp()
