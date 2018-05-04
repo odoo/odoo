@@ -21,8 +21,9 @@ class HrContract(models.Model):
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
-    final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs', readonly=False,
-        string='Employee Budget', groups="hr.group_hr_manager",
+    final_yearly_costs = fields.Monetary(compute='_compute_final_yearly_costs',
+        readonly=False, store=True,
+        string="Employee Budget",
         track_visibility="onchange",
         help="Total yearly cost of the employee for the employer.")
     monthly_yearly_costs = fields.Monetary(compute='_compute_monthly_yearly_costs', string='Monthly Equivalent Cost', readonly=True,
