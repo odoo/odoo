@@ -93,14 +93,14 @@ class Country(models.Model):
         return re.findall(r'\((.+?)\)', self.address_format)
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
-        records = self.search([('code', '=', name)] + args, limit=limit)
-        if not records:
+        country_ids = self._search([('code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not country_ids:
             search_domain = [('name', operator, name)]
-            records = self.search(search_domain + args, limit=limit)
-        return [(record.id, record.display_name) for record in records]
+            country_ids = self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return [(country.id, country.display_name) for country in self.browse(country_ids)]
 
 
 class CountryGroup(models.Model):
@@ -127,15 +127,13 @@ class CountryState(models.Model):
     ]
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
         if self.env.context.get('country_id'):
             args = args + [('country_id', '=', self.env.context.get('country_id'))]
-        records = self.search([('code', '=', name)] + args, limit=limit)
-        if not records:
+        state_ids = self._search([('code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not state_ids:
             search_domain = [('name', operator, name)]
-            records = self.search(search_domain + args, limit=limit)
-        return [(record.id, record.display_name) for record in records]
-
-
+            state_ids = self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return [(state.id, state.display_name) for state in self.browse(state_ids)]

@@ -106,14 +106,14 @@ class Groups(models.Model):
         return where
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
             groups = super(Groups, self).search(args)
             groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
             groups = groups[offset:offset+limit] if limit else groups[offset:]
             return len(groups) if count else groups.ids
-        return super(Groups, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        return super(Groups, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.multi
     def copy(self, default=None):
@@ -398,15 +398,15 @@ class Users(models.Model):
         return super(Users, self).unlink()
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
-        users = self.browse()
+        user_ids = []
         if name and operator in ['=', 'ilike']:
-            users = self.search([('login', '=', name)] + args, limit=limit)
-        if not users:
-            users = self.search([('name', operator, name)] + args, limit=limit)
-        return users.name_get()
+            user_ids = self._search([('login', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        if not user_ids:
+            user_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(user_ids).name_get()
 
     @api.multi
     def copy(self, default=None):

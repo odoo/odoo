@@ -133,13 +133,13 @@ class PurchaseOrder(models.Model):
             order.website_url = '/my/purchase/%s' % (order.id)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         domain = []
         if name:
             domain = ['|', ('name', operator, name), ('partner_ref', operator, name)]
-        pos = self.search(domain + args, limit=limit)
-        return pos.name_get()
+        purchase_order_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(purchase_order_ids).name_get()
 
     @api.multi
     @api.depends('name', 'partner_ref')

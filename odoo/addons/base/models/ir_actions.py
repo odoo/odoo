@@ -651,13 +651,13 @@ class IrActionsTodo(models.Model):
         return super(IrActionsTodo, self).unlink()
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if args is None:
             args = []
         if name:
-            actions = self.search([('action_id', operator, name)] + args, limit=limit)
-            return actions.name_get()
-        return super(IrActionsTodo, self).name_search(name, args=args, operator=operator, limit=limit)
+            action_ids = self._search([('action_id', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+            return self.browse(action_ids).name_get()
+        return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
     def action_launch(self, context=None):

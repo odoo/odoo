@@ -335,15 +335,16 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).name_get()
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if self._context.get('sale_show_partner_name'):
             if operator in ('ilike', 'like', '=', '=like', '=ilike'):
                 domain = expression.AND([
                     args or [],
                     ['|', ('name', operator, name), ('partner_id.name', operator, name)]
                 ])
-                return self.search(domain, limit=limit).name_get()
-        return super(SaleOrder, self).name_search(name, args, operator, limit)
+                order_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+                return self.browse(order_ids).name_get()
+        return super(SaleOrder, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.model_cr_context
     def _init_column(self, column_name):
@@ -1174,13 +1175,13 @@ class SaleOrderLine(models.Model):
         return result
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator in ('ilike', 'like', '=', '=like', '=ilike'):
             args = expression.AND([
                 args or [],
                 ['|', ('order_id.name', operator, name), ('name', operator, name)]
             ])
-        return super(SaleOrderLine, self).name_search(name, args, operator, limit)
+        return super(SaleOrderLine, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
     def unlink(self):
