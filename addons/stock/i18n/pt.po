@@ -101,11 +101,11 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Novo: Quando o movimento de stock foi criado mas ainda não foi confirmado.\n"
-"* Aguardando Outro Movimento: Este estado pode ser visto quando um movimento está à espera de outro, por exemplo num fluxo encadeado.\n"
-"* Aguardando Disponibilidade: Este estado é atingido quando a resolução de aquisição não é linear. Pode precisar que o planeador seja executado, que um componente seja fabricado...\n"
-"* Disponível: Quando os produtos são reservados, é marcado como 'Disponível'.\n"
-"* Feito: Quando a remessa é processada, o estado é 'Feito'."
+"* Novo: quando é criado um movimento de stock e ainda não foi confirmado.\n"
+"* A Aguardar Outro Movimento: este estado pode ser visto quando um movimento está a aguardar por outro, por exemplo, num fluxo em sequência.\n"
+"* A Aguardar Disponibilidade: este estado é atingido quando a resolução de aquisição não é linear. Este pode precisar que o agendamento seja executado, que um componente seja fabricado...\n"
+"* Disponível: quando os artigos estão reservados, são definidos para 'Disponível'.\n"
+"* Concluído: quando a expedição é processada, o estado é 'Concluído'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -119,14 +119,14 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Localização do Fornecedor: Localização virtual que representa a localização fonte dos produtos que vêm dos seus fornecedores\n"
-"* Vista: Localização virtual usada para criar uma estrutura hierárquica para o seu armazém, agregando as suas localizações secundárias; não pode conter produtos diretamente\n"
-"* Localização Interna: Localização físicas dentro dos seus próprios armazéns\n"
-"* Localização do Cliente: Localização virtual que representa a localização destino para produtos enviados aos seus clientes\n"
-"* Perda de Inventário: Localização virtual homóloga às operações de inventário usadas para corrigir níveis de stock (inventários físicos)\n"
-"* Aquisição: Localização virtual que temporariamente homóloga às operações de aquisição quando a fonte (fornecedor ou produção) ainda não é conhecida. Esta localização deve estar vazia quando o planeador de aquisição terminar a sua execução.\n"
-"* Produção: Localização virtual homóloga às operações de produção: esta localização consume a matéria-prima e produz produtos acabados\n"
-"* Localização de Trânsito: Localização homóloga às operações inter-empresa ou inter-armazém"
+"* Localização do Fornecedor: localização virtual que representa a localização original dos artigos que vêm dos seus fornecedores\n"
+"* Visualização: localização virtual utilizada para criar estruturas hierárquicas para o seu armazém, agregando as suas localizações secundárias; não pode conter produtos diretamente\n"
+"* Localização Interna: localizações físicas dentro dos seus próprios armazéns\n"
+"* Localização do Cliente: localização virtual que representa a localização de destino para os artigos enviados aos seus clientes\n"
+"* Perda de Inventário: localização virtual homóloga às operações de inventário utilizadas para corrigir níveis de stock (inventários físicos)\n"
+"* Aquisição: localização virtual que temporariamente homóloga às operações de aquisição quando a fonte (fornecedor ou produção) ainda não é conhecida. Esta localização deverá estar vazia quando o agendamento da aquisição terminar a sua execução.\n"
+"* Produção: localização virtual homóloga às operações de produção: esta localização consume a matéria-prima e produz produtos acabados\n"
+"* Localização de Trânsito: localização homóloga às operações interempresa ou interarmazém"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -407,7 +407,8 @@ msgstr ""
 msgid ""
 "<span>You need to install the Sales Management app for this flow.</span>"
 msgstr ""
-"<span>Precisa de instalar a app de Gestão de Vendas para este fluxo.</span>"
+"<span>Precisa de instalar a aplicação de 'Gestão de Vendas' para este "
+"fluxo.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -607,9 +608,9 @@ msgid ""
 "location at the current time. This includes items that are already allocated"
 " to fulfilling production needs or sales orders"
 msgstr ""
-"<strong>Produtos disponíveis</strong> estão fisicamente localizados na "
-"localização do armazém presentemente. Isto inclui itens que já estão "
-"atribuídos a necessidades de produção ou ordens de venda."
+"Os <strong>produtos disponíveis</strong> estão localizados fisicamente de "
+"momento na localização do armazém. Isto inclui os itens que já estão "
+"alocados para as necessidades de produção ou das ordens de vendas."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1326,7 +1327,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
-msgstr "Escolha a data"
+msgstr "Escolha a sua data"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -1980,9 +1981,9 @@ msgid ""
 "Define routes within your warehouse according to business needs, such as "
 "Quality Control, After Sales Services or Supplier Returns"
 msgstr ""
-"Defina rotas de passagem pelo seu armazém de acordo com as suas necessidades"
-" de negócio, tais como Controlo de Qualidade, Serviço Pós-Venda ou "
-"Devoluções de Fornecedor"
+"Defina rotas dentro do seu armazém de acordo com as suas necessidades de "
+"negócio, tais como 'Controlo de Qualidade', 'Serviço Pós-Venda' ou "
+"'Devoluções de Fornecedor'"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -3008,7 +3009,7 @@ msgid ""
 msgstr ""
 "No caso de números de série únicos, cada número de série corresponde\n"
 "                        a exatamente uma peça. No caso dos lotes, precisa de fornecer a quantidade\n"
-"                        para cada lote quando mover aquele artigo."
+"                        para cada lote quando mover esse artigo."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3017,7 +3018,7 @@ msgid ""
 "                        to inventory reduction and better efficiencies in your daily operations."
 msgstr ""
 "Resumidamente, irá obter uma gestão de armazém mais eficiente, o que levará\n"
-"                        a uma redução do inventário e a uma maior eficácia das suas operações diárias."
+"                        a uma redução do inventário e melhores eficiências nas suas operações diárias."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
@@ -5598,9 +5599,9 @@ msgid ""
 "is advised to better manage priorities in case of long customer lead times "
 "or/and frequent stock-outs."
 msgstr ""
-"É aconselhável reservar produtos manualmente em ordens de entrega ou usando "
-"o planeador para uma melhor gestão das prioridades no caso de tempos "
-"extensos de leads de cliente ou/e falhas de stock frequentes."
+"É aconselhável reservar artigos manualmente nas ordens de entrega ou "
+"executando o agendamento para gerir melhor as prioridades no caso de tempos "
+"extensos do cliente ou/e falhas de stock frequentes."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7239,7 +7240,7 @@ msgstr "Atualizar Quantidade de Artigo"
 #: model:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Update Qty On Hand"
-msgstr "Atualizar Qtd Disponível"
+msgstr "Atualizar Quantidade Disponível"
 
 #. module: stock
 #. openerp-web
@@ -7640,11 +7641,11 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"Está a usar uma unidade de medida mais pequena que a que usa para armazenar "
-"o seu artigo. Isto pode levar a problemas de arredondamento em quantidades "
-"reservadas! Deve usar a unidade de medida mais pequena possível de modo a "
-"avaliar o seu stock ou alterar a sua precisão de arredondamento para um "
-"valor mais pequeno (Ex.: 0.00001)."
+"Está a utilizar uma unidade de medida mais pequena do que a que está a "
+"utilizar para armazenar o seu artigo. Isto pode levar a problemas de "
+"arredondamento em quantidades reservadas! Deverá utilizar a unidade de "
+"medida mais pequena possível de modo a avaliar o seu stock ou alterar a sua "
+"precisão de arredondamento para um valor mais pequeno (exemplo:  0.00001)."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form
@@ -7719,7 +7720,7 @@ msgid ""
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
 msgstr ""
-"Não pode alterar a unidade de medida de um artigo que já foi usado num "
+"Não pode alterar a unidade de medida de um artigo que já foi utilizado num "
 "movimento de stock realizado. Se precisar de alterar a unidade de medida, "
 "pode desativar este artigo."
 
