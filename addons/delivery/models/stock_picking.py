@@ -202,7 +202,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         if self.package_ids:
             packages = [p.packaging_id for p in self.package_ids]
-            if len(set(packages)) != 1:
+            if len(set([package.shipper_package_code for package in packages])) != 1:
                 package_names = ', '.join([str(p.name) for p in packages])
                 raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
         return True
