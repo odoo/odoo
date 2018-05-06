@@ -43,6 +43,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Status „Wersja robocza” jest używany, gdy użytkownik koduje nową i niepotwierdzoną fakturę.\n"
+"* Status „Otwórz” jest używany, gdy użytkownik tworzy fakturę, generowany jest numer faktury. Pozostaje w stanie otwartym, dopóki użytkownik nie zapłaci faktury.\n"
+"* Status „Zapłacono” jest ustalany automatycznie po opłaceniu faktury. Związane z nim zapisy księgowe mogą lub mogą nie zostać uzgodnione.\n"
+"* Status „Anulowano” jest używany, gdy użytkownik anuluje fakturę."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -1045,13 +1049,13 @@ msgstr "Transakcja pieniężna nie może mieć wartości 0."
 #: code:addons/account/models/account_invoice.py:1731
 #, python-format
 msgid "A Payment Terms should have its last line of type Balance."
-msgstr ""
+msgstr "Warunki płatności powinny mieć swój ostatni wiersz typu Saldo."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1734
 #, python-format
 msgid "A Payment Terms should have only one line of type Balance."
-msgstr ""
+msgstr "Warunki płatności powinny mieć tylko jedną linię typu Saldo."
 
 #. module: account
 #: code:addons/account/models/account.py:707
@@ -1694,7 +1698,7 @@ msgstr "Podatek korekcyjny"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Rodzaj korekty"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
@@ -1704,7 +1708,7 @@ msgstr ""
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Adjustment in your favor"
-msgstr ""
+msgstr "Korekta na swoją korzyść"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -4110,7 +4114,7 @@ msgstr "Domyślny podatek należny stosowany przy transakcjach krajowych"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deferred Revenues Management"
-msgstr ""
+msgstr "Zarządzanie odroczonym przychodami"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4735,7 +4739,7 @@ msgstr "Raporty finansowe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_fy_data_done
 msgid "Financial Year Setup Marked As Done"
-msgstr ""
+msgstr "Oznaczenie roku finansowego jako zakończony"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
@@ -4745,7 +4749,7 @@ msgstr "Raport finansowy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
 msgid "Financial year setup marked as done"
-msgstr ""
+msgstr "Oznaczenie roku finansowego jako zakończony"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5021,6 +5025,11 @@ msgid ""
 "“Bank Synchronization” in bank account settings. Then, click “Configure” on "
 "the online account to enter your bank credentials."
 msgstr ""
+"Automatyczne pobieranie zaimportowanych wyciągów bankowych co 4 godziny lub "
+"za pomocą jednego kliknięcia, przy użyciu usług Yodlee i Plaid. Po "
+"zainstalowaniu ustaw \"Kanały bankowe\" na \"Synchronizacja banku\" w "
+"ustawieniach konta bankowego. Następnie kliknij \"Konfiguruj\" na koncie "
+"internetowym, aby wprowadzić dane banku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
@@ -5049,7 +5058,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:57
 #, python-format
 msgid "Go to bank statement(s)"
-msgstr ""
+msgstr "Przejdź do wyciągów bankowych"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:636
@@ -5345,6 +5354,11 @@ msgid ""
 " date empty, it means direct payment. The payment terms may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Jeśli stosujesz warunki płatności, to data zapłaty będzie wyliczana "
+"automatycznie przy generowaniu zapisów na koncie. Jeśli pozostawisz puste "
+"warunki płatności i datę zapłaty, to będzie oznaczać płatność "
+"natychmiastową. Warunki płatności mogą wyliczyć wiele dat zapłaty. Np. 50% "
+"teraz i 50% w ciągu miesiąca."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -5355,6 +5369,12 @@ msgid ""
 " due date, make sure that the payment term is not set on the invoice. If you"
 " keep the Payment terms and the due date empty, it means direct payment."
 msgstr ""
+"Jeśli stosujesz warunki zapłaty, to termin płatności zostanie obliczony "
+"automatycznie w trakcie generowania zapisów księgowych (przy zatwierdzaniu "
+"faktury). Warunki płatności mogą zawierać kilka terminów (np. 50% teraz i "
+"50% w ciągu 30dni), ale jeśli chcesz wymusić termin płatności, to upewnij "
+"się, że warunki płatności nie są ustawione na fakturze. Jeśli nie ma ani "
+"warunków płatności, ani terminu zapłaty, to oznacza płatność natychmiastową."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5428,7 +5448,7 @@ msgstr "Importuj w formacie .ofx"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_bank_statement_import_camt
 msgid "Import in CAMT.053 format"
-msgstr ""
+msgstr "Importuj w formacie CAMT.053"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6681,6 +6701,13 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Ręcznie: Płać gotówką, czekiem lub jakąkolwiek inną metoda poza Odoo. "
+"Elektronicznie: Otrzymuj automatycznie płatności za pośrednictwem centrum "
+"autoryzacji płatności, żądając transakcji na karcie zapisanej przez klienta "
+"podczas kupowania lub subskrybowania online (token płatności). Depozyt "
+"zbiorczy: załóż kilka czeków klientów naraz, generując depozyt partii, który"
+" zostanie przesłany do Twojego banku. Kodowanie wyciągu bankowego w Odoo "
+"sugeruje, aby uzgodnić transakcję z wpłatą. Włącz tę opcję w ustawieniach."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6738,7 +6765,7 @@ msgstr "Dane główne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
 msgid "Matched Credit"
-msgstr ""
+msgstr "Dopasowany kredyt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_debit_ids
@@ -6846,7 +6873,7 @@ msgstr "Modyfikuj model"
 #. module: account
 #: selection:account.cash.rounding,strategy:0
 msgid "Modify tax amount"
-msgstr ""
+msgstr "Zmodyfikuj kwotę podatku"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -7039,7 +7066,7 @@ msgstr "Brak szczegółów"
 #: code:addons/account/models/account.py:116
 #, python-format
 msgid "No opening move defined !"
-msgstr ""
+msgstr "Nie zdefiniowano żadnego ruchu otwarcia!"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company_fiscalyear_lock_date
@@ -7391,27 +7418,27 @@ msgstr "Liczba jednostek początkowych"
 #: code:addons/account/models/account.py:138
 #, python-format
 msgid "Opening balance"
-msgstr ""
+msgstr "Bilans otwarcia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_opening_credit
 msgid "Opening credit"
-msgstr ""
+msgstr "Otwarcie kredytu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_opening_credit
 msgid "Opening credit value for this account."
-msgstr ""
+msgstr "Wartość otwarcia kredytu dla tego konta."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_opening_debit
 msgid "Opening debit"
-msgstr ""
+msgstr "Otwarcie debetu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_opening_debit
 msgid "Opening debit value for this account."
-msgstr ""
+msgstr "Wartość otwarcia debetu dla tego konta."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -7759,12 +7786,12 @@ msgstr "Pozycje zapisu płatności"
 #. module: account
 #: model:ir.actions.report,name:account.action_report_payment_receipt
 msgid "Payment Receipt"
-msgstr ""
+msgstr "Potwierdzenie wpłaty"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Payment Receipt:"
-msgstr ""
+msgstr "Potwierdzenie wpłaty:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -10204,7 +10231,7 @@ msgstr "Wystąpił błąd podczas przetwarzania tej strony"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr ""
+msgstr "Podatki te są ustawiane dla każdego nowego produktu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
@@ -10330,7 +10357,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This feature is useful if you issue a high amounts of invoices."
-msgstr ""
+msgstr "Ta funkcja jest przydatna, jeśli wystawiasz duże kwoty faktur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_id
@@ -10535,7 +10562,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_account_hide_setup_bar
 msgid "Tick if you wish to hide the setup bar on the dashboard"
-msgstr ""
+msgstr "Zaznacz, jeśli chcesz ukryć pasek ustawień na pulpicie nawigacyjnym."
 
 #. module: account
 #. openerp-web
@@ -10960,7 +10987,7 @@ msgstr "Użyj grupowej zaliczki"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use depreciation boards, automate amortization entries"
-msgstr ""
+msgstr "Używaj tablic amortyzacji, automatyzuj wpisy amortyzacji"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11538,7 +11565,7 @@ msgstr ""
 #: code:addons/account/models/account.py:508
 #, python-format
 msgid "You cannot empty the bank account once set."
-msgstr ""
+msgstr "Nie możesz opróżnić konta bankowego po ustawieniu."
 
 #. module: account
 #: code:addons/account/models/account.py:55
@@ -11636,7 +11663,7 @@ msgstr "Masz"
 #: code:addons/account/models/account_payment.py:485
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr ""
+msgstr "Musisz zdefiniować sekwencję dla %s w swojej firmy."
 
 #. module: account
 #: code:addons/account/wizard/account_report_general_ledger.py:21
