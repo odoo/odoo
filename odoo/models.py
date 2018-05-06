@@ -4773,12 +4773,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             (:class:`Field` instance), including ``self``.
             Return at most ``limit`` records.
         """
-        ids0 = self._prefetch[self._name]
-        ids1 = set(self.env.cache.get_records(self, field)._ids)
-        recs = self.browse([it for it in ids0 if it and it not in ids1])
-        if limit and len(recs) > limit:
-            recs = self + (recs - self)[:(limit - len(self))]
-        return recs
+        recs = self.browse(self._prefetch[self._name])
+        ids = [self.id]
+        for record_id in self.env.cache.get_missing_ids(recs - self, field):
+            ids.append(record_id)
+            if limit and limit <= len(ids):
+                break
+        return self.browse(ids)
 
     @api.model
     def refresh(self):

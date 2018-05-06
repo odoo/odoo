@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# Nuno Silva <nuno.silva@arxi.pt>, 2017
 # Manuela Silva <manuela.silva@sky.com>, 2017
+# Nuno Silva <nuno.silva@arxi.pt>, 2017
 # Joao Felix <jrmfelix@gmail.com>, 2018
 # Nelson Costa <nelson.costa@isangola.com>, 2018
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
@@ -433,8 +433,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Capacidade de selecionar um tipo de embalagem em ordens de venda e de forçar"
-" uma quantidade múltipla do número de unidades por embalagem."
+"Capacidade de selecionar um tipo de embalagem nas ordens de vendas e de "
+"forçar uma quantidade que é múltipla do número de unidades por embalagem."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -531,7 +531,7 @@ msgstr "Conta Analítica"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr "Conta analítica para vendas"
+msgstr "Contabilidade Analítica para Vendas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -732,7 +732,7 @@ msgstr "Criar Faturas"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "Crie um orçamento, o primeiro passo de uma nova venda"
+msgstr "Crie um Orçamento, o primeiro passo de uma nova venda"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -768,7 +768,7 @@ msgstr "Moeda"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "Current Year Sales"
-msgstr "Vendas do Ano Corrente"
+msgstr "Vendas do Corrente Ano"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
@@ -855,7 +855,7 @@ msgstr "Endereço de entrega"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_customer_lead
 msgid "Delivery Lead Time"
-msgstr "Prazo de entrega da lead"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
@@ -1318,7 +1318,7 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
-msgstr "Última Actualização por"
+msgstr "Última Atualização por"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
@@ -1326,7 +1326,7 @@ msgstr "Última Actualização por"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
-msgstr "Última Actualização em"
+msgstr "Última Atualização em"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1343,7 +1343,7 @@ msgstr "Sequência de Layout"
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
-"Permita que os seus clientes se conectem para verem os seus documentos"
+"Permita que os seus clientes iniciem a sessão para verem os seus documentos"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1538,10 +1538,10 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
-"Assim que o orçamento for confirmado, passa a ser uma ordem de venda.\n"
-"                    Passará a ser capaz de a faturar e receber pagamentos.\n"
+"Assim que a cotação for confirmada, esta passa a ordem de venda.\n"
+"                    Irá poder faturá-la e receber os pagamentos.\n"
 "                    A partir do menu de <i>Ordens de Venda</i> pode monitorizar\n"
-"                    ordens ou serviços de entrega."
+"                    as ordens ou serviços de entrega."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
@@ -1822,7 +1822,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Pricing"
-msgstr "Definição de preços"
+msgstr "Preços"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2551,8 +2551,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"O produto usado para faturar uma entrada inicial deve ser do tipo "
-"\"serviço\". Por favor, use outro produto ou actualize este. "
+"O artigo utilizado para faturar um adiantamento deverá ser do tipo "
+"\"Serviço\". Por favor, utilize outro artigo ou atualize este artigo. "
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:147
@@ -2562,8 +2562,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"O produto usado para faturar uma entrada inicial deve ser do tipo "
-"\"serviço\". Por favor, use outro produto ou actualize este. "
+"O artigo utilizado para faturar um adiantamento deverá ter uma política de "
+"faturamento definida para \"Quantidades encomendadas\". Por favor, atualize "
+"o seu artigo de depósito para poder criar uma de depósito."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2802,7 +2803,7 @@ msgstr "Upselling"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr "Oportunidade de Upselling"
+msgstr "Oportunidade de \"Upselling\""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations

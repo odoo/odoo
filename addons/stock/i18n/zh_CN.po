@@ -24,6 +24,7 @@
 # Michael Chong <michaelchong2005@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
+# Henry Zhou <zhouhenry@live.com>, 2017
 # glovebx <ruinning@163.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
@@ -759,8 +760,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加和自定义路线操作以处理你仓库中的产品移动：例如：卸货>质量控制>入库产品库存，拣货>包装>出货产品。\n"
-"您也可以在仓库位置设置入库策略，以便立即将入库产品发送到特定的小孩位置（例如：特定箱子、机架）。"
+"添加和自定义路线操作以处理你仓库中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。\n"
+"您也可以在仓库位置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -771,8 +772,7 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加和自定义路线操作以处理你仓库中的产品移动：例如：卸货>质量控制>入库产品库存，拣货>包装>出货产品。\n"
-"您也可以在仓库位置设置入库策略，以便立即将入库产品发送到特定的小孩位置（例如：特定箱子、机架）。"
+"添加和自定义路线操作以处理你仓库中的产品移动：例如：卸货>品控>入库，拣货>包装>发运。您也可以在仓库位置设置上架策略，以便直接将入库产品发送到特定的子位置（例如：特定的货位、货架）。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5008,7 +5008,7 @@ msgstr "上架方法"
 #: model:ir.model,name:stock.model_product_putaway
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
-msgstr "下架策略"
+msgstr "上架策略"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form

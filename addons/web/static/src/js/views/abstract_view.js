@@ -224,6 +224,14 @@ var AbstractView = Class.extend({
 
             _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
                 var field = fields[fieldName];
+                if (!field) {
+                    // when a one2many record is opened in a form view, the fields
+                    // of the main one2many view (list or kanban) are added to the
+                    // fieldsInfo of its form view, but those fields aren't in the
+                    // loadParams.fields, as they are not displayed in the view, so
+                    // we can ignore them.
+                    return;
+                }
                 if (field.type !== 'one2many' && field.type !== 'many2many') {
                     return;
                 }
