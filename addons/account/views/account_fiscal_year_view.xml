@@ -23,7 +23,7 @@
                             <field name="name" placeholder="Fiscal Year 2018"/>
                             <field name="date_from"/>
                             <field name="date_to"/>
-                            <field name="company_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
                 </form>
@@ -36,7 +36,6 @@
             <field name="arch" type="xml">
                 <search>
                     <field name="name"/>
-                    <field name="company_id"/>
                 </search>
             </field>
         </record>
@@ -49,7 +48,7 @@
                     <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
