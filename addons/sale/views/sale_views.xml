@@ -294,15 +294,11 @@
                                         </div>
                                     </group>
                                     <group attrs="{'invisible': [('line_type', '!=', 'section')]}">
-                                        <div class="oe_title">
-                                            <h1>
-                                                <field name="name"/>
-                                            </h1>
-                                            <group>
-                                                <field name="line_pagebreak"/>
-                                                <field name="line_subtotal"/>
-                                            </group>
-                                        </div>
+                                        <group>
+                                            <field name="name" widget="char" string="Section Name" placeholder="Materials,Services"/>
+                                            <field name="line_pagebreak"/>
+                                            <field name="line_subtotal"/>
+                                        </group>
                                     </group>
                                 </form>
                                 <tree string="Sales Order Lines" section_line="true" editable="bottom" 
