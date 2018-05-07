@@ -183,17 +183,17 @@ class ResPartner(models.Model):
             if not company:
                 company = self.env.user.company_id
 
-            check_rslt = 'wrong'
+            check_rslt = 'unknown'
             if partner.vat:
                 if partner.parent_id and partner.vat == partner.parent_id.vat:
                     check_rslt = partner.parent_id.base_vat_check_status
                 elif company.vat_check_vies:
                     if not partner.base_vat_vies_answer: # We only call the webservice if we haven't called it before, otherwise we use cached data
-                        partner.base_vat_vies_answer = partner._check_vat(self.vies_vat_check)
+                        partner.base_vat_vies_answer = partner._check_and_interpret_vat(self.vies_vat_check)
 
                     check_rslt = partner.base_vat_vies_answer
                 else:
-                    check_rslt = partner._check_vat(self.simple_vat_check)
+                    check_rslt = partner._check_and_interpret_vat(self.simple_vat_check)
 
             partner.base_vat_check_status = check_rslt
 
@@ -204,6 +204,7 @@ class ResPartner(models.Model):
                            return True if the number is correct, False if it is not and None if the
                            result could not be determined
         """
+        self.ensure_one()
         # We first check with the prefix of the TIN as country code
         vat_country, vat_number = self._split_vat(self.vat)
         check_rslt = vat_country and check_func(vat_country, vat_number) or False
@@ -214,8 +215,16 @@ class ResPartner(models.Model):
                 # We recall split, so that the vat number is re-compacted in accordance with the country code
                 vat_country, vat_number = self._split_vat(country_code + self.vat)
                 check_rslt = vat_country and check_func(vat_country, vat_number) or False
+        return check_rslt
 
-        return (check_rslt == None) and 'unknown' or check_rslt and 'verified' or 'wrong'
+    def _check_and_interpret_vat(self, check_func):
+        self.ensure_one()
+        check_rslt = self._check_vat(check_func)
+        if check_rslt is None:
+            return 'unknown'
+        if check_rslt:
+            return 'verified'
+        return 'wrong'
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')

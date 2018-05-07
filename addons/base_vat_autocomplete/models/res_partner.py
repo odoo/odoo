@@ -6,8 +6,6 @@ import re
 
 from odoo import api, models
 
-from suds.client import Client
-
 _logger = logging.getLogger(__name__)
 
 try:
@@ -24,7 +22,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     @api.model
-    def _get_partner_vals(self, vat):
+    def _parse_partner_vals(self, vies_result):
         def _check_city(lines, country='BE'):
             if country == 'GB':
                 ukzip = '[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}'
@@ -44,20 +42,17 @@ class ResPartner(models.Model):
                     return (result.group(1), result.group(2))
             return False
 
-        partner_vat = self.compact_vat_number(vat)
-        result = self.vies_vat_check(partner_vat[:2], partner_vat[2:])
-
-        if not result:
+        if not vies_result:
             return False, {}
         partner_name = False
         partner_address = {}
-        if result['name'] != '---':
-            partner_name = result['name']
+        if vies_result['name'] != '---':
+            partner_name = vies_result['name']
 
         #parse the address from VIES and fill the partner's data
-        if result['address'] == '---': return partner_name, {}
+        if vies_result['address'] == '---': return partner_name, {}
 
-        lines = [x for x in result['address'].split("\n") if x]
+        lines = [x for x in vies_result['address'].split("\n") if x]
         if len(lines) == 1:
             lines = [x.strip() for x in lines[0].split(',') if x]
         if len(lines) == 1:
@@ -67,7 +62,7 @@ class ResPartner(models.Model):
         #_set_address_field(partner, 'street', lines.pop(0))
 
         if len(lines) > 0:
-            res = _check_city(lines, result['countryCode'])
+            res = _check_city(lines, vies_result['countryCode'])
             if res:
                 partner_address['zip'] = res[0]
                 partner_address['city'] = res[1]
@@ -77,34 +72,31 @@ class ResPartner(models.Model):
             partner_address['street2'] = lines.pop(0)
             #_set_address_field(partner, 'street2', lines.pop(0))
 
-        country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
+        country = self.env['res.country'].search([('code', '=', vies_result['countryCode'])], limit=1)
 
         #_set_address_field(partner, 'country_id', country and country.id or False)
         partner_address['country_id'] = country and country.id or False
         return partner_name, partner_address
 
-    @api.onchange('vat')
-    def vies_vat_change(self):
-        eu_country_codes = self.env.ref('base.europe').country_ids.mapped('code')
-        for partner in self:
-            if not partner.vat:
-                continue
+    def _check_vat(self, check_func):
+        res = super(ResPartner, self)._check_vat(check_func)
+        company = self.env.context.get('company_id', self.env.user.company_id)
+        if res and company.vat_check_vies:
             # If a field is not set in the response, wipe it anyway
             non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-            if len(partner.vat) > 5 and partner.vat[:2].upper() in eu_country_codes:
-                partner_name, partner_address = self._get_partner_vals(partner.vat)
+            partner_name, partner_address = self._parse_partner_vals(res)
+            if not self.name and partner_name:
+                self.name = partner_name
 
-                if not partner.name and partner_name:
-                    partner.name = partner_name
-
-                if partner_address:
-                    #set the address fields
-                    for field, value in partner_address.items():
-                        partner[field] = value
-                        non_set_address_fields.remove(field)
-                    for field in non_set_address_fields:
-                        if partner[field]:
-                            partner[field] = False
+            if partner_address:
+                #set the address fields
+                for field, value in partner_address.items():
+                    self[field] = value
+                    non_set_address_fields.remove(field)
+                for field in non_set_address_fields:
+                    if self[field]:
+                        self[field] = False
+        return res
 
 
 class ResCompany(models.Model):
