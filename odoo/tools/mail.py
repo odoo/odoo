@@ -44,13 +44,13 @@ class _Cleaner(clean.Cleaner):
 
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
-        'line-height', 'letter-spacing', 'text-transform', 'text-decoration',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'opacity',
         'float', 'vertical-align',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         # box model
-        'border', 'border-color', 'border-radius', 'border-style', 'border-width',
-        'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
+        'border', 'border-color', 'border-radius', 'border-style', 'border-width', 'border-top',
+        'height', 'width', 'max-width', 'min-width', 'min-height',
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
 
