@@ -1289,6 +1289,10 @@
 <!--Private profile-->
 <template id="private_profile">
     <t t-call="website_forum.header">
+        <t t-set='head'>
+            <t t-raw='head'/>
+            <meta name="robots" content="noindex follow"/>
+        </t>
         <h1 class="mt32">This profile is private!</h1>
         <p>
             <a t-attf-href="/forum/#{slug(forum)}">Return to the question list.</a>
