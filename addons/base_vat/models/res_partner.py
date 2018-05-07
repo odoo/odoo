@@ -197,7 +197,7 @@ class ResPartner(models.Model):
 
             partner.base_vat_check_status = check_rslt
 
-    def _check_vat(self, check_func):
+    def check_vat(self, check_func):
         """ Checks the VAT number of this partner.
 
         :param check_func: the check function to use on vat. This function must
@@ -219,7 +219,7 @@ class ResPartner(models.Model):
 
     def _check_and_interpret_vat(self, check_func):
         self.ensure_one()
-        check_rslt = self._check_vat(check_func)
+        check_rslt = self.check_vat(check_func)
         if check_rslt is None:
             return 'unknown'
         if check_rslt:

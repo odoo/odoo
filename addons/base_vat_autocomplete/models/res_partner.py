@@ -78,8 +78,8 @@ class ResPartner(models.Model):
         partner_address['country_id'] = country and country.id or False
         return partner_name, partner_address
 
-    def _check_vat(self, check_func):
-        res = super(ResPartner, self)._check_vat(check_func)
+    def check_vat(self, check_func):
+        res = super(ResPartner, self).check_vat(check_func)
         company = self.env.context.get('company_id', self.env.user.company_id)
         if res and company.vat_check_vies:
             # If a field is not set in the response, wipe it anyway
