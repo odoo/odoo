@@ -27,11 +27,12 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      *
      * @param {string} title
      * @param {string} content
+     * @param {function} [callback] if given callback will be called when user clicks on notification
      */
-    sendNotification: function (title, content) {
+    sendNotification: function (title, content, callback) {
         if (window.Notification && Notification.permission === "granted") {
             if (this.isMasterTab()) {
-                this._sendNativeNotification(title, content);
+                this._sendNativeNotification(title, content, callback);
             }
         } else {
             this.do_notify(title, content);
@@ -76,8 +77,9 @@ var BusService =  CrossTab.extend(ServicesMixin, {
      * @private
      * @param {string} title
      * @param {string} content
+     * @param {function} [callback] if given callback will be called when user clicks on notification
      */
-    _sendNativeNotification: function (title, content) {
+    _sendNativeNotification: function (title, content, callback) {
         var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
         notification.onclick = function () {
             window.focus();
@@ -85,6 +87,9 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 this.cancel();
             } else if (this.close) {
                 this.close();
+            }
+            if (callback) {
+                callback();
             }
         };
     },
