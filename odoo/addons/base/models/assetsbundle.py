@@ -7,7 +7,12 @@ import itertools
 import json
 import textwrap
 import uuid
-import sass
+try:
+    import sass as libsass
+except ImportError:
+    # If the `sass` python library isn't found, we fallback on the
+    # `sassc` executable in the path.
+    libsass = None
 from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
@@ -346,8 +351,12 @@ class AssetsBundle(object):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
                 source = '\n'.join([asset.get_source() for asset in assets])
-                cmd = assets[0].get_command()
-                compiled = self.compile_css(cmd, source, atype)
+                try:
+                    cmd_or_callable = assets[0].get_callable()
+                except NotImplementedError:
+                    cmd_or_callable = assets[0].get_command()
+                compiled = self.compile_css(cmd_or_callable, source)
+
                 if not self.css_errors and old_attachments:
                     old_attachments.unlink()
 
@@ -384,7 +393,7 @@ class AssetsBundle(object):
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
-    def compile_css(self, cmd, source, atype):
+    def compile_css(self, cmd_or_callable, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
         def handle_compile_error(e, source):
@@ -407,24 +416,17 @@ class AssetsBundle(object):
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        if atype == ScssStylesheetAsset:
+        if callable(cmd_or_callable):
             try:
-                path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-                path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
-                result = sass.compile(
-                    string=source.encode('utf-8'),
-                    include_paths=[path_to_bs, path_to_bs_components],
-                    output_style='expanded',
-                    precision=8,
-                )
+                result = cmd_or_callable(source)
                 compiled = result.strip()
-            except sass.CompileError as e:
+            except Exception as e:
                 return handle_compile_error(e, source=source)
         else:
             try:
-                compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+                compiler = Popen(cmd_or_callable, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             except Exception:
-                msg = "Could not execute command %r" % cmd[0]
+                msg = "Could not execute command %r" % cmd_or_callable[0]
                 _logger.error(msg)
                 self.css_errors.append(msg)
                 return ''
@@ -637,6 +639,9 @@ class PreprocessedCSS(StylesheetAsset):
         content = self.inline or self._fetch_content()
         return "/*! %s */\n%s" % (self.id, content)
 
+    def get_callable(self):
+        raise NotImplementedError
+
     def get_command(self):
         raise NotImplementedError
 
@@ -678,8 +683,30 @@ class SassStylesheetAsset(PreprocessedCSS):
 
 
 class ScssStylesheetAsset(PreprocessedCSS):
+    def get_callable(self):
+        if libsass is None:
+            raise NotImplementedError
+
+        path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+        path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+        def libsass_wrapper(source):
+            return libsass.compile(
+                string=source.encode('utf-8'),
+                include_paths=[path_to_bs, path_to_bs_components],
+                output_style='expanded',
+                precision=8,
+            )
+        return libsass_wrapper
+
     def get_command(self):
-        return ''
+        path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+        path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+        try:
+            sassc = misc.find_in_path('sassc')
+        except IOError:
+            sassc = 'sassc'
+        return [sassc, '--stdin', '--precision', '8', '--load-path', path_to_bs, '--load-path', path_to_bs_components, '-t', 'expanded']
+
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
