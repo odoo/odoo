@@ -57,7 +57,8 @@ class AccountMove(models.Model):
                     total_amount += amount
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                         total_reconciled += partial_line.amount
-            if float_is_zero(total_amount, precision_rounding=move.currency_id.rounding):
+            precision_currency = move.currency_id or move.company_id.currency_id
+            if float_is_zero(total_amount, precision_rounding=precision_currency.rounding):
                 move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
