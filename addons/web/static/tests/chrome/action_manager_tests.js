@@ -12,6 +12,7 @@ var ListController = require('web.ListController');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
+var SessionStorageService = require('web.SessionStorageService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 var createActionManager = testUtils.createActionManager;
@@ -2855,6 +2856,68 @@ QUnit.module('ActionManager', {
         actionManager.doAction(3, {keepSearchView: true});
         assert.strictEqual($('.o_control_panel .o_facet_values').text().trim(), 'Bar',
             "the filter on Bar should still be in the search view");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("current act_window action is stored in session_storage", function (assert) {
+        assert.expect(1);
+
+        var expectedAction = _.extend({}, _.findWhere(this.actions, {id: 3}), {
+            context: {},
+        });
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: [SessionStorageService.extend({
+                setItem: function (key, value) {
+                    assert.strictEqual(value, JSON.stringify(expectedAction),
+                        "should store the executed action in the sessionStorage");
+                },
+            })],
+        });
+
+        actionManager.doAction(3);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("store evaluated context of current action in session_storage", function (assert) {
+        // this test ensures that we don't store stringified instances of
+        // CompoundContext in the session_storage, as they would be meaningless
+        // once restored
+        assert.expect(1);
+
+        var expectedAction = _.extend({}, _.findWhere(this.actions, {id: 4}), {
+            context: {
+                active_model: 'partner',
+                active_id: 1,
+                active_ids: [1],
+            },
+        });
+        var checkSessionStorage = false;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: [SessionStorageService.extend({
+                setItem: function (key, value) {
+                    if (checkSessionStorage) {
+                        assert.strictEqual(value, JSON.stringify(expectedAction),
+                            "should correctly store the executed action in the sessionStorage");
+                    }
+                },
+            })],
+        });
+
+        // execute an action and open a record in form view
+        actionManager.doAction(3);
+        actionManager.$('.o_list_view .o_data_row:first').click();
+
+        // click on 'Execute action' button (it executes an action with a CompoundContext as context)
+        checkSessionStorage = true;
+        actionManager.$('.o_form_view button:contains(Execute action)').click();
 
         actionManager.destroy();
     });
