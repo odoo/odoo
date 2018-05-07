@@ -395,7 +395,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         $editable: $editable,
         media: media,
         options : {
-            onUpload: $editable.data('callbacks').onImageUpload,
+            onUpload: $editable.data('callbacks').onUpload,
         },
     });
     return new $.Deferred().reject();
