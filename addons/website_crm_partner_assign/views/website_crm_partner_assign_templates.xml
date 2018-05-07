@@ -234,10 +234,9 @@
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
-            <h3>
-                My Leads
-                <t t-call="portal.portal_searchbar"/>
-            </h3>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title" t-value="'My Leads'"/>
+            </t>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
             </div>
@@ -269,11 +268,10 @@
 
     <template id="portal_my_opportunities" name="My Opportunities">
         <t t-call="portal.portal_layout">
-            <h3>
-                My Opportunities
-                <t t-call="portal.portal_searchbar"/>
-                <button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
-            </h3>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title" t-value="'My Opportunities'"/>
+                <li class="pull-left"><button ddt-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default navbar-btn ml16"><i class="fa fa-plus"/></button></li>
+            </t>
             <div class="modal fade modal_new_opp" role="form" aria-hidden="true">
                 <div class="modal-dialog">
                     <form method="POST" class="modal-content js_website_submit_form new_opp_form">

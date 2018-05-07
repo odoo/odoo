@@ -34,9 +34,9 @@
 
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout">
-            <h3>Projects
-                <t t-call="portal.portal_searchbar"/>
-            </h3>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title" t-value="'Projects'"/>
+            </t>
             <t t-if="not projects">
                 <div class="alert alert-warning mt8" role="alert">
                     There are no projects.
@@ -117,9 +117,9 @@
 
     <template id="portal_my_tasks" name="My Tasks">
         <t t-call="portal.portal_layout">
-            <h3>Tasks
-                <t t-call="portal.portal_searchbar"/>
-            </h3>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title" t-value="'Tasks'"/>
+            </t>
             <t t-if="not grouped_tasks">
                 <div class="alert alert-warning mt8" role="alert">
                     There are no tasks.

@@ -32,9 +32,9 @@
 
     <template id="portal_my_quotations" name="My Quotations">
       <t t-call="portal.portal_layout">
-        <h3>Quotations
-            <t t-call="portal.portal_searchbar"/>
-        </h3>
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title" t-value="'Quotations'"/>
+        </t>
         <t t-if="not quotations">
             <p>There are currently no quotations for your account.</p>
         </t>
@@ -78,9 +78,9 @@
 
     <template id="portal_my_orders" name="My Sales Orders">
       <t t-call="portal.portal_layout">
-        <h3>Sales Orders
-            <t t-call="portal.portal_searchbar"/>
-        </h3>
+        <t t-call="portal.portal_searchbar">
+            <t t-set="title" t-value="'Sales Orders'"/>
+        </t>
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>

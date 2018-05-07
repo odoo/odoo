@@ -24,9 +24,9 @@
 
   <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
     <t t-call="portal.portal_layout">
-      <h3>Purchase Orders
-        <t t-call="portal.portal_searchbar"/>
-      </h3>
+      <t t-call="portal.portal_searchbar">
+        <t t-set="title" t-value="'Purchase Orders'"/>
+      </t>
       <div t-if="orders" class="panel panel-default">
       <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
         <thead>
