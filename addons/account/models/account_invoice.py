@@ -431,7 +431,8 @@ class AccountInvoice(models.Model):
         for invoice in self:
             # Delete non-manual tax lines
             self._cr.execute("DELETE FROM account_invoice_tax WHERE invoice_id=%s AND manual is False", (invoice.id,))
-            self.invalidate_cache()
+            if self._cr.rowcount:
+                self.invalidate_cache()
 
             # Generate one tax line per tax, however many invoice lines it's applied to
             tax_grouped = invoice.get_taxes_values()
@@ -747,8 +748,6 @@ class AccountInvoice(models.Model):
                 'invoice_id': self.id,
                 'analytic_tag_ids': analytic_tag_ids
             }
-            if line['account_analytic_id']:
-                move_line_dict['analytic_line_ids'] = [(0, 0, line._get_analytic_line())]
             res.append(move_line_dict)
         return res
 
