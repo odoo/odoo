@@ -554,6 +554,7 @@ class ProductProduct(models.Model):
     def price_get(self, ptype='list_price'):
         return self.price_compute(ptype)
 
+    #siguente metodo fue agregado por Trescloud
     def dict_price_history(self, value):
         '''
         Hook para agregar asiento contable.
