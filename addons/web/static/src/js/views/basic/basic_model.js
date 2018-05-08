@@ -3869,11 +3869,13 @@ var BasicModel = AbstractModel.extend({
                     });
                 }
                 return $.when.apply($, defs).then(function () {
-                    // generate the res_ids of the main list, being the concatenation
-                    // of the fetched res_ids in each group
-                    list.res_ids = _.flatten(_.map(arguments, function (group) {
-                        return group ? group.res_ids : [];
-                    }));
+                    if (!options || !options.onlyGroups) {
+                        // generate the res_ids of the main list, being the concatenation
+                        // of the fetched res_ids in each group
+                        list.res_ids = _.flatten(_.map(arguments, function (group) {
+                            return group ? group.res_ids : [];
+                        }));
+                    }
                     return list;
                 });
             });

@@ -397,7 +397,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         media: media,
         options: {
             lastFilters: ['background'],
-            onUpload: $editable.data('callbacks').onImageUpload,
+            onUpload: $editable.data('callbacks').onUpload,
         },
     });
     return new $.Deferred().reject();

@@ -408,6 +408,11 @@ var KanbanModel = BasicModel.extend({
      */
     _reloadProgressBarGroupFromRecord: function (recordID, def) {
         var element = this.localData[recordID];
+        if (element.type === 'list' && !element.parentID) {
+            // we are reloading the whole view, so there is no need to manually
+            // reload the progressbars
+            return def;
+        }
 
         // If we updated a record, then we must potentially update columns'
         // progressbars, so we need to load groups info again
