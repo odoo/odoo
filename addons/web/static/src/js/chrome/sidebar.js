@@ -144,6 +144,7 @@ var Sidebar = Widget.extend({
                 };
                 if (env.domain && env.all_selected) {
                     activeIdsContext.active_domain = env.domain;
+                    activeIdsContext.active_ids = [];
                 }
 
                 var context = pyUtils.eval('context', new Context(env.context, activeIdsContext));
