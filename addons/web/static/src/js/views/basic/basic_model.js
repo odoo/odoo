@@ -3957,7 +3957,7 @@ var BasicModel = AbstractModel.extend({
         return this._rpc({
             route: '/web/dataset/search_read',
             model: list.model,
-            fields: fieldNames,
+            fields: fieldNames.length ? fieldNames : ['id'],
             context: list.getContext(),
             domain: list.domain || [],
             limit: list.limit,
