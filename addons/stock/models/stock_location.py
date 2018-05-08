@@ -92,12 +92,18 @@ class Location(models.Model):
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
         current_location = self
-        putaway_location = self.env['stock.location']
+        putaway_location = parent_location = self.env['stock.location']
         while current_location and not putaway_location:
             if current_location.putaway_strategy_id:
                 putaway_location = current_location.putaway_strategy_id.putaway_apply(product)
             current_location = current_location.location_id
-        return putaway_location
+        # We should not authorize a putaway location which is not
+        # a child of self, either return void location
+        if putaway_location and self:
+            parent_location = self.env['stock.location'].search([
+                ('location_id', 'parent_of', putaway_location),
+                ('id', '=', self.id)])
+        return putaway_location if parent_location else parent_location
 
     @api.multi
     @api.returns('stock.warehouse', lambda value: value.id)

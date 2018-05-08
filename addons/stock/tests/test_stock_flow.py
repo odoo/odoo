@@ -1791,3 +1791,53 @@ class TestStockFlow(TestStockCommon):
         self.assertEquals(move_mto_alone.state, "waiting")
         self.assertEquals(move_with_ancestors.state, "waiting")
         self.assertEquals(other_move.state, "confirmed")
+
+    def test_75_putaway_apply(self):
+        """
+        Create a picking IN that points to Gate B and a strategy that points
+        to Gate A
+        :return:
+        """
+        location_gate_a = self.env.ref('stock.location_gate_a')
+        location_gate_b = self.env.ref('stock.location_gate_b')
+        location_dispatch_zone = self.env.ref('stock.location_dispatch_zone')
+        category_all = self.env.ref('product.product_category_all')
+        vals = {
+            'name': 'INPUT PUTAWAY',
+            'method': 'fixed',
+        }
+        putaway_strategy = self.env['product.putaway'].create(vals)
+        vals = {
+            'putaway_id': putaway_strategy.id,
+            'fixed_location_id': location_gate_a.id,
+            'category_id': category_all.id,
+        }
+        self.env['stock.fixed.putaway.strat'].create(vals)
+
+        # Assign Strategy to parent (Dispatch Zone)
+        location_dispatch_zone.write({
+            'putaway_strategy_id': putaway_strategy.id,
+        })
+
+        picking_in = self.PickingObj.create({
+            'partner_id': self.partner_agrolite_id,
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': location_gate_b.id})
+        move_in = self.MoveObj.create({
+            'name': 'Move IN',
+            'product_id': self.productA.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': location_gate_b.id,
+            'picking_id': picking_in.id,
+            'product_uom_qty': 10.0,
+            'product_uom': self.uom_unit.id,
+        })
+
+        picking_in.action_confirm()
+        picking_in.action_assign()
+
+        self.assertIn(
+            location_gate_b,
+            picking_in.pack_operation_ids.mapped('location_dest_id')
+        )
