@@ -150,11 +150,14 @@ class Warehouse(models.Model):
         # If another partner assigned
         if vals.get('partner_id'):
             warehouses._update_partner_data(vals['partner_id'], vals.get('company_id'))
+
         res = super(Warehouse, self).write(vals)
 
         # check if we need to delete and recreate route
         if vals.get('reception_steps') or vals.get('delivery_steps'):
-            warehouses._update_routes()
+            route_vals = warehouses._update_routes()
+            if route_vals:
+                self.write(route_vals)
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
             for warehouse in warehouses:
@@ -280,7 +283,7 @@ class Warehouse(models.Model):
                 reception_route.pull_ids.write({'active': False})
                 reception_route.push_ids.write({'active': False})
             else:
-                reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
+                warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
             # push / procurement (pull) rules for reception
             routings = routes_data[warehouse.id][warehouse.reception_steps]
             push_rules_list, pull_rules_list = warehouse._get_push_pull_rules_values(
@@ -593,11 +596,18 @@ class Warehouse(models.Model):
         routes_data = self.get_routes_dict()
         # change the default source and destination location and (de)activate operation types
         self._update_picking_type()
-        self._create_or_update_delivery_route(routes_data)
-        self._create_or_update_reception_route(routes_data)
-        self._create_or_update_crossdock_route(routes_data)
-        self._create_or_update_mto_pull(routes_data)
-        return True
+        delivery_route = self._create_or_update_delivery_route(routes_data)
+        reception_route = self._create_or_update_reception_route(routes_data)
+        crossdock_route = self._create_or_update_crossdock_route(routes_data)
+        mto_pull = self._create_or_update_mto_pull(routes_data)
+
+        return {
+            'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
+            'mto_pull_id': mto_pull.id,
+            'reception_route_id': reception_route.id,
+            'delivery_route_id': delivery_route.id,
+            'crossdock_route_id': crossdock_route.id,
+        }
 
     @api.one
     def _update_picking_type(self):
