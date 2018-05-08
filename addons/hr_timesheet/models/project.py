@@ -9,7 +9,7 @@ class Project(models.Model):
     _inherit = "project.project"
 
     allow_timesheets = fields.Boolean("Allow timesheets", default=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", ondelete='set null',
+    analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
         help="Link this project to an analytic account if you need financial management on projects. "
              "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.")
 
