@@ -76,7 +76,7 @@ class account_abstract_payment(models.AbstractModel):
         active_model = self._context.get('active_model')
 
         # Check for selected invoices ids
-        if not active_ids or active_model != 'account.invoice':
+        if not (active_ids or 'active_domain' in self.env.context) or active_model != 'account.invoice':
             return rec
 
         invoices = self.env['account.invoice'].get_active_records()
@@ -278,8 +278,8 @@ class account_register_payments(models.TransientModel):
         rec = super(account_register_payments, self).default_get(fields)
         active_ids = self._context.get('active_ids')
 
-        if not active_ids:
-            raise UserError(_("Programming error: wizard action executed without active_ids in context."))
+        if not (active_ids or 'active_domain' in self.env.context):
+            raise UserError(_("Programming error: wizard action executed without active_ids/active_domain in context."))
 
         return rec
 
