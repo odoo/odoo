@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import email_split, float_is_zero, float_compare, pycompat
+from odoo.tools import email_re, email_split, float_is_zero, float_compare, pycompat
 from odoo.tools.misc import formatLang
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
@@ -614,14 +614,33 @@ class AccountInvoice(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
-        values = dict(custom_values or {}, partner_id=msg_dict.get('author_id'))
+        # Split `From` and `CC` email address from received email and check if any of odoo partner is associated with that email
+        subscribe_partner_ids = partner_ids = [pid for pid in self._find_partner_from_emails(self._invoice_email_split(msg_dict), force_create=False) if pid]
+        # If sender of the email is the one from odoo internal user then it is likely that the vendor forwarded bill as an email to the internal user and inturn,
+        # internal user forwarded that email to vendor bill alias to automatically generate vendor bill on behalf of vendor. In this case, we will look for
+        # vendor's email address in email's body(generally it will be found first email address under forwarded Message section) and we will try to find vendor
+        # in odoo that is accociated with that email and will set that Vendor in the generated bill. If it can't be found, then it will left blank and someone
+        # has to manually create vendor based on chatter message.
+        user = self.env['res.users'].search([('partner_id', 'in', partner_ids)], limit=1)
+        if user:
+            partner_id = False
+            email_addresses = email_re.findall(msg_dict.get('body'))
+            if email_addresses:
+                partner_ids = [pid for pid in self._find_partner_from_emails([email_addresses[0]], force_create=False) if pid]
+                # this is an actual vendor
+                partner_id = partner_ids and partner_ids[0]
+        else:
+            # this is an actual vendor
+            partner_id = msg_dict.get('author_id')
+        if partner_id:
+            subscribe_partner_ids.append(partner_id)
+        values = dict(custom_values or {}, partner_id=partner_id)
         # Passing `type` in context so that _default_journal(...) can correctly set journal for new vendor bill
         invoice = super(AccountInvoice, self.with_context(type=values.get('type'))).message_new(msg_dict, values)
         # When configured Odoo to generate vendor bills from email and if the sender is an Odoo Vendor
         # then that vendor should automatically be added to the follower list of newly created bill
-        partner_ids = [pid for pid in invoice._find_partner_from_emails(self._invoice_email_split(msg_dict), force_create=False) if pid]
-        if partner_ids:
-            invoice.message_subscribe(partner_ids)
+        if subscribe_partner_ids:
+            invoice.message_subscribe(subscribe_partner_ids)
         return invoice
 
     @api.model
