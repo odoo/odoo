@@ -244,14 +244,23 @@ class StockMove(models.Model):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
-        return self.move_line_ids
+        return self.move_line_ids or self.move_line_nosuggest_ids
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id')
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
+        """ This field represents the sum of the move lines `qty_done`. It allows the user to know
+        if there is still work to do.
+
+        We take care of rounding this value at the general decimal precision and not the rounding
+        of the move's UOM to make sure this value is really close to the real sum, because this
+        field will be used in `_action_done` in order to know if the move will need a backorder or
+        an extra move.
+        """
         for move in self:
+            quantity_done = 0
             for move_line in move._get_move_lines():
-                # Transform the move_line quantity_done into the move uom.
-                move.quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom)
+                quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
+            move.quantity_done = quantity_done
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
@@ -542,7 +551,7 @@ class StockMove(models.Model):
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id
         ]
 
-    def _merge_moves(self):
+    def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
         :return: Recordset of moves passed to this method. If some of the passed moves were merged
@@ -550,12 +559,19 @@ class StockMove(models.Model):
         """
         distinct_fields = self._prepare_merge_moves_distinct_fields()
 
+        candidate_moves_list = []
+        if not merge_into:
+            for picking in self.mapped('picking_id'):
+                candidate_moves_list.append(picking.move_lines)
+        else:
+            candidate_moves_list.append(merge_into | self)
+
         # Move removed after merge
         moves_to_unlink = self.env['stock.move']
         moves_to_merge = []
-        for picking in self.mapped('picking_id'):
+        for candidate_moves in candidate_moves_list:
             # First step find move to merge.
-            for k, g in groupby(sorted(picking.move_lines, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
+            for k, g in groupby(sorted(candidate_moves, key=self._prepare_merge_move_sort_method), key=itemgetter(*distinct_fields)):
                 moves = self.env['stock.move'].concat(*g).filtered(lambda m: m.state not in ('done', 'cancel', 'draft'))
                 # If we have multiple records we will merge then in a single one.
                 if len(moves) > 1:
@@ -709,7 +725,7 @@ class StockMove(models.Model):
             'location_dest_id': self.location_dest_id.id,
         }
 
-    def _action_confirm(self, merge=True):
+    def _action_confirm(self, merge=True, merge_into=False):
         """ Confirms stock move or put it in waiting if it's linked to another move.
         :param: merge: According to this boolean, a newly confirmed move will be merged
         in another move of the same picking sharing its characteristics.
@@ -749,7 +765,7 @@ class StockMove(models.Model):
             moves._assign_picking()
         self._push_apply()
         if merge:
-            return self._merge_moves()
+            return self._merge_moves(merge_into=merge_into)
         return self
 
     def _prepare_procurement_values(self):
@@ -820,12 +836,22 @@ class StockMove(models.Model):
 
         taken_quantity = min(available_quantity, need)
 
+        # `taken_quantity` is in the quants unit of measure. There's a possibility that the move's
+        # unit of measure won't be respected if we blindly reserve this quantity, a common usecase
+        # is if the move's unit of measure's rounding does not allow fractional reservation. We chose
+        # to convert `taken_quantity` to the move's unit of measure with a down rounding method and
+        # then get it back in the quants unit of measure with an half-up rounding_method. This
+        # way, we'll never reserve more than allowed.
+        taken_quantity_move_uom = self.product_id.uom_id._compute_quantity(taken_quantity, self.product_uom, rounding_method='DOWN')
+        taken_quantity = self.product_uom._compute_quantity(taken_quantity_move_uom, self.product_id.uom_id, rounding_method='HALF-UP')
+
         quants = []
         try:
-            quants = self.env['stock.quant']._update_reserved_quantity(
-                self.product_id, location_id, taken_quantity, lot_id=lot_id,
-                package_id=package_id, owner_id=owner_id, strict=strict
-            )
+            if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
+                quants = self.env['stock.quant']._update_reserved_quantity(
+                    self.product_id, location_id, taken_quantity, lot_id=lot_id,
+                    package_id=package_id, owner_id=owner_id, strict=strict
+                )
         except UserError:
             # If it raises here, it means that the `available_quantity` brought by a done move line
             # is not available on the quants itself. This could be the result of an inventory
@@ -886,6 +912,8 @@ class StockMove(models.Model):
                         continue
                     need = move.product_qty - move.reserved_availability
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
+                    if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                        continue
                     if need == taken_quantity:
                         assigned_moves |= move
                     else:
@@ -942,6 +970,8 @@ class StockMove(models.Model):
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('product_qty'))
                         taken_quantity = move._update_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
+                        if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
+                            continue
                         if need - taken_quantity == 0.0:
                             assigned_moves |= move
                             break
@@ -985,7 +1015,7 @@ class StockMove(models.Model):
         The rationale for the creation of an extra move is the application of a potential push
         rule that will handle the extra quantities.
         """
-        extra_move = self.env['stock.move']
+        extra_move = self
         rounding = self.product_uom.rounding
         # moves created after the picking is assigned do not have `product_uom_qty`, but we shouldn't create extra moves for them
         if float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
@@ -995,7 +1025,11 @@ class StockMove(models.Model):
                 precision_rounding=self.product_uom.rounding,
                 rounding_method ='UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
-            extra_move = self.copy(default=extra_move_vals)._action_confirm()
+            extra_move = self.copy(default=extra_move_vals)
+            if extra_move.picking_id:
+                extra_move = extra_move._action_confirm(merge_into=self)
+            else:
+                extra_move = extra_move._action_confirm()
 
             # link it to some move lines. We don't need to do it for move since they should be merged.
             if self.exists() and not self.picking_id:
@@ -1034,13 +1068,17 @@ class StockMove(models.Model):
         for move in moves:
             if move.state == 'cancel' or move.quantity_done <= 0:
                 continue
-            moves_todo |= move
+            # extra move will not be merged in mrp
+            if not move.picking_id:
+                moves_todo |= move
             moves_todo |= move._create_extra_move()
 
         # Split moves where necessary and move quants
         for move in moves_todo:
-            rounding = move.product_uom.rounding
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=rounding) < 0:
+            # To know whether we need to create a backorder or not, round to the general product's
+            # decimal precision and not the product's UOM.
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
                 # Need to do some kind of conversion here
                 qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
                 new_move = move._split(qty_split)
@@ -1064,7 +1102,7 @@ class StockMove(models.Model):
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.mapped('location_id')) > 1:
                 raise UserError(_('You should not put the contents of a package in different locations.'))
-        picking = self and self[0].picking_id or False
+        picking = moves_todo and moves_todo[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids')._action_assign()
 
@@ -1084,15 +1122,17 @@ class StockMove(models.Model):
         self.mapped('move_line_ids').unlink()
         return super(StockMove, self).unlink()
 
-    def _prepare_move_split_vals(self, uom_qty):
+    def _prepare_move_split_vals(self, qty):
         vals = {
-            'product_uom_qty': uom_qty,
+            'product_uom_qty': qty,
             'procure_method': 'make_to_stock',
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'price_unit': self.price_unit,
         }
+        if self.env.context.get('force_split_uom_id'):
+            vals['product_uom'] = self.env.context['force_split_uom_id']
         return vals
 
     def _split(self, qty, restrict_partner_id=False):
@@ -1111,9 +1151,18 @@ class StockMove(models.Model):
             raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
         if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or self.product_qty <= qty:
             return self.id
-        # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
+
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        # `qty` passed as argument is the quantity to backorder and is always expressed in the
+        # quants UOM. If we're able to convert back and forth this quantity in the move's and the
+        # quants UOM, the backordered move can keep the UOM of the move. Else, we'll create is in
+        # the UOM of the quants.
         uom_qty = self.product_id.uom_id._compute_quantity(qty, self.product_uom, rounding_method='HALF-UP')
-        defaults = self._prepare_move_split_vals(uom_qty)
+        if float_compare(qty, self.product_uom._compute_quantity(uom_qty, self.product_id.uom_id, rounding_method='HALF-UP'), precision_digits=decimal_precision) == 0:
+            defaults = self._prepare_move_split_vals(uom_qty)
+        else:
+            defaults = self.with_context(force_split_uom_id=self.product_id.uom_id.id)._prepare_move_split_vals(qty)
 
         if restrict_partner_id:
             defaults['restrict_partner_id'] = restrict_partner_id
@@ -1122,21 +1171,15 @@ class StockMove(models.Model):
         if self.env.context.get('source_location_id'):
             defaults['location_id'] = self.env.context['source_location_id']
         new_move = self.with_context(rounding_method='HALF-UP').copy(defaults)
-        # ctx = context.copy()
-        # TDE CLEANME: used only in write in this file, to clean
-        # ctx['do_not_propagate'] = True
 
         # FIXME: pim fix your crap
-        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': self.product_uom_qty - uom_qty})
-
-        # if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
-        #     new_move_prop = self.move_dest_id.split(qty)
-        #     new_move.write({'move_dest_id': new_move_prop})
-        # returning the first element of list returned by action_confirm is ok because we checked it wouldn't be exploded (and
-        # thus the result of action_confirm should always be a list of 1 element length)
-        # In this case we don't merge move since the new move with 0 quantity done will be used for the backorder.
+        # Update the original `product_qty` of the move. Use the general product's decimal
+        # precision and not the move's UOM to handle case where the `quantity_done` is not
+        # compatible with the move's UOM.
+        new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
+        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_uom_qty': new_product_qty})
         new_move = new_move._action_confirm(merge=False)
-        # TDE FIXME: due to action confirm change
         return new_move.id
 
     def _recompute_state(self):

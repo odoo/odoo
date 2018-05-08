@@ -658,6 +658,11 @@ class Page(models.Model):
         item = self.search_read(domain, fields=['id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish', 'menu_ids', 'is_homepage'], limit=1)
         return item
 
+    @api.multi
+    def get_view_identifier(self):
+        """ Get identifier of this page view that may be used to render it """
+        return self.view_id.id
+
     @api.model
     def save_page_info(self, website_id, data):
         website = self.env['website'].browse(website_id)

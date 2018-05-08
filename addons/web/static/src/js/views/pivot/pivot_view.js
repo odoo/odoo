@@ -36,6 +36,8 @@ var PivotView = AbstractView.extend({
         var self = this;
         this._super.apply(this, arguments);
 
+        var self = this;
+
         var activeMeasures = [];
         var colGroupBys = [];
         var rowGroupBys = [];
@@ -46,8 +48,9 @@ var PivotView = AbstractView.extend({
         this.fields.__count = {string: _t("Count"), type: "integer"};
         _.each(this.fields, function (field, name) {
             if ((name !== 'id') && (field.store === true)) {
-                if (_.contains(['integer', 'float', 'monetary'], field.type)) {
-                    measures[name] = field;
+                if (_.contains(['integer', 'float', 'monetary'], field.type) ||
+                    _.contains(params.additionalMeasures, name)) {
+                        measures[name] = field;
                 }
                 if (_.contains(GROUPABLE_TYPES, field.type)) {
                     groupableFields[name] = field;
@@ -75,6 +78,7 @@ var PivotView = AbstractView.extend({
             }
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
+                measures[name] = self.fields[name];
             }
             if (field.attrs.type === 'col') {
                 colGroupBys.push(name);

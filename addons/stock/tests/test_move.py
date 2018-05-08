@@ -698,6 +698,154 @@ class StockMove(TransactionCase):
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
 
+    def test_putaway_2(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply a putaway strategy by product on the stock location to put everything
+        # incoming in the sublocation shelf1.
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('product.product_product_5').id,
+                'fixed_location_id': shelf1_location.id,
+            })]
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_2',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('product.product_product_5').id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
+
+    def test_putaway_3(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply both the putaway strategy by product and category. We check here
+        # that the putaway by product takes precedence.
+
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'fixed_location_ids': [(0, 0, {
+                'category_id': self.env.ref('product.product_category_all').id,
+                'fixed_location_id': shelf1_location.id,
+            })],
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('stock.product_icecream').id,
+                'fixed_location_id': shelf2_location.id,
+            })],
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_3',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.env.ref('stock.product_icecream').id,
+            'product_uom': self.env.ref('uom.product_uom_kgm').id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
+
+    def test_putaway_4(self):
+        """ Receive products from a supplier. Check that putaway rules are rightly applied on
+        the receipt move line.
+        """
+        # This test will apply both the putaway strategy by product and category. We check here
+        # that if a putaway by product is not matched, the fallback to the category is correctly
+        # done.
+
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        shelf2_location = self.env['stock.location'].create({
+            'name': 'shelf2',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        putaway = self.env['product.putaway'].create({
+            'name': 'putaway stock->shelf1',
+            'fixed_location_ids': [(0, 0, {
+                'category_id': self.env.ref('product.product_category_all').id,
+                'fixed_location_id': shelf1_location.id,
+            })],
+            'product_location_ids': [(0, 0, {
+                'product_id': self.env.ref('stock.product_icecream').id,
+                'fixed_location_id': shelf2_location.id,
+            })],
+        })
+        self.stock_location.write({
+            'putaway_strategy_id': putaway.id,
+        })
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_putaway_4',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 100.0,
+        })
+        move1._action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1._action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        # check if the putaway was rightly applied
+        self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf1_location.id)
+
+
     def test_availability_1(self):
         """ Check that the `availability` field on a move is correctly computed when there is
         more than enough products in stock.
@@ -827,6 +975,63 @@ class StockMove(TransactionCase):
         move._action_assign()
 
         self.assertEqual(len(move.move_line_ids), 4.0)
+
+    def test_availability_6(self):
+        """ Check that, in the scenario where a move is in a bigger uom than the uom of the quants
+        and this uom only allows entire numbers, we don't make a partial reservation when the
+        quantity available is not enough to reserve the move. Check also that it is not possible
+        to set `quantity_done` with a value not honouring the UOM's rounding.
+        """
+        # on the dozen uom, set the rounding set 1.0
+        self.uom_dozen.rounding = 1
+
+        # 6 units are available in stock
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 6.0)
+
+        # the move should not be reserved
+        move = self.env['stock.move'].create({
+            'name': 'test_availability_6',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.state, 'confirmed')
+
+        # the quants should be left untouched
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 6.0)
+
+        # make 8 units available, the move should again not be reservabale
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 2.0)
+        move._action_assign()
+        self.assertEqual(move.state, 'confirmed')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 8.0)
+
+        # make 12 units available, this time the move should be reservable
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 4.0)
+        move._action_assign()
+        self.assertEqual(move.state, 'assigned')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
+
+        # Check it isn't possible to set any value to quantity_done
+        with self.assertRaises(UserError):
+            move.quantity_done = 0.1
+            move._action_done()
+
+        with self.assertRaises(UserError):
+            move.quantity_done = 1.1
+            move._action_done()
+
+        with self.assertRaises(UserError):
+            move.quantity_done = 0.9
+            move._action_done()
+
+        move.quantity_done = 1
+        move._action_done()
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 12.0)
 
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
@@ -1357,6 +1562,108 @@ class StockMove(TransactionCase):
         self.assertEqual(move_stock_stock_1.state, 'assigned')
         self.assertEqual(move_stock_stock_2.state, 'waiting')
 
+    def test_link_assign_7(self):
+        # on the dozen uom, set the rounding set 1.0
+        self.uom_dozen.rounding = 1
+
+        # 6 units are available in stock
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 6.0)
+
+        # create pickings and moves for a pick -> pack mto scenario
+        picking_stock_pack = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
+        })
+        move_stock_pack = self.env['stock.move'].create({
+            'name': 'test_link_assign_7',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_stock_pack.id,
+        })
+        picking_pack_cust = self.env['stock.picking'].create({
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+        move_pack_cust = self.env['stock.move'].create({
+            'name': 'test_link_assign_7',
+            'location_id': self.pack_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_dozen.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_pack_cust.id,
+        })
+        move_stock_pack.write({'move_dest_ids': [(4, move_pack_cust.id, 0)]})
+        move_pack_cust.write({'move_orig_ids': [(4, move_stock_pack.id, 0)]})
+        (move_stock_pack + move_pack_cust)._action_confirm()
+
+        # the pick should not be reservable because of the rounding of the dozen
+        move_stock_pack._action_assign()
+        self.assertEqual(move_stock_pack.state, 'confirmed')
+        move_pack_cust._action_assign()
+        self.assertEqual(move_pack_cust.state, 'waiting')
+
+        # move the 6 units by adding an unreserved move line
+        move_stock_pack.write({'move_line_ids': [(0, 0, {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 6,
+            'product_uom_qty': 0,
+            'lot_id': False,
+            'package_id': False,
+            'result_package_id': False,
+            'location_id': move_stock_pack.location_id.id,
+            'location_dest_id': move_stock_pack.location_dest_id.id,
+            'picking_id': picking_stock_pack.id,
+        })]})
+
+        # the quantity done on the move should not respect the rounding of the move line
+        self.assertEqual(move_stock_pack.quantity_done, 0.5)
+
+        # create the backorder in the uom of the quants
+        backorder_wizard_dict = picking_stock_pack.button_validate()
+        backorder_wizard = self.env[backorder_wizard_dict['res_model']].browse(backorder_wizard_dict['res_id'])
+        backorder_wizard.process()
+        self.assertEqual(move_stock_pack.state, 'done')
+        self.assertEqual(move_stock_pack.quantity_done, 0.5)
+        self.assertEqual(move_stock_pack.product_uom_qty, 0.5)
+
+        # the second move should not be reservable because of the rounding on the dozen
+        move_pack_cust._action_assign()
+        self.assertEqual(move_pack_cust.state, 'waiting')
+
+        # move a dozen on the backorder to see how we handle the extra move
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_stock_pack.id)])
+        backorder.move_lines.write({'move_line_ids': [(0, 0, {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_dozen.id,
+            'qty_done': 1,
+            'product_uom_qty': 0,
+            'lot_id': False,
+            'package_id': False,
+            'result_package_id': False,
+            'location_id': backorder.location_id.id,
+            'location_dest_id': backorder.location_dest_id.id,
+            'picking_id': backorder.id,
+        })]})
+        overprocessed_wizard_dict = backorder.button_validate()
+        overprocessed_wizard = self.env[overprocessed_wizard_dict['res_model']].browse(overprocessed_wizard_dict['res_id'])
+        overprocessed_wizard.action_confirm()
+        backorder_move = backorder.move_lines
+        self.assertEqual(backorder_move.state, 'done')
+        self.assertEqual(backorder_move.quantity_done, 12.0)
+        self.assertEqual(backorder_move.product_uom_qty, 12.0)
+        self.assertEqual(backorder_move.product_uom, self.uom_unit)
+
+        # the second move should now be reservable
+        move_pack_cust._action_assign()
+        self.assertEqual(move_pack_cust.state, 'assigned')
+
     def test_use_unreserved_move_line_1(self):
         """ Test that validating a stock move linked to an untracked product reserved by another one
         correctly unreserves the other one.
@@ -1473,6 +1780,41 @@ class StockMove(TransactionCase):
         # the first move should go back to confirmed
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 0.0)
+
+    def test_use_unreserved_move_line_3(self):
+        """ Test the behavior of `_free_reservation` when ran on a recordset of move lines where
+        some are assigned and some are force assigned. `_free_reservation` should not use an
+        already processed move line when looking for a move line candidate to unreserve.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1.0)
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_use_unreserved_move_line_3',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.quantity_done = 1
+
+        # add a forced move line in `move1`
+        move1.write({'move_line_ids': [(0, 0, {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 2,
+            'product_uom_qty': 0,
+            'lot_id': False,
+            'package_id': False,
+            'result_package_id': False,
+            'location_id': move1.location_id.id,
+            'location_dest_id': move1.location_dest_id.id,
+        })]})
+        move1._action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 3.0)
 
     def test_edit_reserved_move_line_1(self):
         """ Test that editing a stock move line linked to an untracked product correctly and

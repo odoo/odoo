@@ -90,6 +90,7 @@ class TestAccountCustomerInvoice(AccountTestUsers):
         # I verify that invoice is now in Paid state
         assert (self.account_invoice_customer0.state == 'paid'), "Invoice is not in Paid state"
 
+        self.partner3.invalidate_cache(ids=self.partner3.ids)
         total_after_confirm = self.partner3.total_invoiced
         self.assertEquals(total_after_confirm - total_before_confirm, self.account_invoice_customer0.amount_untaxed_signed)
 

@@ -46,9 +46,27 @@ class StockMove(models.Model):
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
-                price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+                price_unit = order.currency_id._convert(
+                    price_unit, order.company_id.currency_id, order.company_id, order.date_order or fields.Date.today(), round=False)
             return price_unit
         return super(StockMove, self)._get_price_unit()
+
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+        """ Overridden from stock_account to support amount_currency on valuation lines generated from po
+        """
+        self.ensure_one()
+
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id)
+        if self.purchase_line_id:
+            purchase_currency = self.purchase_line_id.currency_id
+            if purchase_currency != self.company_id.currency_id:
+                purchase_price_unit = self.purchase_line_id.price_unit
+                currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
+                rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+                rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+                rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
+                rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+        return rslt
 
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
@@ -77,6 +95,13 @@ class StockMove(models.Model):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
         else:
             return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
+    def _get_related_invoices(self):
+        """ Overridden to return the vendor bills related to this stock move.
+        """
+        rslt = super(StockMove, self)._get_related_invoices()
+        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state not in ('draft', 'cancel'))
+        return rslt
 
 
 class StockWarehouse(models.Model):

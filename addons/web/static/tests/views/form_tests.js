@@ -8,6 +8,7 @@ var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
+var NotificationService = require('web.NotificationService');
 var pyeval = require('web.pyeval');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
@@ -69,6 +70,12 @@ QUnit.module('Views', {
                 }, {
                     id: 4,
                     display_name: "aaa",
+                    state: "ef",
+                }, {
+                    id: 5,
+                    display_name: "aaa",
+                    foo:'',
+                    bar:false,
                     state: "ef",
                 }],
                 onchanges: {},
@@ -980,7 +987,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('buttons in form view', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         var rpcCount = 0;
 
@@ -1011,6 +1018,8 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.o_form_statusbar button').length, 2,
             "should have 2 buttons in the statusbar");
+        assert.strictEqual(form.$('button[name="post"]').length, 1,
+            "'name' attribute of buttons is transmitted to the rendered html element");
 
         assert.strictEqual(form.$('.o_form_statusbar button:visible').length, 1,
             "should have only 1 visible button in the statusbar");
@@ -1033,6 +1042,75 @@ QUnit.module('Views', {
         form.$('.o_form_statusbar button.s').click();
 
         assert.strictEqual(rpcCount, 1, "should have done 1 rpc, because we do not reload anymore if the server action fails");
+        form.destroy();
+    });
+
+    QUnit.test('buttons classes in form view', function (assert) {
+        assert.expect(16);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="0"/>' +
+                        '<button name="1" class="btn-primary"/>' +
+                        '<button name="2" class="oe_highlight"/>' +
+                        '<button name="3" class="btn-default"/>' +
+                        '<button name="4" class="btn-link"/>' +
+                        '<button name="5" class="oe_link"/>' +
+                        '<button name="6" class="btn-success"/>' +
+                        '<button name="7" class="o_this_is_a_button"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<button name="8"/>' +
+                        '<button name="9" class="btn-primary"/>' +
+                        '<button name="10" class="oe_highlight"/>' +
+                        '<button name="11" class="btn-default"/>' +
+                        '<button name="12" class="btn-link"/>' +
+                        '<button name="13" class="oe_link"/>' +
+                        '<button name="14" class="btn-success"/>' +
+                        '<button name="15" class="o_this_is_a_button"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('button[name="0"]').attr('class'), 'btn btn-sm btn-default',
+            "header buttons without any class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="1"]').attr('class'), 'btn btn-sm btn-primary',
+            "header buttons with bootstrap primary class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="2"]').attr('class'), 'btn btn-sm btn-primary',
+            "header buttons with oe_highlight class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="3"]').attr('class'), 'btn btn-sm btn-default',
+            "header buttons with bootstrap default class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="4"]').attr('class'), 'btn btn-sm btn-link',
+            "header buttons with bootstrap link class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="5"]').attr('class'), 'btn btn-sm btn-link',
+            "header buttons with oe_link class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="6"]').attr('class'), 'btn btn-sm btn-success',
+            "header buttons with bootstrap state class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="7"]').attr('class'), 'btn btn-sm o_this_is_a_button btn-default',
+            "header buttons with custom classes should receive the correct classes");
+        assert.strictEqual(form.$('button[name="8"]').attr('class'), 'btn btn-sm btn-default',
+            "sheet header buttons without any class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="9"]').attr('class'), 'btn btn-sm btn-primary',
+            "sheet buttons with bootstrap primary class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="10"]').attr('class'), 'btn btn-sm btn-primary',
+            "sheet buttons with oe_highlight class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="11"]').attr('class'), 'btn btn-sm btn-default',
+            "sheet buttons with bootstrap default class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="12"]').attr('class'), 'btn btn-sm btn-link',
+            "sheet buttons with bootstrap link class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="13"]').attr('class'), 'btn btn-sm btn-link',
+            "sheet buttons with oe_link class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="14"]').attr('class'), 'btn btn-sm btn-success',
+            "sheet buttons with bootstrap state class should receive the correct classes");
+        assert.strictEqual(form.$('button[name="15"]').attr('class'), 'btn btn-sm o_this_is_a_button',
+            "sheet buttons with custom classes should receive the correct classes");
+
         form.destroy();
     });
 
@@ -1620,6 +1698,37 @@ QUnit.module('Views', {
             "should have duplicated the record");
 
         assert.strictEqual(form.mode, "edit", 'should be in edit mode');
+        form.destroy();
+    });
+
+    QUnit.test('duplicating a record preserve the context', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {hasSidebar: true, context: {hey: 'hoy'}},
+            mockRPC: function (route, args) {
+                if (args.method === 'read') {
+                    // should have 2 read, one for initial load, second for
+                    // read after duplicating
+                    assert.strictEqual(args.kwargs.context.hey, 'hoy',
+                        "should have send the correct context");
+                }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.sidebar.$('a:contains(Duplicate)').click();
+
         form.destroy();
     });
 
@@ -2632,13 +2741,17 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                         '<group><field name="foo"/></group>' +
                 '</form>',
-        });
-
-        testUtils.intercept(form, 'warning', function (event) {
-            assert.strictEqual(event.data.title, 'The following fields are invalid:',
-                "should have a warning with correct title");
-            assert.strictEqual(event.data.message, '<ul><li>Foo</li></ul>',
-                "should have a warning with correct message");
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    if (params.type !== 'warning') {
+                        return;
+                    }
+                    assert.strictEqual(params.title, 'The following fields are invalid:',
+                        "should have a warning with correct title");
+                    assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
+                        "should have a warning with correct message");
+                }
+            })],
         });
 
         form.$buttons.find('.o_form_button_save').click();
@@ -4015,6 +4128,35 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('display correctly buttonbox, in large size class', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div name="button_box" class="oe_button_box">' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="bar"/>' +
+                        '</button>' +
+                        '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
+                            '<field name="foo"/>' +
+                        '</button>' +
+                    '</div>' +
+                '</form>',
+            res_id: 2,
+            config: {
+                device: {size_class: 5},
+            },
+        });
+
+        assert.strictEqual(form.$('.oe_button_box').children().length, 2,
+            "button box should contain two children");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many default value creation', function (assert) {
         assert.expect(1);
 
@@ -4647,11 +4789,11 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            intercepts: {
-                warning: function () {
-                    assert.step('warning');
-                },
-            },
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            })],
         });
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -6513,6 +6655,35 @@ QUnit.module('Views', {
         testUtils.unpatch(mixins.ParentedMixin);
     });
 
+    QUnit.test('do not change pager when discarding current record', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                '</form>',
+            viewOptions: {
+                ids: [1, 2],
+                index: 0,
+            },
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.pager.$('.o_pager_counter').text().trim(), '2 / 2',
+            'pager should indicate that we are on second record');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.strictEqual(form.pager.$('.o_pager_counter').text().trim(), '2 / 2',
+            'pager should not have changed');
+
+        form.destroy();
+    });
+
     QUnit.test('edition in form view on a "noCache" model', function (assert) {
         assert.expect(4);
 
@@ -6637,9 +6808,9 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch:'<form>' +
-                    '<field name="product_ids">' + 
-                        '<tree><field name="partner_type_id"/></tree>' + 
-                        '<form><field name="partner_type_id"/></form>' + 
+                    '<field name="product_ids">' +
+                        '<tree><field name="partner_type_id"/></tree>' +
+                        '<form><field name="partner_type_id"/></form>' +
                     '</field>' +
                 '</form>',
             res_id: 1,
@@ -6657,7 +6828,7 @@ QUnit.module('Views', {
         });
         // Open one2many
         form.$('.o_data_row').click();
-        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");       
+        assert.strictEqual($('.modal-content').length, 1, "a popup window should have opened");
         // Click on many2one and trigger do_action
         $('.modal-content a[name="partner_type_id"]').click();
         assert.strictEqual($('.modal-content').length, 0, "the popup window should have closed");
@@ -6683,14 +6854,14 @@ QUnit.module('Views', {
             data: this.data,
             arch:'<form>' +
                         '<field name="p">' +
-                            '<tree><field name="display_name"/></tree>' + 
+                            '<tree><field name="display_name"/></tree>' +
                         '</field>' +
                 '</form>',
             archs: {
                 'partner,false,form': '<form><field name="product_ids">' +
                                             '<tree><field name="partner_type_id"/></tree>' +
                                             '<form><field name="partner_type_id"/></form>' +
-                                        '</field></form>', 
+                                        '</field></form>',
             },
             res_id: 1,
             mockRPC: function (route, args) {
@@ -6716,6 +6887,366 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+
+    QUnit.module('FormViewTABMainButtons');
+
+    QUnit.test('using tab in an empty required string field should not move to the next field',function(assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="display_name" required="1" />' +
+                            '<field name="foo" />' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('input[name=display_name]').click();
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused");
+        form.$('input[name="display_name"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should still be focused because it is empty and required");
+        assert.strictEqual(form.$('input[name="display_name"]').hasClass("o_field_invalid"), true,
+            "display_name should have the o_field_invalid class");
+        form.destroy();
+    });
+
+    QUnit.test('using tab in an empty required date field should not move to the next field',function(assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="date" required="1" />' +
+                            '<field name="foo" />' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        form.$('input[name=date]').click();
+        assert.strictEqual(form.$('input[name="date"]')[0], document.activeElement,
+            "display_name should be focused");
+        form.$('input[name="date"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="date"]')[0], document.activeElement,
+            "date should still be focused because it is empty and required");
+
+        form.destroy();
+    });
+
+    QUnit.test('Edit button get the focus when pressing TAB from form', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div class="oe_title">' +
+                        '<field name="display_name"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // in edit
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="display_name"]').focus().trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$buttons.find('.btn-primary:visible')[0], document.activeElement,
+            "the first primary button (save) should be focused");
+        form.destroy();
+    });
+
+    QUnit.module('FormViewTABFormButtons');
+
+    QUnit.test('In Edition mode, after navigating to the last field, the default button when pressing TAB is SAVE', function (assert) {
+        assert.expect(1);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>' +
+                        '<button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<div class="oe_title">' +
+                                '<field name="display_name"/>' +
+                            '</div>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input[name="display_name"]').focus().trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$buttons.find('.o_form_button_save:visible')[0], document.activeElement,
+            "the save should be focused");
+        form.destroy();
+    });
+
+    QUnit.test('In READ mode, the default button with focus is the first primary button of the form', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="btn-primary firstButton" string="Confirm" type="object"/>' +
+                        '<button name="post" class="btn-primary secondButton" string="Confirm2" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<div class="oe_title">' +
+                                '<field name="display_name"/>' +
+                            '</div>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+        assert.strictEqual(form.$('button.firstButton')[0], document.activeElement,
+                        "by default the focus in edit mode should go to the first primary button of the form (not edit)");
+        form.destroy();
+    });
+
+    QUnit.test('In READ mode, the default button when pressing TAB is EDIT when there is no primary button on the form', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="not-primary" string="Confirm" type="object"/>' +
+                        '<button name="post" class="not-primary" string="Confirm2" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<div class="oe_title">' +
+                                '<field name="display_name"/>' +
+                            '</div>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            //debug:1,
+        });
+        assert.strictEqual(form.$buttons.find('.o_form_button_edit')[0],document.activeElement,
+                        "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit");
+        form.destroy();
+    });
+
+    QUnit.test('In Edition mode, when an attribute is dynamically required (and not required), TAB should navigate to the next field', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" attrs="{\'required\': [[\'bar\', \'=\', True]]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input[name="foo"]').focus();
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+
+        assert.strictEqual(form.$('div[name="bar"]>input')[0], document.activeElement, "foo is not required, so hitting TAB on foo should have moved the focus to BAR");
+        form.destroy();
+    });
+
+    QUnit.test('In Edition mode, when an attribute is dynamically required, TAB should stop on the field if it is required', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" attrs="{\'required\': [[\'bar\', \'=\', True]]}"/>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('div[name="bar"]>input').click();
+        form.$('input[name="foo"]').focus();
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+
+        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement, "foo is required, so hitting TAB on foo should keep the focus on foo");
+        form.destroy();
+    });
+
+    QUnit.test('display tooltips for save and discard buttons', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" />'+
+                '</form>',
+        });
+
+        form.$buttons.find('.o_form_buttons_edit').tooltip('show',false);
+        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
+            "should have rendered a tooltip");
+        form.destroy();
+    });
+    QUnit.test('if the focus is on the save button, hitting ENTER should save', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" />'+
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.ok(true, "should call the /create route");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_save')
+                     .focus()
+                     .trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+        form.destroy();
+    });
+    QUnit.test('if the focus is on the discard button, hitting ENTER should save', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" />'+
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.ok(true, "should call the /create route");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_cancel')
+                     .focus()
+                     .trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
+        form.destroy();
+    });
+    QUnit.test('if the focus is on the save button, hitting ESCAPE should discard', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" />'+
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    assert.ok(true, "should call the /create route");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_save')
+                     .focus()
+                     .trigger($.Event('keydown', {which: $.ui.keyCode.ESCAPE}));
+        form.destroy();
+    });
+    QUnit.test('if the focus is on the discard button, hitting ESCAPE should discard', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" />'+
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    assert.ok(true, "should call the /create route");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_cancel')
+                     .focus()
+                     .trigger($.Event('keydown', {which: $.ui.keyCode.ESCAPE}));
+        form.destroy();
+    });
+
+    QUnit.test('if the focus is on the save button, hitting TAB should not move to the next button', function (assert) {
+        assert.expect(1);
+        /*
+        this test has only one purpose: to say that it is normal that the focus stays within a button primary even after the TAB key has been pressed.
+        It is not possible here to execute the default action of the TAB on a button : https://stackoverflow.com/questions/32428993/why-doesnt-simulating-a-tab-keypress-move-focus-to-the-next-input-field
+        so writing a test that will always succeed is not useful.
+         */
+        assert.ok("Behavior can't be tested");
+    });
 
 });
 

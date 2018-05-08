@@ -139,7 +139,7 @@ var MessagingMenu = Widget.extend({
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
                     .then(function () {
                         self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
-                        core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID').bind(self));
+                        core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID'));
                     });
             }
         } else {
@@ -167,9 +167,9 @@ var ActivityMenu = Widget.extend({
         this._updateActivityPreview();
         return this._super();
     },
-
+    //--------------------------------------------------
     // Private
-
+    //--------------------------------------------------
     /**
      * Make RPC and get current user's activity details
      * @private
@@ -241,10 +241,9 @@ var ActivityMenu = Widget.extend({
             this.$el.toggleClass('o_no_notification', !this.activityCounter);
         }
     },
-
-
+    //------------------------------------------------------------
     // Handlers
-
+    //-----------------------------------------------------------
     /**
      * Redirect to particular model view
      * @private
@@ -280,14 +279,14 @@ var ActivityMenu = Widget.extend({
             this._updateActivityPreview();
         }
     },
-
 });
 
 SystrayMenu.Items.push(MessagingMenu);
 SystrayMenu.Items.push(ActivityMenu);
 
-// to test activity menu in qunit test cases we need it
+// to test activity and messaging menus in qunit test cases we need it
 return {
     ActivityMenu: ActivityMenu,
+    MessagingMenu: MessagingMenu,
 };
 });

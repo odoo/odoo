@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
@@ -290,6 +290,31 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
+    def _write(self, values):
+        """ Override of private write method in order to generate activities
+        based in the invoice status. As the invoice status is a computed field
+        triggered notably when its lines and linked invoice status changes the
+        flow does not necessarily goes through write if the action was not done
+        on the SO itself. We hence override the _write to catch the computation
+        of invoice_status field. """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return super(SaleOrder, self)._write(values)
+
+        res = super(SaleOrder, self)._write(values)
+        if 'invoice_status' in values:
+            self.activity_unlink(['sale.mail_act_sale_upsell'])
+            if values['invoice_status'] == 'upselling':
+                for order in self:
+                    order.activity_schedule(
+                        'sale.mail_act_sale_upsell', fields.Date.today(),
+                        user_id=order.user_id.id,
+                        note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+                            order._name, order.id, order.name,
+                            order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
+
+        return res
+
+    @api.multi
     def copy_data(self, default=None):
         if default is None:
             default = {}
@@ -425,7 +450,7 @@ class SaleOrder(models.Model):
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
-                    references[invoice] = references[invoice] | order
+                    references[invoices[group_key]] |= order
 
         if not invoices:
             raise UserError(_('There is no invoiceable line.'))
@@ -593,9 +618,8 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                # FORWARD-PORT UP TO SAAS-17
                 for t in taxes:
-                    if t['id'] == tax.id:
+                    if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
                         res[group]['amount'] += t['amount']
                         res[group]['base'] += t['base']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
@@ -1067,7 +1091,10 @@ class SaleOrderLine(models.Model):
         context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
         base_price, currency_id = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency_id != self.order_id.pricelist_id.currency_id.id:
-            base_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(base_price, self.order_id.pricelist_id.currency_id)
+            currency = self.env['res.currency'].browse(currency_id)
+            base_price = currency._convert(
+                base_price, self.order_id.pricelist_id.currency_id,
+                self.order_id.company_id, self.order_id.date_order or fields.Date.today())
         # negative discounts (= surcharge) are included in the display price
         return max(base_price, final_price)
 
@@ -1139,23 +1166,21 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def name_get(self):
-        if self._context.get('sale_show_order_product_name'):
-            result = []
-            for so_line in self:
-                name = '%s - %s' % (so_line.order_id.name, so_line.product_id.name)
-                result.append((so_line.id, name))
-            return result
-        return super(SaleOrderLine, self).name_get()
+        result = []
+        for so_line in self:
+            name = '%s - %s' % (so_line.order_id.name, so_line.name.split('\n')[0] or so_line.product_id.name)
+            if so_line.order_partner_id.ref:
+                name = '%s (%s)' % (name, so_line.order_partner_id.ref)
+            result.append((so_line.id, name))
+        return result
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if self._context.get('sale_show_order_product_name'):
-            if operator in ('ilike', 'like', '=', '=like', '=ilike'):
-                domain = expression.AND([
-                    args or [],
-                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
-                ])
-                return self.search(domain, limit=limit).name_get()
+        if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+            args = expression.AND([
+                args or [],
+                ['|', ('order_id.name', operator, name), ('name', operator, name)]
+            ])
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
 
     @api.multi
@@ -1198,7 +1223,7 @@ class SaleOrderLine(models.Model):
             if currency_id.id == product_currency.id:
                 cur_factor = 1.0
             else:
-                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id)
+                cur_factor = currency_id._get_conversion_rate(product_currency, currency_id, self.company_id, self.order_id.date_order)
 
         product_uom = self.env.context.get('uom') or product.uom_id.id
         if uom and uom.id != product_uom:
@@ -1207,7 +1232,7 @@ class SaleOrderLine(models.Model):
         else:
             uom_factor = 1.0
 
-        return product[field_name] * uom_factor * cur_factor, currency_id.id
+        return product[field_name] * uom_factor * cur_factor, currency_id
 
     def _get_protected_fields(self):
         return [
@@ -1233,7 +1258,10 @@ class SaleOrderLine(models.Model):
         if new_list_price != 0:
             if self.order_id.pricelist_id.currency_id.id != currency_id:
                 # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                new_list_price = self.env['res.currency'].browse(currency_id).with_context(context_partner).compute(new_list_price, self.order_id.pricelist_id.currency_id)
+                currency = self.env['res.currency'].browse(currency_id)
+                new_list_price = currency._convert(
+                    new_list_price, self.order_id.pricelist_id.currency_id,
+                    self.order_id.company_id, self.order_id.date_order or fields.Date.today())
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount

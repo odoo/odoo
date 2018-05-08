@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, tools, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class UoMCategory(models.Model):
@@ -10,6 +10,17 @@ class UoMCategory(models.Model):
     _description = 'Product UoM Categories'
 
     name = fields.Char('Name', required=True, translate=True)
+    measure_type = fields.Selection([
+        ('unit', 'Units'),
+        ('weight', 'Weight'),
+        ('time', 'Time'),
+        ('length', 'Length'),
+        ('volume', 'Volume'),
+    ], string="Type of Measure")
+
+    _sql_constraints = [
+        ('uom_category_unique_type', 'UNIQUE(measure_type)', 'You can have only one category per measurement type.'),
+    ]
 
 
 class UoM(models.Model):
@@ -38,6 +49,7 @@ class UoM(models.Model):
         ('reference', 'Reference Unit of Measure for this category'),
         ('smaller', 'Smaller than the reference Unit of Measure')], 'Type',
         default='reference', required=1)
+    measure_type = fields.Selection(string="Type of measurement category", related='category_id.measure_type', store=True, readonly=True)
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
@@ -53,6 +65,27 @@ class UoM(models.Model):
     def _onchange_uom_type(self):
         if self.uom_type == 'reference':
             self.factor = 1
+
+    @api.constrains('category_id', 'uom_type', 'active')
+    def _check_category_reference_uniqueness(self):
+        """ Force the existence of only one UoM reference per category
+            NOTE: this is a constraint on the all table. This might not be a good practice, but this is
+            not possible to do it in SQL directly.
+        """
+        category_ids = self.mapped('category_id').ids
+        self._cr.execute("""
+            SELECT C.id AS category_id, count(U.id) AS uom_count
+            FROM uom_category C
+            LEFT JOIN uom_uom U ON C.id = U.category_id AND uom_type = 'reference'
+            WHERE C.id IN %s
+                AND U.active = 't'
+            GROUP BY C.id
+        """, (tuple(category_ids),))
+        for uom_data in self._cr.dictfetchall():
+            if uom_data['uom_count'] == 0:
+                raise ValidationError(_("UoM category %s should have a reference unit of measure. If you just created a new category, please record the 'reference' unit first.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
+            if uom_data['uom_count'] > 1:
+                raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
     @api.model
     def create(self, values):
@@ -89,12 +122,19 @@ class UoM(models.Model):
         return new_uom.name_get()[0]
 
     @api.multi
-    def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP'):
+    def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP', raise_if_failure=True):
+        """ Convert the given quantity from the current UoM `self` into a given one
+            :param qty: the quantity to convert
+            :param to_unit: the destination UoM record (uom.uom)
+            :param raise_if_failure: only if the conversion is not possible
+                - if true, raise an exception if the conversion is not possible (different UoM category),
+                - otherwise, return the initial quantity
+        """
         if not self:
             return qty
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
-            if self._context.get('raise-exception', True):
+            if raise_if_failure:
                 raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (self.name, to_unit.name))
             else:
                 return qty

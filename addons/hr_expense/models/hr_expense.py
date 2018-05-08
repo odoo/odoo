@@ -90,7 +90,9 @@ class HrExpense(models.Model):
             amount = 0
             if expense.company_currency_id:
                 date_expense = expense.date
-                amount = expense.currency_id.with_context(date=date_expense, company_id=expense.company_id.id).compute(expense.total_amount, expense.company_currency_id)
+                amount = expense.currency_id._convert(
+                    expense.total_amount, expense.company_currency_id,
+                    expense.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
     @api.multi
@@ -285,7 +287,8 @@ class HrExpense(models.Model):
 
             # taxes move lines
             for tax in taxes['taxes']:
-                price = expense.currency_id.with_context(date=account_date).compute(tax['amount'], company_currency)
+                price = expense.currency_id._convert(
+                    tax['amount'], company_currency, expense.company_id, account_date)
                 amount_currency = price if different_currency else False
                 move_line_tax_values = {
                     'name': tax['name'],
@@ -450,7 +453,7 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
 
     _name = "hr.expense.sheet"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense Report"
     _order = "accounting_date desc, id desc"
 
@@ -508,7 +511,7 @@ class HrExpenseSheet(models.Model):
     def _onchange_employee_id(self):
         self.address_id = self.employee_id.sudo().address_home_id
         self.department_id = self.employee_id.department_id
-        self.user_id = self.employee_id.expense_manager_id
+        self.user_id = self.employee_id.expense_manager_id or self.employee_id.parent_id.user_id
 
     @api.multi
     @api.constrains('expense_line_ids')
@@ -527,16 +530,9 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        self._create_set_followers(vals)
-        sheet = super(HrExpenseSheet, self).create(vals)
+        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True)).create(vals)
+        sheet.activity_update()
         return sheet
-
-    @api.multi
-    def write(self, vals):
-        res = super(HrExpenseSheet, self).write(vals)
-        if vals.get('employee_id'):
-            self._add_followers()
-        return res
 
     @api.multi
     def unlink(self):
@@ -554,49 +550,19 @@ class HrExpenseSheet(models.Model):
         self.ensure_one()
         if 'state' in init_values and self.state == 'approve':
             return 'hr_expense.mt_expense_approved'
-        elif 'state' in init_values and self.state == 'submit':
-            return 'hr_expense.mt_expense_confirmed'
         elif 'state' in init_values and self.state == 'cancel':
             return 'hr_expense.mt_expense_refused'
         elif 'state' in init_values and self.state == 'done':
             return 'hr_expense.mt_expense_paid'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
-    def _get_users_to_subscribe(self, employee=False):
-        users = self.env['res.users']
-        employee = employee or self.employee_id
-        if employee.user_id:
-            users |= employee.user_id
-        if employee.parent_id:
-            users |= employee.parent_id.user_id
-        if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
-            users |= employee.department_id.manager_id.user_id
-        return users
-
-    def _add_followers(self):
-        users = self._get_users_to_subscribe()
-        self.message_subscribe_users(user_ids=users.ids)
-
-    @api.model
-    def _create_set_followers(self, values):
-        # Add the followers at creation, so they can be notified
-        employee_id = values.get('employee_id')
-        if not employee_id:
-            return
-
-        employee = self.env['hr.employee'].browse(employee_id)
-        users = self._get_users_to_subscribe(employee=employee) - self.env.user
-        values['message_follower_ids'] = []
-        MailFollowers = self.env['mail.followers']
-        for partner in users.mapped('partner_id'):
-            values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {partner.id: None}, {})[0]
-
-        if values.get('user_id') and values.get('user_id') != employee.user_id.id and values.get('user_id') != self.env.uid:
-            resp_partner = self.env['res.users'].browse(values['user_id'])
-            # Parsing ORM command to avoid adding several times the same partner
-            # TDE note: a better implementation should come in saas 11.3 or 11.4, allowing to normally remove that code
-            if resp_partner.partner_id.id not in (x[2].get('partner_id') for x in values['message_follower_ids'] if len(x) == 3):
-                values['message_follower_ids'] += MailFollowers._add_follower_command(self._name, [], {resp_partner.partner_id.id: None}, {})[0]
+    def _message_auto_subscribe_followers(self, updated_values, subtype_ids):
+        res = super(HrExpenseSheet, self)._message_auto_subscribe_followers(updated_values, subtype_ids)
+        if updated_values.get('employee_id'):
+            employee = self.env['hr.employee'].browse(updated_values['employee_id'])
+            if employee.user_id:
+                res.append((employee.user_id.partner_id.id, subtype_ids, False))
+        return res
 
     # --------------------------------------------
     # Actions
@@ -621,6 +587,7 @@ class HrExpenseSheet(models.Model):
             self.write({'state': 'post'})
         else:
             self.write({'state': 'done'})
+        self.activity_update()
         return res
 
     @api.multi
@@ -649,6 +616,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("Only HR Officers can approve expenses"))
         responsible_id = self.user_id.id or self.env.user.id
         self.write({'state': 'approve', 'user_id': responsible_id})
+        self.activity_update()
 
     @api.multi
     def paid_expense_sheets(self):
@@ -661,8 +629,28 @@ class HrExpenseSheet(models.Model):
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
+        self.activity_update()
 
     @api.multi
     def reset_expense_sheets(self):
         self.mapped('expense_line_ids').write({'is_refused': False})
-        return self.write({'state': 'submit'})
+        self.write({'state': 'submit'})
+        self.activity_update()
+        return True
+
+    def _get_responsible_for_approval(self):
+        if self.user_id:
+            return self.user_id
+        elif self.employee_id.parent_id.user_id:
+            return self.employee_id.parent_id.user_id
+        elif self.employee_id.department_id.manager_id.user_id:
+            return self.employee_id.department_id.manager_id.user_id
+        return self.env.user
+
+    def activity_update(self):
+        for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
+            self.activity_schedule(
+                'hr_expense.mail_act_expense_approval', fields.Date.today(),
+                user_id=expense_report._get_responsible_for_approval().id)
+        self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
+        self.filtered(lambda hol: hol.state == 'cancel').activity_unlink(['hr_expense.mail_act_expense_approval'])

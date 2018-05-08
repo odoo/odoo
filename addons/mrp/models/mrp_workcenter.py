@@ -29,6 +29,7 @@ class MrpWorkcenter(models.Model):
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
     color = fields.Integer('Color')
+    costs_hour = fields.Float(string='Cost per hour', help='Specify cost of work center per hour.', default=0.0)
     time_start = fields.Float('Time before prod.', help="Time in minutes for the setup.")
     time_stop = fields.Float('Time after prod.', help="Time in minutes for the cleaning.")
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")

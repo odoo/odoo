@@ -17,7 +17,7 @@
         <field name="groups_id" eval="[(4,ref('hr_holidays.group_hr_holidays_manager'))]"/>
     </record>
 
-    <record id="property_rule_request_employee" model="ir.rule">
+    <record id="hr_leave_rule_employee" model="ir.rule">
         <field name="name">Employee Leaves</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
@@ -27,7 +27,7 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_request_employee_write" model="ir.rule">
+    <record id="hr_leave_rule_employee_write" model="ir.rule">
         <field name="name">Employee Leaves Create, Write, Unlink</field>
         <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
@@ -35,14 +35,21 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_request_officer" model="ir.rule">
+    <record id="hr_leave_rule_officer" model="ir.rule">
         <field name="name">Leaves Officer</field>
         <field name="model_id" ref="model_hr_leave"/>
-        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain_force">['|','|','|', ('employee_id.user_id', '=', user.id), ('department_id', '=', False), ('department_id.manager_id', '=', False), ('department_id.manager_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
-    <record id="property_rule_allocation_employee" model="ir.rule">
+    <record id="hr_leave_rule_manager" model="ir.rule">
+        <field name="name">Manager Leaves</field>
+        <field name="model_id" ref="model_hr_leave"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_holidays_manager'))]"/>
+    </record>
+
+    <record id="hr_leave_allocation_rule_employee" model="ir.rule">
         <field name="name">Employee Allocations</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
@@ -52,7 +59,7 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_allocation_employee_write" model="ir.rule">
+    <record id="hr_leave_allocation_rule_employee_write" model="ir.rule">
         <field name="name">Employee Allocations Create, Write, Unlink</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
@@ -60,11 +67,18 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_allocation_officer" model="ir.rule">
+    <record id="hr_leave_allocation_rule_officer" model="ir.rule">
         <field name="name">Leaves Officer</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
-        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain_force">['|','|','|', ('employee_id.user_id', '=', user.id), ('department_id', '=', False), ('department_id.manager_id', '=', False), ('department_id.manager_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+
+    <record id="hr_leave_allocation_rule_manager" model="ir.rule">
+        <field name="name">Manager Allocations</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_holidays_manager'))]"/>
     </record>
 
     <record id="resource_leaves_officer" model="ir.rule">

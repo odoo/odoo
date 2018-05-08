@@ -62,4 +62,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
-        self.price_unit = (self.event_id.company_id or self.env.user.company_id).currency_id.compute(self.event_ticket_id.price, self.order_id.currency_id)
+        company = self.event_id.company_id or self.env.user.company_id
+        currency = company.currency_id
+        self.price_unit = currency._convert(
+            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())

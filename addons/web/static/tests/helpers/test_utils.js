@@ -77,6 +77,7 @@ var createActionManager = function (params) {
     var $target = $('#qunit-fixture');
     if (params.debug) {
         $target = $('body');
+        $target.addClass('debug');
     }
 
     var widget = new Widget();
@@ -733,17 +734,17 @@ function patch (target, props) {
  * In Phantomjs, there is a crash when calling window.getSelection
  * in order for the tests to work, for the specific test that uses it, replace
  * the default window.getSelection by a mock
- * 
+ *
  * usage:
  *     QUnit.test('...',function(done){
  *          var unpatchWindowGetSelection = testUtils.patchWindowGetSelection();
- *          
+ *
  *          // do something that needs to use window.getSelection()
  *          assert.strictEqual(....);
- *          
+ *
  *          // restore the original function
  *          unpatchWindowGetSelection();
- *      
+ *
  *          // finish the test
  *          done();
  *     })

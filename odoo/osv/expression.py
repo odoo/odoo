@@ -232,8 +232,9 @@ def is_false(model, domain):
 
 def combine(operator, unit, zero, domains):
     """Returns a new domain expression where all domain components from ``domains``
-       have been added together using the binary operator ``operator``. The given
-       domains must be normalized.
+       have been added together using the binary operator ``operator``.
+
+       It is guaranteed to return a normalized domain.
 
        :param unit: the identity element of the domains "set" with regard to the operation
                     performed by ``operator``, i.e the domain component ``i`` which, when
@@ -255,7 +256,7 @@ def combine(operator, unit, zero, domains):
         if domain == zero:
             return zero
         if domain:
-            result += domain
+            result += normalize_domain(domain)
             count += 1
     result = [operator] * (count - 1) + result
     return result

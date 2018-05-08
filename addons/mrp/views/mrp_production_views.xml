@@ -11,11 +11,11 @@
                     <field name="name"/>
                     <field name="date_planned_start"/>
                     <field name="product_id"/>
+                    <field name="origin"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity"/>
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                     <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="origin" groups="base.group_no_one"/>
                     <field name="state"/>
                 </tree>
             </field>

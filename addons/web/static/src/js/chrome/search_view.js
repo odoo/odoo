@@ -248,6 +248,12 @@ var SearchView = Widget.extend({
                     }
                     e.preventDefault();
                     break;
+                case $.ui.keyCode.DOWN:
+                    if (!this.autocomplete.is_expanded()) {
+                        e.preventDefault();
+                        this.trigger_up('navigation_move', {direction: 'down'});
+                        break;
+                    }
             }
         },
     },
@@ -336,6 +342,9 @@ var SearchView = Widget.extend({
         }
         return $.when.apply($, menu_defs).then(this.set_default_filters.bind(this));
     },
+    on_attach_callback: function () {
+        this._focusInput();
+    },
     get_title: function () {
         return this.title;
     },
@@ -417,6 +426,12 @@ var SearchView = Widget.extend({
         if (this.$buttons) {
             this.$buttons.toggle(!this.headless && is_visible && this.visible_filters);
         }
+        this._focusInput();
+    },
+    /**
+     * puts the focus on the search input
+     */
+    _focusInput: function () {
         if (!config.device.touch && config.device.size_class >= config.device.SIZES.SM) {
             this.$('input').focus();
         }
@@ -604,6 +619,47 @@ var SearchView = Widget.extend({
             }
             current_category = filter.category;
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Updates the domain of the search view by adding and/or removing filters.
+     *
+     * @todo: the way it is done could be improved, but the actual state of the
+     * searchview doesn't allow to do much better.
+
+     * @param {Array<Object>} newFilters list of filters to add, described by
+     *   objects with keys domain (the domain as an Array), and help (the text
+     *   to display in the facet)
+     * @param {Array<Object>} filtersToRemove list of filters to remove
+     *   (previously added ones)
+     * @returns {Array<Object>} list of added filters (to pass as filtersToRemove
+     *   for a further call to this function)
+     */
+    updateFilters: function (newFilters, filtersToRemove) {
+        var self = this;
+        var addedFilters = _.map(newFilters, function (filter) {
+            filter = {
+                attrs: {domain: filter.domain, help: filter.help},
+            };
+            var filterWidget = new search_inputs.Filter(filter);
+            var filterGroup = new search_inputs.FilterGroup([filterWidget], self);
+            var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
+            self.query.add([facet], {silent: true});
+
+            return _.last(self.query.models);
+        })
+
+        _.each(filtersToRemove, function (filter) {
+            self.query.remove(filter, {silent: true});
+        });
+
+        this.query.trigger('reset');
+
+        return addedFilters;
     },
 
     //--------------------------------------------------------------------------

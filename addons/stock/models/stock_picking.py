@@ -184,6 +184,8 @@ class Picking(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
 
+    backorder_ids = fields.One2many('stock.picking', 'backorder_id', 'Back Orders')
+
     move_type = fields.Selection([
         ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
         default='direct', required=True,
@@ -300,17 +302,22 @@ class Picking(models.Model):
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    has_tracking = fields.Boolean(compute='_compute_has_tracking')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    def _compute_has_tracking(self):
+        for picking in self:
+            picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_lines)
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
         for picking in self:
             if self.env.context.get('force_detailed_view'):
                 picking.show_operations = True
-                break
+                continue
             if picking.picking_type_id.show_operations:
                 if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
                     picking.show_operations = True
@@ -626,7 +633,7 @@ class Picking(models.Model):
             # # Link existing moves or add moves when no one is related
             for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
-                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 
+                moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id)
                 if moves: #could search move that needs it the most (that has some quantities left)
                     ops.move_id = moves[0].id
                 else:
@@ -687,10 +694,11 @@ class Picking(models.Model):
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
-            raise UserError(_('You cannot validate a transfer if you have not processed any quantity. You should rather cancel the transfer.'))
+            raise UserError(_('You cannot validate a transfer if no quantites are reserved nor done. To force the transfer, switch in edit more and encode the done quantities.'))
 
         if picking_type.use_create_lots or picking_type.use_existing_lots:
             lines_to_check = self.move_line_ids
@@ -704,7 +712,7 @@ class Picking(models.Model):
                 product = line.product_id
                 if product and product.tracking != 'none':
                     if not line.lot_name and not line.lot_id:
-                        raise UserError(_('You need to supply a lot/serial number for %s.') % product.display_name)
+                        raise UserError(_('You need to supply a Lot/Serial number for product %s.') % product.display_name)
                     elif line.qty_done == 0:
                         raise UserError(_('You cannot validate a transfer if you have not processed any quantity for %s.') % product.display_name)
 

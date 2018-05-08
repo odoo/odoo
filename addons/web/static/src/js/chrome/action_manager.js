@@ -335,7 +335,7 @@ var ActionManager = Widget.extend({
                     // communicate its status
                     widget.set_cp_bus(self.controlPanel.get_bus());
                 }
-                return self._startController(controller);
+                return self.dp.add(self._startController(controller));
             })
             .then(function (controller) {
                 if (self.currentDialogController) {
@@ -410,13 +410,14 @@ var ActionManager = Widget.extend({
             controller.dialog = dialog;
 
             return dialog.open().opened(function () {
+                self.currentDialogController = controller;
+
                 dom.append(dialog.$el, widget.$el, {
                     in_DOM: true,
-                    callbacks: [{widget: dialog}],
+                    callbacks: [{widget: dialog}, {widget: controller.widget}],
                 });
                 widget.renderButtons(dialog.$footer);
-
-                self.currentDialogController = controller;
+                dialog.rebindButtonBehavior();
 
                 return action;
             });
@@ -838,12 +839,27 @@ var ActionManager = Widget.extend({
      * is ready when it will be appended to the DOM. This allows to prevent
      * flickering for widgets doing async stuff in willStart() or start().
      *
+     * Also updates the control panel on any change of the title on controller's
+     * widget.
+     *
      * @private
      * @param {Object} controller
      * @returns {Deferred<Object>} resolved with the controller when it is ready
      */
     _startController: function (controller) {
+        var self = this;
         var fragment = document.createDocumentFragment();
+        // AAB: change this logic to stop using the properties mixin
+        controller.widget.on("change:title", this, function () {
+            if (self.getCurrentController() !== controller) {
+                return;
+            }
+            var action = self.actions[controller.actionID];
+            if (!action.flags || !action.flags.headless) {
+                var breadcrumbs = self._getBreadcrumbs();
+                self.controlPanel.update({breadcrumbs: breadcrumbs}, {clear: false});
+            }
+        });
         return controller.widget.appendTo(fragment).then(function () {
             return controller;
         });

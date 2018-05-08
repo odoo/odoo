@@ -5,7 +5,7 @@ from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
 
 class account_journal(models.Model):
@@ -189,7 +189,7 @@ class account_journal(models.Model):
             query_results_drafts = self.env.cr.dictfetchall()
 
             today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
+            query = """SELECT amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
@@ -219,7 +219,7 @@ class account_journal(models.Model):
         data as its first element, and the arguments dictionary to use to run
         it as its second.
         """
-        return ("""SELECT state, residual_signed as amount_total, currency_id AS currency
+        return ("""SELECT state, residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
@@ -229,7 +229,7 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency
+        return ("""SELECT state, amount_total, currency_id AS currency, type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
@@ -241,8 +241,11 @@ class account_journal(models.Model):
         rslt_sum = 0.0
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
-            rslt_sum += cur.compute(result.get('amount_total'), target_currency)
+            type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
+            rslt_sum += type_factor * cur._convert(
+                result.get('amount_total'), target_currency, company, result.get('date_invoice') or fields.Date.today())
         return (rslt_count, rslt_sum)
 
     @api.multi
@@ -371,19 +374,18 @@ class account_journal(models.Model):
         return self.open_payments_action('transfer')
 
     @api.multi
-    def open_payments_action(self, payment_type):
-        ctx = self._context.copy()
-        ctx.update({
-            'default_payment_type': payment_type,
-            'default_journal_id': self.id
-        })
-        ctx.pop('group_by', None)
-        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_payments')
-        if action_rec:
-            action = action_rec.read([])[0]
-            action['context'] = ctx
-            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
-            return action
+    def open_payments_action(self, payment_type, mode='tree'):
+        if payment_type == 'outbound':
+            action_ref = 'account.action_account_payments_payable'
+        elif payment_type == 'transfer':
+            action_ref = 'account.action_account_payments_transfer'
+        else:
+            action_ref = 'account.action_account_payments'
+        [action] = self.env.ref(action_ref).read()
+        action['context'] = dict(safe_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
+        if mode == 'form':
+            action['views'] = [[False, 'form']]
+        return action
 
     @api.multi
     def open_action_with_context(self):
@@ -413,6 +415,21 @@ class account_journal(models.Model):
             'context': "{'default_journal_id': " + str(self.id) + "}",
         })
         return action
+
+    @api.multi
+    def create_customer_payment(self):
+        """return action to create a customer payment"""
+        return self.open_payments_action('inbound', mode='form')
+
+    @api.multi
+    def create_supplier_payment(self):
+        """return action to create a supplier payment"""
+        return self.open_payments_action('outbound', mode='form')
+
+    @api.multi
+    def create_internal_transfer(self):
+        """return action to create a internal transfer"""
+        return self.open_payments_action('transfer', mode='form')
 
     #####################
     # Setup Steps Stuff #

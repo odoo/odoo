@@ -8,6 +8,7 @@ var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var mixins = require('web.mixins');
+var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -842,7 +843,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('archiving one record', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         // add active field on foo model and make all records active
         this.data.foo.fields.active = {string: 'Active', type: 'boolean', default: true};
@@ -871,7 +872,13 @@ QUnit.module('Views', {
 
         assert.verifySteps(['/web/dataset/search_read']);
         list.sidebar.$('a:contains(Archive)').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-default').click(); // Click on 'Cancel'
+        assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 4, "still should have 4 records");
 
+        list.sidebar.$('a:contains(Archive)').click();
+        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
+        $('.modal .modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/write', '/web/dataset/search_read']);
         list.destroy();
@@ -1366,7 +1373,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view, editable, without data', function (assert) {
-        assert.expect(11);
+        assert.expect(13);
 
         this.data.foo.records = [];
 
@@ -1416,11 +1423,15 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody tr:eq(0) td:eq(1)').text().trim(), "",
             "the date field td should not have any content");
 
+        assert.strictEqual(list.$('tr.o_selected_row .o_list_record_selector input').prop('disabled'), true,
+            "record selector checkbox should be disabled while the record is not yet created");
         assert.strictEqual(list.$('.o_list_button button').prop('disabled'), true,
             "buttons should be disabled while the record is not yet created");
 
         list.$buttons.find('.o_list_button_save').click();
 
+        assert.strictEqual(list.$('tbody tr:eq(0) .o_list_record_selector input').prop('disabled'), false,
+            "record selector checkbox should not be disabled once the record is created");
         assert.strictEqual(list.$('.o_list_button button').prop('disabled'), false,
             "buttons should not be disabled once the record is created");
 
@@ -2091,11 +2102,13 @@ QUnit.module('Views', {
                     '<field name="foo" required="1"/>' +
                     '<field name="bar"/>' +
                 '</tree>',
-            intercepts: {
-                warning: function () {
-                    warnings++;
-                },
-            },
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    if (params.type === 'warning') {
+                        warnings++;
+                    }
+                }
+            })],
         });
 
         // Start first line edition
@@ -2400,11 +2413,14 @@ QUnit.module('Views', {
             "third row should be in edition");
 
         // Press 'Tab' -> should go to next line
+        // add a value in the cell because the Tab on an empty first cell would activate the next widget in the view
+        list.$('.o_selected_row input').val(11).trigger('input'); 
         list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
         assert.ok(list.$('.o_data_row:nth(3)').hasClass('o_selected_row'),
             "fourth row should be in edition");
 
         // Press 'Tab' -> should go back to first line as the create action isn't available
+        list.$('.o_selected_row input').val(11).trigger('input');
         list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
         assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
             "first row should be in edition");
@@ -2471,7 +2487,7 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            fieldDebounce: 1,
+            fieldDebounce: 1
         });
 
         // click on first td and press TAB

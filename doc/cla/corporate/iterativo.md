@@ -12,4 +12,6 @@ Edser G. Solís edser@iterativo.do https://github.com/edsersolis
 
 List of contributors:
 
-Gustavo A. Valverde gustavo@iterativo.do https://github.com/gustavovalverde
+    Gustavo A. Valverde gustavo@iterativo.do https://github.com/gustavovalverde
+    Edser G. Solís edser@iterativo.do https://github.com/edsersolis
+    José López joselopezg8@gmail.com https://github.com/jlopezg

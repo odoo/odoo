@@ -23,7 +23,8 @@ class CrmLead(models.Model):
                 if order.state in ('draft', 'sent', 'sale'):
                     nbr += 1
                 if order.state not in ('draft', 'sent', 'cancel'):
-                    total += order.currency_id.compute(order.amount_untaxed, company_currency)
+                    total += order.currency_id._convert(
+                        order.amount_untaxed, company_currency, order.company_id, order.date_order or fields.Date.today())
             lead.sale_amount_total = total
             lead.sale_number = nbr
 

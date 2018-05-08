@@ -90,6 +90,12 @@ class MrpStockReport(models.TransientModel):
             ref = move_line.move_id.scrap_ids[0].name
         return res_model, res_id, ref
 
+    @api.model
+    def _quantity_to_str(self, from_uom, to_uom, qty):
+        """ workaround to apply the float rounding logic of t-esc on data prepared server side """
+        qty = from_uom._compute_quantity(qty, to_uom, rounding_method='HALF-UP')
+        return self.env['ir.qweb.field.float'].value_to_html(qty, {'decimal_precision': 'Product Unit of Measure'})
+
     def _get_usage(self, move_line):
         usage = ''
         if (move_line.location_id.usage == 'internal') and (move_line.location_dest_id.usage == 'internal'):
@@ -114,9 +120,9 @@ class MrpStockReport(models.TransientModel):
             'model_id': move_line.id,
             'model': 'stock.move.line',
             'product_id': move_line.product_id.display_name,
+            'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
-            'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
             'location_source': move_line.location_id.name if not unfoldable or level == 1 else False,
             'location_destination': move_line.location_dest_id.name if not unfoldable or level == 1 else False,
             'reference_id': ref,

@@ -230,6 +230,7 @@ class TestActionBindings(common.TransactionCase):
 
 class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'
+    COMODEL = 'res.users'
 
     def setUp(self):
         # check that the registry is properly reset
@@ -272,6 +273,48 @@ class TestCustomFields(common.TransactionCase):
         """ custom field names must be start with 'x_' """
         with self.assertRaises(ValidationError):
             self.create_field('foo')
+
+    def test_create_custom_o2m(self):
+        """ try creating a custom o2m and then deleting its m2o inverse """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        comodel = self.env['ir.model'].search([('model', '=', self.COMODEL)])
+
+        m2o_field = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_my_m2o',
+            'field_description': 'my_m2o',
+            'ttype': 'many2one',
+            'relation': self.MODEL,
+        })
+
+        o2m_field = self.env['ir.model.fields'].create({
+            'model_id': model.id,
+            'name': 'x_my_o2m',
+            'field_description': 'my_o2m',
+            'ttype': 'one2many',
+            'relation': self.COMODEL,
+            'relation_field': m2o_field.name,
+        })
+
+        m2o_field.unlink()
+        self.assertFalse(o2m_field.exists())
+
+    def test_create_custom_related(self):
+        """ try creating a custom related then deleting its inverse """
+        comodel = self.env['ir.model'].search([('model', '=', self.COMODEL)])
+
+        field = self.create_field('x_my_char')
+
+        related_field = self.env['ir.model.fields'].create({
+            'model_id': comodel.id,
+            'name': 'x_oh_boy',
+            'field_description': 'x_oh_boy',
+            'ttype': 'char',
+            'related': 'partner_id.x_my_char',
+        })
+
+        field.unlink()
+        self.assertFalse(related_field.exists())
 
     def test_rename_custom(self):
         """ custom field names must be start with 'x_' """

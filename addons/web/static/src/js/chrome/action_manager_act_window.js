@@ -22,8 +22,10 @@ ActionManager.include({
         env_updated: '_onEnvUpdated',
         execute_action: '_onExecuteAction',
         get_controller_context: '_onGetControllerContext',
+        update_filters: '_onUpdateFilters',
         search: '_onSearch',
         switch_view: '_onSwitchView',
+        navigation_move: '_onNavigationMove',
     }),
 
     //--------------------------------------------------------------------------
@@ -120,6 +122,22 @@ ActionManager.include({
      * @returns {Deferred} resolved with the search view when it is ready
      */
     _createSearchView: function (action) {
+        // if requested, keep the searchview of the current action instead of
+        // creating a new one
+        if (action._keepSearchView) {
+            var currentAction = this.getCurrentAction();
+            if (currentAction) {
+                action.searchView = currentAction.searchView;
+                action.env = currentAction.env; // make those actions share the same env
+                return $.when(currentAction.searchView);
+            } else {
+                // there is not searchview to keep, so reset the flag to false
+                // to ensure that the one that will be created will be correctly
+                // destroyed
+                action._keepSearchView = false;
+            }
+        }
+
         // AAB: temporarily create a dataset, until the SearchView is refactored
         // and stops using it
         var dataset = new data.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -211,15 +229,7 @@ ActionManager.include({
                     // the action has been removed, so simply destroy the widget
                     widget.destroy();
                 } else {
-                    // AAB: change this logic to stop using the properties mixin
-                    widget.on("change:title", this, function () {
-                        if (!action.flags.headless) {
-                            var breadcrumbs = self._getBreadcrumbs();
-                            self.controlPanel.update({breadcrumbs: breadcrumbs}, {clear: false});
-                        }
-                    });
                     controller.widget = widget;
-
                     def.resolve(controller);
                 }
             }).fail(def.reject.bind(def));
@@ -253,7 +263,7 @@ ActionManager.include({
             // its reference is removed
             controllerDef.reject();
         });
-        if (action.searchView) {
+        if (action.searchView && !action._keepSearchView) {
             action.searchView.destroy();
         }
     },
@@ -418,7 +428,7 @@ ActionManager.include({
             var View = view_registry.get(key || viewType);
             if (View) {
                 views.push({
-                    accessKey: View.prototype.accessKey,
+                    accessKey: View.prototype.accessKey || View.prototype.accesskey,
                     fieldsView: fieldsView,
                     icon: View.prototype.icon,
                     isMobileFriendly: View.prototype.mobile_friendly,
@@ -481,6 +491,20 @@ ActionManager.include({
             views.push([searchviewID || false, 'search']);
         }
         return this.loadViews(action.res_model, action.context, views, options);
+    },
+    /**
+     * Overrides to handle the 'keepSearchView' option. If set to true, the
+     * search view of the current action will be re-used in the new action, i.e.
+     * the environment (domain, context, groupby) will be shared between both
+     * actions.
+     *
+     * @override
+     */
+    _preprocessAction: function (action, options) {
+        this._super.apply(this, arguments);
+        if (action.type === 'ir.actions.act_window' && options.keepSearchView) {
+            action._keepSearchView = true;
+        }
     },
     /**
      * Processes the search data sent by the search view.
@@ -591,7 +615,14 @@ ActionManager.include({
         };
 
         var controllerDef = action.controllers[viewType];
-        if (!controllerDef) {
+        if (!controllerDef || controllerDef.state() === 'rejected') {
+            // if the controllerDef is rejected, it probably means that the js
+            // code or the requests made to the server crashed.  In that case,
+            // if we reuse the same deferred, then the switch to the view is
+            // definitely blocked.  We want to use a new controller, even though
+            // it is very likely that it will recrash again.  At least, it will
+            // give more feedback to the user, and it could happen that one
+            // record crashes, but not another.
             controllerDef = newController();
         } else {
             controllerDef = controllerDef.then(function (controller) {
@@ -772,6 +803,37 @@ ActionManager.include({
         var currentController = this.getCurrentController();
         var context = currentController && currentController.widget.getContext();
         ev.data.callback(context || {});
+    },
+    /**
+     * Handles a request to add/remove search view filters.
+     *
+     * @param {OdooEvent} ev
+     * @param {string} ev.data.controllerID
+     * @param {Array[Object]} [ev.data.newFilters]
+     * @param {Array[Object]} [ev.data.filtersToRemove]
+     * @param {function} ev.data.callback called with the added filters as arg
+     */
+    _onUpdateFilters: function (ev) {
+        var controller = this.controllers[ev.data.controllerID];
+        var action = this.actions[controller.actionID];
+        var data = ev.data;
+        var addedFilters = action.searchView.updateFilters(data.newFilters, data.filtersToRemove);
+        data.callback(addedFilters);
+    },
+    /**
+     * Called mainly from the control panel when the focus should be given to a controller
+     * 
+     * @param {OdooEvent} event
+     * @private
+     */
+    _onNavigationMove : function(event) {
+        switch(event.data.direction) {
+            case 'down' :
+                var currentController = this.getCurrentController().widget;
+                currentController.giveFocus();
+                event.stopPropagation();
+                break;
+        }
     },
     /**
      * Called when there is a change in the search view, so the current action's

@@ -138,6 +138,8 @@ class AccountBankStatement(models.Model):
     date_done = fields.Datetime(string="Closed On")
     balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
+    accounting_date = fields.Date(string="Accounting Date", help="If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
+        "This is useful if the accounting period in which the entries should normally be booked is already closed.")
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
@@ -488,7 +490,7 @@ class AccountBankStatementLine(models.Model):
             ref = move_ref + ' - ' + self.ref if move_ref else self.ref
         data = {
             'journal_id': self.statement_id.journal_id.id,
-            'date': self.date,
+            'date': self.statement_id.accounting_date or self.date,
             'ref': ref,
         }
         if self.move_name:
@@ -658,12 +660,13 @@ class AccountBankStatementLine(models.Model):
                     'currency_id': currency.id,
                     'amount': abs(total),
                     'communication': self._get_communication(payment_methods[0] if payment_methods else False),
-                    'name': self.statement_id.name,
+                    'name': self.statement_id.name or _("Bank Statement %s") %  self.date,
                 })
 
             # Complete dicts to create both counterpart move lines and write-offs
             to_create = (counterpart_aml_dicts + new_aml_dicts)
-            ctx = dict(self._context, date=self.date)
+            company = self.company_id
+            date = self.date or fields.Date.today()
             for aml_dict in to_create:
                 aml_dict['move_id'] = move.id
                 aml_dict['partner_id'] = self.partner_id.id
@@ -677,12 +680,12 @@ class AccountBankStatementLine(models.Model):
                         aml_dict['credit'] = company_currency.round(aml_dict['credit'] / st_line_currency_rate)
                     elif self.currency_id and st_line_currency_rate:
                         # Statement is in foreign currency and the transaction is in another one
-                        aml_dict['debit'] = statement_currency.with_context(ctx).compute(aml_dict['debit'] / st_line_currency_rate, company_currency)
-                        aml_dict['credit'] = statement_currency.with_context(ctx).compute(aml_dict['credit'] / st_line_currency_rate, company_currency)
+                        aml_dict['debit'] = statement_currency._convert(aml_dict['debit'] / st_line_currency_rate, company_currency, company, date)
+                        aml_dict['credit'] = statement_currency._convert(aml_dict['credit'] / st_line_currency_rate, company_currency, company, date)
                     else:
                         # Statement is in foreign currency and no extra currency is given for the transaction
-                        aml_dict['debit'] = st_line_currency.with_context(ctx).compute(aml_dict['debit'], company_currency)
-                        aml_dict['credit'] = st_line_currency.with_context(ctx).compute(aml_dict['credit'], company_currency)
+                        aml_dict['debit'] = st_line_currency._convert(aml_dict['debit'], company_currency, company, date)
+                        aml_dict['credit'] = st_line_currency._convert(aml_dict['credit'], company_currency, company, date)
                 elif statement_currency.id != company_currency.id:
                     # Statement is in foreign currency but the transaction is in company currency
                     prorata_factor = (aml_dict['debit'] - aml_dict['credit']) / self.amount_currency
@@ -692,10 +695,12 @@ class AccountBankStatementLine(models.Model):
             # Create write-offs
             for aml_dict in new_aml_dicts:
                 aml_dict['payment_id'] = payment and payment.id or False
-                aml_obj.with_context(check_move_validity=False, apply_taxes=True).create(aml_dict)
+                aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
             # Create counterpart move lines and reconcile them
             for aml_dict in counterpart_aml_dicts:
+                if aml_dict['move_line'].payment_id:
+                    aml_dict['move_line'].write({'statement_line_id': self.id})
                 if aml_dict['move_line'].partner_id.id:
                     aml_dict['partner_id'] = aml_dict['move_line'].partner_id.id
                 aml_dict['account_id'] = aml_dict['move_line'].account_id.id

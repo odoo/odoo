@@ -11,7 +11,12 @@ def normalize_iban(iban):
 
 def pretty_iban(iban):
     """ return iban in groups of four characters separated by a single space """
-    return ' '.join([iban[i:i + 4] for i in range(0, len(iban), 4)])
+    try:
+        validate_iban(iban)
+        iban = ' '.join([iban[i:i + 4] for i in range(0, len(iban), 4)])
+    except ValidationError:
+        pass
+    return iban
 
 def get_bban_from_iban(iban):
     """ Returns the basic bank account number corresponding to an IBAN.
@@ -61,13 +66,13 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def create(self, vals):
-        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
+        if vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
+        if vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).write(vals)
 

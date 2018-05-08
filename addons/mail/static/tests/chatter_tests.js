@@ -389,6 +389,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         id: 1,
         is_note: false,
         is_discussion: true,
+        is_notification: false,
         is_starred: false,
         model: 'partner',
         res_id: 2,
@@ -433,6 +434,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                     id: msg_id,
                     is_note: args.kwargs.subtype === 'mail.mt_note',
                     is_discussion: args.kwargs.subtype === 'mail.mt_comment',
+                    is_notification: false,
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
@@ -684,7 +686,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     });
     assert.strictEqual(form.$('.o_thread_message .o_attachment').length, 4,
         "there should be three attachment on message");
-    assert.strictEqual(form.$('.o_thread_message .o_attachment .caption a').first().attr('href'), '/web/content/1?download=true',
+    assert.strictEqual(form.$('.o_thread_message .o_attachment a').first().attr('href'), '/web/content/1?download=true',
         "image caption should have correct download link");
     // click on first image attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
@@ -699,7 +701,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     // close attachment popup
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
     // click on pdf attachement
-    form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').eq(3).click();
+    form.$('span:contains(Test PDF 1)').click();
     assert.strictEqual($('.o_modal_fullscreen iframe[data-src*="/web/content/4"]').length, 1,
         "Modal popup should open with the pdf preview");
     // close attachment popup

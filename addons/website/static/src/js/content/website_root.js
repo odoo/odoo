@@ -242,7 +242,6 @@ var WebsiteRoot = BodyManager.extend({
         })
         .done(function (result) {
             $data.toggleClass("css_unpublished css_published");
-            $(".ribbon-publish.ribbon-wrapper").toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
         })

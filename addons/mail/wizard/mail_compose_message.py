@@ -123,7 +123,7 @@ class MailComposer(models.TransientModel):
         domain="[('model', '=', model)]")
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
-    subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+    subtype_id = fields.Many2one(default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
 
     @api.multi
     def check_access_rule(self, operation):
@@ -216,9 +216,7 @@ class MailComposer(models.TransientModel):
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
             Mail = self.env['mail.mail']
-            ActiveModel = self.env[wizard.model if wizard.model else 'mail.thread']
-            if not hasattr(ActiveModel, 'message_post'):
-                ActiveModel = self.env['mail.thread'].with_context(thread_model=wizard.model)
+            ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
             if wizard.composition_mode == 'mass_post':
                 # do not send emails directly but use the queue instead
                 # add context key to avoid subscribing the author
@@ -239,7 +237,7 @@ class MailComposer(models.TransientModel):
             elif wizard.subtype_id:
                 subtype_id = wizard.subtype_id.id
             else:
-                subtype_id = self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id
+                subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
 
             for res_ids in sliced_res_ids:
                 batch_mails = Mail
@@ -248,7 +246,7 @@ class MailComposer(models.TransientModel):
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails |= Mail.create(mail_values)
                     else:
-                        ActiveModel.browse(res_id).message_post(
+                        post_params = dict(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
                             notif_layout=notif_layout,
@@ -257,6 +255,9 @@ class MailComposer(models.TransientModel):
                                 'mail_auto_delete': wizard.template_id.auto_delete if wizard.template_id else False,
                             },
                             **mail_values)
+                        if ActiveModel._name == 'mail.thread' and wizard.model:
+                            post_params['model'] = wizard.model
+                        ActiveModel.browse(res_id).message_post(**post_params)
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
@@ -278,8 +279,8 @@ class MailComposer(models.TransientModel):
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
-            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids)._notify_get_reply_to(default=self.email_from)
-            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model)._notify_get_reply_to(res_ids, default=self.email_from)
+            records = self.env[self.model].browse(res_ids)
+            reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -299,8 +300,7 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                if self.model in self.env and hasattr(self.env[self.model], '_notify_specific_email_values'):
-                    mail_values.update(self.env[self.model].browse(res_id)._notify_specific_email_values(False))
+                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

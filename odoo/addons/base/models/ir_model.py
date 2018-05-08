@@ -308,6 +308,8 @@ class IrModelFields(models.Model):
     relation = fields.Char(string='Object Relation',
                            help="For relationship fields, the technical name of the target model")
     relation_field = fields.Char(help="For one2many fields, the field on the target model that implement the opposite many2one relationship")
+    relation_field_id = fields.Many2one('ir.model.fields', compute='_compute_relation_field_id',
+                                        store=True, ondelete='cascade', string='Relation field')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade',
                                help="The model this field belongs to")
     field_description = fields.Char(string='Field Label', default='', required=True, translate=True)
@@ -319,6 +321,8 @@ class IrModelFields(models.Model):
                                  "For example: [('blue','Blue'),('yellow','Yellow')]")
     copy = fields.Boolean(string='Copied', help="Whether the value is copied when duplicating a record.")
     related = fields.Char(string='Related Field', help="The corresponding related field, if any. This must be a dot-separated list of field names.")
+    related_field_id = fields.Many2one('ir.model.fields', compute='_compute_related_field_id',
+                                       store=True, string="Related field", ondelete='cascade')
     required = fields.Boolean()
     readonly = fields.Boolean()
     index = fields.Boolean(string='Indexed')
@@ -345,6 +349,19 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+
+    @api.depends('relation', 'relation_field')
+    def _compute_relation_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation_field:
+                rec.relation_field_id = self._get(rec.relation, rec.relation_field)
+
+    @api.depends('related')
+    def _compute_related_field_id(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.related:
+                field = rec._related_field()
+                rec.related_field_id = self._get(field.model_name, field.name)
 
     @api.depends()
     def _in_modules(self):
@@ -466,6 +483,13 @@ class IrModelFields(models.Model):
     def _onchange_ttype(self):
         self.copy = (self.ttype != 'one2many')
         if self.ttype == 'many2many' and self.model_id and self.relation:
+            if self.relation not in self.env:
+                return {
+                    'warning': {
+                        'title': _('Model %s does not exist') % self.relation,
+                        'message': _('Please specify a valid model for the object relation'),
+                    }
+                }
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
         else:

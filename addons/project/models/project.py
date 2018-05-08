@@ -69,7 +69,6 @@ class Project(models.Model):
     _name = "project.project"
     _description = "Project"
     _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
-    _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
 
@@ -83,15 +82,10 @@ class Project(models.Model):
 
     @api.multi
     def unlink(self):
-        analytic_accounts_to_delete = self.env['account.analytic.account']
         for project in self:
             if project.tasks:
                 raise UserError(_('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
-            if project.analytic_account_id and not project.analytic_account_id.line_ids:
-                analytic_accounts_to_delete |= project.analytic_account_id
-        res = super(Project, self).unlink()
-        analytic_accounts_to_delete.unlink()
-        return res
+        return super(Project, self).unlink()
 
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
@@ -109,16 +103,6 @@ class Project(models.Model):
         result = dict((data['project_id'][0], data['project_id_count']) for data in task_data)
         for project in self:
             project.task_count = result.get(project.id, 0)
-
-    def _compute_task_needaction_count(self):
-        projects_data = self.env['project.task'].read_group([
-            ('project_id', 'in', self.ids),
-            ('message_needaction', '=', True)
-        ], ['project_id'], ['project_id'])
-        mapped_data = {project_data['project_id'][0]: int(project_data['project_id_count'])
-                       for project_data in projects_data}
-        for project in self:
-            project.task_needaction_count = mapped_data.get(project.id, 0)
 
     @api.multi
     def attachment_tree_view(self):
@@ -189,14 +173,14 @@ class Project(models.Model):
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
+    name = fields.Char("Name", index=True, required=True, track_visibility='onchange')
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
-    analytic_account_id = fields.Many2one(
-        'account.analytic.account', string='Contract/Analytic',
-        help="Link this project to an analytic account if you need financial management on projects. "
-             "It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.",
-        ondelete="cascade", required=True, auto_join=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, track_visibility='onchange')
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
+
     favorite_user_ids = fields.Many2many(
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         default=_get_default_favorite_user_ids,
@@ -211,7 +195,6 @@ class Project(models.Model):
         help="Timetable working hours to adjust the gantt diagram report")
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
-    task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Task Activitie Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
                                domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
     color = fields.Integer(string='Color Index')
@@ -326,8 +309,6 @@ class Project(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
-            # archiving/unarchiving a project implies that we don't want to use the analytic account anymore
-            self.with_context(active_test=False).mapped('analytic_account_id').write({'active': vals['active']})
         if vals.get('partner_id') or vals.get('privacy_visibility'):
             for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
                 project.message_subscribe(project.partner_id.ids)
@@ -358,16 +339,14 @@ class Project(models.Model):
         return super(Project, self).get_access_action(access_uid)
 
     @api.multi
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
+    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """ Subscribe to all existing active tasks when subscribing to a project """
-        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
-        if not subtype_ids or any(subtype.parent_id.res_model == 'project.task' for subtype in self.env['mail.message.subtype'].browse(subtype_ids)):
-            for partner_id in partner_ids or []:
-                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and partner_id not in task.message_partner_ids.ids).message_subscribe(
-                    partner_ids=[partner_id], channel_ids=None, subtype_ids=None, force=False)
-            for channel_id in channel_ids or []:
-                self.mapped('tasks').filtered(lambda task: not task.stage_id.fold and channel_id not in task.message_channel_ids.ids).message_subscribe(
-                    partner_ids=None, channel_ids=[channel_id], subtype_ids=None, force=False)
+        res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids)
+        project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
+        task_subtypes = project_subtypes.mapped('parent_id').ids if project_subtypes else None
+        if not subtype_ids or task_subtypes:
+            self.mapped('tasks').message_subscribe(
+                partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
         return res
 
     @api.multi
@@ -507,7 +486,6 @@ class Task(models.Model):
     notes = fields.Text(string='Notes')
     planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
     subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
-    remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
@@ -529,7 +507,7 @@ class Task(models.Model):
     legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid Explanation', readonly=True, related_sudo=False)
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True, related_sudo=False)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", context={'active_test': False})
     subtask_count = fields.Integer("Sub-task count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
     email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
@@ -640,8 +618,6 @@ class Task(models.Model):
             default = {}
         if not default.get('name'):
             default['name'] = _("%s (copy)") % self.name
-        if 'remaining_hours' not in default:
-            default['remaining_hours'] = self.planned_hours
         return super(Task, self).copy(default)
 
     # Override view according to the company definition
@@ -886,13 +862,15 @@ class Task(models.Model):
 
         return groups
 
-    @api.model
-    def _notify_get_reply_to(self, res_ids, default=None):
-        """ Override to get the reply_to of the parent project. """
-        tasks = self.sudo().browse(res_ids)
-        project_ids = tasks.mapped('project_id').ids
-        aliases = self.env['project.project']._notify_get_reply_to(project_ids, default=default)
-        return {task.id: aliases.get(task.project_id.id, False) for task in tasks}
+    @api.multi
+    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+        """ Override to set alias of tasks to their project if any. """
+        aliases = self.mapped('project_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        res = {task.id: aliases.get(task.project_id.id) for task in self}
+        leftover = self.filtered(lambda rec: not rec.project_id)
+        if leftover:
+            res.update(super(Task, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+        return res
 
     @api.multi
     def email_split(self, msg):

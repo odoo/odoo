@@ -209,7 +209,9 @@ var ImageWidget = MediaWidget.extend({
 
         this.options = options;
         this.accept = options.accept || (options.document ? '*/*' : 'image/*');
-        if (options.res_id) {
+        if (options.domain) {
+            this.domain = typeof options.domain === 'function' ? options.domain() : options.domain;
+        } else if (options.res_id) {
             this.domain = ['|',
                 '&', ['res_model', '=', options.res_model], ['res_id', '=', options.res_id],
                 ['res_model', '=', 'ir.ui.view']];
@@ -328,6 +330,11 @@ var ImageWidget = MediaWidget.extend({
             var style = self.style;
             if (style) {
                 self.$media.css(style);
+            }
+
+            if (self.options.onUpload) {
+                // We consider that when selecting an image it is as if we upload it in the html content.
+                self.options.onUpload([img]);
             }
 
             return self.media;
@@ -455,11 +462,13 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _toggleImage: function (attachment, clearSearch) {
+    _toggleImage: function (attachment, clearSearch, force_select) {
         if (this.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
-                this.images.splice(this.images.indexOf(img[0]),1);
+                if (!force_select) {
+                    this.images.splice(this.images.indexOf(img[0]),1);
+                }
             } else {
                 this.images.push(attachment);
             }
@@ -502,6 +511,10 @@ var ImageWidget = MediaWidget.extend({
                 _processFile(attachments[i], error);
             }
 
+            if (self.options.onUpload) {
+                self.options.onUpload(attachments);
+            }
+
             function _processFile(attachment, error) {
                 var $button = self.$('.o_upload_image_button');
                 if (!error) {
@@ -527,17 +540,18 @@ var ImageWidget = MediaWidget.extend({
     /**
      * @private
      */
-    _onImageClick: function (ev) {
+    _onImageClick: function (ev, force_select) {
         var $img = $(ev.currentTarget);
         var attachment = _.find(this.records, function (record) {
             return record.id === $img.data('id');
         });
-        this._toggleImage(attachment);
+        this._toggleImage(attachment, false, force_select);
     },
     /**
      * @private
      */
     _onImageDblClick: function (ev) {
+        this._onImageClick(ev, true);
         this.trigger_up('save_request');
     },
     /**

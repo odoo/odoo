@@ -12,7 +12,7 @@ var session = require('web.session');
 var _t = core._t;
 
 /**
- * Formats a content-check result (@see checkXML, checkLESS).
+ * Formats a content-check result (@see checkXML, checkSCSS).
  *
  * @param {boolean} isValid
  * @param {integer} [errorLine] needed if isValid is false
@@ -65,12 +65,12 @@ function formatXML(xml) {
     return window.vkbeautify.xml(xml, 4);
 }
 /**
- * Checks the syntax validity of some LESS.
+ * Checks the syntax validity of some SCSS.
  *
- * @param {string} less
+ * @param {string} scss
  * @returns {Object} @see _getCheckReturn
  */
-var checkLESS = (function () {
+var checkSCSS = (function () {
     var mapping = {
         '{': '}', '}': '{',
         '(': ')', ')': '(',
@@ -79,17 +79,17 @@ var checkLESS = (function () {
     var openings = ['{', '(', '['];
     var closings = ['}', ')', ']'];
 
-    return function (less) {
+    return function (scss) {
         var stack = [];
         var line = 1;
-        for (var i = 0 ; i < less.length ; i++) {
-            if (_.contains(openings, less[i])) {
-                stack.push(less[i]);
-            } else if (_.contains(closings, less[i])) {
-                if (stack.pop() !== mapping[less[i]]) {
-                    return _getCheckReturn(false, line, _t("Unexpected ") + less[i]);
+        for (var i = 0 ; i < scss.length ; i++) {
+            if (_.contains(openings, scss[i])) {
+                stack.push(scss[i]);
+            } else if (_.contains(closings, scss[i])) {
+                if (stack.pop() !== mapping[scss[i]]) {
+                    return _getCheckReturn(false, line, _t("Unexpected ") + scss[i]);
                 }
-            } else if (less[i] === '\n') {
+            } else if (scss[i] === '\n') {
                 line++;
             }
         }
@@ -100,14 +100,14 @@ var checkLESS = (function () {
     };
 })();
 /**
- * Formats some LESS so that it has proper indentation and structure.
+ * Formats some SCSS so that it has proper indentation and structure.
  *
- * @todo Right now, this does return the given LESS content, untouched.
- * @param {string} less
- * @returns {string} formatted less
+ * @todo Right now, this does return the given SCSS content, untouched.
+ * @param {string} scss
+ * @returns {string} formatted scss
  */
-function formatLESS(less) {
-    return less;
+function formatSCSS(scss) {
+    return scss;
 }
 
 /**
@@ -120,7 +120,7 @@ var ViewEditor = Widget.extend({
         '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-xml.js',
-            '/web/static/lib/ace/mode-less.js',
+            '/web/static/lib/ace/mode-scss.js',
             '/web/static/lib/ace/theme-monokai.js'
         ]
     ],
@@ -128,7 +128,7 @@ var ViewEditor = Widget.extend({
         'click .o_ace_type_switcher_choice': '_onTypeChoice',
         'change .o_res_list': '_onResChange',
         'click .js_include_bundles': '_onIncludeBundlesChange',
-        'click .js_include_all_less': '_onIncludeAllLessChange',
+        'click .js_include_all_scss': '_onIncludeAllSCSSChange',
         'click button[data-action=save]': '_onSaveClick',
         'click button[data-action=reset]': '_onResetClick',
         'click button[data-action=format]': '_onFormatClick',
@@ -145,13 +145,13 @@ var ViewEditor = Widget.extend({
      *        xml_id or id of the view whose linked resources have to be loaded.
      * @param {Object} [options]
      * @param {string|integer} [options.initialResID]
-     *        a specific view ID / LESS URL to load on start (otherwise the main
+     *        a specific view ID / SCSS URL to load on start (otherwise the main
      *        view ID associated with the specified viewKey will be used)
      * @param {string} [options.position=right]
      * @param {boolean} [options.doNotLoadViews=false]
-     * @param {boolean} [options.doNotLoadLess=false]
+     * @param {boolean} [options.doNotLoadSCSS=false]
      * @param {boolean} [options.includeBundles=false]
-     * @param {boolean} [options.includeAllLess=false]
+     * @param {boolean} [options.includeAllSCSS=false]
      * @param {string[]} [options.defaultBundlesRestriction]
      */
     init: function (parent, viewKey, options) {
@@ -161,19 +161,19 @@ var ViewEditor = Widget.extend({
         this.options = _.defaults({}, options, {
             position: 'right',
             doNotLoadViews: false,
-            doNotLoadLess: false,
+            doNotLoadSCSS: false,
             includeBundles: false,
-            includeAllLess: false,
+            includeAllSCSS: false,
             defaultBundlesRestriction: [],
         });
 
-        this.resources = {xml: {}, less: {}};
-        this.editingSessions = {xml: {}, less: {}};
+        this.resources = {xml: {}, scss: {}};
+        this.editingSessions = {xml: {}, scss: {}};
         this.currentType = 'xml';
 
         // Alias
         this.views = this.resources.xml;
-        this.less = this.resources.less;
+        this.scss = this.resources.scss;
     },
     /**
      * Loads everything the ace library needs to work.
@@ -202,10 +202,10 @@ var ViewEditor = Widget.extend({
 
         this.$lists = {
             xml: this.$('#ace-view-list'),
-            less: this.$('#ace-less-list')
+            scss: this.$('#ace-scss-list')
         };
         this.$includeBundlesArea = this.$('.oe_include_bundles');
-        this.$includeAllLessArea = this.$('.o_include_all_less');
+        this.$includeAllSCSSArea = this.$('.o_include_all_scss');
         this.$viewID = this.$('#ace-view-id > span');
 
         this.$formatButton = this.$('button[data-action=format]');
@@ -226,11 +226,11 @@ var ViewEditor = Widget.extend({
         var initType;
         if (this.options.initialResID) {
             initResID = this.options.initialResID;
-            initType = (_.isString(initResID) && initResID[0] === '/') ? 'less' : 'xml';
+            initType = (_.isString(initResID) && initResID[0] === '/') ? 'scss' : 'xml';
         } else {
-            if (!this.options.doNotLoadLess) {
-                initResID = this.sorted_less[0][1][0].url; // first bundle, less files, first one
-                initType = 'less';
+            if (!this.options.doNotLoadSCSS) {
+                initResID = this.sortedSCSS[0][1][0].url; // first bundle, scss files, first one
+                initType = 'scss';
             }
             if (!this.options.doNotLoadViews) {
                 if (typeof this.viewKey === "number") {
@@ -249,9 +249,9 @@ var ViewEditor = Widget.extend({
             this._displayResource(initResID, initType);
         }
 
-        if (!this.sorted_views.length || !this.sorted_less.length) {
+        if (!this.sortedViews.length || !this.sortedSCSS.length) {
             _.defer((function () {
-                this._switchType(this.sorted_views.length ? 'xml' : 'less');
+                this._switchType(this.sortedViews.length ? 'xml' : 'scss');
                 this.$typeSwitcherBtn.parent('.btn-group').addClass('hidden');
             }).bind(this));
         }
@@ -319,7 +319,7 @@ var ViewEditor = Widget.extend({
      * Initializes a text editor for the specified resource.
      *
      * @private
-     * @param {integer|string} resID - the ID/URL of the view/less file
+     * @param {integer|string} resID - the ID/URL of the view/scss file
      * @param {string} [type] (default to the currently selected one)
      * @returns {ace.EditSession}
      */
@@ -339,13 +339,13 @@ var ViewEditor = Widget.extend({
         return editingSession;
     },
     /**
-     * Forces the view/less file identified by its ID/URL to be displayed in the
+     * Forces the view/scss file identified by its ID/URL to be displayed in the
      * editor. The method will update the resource select DOM element as well if
      * necessary.
      *
      * @private
      * @param {integer|string} resID
-     * @param {string} [type] - the type of resource (either 'xml' or 'less')
+     * @param {string} [type] - the type of resource (either 'xml' or 'scss')
      */
     _displayResource: function (resID, type) {
         if (type) {
@@ -361,23 +361,23 @@ var ViewEditor = Widget.extend({
         if (this.currentType === 'xml') {
             this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].xml_id));
         } else {
-            this.$viewID.text(_.str.sprintf(_t("Less file: %s"), resID));
+            this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
         }
         this.$lists[this.currentType].select2('val', resID);
 
-        this.$resetButton.toggleClass('hidden', this.currentType === 'xml' || !this.less[resID].customized);
+        this.$resetButton.toggleClass('hidden', this.currentType === 'xml' || !this.scss[resID].customized);
     },
     /**
      * Formats the current resource being vizualized.
-     * (@see formatXML, formatLESS)
+     * (@see formatXML, formatSCSS)
      *
      * @private
      */
     _formatResource: function () {
         var res = this.aceEditor.getValue();
-        var check = (this.currentType === 'xml' ? checkXML : checkLESS)(res);
+        var check = (this.currentType === 'xml' ? checkXML : checkSCSS)(res);
         if (check.isValid) {
-            this.aceEditor.setValue((this.currentType === 'xml' ? formatXML : formatLESS)(res));
+            this.aceEditor.setValue((this.currentType === 'xml' ? formatXML : formatSCSS)(res));
         } else {
             this._showErrorLine(check.error.line, check.error.message, this._getSelectedResource());
         }
@@ -386,7 +386,7 @@ var ViewEditor = Widget.extend({
      * Returns the currently selected resource data.
      *
      * @private
-     * @returns {integer|string} view ID or less file URL
+     * @returns {integer|string} view ID or scss file URL
      */
     _getSelectedResource: function () {
         var value = this.$lists[this.currentType].select2('val');
@@ -401,10 +401,10 @@ var ViewEditor = Widget.extend({
      */
     _loadResources: function () {
         // Reset resources
-        this.resources = {xml: {}, less: {}};
-        this.editingSessions = {xml: {}, less: {}};
+        this.resources = {xml: {}, scss: {}};
+        this.editingSessions = {xml: {}, scss: {}};
         this.views = this.resources.xml;
-        this.less = this.resources.less;
+        this.scss = this.resources.scss;
 
         // Load resources
         return this._rpc({
@@ -412,16 +412,16 @@ var ViewEditor = Widget.extend({
             params: {
                 key: this.viewKey,
                 get_views: !this.options.doNotLoadViews,
-                get_less: !this.options.doNotLoadLess,
+                get_scss: !this.options.doNotLoadSCSS,
                 bundles: this.options.includeBundles,
-                bundles_restriction: this.options.includeAllLess ? [] : this.options.defaultBundlesRestriction,
+                bundles_restriction: this.options.includeAllSCSS ? [] : this.options.defaultBundlesRestriction,
             },
         }).then((function (resources) {
-            _process_views.call(this, resources.views);
-            _process_less.call(this, resources.less);
+            _processViews.call(this, resources.views || []);
+            _processSCSS.call(this, resources.scss || []);
         }).bind(this));
 
-        function _process_views(views) {
+        function _processViews(views) {
             // Only keep the active views and index them by ID.
             _.extend(this.views, _.indexBy(_.filter(views, function (view) {
                 return view.active;
@@ -446,10 +446,10 @@ var ViewEditor = Widget.extend({
 
             // Assign the correct level based on children key and save a sorted array where
             // each view is followed by their children.
-            this.sorted_views = [];
+            this.sortedViews = [];
             function visit(view, level) {
                 view.level = level;
-                self.sorted_views.push(view);
+                self.sortedViews.push(view);
                 _.each(view.children, function (child) {
                     visit(child, level + 1);
                 });
@@ -459,20 +459,20 @@ var ViewEditor = Widget.extend({
             });
         }
 
-        function _process_less(less) {
-            // The received less data is already sorted by bundle and DOM order
-            this.sorted_less = less;
+        function _processSCSS(scss) {
+            // The received scss data is already sorted by bundle and DOM order
+            this.sortedSCSS = scss;
 
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
             var self = this;
-            _.each(less, function (bundleInfos) {
+            _.each(scss, function (bundleInfos) {
                 _.each(bundleInfos[1], function (info) { info.bundle_xmlid = bundleInfos[0].xmlid; });
-                _.extend(self.less, _.indexBy(bundleInfos[1], 'url'));
+                _.extend(self.scss, _.indexBy(bundleInfos[1], 'url'));
             });
         }
     },
     /**
-     * Forces the view/less file identified by its ID/URL to be reset to the way
+     * Forces the view/scss file identified by its ID/URL to be reset to the way
      * it was before the user started editing it.
      *
      * @todo views reset is not supported yet
@@ -490,36 +490,36 @@ var ViewEditor = Widget.extend({
             return $.Defered().reject(_t("Reseting views is not supported yet"));
         } else {
             return this._rpc({
-                route: '/web_editor/reset_less',
+                route: '/web_editor/reset_scss',
                 params: {
                     url: resID,
-                    bundle_xmlid: this.less[resID].bundle_xmlid,
+                    bundle_xmlid: this.scss[resID].bundle_xmlid,
                 },
             });
         }
     },
     /**
-     * Saves an unique LESS file.
+     * Saves an unique SCSS file.
      *
      * @private
      * @param {Object} session - contains the 'id' (url) and the 'text' of the
-     *                         LESS file to save.
+     *                         SCSS file to save.
      * @return {Deferred} status indicates if the save is finished or if an
      *                    error occured.
      */
-    _saveLess: function (session) {
+    _saveSCSS: function (session) {
         var def = $.Deferred();
 
         var self = this;
         this._rpc({
-            route: '/web_editor/save_less',
+            route: '/web_editor/save_scss',
             params: {
                 url: session.id,
-                bundle_xmlid: this.less[session.id].bundle_xmlid,
+                bundle_xmlid: this.scss[session.id].bundle_xmlid,
                 content: session.text,
             },
         }).then(function () {
-            self._toggleDirtyInfo(session.id, 'less', false);
+            self._toggleDirtyInfo(session.id, 'scss', false);
             def.resolve();
         }, function (source, error) {
             def.reject(session, error);
@@ -553,7 +553,7 @@ var ViewEditor = Widget.extend({
 
             this._showErrorLine();
             for (var i = 0 ; i < toSave[type].length && !errorFound ; i++) {
-                var check = (type === 'xml' ? checkXML : checkLESS)(toSave[type][i].text);
+                var check = (type === 'xml' ? checkXML : checkSCSS)(toSave[type][i].text);
                 if (!check.isValid) {
                     this._showErrorLine(check.error.line, check.error.message, toSave[type][i].id, type);
                     errorFound = toSave[type][i];
@@ -564,7 +564,7 @@ var ViewEditor = Widget.extend({
 
         var defs = [];
         _.each(toSave, (function (_toSave, type) {
-            defs = defs.concat(_.map(_toSave, (type === 'xml' ? this._saveView : this._saveLess).bind(this)));
+            defs = defs.concat(_.map(_toSave, (type === 'xml' ? this._saveView : this._saveSCSS).bind(this)));
         }).bind(this));
 
         return $.when.apply($, defs).fail((function (session, error) {
@@ -653,11 +653,11 @@ var ViewEditor = Widget.extend({
         }
     },
     /**
-     * Switches to the LESS or XML edition. Calling this method will adapt all
+     * Switches to the SCSS or XML edition. Calling this method will adapt all
      * DOM elements to keep the editor consistent.
      *
      * @private
-     * @param {string} type - either 'xml' or 'less'
+     * @param {string} type - either 'xml' or 'scss'
      */
     _switchType: function (type) {
         this.currentType = type;
@@ -665,9 +665,9 @@ var ViewEditor = Widget.extend({
         _.each(this.$lists, function ($list, _type) { $list.toggleClass('hidden', type !== _type); });
         this.$lists[type].change();
 
-        this.$includeBundlesArea.toggleClass('hidden', this.currentType === 'less' || !session.debug);
-        this.$includeAllLessArea.toggleClass('hidden', this.currentType === 'xml' || !session.debug || this.options.defaultBundlesRestriction.length === 0);
-        this.$formatButton.toggleClass('hidden', this.currentType === 'less');
+        this.$includeBundlesArea.toggleClass('hidden', this.currentType === 'scss' || !session.debug);
+        this.$includeAllSCSSArea.toggleClass('hidden', this.currentType === 'xml' || !session.debug || this.options.defaultBundlesRestriction.length === 0);
+        this.$formatButton.toggleClass('hidden', this.currentType === 'scss');
     },
     /**
      * Updates the select option DOM element associated with a particular resID
@@ -701,7 +701,7 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         this.$lists.xml.empty();
-        _.each(this.sorted_views, function (view) {
+        _.each(this.sortedViews, function (view) {
             self.$lists.xml.append($('<option/>', {
                 value: view.id,
                 text: view.name,
@@ -711,19 +711,19 @@ var ViewEditor = Widget.extend({
             }));
         });
 
-        this.$lists.less.empty();
-        _.each(this.sorted_less, function (bundleInfos) {
+        this.$lists.scss.empty();
+        _.each(this.sortedSCSS, function (bundleInfos) {
             var $optgroup = $('<optgroup/>', {
                 label: bundleInfos[0].name,
-            }).appendTo(self.$lists.less);
-            _.each(bundleInfos[1], function (lessInfo) {
-                var name = lessInfo.url.substring(_.lastIndexOf(lessInfo.url, '/') + 1, lessInfo.url.length - 5);
+            }).appendTo(self.$lists.scss);
+            _.each(bundleInfos[1], function (scssInfo) {
+                var name = scssInfo.url.substring(_.lastIndexOf(scssInfo.url, '/') + 1, scssInfo.url.length - 5);
                 $optgroup.append($('<option/>', {
-                    value: lessInfo.url,
+                    value: scssInfo.url,
                     text: name,
-                    selected: currentId === lessInfo.url,
-                    'data-debug': lessInfo.url,
-                    'data-customized': lessInfo.customized
+                    selected: currentId === scssInfo.url,
+                    'data-debug': scssInfo.url,
+                    'data-customized': scssInfo.customized
                 }));
             });
         });
@@ -734,12 +734,12 @@ var ViewEditor = Widget.extend({
             formatSelection: _formatDisplay.bind(this, true),
         });
         this.$lists.xml.data('select2').dropdown.addClass('o_ace_select2_dropdown');
-        this.$lists.less.select2('destroy');
-        this.$lists.less.select2({
+        this.$lists.scss.select2('destroy');
+        this.$lists.scss.select2({
             formatResult: _formatDisplay.bind(this, false),
             formatSelection: _formatDisplay.bind(this, true),
         });
-        this.$lists.less.data('select2').dropdown.addClass('o_ace_select2_dropdown');
+        this.$lists.scss.data('select2').dropdown.addClass('o_ace_select2_dropdown');
 
         function _formatDisplay(isSelected, data) {
             var $elem = $(data.element);
@@ -791,14 +791,14 @@ var ViewEditor = Widget.extend({
         this._formatResource();
     },
     /**
-     * Called when the checkbox which indicates if all LESS should be included
+     * Called when the checkbox which indicates if all SCSS should be included
      * is toggled -> reloads the resources accordingly.
      *
      * @private
      * @param {Event} ev
      */
-    _onIncludeAllLessChange: function (ev) {
-        this.options.includeAllLess = $(ev.target).prop('checked');
+    _onIncludeAllSCSSChange: function (ev) {
+        this.options.includeAllSCSS = $(ev.target).prop('checked');
         this._loadResources().then(this._updateViewSelectDOM.bind(this));
     },
     /**
@@ -845,7 +845,7 @@ var ViewEditor = Widget.extend({
         this._saveResources();
     },
     /**
-     * Called when the user wants to switch from xml to less or vice-versa ->
+     * Called when the user wants to switch from xml to scss or vice-versa ->
      * adapt resources choices and displays a resource of that type.
      *
      * @private

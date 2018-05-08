@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.form.stock.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">15</field>
+        <field name="arch" type="xml">
+            <group name="applications" position="inside">
+                <field name='group_stock_user'/>
+            </group>
+            <group name="technical" position="inside">
+                <label for="has_group_stock_multi_locations" colspan="3"/>
+                <div>
+                    <field name='has_group_stock_multi_locations' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_stock_multi_warehouses" colspan="3"/>
+                <div>
+                    <field name='has_group_stock_multi_warehouses' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_production_lot" colspan="3"/>
+                <div>
+                    <field name='has_group_production_lot' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_tracking_lot" colspan="3"/>
+                <div>
+                    <field name='has_group_tracking_lot' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_adv_location" colspan="3"/>
+                <div>
+                    <field name='has_group_adv_location' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_tracking_owner" colspan="3"/>
+                <div>
+                    <field name='has_group_tracking_owner' colspan="1" class="oe_inline"/>
+                </div>
+                <label for="has_group_warning_stock" colspan="3"/>
+                <div>
+                    <field name='has_group_warning_stock' colspan="1" class="oe_inline"/>
+                </div>
+            </group>
+        </field>
+    </record>
+</odoo>

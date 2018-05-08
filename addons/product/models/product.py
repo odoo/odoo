@@ -147,6 +147,9 @@ class ProductProduct(models.Model):
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     ]
 
+    def _get_invoice_policy(self):
+        return False
+
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
@@ -523,7 +526,8 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
-                prices[product.id] = product.currency_id.compute(prices[product.id], currency)
+                prices[product.id] = product.currency_id._convert(
+                    prices[product.id], currency, product.company_id, fields.Date.today())
 
         return prices
 

@@ -83,6 +83,7 @@ var Thread = Widget.extend({
             squash_close_messages: true,
             display_email_icon: true,
             display_reply_icon: false,
+            loadMoreOnScroll: false,
         });
         this.disabledOptions = {
             display_order: this.enabledOptions.display_order,
@@ -93,6 +94,7 @@ var Thread = Widget.extend({
             squash_close_messages: false,
             display_email_icon: false,
             display_reply_icon: false,
+            loadMoreOnScroll: this.enabledOptions.loadMoreOnScroll,
         };
         this.expanded_msg_ids = [];
         this.selected_id = null;
@@ -129,6 +131,13 @@ var Thread = Widget.extend({
                 msg.display_author = true;
             } else {
                 msg.display_author = !options.squash_close_messages;
+            }
+            if (msg.attachment_ids) {
+                var sortedAttachments = _.partition(msg.attachment_ids, function (att) {
+                    return att.mimetype && att.mimetype.split('/')[0] === 'image';
+                });
+                msg.images = sortedAttachments[0];
+                msg.others = sortedAttachments[1];
             }
             prev_msg = msg;
         });

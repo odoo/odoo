@@ -209,7 +209,13 @@ var FormViewDialog = ViewDialog.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    /**
+     * @override
+     */
+    _focusOnClose: function() {
+        this.trigger_up('form_dialog_discarded');
+        return true;
+    },
     _save: function () {
         var self = this;
         return this.form_view.saveRecord(this.form_view.handle, {
@@ -418,7 +424,13 @@ var SelectCreateDialog = ViewDialog.extend({
         dialog.on('closed', this, this.close);
         return dialog;
     },
-
+    /**
+     * @override
+     */
+    _focusOnClose: function() {
+        this.trigger_up('form_dialog_discarded');
+        return true;
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

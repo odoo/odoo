@@ -53,7 +53,10 @@ class Users(models.Model):
             msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        return super(Users, self).create(values)
+        user = super(Users, self).create(values)
+        # Auto-subscribe to channels
+        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
+        return user
 
     @api.multi
     def write(self, vals):
@@ -84,7 +87,7 @@ class Users(models.Model):
         self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
-        model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
+        model_names = {n[0]: n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
         user_activities = {}
         for activity in activity_data:
@@ -96,7 +99,7 @@ class Users(models.Model):
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
-            if activity['states'] in ('today','overdue'):
+            if activity['states'] in ('today', 'overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
         return list(user_activities.values())

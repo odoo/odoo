@@ -47,9 +47,9 @@ var config = {
          */
         isMobile: null,
         /**
-         * Mapping between the numbers 0,1,2,3,4 and some descriptions
+         * Mapping between the numbers 0,1,2,3,4,5 and some descriptions
          */
-        SIZES: { XXS: 0, XS: 1, SM: 2, MD: 3, LG: 4 },
+        SIZES: { XXS: 0, XS: 1, SM: 2, MD: 3, LG: 4, XL: 5 },
     },
 };
 
@@ -59,13 +59,14 @@ var medias = [
     window.matchMedia('(min-width: 475px) and (max-width: 767px)'),
     window.matchMedia('(min-width: 768px) and (max-width: 991px)'),
     window.matchMedia('(min-width: 992px) and (max-width: 1199px)'),
-    window.matchMedia('(min-width: 1200px)')
+    window.matchMedia('(min-width: 1200px) and (max-width: 1533px)'),
+    window.matchMedia('(min-width: 1534px)'),
 ];
 
 /**
  * Return the current size class
  *
- * @returns {integer} a number between 0 and 3, included
+ * @returns {integer} a number between 0 and 5, included
  */
 function _getSizeClass() {
     for(var i = 0 ; i < medias.length ; i++) {

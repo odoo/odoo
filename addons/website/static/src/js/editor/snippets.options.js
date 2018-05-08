@@ -329,6 +329,81 @@ options.registry.sizing_x = options.registry.sizing.extend({
     },
 });
 
+options.registry.layout_column = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the number of columns.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectCount: function (previewMode, value, $li) {
+        this._updateColumnCount(value - this.$target.children().length);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds new columns which are clones of the last column or removes the
+     * last x columns.
+     *
+     * @private
+     * @param {integer} count - positif to add, negative to remove
+     */
+    _updateColumnCount: function (count) {
+        if (!count) {
+            return;
+        }
+
+        this.trigger_up('request_history_undo_record', {$target: this.$target});
+
+        if (count > 0) {
+            var $lastColumn = this.$target.children().last();
+            for (var i = 0 ; i < count ; i++) {
+                $lastColumn.clone().insertAfter($lastColumn);
+            }
+        } else {
+            this.$target.children().slice(count).remove();
+        }
+
+        this._resizeColumns();
+        this.trigger_up('cover_update');
+    },
+    /**
+     * Resizes the columns so that they are kept on one row.
+     *
+     * @private
+     */
+    _resizeColumns: function () {
+        var $columns = this.$target.children();
+        var colsLength = $columns.length;
+        var colSize = Math.floor(12 / colsLength) || 1;
+        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
+        var colClass = 'col-md-' + colSize;
+        _.each($columns, function (column) {
+            var $column = $(column);
+            $column.attr('class', $column.attr('class').replace(/\bcol-md-(offset-)?\d+\b/g, ''));
+            $column.addClass(colClass);
+        });
+        if (colOffset) {
+            $columns.first().addClass('col-md-offset-' + colOffset);
+        }
+    },
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.find('li[data-select-count]').removeClass('active')
+            .filter('li[data-select-count=' + this.$target.children().length + ']').addClass('active');
+    },
+});
+
 options.registry.parallax = options.Class.extend({
     /**
      * @override

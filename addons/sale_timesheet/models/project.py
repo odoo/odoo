@@ -41,20 +41,27 @@ class Project(models.Model):
 
     @api.multi
     def action_view_timesheet_plan(self):
-        return {
-            'name': _('Overview'),
-            'type': 'ir.actions.client',
-            'tag': 'timesheet.plan',
-            'context': {
-                'active_id': self.id,
-                'active_ids': self.ids,
-                'search_default_project_id': self.id,
-            }
+        action = self.env.ref('sale_timesheet.project_timesheet_action_client_timesheet_plan').read()[0]
+        action['params'] = {
+            'project_ids': self.ids,
         }
+        action['context'] = {
+            'active_id': self.id,
+            'active_ids': self.ids,
+            'search_default_display_name': self.name,
+        }
+        return action
 
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
+
+    def _get_default_partner(self):
+        partner = super(ProjectTask, self)._get_default_partner()
+        if 'default_project_id' in self.env.context:  # partner from SO line is prior on one from project
+            project = self.env['project.project'].browse(self.env.context['default_project_id'])
+            partner = project.sale_line_id.order_partner_id
+        return partner
 
     @api.model
     def _default_sale_line_id(self):
@@ -66,6 +73,16 @@ class ProjectTask(models.Model):
         return sale_line_id
 
     sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', default=_default_sale_line_id, domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False)]")
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', related='sale_line_id.order_id', store=True, readonly=True)
+
+    @api.onchange('project_id')
+    def _onchange_project(self):
+        result = super(ProjectTask, self)._onchange_project()
+        if self.project_id:
+            self.sale_line_id = self.project_id.sale_line_id
+            if not self.partner_id:
+                self.partner_id = self.sale_line_id.order_partner_id
+        return result
 
     @api.multi
     @api.constrains('sale_line_id')

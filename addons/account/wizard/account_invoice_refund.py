@@ -100,6 +100,8 @@ class AccountInvoiceRefund(models.TransientModel):
                             else:
                                 invoice[field] = invoice[field] or False
                         inv_refund = inv_obj.create(invoice)
+                        body = _('Correction of <a href=# data-oe-model=account.invoice data-oe-id=%d>%s</a><br>Reason: %s') % (inv.id, inv.number, description)
+                        inv_refund.message_post(body=body)
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()
                         created_inv.append(inv_refund.id)
@@ -107,15 +109,20 @@ class AccountInvoiceRefund(models.TransientModel):
                          inv.type == 'out_refund' and 'action_invoice_tree1' or \
                          inv.type == 'in_invoice' and 'action_invoice_in_refund' or \
                          inv.type == 'in_refund' and 'action_invoice_tree2'
-                # Put the reason in the chatter
-                subject = _("Credit Note")
-                body = description
-                refund.message_post(body=body, subject=subject)
         if xml_id:
             result = self.env.ref('account.%s' % (xml_id)).read()[0]
-            invoice_domain = safe_eval(result['domain'])
-            invoice_domain.append(('id', 'in', created_inv))
-            result['domain'] = invoice_domain
+            if mode == 'modify':
+                # When refund method is `modify` then it will directly open the new draft bill/invoice in form view
+                if inv_refund.type == 'in_invoice':
+                    view_ref = self.env.ref('account.invoice_supplier_form')
+                else:
+                    view_ref = self.env.ref('account.invoice_form')
+                result['views'] = [(view_ref.id, 'form')]
+                result['res_id'] = inv_refund.id
+            else:
+                invoice_domain = safe_eval(result['domain'])
+                invoice_domain.append(('id', 'in', created_inv))
+                result['domain'] = invoice_domain
             return result
         return True
 

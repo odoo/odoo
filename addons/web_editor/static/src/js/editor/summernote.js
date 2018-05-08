@@ -1060,10 +1060,12 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             } else {
                 r = dom.merge(r.sc.parentNode, r.sc, r.so, r.ec, r.eo, null, true);
                 r = range.create(r.sc, r.so, r.ec, r.eo);
-                next = r.sc.splitText(r.so);
-                r.sc.textContent = r.sc.textContent.replace(/(\u00A0)+$/g, '');
-                next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
-                range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
+                if (r.sc.splitText) {
+                    next = r.sc.splitText(r.so);
+                    r.sc.textContent = r.sc.textContent.replace(/(\u00A0)+$/g, '');
+                    next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
+                    range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
+                }
             }
         }
     }
@@ -1800,12 +1802,17 @@ $.summernote.pluginEvents.indent = function (event, editor, layoutInfo, outdent)
     var $dom = $(ancestor);
 
     if (!dom.isList(ancestor)) {
+        // to indent a selection, we indent the child nodes of the common
+        // ancestor that contains this selection
         $dom = $(dom.node(ancestor)).children();
     }
-    if (!$dom.length) {
-        $dom = $(dom.ancestor(r.sc, dom.isList) || dom.ancestor(r.sc, dom.isCell));
+    if (!$dom.not('br').length) {
+        // if selection is inside a list, we indent its list items
+        $dom = $(dom.ancestor(r.sc, dom.isList));
         if (!$dom.length) {
-            $dom = $(r.sc).closest(options.styleTags.join(','));
+            // if the selection is contained in a single HTML node, we indent
+            // the first ancestor 'content block' (P, H1, PRE, ...) or TD
+            $dom = $(r.sc).closest(options.styleTags.join(',')+',td');
         }
     }
 

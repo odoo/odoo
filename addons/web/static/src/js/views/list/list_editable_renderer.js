@@ -24,6 +24,7 @@ ListRenderer.include({
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
         'click .o_field_x2many_list_row_add a': '_onAddRecord',
+        'keydown .o_field_x2many_list_row_add a': '_onKeyDownAddRecord',
         'click tbody td.o_data_cell': '_onCellClick',
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
         'click tfoot': '_onFooterClick',
@@ -340,6 +341,7 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
+        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id)
 
         return $.when.apply($, defs);
     },
@@ -738,6 +740,34 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
+    _onKeyDownAddRecord: function(e) {
+        switch(e.keyCode) {
+            case $.ui.keyCode.ENTER:
+                e.stopPropagation();
+                e.preventDefault();
+                this._onAddRecord(e);
+                break;
+        }
+    },
+    /** 
+     * It will returns the first visible widget that is editable
+     *
+     * @private
+     * @returns {Class} Widget returns first widget
+     */
+    _getFirstWidget: function () {
+        var record = this.state.data[this.currentRow];
+        var recordWidgets = this.allFieldWidgets[record.id];
+        var firstWidget = _.find(recordWidgets, function (widget) {
+            var isFirst = widget.$el.is(':visible') && 
+                                (widget.$el.has('input').length > 0 ||
+                                widget.tagName== 'input') && 
+                            !widget.$el.hasClass('o_readonly_modifier');
+            return isFirst;
+        });
+        return firstWidget;
+    },
+
     /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
@@ -791,12 +821,20 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                if (this.currentFieldIndex + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
-                        .fail(this._moveToNextLine.bind(this));
+                // When navigating with the keyboard, we want to get out of the list editable if the
+                // first field is left empty.
+                var column = this.columns[this.currentFieldIndex];
+                var firstWidget = this._getFirstWidget();
+                if (column.attrs.name === firstWidget.name && !firstWidget.$input.val()) {
+                    this.trigger_up('activate_next_widget');
                 } else {
-                    this._moveToNextLine();
-                }
+                    if (this.currentFieldIndex + 1 < this.columns.length) {
+                        this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
+                            .fail(this._moveToNextLine.bind(this));
+                    } else {
+                        this._moveToNextLine();
+                    }
+                 }
                 break;
             case 'next_line':
                 this._moveToNextLine();

@@ -38,6 +38,15 @@ class MailTestActivity(models.Model):
     name = fields.Char()
     email_from = fields.Char()
 
+    def action_start(self, action_summary):
+        self.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary=action_summary
+        )
+
+    def action_close(self, action_feedback):
+        self.activity_feedback(['test_mail.mail_act_test_todo'], feedback=action_feedback)
+
 
 class MailTestFull(models.Model):
     """ This model can be used in tests when complex chatter features are

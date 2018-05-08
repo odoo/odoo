@@ -66,9 +66,10 @@ class MailMail(models.Model):
     @api.multi
     def unlink(self):
         # cascade-delete the parent message for all mails that are not created for a notification
-        to_cascade = self.search([('notification', '=', False), ('id', 'in', self.ids)]).mapped('mail_message_id')
+        mail_msg_cascade_ids = [mail.mail_message_id.id for mail in self if not mail.notification]
         res = super(MailMail, self).unlink()
-        to_cascade.unlink()
+        if mail_msg_cascade_ids:
+            self.env['mail.message'].browse(mail_msg_cascade_ids).unlink()
         return res
 
     @api.model
@@ -130,21 +131,22 @@ class MailMail(models.Model):
 
         :return: True
         """
-        notif_emails = self.filtered(lambda email: email.notification)
-        if notif_emails:
+        mail_message_notif_ids = [mail.mail_message_id.id for mail in self if mail.notification]
+        if mail_message_notif_ids:
             notifications = self.env['mail.notification'].search([
-                ('mail_message_id', 'in', notif_emails.mapped('mail_message_id').ids),
+                ('mail_message_id', 'in', mail_message_notif_ids),
                 ('is_email', '=', True)])
-            if mail_sent:
+            if notifications and mail_sent:
                 notifications.write({
                     'email_status': 'sent',
                 })
-            else:
+            elif notifications:
                 notifications.write({
                     'email_status': 'exception',
                 })
         if mail_sent:
-            self.sudo().filtered(lambda self: self.auto_delete).unlink()
+            mail_to_delete_ids = [mail.id for mail in self if mail.auto_delete]
+            self.browse(mail_to_delete_ids).sudo().unlink()
         return True
 
     # ------------------------------------------------------

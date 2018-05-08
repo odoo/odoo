@@ -177,7 +177,8 @@ class Partner(models.Model):
         [('contact', 'Contact'),
          ('invoice', 'Invoice address'),
          ('delivery', 'Shipping address'),
-         ('other', 'Other address')], string='Address Type',
+         ('other', 'Other address'),
+         ("private", "Private Address")], string='Address Type',
         default='contact',
         help="Used to select automatically the right address according to the context in sales and purchases documents.")
     street = fields.Char()
@@ -705,6 +706,8 @@ class Partner(models.Model):
             if res.status_code != requests.codes.ok:
                 return False
         except requests.exceptions.ConnectionError as e:
+            return False
+        except requests.exceptions.Timeout as e:
             return False
         return base64.b64encode(res.content)
 

@@ -17,8 +17,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # Do an invoice and a payment and unreconcile. The amount will be nullified
         # By default, the partner wouldn't appear in this report.
         # The context key allow it to appear
+        ctx = self._context
         periods = {}
-        start = datetime.strptime(date_from, "%Y-%m-%d")
+        start = datetime.strptime(date_from, "%Y-%m-%d") - relativedelta(days=1)
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
@@ -30,6 +31,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
         res = []
         total = []
+        partner_clause = ''
         cr = self.env.cr
         company_ids = self.env.context.get('company_ids', (self.env.user.company_id.id,))
         move_state = ['draft', 'posted']
@@ -45,6 +47,13 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if reconciled_after_date:
             reconciliation_clause = '(l.reconciled IS FALSE OR l.id IN %s)'
             arg_list += (tuple(reconciled_after_date),)
+        if ctx.get('partner_ids'):
+            partner_clause = 'AND (l.partner_id IN %s)'
+            arg_list += (tuple(ctx['partner_ids'].ids),)
+        if ctx.get('partner_categories'):
+            partner_clause += 'AND (l.partner_id IN %s)'
+            partner_ids = self.env['res.partner'].search([('category_id', 'in', ctx['partner_categories'].ids)]).ids
+            arg_list += (tuple(partner_ids or [0]),)
         arg_list += (date_from, tuple(company_ids))
         query = '''
             SELECT DISTINCT l.partner_id, UPPER(res_partner.name)
@@ -53,7 +62,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (l.move_id = am.id)
                 AND (am.state IN %s)
                 AND (account_account.internal_type IN %s)
-                AND ''' + reconciliation_clause + '''
+                AND ''' + reconciliation_clause + partner_clause + '''
                 AND (l.date <= %s)
                 AND l.company_id IN %s
             ORDER BY UPPER(res_partner.name)'''
@@ -77,7 +86,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 WHERE (l.account_id = account_account.id) AND (l.move_id = am.id)
                     AND (am.state IN %s)
                     AND (account_account.internal_type IN %s)
-                    AND (COALESCE(l.date_maturity,l.date) > %s)\
+                    AND (COALESCE(l.date_maturity,l.date) >= %s)\
                     AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                 AND (l.date <= %s)
                 AND l.company_id IN %s'''

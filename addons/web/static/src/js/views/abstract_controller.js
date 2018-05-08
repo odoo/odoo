@@ -106,6 +106,9 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      * Called each time the controller is attached into the DOM.
      */
     on_attach_callback: function () {
+        if (this.searchView) {
+            this.searchView.on_attach_callback();
+        }
         this.renderer.on_attach_callback();
     },
     /**
@@ -115,6 +118,12 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         this.renderer.on_detach_callback();
     },
 
+    /**
+     * Gives the focus to the renderer
+     */
+    giveFocus:function(){
+        this.renderer.giveFocus();
+    },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

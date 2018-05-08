@@ -25,8 +25,8 @@ class Http(models.AbstractModel):
         return {
             "session_id": request.session.sid,
             "uid": request.session.uid,
-            "is_system": request.env.user._is_system(),
-            "is_superuser": request.env.user._is_superuser(),
+            "is_system": user._is_system(),
+            "is_superuser": user._is_superuser(),
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
             "server_version": version_info.get('server_version'),
@@ -34,8 +34,8 @@ class Http(models.AbstractModel):
             "name": user.name,
             "username": user.login,
             "partner_display_name": user.partner_id.display_name,
-            "company_id": request.env.user.company_id.id if request.session.uid else None,
-            "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
+            "company_id": user.company_id.id if request.session.uid else None,
+            "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
             "currencies": self.get_currencies(),
             "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
@@ -44,4 +44,4 @@ class Http(models.AbstractModel):
     def get_currencies(self):
         Currency = request.env['res.currency']
         currencies = Currency.search([]).read(['symbol', 'position', 'decimal_places'])
-        return { c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies} 
+        return {c['id']: {'symbol': c['symbol'], 'position': c['position'], 'digits': [69,c['decimal_places']]} for c in currencies}

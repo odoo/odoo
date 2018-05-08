@@ -124,7 +124,8 @@ var PivotRenderer = AbstractRenderer.extend({
             return self.state.fields[gb.split(':')[0]].string;
         });
         var measureTypes = this.state.measures.map(function (name) {
-            return self.state.fields[name].type;
+            var type = self.state.fields[name].type;
+            return type === 'many2one' ? 'integer' : type;
         });
         for (i = 0; i < rows.length; i++) {
             $row = $('<tr>');

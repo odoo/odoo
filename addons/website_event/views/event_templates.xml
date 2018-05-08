@@ -594,6 +594,14 @@
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
                     <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
+                    <div id="add_to_calendar" class="mt4">
+                        <a class="btn btn-primary mr8" t-att-href="iCal_url">
+                            <i class="fa fa-fw fa-arrow-right"/>Add to iCal/Outlook
+                        </a>
+                        <a class="btn btn-primary" t-att-href="google_url" target='_blank'>
+                            <i class="fa fa-fw fa-arrow-right"/>Add to Google Calendar
+                        </a>
+                    </div>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
                             "fields": ["name", "address", "phone", "mobile", "email"]

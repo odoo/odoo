@@ -6,7 +6,6 @@
 # Martin Trigaux, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Winfried Grieb <inactive+wigrieb@transifex.com>, 2017
-# Wolfgang Taferner, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
@@ -14,10 +13,10 @@
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -36,7 +35,7 @@ msgstr ""
 "Ziele können automatisch durch Verwendung von Herausforderungen angelegt werden."
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee__badge_ids
 msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
@@ -56,7 +55,7 @@ msgstr ""
 "Die Ziele werden für die gewählten Benutzer oder Gruppenmitglieder angelegt."
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
 msgstr "Auszeichnungen"
@@ -70,7 +69,7 @@ msgstr ""
 "Mitarbeiter, die sich eine Anerkennung verdient haben."
 
 #. module: hr_gamification
-#: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee__direct_badge_ids
 msgid "Badges directly linked to the employee"
 msgstr "Abzeichen, die direkt mit dem Mitarbeiter verknüpft sind"
 
@@ -88,20 +87,13 @@ msgstr "Zielvereinbarung"
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
-msgid "Click to create a challenge."
-msgstr "Klicken Sie, um ein Ziel zu definieren."
+msgid "Create a new challenge"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
-msgid "Click to create a goal."
-msgstr "Klicken, um ein Ziel zu erstellen"
-
-#. module: hr_gamification
-#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
-msgid "Click to grant this employee his first badge"
+msgid "Create a new goal"
 msgstr ""
-"Klicken Sie hier, um dem Mitarbeiter/der Mitarbeiterin seine/ihre erste "
-"Auszeichnung zu verleihen."
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -111,24 +103,24 @@ msgstr ""
 "erhält (ist öffentlich sichtbar)."
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__direct_badge_ids
 msgid "Direct Badge"
 msgstr "Direktes Abzeichen"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
-#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_employee_id
-#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard_employee_id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user__employee_id
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard__employee_id
 msgid "Employee"
 msgstr "Mitarbeiter"
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_badge_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__badge_ids
 msgid "Employee Badges"
 msgstr "Auszeichnungen"
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__goal_ids
 msgid "Employee HR Goals"
 msgstr "Mitarbeiterziele"
 
@@ -143,7 +135,7 @@ msgid "Gamification user badge"
 msgstr "Auszeichnungs Rangliste Benutzer"
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users__goal_ids
 msgid "Goal"
 msgstr "Ziel"
 
@@ -159,17 +151,22 @@ msgid "Grant a Badge"
 msgstr "Vergebe Auszeichnung"
 
 #. module: hr_gamification
+#: model:ir.ui.view,arch_db:hr_gamification.hr_hr_employee_view_form
+msgid "Grant this employee his first badge"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
 msgid "Granted"
 msgstr "Bewilligt"
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge__granted_employees_count
 msgid "Granted Employees Count"
 msgstr "Bewilligte Mitarbeiteranzahl"
 
 #. module: hr_gamification
-#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee__has_badges
 msgid "Has Badges"
 msgstr "Wurde ausgezeichnet"
 

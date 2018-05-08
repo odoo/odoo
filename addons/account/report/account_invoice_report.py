@@ -15,18 +15,17 @@ class AccountInvoiceReport(models.Model):
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        context = dict(self._context or {})
         user_currency_id = self.env.user.company_id.currency_id
         currency_rate_id = self.env['res.currency.rate'].search([
             ('rate', '=', 1),
             '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
         base_currency_id = currency_rate_id.currency_id
-        ctx = context.copy()
         for record in self:
-            ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
+            date = record.date or fields.Date.today()
+            company = record.company_id
+            record.user_currency_price_total = base_currency_id._convert(record.price_total, user_currency_id, company, date)
+            record.user_currency_price_average = base_currency_id._convert(record.price_average, user_currency_id, company, date)
+            record.user_currency_residual = base_currency_id._convert(record.residual, user_currency_id, company, date)
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)

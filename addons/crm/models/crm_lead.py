@@ -1110,11 +1110,15 @@ class Lead(models.Model):
 
         return [new_group] + groups
 
-    @api.model
-    def _notify_get_reply_to(self, res_ids, default=None):
-        leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
-        return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
+    @api.multi
+    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+        """ Override to set alias of lead and opportunities to their sales team if any. """
+        aliases = self.mapped('team_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        res = {lead.id: aliases.get(lead.team_id.id) for lead in self}
+        leftover = self.filtered(lambda rec: not rec.team_id)
+        if leftover:
+            res.update(super(Lead, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+        return res
 
     @api.multi
     def get_formview_id(self, access_uid=None):

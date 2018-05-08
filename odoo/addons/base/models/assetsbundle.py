@@ -7,6 +7,7 @@ import itertools
 import json
 import textwrap
 import uuid
+import sass
 from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
@@ -93,6 +94,8 @@ class AssetsBundle(object):
         for f in files:
             if f['atype'] == 'text/sass':
                 self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+            elif f['atype'] == 'text/scss':
+                self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/less':
                 self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             elif f['atype'] == 'text/css':
@@ -310,7 +313,7 @@ class AssetsBundle(object):
     def is_css_preprocessed(self):
         preprocessed = True
         attachments = None
-        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+        for atype in (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
@@ -339,12 +342,12 @@ class AssetsBundle(object):
             Checks if the bundle contains any sass/less content, then compiles it to css.
             Returns the bundle's flat css.
         """
-        for atype in (SassStylesheetAsset, LessStylesheetAsset):
+        for atype in (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
-                cmd = assets[0].get_command()
                 source = '\n'.join([asset.get_source() for asset in assets])
-                compiled = self.compile_css(cmd, source)
+                cmd = assets[0].get_command()
+                compiled = self.compile_css(cmd, source, atype)
                 if not self.css_errors and old_attachments:
                     old_attachments.unlink()
 
@@ -381,39 +384,57 @@ class AssetsBundle(object):
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
-    def compile_css(self, cmd, source):
+    def compile_css(self, cmd, source, atype):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
-
+        def handle_compile_error(e, source):
+            error = self.get_preprocessor_error(e, source=source)
+            _logger.warning(error)
+            self.css_errors.append(error)
+            return ''
         def sanitize(matchobj):
             ref = matchobj.group(2)
             line = '@import "%s"%s' % (ref, matchobj.group(3))
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
                 return line
-            msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.less\" imports in your custom less files. In Odoo you have to import all less files in the assets, and not through the @import statement." % ref
+            if atype == ScssStylesheetAsset:
+                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.scss\" imports in your custom sass files. In Odoo you have to import all sass files in the assets, and not through the @import statement." % ref
+            else:
+                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.less\" imports in your custom less files. In Odoo you have to import all less files in the assets, and not through the @import statement." % ref
             _logger.warning(msg)
             self.css_errors.append(msg)
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        try:
-            compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        except Exception:
-            msg = "Could not execute command %r" % cmd[0]
-            _logger.error(msg)
-            self.css_errors.append(msg)
-            return ''
-        result = compiler.communicate(input=source.encode('utf-8'))
-        if compiler.returncode:
-            cmd_output = ''.join(misc.ustr(result))
-            if not cmd_output:
-                cmd_output = "Process exited with return code %d\n" % compiler.returncode
-            error = self.get_preprocessor_error(cmd_output, source=source)
-            _logger.warning(error)
-            self.css_errors.append(error)
-            return ''
-        compiled = result[0].strip().decode('utf8')
+        if atype == ScssStylesheetAsset:
+            try:
+                path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+                path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+                result = sass.compile(
+                    string=source.encode('utf-8'),
+                    include_paths=[path_to_bs, path_to_bs_components],
+                    output_style='expanded',
+                    precision=8,
+                )
+                compiled = result.strip()
+            except sass.CompileError as e:
+                return handle_compile_error(e, source=source)
+        else:
+            try:
+                compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            except Exception:
+                msg = "Could not execute command %r" % cmd[0]
+                _logger.error(msg)
+                self.css_errors.append(msg)
+                return ''
+            result = compiler.communicate(input=source.encode('utf-8'))
+            if compiler.returncode:
+                cmd_output = ''.join(misc.ustr(result))
+                if not cmd_output:
+                    cmd_output = "Process exited with return code %d\n" % compiler.returncode
+                return handle_compile_error(cmd_output, source=source)
+            compiled = result[0].strip().decode('utf8')
         return compiled
 
     def get_preprocessor_error(self, stderr, source=None):
@@ -655,6 +676,10 @@ class SassStylesheetAsset(PreprocessedCSS):
         return [sass, '--stdin', '-t', 'compressed', '--unix-newlines', '--compass',
                 '-r', 'bootstrap-sass']
 
+
+class ScssStylesheetAsset(PreprocessedCSS):
+    def get_command(self):
+        return ''
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):

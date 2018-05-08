@@ -895,6 +895,23 @@
         data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
+    <div data-js="layout_column"
+        data-selector="section"
+        data-target="> * > .row"
+        data-exclude=".s_text_block_image_fw, .s_company_team, .s_big_picture">
+        <li class="dropdown-submenu">
+            <a tabindex="-2" href="#"><i class="fa fa-columns"/>Number of columns</a>
+            <ul class="dropdown-menu" data-no-preview="true">
+                <li data-select-count="1"><a href="#">1</a></li>
+                <li data-select-count="2"><a href="#">2</a></li>
+                <li data-select-count="3"><a href="#">3</a></li>
+                <li data-select-count="4"><a href="#">4</a></li>
+                <li data-select-count="5"><a href="#">5</a></li>
+                <li data-select-count="6"><a href="#">6</a></li>
+            </ul>
+        </li>
+    </div>
+
     <div data-js="sizing_x"
         data-selector=".row:not(.s_no_resize_cols) > [class*='col-md-']"
         data-drop-near=".row:not(.s_no_resize_cols) > [class*='col-md-']">

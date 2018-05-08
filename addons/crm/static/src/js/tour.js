@@ -10,7 +10,7 @@ tour.register('crm_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under <b>CRM</b> app."),
+    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the <b>CRM</b> app."),
     position: 'bottom',
 }, {
     trigger: ".o-kanban-button-new",
@@ -24,7 +24,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: _t("Click here to <b>add your opportunity</b>."),
-    position: "right",
+    position: "bottom",
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
@@ -43,7 +43,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".modal-body .o_field_many2one",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now on.</i></p>"),
+    content: _t("<p>You will be able to customize your followup activities. Examples:</p><ol><li>introductory email</li><li>call 10 days after</li><li>second call 3 days after, ...</li></ol><p class='mb0'><i>Select a standard activity for now.</i></p>"),
     position: "bottom",
     run: function (actions) {
         actions.auto(".modal-footer button[special=cancel]");
@@ -59,7 +59,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_opportunity_form .o_chatter_button_new_message",
     content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
-    position: "right"
+    position: "bottom"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_opportunity_form',
@@ -77,7 +77,7 @@ tour.STEPS.MENU_MORE, {
 }, tour.STEPS.TOGGLE_HOME_MENU,
 tour.STEPS.MENU_MORE, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Good job! Your completed the tour of the CRM."),
+    content: _t("Good job! You completed the tour of the CRM app."),
     position: 'bottom',
 }]);
 

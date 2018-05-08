@@ -185,10 +185,10 @@ var ServicesMixin = {
         return def;
     },
     do_notify: function (title, message, sticky, className) {
-        this.trigger_up('notification', {title: title, message: message, sticky: sticky, className: className});
+        return this.call('notification', 'notify', {title: title, message: message, sticky: sticky, className: className});
     },
     do_warn: function (title, message, sticky, className) {
-        this.trigger_up('warning', {title: title, message: message, sticky: sticky, className: className});
+        return this.call('notification', 'notify', {type: 'warning', title: title, message: message, sticky: sticky, className: className});
     },
 };
 

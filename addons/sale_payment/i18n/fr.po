@@ -13,19 +13,26 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Olivier Dony <odo@odoo.com>, 2018
+# Richard Mathot <rim@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: Richard Mathot <rim@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:125
@@ -80,18 +87,18 @@ msgid "<strong>Transactions</strong>"
 msgstr "<strong>Transactions</strong>"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:53
+#: code:addons/sale_payment/models/payment.py:54
 #, python-format
 msgid "Amount Mismatch (%s)"
 msgstr ""
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team__pending_payment_transactions_amount
 msgid "Amount of pending transactions"
 msgstr "Nombre de transactions en attente"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team__authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
 msgstr "Nombre de transactions à saisir"
 
@@ -121,29 +128,24 @@ msgstr ""
 "paiements des abonnements se feront automatiquement."
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_tx_id
 msgid "Last Transaction"
 msgstr "Dernière transaction"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_transaction_count
 msgid "Number of payment transactions"
 msgstr "Nombre de transactions de paiement"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team__pending_payment_transactions_count
 msgid "Number of pending transactions"
 msgstr "Nombre de transactions en attente"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team__authorized_payment_transactions_count
 msgid "Number of transactions to capture"
 msgstr "Nombre de transactions à saisir"
-
-#. module: sale_payment
-#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
-msgid "Order successfully paid."
-msgstr "Commande réglée avec succès."
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:49
@@ -163,9 +165,14 @@ msgid "Pay with"
 msgstr "Payer avec"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_acquirer_id
 msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "Intermédiaires de paiement"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_payment_transaction
@@ -175,7 +182,7 @@ msgstr "Transaction"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payment to Capture"
-msgstr ""
+msgstr "Paiement à récupérer"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
@@ -193,17 +200,22 @@ msgid "Quotation"
 msgstr "Devis"
 
 #. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__so_state
+msgid "Sale Order State"
+msgstr ""
+
+#. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
 msgstr "Equipe de vente"
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction__sale_order_id
 msgid "Sales Order"
 msgstr "Bon de commande"
 
 #. module: sale_payment
-#: code:addons/sale_payment/models/payment.py:54
+#: code:addons/sale_payment/models/payment.py:55
 #, python-format
 msgid ""
 "The sale order was not confirmed despite response from the acquirer (%s): SO"
@@ -271,7 +283,12 @@ msgstr ""
 " de carte bancaire non valide."
 
 #. module: sale_payment
-#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order__payment_tx_ids
 #: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
 msgid "Transactions"
 msgstr "Transactions"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Votre paiement a été autorisé."

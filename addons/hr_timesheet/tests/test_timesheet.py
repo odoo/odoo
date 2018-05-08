@@ -17,11 +17,18 @@ class TestCommonTimesheet(TransactionCase):
             'customer': True,
         })
 
+        self.analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account for Test Customer',
+            'partner_id': self.partner.id,
+            'code': 'TEST'
+        })
+
         # project and tasks
         self.project_customer = self.env['project.project'].create({
             'name': 'Project X',
             'allow_timesheets': True,
             'partner_id': self.partner.id,
+            'analytic_account_id': self.analytic_account.id,
         })
         self.task1 = self.env['project.task'].create({
             'name': 'Task One',

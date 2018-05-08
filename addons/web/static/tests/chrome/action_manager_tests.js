@@ -2,17 +2,18 @@ odoo.define('web.action_manager_tests', function (require) {
 "use strict";
 
 var ReportClientAction = require('report.client_action');
-
+var NotificationService = require('web.NotificationService');
 var AbstractAction = require('web.AbstractAction');
 var AbstractStorageService = require('web.AbstractStorageService');
+var BasicFields = require('web.basic_fields');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var ListController = require('web.ListController');
+var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var RamStorage = require('web.RamStorage');
 var ReportService = require('web.ReportService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
-
 var createActionManager = testUtils.createActionManager;
 
 QUnit.module('ActionManager', {
@@ -126,6 +127,9 @@ QUnit.module('ActionManager', {
 
             // search views
             'partner,false,search': '<search><field name="foo" string="Foo"/></search>',
+            'partner,1,search': '<search>' +
+                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
+                '</search>',
             'pony,false,search': '<search></search>',
         };
     },
@@ -1639,6 +1643,36 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('breadcrumb is updated on title change', function (assert) {
+        assert.expect(2);
+
+        var ClientAction = Widget.extend(ControlPanelMixin, {
+            className: 'o_client_action_test',
+            events: {
+                click: function () {
+                    this.set("title", 'new title');
+                },
+            },
+            start: function () {
+                this.set("title", 'initial title');
+                this.$el.text('Hello World');
+            },
+        });
+        var actionManager = createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        actionManager.doAction('HelloWorldTest');
+
+        assert.strictEqual($('ol.breadcrumb').text(), "initial title",
+            "should have initial title as breadcrumb content");
+
+        actionManager.$('.o_client_action_test').click();
+        assert.strictEqual($('ol.breadcrumb').text(), "new title",
+            "should have updated title as breadcrumb content");
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
     QUnit.module('Server actions');
 
     QUnit.test('can execute server actions from db ID', function (assert) {
@@ -1736,6 +1770,7 @@ QUnit.module('ActionManager', {
                     assert.step(params.url);
                     params.success();
                     params.complete();
+                    return true;
                 },
             },
         });
@@ -1763,7 +1798,11 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService],
+            services: [ReportService, NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type || 'notification');
+                }
+            })],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1776,11 +1815,7 @@ QUnit.module('ActionManager', {
                     assert.step(params.url);
                     params.success();
                     params.complete();
-                },
-            },
-            intercepts: {
-                notification: function () {
-                    assert.step('notification');
+                    return true;
                 },
             },
         });
@@ -1817,7 +1852,11 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: [ReportService],
+            services: [ReportService, NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type || 'notification');
+                }
+            })],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1831,11 +1870,7 @@ QUnit.module('ActionManager', {
             session: {
                 get_file: function (params) {
                     assert.step(params.url); // should not be called
-                },
-            },
-            intercepts: {
-                notification: function () {
-                    assert.step('notification');
+                    return true;
                 },
             },
         });
@@ -2714,13 +2749,6 @@ QUnit.module('ActionManager', {
             },
         });
 
-        _.extend(this.archs, {
-            'partner,7,search':
-                '<search>' +
-                   '<filter name="bar" help="Bar" domain="[(\'bar\', \'=\', 1)]"/>' +
-                '</search>',
-        });
-
         this.actions.push({
             id: 33,
             context: {
@@ -2728,7 +2756,7 @@ QUnit.module('ActionManager', {
             },
             name: 'Partners',
             res_model: 'partner',
-            search_view_id: [7, 'a custom search view'],
+            search_view_id: [1, 'a custom search view'],
             type: 'ir.actions.act_window',
             views: [[false, 'list']],
         });
@@ -2792,6 +2820,46 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test("doAction with option 'keepSearchView'", function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 33,
+            name: 'Partners',
+            res_model: 'partner',
+            search_view_id: [1, 'a specific search view'],
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+        });
+
+        var checkRPC = false;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (checkRPC && route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.domain, [['bar', '=', 1]],
+                        "should search with the correct domain");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(33);
+
+        checkRPC = true;
+        $('.o_control_panel .o_filters_menu a:contains(Bar)').click(); // filter on bar
+        assert.strictEqual($('.o_control_panel .o_facet_values').text().trim(), 'Bar',
+            "the filter on Bar should appear in the search view");
+
+        actionManager.doAction(3, {keepSearchView: true});
+        assert.strictEqual($('.o_control_panel .o_facet_values').text().trim(), 'Bar',
+            "the filter on Bar should still be in the search view");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', function (assert) {
@@ -2849,6 +2917,38 @@ QUnit.module('ActionManager', {
             "the modal footer should only contain one button");
 
         actionManager.destroy();
+    });
+
+    QUnit.test('on_attach_callback is called for actions in target="new"', function (assert) {
+        assert.expect(4);
+
+        var ClientAction = AbstractAction.extend({
+            className: 'o_test',
+            on_attach_callback: function () {
+                assert.step('on_attach_callback');
+                assert.ok(actionManager.currentDialogController,
+                    "the currentDialogController should have been set already");
+            },
+        });
+        core.action_registry.add('test', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction({
+            tag: 'test',
+            target: 'new',
+            type: 'ir.actions.client',
+        });
+
+        assert.strictEqual($('.modal .o_test').length, 1,
+            "should have rendered the client action in a dialog");
+        assert.verifySteps(['on_attach_callback']);
+
+        actionManager.destroy();
+        delete core.action_registry.map.test;
     });
 
     QUnit.module('Actions in target="inline"');
@@ -2996,6 +3096,145 @@ QUnit.module('ActionManager', {
                 "should be resolved with correct action type");
             actionManager.destroy();
         });
+    });
+
+    QUnit.test('properly drop client actions after new action is initiated', function (assert) {
+        assert.expect(1);
+
+        var slowWillStartDef = $.Deferred();
+
+        var ClientAction = AbstractAction.extend({
+            willStart: function () {
+                return slowWillStartDef;
+            },
+        });
+
+        core.action_registry.add('slowAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('slowAction');
+        actionManager.doAction(4);
+        slowWillStartDef.resolve();
+        assert.strictEqual(actionManager.$('.o_kanban_view').length, 1,
+            'should have loaded a kanban view');
+
+        actionManager.destroy();
+        delete core.action_registry.map.slowAction;
+    });
+
+
+    QUnit.test('abstract action does not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var ClientAction = AbstractAction.extend({
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        actionManager.trigger_up('navigation_move', {direction:'down'});
+
+        assert.ok(true); // no error so it's good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
+    });
+
+    QUnit.test('fields in abstract action does not crash on navigation_moves', function (assert) {
+        assert.expect(1);
+        var self = this;
+
+        // create a client action with 2 input field
+        var inputWidget;
+        var secondInputWidget;
+        var ClientAction = AbstractAction.extend(StandaloneFieldManagerMixin, {
+            init: function () {
+                this._super.apply(this, arguments);
+                StandaloneFieldManagerMixin.init.call(this);
+            },
+            start: function () {
+                var _self = this;
+
+                return this.model.makeRecord('partner', [{
+                    name: 'display_name',
+                    type: 'char',
+                }]).then(function (recordID) {
+                    var record = _self.model.get(recordID);
+                    inputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    _self._registerWidget(recordID, 'display_name', inputWidget);
+
+                    secondInputWidget = new BasicFields.InputField(_self, 'display_name', record, {mode: 'edit',});
+                    secondInputWidget.attrs = {className:"secondField"};
+                    _self._registerWidget(recordID, 'display_name', secondInputWidget);
+
+                    inputWidget.appendTo(_self.$el);
+                    secondInputWidget.appendTo(_self.$el);
+                });
+            }
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction('ClientAction');
+        inputWidget.$el[0].focus();
+        var event = $.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        });
+        $(inputWidget.$el[0]).trigger(event);
+
+        assert.notOk(event.isDefaultPrevented(),
+            "the keyboard event default should not be prevented"); // no crash is good
+        actionManager.destroy();
+        delete core.action_registry.ClientAction;
+    });
+
+    QUnit.test('web client is not deadlocked when a view crashes', function (assert) {
+        assert.expect(3);
+
+        var readOnFirstRecordDef = $.Deferred();
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.args[0][0] === 1) {
+                    return readOnFirstRecordDef;
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        actionManager.doAction(3);
+
+        // open first record in form view. this will crash and will not
+        // display a form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+
+        readOnFirstRecordDef.reject("not working as intended");
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "there should still be a list view in dom");
+
+        // open another record, the read will not crash
+        actionManager.$('.o_list_view .o_data_row:eq(2)').click();
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "there should not be a list view in dom");
+
+        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
+            "there should be a form view in dom");
+
+        actionManager.destroy();
     });
 });
 

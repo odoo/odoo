@@ -682,6 +682,8 @@ var FieldX2Many = AbstractField.extend({
         resequence: '_onResequence',
         save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
+        activate_next_widget: '_onActiveNextWidget',
+        navigation_move: '_onNavigationMove',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -699,6 +701,9 @@ var FieldX2Many = AbstractField.extend({
      */
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
+        this.nodeOptions = _.defaults(this.nodeOptions, {
+            create_text: _t('Add'),
+        });
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
@@ -794,6 +799,30 @@ var FieldX2Many = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+       return (this.mode === 'edit' && this.$input) || this.$el;
+    },
+
+    /**
+     * @override
+     * @param {Object} [options]
+     */
+    activate: function (options) {
+        if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
+            return false;
+        }
+        if (this.view.type === 'kanban') {
+            this.$buttons.find(".o-kanban-button-new").focus();
+        }
+        if (this.view.arch.tag === 'tree') {
+            this.renderer.$('.o_field_x2many_list_row_add a').focus();
+        }
+        return true;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -914,8 +943,10 @@ var FieldX2Many = AbstractField.extend({
      */
     _renderButtons: function () {
         if (!this.isReadonly && this.view.arch.tag === 'kanban') {
-            var options = { create_text: this.nodeOptions.create_text };
-            this.$buttons = $(qweb.render('KanbanView.buttons', options));
+            this.$buttons = $(qweb.render('KanbanView.buttons', {
+                btnClass: 'btn-default',
+                create_text: this.nodeOptions.create_text,
+            }));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
         }
     },
@@ -1030,7 +1061,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
@@ -1118,7 +1149,7 @@ var FieldX2Many = AbstractField.extend({
     _onResequence: function (event) {
         event.stopPropagation();
         var self = this;
-        this.trigger_up('freeze_order', {id: this.value.id});
+        this.trigger_up('edited_list', { id: this.value.id });
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
@@ -1155,6 +1186,16 @@ var FieldX2Many = AbstractField.extend({
      */
     _onToggleColumnOrder: function (ev) {
         ev.data.field = this.name;
+    },
+    /*
+    * Move to next widget.
+    *
+    * @private
+    */
+    _onActiveNextWidget: function (e) {
+        e.stopPropagation();
+        this.renderer.unselectRow();
+        this.trigger_up('navigation_move',{direction:'next'});
     },
 });
 
@@ -1254,7 +1295,6 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         // we don't want interference with the components upstream.
         ev.stopPropagation();
-
         if (this.editable) {
             if (!this.activeActions.create) {
                 if (ev.data.onFail) {
@@ -1262,7 +1302,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 }
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
-                this.trigger_up('freeze_order', {id: this.value.id});
+                this.trigger_up('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable,
@@ -1292,12 +1332,27 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
+        var self = this;
         var id = ev.data.id;
-        // trigger an empty 'UPDATE' operation when the user clicks on 'Save' in
-        // the dialog, to notify the main record that a subrecord of this
-        // relational field has changed (those changes will be already stored on
-        // that subrecord, thanks to the 'Save').
-        var onSaved = this._setValue.bind(this, { operation: 'UPDATE', id: id }, {});
+        var onSaved = function (record, hasChanged) {
+            if (!hasChanged) {
+                return;
+            }
+            if (_.some(self.value.data, {id: record.id})) {
+                // the record already exists in the relation, so trigger an
+                // empty 'UPDATE' operation when the user clicks on 'Save' in
+                // the dialog, to notify the main record that a subrecord of
+                // this relational field has changed (those changes will be
+                // already stored on that subrecord, thanks to the 'Save').
+                self._setValue({ operation: 'UPDATE', id: record.id });
+            } else {
+                // the record isn't in the relation yet, so add it ; this can
+                // happen if the user clicks on 'Save & New' in the dialog (the
+                // opened record will be updated, and other records will be
+                // created)
+                self._setValue({ operation: 'ADD', id: record.id });
+            }
+        };
         this._openFormDialog({
             id: id,
             on_saved: onSaved,
@@ -1309,16 +1364,6 @@ var FieldOne2Many = FieldX2Many.extend({
 var FieldMany2Many = FieldX2Many.extend({
     className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
-
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.nodeOptions = _.defaults(this.nodeOptions, {
-            create_text: _t('Add'),
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -1336,7 +1381,6 @@ var FieldMany2Many = FieldX2Many.extend({
     _onAddRecord: function (ev) {
         var self = this;
         ev.stopPropagation();
-
         var domain = this.record.getDomain({fieldName: this.name});
 
         new dialogs.SelectCreateDialog(this, {
@@ -2289,6 +2333,21 @@ var FieldReference = FieldMany2One.extend({
      */
     start: function () {
         this.$('select').val(this.field.relation);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        if (this.mode === 'edit' && !this.field.relation) {
+            return this.$('select');
+        }
         return this._super.apply(this, arguments);
     },
 

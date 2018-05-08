@@ -12,7 +12,7 @@ var SystrayMenu = require('web.SystrayMenu');
 var UserMenu = require('web.UserMenu');
 
 return AbstractWebClient.extend({
-    events: {
+    events: _.extend({}, AbstractWebClient.prototype.events, {
         'click .oe_logo_edit_admin': 'logo_edit',
         'click .oe_logo img': function(ev) {
             ev.preventDefault();
@@ -20,7 +20,7 @@ return AbstractWebClient.extend({
                 framework.redirect("/web" + (config.debug ? "?debug" : ""));
             });
         },
-    },
+    }),
     show_application: function() {
         var self = this;
 
@@ -91,6 +91,10 @@ return AbstractWebClient.extend({
     bind_hashchange: function() {
         var self = this;
         $(window).bind('hashchange', this.on_hashchange);
+        var didHashChanged = false;
+        $(window).one('hashchange', function () {
+            didHashChanged = true;
+        });
 
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
@@ -101,6 +105,9 @@ return AbstractWebClient.extend({
                         args: [[session.uid], ['action_id']],
                     })
                     .done(function(result) {
+                        if (didHashChanged) {
+                            return;
+                        }
                         var data = result[0];
                         if(data.action_id) {
                             self.action_manager.doAction(data.action_id[0]);
@@ -150,27 +157,10 @@ return AbstractWebClient.extend({
         });
     },
     on_menu_action: function(options) {
-        var self = this;
-        return this.menu_dm.add(data_manager.load_action(options.action_id))
-            .then(function (result) {
-                return self.action_mutex.exec(function() {
-                    var completed = $.Deferred();
-                    self.action_manager.doAction(result, {
-                        clear_breadcrumbs: true,
-                        action_menu_id: options.id,
-                    }).fail(function() {
-                        self.menu.open_menu(options.previous_menu_id);
-                    }).always(function() {
-                        completed.resolve();
-                    });
-                    setTimeout(function() {
-                        completed.resolve();
-                    }, 2000);
-                    // We block the menu when clicking on an element until the action has correctly finished
-                    // loading. If something crash, there is a 2 seconds timeout before it's unblocked.
-                    return completed;
-                });
-            });
+        this.action_manager.doAction(options.action_id, {
+            clear_breadcrumbs: true,
+            action_menu_id: options.id,
+        });
     },
     toggle_fullscreen: function(fullscreen) {
         this._super(fullscreen);

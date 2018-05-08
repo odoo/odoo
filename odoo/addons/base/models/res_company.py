@@ -221,11 +221,22 @@ class Company(models.Model):
         # The write is made on the user to set it automatically in the multi company group.
         self.env.user.write({'company_ids': [(4, company.id)]})
         partner.write({'company_id': company.id})
+
+        # Make sure that the selected currency is enabled
+        if vals.get('currency_id'):
+            currency = self.env['res.currency'].browse(vals['currency_id'])
+            if not currency.active:
+                currency.write({'active': True})
         return company
 
     @api.multi
     def write(self, values):
         self.clear_caches()
+        # Make sure that the selected currency is enabled
+        if values.get('currency_id'):
+            currency = self.env['res.currency'].browse(values['currency_id'])
+            if not currency.active:
+                currency.write({'active': True})
         return super(Company, self).write(values)
 
     @api.constrains('parent_id')

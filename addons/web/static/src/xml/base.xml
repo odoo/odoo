@@ -115,19 +115,23 @@
 </t>
 
 <t t-name="Notification">
-    <div t-attf-class="o_notification #{className}" t-translation="off">
+    <div t-attf-class="o_notification #{widget.className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
         <div class="o_notification_title">
-            <span class="o_icon fa fa-3x fa-lightbulb-o"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}"/>
             <t t-raw="widget.title"/>
         </div>
-        <div class="o_notification_content" t-if="widget.text"><t t-raw="widget.text"/></div>
+        <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
+        <div t-if="widget.buttons.length" class="o_buttons">
+            <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-default'}" type="button">
+                <t t-if="button.icon">
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}"/>
+                    <img t-else="" t-att-src="button.icon"/>
+                </t>
+                <span><t t-esc="button.text"/></span>
+            </button>
+        </div>
     </div>
-</t>
-<t t-name="Warning" t-extend="Notification">
-    <t t-jquery=".o_icon" t-operation="replace">
-        <span class="o_icon fa fa-3x fa-exclamation"/>
-    </t>
 </t>
 
 <div t-name="CrashManager.warning" class="o_dialog_warning">
@@ -203,13 +207,13 @@
         <button type="button" t-att-accesskey="view.accessKey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
             t-att-aria-label="view.type"
-            t-att-data-view-type="view.type" t-att-title="view.label"/>
+            t-att-data-view-type="view.type" t-att-title="view.label" tabindex="-1"/>
     </t>
 </t>
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager">
-        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
             <span class="fa fa-bug"/>
         </a>
         <ul class="dropdown-menu o_debug_dropdown" role="menu"/>
@@ -264,14 +268,7 @@
         <t t-if="can_edit">
             <li>
               <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id">
-                <t t-if="view.type == 'form'">Edit Form view</t>
-                <t t-elif="view.type == 'list'">Edit List view</t>
-                <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
-                <t t-elif="view.type == 'graph'">Edit Graph view</t>
-                <t t-elif="view.type == 'gantt'">Edit Gantt view</t>
-                <t t-elif="view.type == 'pivot'">Edit Pivot view</t>
-                <t t-elif="view.type == 'calendar'">Edit Calendar view</t>
-                <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
+                Edit View: <t t-esc="_.str.capitalize(view.type)"/>
               </a>
             </li>
             <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id">Edit SearchView</a></li>
@@ -325,7 +322,7 @@
 <t t-name="Sidebar">
     <t t-foreach="widget.sections" t-as="section">
         <div class="btn-group o_dropdown">
-            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button t-if="section.name != 'buttons'" class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                 <t t-esc="section.label"/> <span class="caret"/>
             </button>
@@ -411,6 +408,30 @@
         </button>
     </div>
 </t>
+<t t-name="SaveCancelButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to SAVE<br/>
+            Hit ESCAPE to DISCARD
+        </div>
+    </div>
+</t>
+<t t-name="CreateButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to CREATE<br/>
+            Hit DOWN to navigate to the list bellow
+        </div>
+    </div>
+</t>
+<t t-name="FormButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to 
+            <t t-esc="title"></t>
+        </div>
+    </div>
+</t>
 <form t-name="FormView.set_default">
     <t t-set="args" t-value="widget.args"/>
     <table style="width: 100%">
@@ -474,7 +495,7 @@
         </button>
         <ul class="dropdown-menu o_graph_measures_list">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a href="#"><t t-esc="measure[1].string"/></a>
+                <a href="#"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
             </li>
             <li class="divider"></li>
             <li data-field="__count__"><a href="#">Count</a></li>
@@ -503,7 +524,7 @@
         </button>
         <ul class="dropdown-menu o_pivot_measures_list">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a href="#"><t t-esc="measure[1].string"/></a>
+                <a href="#"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
             </li>
             <li class="divider"></li>
             <li data-field="__count"><a href="#">Count</a></li>
@@ -847,12 +868,12 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-if="selection_folded.length">
+        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"/></button>
         <ul class="dropdown-menu o-status-more" role="menu">
             <li t-foreach="selection_folded" t-as="i">
                 <t t-call="FieldStatus.content.button"/>
             </li>
         </ul>
-        <button type="button" class="btn btn-sm o_arrow_button btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">More <span class="caret"/></button>
     </t>
     <t t-foreach="selection_unfolded.reverse()" t-as="i">
         <t t-call="FieldStatus.content.button"/>
@@ -885,9 +906,7 @@
     <img class="img img-responsive"
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
-        t-att-name="widget.name"
-        t-att-width="widget.nodeOptions.size ? widget.nodeOptions.size[0] : widget.attrs.img_width || widget.attrs.width"
-        t-att-height="widget.nodeOptions.size ? widget.nodeOptions.size[1] : widget.attrs.img_height || widget.attrs.height"/>
+        t-att-name="widget.name"/>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
@@ -995,7 +1014,7 @@
 <div t-name="SearchView" class="o_searchview">
     <span class="o_searchview_more fa" title="Advanced Search..."/>
 </div>
-<input t-name="SearchView.InputView" type="text" class="o_searchview_input" placeholder="Search..."/>
+<input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..."/>
 <div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet">
     <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
     <span t-if="!widget.model.has('icon')" class="o_searchview_facet_label">
@@ -1011,7 +1030,7 @@
     <ul class="dropdown-menu o_searchview_autocomplete" role="menu"></ul>
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-filter"/> Filters <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_filters_menu" role="menu">
@@ -1123,7 +1142,7 @@
     </select>
 </t>
 <div t-name="SearchView.GroupByMenu" class="btn-group hidden-xs o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-bars"/> Group By <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_group_by_menu" role="menu">
@@ -1140,11 +1159,11 @@
         </t>
     </select></li>
     <li>
-        <button type="button" class="btn btn-primary btn-sm o_add_group o_select_group">Apply</button>
+        <button type="button" class="btn btn-primary btn-sm o_add_group o_select_group" tabindex="-1">Apply</button>
     </li>
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-star"/> Favorites <span class="caret"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">
@@ -1288,8 +1307,8 @@
             <t t-set="att_prev" t-value="{'accesskey': 'p'}" />
             <t t-set="att_next" t-value="{'accesskey': 'n'}" />
         </t>
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev" aria-label="Previous"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next" aria-label="Next"/>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev" aria-label="Previous" tabindex="-1"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next" aria-label="Next" tabindex="-1"/>
     </span>
 </div>
 

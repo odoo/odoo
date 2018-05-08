@@ -312,12 +312,22 @@ var InputField = DebouncedField.extend({
         this._super.apply(this, arguments);
 
         // the following code only makes sense in edit mode, with an input
-        if (this.mode === 'edit') {
+        if (this.mode === 'edit' && ev.data.direction !== 'cancel') {
             var input = this.$input[0];
             var selecting = (input.selectionEnd !== input.selectionStart);
             if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
                 ev.stopPropagation();
+            }
+            if (ev.data.direction ==='next' &&
+                this.attrs.modifiersValue &&
+                this.attrs.modifiersValue.required) {
+                if (!this.$input.val()){
+                    this.setInvalidClass();
+                    ev.stopPropagation();
+                } else {
+                    this.removeInvalidClass();
+                }
             }
         }
     },
@@ -1171,6 +1181,18 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             }
         }
         var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+        // override css size attributes (could have been defined in css files)
+        // if specified on the widget
+        var width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+        var height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+        if (width) {
+            $img.attr('width', width);
+            $img.css('max-width', width + 'px');
+        }
+        if (height) {
+            $img.attr('height', height);
+            $img.css('max-height', height + 'px');
+        }
         this.$('> img').remove();
         this.$el.prepend($img);
         $img.on('error', function () {
@@ -1178,9 +1200,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
-    },
-    isSet: function () {
-        return true;
     },
 });
 
@@ -1830,7 +1849,7 @@ var StatInfo = AbstractField.extend({
 
 var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['integer', 'float'],
 
     /**
      * Register some useful references for later use throughout the widget.

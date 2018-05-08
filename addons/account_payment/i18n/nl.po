@@ -10,10 +10,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:36+0000\n"
-"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -21,6 +21,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "&amp;times;"
+msgstr "&amp;times;"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -105,22 +110,17 @@ msgstr ""
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
-#: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
+#: model:ir.model.fields,field_description:account_payment.field_payment_transaction__account_invoice_id
 msgid "Invoice"
 msgstr "Factuur"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr "Factuur succesvol betaald."
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_id
 msgid "Last Transaction"
 msgstr "Laatste transactie"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_count
 msgid "Number of payment transactions"
 msgstr "Aantal betalingstransacties"
 
@@ -143,7 +143,7 @@ msgid "Pay with"
 msgstr "Betaal met"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_acquirer_id
 msgid "Payment Acquirer"
 msgstr "Betaling verwerver"
 
@@ -229,7 +229,12 @@ msgstr ""
 "Er was een fout met het verwerken van uw betalingen: foute creditcard ID."
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
+#: model:ir.model.fields,field_description:account_payment.field_account_invoice__payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
 msgstr "Transacties"
+
+#. module: account_payment
+#: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
+msgid "Your payment has been authorized."
+msgstr "Uw betaling is geauthoriseerd."

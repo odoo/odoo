@@ -125,7 +125,12 @@ return AbstractModel.extend({
             return groupBy.split(':')[0];
         });
         if (this.chart.measure !== '__count__') {
-            fields = fields.concat(this.chart.measure);
+            if (this.fields[this.chart.measure].type === 'many2one') {
+                fields = fields.concat(this.chart.measure + ":count_distinct");
+            }
+            else {
+                fields = fields.concat(this.chart.measure);
+            }
         }
         return this._rpc({
                 model: this.modelName,
@@ -160,8 +165,19 @@ return AbstractModel.extend({
             labels = _.map(this.chart.groupedBy, function (field) {
                 return self._sanitizeValue(data_pt[field], field);
             });
+            var value = is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure];
+            if (value instanceof Array) {
+                // when a many2one field is used as a measure AND as a grouped
+                // field, bad things happen.  The server will only return the
+                // grouped value and will not aggregate it.  Since there is a
+                // nameclash, we are then in the situation where this value is
+                // an array.  Fortunately, if we group by a field, then we can
+                // say for certain that the group contains exactly one distinct
+                // value for that field.
+                value = 1;
+            }
             this.chart.data.push({
-                value: is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure],
+                value: value,
                 labels: labels
             });
         }

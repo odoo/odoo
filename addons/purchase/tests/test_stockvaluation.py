@@ -4,6 +4,7 @@
 import time
 from datetime import datetime
 
+from odoo import fields
 from odoo.tests.common import TransactionCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -167,7 +168,9 @@ class TestStockValuation(TransactionCase):
         move1 = picking1.move_lines[0]
 
         # convert the price unit in the company currency
-        price_unit_usd = po1.currency_id.compute(po1.order_line.price_unit, po1.company_id.currency_id, round=True)
+        price_unit_usd = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.user.company_id, fields.Date.today(), round=False)
 
         # the unit price of the move is the unit price of the purchase order line converted in
         # the company's currency
@@ -181,7 +184,9 @@ class TestStockValuation(TransactionCase):
             'company_id': po1.company_id.id,
         })
         eur_currency._compute_current_rate()
-        price_unit_usd_new_rate = po1.currency_id.compute(po1.order_line.price_unit, po1.company_id.currency_id, round=True)
+        price_unit_usd_new_rate = po1.currency_id._convert(
+            po1.order_line.price_unit, po1.company_id.currency_id,
+            self.env.user.company_id, fields.Date.today(), round=False)
 
         # the new price_unit is lower than th initial because of the rate's change
         self.assertLess(price_unit_usd_new_rate, price_unit_usd)

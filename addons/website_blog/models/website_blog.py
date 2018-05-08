@@ -77,6 +77,19 @@ class Blog(models.Model):
         return tag_by_blog
 
 
+class BlogTagCategory(models.Model):
+    _name = 'blog.tag.category'
+    _description = 'Blog Tag Category'
+    _order = 'name'
+
+    name = fields.Char('Name', required=True, translate=True)
+    tag_ids = fields.One2many('blog.tag', 'category_id', string='Tags')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "Tag category already exists !"),
+    ]
+
+
 class BlogTag(models.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
@@ -84,6 +97,7 @@ class BlogTag(models.Model):
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
+    category_id = fields.Many2one('blog.tag.category', 'Category', index=True)
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [
@@ -162,10 +176,7 @@ class BlogPost(models.Model):
                 blog_post.teaser = blog_post.teaser_manual
             else:
                 content = html2plaintext(blog_post.content).replace('\n', ' ')
-                blog_post.teaser = ' '.join(itertools.islice(
-                    (c for c in content.split(' ') if c),
-                    50
-                )) + '...'
+                blog_post.teaser = content[:150] + '...'
 
     @api.multi
     def _set_teaser(self):

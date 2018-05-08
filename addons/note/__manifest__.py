@@ -7,7 +7,7 @@
     'category': 'Tools',
     'description': "",
     'website': 'https://www.odoo.com/page/notes',
-    'summary': 'Sticky notes, Collaborative, Memos',
+    'summary': 'Notes, Reminders, Todos',
     'sequence': 45,
     'depends': [
         'mail',
@@ -15,12 +15,17 @@
     'data': [
         'security/note_security.xml',
         'security/ir.model.access.csv',
+        'data/mail_activity_data.xml',
         'data/note_data.xml',
         'views/note_views.xml',
         'views/note_templates.xml',
+        'views/mail_activity_views.xml',
     ],
     'demo': [
         'data/note_demo.xml',
+    ],
+    'qweb': [
+        'static/src/xml/systray.xml',
     ],
     'test': [
     ],

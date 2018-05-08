@@ -358,7 +358,7 @@ class TestAssetsBundleInBrowser(HttpCase):
 class TestAssetsBundleWithIRAMock(TransactionCase):
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
-        self.lessbundle_xmlid = 'test_assetsbundle.bundle3'
+        self.stylebundle_xmlid = 'test_assetsbundle.bundle3'
         self.counter = counter = Counter()
 
         # patch methods 'create' and 'unlink' of model 'ir.attachment'
@@ -379,8 +379,8 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
 
     def _get_asset(self):
-        files, remains = self.env['ir.qweb']._get_asset_content(self.lessbundle_xmlid, {})
-        return AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+        files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
+        return AssetsBundle(self.stylebundle_xmlid, files, remains, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
         self.counter.clear()
@@ -389,7 +389,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
     def test_01_debug_mode_assets(self):
-        """ Checks that the ir.attachments records created for compiled less assets in debug mode
+        """ Checks that the ir.attachments records created for compiled assets in debug mode
         are correctly invalidated.
         """
         # Compile for the first time
@@ -399,7 +399,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'less', 'test_lessfile1.less')
+        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         _touch(path, asset, t=t)

@@ -335,12 +335,15 @@ class Applicant(models.Model):
             return 'hr_recruitment.mt_applicant_stage_changed'
         return super(Applicant, self)._track_subtype(init_values)
 
-    @api.model
-    def _notify_get_reply_to(self, ids, default=None):
-        """ Override to get the reply_to of the parent project. """
-        applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job']._notify_get_reply_to(applicants.mapped('job_id').ids, default=default)
-        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
+    @api.multi
+    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+        """ Override to set alias of applicants to their job definition if any. """
+        aliases = self.mapped('job_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        res = {app.id: aliases.get(app.job_id.id) for app in self}
+        leftover = self.filtered(lambda rec: not rec.job_id)
+        if leftover:
+            res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+        return res
 
     @api.multi
     def message_get_suggested_recipients(self):

@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Normal'),
-    ('1', 'Low'),
+    ('0', 'Low'),
+    ('1', 'Medium'),
     ('2', 'High'),
     ('3', 'Very High'),
 ]

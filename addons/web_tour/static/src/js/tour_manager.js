@@ -501,7 +501,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         TOGGLE_HOME_MENU: {
             edition: "enterprise",
             trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+            content: _t('Click on the <i>Home icon</i> to navigate across apps.'),
             position: "bottom",
         },
 

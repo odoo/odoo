@@ -28,7 +28,7 @@ class Message(models.Model):
     def _get_default_from(self):
         if self.env.user.email:
             return formataddr((self.env.user.name, self.env.user.email))
-        raise UserError(_("Unable to send email, please configure the sender's email address."))
+        raise UserError(_("Unable to post message, please configure the sender's email address."))
 
     @api.model
     def _get_default_author(self):
@@ -392,8 +392,9 @@ class Message(models.Model):
                     'message_type': u'comment',
                     'id': 59,
                     'subject': False
-                    'is_note': True # only if the subtype is internal
+                    'is_note': True # only if the message is a note (subtype == note)
                     'is_discussion': False # only if the message is a discussion (subtype == discussion)
+                    'is_notification': False # only if the message is a note but is a notification aka not linked to a document like assignation
                 }
         """
         message_values = self.read([
@@ -412,10 +413,14 @@ class Message(models.Model):
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
         subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
-        xml_comment_id = self.env.ref('mail.mt_comment').id
+
+        com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
+        note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+
         for message in message_values:
-            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
-            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
+            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id
+            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id
+            message['is_notification'] = message['is_note'] and not message['model'] and not message['res_id']
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
@@ -690,15 +695,10 @@ class Message(models.Model):
 
     @api.model
     def _get_reply_to(self, values):
-        """ Return a specific reply_to: alias of the document through
-        _notify_get_reply_to or take the email_from """
+        """ Return a specific reply_to for the document """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
-        if model and hasattr(self.env[model], '_notify_get_reply_to'):
-            # return self.env[model].browse(res_id)._notify_get_reply_to([res_id], default=email_from)[res_id]
-            return self.env[model]._notify_get_reply_to([res_id], default=email_from)[res_id]
-        else:
-            # return self.env['mail.thread']._notify_get_reply_to(default=email_from)[None]
-            return self.env['mail.thread']._notify_get_reply_to([None], default=email_from)[None]
+        records = self.env[model].browse([res_id]) if model and res_id else None
+        return self.env['mail.thread']._notify_get_reply_to_on_records(default=email_from, records=records)[res_id or False]
 
     @api.model
     def _get_message_id(self, values):
@@ -714,8 +714,14 @@ class Message(models.Model):
     def _invalidate_documents(self):
         """ Invalidate the cache of the documents followed by ``self``. """
         for record in self:
-            if record.model and record.res_id:
-                self.env[record.model].invalidate_cache(ids=[record.res_id])
+            if record.model and record.res_id and 'message_ids' in self.env[record.model]:
+                self.env[record.model].invalidate_cache(fnames=[
+                    'message_ids',
+                    'message_unread',
+                    'message_unread_counter',
+                    'message_needaction',
+                    'message_needaction_counter',
+                ], ids=[record.res_id])
 
     @api.model
     def create(self, values):
@@ -761,7 +767,8 @@ class Message(models.Model):
         if tracking_values_cmd:
             message.sudo().write({'tracking_value_ids': tracking_values_cmd})
 
-        message._invalidate_documents()
+        if values.get('model') and values.get('res_id'):
+            message._invalidate_documents()
 
         return message
 
@@ -777,7 +784,8 @@ class Message(models.Model):
         if 'model' in vals or 'res_id' in vals:
             self._invalidate_documents()
         res = super(Message, self).write(vals)
-        self._invalidate_documents()
+        if 'notification_ids' in vals or 'model' in vals or 'res_id' in vals:
+            self._invalidate_documents()
         return res
 
     @api.multi
@@ -852,10 +860,5 @@ class Message(models.Model):
         notif_partners._notify_by_chat(self)
 
         channels_sudo._notify(self)
-
-        # Discard cache, because child / parent allow reading and therefore
-        # change access rights.
-        if self.parent_id:
-            self.parent_id.invalidate_cache()
 
         return True

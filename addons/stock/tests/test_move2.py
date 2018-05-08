@@ -1015,6 +1015,50 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
 
+    def test_extra_move_4(self):
+        """ Create a picking with similar moves (created after
+        confirmation). Action done should propagate all the extra
+        quantity and only merge extra moves in their original moves.
+        """
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5)
+        delivery.action_confirm()
+        delivery.action_assign()
+
+        delivery.write({
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 0,
+                'quantity_done': 10,
+                'state': 'assigned',
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': delivery.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        delivery.action_done()
+        self.assertEqual(len(delivery.move_lines), 2, 'Move should not be merged together')
+        for move in delivery.move_lines:
+            self.assertEqual(move.quantity_done, move.product_uom_qty, 'Initial demand should be equals to quantity done')
+
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with
         only one in stock. After the first check availability, I should have 1 reserved
@@ -1816,34 +1860,39 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(back_order_in.move_lines.product_qty, 91640.00, 'There should be one back order created')
 
 
-class TestRoutes(TransactionCase):
+class TestRoutes(TestStockCommon):
+    def setUp(self):
+        super(TestRoutes, self).setUp()
+        self.product1 = self.env['product.product'].create({
+            'name': 'product a',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+    
+    def _enable_pick_ship(self):
+        self.wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        # create and get back the pick ship route
+        self.wh.write({'delivery_steps': 'pick_ship'})
+        self.pick_ship_route = self.wh.route_ids.filtered(lambda r: 'Pick + Ship' in r.name)
+        
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the
         pick. When a second move is added, make sure the `partner_id` and
         `origin` fields are erased.
         """
-        product1 = self.env['product.product'].create({
-            'name': 'product a',
-            'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
-        })
-        uom_unit = self.env.ref('uom.product_uom_unit')
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-
-        # create and get back the pick ship route
-        wh.write({'delivery_steps': 'pick_ship'})
-        pick_ship_route = wh.route_ids.filtered(lambda r: 'Pick + Ship' in r.name)
-
+        self._enable_pick_ship()
+        
         # create a procurement group and set in on the pick procurement rule
         procurement_group0 = self.env['procurement.group'].create({})
-        pick_rule = pick_ship_route.pull_ids.filtered(lambda rule: 'Stock -> Output' in rule.name)
-        push_rule = pick_ship_route.pull_ids - pick_rule
+        pick_rule = self.pick_ship_route.pull_ids.filtered(lambda rule: 'Stock -> Output' in rule.name)
+        push_rule = self.pick_ship_route.pull_ids - pick_rule
         pick_rule.write({
             'group_propagation_option': 'fixed',
             'group_id': procurement_group0.id,
         })
 
-        stock_location = pick_rule.location_src_id
         ship_location = pick_rule.location_id
         customer_location = push_rule.location_id
         partners = self.env['res.partner'].search([], limit=2)
@@ -1857,10 +1906,10 @@ class TestRoutes(TransactionCase):
             'procure_method': 'make_to_order',
             'location_id': ship_location.id,
             'location_dest_id': customer_location.id,
-            'product_id': product1.id,
-            'product_uom': uom_unit.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
-            'warehouse_id': wh.id,
+            'warehouse_id': self.wh.id,
             'group_id': procurement_group1.id,
             'origin': 'origin1',
         })
@@ -1870,10 +1919,10 @@ class TestRoutes(TransactionCase):
             'procure_method': 'make_to_order',
             'location_id': ship_location.id,
             'location_dest_id': customer_location.id,
-            'product_id': product1.id,
-            'product_uom': uom_unit.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
-            'warehouse_id': wh.id,
+            'warehouse_id': self.wh.id,
             'group_id': procurement_group2.id,
             'origin': 'origin2',
         })
@@ -1888,19 +1937,49 @@ class TestRoutes(TransactionCase):
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
         self.assertEqual(picking_pick.origin, False)
+    
+    def test_replenish_pick_ship_1(self):
+        """ Creates 2 warehouses and make a replenish using one warehouse 
+        to ressuply the other one, Then check if the quantity and the product are matching
+        """
+        self.product_uom_qty = 42
+
+        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Small Warehouse',
+            'code': 'SWH'
+        })
+        warehouse_1.write({
+            'default_resupply_wh_id': warehouse_2.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_2.id])]
+        })
+        resupply_route = self.env['stock.location.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
+        self.assertTrue(resupply_route, "Ressuply route not found")
+        self.product1.write({'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        self.wh = warehouse_1
+
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': self.product_uom_qty,
+            'warehouse_id': self.wh.id,
+        })
+        
+        replenish_wizard.launch_replenishment()
+        last_picking_id = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment')])[-1]
+        self.assertTrue(last_picking_id, 'Picking not found')
+        move_line = last_picking_id.move_lines.search([('product_id','=', self.product1.id)])
+        self.assertTrue(move_line,'The product is not in the picking')
+        self.assertEqual(move_line[0].product_uom_qty, self.product_uom_qty, 'Quantities does not match')
+        self.assertEqual(move_line[1].product_uom_qty, self.product_uom_qty, 'Quantities does not match')       
 
     def test_push_rule_on_move_1(self):
         """ Create a route with a push rule, force it on a move, check that it is applied.
-        """
-        product1 = self.env['product.product'].create({
-            'name': 'product a',
-            'type': 'product',
-            'categ_id': self.env.ref('product.product_category_all').id,
-        })
-        uom_unit = self.env.ref('uom.product_uom_unit')
+        """       
+        self._enable_pick_ship()
         stock_location = self.env.ref('stock.stock_location_stock')
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-
+        
         push_location = self.env['stock.location'].create({
             'location_id': stock_location.location_id.id,
             'name': 'push location',
@@ -1921,8 +2000,8 @@ class TestRoutes(TransactionCase):
             'name': 'move with a route',
             'location_id': stock_location.id,
             'location_dest_id': stock_location.id,
-            'product_id': product1.id,
-            'product_uom': uom_unit.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'route_ids': [(4, route.id)]
         })
@@ -1930,4 +2009,3 @@ class TestRoutes(TransactionCase):
 
         pushed_move = move1.move_dest_ids
         self.assertEqual(pushed_move.location_dest_id.id, push_location.id)
-

@@ -397,6 +397,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         media: media,
         options: {
             lastFilters: ['background'],
+            onUpload: $editable.data('callbacks').onImageUpload,
         },
     });
     return new $.Deferred().reject();
@@ -664,7 +665,15 @@ function summernote_mousedown(event) {
     }
 
     // restore range if range lost after clicking on non-editable area
-    r = range.create();
+    try {
+        r = range.create();
+    } catch (e) {
+        // If this code is running inside an iframe-editor and that the range
+        // is outside of this iframe, this will fail as the iframe does not have
+        // the permission to check the outside content this way. In that case,
+        // we simply ignore the exception as it is as if there was no range.
+        return;
+    }
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
@@ -788,6 +797,14 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on("keyup", reRangeSelectKey);
 
     var clone_data = false;
+
+    if (options.model) {
+        oLayoutInfo.editable().data({'oe-model': options.model, 'oe-id': options.id});
+    }
+    if (options.getMediaDomain) {
+        oLayoutInfo.editable().data('oe-media-domain', options.getMediaDomain);
+    }
+
     var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
@@ -1089,6 +1106,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             _.extend({
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
+                domain: data.$editable.data('oe-media-domain'),
             }, data.options),
             data.$editable,
             data.media

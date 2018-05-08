@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:179
+#: code:addons/sale_stock/models/sale_order.py:247
 #, python-format
 msgid ""
 "\n"
@@ -33,6 +33,13 @@ msgstr ""
 "\n"
 "Er zijn %s %s beschikbaar doorheen alle magazijnen.\n"
 "\n"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid ""
+".\n"
+"                Manual actions may be needed."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
@@ -129,12 +136,12 @@ msgid "Delivery"
 msgstr "Levering"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__module_sale_order_dates
 msgid "Delivery Date"
 msgstr "Leverdatum"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
 msgstr "Uitgaande leveringen"
 
@@ -155,15 +162,36 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Maak routes mogelijk op verkooporderregels"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "Exception(s) occurred on the picking:"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Impacted Transfer(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "Leveringscondities"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
@@ -174,7 +202,7 @@ msgstr ""
 "verdelen."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
+#: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
@@ -204,7 +232,12 @@ msgid "Invoicing"
 msgstr "Facturatie"
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Manual actions may be needed."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for delivery that many days earlier than the actual promised date, to cope "
@@ -215,8 +248,8 @@ msgstr ""
 "datum om zo onverwachte vertragingen te kunnen opvangen in de supply chain."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
@@ -233,34 +266,39 @@ msgid "Move forward expected delivery dates by"
 msgstr "Verschuif geplande leverdatum vooruit met"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:186
+#: code:addons/sale_stock/models/sale_order.py:254
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Niet genoeg voorraad!"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
 msgid "Order-Specific Routes"
 msgstr "Order specifieke routes"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:200
+#: code:addons/sale_stock/models/sale_order.py:268
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestelde hoeveelheid is verminderd!"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
 msgid "Package"
 msgstr "Verpakking"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
+msgid "Picking Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Pickings"
 msgstr "Leveringen"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
 msgstr "Verwervingsgroep"
 
@@ -273,6 +311,11 @@ msgstr "Verwervingsaanvraag"
 #: model:ir.model,name:sale_stock.model_procurement_rule
 msgid "Procurement Rule"
 msgstr "Verwervingsregel"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_template
+msgid "Product Template"
+msgstr "Productsjabloon"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -293,7 +336,7 @@ msgstr ""
 "Standaard draait de planner elke 24 uur."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
 msgstr "Route"
 
@@ -303,12 +346,12 @@ msgid "Routes for Sales Order Lines"
 msgstr "Routes voor verkooporderlijnen"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
 msgstr "Orderregel"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "Verkooporder"
 
@@ -318,7 +361,7 @@ msgid "Sales"
 msgstr "Verkoop"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
 msgstr "Verkooporder"
 
@@ -338,7 +381,7 @@ msgid "Sales Orders Statistics"
 msgstr "Verkooporder analyses"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
 msgstr "Verkopen veiligheidsdagen"
 
@@ -348,17 +391,17 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr "Plan levering vroeger om vertragingen te vermijden"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr "Veiligheid leveringstijd"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
 msgstr "Veiligheid leveringstijd voor verkoop"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
 msgstr "Selecteerbaar op verkooporderregels"
 
@@ -383,12 +426,7 @@ msgid "Shipping Information"
 msgstr "Verzendgegevens"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
-msgid "Shipping Management"
-msgstr "Vervoersbeheer"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Behandelwijze"
 
@@ -398,7 +436,7 @@ msgid "Stock Move"
 msgstr "Voorraadmutatie"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 msgid "Stock Moves"
 msgstr "Voorraadmutaties"
 
@@ -416,7 +454,7 @@ msgstr ""
 "\"Verkooporderregel\" worden aangevinkt. "
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:298
+#: code:addons/sale_stock/models/sale_order.py:361
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Dit product is verpakt door %.2f %s.. U moet %.2f %s verkopen."
@@ -427,13 +465,13 @@ msgid "Transfer"
 msgstr "Overplaatsing"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
 msgstr "Magazijn"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:297
+#: code:addons/sale_stock/models/sale_order.py:360
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -449,7 +487,7 @@ msgid "When to start shipping"
 msgstr "Wanneer verzenden starten"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:201
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -459,7 +497,7 @@ msgstr ""
 "leveringsorder te updaten indien dit nodig is."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:338
+#: code:addons/sale_stock/models/sale_order.py:401
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
@@ -467,7 +505,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:175
+#: code:addons/sale_stock/models/sale_order.py:243
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
@@ -476,9 +514,30 @@ msgstr ""
 "%shet magazijn."
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "cancelled"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
 msgstr "dagen"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "of"
+msgstr "of"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "ordered instead of"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "processed instead of"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings

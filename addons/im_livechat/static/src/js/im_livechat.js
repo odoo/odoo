@@ -18,6 +18,12 @@ var QWeb = core.qweb;
 var LIVECHAT_COOKIE_HISTORY = 'im_livechat_history';
 var HISTORY_LIMIT = 15;
 
+var RATING_TO_EMOJI = {
+    "10":"😊",
+    "5":"😐",
+    "1":"😞"
+};
+
 // History tracking
 var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
 var page_history = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
@@ -231,6 +237,7 @@ var LivechatButton = Widget.extend({
             is_needaction: false,
             is_note: data.is_note,
             is_discussion: data.is_discussion,
+            is_notification: data.is_notification,
             customer_email_data: []
         };
 
@@ -315,7 +322,7 @@ var Feedback = Widget.extend({
 
         // only display textearea if bad smiley selected
         var close_chat = false;
-        if (this.rating === 0) {
+        if (this.rating !== 10) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
@@ -343,7 +350,8 @@ var Feedback = Widget.extend({
         };
         return session.rpc('/im_livechat/feedback', args).then(function () {
             if (options.close) {
-                var content = _.str.sprintf(_t("Rating: :rating_%d"), self.rating);
+                var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
+                var content = _.str.sprintf(_t("Rating: %s"), emoji);
                 if (options.reason) {
                     content += " \n" + options.reason;
                 }

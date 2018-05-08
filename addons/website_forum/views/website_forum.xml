@@ -12,7 +12,7 @@
 
 <template id="assets_frontend" inherit_id="website.assets_frontend">
     <xpath expr="link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/website_forum/static/src/less/website_forum.less"/>
+        <link rel="stylesheet" type="text/scss" href="/website_forum/static/src/scss/website_forum.scss"/>
     </xpath>
     <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
@@ -51,7 +51,7 @@
 
 <!-- Page Index -->
 <template id="header" name="Forum Index">
-    <t t-call="website_forum.layout">
+    <t t-if="forum.active" t-call="website_forum.layout">
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -218,6 +218,14 @@
         </div>
         <div class="oe_structure"/>
     </t>
+    <t t-else="" t-call="website_forum.layout">
+        <t t-set='head'>
+            <meta name="robots" content="noindex, nofollow" />
+        </t>
+        <div class="text-center text-muted">
+            <p class="css_editable_hidden"><h2>This forum has been archived.</h2></p>
+        </div>
+    </t>
 </template>
 
 <!-- Template use to edit the welcome_message -->
@@ -256,15 +264,17 @@
             <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" t-att-title="question.post_type.capitalize()" />
             <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
             <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
-            <span> • </span><span t-field="question.views" /> View<t t-if="question.views&gt;1">s</t>
+            <span> • </span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
             <span> • </span><a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">
 
                 <t t-esc="question.child_count"/>
                 <t t-if="question.post_type == 'question'">
-                    Answer<t t-if="question.child_count&gt;1">s</t>
+                    <t t-if="question.child_count&lt;=1">View</t>
+                    <t t-else="">Views</t>
                 </t>
                 <t t-if="question.post_type != 'question'">
-                    Comment<t t-if="question.child_count&gt;1">s</t>
+                    <t t-if="question.child_count&lt;=1">Comment</t>
+                    <t t-else="">Comments</t>
                 </t>
             </a>
             <t t-if="question.state == 'flagged'">
@@ -385,6 +395,7 @@
         <div class="container">
             <h1 class="mb32">Our forums</h1>
             <div class="row">
+                <div t-if="not forums" class="well">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
                         <div class="fa fa-5x fa-comment mb16"/>

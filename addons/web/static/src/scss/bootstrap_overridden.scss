@@ -1,0 +1,120 @@
+// ------------------------------------------------------------------
+// Bootstrap variables
+// ------------------------------------------------------------------
+
+//== Grid
+$grid-gutter-width: $o-horizontal-padding*2;
+
+//== Colors
+$brand-primary: $o-brand-primary;
+
+//== Greyscale
+$gray-base: #000;
+$gray-darker: lighten($gray-base, 13.5%);
+$gray-dark: lighten($gray-base, 20%);
+$gray: lighten($gray-base, 33.5%);
+$gray-light: $o-color-gray-light;
+$gray-lighter: $o-color-silver;
+
+//== Titles
+$font-size-h1: $o-font-size-base + 13px;
+$font-size-h2: $o-font-size-base + 7px;
+$font-size-h3: $o-font-size-base + 3px;
+$font-size-h4: $o-font-size-base + 2px;
+$font-size-h5: $o-font-size-base + 1px;
+$font-size-h6: $o-font-size-base;
+
+//== Scaffolding
+$body-bg: $o-brand-secondary;
+$text-color: $o-main-text-color;
+$link-color: $o-brand-optional;
+$link-hover-decoration: none;
+
+//== Typography
+$font-family-sans-serif: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+$font-size-base: $o-font-size-base;
+$headings-font-weight: bold;
+$line-height-base: $o-line-height-base;
+
+//== Components
+$border-radius-base: 3px;
+$component-active-bg: $gray-lighter;
+$component-active-color: $o-brand-optional;
+
+//== Badges
+$badge-bg: $o-brand-optional;
+$badge-color: white;
+$badge-line-height: $o-line-height-base;
+$badge-font-weight: normal;
+
+//== Breadcrumbs
+$breadcrumb-active-color: #777777;
+$breadcrumb-bg: $o-control-panel-background-color;
+$breadcrumb-color: #777777;
+$breadcrumb-padding-horizontal: 0;
+$breadcrumb-padding-vertical: 0;
+
+//== Buttons
+$btn-default-bg: white;
+$btn-default-border: #cccccc;
+$btn-default-color: $o-main-text-color;
+$btn-primary-bg: $o-brand-optional;
+$btn-primary-border: $o-brand-optional;
+$btn-primary-color: white;
+
+//== Dropdowns
+$dropdown-bg: white;
+$dropdown-border: $gray-lighter-dark;
+$dropdown-divider-bg: $gray-lighter-dark;
+$dropdown-link-color: $o-main-text-color;
+$dropdown-link-hover-color: $gray-dark;
+$dropdown-link-hover-bg: $gray-lighter;
+$dropdown-link-active-color: $component-active-color;
+$dropdown-link-active-bg: $component-active-bg;
+$dropdown-link-disabled-color: $gray-light;
+$dropdown-header-color: $gray-light;
+
+//== Modals
+$modal-sm: 300px;
+$modal-md: 650px;
+$modal-lg: 980px;
+$modal-inner-padding: $o-horizontal-padding;
+$modal-title-padding: $o-horizontal-padding;
+
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// Note that the variable $zindex-modal-background may be renamed/removed in
+// newer versions of bootstrap.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// $zindex-modal-background: $zindex-modal;
+
+//== Navs
+$nav-link-padding: 10px 15px;
+$nav-pills-border-radius: 0;
+$nav-pills-active-link-hover-color: white;
+$nav-pills-active-link-hover-bg: $o-brand-optional;
+$nav-tabs-active-link-hover-bg: white;
+
+//== Navbar
+$navbar-height: $o-navbar-height - 2;
+$navbar-margin-bottom: 0;
+$navbar-inverse-bg: #222222;
+$navbar-inverse-link-color: #9d9d9d;
+$navbar-inverse-link-hover-bg: #222222;
+$navbar-inverse-toggle-hover-bg: #222222;
+$navbar-border-radius: 0;
+
+//== Tables
+$table-bg-accent: #efeff8; // FIXME: expose
+$table-bg-hover: darken($table-bg-accent,5%);
+
+$icon-font-path: "/web/static/lib/bootstrap/fonts/";

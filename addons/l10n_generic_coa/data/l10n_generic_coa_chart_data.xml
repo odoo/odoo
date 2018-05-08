@@ -49,12 +49,14 @@
             <field name="name">Stock Interim Account (Received)</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="reconcile" eval="True"/>
         </record>
         <record id="conf_cas_interim2" model="account.account.template">
             <field name="code">10113</field>
             <field name="name">Stock Interim Account (Delivered)</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="chart_template_id" ref="configurable_chart_template"/>
+            <field name="reconcile" eval="True"/>
         </record>
 
         <record id="conf_a_recv" model="account.account.template">

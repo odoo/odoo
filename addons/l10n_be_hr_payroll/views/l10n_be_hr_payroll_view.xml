@@ -58,11 +58,12 @@
                     <field name="monthly_yearly_costs"/>
                 </group>
                 <group string="Monthly Benefit in Kind">
-                    <field name="transport_mode" widget="radio"/>
-                    <field name="car_atn" attrs="{'invisible': [('transport_mode', '!=', 'company_car')]}" invisible="1"/>
+                    <field name="transport_mode_car"/>
+                    <field name="car_atn" attrs="{'invisible': [('transport_mode_car', '=', False)]}" invisible="1"/>
                     <field name="transport_employer_cost" invisible="1"/>
-                    <label string="Public Transport" attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}" name="public_transport_label"/>
-                    <div attrs="{'invisible': [('transport_mode', '!=', 'public_transport')]}" name="public_transport_div">
+                    <field name="transport_mode_public"/>
+                    <label string="Public Transport" attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_label"/>
+                    <div attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_div">
                         <div>
                             <label for="public_transport_employee_amount" class="oe_inline"/>
                             <field name="public_transport_employee_amount" class="oe_inline"/>
@@ -72,8 +73,9 @@
                             <field name="public_transport_reimbursed_amount" class="oe_inline"/>
                         </div>
                     </div>
-                    <label string="Other" attrs="{'invisible': [('transport_mode', '!=', 'others')]}" name="others_label"/>
-                    <div attrs="{'invisible': [('transport_mode', '!=', 'others')]}" class="o_row" name="others_div">
+                    <field name="transport_mode_others"/>
+                    <label string="Other" attrs="{'invisible': [('transport_mode_others', '=', False)]}" name="others_label"/>
+                    <div attrs="{'invisible': [('transport_mode_others', '=', False)]}" class="o_row" name="others_div">
                         <field name="others_reimbursed_amount" class="oe_inline" nolabel="1"/>
                         <span>/ month</span>
                     </div>
@@ -117,6 +119,13 @@
                     </div>
                     <field name="holidays_compensation" invisible="1"/>
                 </group>
+                <group name="salary_and_advantages" position="inside">
+                    <field name="ip_wage_rate"/>
+                    <label for="ip" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}"/>
+                    <div class="o_row" attrs="{'invisible': [('ip_wage_rate', '=', 0.0)]}">
+                        <field name="ip" nolabel="1"/>
+                    </div>
+                </group>
             </xpath>
         </field>
     </record>
@@ -127,7 +136,7 @@
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
             <field name="priority">30</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vehicle_distance']" position="after">
+                <xpath expr="//field[@name='vehicle']" position="after">
                     <field name="resident_bool" eval="False"/> 
                 </xpath>
                 <xpath expr="//field[@name='marital']" position="after">

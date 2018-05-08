@@ -35,14 +35,7 @@
                         <group string="Current Contract">
                             <field name="medic_exam" string="Medical Exam"/>
                             <field name="vehicle"/>
-                            <field name="vehicle_distance"/>
                         </group>
-                    </xpath>
-                    <xpath expr="//field[@name='marital']" position="after">
-                        <field name="children"/>
-                    </xpath>
-                    <xpath expr="//field[@name='birthday']" position="after">
-                        <field name="place_of_birth"/>
                     </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}"/>
@@ -67,6 +60,10 @@
                     <separator />
                     <filter string="Current Employee" name="current_employee" domain="[('employee_id.active','=',True)]"/>
                     <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="To Report to Social Secretariat" name="to_report" domain="[('reported_to_secretariat', '=', False)]"/>
+                    <separator/>
                     <filter string="Important Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
@@ -87,6 +84,11 @@
                         <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title" name="title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
@@ -101,6 +103,7 @@
                         </group>
                         <group>
                             <field name="type_id"/>
+                            <field name="reported_to_secretariat" widget="toggle_button" options='{"active": "Reported to the social secretariat", "inactive": "To report to the social secretariat"}'/>
                         </group>
                     </group>
                     <notebook>
@@ -137,6 +140,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -268,7 +272,7 @@
             action="action_hr_contract"
             parent="hr.menu_hr_root"
             sequence="4"
-            groups="hr.group_hr_manager"/>
+            groups="hr_contract.group_hr_contract_manager"/>
 
 
 </odoo>

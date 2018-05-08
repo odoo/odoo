@@ -2,7 +2,7 @@ odoo.define('web_settings_dashboard.settings_dashboard_tests', function (require
 "use strict";
 
 var webSettingsDashboard = require('web_settings_dashboard');
-
+var NotificationService = require('web.NotificationService');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -88,9 +88,11 @@ QUnit.module('settings_dashboard', function () {
                 }
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                warning: assert.step.bind(assert, 'warning'),
-            },
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            })],
         });
 
         // enter an invalid email address to invite
@@ -165,9 +167,11 @@ QUnit.module('settings_dashboard', function () {
                 }
                 return this._super.apply(this, arguments);
             },
-            intercepts: {
-                warning: assert.step.bind(assert, 'warning'),
-            },
+            services: [NotificationService.extend({
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            })],
         });
 
         // simulate a copy paste of multiple email addresses

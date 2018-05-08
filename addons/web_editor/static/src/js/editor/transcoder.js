@@ -105,25 +105,47 @@ function getMatchedCSSRules(a) {
         delete style.display;
     }
 
-    _.each(['margin', 'padding'], function (p) {
-        if (style[p+'-top'] || style[p+'-right'] || style[p+'-bottom'] || style[p+'-left']) {
-            if (style[p+'-top'] === style[p+'-right'] && style[p+'-top'] === style[p+'-bottom'] && style[p+'-top'] === style[p+'-left']) {
+    // The css generates all the attributes separately and not in simplified form.
+    // In order to have a better compatibility (outlook for example) we simplify the css tags.
+    // e.g. border-left-style: none; border-bottom-s .... will be simplified in border-style = none
+    _.each([['margin'], ['padding'], ['border', 'style']], function (attr) {
+        var p = attr[0];
+        var e = attr[1] ? '-' + attr[1] : '';
+
+        if (style[p+'-top'+e] || style[p+'-right'+e] || style[p+'-bottom'+e] || style[p+'-left'+e]) {
+            if (style[p+'-top'+e] === style[p+'-right'+e] && style[p+'-top'+e] === style[p+'-bottom'+e] && style[p+'-top'+e] === style[p+'-left'+e]) {
                 // keep => property: [top/right/bottom/left value];
-                style[p] = style[p+'-top'];
+                style[p+e] = style[p+'-top'+e];
             }
             else {
                 // keep => property: [top value] [right value] [bottom value] [left value];
-                style[p] = (style[p+'-top'] || 0) + ' ' + (style[p+'-right'] || 0) + ' ' + (style[p+'-bottom'] || 0) + ' ' + (style[p+'-left'] || 0);
-                if (style[p].indexOf('inherit') !== -1 || style[p].indexOf('initial') !== -1) {
+                style[p+e] = (style[p+'-top'+e] || 0) + ' ' + (style[p+'-right'+e] || 0) + ' ' + (style[p+'-bottom'+e] || 0) + ' ' + (style[p+'-left'+e] || 0);
+                if (style[p+e].indexOf('inherit') !== -1 || style[p+e].indexOf('initial') !== -1) {
                     // keep => property-top: [top value]; property-right: [right value]; property-bottom: [bottom value]; property-left: [left value];
-                    delete style[p];
+                    delete style[p+e];
                     return;
                 }
             }
-            delete style[p+'-top'];
-            delete style[p+'-right'];
-            delete style[p+'-bottom'];
-            delete style[p+'-left'];
+            delete style[p+'-top'+e];
+            delete style[p+'-right'+e];
+            delete style[p+'-bottom'+e];
+            delete style[p+'-left'+e];
+        }
+    });
+
+    if (style['border-bottom-left-radius']) {
+        style['border-radius'] = style['border-bottom-left-radius'];
+        delete style['border-bottom-left-radius'];
+        delete style['border-bottom-right-radius'];
+        delete style['border-top-left-radius'];
+        delete style['border-top-right-radius'];
+    }
+
+    // if the border styling is initial we remove it to simplify the css tags for compatibility.
+    // Also, since we do not send a css style tag, the initial value of the border is useless.
+    _.each(_.keys(style), function (k) {
+        if (k.indexOf('border') !== -1 && style[k] === 'initial') {
+            delete style[k];
         }
     });
 
@@ -229,6 +251,33 @@ function classToStyle($editable) {
         } else {
             $target.attr('style', style);
         }
+        // Apple Mail
+        if (this.nodeName === 'TD' && !this.childNodes.length) {
+            this.innerHTML = '&nbsp;';
+        }
+
+        // Outlook
+        if (this.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
+            var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
+            $hack.find('td')
+                .attr('height', $target.outerHeight())
+                .css({
+                    'margin': $target.css('padding'),
+                    'border-radius': $target.css('border-radius'),
+                    'background-color': $target.css('background-color'),
+                });
+            $target.after($hack);
+            $target.appendTo($hack.find('td'));
+            // the space add a line when it's a table but it's invisible when it's a link
+            var node = $hack[0].previousSibling;
+            if (node && node.nodeType === Node.TEXT_NODE && !node.textContent.match(/\S/)) {
+                $(node).remove();
+            }
+            node = $hack[0].nextSibling;
+            if (node && node.nodeType === Node.TEXT_NODE && !node.textContent.match(/\S/)) {
+                $(node).remove();
+            }
+        }
     });
 }
 
@@ -239,6 +288,11 @@ function classToStyle($editable) {
  * @param {jQuery} $editable
  */
 function styleToClass($editable) {
+    // Outlook revert
+    $editable.find('table.o_outlook_hack').each(function () {
+        $(this).after($('a', this));
+    }).remove();
+
     getMatchedCSSRules($editable[0]);
 
     var $c = $('<span/>').appendTo(document.body);

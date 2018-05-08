@@ -39,6 +39,7 @@ Jesus Zapata jesus@vauxoo.com https://github.com/JesusZapata
 Germana Oliveira germana@vauxoo.com https://github.com/goliveirab
 Mariano Fernandez mariano@vauxoo.com https://github.com/Batuto
 Edgar Rivero edgar@vauxoo.com https://github.com/egrivero
+Edilianny Sánchez esanchez@vauxoo.com https://github.com/edy1192
 Alexander Olivares alexander@vauxoo.com https://github.com/alxolivares
 Jose Manuel Robles josemanuel@vauxoo.com https://github.com/keylor2906
 Erick Birbe erick@vauxoo.com https://github.com/ebirbe

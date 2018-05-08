@@ -13,8 +13,13 @@
 <t t-name="reconciliation.statement">
     <div t-if="widget._initialState.valuemax">
         <div>
-            <h1 class="statement_name"/>
-            <h1 class="statement_name_edition" style="display: none;"><button class="btn btn-primary btn-sm pull-right">OK</button></h1>
+            <t t-if="widget._initialState.bank_statement_id">
+                <h1 class="statement_name editable" title="Click to Rename" />
+            </t>
+            <t t-else="">
+                <h1 class="statement_name" />
+            </t>
+            <h1 class="statement_name_edition" style="display: none;"/>
             <div class="progress progress-striped">
                 <div class="progress-text">
                     <span class="valuenow"><t t-esc="widget._initialState.valuenow"/></span> / <span class="valuemax"><t t-esc="widget._initialState.valuemax"/></span>

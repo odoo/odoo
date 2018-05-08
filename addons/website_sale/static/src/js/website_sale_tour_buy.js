@@ -77,6 +77,7 @@ tour.register('shop_buy_product', {
         {
             content: "finish",
             trigger: '.oe_website_sale:contains("Thank you for your order")',
+            timeout: 30000,
         }
     ]
 );

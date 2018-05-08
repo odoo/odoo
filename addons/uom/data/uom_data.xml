@@ -6,18 +6,23 @@
         -->
         <record id="product_uom_categ_unit" model="uom.category">
             <field name="name">Unit</field>
+            <field name="measure_type">unit</field>
         </record>
         <record id="product_uom_categ_kgm" model="uom.category">
             <field name="name">Weight</field>
+            <field name="measure_type">weight</field>
         </record>
         <record id="uom_categ_wtime" model="uom.category">
             <field name="name">Working Time</field>
+            <field name="measure_type">time</field>
         </record>
         <record id="uom_categ_length" model="uom.category">
             <field name="name">Length / Distance</field>
+            <field name="measure_type">length</field>
         </record>
         <record id="product_uom_categ_vol" model="uom.category">
             <field name="name">Volume</field>
+            <field name="measure_type">volume</field>
         </record>
        <!--
             Resource: uom.uom
@@ -46,16 +51,16 @@
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
         </record>
+        <record id="product_uom_day" model="uom.uom">
+            <field name="name">Day(s)</field>
+            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="factor" eval="1.0"/>
+        </record>
         <record id="product_uom_hour" model="uom.uom">
             <field name="name">Hour(s)</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="8.0"/>
             <field name="uom_type">smaller</field>
-        </record>
-        <record id="product_uom_day" model="uom.uom">
-            <field name="name">Day(s)</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
-            <field name="factor" eval="1.0"/>
         </record>
         <record id="product_uom_ton" model="uom.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>

@@ -149,11 +149,15 @@ class WebsiteBlog(http.Controller):
                 tag_ids.append(current_tag)
             tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
             return ','.join(slug(tag) for tag in tag_ids)
+
+        tag_category = sorted(all_tags.mapped('category_id'), key=lambda category: category.name.upper())
+        other_tags =  sorted(all_tags.filtered(lambda x: not x.category_id), key=lambda tag: tag.name.upper())
+
         values = {
             'blog': blog,
             'blogs': blogs,
             'main_object': blog,
-            'tags': all_tags,
+            'other_tags': other_tags,
             'state_info': {"state": state, "published": published_count, "unpublished": unpublished_count},
             'active_tag_ids': active_tag_ids,
             'tags_list' : tags_list,
@@ -163,6 +167,7 @@ class WebsiteBlog(http.Controller):
             'nav_list': self.nav_list(blog),
             'blog_url': blog_url,
             'date': date_begin,
+            'tag_category': tag_category,
         }
         response = request.render("website_blog.blog_post_short", values)
         return response

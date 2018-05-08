@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <data>
+    <!-- Maintenance-specific activities, for automatic generation mainly -->
+    <record id="mail_act_maintenance_request" model="mail.activity.type">
+        <field name="name">Maintenance Request</field>
+        <field name="icon">fa-wrench</field>
+        <field name="res_model_id" ref="maintenance.model_maintenance_request"/>
+    </record>
+
     <!-- email alias for maintenance requests -->
     <record id="mail_alias_equipment" model="mail.alias">
         <field name="alias_name">helpdesk</field>

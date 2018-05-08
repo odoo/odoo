@@ -679,7 +679,19 @@ var MockServer = Class.extend({
         }
         var self = this;
         var fields = this.data[model].fields;
-        var aggregatedFields = _.clone(kwargs.fields);
+        var aggregatedFields = [];
+        _.each(kwargs.fields, function (field) {
+            var split = field.split(":");
+            var fieldName = split[0];
+            if (kwargs.groupby.indexOf(fieldName) > 0) {
+                // grouped fields are not aggregated
+                return;
+            }
+            if (fields[fieldName] && (fields[fieldName].type === 'many2one') && split[1] !== 'count_distinct') {
+                return;
+            }
+            aggregatedFields.push(fieldName);
+        });
         var groupBy = [];
         if (kwargs.groupby.length) {
             groupBy = kwargs.lazy ? [kwargs.groupby[0]] : kwargs.groupby;
@@ -687,13 +699,17 @@ var MockServer = Class.extend({
         var records = this._getRecords(model, kwargs.domain);
 
         // if no fields have been given, the server picks all stored fields
-        if (aggregatedFields.length === 0) {
+        if (kwargs.fields.length === 0) {
             aggregatedFields = _.keys(this.data[model].fields);
         }
 
+        var groupByFieldNames = _.map(groupBy, function (groupByField) {
+            return groupByField.split(":")[0];
+        });
+
         // filter out non existing fields
         aggregatedFields = _.filter(aggregatedFields, function (name) {
-            return name in self.data[model].fields;
+            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
         });
 
         function aggregateFields(group, records) {
@@ -701,10 +717,15 @@ var MockServer = Class.extend({
             for (var i = 0; i < aggregatedFields.length; i++) {
                 type = fields[aggregatedFields[i]].type;
                 if (type === 'float' || type === 'integer') {
-                    group[aggregatedFields[i]] = 0;
+                    group[aggregatedFields[i]] = null;
                     for (var j = 0; j < records.length; j++) {
-                        group[aggregatedFields[i]] += records[j][aggregatedFields[i]];
+                        var value = group[aggregatedFields[i]] || 0;
+                        group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
                     }
+                }
+                if (type === 'many2one') {
+                    var ids = _.pluck(records, aggregatedFields[i]); 
+                    group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
         }
@@ -994,6 +1015,9 @@ var MockServer = Class.extend({
 
             case '/web/dataset/search_read':
                 return $.when(this._mockSearchReadController(args));
+
+            case '/web/dataset/resequence':
+                return $.when();
         }
         if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
             return $.when();

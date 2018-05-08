@@ -32,13 +32,13 @@
                         <group name="leave_request" string="Leave Request">
                             <field name="time_type" groups="base.group_no_one"/>
                             <field name="limit"/>
-                            <field name="sequence" attrs="{'invisible': [('limit', '=', 'False')]}" groups="base.group_no_one"/>
+                            <field name="sequence" attrs="{'invisible': [('limit', '=', False)]}" groups="base.group_no_one"/>
                         </group>
                         <group name="validation" string="Validation">
                             <field name="validation_type" widget="radio"/>
                         </group>
                         <group name="visibility" string="Visibility">
-                            <field name="employee_applicability" widget="radio"/>
+                            <field name="employee_applicability" widget="radio" attrs="{'readonly': [('limit', '=', True)]}"/>
                         </group>
                         <group name="calendar" string="Calendar">
                             <field name="categ_id"/>
@@ -127,5 +127,18 @@
         <field name="view_id" eval="view_holiday_status_normal_tree"/>
         <field name="search_view_id" ref="view_hr_holidays_status_search"/>
     </record>
+
+    <menuitem
+        id="menu_hr_holidays_configuration"
+        name="Configuration"
+        parent="menu_hr_holidays_root"
+        sequence="100"/>
+
+    <menuitem
+        id="hr_holidays_status_menu_configuration"
+        action="open_view_holiday_status"
+        name="Leave Types"
+        parent="menu_hr_holidays_configuration"
+        sequence="1"/>
 
 </odoo>

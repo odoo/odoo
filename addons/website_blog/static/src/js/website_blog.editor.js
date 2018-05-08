@@ -132,7 +132,11 @@ options.registry.blog_cover = options.Class.extend({
         this.$image.css("background-image", "");
     },
     change: function (previewMode, value, $li) {
-        var $image = $("<img/>", {src: this.$image.css("background-image")});
+        var $image = $("<img/>");
+        var background = this.$image.css("background-image");
+        if (background && background !== "none") {
+            $image.attr('src', background.match(/^url\(["']?(.+?)["']?\)$/)[1]);
+        }
 
         var editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,

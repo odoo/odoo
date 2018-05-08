@@ -16,6 +16,7 @@ Add a snippet in the website builder to subscribe a mass_mailing list
         'views/snippets_templates.xml',
         'views/mass_mailing_view.xml',
         'views/res_config_settings_views.xml',
+        'views/res_users_views.xml',
     ],
     'auto_install': True,
 }

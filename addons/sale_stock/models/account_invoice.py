@@ -11,6 +11,16 @@ class AccountInvoice(models.Model):
         help="Incoterms are series of sales terms. They are used to divide transaction costs and responsibilities between buyer and seller and reflect state-of-the-art transportation practices.",
         readonly=True, states={'draft': [('readonly', False)]})
 
+    def _get_last_step_stock_moves(self):
+        """ Overridden from stock_account.
+        Returns the stock moves associated to this invoice."""
+        rslt = super(AccountInvoice, self)._get_last_step_stock_moves()
+        for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
+            rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+        for invoice in self.filtered(lambda x: x.type == 'out_refund'):
+            rslt += invoice.mapped('refund_invoice_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+        return rslt
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
@@ -37,23 +47,4 @@ class AccountInvoiceLine(models.Model):
         return price_unit
 
     def _compute_average_price(self, qty_done, quantity, moves):
-        average_price_unit = 0
-        qty_delivered = 0
-        invoiced_qty = 0
-        for move in moves:
-            if move.state != 'done':
-                continue
-            invoiced_qty += move.product_qty
-            if invoiced_qty <= qty_done:
-                continue
-            qty_to_consider = move.product_qty
-            if invoiced_qty - move.product_qty < qty_done:
-                qty_to_consider = invoiced_qty - qty_done
-            qty_to_consider = min(qty_to_consider, quantity - qty_delivered)
-            qty_delivered += qty_to_consider
-            # `move.price_unit` is negative if the move is out and positive if the move is
-            # dropshipped. Use its absolute value to compute the average price unit.
-            average_price_unit = (average_price_unit * (qty_delivered - qty_to_consider) + abs(move.price_unit) * qty_to_consider) / qty_delivered
-            if qty_delivered == quantity:
-                break
-        return average_price_unit
+        return self.env['product.product']._compute_average_price(qty_done, quantity, moves)

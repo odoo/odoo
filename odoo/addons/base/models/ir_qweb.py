@@ -230,9 +230,11 @@ class IrQWeb(models.AbstractModel, QWeb):
                 if el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet' and can_aggregate):
                     if href.endswith('.sass'):
                         atype = 'text/sass'
+                    elif href.endswith('.scss'):
+                        atype = 'text/scss'
                     elif href.endswith('.less'):
                         atype = 'text/less'
-                    if atype not in ('text/less', 'text/sass'):
+                    if atype not in ('text/less', 'text/scss', 'text/sass'):
                         atype = 'text/css'
                     path = [segment for segment in href.split('/') if segment]
                     filename = get_resource_path(*path) if path else None

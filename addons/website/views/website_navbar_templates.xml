@@ -5,11 +5,6 @@
         <xpath expr="//t[@t-set='html_data']" position="after">
             <t t-set="body_classname" t-value="'o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else None"/>
         </xpath>
-        <xpath expr="//div[@id='wrapwrap']//header" position="after">
-            <div t-if="'website_published' in main_object.fields_get()" t-attf-class="ribbon-publish ribbon-wrapper #{main_object.website_published and 'css_published' or 'css_unpublished'}">
-                <div class="ribbon btn btn-danger">Unpublished</div>
-            </div>
-        </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
             <nav groups="base.group_user" t-if="website and menu_data" id="oe_main_menu_navbar" class="o_main_navbar">
                 <ul id="oe_applications">
