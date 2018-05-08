@@ -111,7 +111,7 @@ class CrossoveredBudgetLines(models.Model):
 
     name = fields.Char(compute='_compute_line_name')
     is_above_budget = fields.Boolean(compute='_is_above_budget')
-    crossovered_budget_state = fields.Selection(related='crossovered_budget_id.state', string='Budget State', store=True)
+    crossovered_budget_state = fields.Selection(related='crossovered_budget_id.state', string='Budget State', store=True, readonly=True)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
