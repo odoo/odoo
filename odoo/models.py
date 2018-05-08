@@ -2443,16 +2443,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr = self._cr
         foreign_key_re = re.compile(r'\s*foreign\s+key\b.*', re.I)
 
-        def cons_text(txt):
-            return txt.lower().replace(', ',',').replace(' (','(')
-
         def process(key, definition):
             conname = '%s_%s' % (self._table, key)
-            has_definition = tools.constraint_definition(cr, conname)
+            has_definition = tools.constraint_definition(cr, self._table, conname)
             if not has_definition:
                 # constraint does not exists
                 tools.add_constraint(cr, self._table, conname, definition)
-            elif cons_text(definition) != cons_text(has_definition):
+            elif tools.constraint_comment(cr, self._table, conname) != definition:
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
                 tools.add_constraint(cr, self._table, conname, definition)
