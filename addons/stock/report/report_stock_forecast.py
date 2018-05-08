@@ -32,7 +32,7 @@ class ReportStockForecat(models.Model):
         (SELECT
             MIN(sq.id) as id,
             sq.product_id,
-            date_trunc('week', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) as date,
+            date_trunc('day', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) as date,
             SUM(sq.quantity) AS product_qty
             FROM
             stock_quant as sq
@@ -48,8 +48,8 @@ class ReportStockForecat(models.Model):
             MIN(-sm.id) as id,
             sm.product_id,
             CASE WHEN sm.date_expected > CURRENT_DATE
-            THEN date_trunc('week', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD'))
-            ELSE date_trunc('week', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) END
+            THEN date_trunc('day', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD'))
+            ELSE date_trunc('day', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) END
             AS date,
             SUM(sm.product_qty) AS product_qty
             FROM
@@ -69,8 +69,8 @@ class ReportStockForecat(models.Model):
                 MIN(-sm.id) as id,
                 sm.product_id,
                 CASE WHEN sm.date_expected > CURRENT_DATE
-                    THEN date_trunc('week', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD'))
-                    ELSE date_trunc('week', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) END
+                    THEN date_trunc('day', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD'))
+                    ELSE date_trunc('day', to_date(to_char(CURRENT_DATE, 'YYYY/MM/DD'), 'YYYY/MM/DD')) END
                 AS date,
                 SUM(-(sm.product_qty)) AS product_qty
             FROM
@@ -90,9 +90,9 @@ class ReportStockForecat(models.Model):
      (SELECT DISTINCT date
       FROM
       (
-             SELECT date_trunc('week', CURRENT_DATE) AS DATE
+             SELECT date_trunc('day', CURRENT_DATE) AS DATE
              UNION ALL
-             SELECT date_trunc('week', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD')) AS date
+             SELECT date_trunc('day', to_date(to_char(sm.date_expected, 'YYYY/MM/DD'), 'YYYY/MM/DD')) AS date
              FROM stock_move sm
              LEFT JOIN
              stock_location source_location ON sm.location_id = source_location.id
