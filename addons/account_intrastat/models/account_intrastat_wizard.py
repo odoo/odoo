@@ -105,7 +105,7 @@ class IntrastatReportWizard(models.TransientModel):
         Then, this method is used to compute the missing values fetched from the database.
 
         :param vals:    A dictionary created by the dictfetchall method.
-        :param cache:   A dictionary used to avoid performance loss.
+        :param cache:   A cache dictionary used to avoid performance loss.
         '''
         # Check account.intrastat.code
         # If missing, retrieve the commodity code by looking in the product category recursively.
