@@ -213,6 +213,12 @@
                              <span t-field="invoice.amount_total" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
                         </td>
                     </tr>
+                    <tr class="border-black">
+                        <td><strong>Amount Due</strong></td>
+                        <td class="text-right">
+                             <span t-field="invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                        </td>
+                    </tr>
                 </table>
             </div>
         </div>

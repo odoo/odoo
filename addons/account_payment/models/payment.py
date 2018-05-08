@@ -130,7 +130,7 @@ class PaymentTransaction(models.Model):
             values.update(render_values)
         return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
             self.reference,
-            invoice.amount_total,
+            invoice.residual,
             invoice.currency_id.id,
             values=values,
         )
@@ -155,7 +155,7 @@ class PaymentTransaction(models.Model):
             tx_values = {
                 'acquirer_id': acquirer.id,
                 'type': tx_type,
-                'amount': invoice.amount_total,
+                'amount': invoice.residual,
                 'currency_id': invoice.currency_id.id,
                 'partner_id': invoice.partner_id.id,
                 'partner_country_id': invoice.partner_id.country_id.id,
