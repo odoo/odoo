@@ -118,17 +118,29 @@ def drop_not_null(cr, tablename, columnname):
     cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" DROP NOT NULL'.format(tablename, columnname))
     _schema.debug("Table %r: column %r: dropped constraint NOT NULL", tablename, columnname)
 
-def constraint_definition(cr, constraintname):
+def constraint_definition(cr, tablename, constraintname):
     """ Return the given constraint's definition. """
-    cr.execute("SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname=%s", (constraintname,))
+    cr.execute('SELECT pg_get_constraintdef(c.oid) FROM pg_constraint c '
+               'JOIN pg_class t ON t.oid = c.conrelid '
+               'WHERE t.relname = %s AND conname=%s', (tablename, constraintname,))
+    return cr.fetchone()[0] if cr.rowcount else None
+
+def constraint_comment(cr, tablename, constraintname):
+    """ Return the given constraint's comment. """
+    cr.execute('SELECT d.description FROM pg_description d '
+               'JOIN pg_constraint c ON c.oid = d.objoid '
+               'JOIN pg_class t ON t.oid = c.conrelid '
+               'WHERE t.relname = %s AND conname = %s;', (tablename, constraintname,))
     return cr.fetchone()[0] if cr.rowcount else None
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    query = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
         with cr.savepoint():
-            cr.execute(query)
+            cr.execute(query1)
+            cr.execute(query2, (definition,))
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
         msg = "Table %r: unable to add constraint %r!\n" \
