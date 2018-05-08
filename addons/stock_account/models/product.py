@@ -121,7 +121,8 @@ class ProductProduct(models.Model):
         locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id)])
 
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
-
+        #siguinte linea fue agregada por Trescloud
+        ctx =  self._context.copy()
         for location in locations:
             for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
                 diff = product.standard_price - new_price
@@ -153,8 +154,12 @@ class ProductProduct(models.Model):
                     }
                     move = AccountMove.create(move_vals)
                     move.post()
-
-        self.write({'standard_price': new_price})
+                    #siguinte linea fue agregada por Trescloud para
+                    #Enviar por contexto el move para linkear con historia de costos del producto.
+                    ctx.update({
+                        'account_move_id': move.id
+                    })
+        self.with_context(ctx).write({'standard_price': new_price})
         return True
 
 

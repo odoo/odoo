@@ -554,16 +554,24 @@ class ProductProduct(models.Model):
     def price_get(self, ptype='list_price'):
         return self.price_compute(ptype)
 
+    #siguente metodo fue agregado por Trescloud
+    def dict_price_history(self, value):
+        '''
+        Hook para agregar asiento contable.
+        '''
+        return {
+            'product_id': self.id,
+            'cost': value,
+            'company_id': self._context.get('force_company', self.env.user.company_id.id),
+        }
+        
     @api.multi
     def _set_standard_price(self, value):
         ''' Store the standard price change in order to be able to retrieve the cost of a product for a given date'''
         PriceHistory = self.env['product.price.history']
         for product in self:
-            PriceHistory.create({
-                'product_id': product.id,
-                'cost': value,
-                'company_id': self._context.get('force_company', self.env.user.company_id.id),
-            })
+            #siguiente linea fue modificada por Trescloud
+            PriceHistory.create(product.dict_price_history(value))
 
     @api.multi
     def get_history_price(self, company_id, date=None):
