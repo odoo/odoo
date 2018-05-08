@@ -3264,7 +3264,7 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('kanban with progressbars: correctly update env when archiving records', function (assert) {
+    QUnit.skip('kanban with progressbars: correctly update env when archiving records', function (assert) {
         assert.expect(3);
 
         // add active field on partner model and make all records active
