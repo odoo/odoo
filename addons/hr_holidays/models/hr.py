@@ -3,6 +3,7 @@
 
 import datetime
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -81,6 +82,70 @@ class Employee(models.Model):
     leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count')
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
+
+    leave_ids = fields.One2many('hr.leave', 'employee_id', readonly=True)
+    allocation_ids = fields.One2many('hr.leave.allocation', 'employee_id', readonly=True)
+
+    max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
+        help='This value is given by the sum of all leaves requests with a positive value.')
+    leaves_taken = fields.Float(compute='_compute_leaves', string='Leaves Already Taken',
+        help='This value is given by the sum of all leaves requests with a negative value.')
+    remaining_leaves = fields.Float(compute='_compute_leaves', string='Remaining Leaves',
+        help='Maximum Leaves Allowed - Leaves Already Taken')
+    virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Virtual Remaining Leaves',
+        help='Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval')
+
+    @api.multi
+    def get_days(self, holiday_types):
+        # need to use `dict` constructor to create a dict per id
+        result = defaultdict(lambda: defaultdict(lambda: 0))
+
+        requests = self.env['hr.leave'].search([
+            ('employee_id', 'in', self.ids),
+            ('state', 'in', ['confirm', 'validate1', 'validate']),
+            ('holiday_status_id', 'in', holiday_types)
+        ])
+
+        allocations = self.env['hr.leave.allocation'].search([
+            ('employee_id', 'in', self.ids),
+            ('state', 'in', ['confirm', 'validate1', 'validate']),
+            ('holiday_status_id', 'in', holiday_types)
+        ])
+
+        for request in requests:
+            status_dict = result[request.employee_id.id]
+            status_dict['virtual_remaining_leaves'] -= request.number_of_days_temp
+            if request.state == 'validate':
+                status_dict['leaves_taken'] += request.number_of_days_temp
+                status_dict['remaining_leaves'] -= request.number_of_days_temp
+
+        for allocation in allocations:
+            status_dict = result[allocation.employee_id.id]
+            if allocation.state == 'validate':
+                # note: add only validated allocation even for the virtual
+                # count; otherwise pending then refused allocation allow
+                # the employee to create more leaves than possible
+                status_dict['virtual_remaining_leaves'] += allocation.number_of_days_temp
+                status_dict['max_leaves'] += allocation.number_of_days_temp
+                status_dict['remaining_leaves'] += allocation.number_of_days_temp
+
+        return result
+
+    @api.multi
+    @api.depends('leave_ids', 'allocation_ids', 'leave_ids.state', 'leave_ids.holiday_status_id',
+                 'allocation_ids.state', 'allocation_ids.holiday_status_id')
+    def _compute_leaves(self):
+        for employee in self:
+            holiday_types = self._context.get('holiday_status_ids', [])
+
+            data_days = employee.get_days(holiday_types)
+
+            result = data_days[employee.id]
+
+            employee.max_leaves = result.get('max_leaves', 0)
+            employee.leaves_taken = result.get('leaves_taken', 0)
+            employee.remaining_leaves = result.get('remaining_leaves', 0)
+            employee.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
 
     def _get_remaining_leaves(self):
         """ Helper to compute the remaining leaves for the current employees
