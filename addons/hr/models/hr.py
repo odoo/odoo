@@ -150,16 +150,16 @@ class Employee(models.Model):
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
     visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
-    additional_note = fields.Text(string='Additional Note')
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user")
     certificate = fields.Selection([
         ('bachelor', 'Bachelor'),
         ('master', 'Master'),
         ('other', 'Other'),
-    ], 'Certificate Level', default='master')
-    study_field = fields.Char("Field of Study", placeholder='Computer Science')
-    study_school = fields.Char("School")
-    emergency_contact = fields.Char("Emergency Contact")
-    emergency_phone = fields.Char("Emergency Phone")
+    ], 'Certificate Level', default='master', groups="hr.group_hr_user")
+    study_field = fields.Char("Field of Study", placeholder='Computer Science', groups="hr.group_hr_user")
+    study_school = fields.Char("School", groups="hr.group_hr_user")
+    emergency_contact = fields.Char("Emergency Contact", groups="hr.group_hr_user")
+    emergency_phone = fields.Char("Emergency Phone", groups="hr.group_hr_user")
     km_home_work = fields.Integer(string="Km home-work", groups="hr.group_hr_user")
     google_drive_link = fields.Char(string="Employee Documents", groups="hr.group_hr_user")
     job_title = fields.Char("Job Title")
