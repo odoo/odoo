@@ -182,7 +182,6 @@ class ResPartner(models.Model):
             company = self.env.context.get('company_id')
             if not company:
                 company = self.env.user.company_id
-
             check_rslt = 'unknown'
             if partner.vat:
                 if partner.parent_id and partner.vat == partner.parent_id.vat:
@@ -207,14 +206,14 @@ class ResPartner(models.Model):
         self.ensure_one()
         # We first check with the prefix of the TIN as country code
         vat_country, vat_number = self._split_vat(self.vat)
-        check_rslt = vat_country and check_func(vat_country, vat_number) or False
+        check_rslt = check_func(vat_country, vat_number) if vat_country else False
         if not check_rslt:
             # If it fails, we check with the country code of the commercial partner's country
             country_code = self.commercial_partner_id.country_id.code
             if country_code:
                 # We recall split, so that the vat number is re-compacted in accordance with the country code
                 vat_country, vat_number = self._split_vat(country_code + self.vat)
-                check_rslt = vat_country and check_func(vat_country, vat_number) or False
+                check_rslt = check_func(vat_country, vat_number) if vat_country else False
         return check_rslt
 
     def _check_and_interpret_vat(self, check_func):
