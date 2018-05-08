@@ -373,6 +373,12 @@ class HrExpense(models.Model):
             except ValueError:
                 price = 1.0
 
+        account = product.product_tmpl_id._get_product_accounts()['expense']
+        if account:
+            custom_values.update({
+                'account_id': account.id,
+            })
+
         custom_values.update({
             'name': expense_description.strip(),
             'employee_id': employee.id,
