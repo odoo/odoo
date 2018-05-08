@@ -161,7 +161,7 @@ class StockPicking(models.Model):
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
-        if self.carrier_id.free_over and self.sale_id._compute_amount_total_without_delivery() >= self.carrier_id.amount:
+        if self.carrier_id.free_over and self.sale_id and self.sale_id._compute_amount_total_without_delivery() >= self.carrier_id.amount:
             res['exact_price'] = 0.0
         self.carrier_price = res['exact_price']
         self.carrier_tracking_ref = res['tracking_number']
