@@ -2,40 +2,40 @@
 <templates xml:space="preserve">
 
     <!-- Should be placed inside an application -->
-    <t t-name="web.wizard">
+    <t t-name="web.onboarding">
         <!-- Accounting Example -->
-        <t t-call="web.wizard_container">
+        <t t-call="web.onboarding_container">
 
             <!-- Use qweb variables to define design and options
             ====================================================
-            classes (design): o_wizard_blue, o_wizard_orange, o_wizard_violet
+            classes (design): o_onboarding_blue, o_onboarding_orange, o_onboarding_violet
             image: background-image's url
             no_fold_btn:  if true, the collapse button is not rendered.
             no_close_btn: the close button is not rendered (mandatory field)
-            folded_by_default: the wizard is folded by defaul (overwrite 'no_fold_btn' option)
+            folded_by_default: the onboarding is folded by defaul (overwrite 'no_fold_btn' option)
             -->
 
-            <t t-set="classes" t-value="'o_wizard_blue'"/>
-            <t t-set="image" t-value="'/website/static/src/img/wizard/accounting_wizard_bg.jpg'"/>
+            <t t-set="classes" t-value="'o_onboarding_blue'"/>
+            <t t-set="image" t-value="'/website/static/src/img/onboarding/accounting_onboarding_bg.jpg'"/>
 
-            <t t-call="web.wizard_step">
+            <t t-call="web.onboarding_step">
                 <t t-set="title" t-value="'Company data'"/>
                 <t t-set="description" t-value="'Your information is displayed on the invoices you send to clients.'"/>
                 <t t-set="btn_text" t-value="'Let\'s start!'"/>
                 <t t-set="done_text" t-value="'All done'"/>
             </t>
-            <t t-call="web.wizard_step">
+            <t t-call="web.onboarding_step">
                 <t t-set="title" t-value="'Invoice template'"/>
                 <t t-set="description" t-value="'Create and send professional looking invoices.'"/>
                 <t t-set="done_icon" t-value="'fa-star'"/>
                 <t t-set="done_text" t-value="'Looks great!'"/>
             </t>
-            <t t-call="web.wizard_step">
+            <t t-call="web.onboarding_step">
                 <t t-set="title" t-value="'Payment Method'"/>
                 <t t-set="description" t-value="'Define your favourite payment methods.'"/>
                 <t t-set="done_text" t-value="'Payment method set!'"/>
             </t>
-            <t t-call="web.wizard_step">
+            <t t-call="web.onboarding_step">
                 <t t-set="title" t-value="'Sample Invoice'"/>
                 <t t-set="description" t-value="'Quicly preview what your client sees by sending yourself a sample.'"/>
                 <t t-set="btn_text" t-value="'I\'m ready'"/>
@@ -44,46 +44,46 @@
         </t>
     </t>
 
-    <t t-name="web.wizard_container">
-        <div t-att-class="'o_wizard ' + classes + (folded_by_default? ' o_wizard_folded' : '')" t-att-style="'background-image:url(' + image + ')'">
-            <div class="o_wizard_wrap">
-                <a t-if="!no_close_btn" class="pull-right o_wizard_btn_close o_wizard_hide_folded"><i class="fa fa-times"/></a>
-                <div class="o_wizard_steps">
-                    <span t-if="!no_fold_btn" class="o_wizard_folded_title">Configuration steps:</span>
+    <t t-name="web.onboarding_container">
+        <div t-att-class="'o_onboarding ' + classes + (folded_by_default? ' o_onboarding_folded' : '')" t-att-style="'background-image:url(' + image + ')'">
+            <div class="o_onboarding_wrap">
+                <a t-if="!no_close_btn" class="pull-right o_onboarding_btn_close o_onboarding_hide_folded"><i class="fa fa-times"/></a>
+                <div class="o_onboarding_steps">
+                    <span t-if="!no_fold_btn" class="o_onboarding_folded_title">Configuration steps:</span>
                     <t t-raw="0"/>
                 </div>
-                <a t-if="!no_fold_btn or folded_by_default" class="o_wizard_btn_fold text-right"><i class="fa fa-chevron-up"/></a>
-                <div class="o_wizard_completed_message text-center">
+                <a t-if="!no_fold_btn or folded_by_default" class="o_onboarding_btn_fold text-right"><i class="fa fa-chevron-up"/></a>
+                <div class="o_onboarding_completed_message text-center">
                     <i class="fa fa-check text-success mr8"/>
                     <span class="h3 mr16">Nice work!</span>
-                    <div class="btn btn-primary btn-sm o_wizard_btn_completed" style="vertical-align: inherit;">Close</div>
+                    <div class="btn btn-primary btn-sm o_onboarding_btn_completed" style="vertical-align: inherit;">Close</div>
                 </div>
             </div>
         </div>
     </t>
 
-    <t t-name="web.wizard_step">
-        <div class="o_wizard_step">
-            <t t-call="web.wizard_confetti"/>
-            <div class="o_wizard_progress o_wizard_hide_folded hidden-xs progress">
+    <t t-name="web.onboarding_step">
+        <div class="o_onboarding_step">
+            <t t-call="web.onboarding_confetti"/>
+            <div class="o_onboarding_progress o_onboarding_hide_folded hidden-xs progress">
                 <div class="progress-bar"></div>
             </div>
-            <span class="o_wizard_dot o_wizard_hide_folded hidden-xs fa fa-check"/>
-            <div class="o_wizard_step_content">
-                <div class="o_wizard_step_content_info">
-                    <h4 class="o_wizard_step_title mt16"><t t-esc="title"/></h4>
-                    <p class="o_wizard_hide_folded mb16"><t t-esc="description"/></p>
+            <span class="o_onboarding_dot o_onboarding_hide_folded hidden-xs fa fa-check"/>
+            <div class="o_onboarding_step_content">
+                <div class="o_onboarding_step_content_info">
+                    <h4 class="o_onboarding_step_title mt16"><t t-esc="title"/></h4>
+                    <p class="o_onboarding_hide_folded mb16"><t t-esc="description"/></p>
                 </div>
-                <div class="o_wizard_step_action o_wizard_hide_folded btn"><t t-esc="btn_text ? btn_text : 'Let\'s do it'"/></div>
-                <div class="o_wizard_all_done mt16">
+                <div class="o_onboarding_step_action o_onboarding_hide_folded btn"><t t-esc="btn_text ? btn_text : 'Let\'s do it'"/></div>
+                <div class="o_onboarding_all_done mt16">
                     <i t-attf-class="text-success mr6 fa #{done_icon? done_icon :'fa-check'}"/>
-                    <span class="o_wizard_hide_folded"><t t-esc="done_text ? done_text : 'All done!'"/></span>
+                    <span class="o_onboarding_hide_folded"><t t-esc="done_text ? done_text : 'All done!'"/></span>
                 </div>
             </div>
         </div>
     </t>
 
-    <div t-name="web.wizard_confetti" class="o_wizard_confetti">
+    <div t-name="web.onboarding_confetti" class="o_onboarding_confetti">
     	<div>
     		<div class="flake color-3"/>
     		<div class="ribbon color-1"/>

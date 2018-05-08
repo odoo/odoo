@@ -9,7 +9,7 @@ var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
 var session = require('web.session');
 var web_client = require('web.web_client');
-var Wizard = require('web.wizard');
+var Onboarding = require('web.onboarding');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -57,7 +57,7 @@ var Dashboard = AbstractAction.extend(ControlPanelMixin, {
 
             // Dummy wizard
             // Should render a specif wizard for this application instead
-            var $wiz = new Wizard();
+            var $wiz = new Onboarding();
             $wiz.prependTo(self.$el);
 
         });

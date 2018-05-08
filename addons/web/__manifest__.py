@@ -24,7 +24,7 @@ This module provides the core of the Odoo Web Client.
         "static/src/xml/rainbow_man.xml",
         "static/src/xml/report.xml",
         "static/src/xml/web_calendar.xml",
-        "static/src/xml/wizard.xml",
+        "static/src/xml/onboarding.xml",
     ],
     'bootstrap': True,  # load translations for login screen
 }

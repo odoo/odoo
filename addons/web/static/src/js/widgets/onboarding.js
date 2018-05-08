@@ -1,4 +1,4 @@
-odoo.define('web.wizard', function (require) {
+odoo.define('web.onboarding', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -8,21 +8,21 @@ var Dialog = require('web.Dialog');
 var _t = core._t;
 
 
-var Wizard = Widget.extend({
-    template: 'web.wizard',
+var Onboarding = Widget.extend({
+    template: 'web.onboarding',
     events: {
-        'click .o_wizard_btn_fold': '_toggleFold',
-        'click .o_wizard_btn_close': '_confirmClose',
-        'click .o_wizard_btn_completed': '_closeWizard',
+        'click .o_onboarding_btn_fold': '_toggleFold',
+        'click .o_onboarding_btn_close': '_confirmClose',
+        'click .o_onboarding_btn_completed': '_closeOnboarding',
     },
 
     start: function() {
         var self = this;
-        var steps = this.$el.find('.o_wizard_step');
-        $(steps[0]).addClass('o_wizard_current');
+        var steps = this.$el.find('.o_onboarding_step');
+        $(steps[0]).addClass('o_onboarding_current');
 
         _.each(steps, function(step, index) {
-            $(step).find('.o_wizard_step_action').on('click', function(){
+            $(step).find('.o_onboarding_step_action').on('click', function(){
                 self._openFakeModal(step, index, steps);
             });
         });
@@ -69,26 +69,26 @@ var Wizard = Widget.extend({
     _nextStep: function (step, index, steps) {
         var self = this;
 
-        $(step).removeClass('o_wizard_current').addClass('o_wizard_done o_wizard_clickable').on('click', function () {
+        $(step).removeClass('o_onboarding_current').addClass('o_onboarding_done o_onboarding_clickable').on('click', function () {
             self._prevStep(step, index, steps);
         });
 
         if (index + 1 == steps.length ) {
-            // Wizard completed
-            this.$el.addClass('o_wizard_completed');
+            // Onboarding completed
+            this.$el.addClass('o_onboarding_completed');
         } else {
-            $(steps).not('.o_wizard_done').first().addClass('o_wizard_current')
+            $(steps).not('.o_onboarding_done').first().addClass('o_onboarding_current')
         }
     },
 
     _prevStep: function (step, index, steps) {
-        $(step).removeClass('o_wizard_done').addClass('o_wizard_current')
-            .nextAll().removeClass('o_wizard_current');
+        $(step).removeClass('o_onboarding_done').addClass('o_onboarding_current')
+            .nextAll().removeClass('o_onboarding_current');
         this._openFakeModal(step, index, steps);
     },
 
     _toggleFold: function () {
-        this.$el.toggleClass('o_wizard_folded');
+        this.$el.toggleClass('o_onboarding_folded');
     },
 
     _confirmClose: function () {
@@ -98,13 +98,13 @@ var Wizard = Widget.extend({
             $content: $('\
             <div>\
                 <p>You can always re-open the wizard:</p>\
-                <b>Configuration</b> > <b>Open Wizard</b>\
+                <b>Configuration</b> > <b>Open Onboarding</b>\
             </div>\
             '),
             size: 'medium',
             buttons: [
                 {text: _t("Yes, close it"), classes: 'btn-primary pull-right', close: true, click: function () {
-                    self._closeWizard();
+                    self._closeOnboarding();
                 }},
                 {text: _t("Cancel"), close: true},
             ],
@@ -112,7 +112,7 @@ var Wizard = Widget.extend({
         dialog.open();
     },
 
-    _closeWizard: function () {
+    _closeOnboarding: function () {
         var self = this;
         this.$el.css('max-height', 0);
 
@@ -123,6 +123,6 @@ var Wizard = Widget.extend({
     }
 });
 
-return Wizard;
+return Onboarding;
 
 });
