@@ -350,6 +350,9 @@ class HrExpense(models.Model):
             expense_description = expense_description.replace(product_code.group(), '')
             products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
             product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
+            expense_account = product and (product.property_account_expense_id or product.categ_id.property_account_expense_categ_id)
+            if expense_account:
+                custom_values.update({'account_id': expense_account.id})
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
