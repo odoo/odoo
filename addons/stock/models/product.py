@@ -520,6 +520,21 @@ class ProductTemplate(models.Model):
             ])
             if existing_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
+        if 'tracking' in vals:
+            for product in self:
+                if product.tracking == vals['tracking']:
+                    continue
+                reserved_quantities = self.env['stock.move.line'].search([
+                    ('product_id', 'in', product.product_variant_ids.ids),
+                    ('product_qty', '>', 0),
+                ])
+                if reserved_quantities.filtered(lambda l: not l.location_id.should_bypass_reservation()):
+                    raise UserError(_(
+                        "You cannot change the tracking of a product"
+                        " that is already reserved. Please unreserve the product"
+                        " on the stock move first."
+                    ))
+                        
         return super(ProductTemplate, self).write(vals)
 
     def action_view_routes(self):
