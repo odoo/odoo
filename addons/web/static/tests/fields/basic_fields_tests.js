@@ -4652,23 +4652,6 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.module('PercentageWidget');
-
-    QUnit.test('a percentage widget exists and format numbers with %', function(assert) {
-        assert.expect(1);
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form string="Partners">' +
-                    '<field name="int_field" widget="percentage"/>' +
-                '</form>',
-            res_id: 1,
-        });
-        assert.strictEqual(form.$el.find('span[name="int_field"]')[0].innerText,'10.00 %','the value of the percentage should be 10.00 %');
-        form.destroy();
-    });
-
 });
 });
 });
