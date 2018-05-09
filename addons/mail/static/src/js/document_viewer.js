@@ -26,6 +26,7 @@ var DocumentViewer = Widget.extend({
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
         'mousewheel .o_viewer_content': '_onScroll',        // Chrome, Safari, IE
         'keydown': '_onKeydown',
+        'keyup': '_onKeyUp',
         'mousedown .o_viewer_img': '_onStartDrag',
         'mousemove .o_viewer_content': '_onDrag',
         'mouseup .o_viewer_content': '_onEndDrag'
@@ -156,6 +157,7 @@ var DocumentViewer = Widget.extend({
     _onClose: function (e) {
         e.preventDefault();
         this.$el.modal('hide');
+        this.trigger_up('document_viewer_closed');
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
@@ -235,6 +237,20 @@ var DocumentViewer = Widget.extend({
             case $.ui.keyCode.LEFT:
                 e.preventDefault();
                 this._previous();
+                break;
+        }
+    },
+    /**
+     * Close popup on ESCAPE keyup
+     *
+     * @private
+     * @param {KeyEvent} e
+     */
+    _onKeyUp: function (e) {
+        switch (e.which) {
+            case $.ui.keyCode.ESCAPE:
+                e.preventDefault();
+                this._onClose(e);
                 break;
         }
     },

@@ -4,7 +4,8 @@
 import time
 from datetime import datetime
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -270,4 +271,141 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(len(picking2.move_lines), 1)
         self.assertEqual(move2.price_unit, 100)
         self.assertEqual(move2.product_qty, 5)
+
+
+@tagged('post_install', '-at_install')
+class TestStockValuationWithCOA(AccountingTestCase):
+    def setUp(self):
+        super(TestStockValuationWithCOA, self).setUp()
+        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.partner_id = self.env.ref('base.res_partner_1')
+        self.product1 = self.env.ref('product.product_product_8')
+        Account = self.env['account.account']
+        self.stock_input_account = Account.create({
+            'name': 'Stock Input',
+            'code': 'StockIn',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.stock_output_account = Account.create({
+            'name': 'Stock Output',
+            'code': 'StockOut',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.stock_valuation_account = Account.create({
+            'name': 'Stock Valuation',
+            'code': 'Stock Valuation',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.stock_journal = self.env['account.journal'].create({
+            'name': 'Stock Journal',
+            'code': 'STJTEST',
+            'type': 'general',
+        })
+        self.product1.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
+
+    def test_fifo_anglosaxon_return(self):
+        self.env.user.company_id.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+        price_diff_account = self.env['account.account'].create({
+            'name': 'price diff account',
+            'code': 'price diff account',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.product1.property_account_creditor_price_difference = price_diff_account
+
+        # Receive 10@10 ; create the vendor bill
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 10.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+        receipt_po1 = po1.picking_ids[0]
+        receipt_po1.move_lines.quantity_done = 10
+        receipt_po1.button_validate()
+
+        invoice_po1 = self.env['account.invoice'].create({
+            'partner_id': self.partner_id.id,
+            'purchase_id': po1.id,
+            'account_id': self.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
+        })
+        invoice_po1.purchase_order_change()
+        invoice_po1.action_invoice_open()
+
+        # Receive 10@20 ; create the vendor bill
+        po2 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 10.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 20.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po2.button_confirm()
+        receipt_po2 = po2.picking_ids[0]
+        receipt_po2.move_lines.quantity_done = 10
+        receipt_po2.button_validate()
+
+        invoice_po2 = self.env['account.invoice'].create({
+            'partner_id': self.partner_id.id,
+            'purchase_id': po2.id,
+            'account_id': self.partner_id.property_account_payable_id.id,
+            'type': 'in_invoice',
+        })
+        invoice_po2.purchase_order_change()
+        invoice_po2.action_invoice_open()
+
+        # valuation of product1 should be 300
+        self.assertEqual(self.product1.stock_value, 300)
+
+        # return the second po
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=receipt_po2.ids, active_id=receipt_po2.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].qty_done = 10
+        return_pick.do_transfer()
+
+        # valuation of product1 should be 200 as the first items will be sent out
+        self.assertEqual(self.product1.stock_value, 200)
+
+        # create a credit note for po2
+        creditnote_po2 = self.env['account.invoice'].create({
+            'partner_id': self.partner_id.id,
+            'purchase_id': po2.id,
+            'account_id': self.partner_id.property_account_payable_id.id,
+            'type': 'in_refund',
+        })
+
+        creditnote_po2.purchase_order_change()
+        creditnote_po2.invoice_line_ids[0].quantity = 10
+        creditnote_po2.action_invoice_open()
+
+        # check the anglo saxon entries
+        price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
+        self.assertEqual(price_diff_entry.credit, 100)
 

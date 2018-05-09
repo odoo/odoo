@@ -954,7 +954,9 @@ calendar view are:
 ``readonly_form_view_id``
     view to open in readonly mode
 ``form_view_id``
-    view to open when the user create or edit an event
+    view to open when the user create or edit an event. Note that if this attribute
+    is not set, the calendar view will fall back to the id of the form view in the
+    current action, if any.
 ``event_open_popup``
     If the option 'event_open_popup' is set to true, then the calendar view will
     open events (or records) in a FormViewDialog. Otherwise, it will open events

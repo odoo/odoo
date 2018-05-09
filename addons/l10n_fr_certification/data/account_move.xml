@@ -3,6 +3,7 @@
         <field name="name">Data Inalterability Check</field>
         <field name="model_id" ref="account.model_account_move"/>
         <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
         <field name="code">
             action = env['account.move']._check_hash_integrity(env.user.company_id.id)
         </field>
@@ -12,6 +13,7 @@
         <field name="name">Get the certification now!</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="account.model_res_company"/>
+        <field name="state">code</field>
         <field name="code">
 db_uuid = env['ir.config_parameter'].sudo().get_param('database.uuid')
 action = {"type": "ir.actions.act_url",

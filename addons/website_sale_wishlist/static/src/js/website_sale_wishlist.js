@@ -75,7 +75,7 @@ var ProductWishlist = Widget.extend({
         if (!product_id && e.currentTarget.classList.contains('o_add_wishlist_dyn')) {
             product_id = parseInt($el.parent().find('.product_id').val());
         }
-        if (!_.contains(self.wishlist_product_ids, product_id)) {
+        if (product_id && !_.contains(self.wishlist_product_ids, product_id)) {
             return ajax.jsonRpc('/shop/wishlist/add', 'call', {
                 'product_id': product_id
             }).then(function () {

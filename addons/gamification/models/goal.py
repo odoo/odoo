@@ -259,7 +259,7 @@ class Goal(models.Model):
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
         goals_by_definition = {}
-        for goal in self:
+        for goal in self.with_context(prefetch_fields=False):
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
 
         for definition, goals in goals_by_definition.items():
