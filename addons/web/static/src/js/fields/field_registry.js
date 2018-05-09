@@ -53,6 +53,8 @@ registry
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)
+    .add('float_factor', basic_fields.FieldFloatFactor)
+    .add('float_toggle', basic_fields.FieldFloatToggle)
     .add('progressbar', basic_fields.FieldProgressBar)
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
