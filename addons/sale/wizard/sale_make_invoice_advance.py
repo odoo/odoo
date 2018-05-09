@@ -27,7 +27,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_product_id(self):
-        product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
+        company_id = self.env.user.company_id.id
+        product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id_'+str(company_id))
+        if not product_id:
+            product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
         return self.env['product.product'].browse(int(product_id))
 
     @api.model
@@ -136,8 +139,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             # Create deposit product if necessary
             if not self.product_id:
                 vals = self._prepare_deposit_product()
+                company_id = sale_orders[0].company_id.id
+                vals['company_id'] = company_id
                 self.product_id = self.env['product.product'].create(vals)
-                self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', self.product_id.id)
+                self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id_'+str(company_id), self.product_id.id)
 
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:

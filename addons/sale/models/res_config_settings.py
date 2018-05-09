@@ -138,7 +138,9 @@ class ResConfigSettings(models.TransientModel):
         ICPSudo = self.env['ir.config_parameter'].sudo()
         sale_pricelist_setting = ICPSudo.get_param('sale.sale_pricelist_setting')
         sale_portal_confirmation_options = ICPSudo.get_param('sale.sale_portal_confirmation_options', default='none')
-        default_deposit_product_id = literal_eval(ICPSudo.get_param('sale.default_deposit_product_id', default='False'))
+        company_id = self.env.user.company_id.id
+        default_deposit_product_id = ICPSudo.get_param('sale.default_deposit_product_id'+'_'+str(company_id)) or ICPSudo.get_param('sale.default_deposit_product_id', default='False')
+        default_deposit_product_id = literal_eval(default_deposit_product_id)
         if default_deposit_product_id and not self.env['product.product'].browse(default_deposit_product_id).exists():
             default_deposit_product_id = False
         res.update(
@@ -162,7 +164,8 @@ class ResConfigSettings(models.TransientModel):
         ICPSudo.set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited == 'b2c'))
         ICPSudo.set_param("sale.use_sale_note", self.use_sale_note)
         ICPSudo.set_param("sale.auto_done_setting", self.auto_done_setting)
-        ICPSudo.set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
+        company_id = self.env.user.company_id.id
+        ICPSudo.set_param("sale.default_deposit_product_id"+"_"+str(company_id), self.default_deposit_product_id.id)
         ICPSudo.set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
         ICPSudo.set_param('sale.sale_show_tax', self.sale_show_tax)
         ICPSudo.set_param('sale.sale_portal_confirmation_options', self.portal_confirmation_options if self.portal_confirmation_options in ('pay', 'sign') else 'none')
