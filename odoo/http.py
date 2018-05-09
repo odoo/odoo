@@ -1634,11 +1634,6 @@ def content_disposition(filename):
 #----------------------------------------------------------
 class CommonController(Controller):
 
-    @route('/jsonrpc', type='json', auth="none")
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        return dispatch_rpc(service, method, args)
-
     @route('/gen_session_id', type='json', auth="none")
     def gen_session_id(self):
         nsession = root.session_store.new()
