@@ -414,8 +414,7 @@ class MrpWorkorder(models.Model):
         self.ensure_one()
         # As button_start is automatically called in the new view
         if self.state in ('done', 'cancel'):
-            import pdb; pdb.set_trace()
-            #return True
+            return True
 
         # Need a loss in case of the real time exceeding the expected
         timeline = self.env['mrp.workcenter.productivity']
