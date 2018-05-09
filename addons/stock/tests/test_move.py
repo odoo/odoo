@@ -1820,7 +1820,7 @@ class StockMove(TransactionCase):
         second only validate 2 and create a backorder for the last one. Check that the reservation
         is correctly cleared up for the last one.
         """
-        uom_3units = self.env['product.uom'].create({
+        uom_3units = self.env['uom.uom'].create({
             'name': '3 units',
             'category_id': self.uom_unit.category_id.id,
             'factor_inv': 3,
