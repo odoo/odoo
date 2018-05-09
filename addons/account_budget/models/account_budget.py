@@ -2,10 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tools import ustr
-from odoo.exceptions import UserError, ValidationError
-from datetime import date, datetime
+from odoo.exceptions import ValidationError
 
 # ---------------------------------------------------------
 # Budgets
@@ -145,7 +142,8 @@ class CrossoveredBudgetLines(models.Model):
                         group_line['theoritical_amount'] += budget_line_of_group.theoritical_amount
 
                     if 'percentage' in fields:
-                        if group_line['theoritical_amount']:  # use a weighted average
+                        if group_line['theoritical_amount']:
+                            # use a weighted average
                             group_line['percentage'] = float(
                                 (group_line['practical_amount'] or 0.0) / group_line['theoritical_amount']) * 100
 
@@ -171,12 +169,11 @@ class CrossoveredBudgetLines(models.Model):
     @api.multi
     def _compute_practical_amount(self):
         for line in self:
-            result = 0.0
             acc_ids = line.general_budget_id.account_ids.ids
-            date_to = self.env.context.get('wizard_date_to') or line.date_to
-            date_from = self.env.context.get('wizard_date_from') or line.date_from
+            date_to = line.date_to
+            date_from = line.date_from
             if line.analytic_account_id.id:
-                analytic_account = self.env['account.analytic.line']
+                analytic_line_obj = self.env['account.analytic.line']
                 domain = [('account_id', '=', line.analytic_account_id.id),
                           ('date', '>=', date_from),
                           ('date', '<=', date_to),
@@ -184,81 +181,49 @@ class CrossoveredBudgetLines(models.Model):
                 if acc_ids:
                     domain += [('general_account_id', 'in', acc_ids)]
 
-                where_query = analytic_account._where_calc(domain)
-                analytic_account._apply_ir_rules(where_query, 'read')
+                where_query = analytic_line_obj._where_calc(domain)
+                analytic_line_obj._apply_ir_rules(where_query, 'read')
                 from_clause, where_clause, where_clause_params = where_query.get_sql()
-                select = " SELECT SUM(amount) from " + from_clause + " where " + where_clause
+                select = "SELECT SUM(amount) from " + from_clause + " where " + where_clause
 
             else:
-                account = self.env['account.move.line']
+                aml_obj = self.env['account.move.line']
                 domain = [('account_id', 'in',
                            line.general_budget_id.account_ids.ids),
                           ('date', '>=', date_from),
                           ('date', '<=', date_to)
                           ]
-                where_query = account._where_calc(domain)
-                account._apply_ir_rules(where_query, 'read')
+                where_query = aml_obj._where_calc(domain)
+                aml_obj._apply_ir_rules(where_query, 'read')
                 from_clause, where_clause, where_clause_params = where_query.get_sql()
                 select = "SELECT sum(credit)-sum(debit) from " + from_clause + " where " + where_clause
 
             self.env.cr.execute(select, where_clause_params)
-            result = self.env.cr.fetchone()[0] or 0.0
-            line.practical_amount = result
+            line.practical_amount = self.env.cr.fetchone()[0] or 0.0
 
     @api.multi
     def _compute_theoritical_amount(self):
-
-        # I checked with CBU and it seems to be the best way to get a date without time and still be able to
-        # mock it in the python tests
-
-        today = fields.Datetime.now()
-        today = fields.Datetime.to_string(fields.Datetime.from_string(today).date())
-
+        # beware: 'today' variable is mocked in the python tests and thus, its implementation matter
+        today = fields.Datetime.from_string(fields.Date.today())
         for line in self:
-            # Used for the report
-
-            if self.env.context.get('wizard_date_from') and self.env.context.get('wizard_date_to'):
-                date_from = fields.Datetime.from_string(self.env.context.get('wizard_date_from'))
-                date_to = fields.Datetime.from_string(self.env.context.get('wizard_date_to'))
-                if date_from < fields.Datetime.from_string(line.date_from):
-                    date_from = fields.Datetime.from_string(line.date_from)
-                elif date_from > fields.Datetime.from_string(line.date_to):
-                    date_from = False
-
-                if date_to > fields.Datetime.from_string(line.date_to):
-                    date_to = fields.Datetime.from_string(line.date_to)
-                elif date_to < fields.Datetime.from_string(line.date_from):
-                    date_to = False
-
-                theo_amt = 0.00
-                if date_from and date_to:
-                    line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(
-                        line.date_from)
-                    elapsed_timedelta = date_to - date_from
-                    if elapsed_timedelta.days > 0:
-                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
-            else:
-                if line.paid_date:
-                    if fields.Datetime.from_string(line.date_to) <= fields.Datetime.from_string(line.paid_date):
-                        theo_amt = 0.00
-                    else:
-                        theo_amt = line.planned_amount
+            if line.paid_date:
+                if fields.Datetime.to_string(today) <= line.paid_date:
+                    theo_amt = 0.00
                 else:
-                    line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(
-                        line.date_from)
-                    elapsed_timedelta = fields.Datetime.from_string(today) - (
-                        fields.Datetime.from_string(line.date_from))
+                    theo_amt = line.planned_amount
+            else:
+                line_timedelta = fields.Datetime.from_string(line.date_to) - fields.Datetime.from_string(
+                    line.date_from)
+                elapsed_timedelta = today - fields.Datetime.from_string(line.date_from)
 
-                    if elapsed_timedelta.days < 0:
-                        # If the budget line has not started yet, theoretical amount should be zero
-                        theo_amt = 0.00
-                    elif line_timedelta.days > 0 and fields.Datetime.from_string(today) < fields.Datetime.from_string(
-                            line.date_to):
-                        # If today is between the budget line date_from and date_to
-                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
-                    else:
-                        theo_amt = line.planned_amount
-
+                if elapsed_timedelta.days < 0:
+                    # If the budget line has not started yet, theoretical amount should be zero
+                    theo_amt = 0.00
+                elif line_timedelta.days > 0 and today < fields.Datetime.from_string(line.date_to):
+                    # If today is between the budget line date_from and date_to
+                    theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
+                else:
+                    theo_amt = line.planned_amount
             line.theoritical_amount = theo_amt
 
     @api.multi
@@ -277,14 +242,17 @@ class CrossoveredBudgetLines(models.Model):
 
     @api.multi
     def action_open_budget_entries(self):
-        # if there is an analytic account, then those are loaded, else the movements of the accounts of the budget postition is opened
         if self.analytic_account_id:
+            # if there is an analytic account, then the analytic items are loaded
             action = self.env['ir.actions.act_window'].for_xml_id('analytic', 'account_analytic_line_action_entries')
             action['domain'] = [('account_id', '=', self.analytic_account_id.id),
                                 ('date', '>=', self.date_from),
                                 ('date', '<=', self.date_to)
                                 ]
+            if self.general_budget_id:
+                action['domain'] += [('general_account_id', 'in', self.general_budget_id.account_ids.ids)]
         else:
+            # otherwise the journal entries booked on the accounts of the budgetary postition are opened
             action = self.env['ir.actions.act_window'].for_xml_id('account', 'action_account_moves_all_a')
             action['domain'] = [('account_id', 'in',
                                  self.general_budget_id.account_ids.ids),
@@ -300,7 +268,7 @@ class CrossoveredBudgetLines(models.Model):
         budget_date_to = fields.Datetime.from_string(self.crossovered_budget_id.date_to)
         if self.date_from:
             date_from = fields.Datetime.from_string(self.date_from)
-            if date_from < budget_date_from  or date_from > budget_date_to:
+            if date_from < budget_date_from or date_from > budget_date_to:
                 raise ValidationError(_('"Start Date" of the budget line should be included in the Period of the budget'))
 
         if self.date_to:
