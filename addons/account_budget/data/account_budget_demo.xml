@@ -10,6 +10,13 @@
             <field eval="str(time.localtime(time.time())[0]+1)+'-12-31'" name="date_to"/>
             <field name="creating_user_id" ref="base.user_root"/>
         </record>
+         <record id="budget_line_analytic_admin" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
+            <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
+            <field eval="str(time.localtime(time.time())[0]+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">-35000</field>
+            <field name="analytic_account_id" ref="analytic.analytic_administratif"/>
+        </record>
          <record id="budget_line_analytic_agrolait1" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
@@ -104,6 +111,13 @@
             <field name="creating_user_id" ref="base.user_root"/>
         </record>
 
+         <record id="budget_line_analytic_admin_pessim" model="crossovered.budget.lines">
+            <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
+            <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
+            <field eval="str(time.localtime(time.time())[0]+1)+'-12-31'" name="date_to"/>
+            <field name="planned_amount">-55000</field>
+            <field name="analytic_account_id" ref="analytic.analytic_administratif"/>
+        </record>
          <record id="budget_line_analytic_agrolait_pessim1" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
             <field eval="str(time.localtime(time.time())[0]+1)+'-01-01'" name="date_from"/>
