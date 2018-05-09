@@ -885,9 +885,10 @@ class Menu(models.Model):
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
             # if the url match a website.page, set the m2o relation
-            page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
+            page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
             if page:
                 menu['page_id'] = page.id
+                menu['url'] = page.url
             elif menu_id.page_id:
                 menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)
