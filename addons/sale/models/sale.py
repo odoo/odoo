@@ -659,7 +659,7 @@ class SaleOrderLine(models.Model):
             if line.state != 'sale' or not line.product_id._need_procurement():
                 continue
             qty = 0.0
-            for proc in line.procurement_ids:
+            for proc in line.procurement_ids.filtered(lambda p: p.state != 'cancel'):
                 qty += proc.product_qty
             if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
                 continue
