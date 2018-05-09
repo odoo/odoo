@@ -95,11 +95,12 @@ class CrossoveredBudgetLines(models.Model):
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
     paid_date = fields.Date('Paid Date')
-    planned_amount = fields.Float('Planned Amount', required=True, digits=0,
+    currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
+    planned_amount = fields.Monetary('Planned Amount', required=True,
                                   help="Amount you plan to earn/spend. Record a positive amount if it is a revenue and a negative amount if it is a cost.")
-    practical_amount = fields.Float(compute='_compute_practical_amount', string='Practical Amount', digits=0,
+    practical_amount = fields.Monetary(compute='_compute_practical_amount', string='Practical Amount',
                                     help="Amount really earned/spent.")
-    theoritical_amount = fields.Float(compute='_compute_theoritical_amount', string='Theoretical Amount', digits=0,
+    theoritical_amount = fields.Monetary(compute='_compute_theoritical_amount', string='Theoretical Amount',
                                       help="Amount you are supposed to have earned/spent at this date.")
     percentage = fields.Float(compute='_compute_percentage', string='Achievement',
                               help="Comparison between practical and theoretical amount. This measure tells you if you are below or over budget.")
@@ -230,7 +231,7 @@ class CrossoveredBudgetLines(models.Model):
     def _compute_percentage(self):
         for line in self:
             if line.theoritical_amount != 0.00:
-                line.percentage = float((line.practical_amount or 0.0) / line.theoritical_amount) * 100
+                line.percentage = float((line.practical_amount or 0.0) / line.theoritical_amount)
             else:
                 line.percentage = 0.00
 
