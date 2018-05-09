@@ -14,11 +14,10 @@ class AccountBudgetPost(models.Model):
 
     name = fields.Char('Name', required=True)
     account_ids = fields.Many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts',
-                                   domain=[('deprecated', '=', False)])
+        domain=[('deprecated', '=', False)])
     crossovered_budget_line = fields.One2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines')
     company_id = fields.Many2one('res.company', 'Company', required=True,
-                                 default=lambda self: self.env['res.company']._company_default_get(
-                                     'account.budget.post'))
+        default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
     def _check_account_ids(self, vals):
         # Raise an error to prevent the account.budget.post to have not specified account_ids.
@@ -56,12 +55,11 @@ class CrossoveredBudget(models.Model):
         ('confirm', 'Confirmed'),
         ('validate', 'Validated'),
         ('done', 'Done')
-    ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
+        ], 'Status', default='draft', index=True, required=True, readonly=True, copy=False, track_visibility='always')
     crossovered_budget_line = fields.One2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines',
-                                              states={'done': [('readonly', True)]}, copy=True)
+        states={'done': [('readonly', True)]}, copy=True)
     company_id = fields.Many2one('res.company', 'Company', required=True,
-                                 default=lambda self: self.env['res.company']._company_default_get(
-                                     'account.budget.post'))
+        default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
     @api.multi
     def action_budget_confirm(self):
@@ -88,26 +86,27 @@ class CrossoveredBudgetLines(models.Model):
     _name = "crossovered.budget.lines"
     _description = "Budget Line"
 
-    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', index=True,
-                                            required=True)
+    name = fields.Char(compute='_compute_line_name')
+    crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', index=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     general_budget_id = fields.Many2one('account.budget.post', 'Budgetary Position')
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
     paid_date = fields.Date('Paid Date')
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', readonly=True)
-    planned_amount = fields.Monetary('Planned Amount', required=True,
-                                  help="Amount you plan to earn/spend. Record a positive amount if it is a revenue and a negative amount if it is a cost.")
-    practical_amount = fields.Monetary(compute='_compute_practical_amount', string='Practical Amount',
-                                    help="Amount really earned/spent.")
-    theoritical_amount = fields.Monetary(compute='_compute_theoritical_amount', string='Theoretical Amount',
-                                      help="Amount you are supposed to have earned/spent at this date.")
-    percentage = fields.Float(compute='_compute_percentage', string='Achievement',
-                              help="Comparison between practical and theoretical amount. This measure tells you if you are below or over budget.")
+    planned_amount = fields.Monetary(
+        'Planned Amount', required=True,
+        help="Amount you plan to earn/spend. Record a positive amount if it is a revenue and a negative amount if it is a cost.")
+    practical_amount = fields.Monetary(
+        compute='_compute_practical_amount', string='Practical Amount', help="Amount really earned/spent.")
+    theoritical_amount = fields.Monetary(
+        compute='_compute_theoritical_amount', string='Theoretical Amount',
+        help="Amount you are supposed to have earned/spent at this date.")
+    percentage = fields.Float(
+        compute='_compute_percentage', string='Achievement',
+        help="Comparison between practical and theoretical amount. This measure tells you if you are below or over budget.")
     company_id = fields.Many2one(related='crossovered_budget_id.company_id', comodel_name='res.company',
-                                 string='Company', store=True, readonly=True)
-
-    name = fields.Char(compute='_compute_line_name')
+        string='Company', store=True, readonly=True)
     is_above_budget = fields.Boolean(compute='_is_above_budget')
     crossovered_budget_state = fields.Selection(related='crossovered_budget_id.state', string='Budget State', store=True, readonly=True)
 
