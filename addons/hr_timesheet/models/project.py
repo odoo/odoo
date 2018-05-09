@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from lxml import etree
-
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
@@ -153,43 +151,3 @@ class Task(models.Model):
                 'company_id': account_id.company_id.id,
             })
         return result
-
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = self.env.user.company_id.project_time_mode_id
-        tm = obj_tm and obj_tm.name or 'Hours'
-
-        res = super(Task, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-
-        # read uom as admin to avoid access rights issues, e.g. for portal/share users,
-        # this should be safe (no context passed to avoid side-effects)
-        obj_tm = self.env.user.company_id.project_time_mode_id
-        # using get_object to get translation value
-        uom_hour = self.env.ref('uom.product_uom_hour', False)
-        if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
-            return res
-
-        eview = etree.fromstring(res['arch'])
-
-        # if the project_time_mode_id is not in hours (so in days), display it as a float field
-        def _check_rec(eview):
-            if eview.attrib.get('widget', '') == 'float_time':
-                eview.set('widget', 'float')
-            for child in eview:
-                _check_rec(child)
-            return True
-
-        _check_rec(eview)
-
-        res['arch'] = etree.tostring(eview, encoding='unicode')
-
-        # replace reference of 'Hours' to 'Day(s)'
-        for f in res['fields']:
-            # TODO this NOT work in different language than english
-            # the field 'Initially Planned Hours' should be replaced by 'Initially Planned Days'
-            # but string 'Initially Planned Days' is not available in translation
-            if 'Hours' in res['fields'][f]['string']:
-                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours', obj_tm.name)
-        return res

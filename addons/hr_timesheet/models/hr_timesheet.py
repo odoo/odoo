@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from lxml import etree
+import json
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -46,6 +49,10 @@ class AccountAnalyticLine(models.Model):
         for line in self:
             line.department_id = line.employee_id.department_id
 
+    # ----------------------------------------------------
+    # ORM overrides
+    # ----------------------------------------------------
+
     @api.model
     def create(self, values):
         # compute employee only for timesheet lines, makes no sense for other lines
@@ -69,6 +76,10 @@ class AccountAnalyticLine(models.Model):
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
+
+    # ----------------------------------------------------
+    # Business Methods
+    # ----------------------------------------------------
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
