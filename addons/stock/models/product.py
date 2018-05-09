@@ -598,3 +598,22 @@ class ProductCategory(models.Model):
             category = category.parent_id
             routes |= category.route_ids
         self.total_route_ids = routes
+
+
+class ProductUoM(models.Model):
+    _inherit = 'product.uom'
+
+    def write(self, values):
+        # Users can not update the factor if open stock moves are based on it
+        if 'factor' in values or 'factor_inv' in values:
+            stock_move_lines = self.env['stock.move.line'].search([
+                ('product_uom_id.category_id', '=', self.category_id.id),
+            ])
+
+            if stock_move_lines.filtered(lambda l: not l.location_id.should_bypass_reservation()):
+                raise UserError(_(
+                    "You cannot change the ratio of this unit of mesure as some"
+                    " products with this UoM have already been moved or are "
+                    "currently reserved."
+                ))
+        return super(ProductUoM, self).write(values)
