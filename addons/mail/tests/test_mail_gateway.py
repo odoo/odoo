@@ -298,6 +298,146 @@ AAAAACwAAAAAAgACAAAEA3DJFQA7
 --001a11416b9e9b229a05272b7052--
 """
 
+MAIL_EML_ATTACHMENT = """Subject: Re: test attac
+From: Anon <anon@odoo.com>
+To: anon@gmail.com
+References: <f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>
+Message-ID: <cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>
+Date: Wed, 14 Mar 2018 14:26:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
+MIME-Version: 1.0
+In-Reply-To: <f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>
+Content-Type: multipart/mixed;
+ boundary="------------A6B5FD5F68F4D73ECD739009"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------A6B5FD5F68F4D73ECD739009
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+
+On 14/03/18 14:20, Anon wrote:
+> Some nice content
+>
+
+
+--------------A6B5FD5F68F4D73ECD739009
+Content-Type: message/rfc822;
+ name="original_msg.eml"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment;
+ filename="original_msg.eml"
+
+Delivered-To: anon2@gmail1.openerp.com
+Received: by 10.46.1.170 with SMTP id f42csp2379722lji;
+        Mon, 5 Mar 2018 01:19:23 -0800 (PST)
+X-Google-Smtp-Source: AG47ELsYTlAcblMxfnaEENQuF+MFoac5Q07wieyw0cybq/qOX4+DmayqoQILkiWT+NiTOcnr/ACO
+X-Received: by 10.28.154.213 with SMTP id c204mr7237750wme.64.1520241563503;
+        Mon, 05 Mar 2018 01:19:23 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1520241563; cv=none;
+        d=google.com; s=arc-20160816;
+        b=BqgMSbqmbpYW1ZtfGTVjj/654MBmabw4XadNZEaI96hDaub6N6cP8Guu3PoxscI9os
+         0OLYVP1s/B+Vv9rIzulCwHyHsgnX+aTxGYepTDN6x8SA9Qeb9aQoNSVvQLryTAoGpaFr
+         vXhw8aPWyr28edE03TDFA/s7X65Bf6dV5zJdMiUPVqGkfYfcTHMf3nDER5vk8vQj7tve
+         Cfyy0h9vLU9RSEtdFwmlEkLmgT9NQ3GDf0jQ97eMXPgR2q6duCPoMcz15KlWOno53xgH
+         EiV7aIZ5ZMN/m+/2xt3br/ubJ5euFojWhDnHUZoaqd08TCSQPd4fFCCx75MjDeCnwYMn
+         iKSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=content-language:mime-version:user-agent:date:message-id:subject
+         :from:to:dkim-signature:arc-authentication-results;
+        bh=/UIFqhjCCbwBLsI4w7YY98QH6G/wxe+2W4bbMDCskjM=;
+        b=Wv5jt+usnSgWI96GaZWUN8/VKl1drueDpU/4gkyX/iK4d6S4CuSDjwYAc3guz/TjeW
+         GoKCqT30IGZoStpXQbuLry7ezXNK+Fp8MJKN2n/x5ClJWHxIsxIGlP2QC3TO8RI0P5o0
+         GXG9izW93q1ubkdPJFt3unSjjwSYf5XVQAZQtRm9xKjqA+lbtFbsnbjJ4wgYBURnD8ma
+         Qxb2xsxXDelaZvtdlzHRDn5SEkbqhcCclEYw6oRLpVQFZeYtPxcCleVybtj2owJxdaLp
+         7wXuo/gpYe6E2cPuS2opei8AzjEhYTNzlYXTPvaoxCCTTjfGTaPv22TeRDehuIXngSEl
+         Nmmw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@odoo.com header.s=mail header.b=MCzhjB9b;
+       spf=pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) smtp.mailfrom=soup@odoo.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
+Return-Path: <soup@odoo.com>
+Received: from mail2.odoo.com (mail2.odoo.com. [149.202.180.44])
+        by mx.google.com with ESMTPS id y4si4279200wmy.148.2018.03.05.01.19.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 05 Mar 2018 01:19:23 -0800 (PST)
+Received-SPF: pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) client-ip=149.202.180.44;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@odoo.com header.s=mail header.b=MCzhjB9b;
+       spf=pass (google.com: domain of soup@odoo.com designates 149.202.180.44 as permitted sender) smtp.mailfrom=soup@odoo.com;
+       dmarc=pass (p=NONE sp=NONE dis=NONE) header.from=odoo.com
+Received: from [10.10.31.24] (unknown [91.183.114.50])
+	(Authenticated sender: soup)
+	by mail2.odoo.com (Postfix) with ESMTPSA id 7B571A4085
+	for <what@odoo.com>; Mon,  5 Mar 2018 10:19:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=odoo.com; s=mail;
+	t=1520241562; bh=L2r7Sp/vjogIdM1k8H9zDGDjnhKolsTTLLjndnFC4Jc=;
+	h=To:From:Subject:Date:From;
+	b=MCzhjB9bnsrJ3uKjq+GjujFxmtrq3fc7Vv7Vg2C72EPKnkxgqy6yPjWKtXbBlaiT3
+	 YjKI24aiSQlOeOPQiqFgiDzeqqemNDp+CRuhoYz1Vbz+ESRaHtkWRLb7ZjvohS2k7e
+	 RTq7tUxY2nUL2YrNHV7DFYtJVBwiTuyLP6eAiJdE=
+To: what@odoo.com
+From: Soup <soup@odoo.com>
+Subject: =?UTF-8?Q?Soupe_du_jour_:_Pois_cass=c3=a9s?=
+Message-ID: <a05d8334-7b7c-df68-c96a-4a88ed19f31b@odoo.com>
+Date: Mon, 5 Mar 2018 10:19:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="------------1F2D18B1129FC2F0B9EECF50"
+Content-Language: en-US
+X-Spam-Status: No, score=-1.2 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+	HTML_IMAGE_ONLY_08,HTML_MESSAGE,T_REMOTE_IMAGE autolearn=no
+	autolearn_force=no version=3.4.0
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on mail2.odoo.com
+
+This is a multi-part message in MIME format.
+--------------1F2D18B1129FC2F0B9EECF50
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Résultat de recherche d'images pour "dessin la princesse au petit pois"
+
+--
+Soup
+
+Odoo S.A.
+Chaussée de Namur, 40
+B-1367 Grand Rosière
+Web: http://www.odoo.com
+
+
+--------------1F2D18B1129FC2F0B9EECF50
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p><img
+src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjCNAadd3NDM8g9w0P_-gAVYrrqC0wmBNYKGsTZ2Pst5SsNxTRnA"
+        alt="Résultat de recherche d'images pour &quot;dessin la
+        princesse au petit pois&quot;"></p>
+    <pre class="moz-signature" cols="72">--
+Soup
+
+Odoo S.A.
+Chaussée de Namur, 40
+B-1367 Grand Rosière
+Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo.com</a> </pre>
+  </body>
+</html>
+
+--------------1F2D18B1129FC2F0B9EECF50--
+
+--------------A6B5FD5F68F4D73ECD739009--"""
 
 class TestMailgateway(TestMail):
 
@@ -365,6 +505,12 @@ class TestMailgateway(TestMail):
         res = self.env['mail.thread'].message_parse(MAIL_SINGLE_BINARY)
         self.assertEqual(res['body'], '')
         self.assertEqual(res['attachments'][0][0], 'thetruth.pdf')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_parse_eml(self):
+        """ Test that the parsing of mail with embedded emails as eml(msg) which generates empty attachments, can be processed.
+        """
+        self.env['mail.thread'].message_process('mail.channel', MAIL_EML_ATTACHMENT)
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
