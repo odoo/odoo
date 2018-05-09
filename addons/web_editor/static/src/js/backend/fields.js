@@ -163,7 +163,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         if (fieldNameAttachment) {
             this.fieldNameAttachment = fieldNameAttachment;
             this.attachments = [];
-            summernoteConfig.onImageUpload = this._onImageUpload.bind(this);
+            summernoteConfig.onUpload = this._onUpload.bind(this);
             summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
         }
 
@@ -195,7 +195,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      *
      * @private
      */
-    _onImageUpload: function (attachments) {
+    _onUpload: function (attachments) {
         var self = this;
         attachments = _.filter(attachments, function (attachment) {
             return !_.findWhere(self.attachments, {id: attachment.id});

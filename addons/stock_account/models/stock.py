@@ -260,7 +260,7 @@ class StockMove(models.Model):
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and move.product_id.cost_method == 'fifo':
-            move.product_id.standard_price = new_standard_price
+            move.product_id.sudo().standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -312,7 +312,9 @@ class StockMove(models.Model):
             self.write(vals)
         elif self._is_out():
             valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
-            valued_quantity = sum(valued_move_lines.mapped('qty_done'))
+            valued_quantity = 0
+            for valued_move_line in valued_move_lines:
+                valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
             self.env['stock.move']._run_fifo(self, quantity=quantity)
             if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
@@ -523,17 +525,6 @@ class StockMove(models.Model):
             raise UserError(_("The cost of %s is currently equal to 0. Change the cost or the configuration of your product to avoid an incorrect valuation.") % (self.product_id.name,))
         credit_value = debit_value
 
-        if self.product_id.cost_method == 'average' and self.company_id.anglo_saxon_accounting:
-            # in case of a supplier return in anglo saxon mode, for products in average costing method, the stock_input
-            # account books the real purchase price, while the stock account books the average price. The difference is
-            # booked in the dedicated price difference account.
-            if self.location_dest_id.usage == 'supplier' and self.origin_returned_move_id and self.origin_returned_move_id.purchase_line_id:
-                debit_value = self.origin_returned_move_id.price_unit * qty
-            # in case of a customer return in anglo saxon mode, for products in average costing method, the stock valuation
-            # is made using the original average price to negate the delivery effect.
-            if self.location_id.usage == 'customer' and self.origin_returned_move_id:
-                debit_value = self.origin_returned_move_id.price_unit * qty
-                credit_value = debit_value
 
         valuation_partner_id = self._get_partner_id_for_valuation_lines()
         res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id).values()]
@@ -617,7 +608,7 @@ class StockMove(models.Model):
         move_lines = self.with_context(forced_ref=ref)._prepare_account_move_line(quantity, abs(self.value), credit_account_id, debit_account_id)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
-            new_account_move = AccountMove.create({
+            new_account_move = AccountMove.sudo().create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,

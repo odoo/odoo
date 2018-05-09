@@ -116,12 +116,12 @@ var MockServer = Class.extend({
                 console.log('%c[rpc] response' + route, 'color: blue; font-weight: bold;', JSON.parse(resultString));
             }
             return JSON.parse(resultString);
-        }).fail(function (result) {
+        }, function (result, event) {
             var errorString = JSON.stringify(result || false);
             if (debug) {
                 console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             }
-            return JSON.parse(errorString);
+            return $.Deferred().reject(errorString, event || $.Event());
         });
     },
 
@@ -834,7 +834,7 @@ var MockServer = Class.extend({
      */
     _mockReadProgressBar: function (model, kwargs) {
         var domain = kwargs.domain;
-        var groupBy = kwargs.groupBy;
+        var groupBy = kwargs.group_by;
         var progress_bar = kwargs.progress_bar;
 
         var records = this._getRecords(model, domain || []);

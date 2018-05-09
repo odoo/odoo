@@ -1875,6 +1875,101 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('form_view_id attribute works (for creating events)', function (assert) {
+        assert.expect(1);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month" '+
+                'form_view_id="42">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    // we simulate here the case where a create call with just
+                    // the field name fails.  This is a normal flow, the server
+                    // reject the create rpc (quick create), then the web client
+                    // fall back to a form view. This happens typically when a
+                    // model has required fields
+                    return $.Deferred().reject('None shall pass!');
+                }
+                return this._super(route, args);
+            },
+            intercepts: {
+                do_action: function (event) {
+                    assert.strictEqual(event.data.action.views[0][0], 42,
+                        "should do a do_action with view id 42");
+                },
+            },
+        });
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        var $input = $('.modal-body input:first');
+        $input.val("It's just a fleshwound").trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        calendar.destroy();
+    });
+
+    QUnit.test('calendar fallback to form view id in action if necessary', function (assert) {
+        assert.expect(1);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="month"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+                action: {views: [[1, 'kanban'], [43, 'form']]}
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    // we simulate here the case where a create call with just
+                    // the field name fails.  This is a normal flow, the server
+                    // reject the create rpc (quick create), then the web client
+                    // fall back to a form view. This happens typically when a
+                    // model has required fields
+                    return $.Deferred().reject('None shall pass!');
+                }
+                return this._super(route, args);
+            },
+            intercepts: {
+                do_action: function (event) {
+                    assert.strictEqual(event.data.action.views[0][0], 43,
+                        "should do a do_action with view id 43");
+                },
+            },
+        });
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        var $input = $('.modal-body input:first');
+        $input.val("It's just a fleshwound").trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click');
+
+        calendar.destroy();
+    });
+
 });
 
 });

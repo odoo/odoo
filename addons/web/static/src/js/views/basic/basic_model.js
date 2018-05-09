@@ -1068,7 +1068,13 @@ var BasicModel = AbstractModel.extend({
     addFieldsInfo: function (recordID, viewInfo) {
         var record = this.localData[recordID];
         record.fields = _.extend({}, record.fields, viewInfo.fields);
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, viewInfo.fieldsInfo);
+        // complete the given fieldsInfo with the fields of the main view, so
+        // that those field will be reloaded if a reload is triggered by the
+        // secondary view
+        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
+            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+        });
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
     },
     /**
      * For list resources, this freezes the current records order.
@@ -2010,7 +2016,8 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRecord: function (record, options) {
         var self = this;
-        var fieldNames = options && options.fieldNames || record.getFieldNames();
+        options = options || {};
+        var fieldNames = options.fieldNames || record.getFieldNames(options);
         fieldNames = _.uniq(fieldNames.concat(['display_name']));
         return this._rpc({
                 model: record.model,
@@ -2510,8 +2517,9 @@ var BasicModel = AbstractModel.extend({
     _fetchX2Manys: function (record, options) {
         var self = this;
         var defs = [];
-        var fieldNames = options && options.fieldNames || record.getFieldNames();
-        var viewType = options && options.viewType || record.viewType;
+        options = options || {};
+        var fieldNames = options.fieldNames || record.getFieldNames(options);
+        var viewType = options.viewType || record.viewType;
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
@@ -3034,11 +3042,15 @@ var BasicModel = AbstractModel.extend({
      * default view type.
      *
      * @param {Object} element an element from the localData
+     * @param {Object} [options]
+     * @param {Object} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {string[]} the list of field names
      */
-    _getFieldNames: function (element) {
+    _getFieldNames: function (element, options) {
         var fieldsInfo = element.fieldsInfo;
-        return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
+        var viewType = options && options.viewType || element.viewType;
+        return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
     },
     /**
      * Evaluate the record evaluation context.  This method is supposed to be
@@ -3533,13 +3545,16 @@ var BasicModel = AbstractModel.extend({
      * @see _fetchRecord @see _makeDefaultRecord
      *
      * @param {Object} record
-     * @param {Object} record
+     * @param {Object} [options]
+     * @param {Object} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Deferred<Object>} resolves to the finished resource
      */
     _postprocess: function (record, options) {
         var self = this;
         var defs = [];
-        _.each(record.getFieldNames(), function (name) {
+
+        _.each(record.getFieldNames(options), function (name) {
             var field = record.fields[name];
             var fieldInfo = record.fieldsInfo[record.viewType][name] || {};
             var options = fieldInfo.options || {};
@@ -3879,14 +3894,20 @@ var BasicModel = AbstractModel.extend({
                     var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
                     _.each(emptyGroupsIDs, function (groupID) {
                         list.data.push(groupID);
+                        var emptyGroup = self.localData[groupID];
+                        // this attribute hasn't been updated in the previous
+                        // loop for empty groups
+                        emptyGroup.aggregateValues = {};
                     });
                 }
                 return $.when.apply($, defs).then(function () {
-                    // generate the res_ids of the main list, being the concatenation
-                    // of the fetched res_ids in each group
-                    list.res_ids = _.flatten(_.map(arguments, function (group) {
-                        return group ? group.res_ids : [];
-                    }));
+                    if (!options || !options.onlyGroups) {
+                        // generate the res_ids of the main list, being the concatenation
+                        // of the fetched res_ids in each group
+                        list.res_ids = _.flatten(_.map(arguments, function (group) {
+                            return group ? group.res_ids : [];
+                        }));
+                    }
                     return list;
                 });
             });

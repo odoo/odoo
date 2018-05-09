@@ -181,7 +181,7 @@ class KVM(object):
         self.login = login
 
     def timeout(self,signum,frame):
-        logging.warning("vm timeout kill",self.pid)
+        logging.warning("vm timeout kill (pid: {})".format(self.pid))
         os.kill(self.pid,15)
 
     def start(self):

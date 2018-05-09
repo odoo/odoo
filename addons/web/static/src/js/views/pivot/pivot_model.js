@@ -17,6 +17,7 @@ odoo.define('web.PivotModel', function (require) {
  */
 
 var AbstractModel = require('web.AbstractModel');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -32,6 +33,7 @@ var PivotModel = AbstractModel.extend({
         this._super.apply(this, arguments);
         this.numbering = {};
         this.data = null;
+        this._loadDataDropPrevious = new concurrency.DropPrevious();
     },
 
     //--------------------------------------------------------------------------
@@ -556,7 +558,7 @@ var PivotModel = AbstractModel.extend({
             }
         }
 
-        return $.when.apply(null, groupBys.map(function (groupBy) {
+        return this._loadDataDropPrevious.add($.when.apply(null, groupBys.map(function (groupBy) {
             return self._rpc({
                     model: self.modelName,
                     method: 'read_group',
@@ -566,7 +568,7 @@ var PivotModel = AbstractModel.extend({
                     groupBy: groupBy,
                     lazy: false,
                 });
-        })).then(function () {
+        }))).then(function () {
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {
                 self.data.has_data = false;

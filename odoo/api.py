@@ -1014,6 +1014,14 @@ class Cache(object):
         ]
         return model.browse(ids)
 
+    def get_missing_ids(self, records, field):
+        """ Return the ids of ``records`` that have no value for ``field``. """
+        key = field.cache_key(records)
+        field_cache = self._data[field]
+        for record_id in records._ids:
+            if key not in field_cache.get(record_id, ()):
+                yield record_id
+
     def copy(self, records, env):
         """ Copy the cache of ``records`` to ``env``. """
         src = records

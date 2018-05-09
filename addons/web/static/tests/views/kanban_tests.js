@@ -3222,6 +3222,132 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    // XXX test deactivated in saas~11.2 as kanban archiving has been removed (and readded in saas~11.4)
+    QUnit.skip('column progressbars on archiving records update counter', function (assert) {
+        assert.expect(4);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="active"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "36",
+            "counter should contain the correct value");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "1 yop",
+            "the counter progressbars should be correctly displayed");
+
+        // archive all records of the second columns
+        kanban.$('.o_kanban_group:eq(1) .o_column_archive').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text(), "0",
+            "counter should contain the correct value");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_progress > .progress-bar:first').data('originalTitle'), "0 yop",
+            "the counter progressbars should have been correctly updated");
+
+        kanban.destroy();
+    });
+
+    QUnit.skip('kanban with progressbars: correctly update env when archiving records', function (assert) {
+        assert.expect(3);
+
+        // add active field on partner model and make all records active
+        this.data.partner.fields.active = {string: 'Active', type: 'char', default: true};
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="active"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+            intercepts: {
+                env_updated: function (ev) {
+                    assert.step(ev.data.ids);
+                },
+            },
+        });
+
+        // archive all records of the first column
+        kanban.$('.o_kanban_group:first .o_column_archive').click();
+
+        assert.verifySteps([
+            [1, 2, 3, 4],
+            [1, 2, 3],
+        ]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test('RPCs when (re)loading kanban view progressbars', function (assert) {
+        assert.expect(9);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\' sum_field="int_field"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="name"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        kanban.reload();
+
+        assert.verifySteps([
+            // initial load
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read_progress_bar',
+            // reload
+            'read_group',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            'read_progress_bar',
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test('drag & drop records grouped by m2o with progressbar', function (assert) {
         assert.expect(4);
 
@@ -3291,7 +3417,7 @@ QUnit.module('Views', {
             "Initial count should be Three");
         kanban.$('.bg-success-full').click();
         var lastCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
-        assert.strictEqual(lastCount, 0,
+        assert.strictEqual(lastCount, 1,
             "kanban counters should vary according to what subgroup is selected");
 
         kanban.destroy();

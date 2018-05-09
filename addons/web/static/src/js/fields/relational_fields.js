@@ -340,8 +340,8 @@ var FieldMany2One = AbstractField.extend({
     _renderReadonly: function () {
         var value = _.escape((this.m2o_value || "").trim()).split("\n").join("<br/>");
         this.$el.html(value);
-        if (!this.nodeOptions.no_open) {
-            this.$el.attr('href', '#');
+        if (!this.nodeOptions.no_open && this.value) {
+            this.$el.attr('href', _.str.sprintf('#id=%s&model=%s', this.value.res_id, this.field.relation));
             this.$el.addClass('o_form_uri');
         }
     },
@@ -1332,10 +1332,7 @@ var FieldOne2Many = FieldX2Many.extend({
 
         var self = this;
         var id = ev.data.id;
-        var onSaved = function (record, hasChanged) {
-            if (!hasChanged) {
-                return;
-            }
+        var onSaved = function (record) {
             if (_.some(self.value.data, {id: record.id})) {
                 // the record already exists in the relation, so trigger an
                 // empty 'UPDATE' operation when the user clicks on 'Save' in

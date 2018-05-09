@@ -30,7 +30,10 @@ class TestDeliveryCost(common.TransactionCase):
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
         # as the tests hereunder assume all the prices in USD, we must ensure
         # that the company actually uses USD
-        self.env.user.company_id.write({'currency_id': self.env.ref('base.USD').id})
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.user.company_id.id])
+        self.pricelist.currency_id = self.env.ref('base.USD').id
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost

@@ -411,8 +411,11 @@ class ProductTemplate(models.Model):
     outgoing_qty = fields.Float(
         'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
         digits=dp.get_precision('Product Unit of Measure'))
-    location_id = fields.Many2one('stock.location', 'Location')
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
+    # The goal of these fields is not to be able to search a location_id/warehouse_id but
+    # to properly make these fields "dummy": only used to put some keys in context from
+    # the search view in order to influence computed field
+    location_id = fields.Many2one('stock.location', 'Location', store=False, search=lambda operator, operand, vals: [])
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False, search=lambda operator, operand, vals: [])
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -504,7 +507,7 @@ class ProductTemplate(models.Model):
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
-            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
+            done_moves = self.env['stock.move'].search([('product_id', 'in', updated.with_context(active_test=False).mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
                 raise UserError(_("You can not change the unit of measure of a product that has already been used in a done stock move. If you need to change the unit of measure, you may deactivate this product."))
         if 'type' in vals and vals['type'] != 'product' and sum(self.mapped('nbr_reordering_rules')) != 0:
