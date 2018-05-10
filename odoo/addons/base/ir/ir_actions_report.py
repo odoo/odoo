@@ -8,6 +8,10 @@ from odoo.tools import config
 from odoo.sql_db import TestCursor
 from odoo.http import request
 
+from odoo.http import Root
+from odoo.service import security
+root = Root()
+
 import time
 import base64
 import io
@@ -191,6 +195,23 @@ class IrActionsReport(models.Model):
         '''
         return wkhtmltopdf_state
 
+    def _create_wkhtmltopdf_session(self):
+        session = root.session_store.new()
+        session.uid = self.env.user.id
+        session.login = self.env.user.login
+        session.db = self._cr.dbname
+        session.wkhtmltopdf = True
+        session.context = {
+            'lang': self.env.user.lang,
+            'tz': self.env.user.tz,
+            'uid': self.env.user.id
+        }
+        session.session_token = security.compute_session_token(session)
+        root.session_store.save(session)
+        self.env.user.current_session = session.sid
+        _logger.debug('Session Store: %s', session)
+        return session
+
     @api.model
     def _build_wkhtmltopdf_args(
             self,
@@ -216,6 +237,11 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--cookie', 'session_id', request.session.sid])
         except AttributeError:
             pass
+        
+        # In case cronjob is triggering a report generation we need to fake a session for the user
+        if repr(request) == '<LocalProxy unbound>':
+            session = self._create_wkhtmltopdf_session()
+            command_args.extend(['--cookie', 'session_id', session.sid])
 
         # Less verbose error messages
         command_args.extend(['--quiet'])
@@ -326,6 +352,12 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
+    def _check_delete_wkhtmltopdf_session(self):
+        if hasattr(self.env.user, 'current_session'):
+            session = root.session_store.get(self.env.user.current_session)
+            if session.wkhtmltopdf:
+                root.session_store.delete(session)
+
     @api.model
     def _run_wkhtmltopdf(
             self,
@@ -387,6 +419,7 @@ class IrActionsReport(models.Model):
             wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
             process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out, err = process.communicate()
+            self._check_delete_wkhtmltopdf_session()
 
             if process.returncode not in [0, 1]:
                 if process.returncode == -11:
@@ -396,6 +429,7 @@ class IrActionsReport(models.Model):
                     message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
                 raise UserError(message % (str(process.returncode), err[-1000:]))
         except:
+            self._check_delete_wkhtmltopdf_session()
             raise
 
         with open(pdf_report_path, 'rb') as pdf_document:
