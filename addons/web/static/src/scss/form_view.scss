@@ -444,6 +444,11 @@
     .o_group.o_inner_group.oe_subtotal_footer {
         @extend .oe_right;
 
+        &.oe_subtotal_footer_left {
+            .o_td_label {
+                text-align: left;
+            }
+        }
         > tbody > tr > td {
             padding: 0;
 
