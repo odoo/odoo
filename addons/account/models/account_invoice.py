@@ -573,8 +573,8 @@ class AccountInvoice(models.Model):
 
         context = self._context
         supplier_form_view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
-        if context.get('active_model') == 'res.partner' and context.get('active_ids'):
-            partner = self.env['res.partner'].browse(context['active_ids'])[0]
+        if context.get('active_model') == 'res.partner' and context.get('active_ids') or 'active_domain' in context:
+            partner = self.env['res.partner'].get_active_records()[0]
             if not view_type:
                 view_id = get_view_id('invoice_tree', 'account.invoice.tree')
                 view_type = 'tree'
