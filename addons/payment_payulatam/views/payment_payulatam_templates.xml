@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payulatam_form">
+        <div>
+            <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
+            <input type="hidden" name="merchantId" t-att-value='merchantId'/>
+            <input type="hidden" name="accountId" t-att-value='accountId'/>
+            <input type="hidden" name="description" t-att-value='description'/>
+            <input type="hidden" name="referenceCode" t-att-value='referenceCode'/>
+            <input type="hidden" name="amount" t-att-value='amount'/>
+            <input type="hidden" name="currency" t-att-value='currency'/>
+            <input type="hidden" name="signature" t-att-value='signature'/>
+            <input type="hidden" name="tax" t-att-value='tax'/>
+            <input type="hidden" name="taxReturnBase" t-att-value="taxReturnBase"/>
+            <input type="hidden" name="buyerEmail" t-att-value='buyerEmail'/>
+            <input type="hidden" name="responseUrl" t-att-value='responseUrl'/>
+            <input type="hidden" name="extra1" t-att-value="extra1"/>
+        </div>
+    </template>
+</odoo>

@@ -243,4 +243,26 @@
                                                         ref("payment.payment_icon_cc_visa")])]'/>
     </record>
 
+    <record id="payment_acquirer_payulatam" model="payment.acquirer">
+        <field name="name">PayUlatam</field>
+        <field name="image" type="base64" file="payment_payulatam/static/src/img/payulatam_icon.png"/>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="module_id" ref="base.module_payment_payulatam"/>
+        <field name="description" type="html">
+            <p>
+                PayU is a leading financial services provider in Colombia, Argentina, Brazil, Chile, Mexico, Panama, and Peru. It allows merchant to accept local payments with just one account and integration.
+            </p>
+            <ul class="list-inline">
+                <li><i class="fa fa-check"/>Online Payment</li>
+                <li><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.payulatam.com/medios-de-pago/ -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_american_express"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_codensa_easy_credit")])]'/>
+    </record>
+
 </odoo>
