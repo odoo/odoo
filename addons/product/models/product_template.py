@@ -155,6 +155,12 @@ class ProductTemplate(models.Model):
 
     item_ids = fields.One2many('product.pricelist.item', 'product_tmpl_id', 'Pricelist Items')
 
+    @api.constrains('barcode', 'company_id')
+    def _check_unique_barcode_company_wise(self):
+        for variant in self.product_variant_ids:
+            if variant.barcode:
+                variant._check_unique_barcode_company_wise()
+
     @api.depends('product_variant_ids')
     def _compute_product_variant_id(self):
         for p in self:

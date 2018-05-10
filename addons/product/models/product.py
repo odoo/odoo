@@ -245,9 +245,15 @@ class ProductProduct(models.Model):
         # image_original instead of the big-sized image.
         self.invalidate_cache()
 
-    _sql_constraints = [
-        ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
-    ]
+    @api.constrains('barcode')
+    def _check_unique_barcode_company_wise(self):
+        if self.barcode:
+            domain = [('barcode', '=', self.barcode), ('id', '!=', self.id)]  # if no company_id then its a shared product, check barcode for all products
+            if self.company_id:
+                domain = [('barcode', '=', self.barcode), ('id', '!=', self.id), '|', ('company_id', '=', False), ('company_id', 'in', self.company_id.ids)]  # Company specific product., search for the barcode of products of the same company or shared among companies
+            similar_barcode = self.search(domain)
+            if similar_barcode:
+                raise ValidationError(_('A barcode can only be assigned to one product !'))
 
     def _get_invoice_policy(self):
         return False
