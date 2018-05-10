@@ -348,7 +348,7 @@ var ListController = BasicController.extend({
         var record = this.model.get(this.handle);
         return _.extend(env, {
             domain: record.getDomain(),
-            all_selected: this.allSelected
+            all_selected: this.allSelected || false
         });
     },
     /**

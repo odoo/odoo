@@ -93,6 +93,7 @@ var ListRenderer = BasicRenderer.extend({
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
+        this.allSelected = false;
         return this._super.apply(this, arguments);
     },
 
