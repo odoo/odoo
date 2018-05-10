@@ -29,9 +29,9 @@ class PosBoxIn(PosBox):
     def _calculate_values_for_statement_line(self, record):
         values = super(PosBoxIn, self)._calculate_values_for_statement_line(record=record)
         active_model = self.env.context.get('active_model', False)
-        active_ids = self.env.context.get('active_ids', [])
-        if active_model == 'pos.session' and active_ids:
-            values['ref'] = self.env[active_model].browse(active_ids)[0].name
+        active_records = self.env[active_model].get_active_records()
+        if active_model == 'pos.session' and active_records:
+            values['ref'] = active_records[0].name
         return values
 
 
@@ -41,7 +41,7 @@ class PosBoxOut(PosBox):
     def _calculate_values_for_statement_line(self, record):
         values = super(PosBoxOut, self)._calculate_values_for_statement_line(record)
         active_model = self.env.context.get('active_model', False)
-        active_ids = self.env.context.get('active_ids', [])
-        if active_model == 'pos.session' and active_ids:
-            values['ref'] = self.env[active_model].browse(active_ids)[0].name
+        active_records = self.env[active_model].get_active_records()
+        if active_model == 'pos.session' and active_records:
+            values['ref'] = active_records[0].name
         return values
