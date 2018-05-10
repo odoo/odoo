@@ -634,7 +634,16 @@ class AccountInvoice(models.Model):
             partner_id = msg_dict.get('author_id')
         if partner_id:
             subscribe_partner_ids.append(partner_id)
-        values = dict(custom_values or {}, partner_id=partner_id)
+        # "TO" email address will generally be the vendor journal alias, and we will set that alias in origin field of vendor bill
+        # which was generated from email alias.
+        [to_email] = email_split((msg_dict.get('to') or ''))
+        alias_name = to_email.split('@')
+        values = dict(custom_values or {}, partner_id=partner_id, origin=to_email)
+        journal = self.env['account.journal'].search([
+            ('type', '=', 'purchase'), ('alias_prefix', '=', alias_name[0])
+        ], limit=1)
+        if journal:
+            values['journal_id'] = journal.id
         # Passing `type` in context so that _default_journal(...) can correctly set journal for new vendor bill
         invoice = super(AccountInvoice, self.with_context(type=values.get('type'))).message_new(msg_dict, values)
         # When configured Odoo to generate vendor bills from email and if the sender is an Odoo Vendor
