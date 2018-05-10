@@ -121,6 +121,7 @@ class MailComposer(models.TransientModel):
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
+    body_preview = fields.Html(related='template_id.body_preview')
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
     subtype_id = fields.Many2one(default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
@@ -276,6 +277,7 @@ class MailComposer(models.TransientModel):
         # render all template-based value at once
         if mass_mail_mode and self.model:
             rendered_values = self.render_message(res_ids)
+
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
@@ -445,10 +447,15 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.render_template(self.subject, self.model, res_ids)
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
-        emails_from = self.render_template(self.email_from, self.model, res_ids)
-        replies_to = self.render_template(self.reply_to, self.model, res_ids)
+        template_type, expr_type = ('jinja', 'jinja')
+        body = self.body
+        if self.template_id and self.template_id.view_id:
+            template_type, expr_type = ('qweb', 'qweb_expr')
+            body = self.template_id.view_id
+        subjects = self.render_template(self.subject, self.model, res_ids, template_type=expr_type)
+        bodies = self.render_template(body, self.model, res_ids, post_process=True, template_type=template_type)
+        emails_from = self.render_template(self.email_from, self.model, res_ids, template_type=expr_type)
+        replies_to = self.render_template(self.reply_to, self.model, res_ids, template_type=expr_type)
         default_recipients = {}
         if not self.partner_ids:
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
@@ -509,5 +516,5 @@ class MailComposer(models.TransientModel):
         return multi_mode and values or values[res_ids[0]]
 
     @api.model
-    def render_template(self, template, model, res_ids, post_process=False):
-        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process)
+    def render_template(self, template, model, res_ids, post_process=False, template_type='jinja'):
+        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process, template_type=template_type)

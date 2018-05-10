@@ -20,4 +20,8 @@
         <field name="res_model_id" ref="test_mail.model_mail_test_activity"/>
     </record>
 
+    <template id="mail_test_qweb_template_view">
+        <t t-esc="object.email_from"/>
+    </template>
+
 </odoo>

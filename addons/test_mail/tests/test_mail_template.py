@@ -45,6 +45,16 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
             'email_to': '%s, %s' % (self.email_1, self.email_2),
             'email_cc': '%s' % self.email_3})
 
+        self.email_template_qweb = self.env['mail.template'].create({
+            'model_id': self.env['ir.model']._get('mail.test.simple').id,
+            'name': 'Hogs Template',
+            'subject': '${object.name}',
+            'view_id': self.env.ref('test_mail.mail_test_qweb_template_view').id,
+            'user_signature': False,
+            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
+            'email_to': '%s, %s' % (self.email_1, self.email_2),
+            'email_cc': '%s' % self.email_3})
+
         # admin should receive emails
         self.user_admin.write({'notification_type': 'email'})
 
@@ -161,6 +171,39 @@ class TestMailTemplate(BaseFunctionalTest, MockEmails, TestRecipients):
         action = self.email_template.ref_ir_act_window
         self.assertEqual(action.name, 'Send Mail (%s)' % self.email_template.name)
         self.assertEqual(action.binding_model_id.model, 'mail.test.simple')
+
+    # Qweb mail template test case
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_composer_w_template_qweb(self):
+        composer = self.env['mail.compose.message'].sudo(self.user_employee).with_context({
+            'default_composition_mode': 'comment',
+            'default_model': 'mail.test.simple',
+            'default_res_id': self.test_record.id,
+            'default_template_id': self.email_template_qweb.id,
+        }).create({'subject': 'Forget me subject', 'body': 'Dummy body'})
+
+        # perform onchange and send emails
+        values = composer.onchange_template_id(self.email_template_qweb.id, 'comment', self.test_record._name, self.test_record.id)['value']
+        composer.write(values)
+        composer.send_mail()
+
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
+        self.assertEmails(
+            self.user_employee.partner_id,
+            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            subject=self.test_record.name,
+            body_content=self.test_record.email_from)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_post_post_w_template_qweb(self):
+        self.test_record.sudo(self.user_employee).message_post_with_template(self.email_template_qweb.id, composition_mode='comment')
+
+        new_partners = self.env['res.partner'].search([('email', 'in', [self.email_1, self.email_2])])
+        self.assertEmails(
+            self.user_employee.partner_id,
+            [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
+            subject=self.test_record.name,
+            body_content=self.test_record.email_from)
 
     # def test_template_scheduled_date(self):
     #     from unittest.mock import patch

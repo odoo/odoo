@@ -9,8 +9,9 @@ import dateutil.relativedelta as relativedelta
 import logging
 
 import functools
-import lxml
 from werkzeug import urls
+from lxml import etree
+from werkzeug.utils import unescape
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
@@ -164,6 +165,8 @@ class MailTemplate(models.Model):
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
     body_html = fields.Html('Body', translate=True, sanitize=False)
+    view_id = fields.Many2one('ir.ui.view', 'Related Qweb View')
+    body_preview = fields.Html(compute="_compute_body_preview")
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
@@ -192,6 +195,11 @@ class MailTemplate(models.Model):
     null_value = fields.Char('Default Value', help="Optional value to use if the target field is empty")
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
+
+    def _compute_body_preview(self):
+        for tmpl in self:
+            if tmpl.view_id:
+                tmpl.body_preview = tmpl.view_id._read_template(tmpl.view_id.id)
 
     @api.onchange('model_id')
     def onchange_model_id(self):
@@ -279,6 +287,14 @@ class MailTemplate(models.Model):
 
         return True
 
+    @api.multi
+    def associated_views(self):
+        self.ensure_one()
+        action_ref = self.env.ref('base.action_ui_view')
+        action_data = action_ref.read()[0]
+        action_data['domain'] = ['|', ('inherit_id', '=', self.view_id.id), ('id', '=', self.view_id.id), ('type', '=', 'qweb')]
+        return action_data
+
     # ----------------------------------------
     # RENDERING
     # ----------------------------------------
@@ -289,7 +305,18 @@ class MailTemplate(models.Model):
         return html
 
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def render_template(self, text_or_view_id, model, res_ids, post_process=False, template_type='jinja'):
+        if template_type == 'jinja':
+            return self._render_jinja_template(text_or_view_id, model, res_ids, post_process=post_process)
+        elif template_type == 'qweb':
+            return self._render_qweb_template(text_or_view_id, model, res_ids, post_process=post_process)
+        elif template_type == 'qweb_expr':
+            return self._render_qweb_expr(text_or_view_id, model, res_ids)
+        else:
+            raise UserError(_("Mail template type '%s' not supported") % template_type)
+
+    @api.model
+    def _render_jinja_template(self, template_txt, model, res_ids, post_process=False):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
@@ -346,6 +373,90 @@ class MailTemplate(models.Model):
 
         return multi_mode and results or results[res_ids[0]]
 
+    @api.model
+    def _render_qweb_template(self, view, model, res_ids, post_process=False):
+        """ Render the given view (ir.ui.view record or external identifier
+         of the view)
+
+        :param recordset / str view: the view object or external identifier of view
+        :param str model: model name of the document record this mail is related to.
+        :param int res_ids: list of ids of document records those mails are related to.
+        """
+        multi_mode = True
+        if isinstance(res_ids, pycompat.integer_types):
+            multi_mode = False
+            res_ids = [res_ids]
+
+        results = dict.fromkeys(res_ids, u"")
+
+        if isinstance(view, pycompat.string_types):
+            view = self.env.ref(view)
+
+        if not view:
+            return results
+
+        records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
+        vals = {
+            'user': self.env.user,
+            'ctx': self.env.context
+        }
+        for record in records:
+            vals.update({
+                'object': record,
+                'record': record
+            })
+            rendered_view = view.render(vals, engine='ir.qweb', minimal_qcontext=True)
+            results[record.id] = rendered_view
+
+        if post_process:
+            for res_id, result in results.items():
+                results[res_id] = self.render_post_process(result)
+
+        return multi_mode and results or results[res_ids[0]]
+
+    @api.model
+    def _render_qweb_expr(self, expr, model, res_ids):
+        """ Renders the given valid qweb expression using qweb engine
+
+        :param str expr: the expression text to render
+        :param str model: model name of the document record this mail is related to.
+        :param int res_ids: list of ids of document records those mails are related to.
+        """
+        multi_mode = True
+        if isinstance(res_ids, pycompat.integer_types):
+            multi_mode = False
+            res_ids = [res_ids]
+
+        results = dict.fromkeys(res_ids, u"")
+        if not expr:
+            return results
+
+        qcontext = {
+            'format_date': lambda date, format=False, context=self.env.context: format_date(self.env, date, format),
+            'format_tz': lambda dt, tz=False, format=False, context=self.env.context: format_tz(self.env, dt, tz, format),
+            'format_amount': lambda amount, currency, context=self.env.context: format_amount(self.env, amount, currency),
+            'user': self.env.user,
+            'ctx': self.env.context
+        }
+
+        # Build Qweb Template with etree
+        qweb = self.env['ir.qweb']
+        root = etree.Element("t")
+        root.set('t-name', 'template_expr')
+        t_set = etree.SubElement(root, "t")
+        t_set.set('t-set', 'result')
+        t_set.set('t-valuef', expr)
+        t_esc = etree.SubElement(root, "t")
+        t_esc.set('t-esc', 'result')
+
+        records = self.env[model].browse(it for it in res_ids if it)
+
+        for record in records:
+            qcontext['object'] = record
+            res = qweb.render(root, values=qcontext)
+            results[record.id] = unescape(res.decode("utf-8"))
+        return multi_mode and results or results[res_ids[0]]
+
     @api.multi
     def get_email_template(self, res_ids):
         multi_mode = True
@@ -361,7 +472,8 @@ class MailTemplate(models.Model):
             return results
         self.ensure_one()
 
-        langs = self.render_template(self.lang, self.model, res_ids)
+        template_type = 'qweb_expr' if self.view_id else 'jinja'
+        langs = self.render_template(self.lang, self.model, res_ids, template_type=template_type)
         for res_id, lang in langs.items():
             if lang:
                 template = self.with_context(lang=lang)
@@ -435,9 +547,17 @@ class MailTemplate(models.Model):
                 Template = Template.with_context(lang=template._context.get('lang'))
             for field in fields:
                 Template = Template.with_context(safe=field in {'subject'})
-                generated_field_values = Template.render_template(
-                    getattr(template, field), template.model, template_res_ids,
-                    post_process=(field == 'body_html'))
+                if template.view_id:
+                    if field == 'body_html':
+                        generated_field_values = Template.render_template(
+                            template.view_id, template.model, template_res_ids, template_type='qweb')
+                    else:
+                        generated_field_values = self.render_template(
+                            template[field], template.model, template_res_ids, template_type='qweb_expr')
+                else:
+                    generated_field_values = Template.render_template(
+                        getattr(template, field), template.model, template_res_ids,
+                        post_process=(field == 'body_html'), template_type='jinja')
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
@@ -466,7 +586,8 @@ class MailTemplate(models.Model):
             if template.report_template:
                 for res_id in template_res_ids:
                     attachments = []
-                    report_name = self.render_template(template.report_name, template.model, res_id)
+                    template_type = 'qweb_expr' if template.view_id else 'jinja'
+                    report_name = self.render_template(template.report_name, template.model, res_id, template_type=template_type)
                     report = template.report_template
                     report_service = report.report_name
 

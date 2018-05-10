@@ -219,8 +219,8 @@ def foreach_iterator(base_ctx, enum, name):
         base_ctx[k] = ctx[k]
 
 _FORMAT_REGEX = re.compile(
-    # ( ruby-style )|(  jinja-style  )
-    r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
+    # ( ruby-style )|(  jinja-style  )|( jinja2-style )
+    r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})|(?:\$\{(.+?)\})')
 
 
 class frozendict(dict):
@@ -1580,7 +1580,7 @@ class QWeb(object):
             if literal:
                 elts.append(ast.Str(literal if isinstance(literal, pycompat.text_type) else literal.decode('utf-8')))
 
-            expr = m.group(1) or m.group(2)
+            expr = m.group(1) or m.group(2) or m.group(3)
             elts.append(self._compile_strexpr(expr))
             base_idx = m.end()
         # string past last regex match
