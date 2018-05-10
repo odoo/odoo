@@ -27,7 +27,8 @@ class product_price_list(models.TransientModel):
         elif (not self.env.user.company_id.external_report_layout_id):
             raise UserError(_("You have to set your reports's header and footer layout."))
 
-        datas = {'ids': self.env.context.get('active_ids', [])}
+        rec_ids = self.env['product.product'].get_active_records().ids
+        datas = {'ids': rec_ids}
         res = self.read(['price_list', 'qty1', 'qty2', 'qty3', 'qty4', 'qty5'])
         res = res and res[0] or {}
         res['price_list'] = res['price_list'][0]
