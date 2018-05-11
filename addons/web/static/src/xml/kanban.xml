@@ -12,7 +12,7 @@
     <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id"
         role="feed" t-attf-aria-labelledby="kanban_header_#{widget.id or widget.db_id}">
         <div class="o_kanban_header">
-            <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
+            <div class="o_kanban_header_title">
                 <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
                 <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
