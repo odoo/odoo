@@ -11,7 +11,7 @@ class SurveyComposeMessage(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(SurveyComposeMessage, self).default_get(fields)
-        if self._context.get('active_model') == 'crm.lead' and self._context.get('active_ids'):
+        if self._context.get('active_model') == 'crm.lead' and (self._context.get('active_ids') or 'active_domain' in self._context):
             partner_ids = []
             emails_list = []
             for lead in self.env['crm.lead'].get_active_records():
