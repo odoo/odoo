@@ -13,6 +13,8 @@ var core = require('web.core');
 var dom = require('web.dom');
 var widgetRegistry = require('web.widget_registry');
 
+var Banner = require('web.Banner');
+
 var qweb = core.qweb;
 
 var BasicRenderer = AbstractRenderer.extend({
@@ -31,6 +33,7 @@ var BasicRenderer = AbstractRenderer.extend({
         this.viewType = params.viewType;
         this.mode = params.mode || 'readonly';
         this.widgets = [];
+        this.bannerRoute = params.bannerRoute;
     },
     /**
      * This method has two responsabilities: find every invalid fields in the
@@ -650,7 +653,36 @@ var BasicRenderer = AbstractRenderer.extend({
      * @returns {Deferred}
      */
     _renderView: function () {
-        return $.when();
+        var def = this._renderBanner();
+        return def;
+    },
+    /**
+     * Renders the html provided by the route specified by the bannerRoute
+     * attribute on the view (banner_route on the template).
+     * Renders it inside o_view_controller, before the actual view.
+     * There can be only one banner displayed at a time.
+     *
+     * Route example:
+     *   @http.route('/module/hello', auth='user')
+     *   def hello(self, **kw):
+     *       return "<h1>Hello, world</h1>"
+     *
+     * @returns {Deferred}
+     */
+    _renderBanner: function() {
+        var def;
+        if (this.bannerRoute !== undefined) {
+            // we should only display one banner at a time
+            if (this._banner && this._banner.destroy) {
+                this._banner.destroy();
+            }
+            var self = this;
+            def = $.get(this.bannerRoute).then(function(html) {
+                self._banner = new Banner(self, html);
+                self._banner.insertBefore(self.$el);
+            });
+        }
+        return $.when(def);
     },
     /**
      * Instantiate custom widgets

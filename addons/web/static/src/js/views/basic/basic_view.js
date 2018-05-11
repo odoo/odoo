@@ -43,6 +43,7 @@ var BasicView = AbstractView.extend({
         this.fieldsInfo[this.viewType] = this.fieldsView.fieldsInfo[this.viewType];
 
         this.rendererParams.viewType = this.viewType;
+        this.rendererParams.bannerRoute = this.arch.attrs.banner_route;
 
         this.controllerParams.confirmOnDelete = true;
         this.controllerParams.archiveEnabled = 'active' in this.fields;
