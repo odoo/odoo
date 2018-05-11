@@ -436,12 +436,10 @@
 
                                 <t t-if="len(image_ids) or variant_img">
                                     <a class="carousel-control left" href="#o-carousel-product" role="button" data-slide="prev" >
-                                        <span class="fa fa-chevron-left" aria-hidden="true"/>
-                                        <span class="sr-only">Previous</span>
+                                        <span class="fa fa-chevron-left" aria-label="Previous"/>
                                     </a>
                                     <a class="carousel-control right" href="#o-carousel-product" role="button" data-slide="next">
-                                        <span class="fa fa-chevron-right" aria-hidden="true"/>
-                                        <span class="sr-only">Next</span>
+                                        <span class="fa fa-chevron-right" aria-label="Next"/>
                                     </a>
                                 </t>
                               </div>
@@ -1058,7 +1056,7 @@
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                     <a class='a-submit btn btn-default mb16 btn-block'>
-                                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Add an address
+                                                        <i class="fa fa-plus-square"></i> Add an address
                                                     </a>
                                                 </form>
                                             </div>
@@ -1334,7 +1332,7 @@
                                 <a class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-arrow-right" aria-hidden="true"></i> Add payment acquirers
+                                        <i class="fa fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">

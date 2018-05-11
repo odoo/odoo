@@ -487,7 +487,7 @@
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
-                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                    <p>
                      Note: To hide this page, uncheck it from the top Customize menu.
                    </p>
@@ -744,7 +744,7 @@
                     <form class="form-horizontal" role="form">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             <h3 class="modal-title">Reset templates</h3>
                         </div>
                         <div class="modal-body">
@@ -760,7 +760,7 @@
                         </div>
                         <div class="modal-footer">
                             <input type="submit" value="Confirm" class="btn btn-primary"/>
-                            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
                         </div>
                     </div>
                     </form>
@@ -925,10 +925,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                       <tr>
                           <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
                           <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" t-att-aria-label="'Checked' if page.menu_ids else 'Not checked'"></i></td>
                           <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
                           <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" t-att-aria-label="'Checked' if page.website_indexed else 'Not checked'"></i></td>
                           <td class="text-right">
                               <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page" aria-label="Manage this page"></a>
                               <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend" aria-label="Edit code in backend"></a>

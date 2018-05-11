@@ -167,25 +167,25 @@
         The duplication avoid to break an existing installation in stable version-->
     <template id="payment_confirmation_status">
         <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             Your payment has been authorized.
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
         </div>
@@ -272,15 +272,15 @@
                   <div id="quote_content" class="col-md-9">
 
                       <div class="alert alert-success alert-dismissable" t-if="message==1">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           Your message has been successfully sent!
                       </div>
                       <div class="alert alert-warning alert-dismissable" t-if="message==2">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This quotation has been rejected. <a href="#discussion">Contact us</a> if you want a new one.
                       </div>
                       <div class="alert alert-warning alert-dismissable" t-if="message==3">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order has been validated. Thanks for your trust
                           and do not hesitate to <a href="#discussion">contact us</a> for
                           any question.
@@ -290,7 +290,7 @@
                           <t t-call="website_quote.payment_confirmation_status"/>
                       </t>
                       <div class="alert alert-warning alert-dismissable" t-if="message==4 and quotation.state != 'sent'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                           This order
                             <t t-if="quotation.state=='draft'">has not yet been sent!</t>
                             <t t-if="quotation.state=='cancel'">has already been cancelled!</t>
@@ -305,7 +305,7 @@
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
                             </div>
                             <div class="modal-body" id="sign-dialog">
@@ -328,7 +328,7 @@
 
                         <div class="modal-dialog modal-content" t-if="quotation.require_payment or need_payment">
                           <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">Validate Order</h4>
                           </div>
                           <div class="modal-body" id="sign-dialog">
@@ -361,7 +361,7 @@
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>
                             </div>
                             <div class="modal-body">
@@ -379,7 +379,7 @@
                       </div>
 
                       <div class="alert alert-warning alert-dismissable hidden-print" t-if="quotation.state == 'cancel'">
-                          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                          <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
                           <strong>This quotation has been canceled.</strong> Contact us to get a new quote.
                       </div>
 
@@ -618,7 +618,7 @@
                             </div>
                         </div>
                         <div class="alert alert-info alert-dismissable" t-ignore="True">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                             <p>
                                 <strong>Template Header:</strong> this content
                                 will appear on all quotations using this
@@ -636,7 +636,7 @@
                             <t t-if="line.product_id.product_tmpl_id.id not in product_tmpl_ids">
                                 <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [line.product_id.product_tmpl_id.id]"/>
                                 <div class="alert alert-info alert-dismissable mt16" t-ignore="True">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                                     Product: <strong t-esc="line.product_id.name"/>:
                                     this content will appear on the quotation only if this
                                     product is put on the quote.
@@ -649,7 +649,7 @@
                             <t t-if="option_line.product_id.product_tmpl_id.id not in product_tmpl_ids">
                                 <t t-set="product_tmpl_ids" t-value="product_tmpl_ids + [option_line.product_id.product_tmpl_id.id]"/>
                                 <div class="alert alert-info alert-dismissable mt16" t-ignore="True">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                                     Optional Product: <strong t-esc="option_line.product_id.name"/>:
                                     this content will appear on the quotation only if this
                                     product is used in the quote.

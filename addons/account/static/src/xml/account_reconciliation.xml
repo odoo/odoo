@@ -266,7 +266,7 @@
 
 <t t-name="reconciliation.notification">
     <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true" class="fa fa-times"></span><span class="sr-only">Close</span></button>
+        <button type="button" class="close" data-dismiss="alert"><span aria-label="Close" class="fa fa-times"></span><span class="sr-only">Close</span></button>
         <t t-esc="message" />
         <t t-if="details !== undefined">
             <a class="fa fa-external-link" rel="do_action" href="#"

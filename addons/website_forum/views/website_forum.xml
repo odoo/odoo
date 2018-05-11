@@ -106,12 +106,12 @@
             <div class="row mb16">
                 <div class="col-sm-9">
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable">
-                        <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                         <div t-field="notification.body"/>
                         <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
                     </div>
                     <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable">
-                        <button type="button" class="close validation_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                         <div>
                             <p>
                                 It appears your email has not been verified.
@@ -120,7 +120,7 @@
                         </div>
                     </div>
                     <div t-if="validation_email_done" class="alert alert-success alert-dismissable">
-                        <button type="button" class="close validated_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                        <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                         <div>
                             <p>Congratulations! Your email has just been validated. You may now participate to our forums.</p>
                         </div>

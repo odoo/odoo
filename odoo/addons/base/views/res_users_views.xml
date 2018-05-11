@@ -287,8 +287,8 @@
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
-                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" aria-hidden="true"></i></li>
-                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle"></i></li>
+                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" aria-label="Ok"></i></li>
+                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" aria-label="Invalid"></i></li>
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>

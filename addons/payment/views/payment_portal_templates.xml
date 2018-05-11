@@ -121,22 +121,22 @@
         <t t-set="thanks_msg" t-value="payment_tx_id.acquirer_id.post_msg"/>
         <t t-set="thanks_msg" t-value="thanks_msg and thanks_msg != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;' and thanks_msg"/>
         <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
             Your payment has been authorized.
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
             <span t-if='thanks_msg' t-raw="thanks_msg"/>
         </div>
         <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <button type="button" class="close" data-dismiss="alert" title="Dismiss" aria-label="Dismiss">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
         </div>
         <div t-if="payment_tx_id.state_message">
