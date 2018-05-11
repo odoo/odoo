@@ -71,8 +71,6 @@ class MailComposer(models.TransientModel):
         if result['composition_mode'] == 'reply':
             result['composition_mode'] = 'comment'
         vals = {}
-        if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            vals['active_domain'] = '%s' % self._context.get('active_domain')
         if result['composition_mode'] == 'comment':
             vals.update(self.get_record_data(result))
 
@@ -105,8 +103,6 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts')
-    use_active_domain = fields.Boolean('Use active domain')
-    active_domain = fields.Text('Active domain', readonly=True)
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
@@ -222,10 +218,8 @@ class MailComposer(models.TransientModel):
                 # add context key to avoid subscribing the author
                 ActiveModel = ActiveModel.with_context(mail_notify_force_send=False, mail_create_nosubscribe=True)
             # wizard works in batch mode: [res_id] or active_ids or active_domain
-            if mass_mode and wizard.use_active_domain and wizard.model:
-                res_ids = self.env[wizard.model].search(safe_eval(wizard.active_domain)).ids
-            elif mass_mode and wizard.model and self._context.get('active_ids'):
-                res_ids = self._context['active_ids']
+            if mass_mode and wizard.model and (self._context.get('active_ids') or 'active_domain' in self._context):
+                res_ids = self.env[wizard.model].get_active_records().ids
             else:
                 res_ids = [wizard.res_id]
 

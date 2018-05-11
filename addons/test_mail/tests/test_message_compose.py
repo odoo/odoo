@@ -309,8 +309,6 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': self.test_record._name,
-            'default_use_active_domain': True,
-            'active_ids': [self.test_record.id],
             'active_domain': [('name', 'in', ['%s' % self.test_record.name, '%s' % test_record_2.name])],
         }).sudo(self.user_employee).create({
             'subject': 'From Composer Test',
@@ -327,9 +325,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         self.env['mail.compose.message'].with_context({
             'default_composition_mode': 'mass_mail',
             'default_model': self.test_record._name,
-            'default_use_active_domain': False,
             'active_ids': [self.test_record.id],
-            'active_domain': [('name', 'in', ['%s' % self.test_record.name, '%s' % test_record_2.name])],
         }).sudo(self.user_employee).create({
             'subject': 'From Composer Test',
             'body': '${object.name}',

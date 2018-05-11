@@ -15,33 +15,7 @@
                         <field name="is_log" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
-                        <field name="active_domain" invisible="1"/>
 
-                        <!-- Various warnings -->
-                        <div colspan="2" class="oe_form_box_info bg-info oe_text_center"
-                                attrs="{'invisible': [('active_domain', '=', False)]}">
-                            <p attrs="{'invisible': [('use_active_domain', '=', False)]}">
-                                <strong>
-                                    All records matching your current search filter will be mailed,
-                                    not only the ids selected in the list view.
-                                </strong><br />
-                                The email will be sent for all the records selected in the list.<br />
-                                Confirming this wizard will probably take a few minutes blocking your browser.
-                            </p>
-                            <p attrs="{'invisible': [('use_active_domain', '=', True)]}">
-                                <strong>Only records checked in list view will be used.</strong><br />
-                                The email will be sent for all the records selected in the list.
-                            </p>
-                            <p class="mt8">
-                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">
-                                    If you want to send it for all the records matching your search criterion, check this box :
-                                </span>
-                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">
-                                    If you want to use only selected records please uncheck this selection box :
-                                </span>
-                                <field class="oe_inline" name="use_active_domain"/>
-                            </p>
-                        </div>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
@@ -49,8 +23,6 @@
                         <div groups="base.group_user" attrs="{'invisible': [('is_log', '=', True)]}">
                             <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
                                 <strong>Email mass mailing</strong> on
-                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">the selected records</span>
-                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">the current search filter</span>.
                             </span>
                             <span name="document_followers_text" attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">Followers of the document and</span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
