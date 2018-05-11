@@ -14,7 +14,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _count(self):
-        return len(self._context.get('active_ids', []))
+        return len(self.env['sale.order'].get_active_records())
 
     @api.model
     def _get_advance_payment_method(self):
