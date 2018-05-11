@@ -828,8 +828,9 @@
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
-        <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
-            <span class="o_badge_text"><t t-esc="el.display_name"/></span>
+        <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
+        <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="'Tag color: #{colornames[color]}">
+            <span class="o_badge_text"><span t-attf-aria-label="'Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </span>
     </t>
@@ -837,12 +838,17 @@
 <t t-name="FieldMany2ManyTag.colorpicker">
     <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
         <ul>
-            <li t-foreach="11" t-as="color">
-                <a href="#"
-                   t-att-data-id="tag_id"
-                   t-att-data-color="color+1"
-                   t-attf-class="o_tag_color_#{color+1}"/>
-            </li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_1" data-color="1" title="Red" aria-label="Red"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_2" data-color="2" title="Orange" aria-label="Orange"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_3" data-color="3" title="Yellow" aria-label="Yellow"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_4" data-color="4" title="Light blue" aria-label="Light blue"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_5" data-color="5" title="Dark purple" aria-label="Dark purple"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_6" data-color="6" title="Salmon pink" aria-label="Salmon pink"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_7" data-color="7" title="Medium blue" aria-label="Medium blue"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_8" data-color="8" title="Dark blue" aria-label="Dark blue"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_9" data-color="9" title="Fushia" aria-label="Fushia"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_10" data-color="10" title="Green" aria-label="Green"/></li>
+            <li><a href="#" t-att-data-id="tag_id" class="o_tag_color_11" data-color="11" title="Purple" aria-label="Purple"/></li>
             <li> <!-- checkbox for tag color 0 -->
                 <div class="o_hide_in_kanban"
                      t-att-data-id="tag_id"

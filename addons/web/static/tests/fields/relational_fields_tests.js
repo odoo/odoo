@@ -10806,9 +10806,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > button').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > span:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > button:contains("gold")').length,
             "should contain newly added tag 'gold'");
 
         form.destroy();
