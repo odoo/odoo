@@ -323,12 +323,12 @@
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_get_attachment_tree_view" type="object">
-                                            <span title='Documents'><i class='fa fa-book'/>
+                                            <span title='Documents'><i class='fa fa-book' aria-label="Documents"/>
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>
@@ -338,7 +338,7 @@
                                             <field name="legend_blocked" invisible="1"/>
                                             <field name="legend_done" invisible="1"/>
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
                                     
                                 </div>

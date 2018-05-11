@@ -93,8 +93,8 @@
                         <div class="pb8 ml16 mr16 container">
                             <t t-if="invoice.user_id">
                                 <div><strong>Your Contact:</strong></div>
-                                <img class="img-circle mr4 pull-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}"/>
-                                <img class="img-circle mr4 pull-left o_portal_contact_img" t-if="not invoice.user_id.image" src="/web/static/src/img/placeholder.png"/>
+                                <img class="img-circle mr4 pull-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}" alt="Contact"/>
+                                <img class="img-circle mr4 pull-left o_portal_contact_img" t-if="not invoice.user_id.image" src="/web/static/src/img/placeholder.png" alt="Contact"/>
                                 <span t-field="invoice.user_id" t-field-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
                                 <a data-toggle="modal" href="#" data-target="#invoice_chatter">Contact us</a>
                             </t>

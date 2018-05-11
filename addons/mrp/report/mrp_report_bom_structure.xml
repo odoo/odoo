@@ -85,7 +85,7 @@
                         <a t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="l['prod_name']"/></a>
                     </span>
                     <t t-if="l['phantom_bom']">
-                        <span class="fa fa-dropbox" title="This is a BoM of type Kit!"/>
+                        <span class="fa fa-dropbox" title="This is a BoM of type Kit!" aria-label="This is a BoM of type Kit!"/>
                     </t>
                 </td>
                 <td><span><t t-esc="l['prod_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>

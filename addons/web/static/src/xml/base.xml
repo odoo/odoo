@@ -116,7 +116,7 @@
 
 <t t-name="Notification">
     <div t-attf-class="o_notification #{widget.className}" t-translation="off">
-        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close"/>
+        <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
         <div class="o_notification_title">
             <span t-attf-class="o_icon fa fa-3x #{widget.icon}"/>
             <t t-raw="widget.title"/>
@@ -213,7 +213,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager">
-        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+        <a href="#" title="Open Developer Tools" aria-label="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
             <span class="fa fa-bug"/>
         </a>
         <ul class="dropdown-menu o_debug_dropdown" role="menu"/>
@@ -351,7 +351,7 @@
                     </t>
                     <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'">
                         <t t-raw="item.label"/>
-                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment"/>
+                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" aria-label="Delete this attachment"/>
                     </a>
                 </li>
                 <li t-if="section.name == 'files' and widget.options.editable" class="o_sidebar_add_attachment">
@@ -502,9 +502,9 @@
         </ul>
     </div>
     <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-bar-chart-o o_graph_button" title="Bar Chart" data-mode="bar"/>
-        <button class="btn btn-default fa fa-line-chart o_graph_button" title="Line Chart" data-mode="line"/>
-        <button class="btn btn-default fa fa-pie-chart o_graph_button" title="Pie Chart" data-mode="pie"/>
+        <button class="btn btn-default fa fa-bar-chart-o o_graph_button" title="Bar Chart" aria-label="Bar Chart" data-mode="bar"/>
+        <button class="btn btn-default fa fa-line-chart o_graph_button" title="Line Chart" aria-label="Line Chart" data-mode="line"/>
+        <button class="btn btn-default fa fa-pie-chart o_graph_button" title="Pie Chart" aria-label="Pie Chart" data-mode="pie"/>
     </div>
 </t>
 <div t-name="GraphView.error" class="o_view_nocontent" >
@@ -531,9 +531,9 @@
         </ul>
     </div>
     <div class="btn-group btn-group-sm">
-        <button class="btn btn-default fa fa-expand o_pivot_flip_button" title="Flip axis"/>
-        <button class="btn btn-default fa fa-arrows-alt o_pivot_expand_button" title="Expand all"/>
-        <button class="btn btn-default fa fa-download o_pivot_download" title="Download xls"/>
+        <button class="btn btn-default fa fa-expand o_pivot_flip_button" title="Flip axis" aria-label="Flip axis"/>
+        <button class="btn btn-default fa fa-arrows-alt o_pivot_expand_button" title="Expand all" aria-label="Expand all"/>
+        <button class="btn btn-default fa fa-download o_pivot_download" title="Download xls" aria-label="Download xls"/>
     </div>
 </t>
 <t t-name="PivotView.FieldSelection">
@@ -604,9 +604,9 @@
 </t>
 <t t-name="DomainNode.ControlPanel">
     <div t-if="!widget.readonly &amp;&amp; !widget.noControlPanel" class="o_domain_node_control_panel">
-        <button class="btn o_domain_delete_node_button" title="Delete node"><i class="fa fa-times"/></button>
-        <button class="btn o_domain_add_node_button" title="Add node"><i class="fa fa-plus-circle"/></button>
-        <button class="btn o_domain_add_node_button" title="Add branch" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
+        <button class="btn o_domain_delete_node_button" title="Delete node" aria-label="Delete node"><i class="fa fa-times"/></button>
+        <button class="btn o_domain_add_node_button" title="Add node" aria-label="Add node"><i class="fa fa-plus-circle"/></button>
+        <button class="btn o_domain_add_node_button" title="Add branch" aria-label="Add branch" data-branch="1"><i class="fa fa-ellipsis-h"/></button>
     </div>
 </t>
 <t t-name="DomainTree.OperatorSelector">
@@ -727,13 +727,13 @@
 <div t-name="ModelFieldSelector" t-attf-class="o_field_selector#{!widget.options.readonly ? ' o_edit_mode o_input' : ''}">
     <div class="o_field_selector_value" tabindex="0"/>
     <div class="o_field_selector_controls" tabindex="0">
-        <i class="fa fa-exclamation-triangle o_field_selector_warning hidden" title="Invalid field chain"/>
+        <i class="fa fa-exclamation-triangle o_field_selector_warning hidden" title="Invalid field chain" aria-label="Invalid field chain"/>
     </div>
     <div t-if="!widget.options.readonly" class="o_field_selector_popover hidden" tabindex="0">
         <div class="o_field_selector_popover_header text-center">
-            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous"/>
+            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
-            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close"/>
+            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" aria-label="Close"/>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
@@ -830,7 +830,7 @@
         <t t-set="color" t-value="el[colorField] || 0"/>
         <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text"><t t-esc="el.display_name"/></span>
-            <span t-if="!readonly" class="fa fa-times o_delete" title="Delete"/>
+            <span t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </span>
     </t>
 </t>
@@ -897,8 +897,8 @@
     <div class="o_field_image">
         <t t-if="widget.mode !== 'readonly'">
             <div class="o_form_image_controls">
-                <span class="fa fa-pencil fa-lg pull-left o_select_file_button" title="Edit"/>
-                <span class="fa fa-trash-o fa-lg pull-right o_clear_file_button" title="Clear"/>
+                <button class="fa fa-pencil fa-lg pull-left o_select_file_button" title="Edit" aria-label="Edit"/>
+                <button class="fa fa-trash-o fa-lg pull-right o_clear_file_button" title="Clear" aria-label="Clear"/>
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
@@ -926,8 +926,8 @@
             t-att-autofocus="widget.attrs.autofocus"/>
 
         <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
-        <button type="button" class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select"/>
-        <button type="button" class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear"/>
+        <button type="button" class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" aria-label="Select"/>
+        <button type="button" class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear"/>
 
         <span class="o_form_binary_progress">Uploading...</span>
         <t t-call="HiddenInputFile">
@@ -957,8 +957,8 @@
         <div t-if="widget.mode !== 'readonly'" class="o_form_pdf_controls mt8">
             <span class="o_form_binary_progress">Uploading...</span>
             <button type="button" class="btn btn-sm btn-primary o_select_file_button" title="Select">Upload your file</button>
-            <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" type="button"></button>
-            <button class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" type="button"></button>
+            <button class="btn btn-sm btn-default fa fa-pencil o_select_file_button" title="Select" aria-label="Select" type="button"></button>
+            <button class="btn btn-sm btn-default fa fa-trash-o o_clear_file_button" title="Clear" aria-label="Clear" type="button"></button>
         </div>
         <iframe class="o_pdfview_iframe o_field_pdfviewer"/>
         <t t-call="HiddenInputPDFFile">
@@ -1000,18 +1000,19 @@
         <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
             <t t-if="!file.data.upload">
                 <div>
-                    <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" t-att-data-id="file.data.id"/>
+                    <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
                     <t t-raw="file.data.name || file.data.filename"/>
                 </div>
                 <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
                    t-att-title="file.data.name"
+                   t-att-aria-label="file.data.name"
                    t-att-data-mimetype="file.data.mimetype"
                    t-attf-data-src="/web/image/#{file.data.id}/100x80"/>
             </t>
         </div>
         <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
             <div>Uploading...</div>
-            <a t-att-title="file.name" t-att-name="file.name" class="o_image">
+            <a t-att-title="file.name" t-att-aria-label="file.name" t-att-name="file.name" class="o_image">
                 <i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
             </a>
             <div><t t-esc="file.name"/></div>
@@ -1088,7 +1089,7 @@
 
 
 <div t-name="SearchView" class="o_searchview">
-    <span class="o_searchview_more fa" title="Advanced Search..."/>
+    <span class="o_searchview_more fa" title="Advanced Search..." aria-label="Advanced Search..."/>
     <div class="o_searchview_input_container"/>
 </div>
 <t t-name="SearchViewMobile">

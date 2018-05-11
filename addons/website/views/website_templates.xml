@@ -234,7 +234,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
-            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-aria-label="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
     </xpath>
 </template>
@@ -915,9 +915,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <tr class="active">
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page published?" class="fa fa-eye" aria-hidden="true"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page published?" aria-label="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
                       <th class="col-sm-3 col-md-2"></th>
                     </tr>
                   </thead>
@@ -927,13 +927,13 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
                           <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
                           <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-right">
-                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
-                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page" aria-label="Manage this page"></a>
+                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend" aria-label="Edit code in backend"></a>
+                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page" aria-label="Clone this page"></a>
+                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page" aria-label="Delete this page"></a>
                           </td>
                       </tr>
                   </t>

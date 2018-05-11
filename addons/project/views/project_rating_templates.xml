@@ -88,31 +88,31 @@
                     <div class="col-sm-4 o_smiley_no_padding_right">
                         <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                             <span t-if="partner_stat['rating_10']">
-                                <img title="happy" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_10.png'/>
+                                <img title="happy" alt="Happy face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_10.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_10']"/>
                             </span>
                             <span t-if="not partner_stat['rating_10']">
-                                <img title="happy" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_10.png'/>
+                                <img title="happy" alt="Happy face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_10.png'/>
                                 <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_10']"/>
                             </span>
                         </div>
                         <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                             <span t-if="partner_stat['rating_5']">
-                                <img title="happy" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_5.png'/>
+                                <img title="average" alt="Neutral face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_5.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_5']"/>
                             </span>
                             <span t-if="not partner_stat['rating_5']">
-                                <img title="happy" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_5.png'/>
+                                <img title="average" alt="Neutral face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_5.png'/>
                                 <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_5']"/>
                             </span>
                         </div>
                         <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                            <span t-if="partner_stat['rating_1']">
-                                <img title="happy" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_1.png'/>
+                                <img title="bad" alt="Sad face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_1.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_1']"/>
                             </span>
                             <span t-if="not partner_stat['rating_1']">
-                                <img title="happy" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_1.png'/>
+                                <img title="bad" alt="Sad face" class="o_top_partner_rating_image o_lighter_smileys" src='/rating/static/src/img/rating_1.png'/>
                                 <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_1']"/>
                             </span>
                         </div>

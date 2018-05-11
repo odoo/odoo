@@ -27,7 +27,7 @@
                     <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.type == 'application/pdf'"/>
                     <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'"/>
                     <t t-esc="widget.activeAttachment.name"/>
-                    <a href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download"/></a>
+                    <a href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" aria-label="Download"/></a>
                 </span>
                 <a class="o_close_btn pull-right" href="#">×</a>
             </div>
@@ -45,16 +45,16 @@
             </div>
             <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
                 <div class="btn-group ml0" role="group">
-                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus"/></a>
-                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search"/></a>
-                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" aria-label="Zoom In"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" aria-label="Reset Zoom"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" aria-label="Zoom Out"/></a>
                 </div>
                 <div class="btn-group ml8" role="group">
-                    <a href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" aria-label="Rotate"/></a>
                 </div>
                 <div class="btn-group ml8" role="group">
-                    <a href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print"/></a>
-                    <a href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" aria-label="Print"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" aria-label="Download"/></a>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
                 </span>
                 <i t-if="!message.display_author and options.display_stars and message.message_type != 'notification'"
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                    t-att-data-message-id="message.id" title="Mark as Todo"/>
+                    t-att-data-message-id="message.id" title="Mark as Todo" aria-label="Mark as todo"/>
             </div>
             <div class="o_thread_message_core">
                 <p t-if="message.display_author" class="o_mail_info text-muted">
@@ -197,13 +197,13 @@
                     <span t-attf-class="o_thread_icons">
                         <i t-if="options.display_stars and !message.is_system_notification and !message.needsModeration"
                             t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                            t-att-data-message-id="message.id" title="Mark as Todo"/>
+                            t-att-data-message-id="message.id" title="Mark as Todo" aria-label="Mark as Todo"/>
                        <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
-                           t-att-data-message-id="message.id" title="Reply"/>
+                           t-att-data-message-id="message.id" title="Reply" aria-label="Reply"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
-                           t-att-data-message-id="message.id" title="Mark as Read"/>
+                           t-att-data-message-id="message.id" title="Mark as Read" aria-label="Mark as Read"/>
 
                         <t t-if="message.needsModeration and message.model === 'mail.channel'">
                             <t t-if="message.isModerator">
@@ -307,7 +307,7 @@
                     <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
                         <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
                         <a class="o_attachment_download" t-att-href='attachment.url'>
-                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" aria-hidden="true"></i>
+                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" aria-label="Download"></i>
                         </a>
                     </div>
                 </div>
@@ -328,10 +328,10 @@
                          t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
                          t-att-data-mimetype="attachment.mimetype">
                     </div>
-                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name">
+                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download">
                         <span class="o_image o_hover" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
                     </a>
-                    <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
+                    <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext" aria-label="Document not downloadable"/>
                 </div>
 
                 <div class="caption">
@@ -347,7 +347,7 @@
                 <div t-if="!editable" class="caption small">
                     <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
                     <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download pull-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download"/></a>
+                    <a class="ml4 o_attachment_download pull-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" aria-label="Download"/></a>
                 </div>
                 <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check"/></div>
                 <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white">×</span></div>

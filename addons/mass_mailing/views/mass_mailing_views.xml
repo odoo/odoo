@@ -84,7 +84,7 @@
                                         </strong>
                                     </div>
                                     <span class="badge" title="Number of bounced email.">
-                                        <i class="fa fa-exclamation-triangle"/> <t t-esc="record.message_bounce.value" title=""/>
+                                        <i class="fa fa-exclamation-triangle" aria-label="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
                                     </span>
                                 </div>
                                 <div class="o_kanban_record_body">
@@ -958,7 +958,7 @@
                                             </div>
                                         </div>
                                         <div class="oe_kanban_bottom_right" style="height:90px">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>

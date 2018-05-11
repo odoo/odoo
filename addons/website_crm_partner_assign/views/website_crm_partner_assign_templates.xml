@@ -527,7 +527,7 @@
                         <div class="col-md-4">
                             <span class="pull-right" title="Rating">
                                 <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}"/>
+                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" t-att-aria-label="'Star %d of 4' % i"/>
                                 </t>
                             </span>
                         </div>

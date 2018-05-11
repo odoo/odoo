@@ -52,7 +52,7 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished" aria-label="Unpublished"/>
                             </span>
                         </h4>
                         <div class="text-muted">
