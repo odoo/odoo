@@ -80,6 +80,19 @@ class Location(models.Model):
             self.complete_name = self.name
 
     def write(self, values):
+        if 'active' in values:
+            for location in self:
+                if location.active and not location.should_bypass_reservation():
+                    reserved_quantities = self.env['stock.move.line'].search_count([
+                        ('location_id', '=', location.id),
+                        ('product_qty', '>', 0),
+                    ])
+
+                    if reserved_quantities > 0:
+                        raise UserError(_(
+                            "Some product that are in this location are still"
+                            " reserved. Please unreserve the product first."
+                        ))
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
