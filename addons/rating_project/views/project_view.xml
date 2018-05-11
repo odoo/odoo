@@ -121,7 +121,14 @@
                         class="oe_stat_button oe_percent"
                         type="action"
                         icon="fa-smile-o">
-                        <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="percentage_satisfaction_task" nolabel="1"/>
+                            </span>
+                            <span class="o_stat_text">
+                                % On <field readonly="1" name="label_tasks" options="{'label_field': 'label_tasks'}" />
+                            </span>
+                        </div>
                     </button>
                 </div>
                 <xpath expr="//field[@name='partner_id']" position="after">
