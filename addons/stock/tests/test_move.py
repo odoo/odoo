@@ -3803,3 +3803,49 @@ class StockMove(TransactionCase):
         picking.button_validate()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 2)
+
+    def test_robustness_1(self):
+        """changing the product's tracking method with reserved moves is
+        forbidden.
+        """
+        self.env['stock.quant']._update_available_quantity(
+            self.product1,
+            self.stock_location,
+            100,
+        )
+
+        # Set a reserve quantity
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        # Change the tracking method
+        with self.assertRaises(UserError):
+            self.product1.write({'tracking': 'lot'})
+
+        # Change the usage location or set as scrap
+        with self.assertRaises(UserError):
+            self.stock_location.usage = 'customer'
+        with self.assertRaises(UserError):
+            self.stock_location.usage = 'internal'  # Set back original value
+
+        with self.assertRaises(UserError):
+            self.stock_location.scrap_location = True
+        with self.assertRaises(UserError):
+            self.stock_location.scrap_location = False  # Set original value
+
+        # Change the usage location or set as scrap
+        with self.assertRaises(UserError):
+            self.stock_location.toggle_active()
+
+        # Change the UoM factor
+        with self.assertRaises(UserError):
+            self.uom_unit.write({'factor': 42})
