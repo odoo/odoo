@@ -26,7 +26,7 @@ class StockScrap(models.Model):
         states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', domain=[('type', 'in', ['product', 'consu'])],
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
