@@ -14,6 +14,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_adyen.controllers.main import AdyenController
+from odoo.tools.pycompat import to_native
 
 _logger = logging.getLogger(__name__)
 
@@ -192,7 +193,7 @@ class TxAdyen(models.Model):
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig_sha256('out', data)
         else:
             shasign_check = tx.acquirer_id._adyen_generate_merchant_sig('out', data)
-        if shasign_check != data.get('merchantSig'):
+        if to_native(shasign_check) != to_native(data.get('merchantSig')):
             error_msg = _('Adyen: invalid merchantSig, received %s, computed %s') % (data.get('merchantSig'), shasign_check)
             _logger.warning(error_msg)
             raise ValidationError(error_msg)
