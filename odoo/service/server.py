@@ -111,7 +111,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         else:
             self.reload_socket = False
             super(ThreadedWSGIServerReloadable, self).server_bind()
-            _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
 
     def server_activate(self):
         if not self.reload_socket:
