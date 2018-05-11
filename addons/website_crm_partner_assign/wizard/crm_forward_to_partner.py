@@ -35,12 +35,12 @@ class CrmLeadForwardToPartner(models.TransientModel):
         template = self.env.ref('website_crm_partner_assign.email_template_lead_forward_mail', False)
 
         res = super(CrmLeadForwardToPartner, self).default_get(fields)
-        active_ids = self.env.context.get('active_ids')
+        leads = self.env['crm.lead'].get_active_records()
         default_composition_mode = self.env.context.get('default_composition_mode')
         res['assignation_lines'] = []
         if template:
             res['body'] = template.body_html
-        if active_ids:
+        if leads:
             leads = self.env['crm.lead'].get_active_records()
             if default_composition_mode == 'mass_mail':
                 partner_assigned_dict = leads.search_geo_partner()
