@@ -220,6 +220,11 @@ class EventEvent(models.Model):
         else:
             self.date_end_located = False
 
+    @api.onchange('is_online')
+    def _onchange_is_online(self):
+        if self.is_online:
+            self.address_id = False
+
     @api.onchange('event_type_id')
     def _onchange_type(self):
         if self.event_type_id:
