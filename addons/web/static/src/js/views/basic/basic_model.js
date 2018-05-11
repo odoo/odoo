@@ -875,6 +875,15 @@ var BasicModel = AbstractModel.extend({
             // x2Many case: the new record has been stored in _changes, as a
             // command so we remove the command(s) related to that record
             parent._changes = _.filter(parent._changes, function (change) {
+                if (change.id === elementID &&
+                    change.operation === 'ADD' && // For now, only an ADD command increases limits
+                    parent.tempLimitIncrement) {
+                        // The record will be deleted from the _changes.
+                        // So we won't be passing into the logic of _applyX2ManyOperations anymore
+                        // implying that we have to cancel out the effects of an ADD command here
+                        parent.tempLimitIncrement--;
+                        parent.limit--;
+                }
                 return change.id !== elementID;
             });
         } else {
