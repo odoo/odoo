@@ -392,7 +392,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
      */
     _onActionClicked: function (event) {
         event.preventDefault();
-        this.do_action(event.target.name);
+        this.do_action(event.currentTarget.name);
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,
