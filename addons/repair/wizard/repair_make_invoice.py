@@ -12,7 +12,7 @@ class MakeInvoice(models.TransientModel):
 
     @api.multi
     def make_invoices(self):
-        if not self._context.get('active_ids'):
+        if not (self._context.get('active_ids') or 'active_domain' in self._context):
             return {'type': 'ir.actions.act_window_close'}
         new_invoice = {}
         for wizard in self:
