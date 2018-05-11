@@ -96,7 +96,26 @@ class Location(models.Model):
         if 'usage' in values and values['usage'] == 'view':
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
-        return super(Location, self).write(values)
+        if 'usage' in values or 'scrap_location' in values:
+            sbr1 = self.should_bypass_reservation()
+
+        res = super(Location, self).write(values)
+
+        if 'usage' in values or 'scrap_location' in values:
+            # 'if usage' again because this part must be executed after the write()
+            sbr2 = self.should_bypass_reservation()
+            if sbr1 != sbr2:
+                reserved_quantities = self.env['stock.move.line'].search_count([
+                    ('location_id', 'in', self.ids),
+                    ('product_qty', '>', 0),
+                ])
+                if reserved_quantities > 0:
+                    raise UserError(_(
+                        "You cannot change the location type or its use as a scrap"
+                        " location as there are products reserved in this location."
+                        " Please unreserve the products first."
+                    ))
+        return res
 
     def name_get(self):
         ret_list = []
