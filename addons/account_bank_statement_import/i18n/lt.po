@@ -340,6 +340,8 @@ msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
 msgstr ""
+"Paspausdami 'Gerai', sukursite sąskaitą/žurnalą ir užbaigsite importavimą. "
+"Jei suklydote, atšaukite importavimą."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
@@ -461,13 +463,16 @@ msgid ""
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
 msgstr ""
+"Išraše. kurį bandote suimportuoti, yra naudojama sąskaita, kuri dar "
+"neužregistruota  Odoo sistemoje. Norėdami vykdyti importavimą, Jums reikia "
+"sukurti banko žurnalą šiai sąskaitai."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "Šio išrašo sąskaita (%s) nėra tokia pati kaip žurnalo (%s)."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
@@ -475,7 +480,7 @@ msgstr ""
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
-msgstr ""
+msgstr "Banko išrašo valiuta (%s) nesutampa su žurnalo valiuta (%s) !"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -512,7 +517,7 @@ msgstr "Šiame faile nėra jokių įrašų."
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr ""
+msgstr "Šiame faile nėra jokių transakcijų."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -530,6 +535,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Naudojama nuostolio registravimui, kai kasos aparato pabaigos balansas "
+"skiriasi nuo sistemoje pateiktų skaičiavimų."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
@@ -537,6 +544,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Naudojama pelno registravimui, kai kasos aparato pabaigos balansas skiriasi "
+"nuo sistemoje pateiktų skaičiavimų."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
@@ -556,6 +565,8 @@ msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
 msgstr ""
+"Jūs turite nustatyti sąskaitas ties 'Numatytoji debetinė sąskaita' ir "
+"'Numatytoji kreditinė sąskaita' žurnale: %s"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

@@ -18,13 +18,14 @@
 # Aidas Oganauskas <aidas@digitouch.lt>, 2017
 # Paulius Stundžia <paulius@focusate.eu>, 2018
 # Eimantas <eimantas@focusate.eu>, 2018
+# Naglis Jonaitis, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"Last-Translator: Naglis Jonaitis, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -249,7 +250,7 @@ msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Įdiegti įvykius"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install Mailing"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Įdiegti el. laiškus"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -277,6 +278,8 @@ msgid ""
 "<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
 "                        <strong>Tips:</strong>"
 msgstr ""
+"<span class=\"fa fa-lightbulb-o fa-2x\"/>\n"
+"                        <strong>Patarimai:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -335,6 +338,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&lt;', 2)]}\"> Susitikimai</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('meeting_count', '&gt;', 1)]}\"> Susitikimas</span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -3558,12 +3563,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Management module."
-msgstr ""
+msgstr "Pardavimų valdymo modulis."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Settings"
-msgstr ""
+msgstr "Pardavimų nustatymai"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -3585,7 +3590,7 @@ msgstr "Pardavimų komanda"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Sales Tools"
-msgstr ""
+msgstr "Pardavimo įrankiai"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_user_ids
@@ -3783,7 +3788,7 @@ msgstr "Praleisti šiuos kontaktus"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Slides"
-msgstr ""
+msgstr "Skaidrės"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
@@ -3951,7 +3956,7 @@ msgstr "Komanda"
 #. module: crm
 #: model:ir.filters,name:crm.ir_filters_crm_opportunity_report_next_action
 msgid "Team Activities"
-msgstr ""
+msgstr "Komandos veiklos"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3968,7 +3973,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #, python-format
 msgid "Territory"
-msgstr ""
+msgstr "Teritorija"
 
 #. module: crm
 #. openerp-web
@@ -4054,6 +4059,8 @@ msgid ""
 "The whole process may take a few hours. But it's worth doing\n"
 "                      it."
 msgstr ""
+"Visas procesas gali užtrukti kelias valandas, bet tai atlikti\n"
+"                      yra verta."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4100,7 +4107,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "This is the default configuration, there is nothing to setup."
-msgstr ""
+msgstr "Tai yra numatytoji konfigūracija, nėra nieko, ką reiktų konfigūruoti."
 
 #. module: crm
 #. openerp-web
@@ -4123,7 +4130,7 @@ msgstr ""
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This report analyses the source of your leads."
-msgstr ""
+msgstr "Ši ataskaita skirta Jūsų iniciatyvų šaltinių analizavimui."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_fold
@@ -4131,12 +4138,14 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Ši stadija bus suskleista kanban tipo rodinyje, jei nebus nė vieno įrašo "
+"šioje stadijoje."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1010
 #, python-format
 msgid "This target does not exist."
-msgstr ""
+msgstr "Šis objektas neegzistuoja."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4171,12 +4180,12 @@ msgstr "Šiandienos veiklos"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
 msgid "Too expensive"
-msgstr ""
+msgstr "Per brangu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
 msgid "Total Revenue"
-msgstr ""
+msgstr "Visos pajamos"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -4252,7 +4261,7 @@ msgstr "Naudokite"
 #. module: crm
 #: selection:crm.lead2opportunity.partner.mass,action:0
 msgid "Use existing partner or create"
-msgstr ""
+msgstr "Naudokite jau egzistuojantį partnerį arba sukurkite"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
@@ -4354,7 +4363,7 @@ msgstr "PVM"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "VIP letter to potential sponsors"
-msgstr ""
+msgstr "VIP laiškas potencialiems remėjams"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -4377,6 +4386,8 @@ msgid ""
 "We are here to help you. If you get stuck, do not hesitate to\n"
 "                      reach our"
 msgstr ""
+"Mes galime Jums padėti. Jei kažkas neaišku, nedvejodami susisiekite\n"
+"                      su mūsų"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4386,7 +4397,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "We can automate steps in your workflow, for example:"
-msgstr ""
+msgstr "Mes galime automatizuoti žingsnius Jūsų darbo eigoje, pavyzdžiui:"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4396,6 +4407,10 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"Mes galime atlikti visą importo procesą už Jus:\n"
+"                                        paprasčiausiai atsiųskite savo Odoo projekto\n"
+"                                        vadovui CSV failą su  visa prosuktų\n"
+"                                        informacija."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4415,7 +4430,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_2
 msgid "We don't have people/skills"
-msgstr ""
+msgstr "Mes neturime resursų/įgūdžių"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4465,7 +4480,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Win / Loss Ratio"
-msgstr ""
+msgstr "Laimėjimo / pralaimėjimo koeficientas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_wizard_id
