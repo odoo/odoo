@@ -1531,6 +1531,8 @@ msgid ""
 "Account that will be set on invoice tax lines for credit notes. Leave empty "
 "to use the expense account."
 msgstr ""
+"Contul care va fi stabilit pe liniile de taxe pe factură pentru stornare "
+"(notele de credit). Lăsați goale pentru a utiliza contul de cheltuieli."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_account_id
@@ -1679,7 +1681,7 @@ msgstr "Adaugă"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr ""
+msgstr "Stornare"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2220,7 +2222,7 @@ msgstr "Arhivat"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Ask for a Credit Note"
-msgstr ""
+msgstr "Cere stornare"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
@@ -2538,12 +2540,14 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
+"Pe baza facturii: taxa este datorată de îndată ce factura este validată.\n"
+"Pe baza plății: taxa este datorată imediat după plata facturii."
 
 #. module: account
 #: selection:account.tax,tax_exigibility:0
 #: selection:account.tax.template,tax_exigibility:0
 msgid "Based on Payment"
-msgstr ""
+msgstr "Pe baza plății"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -2646,7 +2650,7 @@ msgstr "După țară"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr ""
+msgstr "Prin stornare"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -2717,7 +2721,7 @@ msgstr "Anulează"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create credit note and reconcile"
-msgstr ""
+msgstr "Anulați: creați stornare și reconciliați"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2739,12 +2743,17 @@ msgid ""
 "invoice should be unreconciled first, then only you can add credit note for "
 "this invoice."
 msgstr ""
+"Nu se poate crea o stornare (notă de credit) pentru factură care este deja "
+"reconciliată, factura ar trebui să fie mai întâi neconciliată și apoi puteți"
+" adăuga o stornare (nota de credit) la această factură."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
 msgstr ""
+"Nu se poate crea o factura de stornare (notă de credit) pentru factura "
+"ciornă / anulată."
 
 #. module: account
 #: code:addons/account/models/account_move.py:195
@@ -2994,6 +3003,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Bifați această casetă dacă nu doriți să utilizați aceleași secvențe pentru "
+"facturi și stornări realizate din acest jurnal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -3072,7 +3083,7 @@ msgstr "Clic pentru a un cont."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
 msgid "Click to create a credit note."
-msgstr ""
+msgstr "Clic pentru a crea o factură de stornare (notă de credit)"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -3108,6 +3119,8 @@ msgstr "Click pentru a înregistra o nouă factură furnizor."
 #: model:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Click to record a new vendor credit note."
 msgstr ""
+"Clic pentru a înregistra o nouă factură de stornare (notă de credit) de la "
+"furnizor."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3515,7 +3528,7 @@ msgstr "Crează pierdere (write-off)"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Creați o factură de stornare ciornă."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3723,23 +3736,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Credit Note"
-msgstr "Nota de credit"
+msgstr "Stornare"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:440
 #, python-format
 msgid "Credit Note - %s"
-msgstr ""
+msgstr "Stornare - %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Note Bill"
-msgstr ""
+msgstr "Stornare achiziție"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
 msgid "Credit Note Date"
-msgstr ""
+msgstr "Dată stornare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
@@ -3750,7 +3763,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Credit Notes"
-msgstr ""
+msgstr "Stornări"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
@@ -3859,7 +3872,7 @@ msgstr "Client"
 #: code:addons/account/models/account_payment.py:656
 #, python-format
 msgid "Customer Credit Note"
-msgstr ""
+msgstr "Factură de stornare client"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_out_refund
@@ -4392,7 +4405,7 @@ msgstr "Factură ciornă"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Credit Note"
-msgstr ""
+msgstr "Factură stornare ciornă"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:437
@@ -4473,6 +4486,8 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same "
 "vendor bill/credit note."
 msgstr ""
+"A fost detectată o referință furnizor dublată. Probabil ați completat de "
+"două ori aceeași factură  / stornare."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports
@@ -6819,6 +6834,8 @@ msgstr ""
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create credit note, reconcile and create a new draft invoice"
 msgstr ""
+"Modificați: creați făcură de stornare, reconciliați și creați o nouă factură"
+" ciornă"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7066,6 +7083,9 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly form\n"
 "                the customer invoice, to refund it totally or partially."
 msgstr ""
+"Rețineți că cea mai ușoară modalitate de a crea o factură de stornare este "
+"să o faceți direct din factura de la client, să o stornați total sau "
+"parțial."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_note
@@ -7591,7 +7611,7 @@ msgstr "Nume partener"
 #: model:ir.model.fields,field_description:account.field_account_payment_partner_type
 #: model:ir.model.fields,field_description:account.field_account_register_payments_partner_type
 msgid "Partner Type"
-msgstr ""
+msgstr "Tip partener"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_aged_trial_balance_result_selection
@@ -8088,7 +8108,7 @@ msgstr "Categorie produs"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Imagine produs"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_product_qty
@@ -9033,7 +9053,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show active taxes"
-msgstr ""
+msgstr "Afișare taxe active"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9044,7 +9064,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show inactive taxes"
-msgstr ""
+msgstr "Afișare taxe inactive"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
@@ -9336,13 +9356,13 @@ msgstr "Descriere taxa"
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_exigibility
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_exigibility
 msgid "Tax Due"
-msgstr ""
+msgstr "Taxa datorată"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_group_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_group_id
 msgid "Tax Group"
-msgstr ""
+msgstr "Grup taxa"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -9664,12 +9684,12 @@ msgstr "Termeni"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Terms &amp; Conditions"
-msgstr "Termeni &amp; condiții"
+msgstr "Termeni și condiții"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Terms and conditions..."
-msgstr "Termeni &amp; condiții..."
+msgstr "Termeni și condiții..."
 
 #. module: account
 #. openerp-web
@@ -10550,18 +10570,22 @@ msgstr "Total fără taxe"
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
 msgid "Total amount in the currency of the company, negative for credit note."
 msgstr ""
+"Suma totală în moneda companiei, negativă pentru stornare (notă de credit)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_company_signed
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
+"Suma totală în moneda companiei, negativă pentru stornări (notele de "
+"credit)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
 msgstr ""
+"Suma totală în moneda facturii, negativă pentru stornări (notele de credit)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -10870,6 +10894,10 @@ msgid ""
 "                                with the current invoice. A new draft invoice will be created\n"
 "                                so that you can edit it."
 msgstr ""
+"Utilizați această opțiune dacă doriți să anulați o factură și să creați una "
+"nouă. Nota de credit (factura de stornare) va fi creată, validată și "
+"reconciliată cu factura curentă. Va fi creată o nouă factură pentru a o "
+"putea edita."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
@@ -10879,8 +10907,9 @@ msgid ""
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
 "Utilizați această opțiune dacă doriți să anulați o factură pe care nu ați "
-"dorit să o emiteți. Nota de credit va fi creată, validată și reconciliată cu"
-" factura. Nu veți putea modifica nota de credit."
+"dorit să o emiteți. Nota de credit (factura de stornare) va fi creată, "
+"validată și reconciliată cu factura. Nu veți putea modifica stornarea (nota "
+"de credit)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -11018,25 +11047,25 @@ msgstr "Facturi furnizor"
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Vendor Credit Note"
-msgstr ""
+msgstr "Stornare furnizori"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:444
 #, python-format
 msgid "Vendor Credit Note - %s"
-msgstr ""
+msgstr "Stornare furnizori - %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
 #: model:ir.ui.menu,name:account.menu_action_invoice_in_refund
 msgid "Vendor Credit Notes"
-msgstr "Note de credit furnizori"
+msgstr "Stornări furnizori"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:1229
 #, python-format
 msgid "Vendor Credit note"
-msgstr ""
+msgstr "Stornare furnizor"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -11477,6 +11506,8 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
+"Nu puteți valida o factură cu o sumă totală negativă. Puteți în schimb să "
+"creați o stornare (notă de credit)."
 
 #. module: account
 #. openerp-web
@@ -11582,9 +11613,9 @@ msgid ""
 "                                waiting for the document to be issued by\n"
 "                                your supplier/customer."
 msgstr ""
-"Veți putea să editați și să validezi această notă de credit direct sau să o "
-"păstrați ca ciornă, așteptând documentului emis de către furnizorul / "
-"clientul dvs."
+"Veți putea să editați și să validezi această notă de credit (factură de "
+"stornare) direct sau să o păstrați ca ciornă, așteptând documentului emis de"
+" către furnizorul / clientul dvs."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
