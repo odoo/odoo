@@ -5,7 +5,7 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Marko Happonen <marko.happonen@sprintit.fi>, 2017
@@ -145,6 +145,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
+"${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web

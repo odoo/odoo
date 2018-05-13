@@ -11,13 +11,14 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2017
 # Anatolij, 2018
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Anatolij, 2018\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,6 +192,168 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Peržiūrėti įvykį</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Sveiki,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Pranešame apie sėkmingą registraciją į įvykį:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li>Įvykis: \n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            <strong>${object.event_id.name}</strong>\n"
+"                        % endif\n"
+"                        </li>\n"
+"                        <li>Dalyvis: ${object.name}</li>\n"
+"                    </ul>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Iki pasimatymo,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            Organizatoriai.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>Nuo</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>iki</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>laiko zona</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Kyla klausimų dėl šio įvykio?</h2>\n"
+"                                    <p>Prašome susisiekti su organizatoriumi:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>El. pašto adresas: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Telefonas: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Pridėkite šį įvykį į savo kalendorių</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Išsiųsta ${object.company_id.name}</div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Atraskite <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">visus savo įvykius</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -354,6 +517,164 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Peržiūrėti įvykį</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Sveiki,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Norime Jums priminti apie įvykį\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            ${object.event_id.name}\n"
+"                        % endif\n"
+"                        , kuris prasideda\n"
+"                        <strong>${object.get_date_range_str()}</strong>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Mes patvirtiname Jūsų registraciją ir iki susitikimo,\n"
+"                    </p><p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            Organizatoriai.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>Nuo</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>iki</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>laiko zona</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id.email:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Kyla klausimų dėl šio įvykio?</h2>\n"
+"                                    <p>Prašome susisiekti su organizatoriumi:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>El. pašto adresas: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Telefonas: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;\">\n"
+"                                <strong>Pridėkite šį įvykį į savo kalendorių</strong>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Išsiųsta ${object.company_id.name}</p>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Atraskite <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">visus savo įvykius</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -365,11 +686,17 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Gerb., ${object.name},</p>\n"
+"<p>Dėkojame už Jūsų užklausą.</p>\n"
+"<p>Čia Jūsų įvykio požymis ${object.event_id.name}.</p>\n"
+"<p>Kreipkitės, jei iškils klausimų.</p>\n"
+"<p>Linkėjimai,</p>"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:297
@@ -470,6 +797,9 @@ msgid ""
 "                                        to \n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        iki \n"
+"                                    </span>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -740,7 +1070,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
-msgstr ""
+msgstr "Paspauskite, norėdami pridėti naują dalyvį."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -751,7 +1081,7 @@ msgstr "Paspauskite, norėdami pridėti naują įvykį"
 #: code:addons/event/models/event.py:264
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Uždarymo data negali būti nurodyta prieš Pradžios datą."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -832,7 +1162,7 @@ msgstr "Kontaktas"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Controllers and Views"
-msgstr ""
+msgstr "Kontroleriai ir rodiniai"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
@@ -968,7 +1298,7 @@ msgstr "El. paštas"
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Email Schedule"
-msgstr ""
+msgstr "El. laiškų planavimas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
@@ -1251,7 +1581,7 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Immediately"
-msgstr ""
+msgstr "Skubiai"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1312,7 +1642,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
 msgid "Kanban Color Index"
-msgstr ""
+msgstr "Kanban spalvos indeksas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm___last_update
@@ -1934,7 +2264,7 @@ msgstr "Supraskite tobulėjimo konceptą ir architektūrą;"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Understand the various modules;"
-msgstr ""
+msgstr "Suprasti įvairius modulius;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -1961,17 +2291,17 @@ msgstr "Ateinantis"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "Artimiausi renginiai nuo šiandien"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "Naudoti numatytasias groteles"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_timezone
 msgid "Use Default Timezone"
-msgstr ""
+msgstr "Naudoti numatytąją laiko zoną"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -1993,7 +2323,7 @@ msgstr "Matomumas"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
+msgstr "Sandėlio valdymas, gamyba (MRP) ir pardavimai, importas/exportas."
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2049,12 +2379,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at ${object.event_id.name}"
-msgstr ""
+msgstr "Jūsų registracija į ${object.event_id.name}"
 
 #. module: event
 #: model:mail.template,report_name:event.event_registration_mail_template_badge
 msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
-msgstr ""
+msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2066,30 +2396,30 @@ msgstr "gėrimai ir pietūs;"
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
 msgid "event.confirm"
-msgstr ""
+msgstr "event.confirm"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: code:addons/event/models/event.py:503
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "per %d dienas"
 
 #. module: event
 #: code:addons/event/models/event.py:507
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "kitą mėnesį"
 
 #. module: event
 #: code:addons/event/models/event.py:505
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "kitą savaitę"
 
 #. module: event
 #: code:addons/event/models/event.py:509
@@ -2106,13 +2436,13 @@ msgstr "res.config.settings"
 #: code:addons/event/models/event.py:499
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "šiandien"
 
 #. module: event
 #: code:addons/event/models/event.py:501
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "rytoj"
 
 #. module: event
 #: model:event.event,description:event.event_0
