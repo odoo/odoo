@@ -161,7 +161,10 @@ class AccountInvoice(models.Model):
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                         valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
                         stock_move_obj = self.env['stock.move']
-                        valuation_stock_move = stock_move_obj.search([('purchase_line_id', '=', i_line.purchase_line_id.id), ('state', '=', 'done')])
+                        valuation_stock_move = stock_move_obj.search([
+                            ('purchase_line_id', '=', i_line.purchase_line_id.id),
+                            ('state', '=', 'done'), ('product_qty', '!=', 0.0)
+                        ])
                         if self.type == 'in_refund':
                             valuation_stock_move = valuation_stock_move.filtered(lambda m: m._is_out())
                         elif self.type == 'in_invoice':
