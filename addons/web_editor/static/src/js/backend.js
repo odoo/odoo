@@ -146,7 +146,7 @@ var FieldTextHtmlSimple = widget.extend({
         this.$content.html(this.text_to_html(value));
         if (this.get("effective_readonly")) {
             this.resize();
-        } else {
+        } else if (this.options['style-inline']) {
             transcoder.style_to_class(this.$content);
         }
         if (this.$content.is(document.activeElement)) {
