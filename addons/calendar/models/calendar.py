@@ -170,7 +170,7 @@ class Attendee(models.Model):
         invitation_template = self.env.ref(template_xmlid)
 
         # get ics file for all meetings
-        ics_files = self.mapped('event_id').get_ics_file()
+        ics_files = self.mapped('event_id')._get_ics_file()
 
         # prepare rendering context for mail template
         colors = {
@@ -946,7 +946,7 @@ class Meeting(models.Model):
     ####################################################
 
     @api.multi
-    def get_ics_file(self):
+    def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each meeting
         """

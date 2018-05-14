@@ -136,7 +136,7 @@ class Event(models.Model):
         }
 
     @api.multi
-    def get_ics_file(self, attendee_ids):
+    def _get_ics_file(self):
         """ Returns iCalendar file for the event invitation.
             :returns a dict of .ics file content for each event
         """
@@ -157,10 +157,6 @@ class Event(models.Model):
             if event.address_id:
                 cal_event.add('location').value = event.sudo().address_id.contact_address
 
-            attendees = self.env['event.registration'].browse(attendee_ids)
-            for attendee in attendees:
-                attendee_add = cal_event.add('attendee')
-                attendee_add.value = u'MAILTO:' + (attendee.email or u'')
             result[event.id] = cal.serialize().encode('utf-8')
         return result
 
@@ -175,8 +171,5 @@ class Event(models.Model):
             'details': self.name,
         })
         google_url = GOOGLE_CALENDAR_URL + params
-        params = werkzeug.url_encode({
-            'attendees': dict(('attendee_%s' % attendee, attendee) for attendee in attendees)
-        })
-        iCal_url = '/event/%s/ics/%s.ics?' % (slug(self), self.name) + params
+        iCal_url = '/event/%s/ics?%s' % (slug(self), params)
         return {'google_url': google_url, 'iCal_url': iCal_url}
