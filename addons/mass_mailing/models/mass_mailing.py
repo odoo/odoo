@@ -577,6 +577,7 @@ class MassMailing(models.Model):
                 'mass_mailing_id': mailing.id,
                 'mailing_list_ids': [(4, l.id) for l in mailing.contact_list_ids],
                 'no_auto_thread': mailing.reply_to_mode != 'thread',
+                'template_id': None,
             }
             if mailing.reply_to_mode == 'email':
                 composer_values['reply_to'] = mailing.reply_to
