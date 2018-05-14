@@ -171,7 +171,8 @@
         id="resource_calendar_closing_days"
         name="Closing Days"
         res_model="resource.calendar.leaves"
-        src_model="resource.calendar"
+        binding_model="resource.calendar"
+        binding_views="form"
         view_mode="calendar,tree,form"
         context="{'default_calendar_id': active_id}"
         domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
@@ -180,7 +181,8 @@
         id="resource_calendar_resources_leaves"
         name="Resources Time Off"
         res_model="resource.calendar.leaves"
-        src_model="resource.calendar"
+        binding_model="resource.calendar"
+        binding_views="form"
         view_mode="calendar,tree,form"
         context="{'default_calendar_id': active_id}"
         domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>

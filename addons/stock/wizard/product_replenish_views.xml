@@ -48,7 +48,7 @@
         <field name="name">Replenish</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.replenish</field>
-        <field name="src_model">product.product</field>
+        <field name="binding_model_id" ref="product.model_product_product"/>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_product_replenish"/>

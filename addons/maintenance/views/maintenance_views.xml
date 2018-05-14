@@ -266,7 +266,7 @@
     <record id="hr_equipment_request_action_from_equipment" model="ir.actions.act_window">
         <field name="name">Maintenance Requests</field>
         <field name="res_model">maintenance.request</field>
-        <field name="src_model">maintenance.equipment</field>
+        <field name="binding_model_id" ref="maintenance.model_maintenance_equipment"/>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="context">{
             'default_equipment_id': active_id,

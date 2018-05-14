@@ -104,9 +104,9 @@
 
         <act_window
             id="action_crm_send_mass_convert"
-            multi="True"
-            key2="client_action_multi" name="Convert to opportunities"
-            res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
+            name="Convert to opportunities"
+            res_model="crm.lead2opportunity.partner.mass"
+            binding_model="crm.lead" binding_views="list"
             view_mode="form" target="new" view_type="form"
             context="{'mass_convert' : True}"
             view_id="view_crm_lead2opportunity_partner_mass"

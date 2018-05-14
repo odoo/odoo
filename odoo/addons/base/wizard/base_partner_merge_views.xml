@@ -102,10 +102,9 @@
         <act_window
             id="action_partner_merge"
             res_model="base.partner.merge.automatic.wizard"
-            src_model="res.partner"
+            binding_model="res.partner"
+            binding_views="list"
             target="new"
-            multi="True"
-            key2="client_action_multi"
             view_mode="form"
             name="Merge Contacts"/>
 </odoo>

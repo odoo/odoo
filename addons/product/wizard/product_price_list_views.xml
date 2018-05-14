@@ -24,10 +24,10 @@
         </record>
 
         <act_window id="action_product_price_list"
-            key2="client_print_multi"
             name="Price List"
             res_model="product.price_list"
-            src_model="product.product"
+            binding_model="product.product"
+            binding_type="report"
             groups="product.group_sale_pricelist"
             view_mode="form" target="new" view_type="form" />
 </odoo>

@@ -19,13 +19,12 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
             name="Put Money In"
             res_model="cash.box.in"
-            src_model="account.bank.statement"
+            binding_model="account.bank.statement"
             view_mode="form"
             target="new"
-            key2="client_action_multi"
             id="action_cash_box_in" />
 
         <record model="ir.ui.view" id="cash_box_out_form">
@@ -47,13 +46,12 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
             name="Take Money Out"
             res_model="cash.box.out"
-            src_model="account.bank.statement"
+            binding_model="account.bank.statement"
             view_mode="form"
             target="new"
-            key2="client_action_multi"
             id="action_cash_box_out" />
     </data>
 </odoo>

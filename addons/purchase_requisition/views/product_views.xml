@@ -43,6 +43,6 @@
         domain="[('requisition_id', '=', active_id)]"
         context="{'default_requisition_id': active_id}"
         res_model="purchase.order"
-        src_model="purchase.requisition"/>
+        binding_model="purchase.requisition" binding_views="form"/>
 
 </odoo>

@@ -32,6 +32,29 @@ A number
 A dictionary
     treat as a client action descriptor and execute
 
+Bindings
+========
+
+Aside from their two mandatory attributes, all actions also share *optional*
+attributes used to present an action in an arbitrary model's contextual menu:
+
+``binding_model_id``
+    specifies which model the action is bound to
+``binding_type``
+    specifies the type of binding, which is mostly which contextual menu the
+    action will appear under
+
+    ``action`` (default)
+        Specifies that the action will appear in the :menuselection:`Action`
+        contextual menu of the bound model.
+    ``report``
+        Specifies that the action will appear in the :menuselection:`Print`
+        contextual menu of the bound model.
+``binding_view_types``
+    a comma-separated list of view types for which the action appears in the
+    contextual menu, mostly "list" and / or "form". Defaults to ``list,form``
+    (both list and form )
+
 .. _reference/actions/window:
 
 Window Actions (``ir.actions.act_window``)
@@ -74,9 +97,6 @@ Its fields are:
 ``limit`` (optional)
     number of records to display in lists by default. Defaults to 80 in the
     web client
-``auto_search`` (optional)
-    whether a search should be performed immediately after loading the default
-    view. Defaults to ``True``
 
 For instance, to open customers (partner with the ``customer`` flag set) with
 list and form views::
@@ -136,8 +156,6 @@ The server-side composition of the ``views`` sequence is the following:
 
 .. todo::
 
-    * ``src_model``, ``multi`` seem linked to "sidebar" actions?
-    * ``auto_refresh`` looks ignored/deprecated
     * ``usage``?
     * ``groups_id``?
     * ``filter``?

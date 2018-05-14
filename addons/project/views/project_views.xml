@@ -517,9 +517,9 @@
             id="portal_share_action"
             name="Share"
             res_model="portal.share"
-            src_model="project.task"
+            binding_model="project.task"
+            binding_views="form"
             view_type="form"
-            view_mode="form"
             target="new"
         />
 
@@ -897,7 +897,8 @@
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" src_model="res.users" view_mode="tree,form,calendar,graph" view_type="form"/>
+                    res_model="project.task" view_mode="tree,form,calendar,graph" view_type="form"
+                    binding_model="res.users" binding_views="form"/>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">

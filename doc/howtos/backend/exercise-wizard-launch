@@ -17,7 +17,7 @@ Index: addons/openacademy/views/openacademy.xml
 ===================================================================
 --- addons.orig/openacademy/views/openacademy.xml
 +++ addons/openacademy/views/openacademy.xml
-@@ -223,4 +223,25 @@
+@@ -223,4 +223,24 @@
                    parent="openacademy_menu"
                    action="session_list_action"/>
  
@@ -36,10 +36,9 @@ Index: addons/openacademy/views/openacademy.xml
 +
 +        <act_window id="launch_session_wizard"
 +                    name="Add Attendees"
-+                    src_model="openacademy.session"
++                    binding_model="openacademy.session"
 +                    res_model="openacademy.wizard"
 +                    view_mode="form"
-+                    target="new"
-+                    key2="client_action_multi"/>
++                    target="new"/>
 +
  </odoo>
