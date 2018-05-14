@@ -127,7 +127,7 @@ QUnit.module('mail', {
         chatWindow.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
         // check focus is on document viewer popup and then press escape to close it
         assert.strictEqual(document.activeElement, $('.o_modal_fullscreen')[0], "Modal popup should have focus");
-        assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/1?unique=1"]').length, 1,
+        assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src*="/web/image/1?unique=1"]').length, 1,
             "Modal popup should open with first image src");
         // trigger ESCAPE keyup on document viewer popup
         var upKeyEvent = jQuery.Event("keyup", {which: 27});
