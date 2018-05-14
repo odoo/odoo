@@ -38,7 +38,7 @@
                     <t t-set="toc" t-value="toc.parent_id"/>
                 </t>
             </t>
-            <li t-if="toc">
+            <li t-if="toc" class="breadcrumb-item">
                 <a t-attf-href="/forum/how-to/#{ slug(toc) }" t-field="toc.name"/>
             </li>
         </template>
@@ -53,7 +53,7 @@
                                 <t t-call="website_forum_doc.breadcrumb">
                                     <t t-set="toc" t-value="toc.parent_id"/>
                                 </t>
-                                <li class="active">
+                                <li class="breadcrumb-item active">
                                     <span t-field="toc.name"/>
                                 </li>
                             </ol>
@@ -92,7 +92,7 @@
                                 <t t-call="website_forum_doc.breadcrumb">
                                     <t t-set="toc" t-value="toc.parent_id"/>
                                 </t>
-                                <li>
+                                <li class="breadcrumb-item">
                                     <a t-attf-href="/forum/how-to/#{ slug(toc) }" t-field="toc.name"/>
                                 </li>
                             </ol>

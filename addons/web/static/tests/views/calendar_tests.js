@@ -253,17 +253,17 @@ QUnit.module('Views', {
         actionManager.doAction(1);
 
         // displays month mode by default
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
         actionManager.controlPanel.$('.o_calendar_button_day').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
         actionManager.controlPanel.$('.o_calendar_button_month').click();
-        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         actionManager.destroy();
