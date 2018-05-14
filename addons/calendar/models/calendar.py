@@ -1238,7 +1238,12 @@ class Meeting(models.Model):
     def _rrule_parse(self, rule_str, data, date_start):
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
-        rule = rrule.rrulestr(rule_str, dtstart=fields.Datetime.from_string(date_start))
+        ddate = fields.Datetime.from_string(date_start)
+        if 'Z' in rule_str and not ddate.tzinfo:
+            ddate = ddate.replace(tzinfo=pytz.timezone('UTC'))
+            rule = rrule.rrulestr(rule_str, dtstart=ddate)
+        else:
+            rule = rrule.rrulestr(rule_str, dtstart=ddate)
 
         if rule._freq > 0 and rule._freq < 4:
             data['rrule_type'] = rrule_type[rule._freq]

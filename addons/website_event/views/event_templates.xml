@@ -684,10 +684,10 @@
                             <span class="label label-danger"><i class="fa fa-ban"></i></span>
                         </t>
                         <t t-if="event_dict['event'].address_id">
-                            <i class="fa fa-map-marker"></i>
+                            <i class="fa fa-map-marker" title="It is a physical event"></i>
                         </t>
                         <t t-if="not event_dict['event'].address_id">
-                            <i class="fa fa-cloud"></i>
+                            <i class="fa fa-cloud" title="It is an online event"></i>
                         </t>
                         <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
                     </div>

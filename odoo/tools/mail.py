@@ -155,7 +155,7 @@ class _Cleaner(clean.Cleaner):
                 if style[0].lower() in self._style_whitelist:
                     valid_styles[style[0].lower()] = style[1]
             if valid_styles:
-                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.items())
+                el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
 
