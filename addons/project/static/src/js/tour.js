@@ -96,7 +96,7 @@ tour.register('project_tour', {
     content: _t('<b>Click the save button</b> to apply your changes to the task.'),
     position: "bottom"
 }, {
-    trigger: ".breadcrumb li:not(.active):last",
+    trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: '.o_form_project_tasks.o_form_readonly',
     content: _t("Use the breadcrumbs to <b>go back to your tasks pipeline</b>."),
     position: "right"

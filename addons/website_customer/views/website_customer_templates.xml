@@ -149,8 +149,8 @@
             <div class="row">
                 <div class="col-md-5">
                     <ol t-if="not edit_page" class="breadcrumb">
-                        <li><a href="/customers">Our References</a></li>
-                        <li class="active"><span t-field="partner.display_name"/></li>
+                        <li class="breadcrumb-item"><a href="/customers">Our References</a></li>
+                        <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
                     </ol>
                 </div>
                 <t t-call="website_partner.partner_detail">

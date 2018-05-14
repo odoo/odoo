@@ -245,11 +245,12 @@ var ControlPanel = Widget.extend({
         var self = this;
         var is_last = (index === length-1);
         var li_content = bc.title && _.escape(bc.title.trim()) || data.noDisplayContent;
-        var $bc = $('<li>')
-            .append(is_last ? li_content : $('<a>').html(li_content))
+        var $bc = $('<li>', {class: 'breadcrumb-item'})
+            .append(is_last ? li_content : $('<a>', {href: '#'}).html(li_content))
             .toggleClass('active', is_last);
         if (!is_last) {
-            $bc.click(function () {
+            $bc.click(function (ev) {
+                ev.preventDefault();
                 self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }

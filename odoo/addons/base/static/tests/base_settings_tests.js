@@ -126,7 +126,7 @@ QUnit.module('base_settings_tests', {
 
         actionManager.doAction(1);
         actionManager.$('button[name="4"]').click();
-        $('.o_control_panel .breadcrumb li a').click();
+        $('.o_control_panel .breadcrumb-item a').click();
         assert.verifySteps([
             'load_views', // initial setting action
             'default_get', // this is a setting view => create new record
