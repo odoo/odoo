@@ -298,4 +298,30 @@
             </field>
         </record>
 
+        <record id="delivery_tracking_url_warning_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.warning.url.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Trackers URL">
+                    <group>
+                        <div class="alert alert-info">
+                            <p>You have multiple URL, they should be available in the chatter.</p>
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="OK" special="cancel" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_delivery_trackers_url" model="ir.actions.act_window">
+            <field name="name">Display tracking links</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="delivery.delivery_tracking_url_warning_form"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 </odoo>
