@@ -1278,6 +1278,51 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: show name of many2one fields in multi-page (default_get)', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom" limit="1">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        p: [
+                            [0, 0, { display_name: 'record1', trululu: 1 }],
+                            [0, 0, { display_name: 'record2', trululu: 2 }]
+                        ]
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').first().text(),
+            "record1", "should show display_name of 1st record");
+        assert.strictEqual(form.$('td.o_data_cell').first().next().text(),
+            "first record", "should show display_name of trululu of 1st record");
+
+        form.$('button.o_pager_next').click();
+
+        assert.strictEqual(form.$('td.o_data_cell').first().text(),
+            "record2", "should show display_name of 2nd record");
+        assert.strictEqual(form.$('td.o_data_cell').first().next().text(),
+            "second record", "should show display_name of trululu of 2nd record");
+
+        form.destroy();
+    });
+
     QUnit.test('list in form: discard newly added element with empty required field (onchange)', function (assert) {
         assert.expect(8);
 
