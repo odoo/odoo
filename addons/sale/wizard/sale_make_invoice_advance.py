@@ -186,4 +186,5 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'invoice_policy': 'order',
             'property_account_income_id': self.deposit_account_id.id,
             'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
+            'company_id': False,
         }

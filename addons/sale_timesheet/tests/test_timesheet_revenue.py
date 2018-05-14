@@ -19,6 +19,11 @@ class TestSaleTimesheet(TestSale):
         # after the 6 june of current year.
         self.env.ref('base.rateUSDbis').unlink()
 
+        # Make sure the company is in USD
+        self.env.cr.execute(
+            "UPDATE res_company SET currency_id = %s WHERE id = %s",
+            [self.env.ref('base.USD').id, self.env.user.company_id.id])
+
         # create project
         self.project = self.env['project.project'].create({
             'name': 'Project for my timesheets',
