@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_archive_form" model="ir.ui.view">
+            <field name="name">l10n_fr.archive.form.view</field>
+            <field name="model">l10n_fr.archive</field>
+            <field name="arch" type="xml">
+                <form string="Data Archive">
+                    <sheet>
+                        <group>
+                            <div>
+                                To ensure data inalterability (BOI-TVA-DECLA-30-10-30), please proceed with an archiving of your sales data at least once a year (e.g. at closing date).
+                                If you use Odoo Accounting, an archive is automatically generated at the lock date for all users.
+                                <br/>
+                                <br/>
+                                Archive files can be found in the thread of your <a href="inject_partner_url">company's contact</a>.
+                            </div>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Generate" name="archive" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_archive_action" model="ir.actions.act_window">
+            <field name="name">Archive Data</field>
+            <field name="res_model">l10n_fr.archive</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="wizard_archive_menu"
+                parent="point_of_sale.menu_point_config_product"
+                action="wizard_archive_action"
+                sequence="100"/>
+    </data>
+</odoo>

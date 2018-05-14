@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-import res_company
+from . import res_company
+from . import wizard_archive

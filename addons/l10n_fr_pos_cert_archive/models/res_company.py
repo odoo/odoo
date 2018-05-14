@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from openerp import models, api, _
-from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo import models, api, _
+from odoo.tools import pycompat, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 import io
 import zipfile
 import base64
 import hashlib
-import csv
 
 from datetime import datetime
 
@@ -22,7 +21,7 @@ class ResCompany(models.Model):
         # Create an archive containing all the POS sales data to ensure the original data
         # remain unchanged/untouched/unmodified. It's a legal requirements in the French law.
         if vals.get('fiscalyear_lock_date'):
-            self._l10n_fr_create_archive_attachment()
+            self._l10n_fr_create_archive_attachment(vals['fiscalyear_lock_date'])
 
         return res
 
@@ -36,16 +35,13 @@ class ResCompany(models.Model):
         '''
         def replace_delimiter(value, delimiter):
             # Avoid having the delimiter in a value
-            if value:
-                if isinstance(value, unicode):
-                    value = value.encode('utf-8')
-                if isinstance(value, str):
-                    return value.replace(delimiter, '-')
+            if value and isinstance(value, pycompat.string_types):
+                return value.replace(delimiter, '-')
             return value
 
         delimiter = ';'
         output = io.BytesIO()
-        writer = csv.writer(output, delimiter=delimiter)
+        writer = pycompat.csv_writer(output, delimiter=delimiter)
 
         writer.writerow(fields)
         for vals in records_vals:
@@ -57,7 +53,7 @@ class ResCompany(models.Model):
         return csv_content
 
     @api.multi
-    def _l10n_fr_compute_amls_csv_archive_content(self):
+    def _l10n_fr_compute_amls_csv_archive_content(self, date):
         '''Compute the filename and the CSV content of the journal entries linked to the POS journal.
         :return: filename, csv_content
         '''
@@ -70,7 +66,8 @@ class ResCompany(models.Model):
         fields = ['id', 'ref', 'create_date', 'date', 'debit', 'credit', 'balance',
                   'debit_cash_basis', 'credit_cash_basis', 'balance_cash_basis',
                   'amount_currency', 'currency_name', 'tax_name', 'partner', 'product_name',
-                  'quantity', 'unit_of_measure', 'account', 'reconciled', 'reconciliation']
+                  'quantity', 'unit_of_measure', 'account', 'reconciled', 'reconciliation',
+                  'hash_sequence', 'hash']
 
         # Query
         query = '''
@@ -86,6 +83,8 @@ class ResCompany(models.Model):
                 line.credit_cash_basis AS credit_cash_basis,
                 line.balance_cash_basis AS balance_cash_basis,
                 line.amount_currency AS amount_currency,
+                move.l10n_fr_secure_sequence_number AS hash_sequence,
+                move.l10n_fr_hash AS hash,
                 currency.name AS currency_name,
                 tax.name AS tax_name,
                 partner.name AS partner,
@@ -112,13 +111,13 @@ class ResCompany(models.Model):
                 AND j.type = 'sale'
             ORDER BY line.id
         '''
-        params = [self.fiscalyear_lock_date, self.id]
+        params = [date, self.id]
 
         self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.multi
-    def _l10n_fr_compute_pos_lines_csv_archive_content(self):
+    def _l10n_fr_compute_pos_lines_csv_archive_content(self, date):
         '''Compute the filename and the CSV content of the POS order lines.
         :return: filename, csv_content
         '''
@@ -128,7 +127,8 @@ class ResCompany(models.Model):
         filename = 'archive_post_order_lines.csv'
 
         # Mapping headers -> fields
-        fields = ['id', 'name', 'create_date', 'product_name', 'price_unit', 'quantity', 'discount', 'order_name']
+        fields = ['id', 'name', 'create_date', 'product_name', 'price_unit', 'quantity', 'discount',
+                  'hash_sequence', 'hash', 'order_name']
 
         # Query
         query = '''
@@ -140,6 +140,8 @@ class ResCompany(models.Model):
                 line.price_unit AS price_unit,
                 line.qty AS quantity,
                 line.discount AS discount,
+                ord.l10n_fr_secure_sequence_number AS hash_sequence,
+                ord.l10n_fr_hash AS hash,
                 ord.name AS order_name
             FROM pos_order_line line
             LEFT JOIN pos_order ord ON ord.id = line.order_id
@@ -150,13 +152,15 @@ class ResCompany(models.Model):
             AND line.company_id = %s
             ORDER BY line.id
         '''
-        params = [self.fiscalyear_lock_date, self.id]
+        dt = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).replace(hour=23, minute=59, second=59)
+        date = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        params = [date, self.id]
 
         self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.multi
-    def _l10n_fr_compute_sales_closing_csv_archive_content(self):
+    def _l10n_fr_compute_sales_closing_csv_archive_content(self, date):
         '''Compute the filename and the CSV content of the sales closings records.
         :return: filename, csv_content
         '''
@@ -191,45 +195,62 @@ class ResCompany(models.Model):
             AND closing.company_id = %s
             ORDER BY closing.id
         '''
-        params = [self.fiscalyear_lock_date, self.id]
+        dt = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT).replace(hour=23, minute=59, second=59)
+        date = dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        params = [date, self.id]
 
         self._cr.execute(query, params)
         return filename, self._l10n_fr_compute_csv_archive_content(self._cr.dictfetchall(), fields)
 
     @api.model
-    def _l10n_fr_compute_hash(self, zip_content):
-        '''Hash the content passed as parameter using SHA1.
-        :param zip_content: The content of the archive ZIP in bytes.
-        :return: A hash of the ZIP content.
+    def _l10n_fr_compute_hash(self, hashable_bytes):
+        ''' Hash the archive contents passed as parameter using SHA1.
+
+        :param hashable_bytes:  A list of byte-encoded chains to hash.
+        :return:                A hash of the ZIP content.
         '''
-        hasher = hashlib.sha1(zip_content)
+        hasher = hashlib.sha1()
+        for bytes in hashable_bytes:
+            hasher.update(bytes)
         return hasher.hexdigest()
 
     @api.multi
-    def _l10n_fr_create_archive_attachment(self):
-        '''Generate an attachement containing a ZIP archive.
-        Itself contains some CSV files to ensure the POS sales data integrity.
+    def _l10n_fr_create_archive_attachment(self, date):
+        ''' This method creates missing archives according to the french law.
+        This is a way to ensure the POS data are not altered.
+        Such archives must be generated at least once a year.
+
+        :param date: The date until which the archive will be generated.
         '''
         for company in self:
             output = io.BytesIO()
 
+            filename1, content1 = company._l10n_fr_compute_amls_csv_archive_content(date)
+            filename2, content2 = company._l10n_fr_compute_pos_lines_csv_archive_content(date)
+            filename3, content3 = company._l10n_fr_compute_sales_closing_csv_archive_content(date)
+
             zip_file = zipfile.ZipFile(output, 'a', compression=zipfile.ZIP_DEFLATED)
-            zip_file.writestr(*company._l10n_fr_compute_amls_csv_archive_content())
-            zip_file.writestr(*company._l10n_fr_compute_pos_lines_csv_archive_content())
-            zip_file.writestr(*company._l10n_fr_compute_sales_closing_csv_archive_content())
+            zip_file.writestr(filename1, content1)
+            zip_file.writestr(filename2, content2)
+            zip_file.writestr(filename3, content3)
             zip_file.close()
 
             output.seek(0)
             zip_content = output.getvalue()
             output.close()
 
+            # Compute the hash using contents instead of hashing the whole zip because it doesn't ensure
+            # the same hash for the same content.
+            hashable_bytes = [content1, content2, content3]
+
             now = datetime.now()
 
             zip_filename = '%s_archive-%s_%s.zip' % (
                 company.name,
                 now.strftime('%y%m%d_%H%M%S'),
-                self._l10n_fr_compute_hash(zip_content)
+                self._l10n_fr_compute_hash(hashable_bytes)
             )
+
             attachment = self.env['ir.attachment'].create({
                 'name': zip_filename,
                 'datas_fname': zip_filename,
@@ -239,7 +260,6 @@ class ResCompany(models.Model):
                 'type': 'binary',
             })
 
-            message = _('Point of Sale data archived:')
-            message += '<ul><li>%s: %s</li></ul>' % (_('Date'), now.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
+            message = _('An archive of your sales data has been generated.')
 
             company.partner_id.message_post(body=message, attachment_ids=[attachment.id])
