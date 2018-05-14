@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.http import request
+from odoo.http import content_disposition, request
 
 
 class WebsiteEventController(http.Controller):
@@ -270,15 +270,14 @@ class WebsiteEventController(http.Controller):
             'iCal_url': urls.get('iCal_url')
         })
 
-    @http.route(['/event/<model("event.event"):event>/ics/<string:name>.ics'], type='http', auth="public", website=True)
+    @http.route(['/event/<model("event.event"):event>/ics'], type='http', auth="public", website=True)
     def make_event_ics_file(self, event, **kwargs):
         if not event or not event.registration_ids:
             return request.not_found()
-        attendee_ids = list(json.loads(kwargs.get('attendees', '{}').replace("'", '"')).values())
-        files = event.get_ics_file(attendee_ids)
+        files = event._get_ics_file()
         content = files[event.id]
         return request.make_response(content, [
             ('Content-Type', 'application/octet-stream'),
             ('Content-Length', len(content)),
-            ('Content-Disposition', 'attachment; filename=' + event.name + '.ics')
+            ('Content-Disposition', content_disposition('%s.ics' % event.name))
         ])
