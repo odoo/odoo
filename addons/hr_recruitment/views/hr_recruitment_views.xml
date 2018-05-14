@@ -408,7 +408,9 @@
                     <field name="address_id" context="{'show_address': 1}" domain= "[('is_company', '=', True )]" options="{'always_reload': True}"/>
                 </group>
                 <group colspan="2">
-                    <field name="stage_ids" widget="many2many_tags" options="{'no_create': True}" />
+                    <!-- ONLY FOR 9.0 -->
+                    <field name="id" invisible="1"/>
+                    <field name="stage_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('id', '=', False)]}"/>
                 </group>
             </group>
             <xpath expr="//field[@name='department_id']" position="after">
