@@ -6,6 +6,7 @@ import re
 
 from odoo import api, models, tools
 from odoo.tools import decode_smtp_header, decode_message_header
+from odoo.addons.mail.models.mail_thread import BOUNCE_REGEX
 
 _logger = logging.getLogger(__name__)
 
@@ -21,12 +22,28 @@ class MailThread(models.AbstractModel):
         email_to = decode_message_header(message, 'To')
         email_to_localpart = (tools.email_split(email_to) or [''])[0].split('@', 1)[0].lower()
 
+        bounced_description = ""
+        bounce_status = ""
+        rfc_email_part = next((part for part in message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        delivery_status_part = next((part for part in message.walk() if part.get_content_type() == 'message/delivery-status'), None)
         if bounce_alias and bounce_alias in email_to_localpart:
-            bounce_re = re.compile("%s\+(\d+)-?([\w.]+)?-?(\d+)?" % re.escape(bounce_alias), re.UNICODE)
+            bounce_re = re.compile(BOUNCE_REGEX % re.escape(bounce_alias), re.UNICODE)
+            if rfc_email_part:
+                email = rfc_email_part.get_payload()[0]
+                for return_email in email.get_all('Return-Path'):
+                    match = bounce_re.match(return_email)
+                    if match:
+                        email_to = match.group()
+            if delivery_status_part:
+                bounce_status = delivery_status_part.get_payload()[1]['status']
+                bounced_description = delivery_status_part.get_payload()[1]['Diagnostic-Code']
             bounce_match = bounce_re.search(email_to)
             if bounce_match:
+                del message['References']  # gmail store email references on bounce email too.
                 bounced_mail_id = bounce_match.group(1)
-                self.env['mail.mail.statistics'].set_bounced(mail_mail_ids=[bounced_mail_id])
+                self.env['mail.mail.statistics'].set_bounced(mail_mail_ids=[bounced_mail_id],
+                                                             bounced_description=bounced_description,
+                                                             bounced_status_code=bounce_status)
 
         return super(MailThread, self).message_route(message, message_dict, model, thread_id, custom_values)
 

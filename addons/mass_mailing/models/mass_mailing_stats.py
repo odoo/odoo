@@ -38,7 +38,14 @@ class MailMailStats(models.Model):
     exception = fields.Datetime(help='Date of technical error leading to the email not being sent')
     opened = fields.Datetime(help='Date when the email has been opened the first time')
     replied = fields.Datetime(help='Date when this email has been replied for the first time.')
-    bounced = fields.Datetime(help='Date when this email has bounced.')
+    bounced = fields.Datetime(help='Date when this email has bounced.', string='Bounced Date')
+    bounced_reason = fields.Selection(compute="_compute_bounced_reason",
+                                      selection=[('hard', 'Hard'),
+                                                 ('soft', 'Soft')], string="Bounced Reason",
+                                      help="A hard bounce is a permanent delivery failure. A soft bounce is a temporary delivery failure",
+                                      store=True)
+    bounced_description = fields.Text(string='Bounced Description')
+    bounced_status_code = fields.Char(string='Bounced Status Code')
     # Link tracking
     links_click_ids = fields.One2many('link.tracker.click', 'mail_stat_id', string='Links click')
     clicked = fields.Datetime(help='Date when customer clicked on at least one tracked link')
@@ -54,6 +61,17 @@ class MailMailStats(models.Model):
                                     help='Last state update of the mail',
                                     store=True)
     recipient = fields.Char(compute="_compute_recipient")
+
+    @api.depends('bounced_status_code')
+    def _compute_bounced_reason(self):
+        # Mail bounce status code ref: http://www.ietf.org/rfc/rfc1893.txt
+        for stat in self:
+            if stat.bounced_status_code:
+                bounce_code = stat.bounced_status_code.split('.')
+                if bounce_code[0] == '5':
+                    stat.bounced_reason = 'hard'
+                elif bounce_code[0] == '4':
+                    stat.bounced_reason = 'soft'
 
     @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception')
     def _compute_state(self):
@@ -119,7 +137,25 @@ class MailMailStats(models.Model):
         statistics.write({'replied': fields.Datetime.now()})
         return statistics
 
-    def set_bounced(self, mail_mail_ids=None, mail_message_ids=None):
+    def set_bounced(self, mail_mail_ids=None, mail_message_ids=None, bounced_description=None, bounced_status_code=None):
         statistics = self._get_records(mail_mail_ids, mail_message_ids, [('bounced', '=', False)])
-        statistics.write({'bounced': fields.Datetime.now()})
+        statistics.write({'bounced': fields.Datetime.now(), 'bounced_description': bounced_description, 'bounced_status_code': bounced_status_code, })
         return statistics
+
+
+class MassMailingBounceRemove(models.TransientModel):
+    """
+    This wizard will remove emails from mailing list.
+    """
+
+    _name = "mass.mailing.bounce.remove"
+    _description = "remove the selected bounce email from lists"
+
+    @api.multi
+    def remove_confirm(self):
+        context = dict(self._context or {})
+        active_ids = context.get('active_ids', []) or []
+        for record in self.env['mail.mail.statistics'].browse(active_ids):
+            res_record = self.env[record.model].browse(record.res_id)
+            res_record.list_ids = [(6, 0, [])]
+        return {'type': 'ir.actions.act_window_close'}

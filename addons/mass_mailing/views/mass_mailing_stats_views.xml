@@ -42,6 +42,7 @@
                 <field name="clicked"/>
                 <field name="replied"/>
                 <field name="bounced"/>
+                <field name="bounced_reason"/>
             </tree>
         </field>
     </record>
@@ -69,6 +70,7 @@
                             <field name="clicked"/>
                             <field name="replied"/>
                             <field name="bounced"/>
+                            <field name="bounced_reason"/>
                         </group>
 
                         <group groups="base.group_no_one">
@@ -118,6 +120,27 @@
             </graph>
         </field>
     </record>
+
+    <record id="view_mass_mailing_bounce_remove" model="ir.ui.view">
+        <field name="name">mass.mailing.bounce.remove.form</field>
+        <field name="model">mass.mailing.bounce.remove</field>
+        <field name="arch" type="xml">
+            <form string="Remove Bounced Address">
+                <p class="oe_grey">
+                    Are you sure you want to remove the email address from all your mailing lists ?
+                </p>
+                <footer>
+                    <button string="Confirm" name="remove_confirm" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="action_view_mass_mailing_bounce_remove"
+        key2="client_action_multi" name="Remove From Mailing List"
+        res_model="mass.mailing.bounce.remove" src_model="mail.mail.statistics"
+        view_mode="form" target="new" view_type="form" />
 
     <!-- Add in Technical/Email -->
     <menuitem name="Mail Statistics" id="menu_email_statistics"

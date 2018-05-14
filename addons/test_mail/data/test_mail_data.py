@@ -61,6 +61,37 @@ Please call me as soon as possible this afternoon!
 Sylvie
 """
 
+
+MAIL_TEMPLATE_BOUNCE = """Date: Wed, 30 May 2018 11:38:33 +0200 (CEST)
+From: MAILER-DAEMON@mail2.odoo.com (Mail Delivery System)
+Subject: Undelivered Mail Returned to Sender
+To: {to}
+MIME-Version: 1.0
+Content-Type: multipart/report; report-type=delivery-status;
+    boundary="9208EA4074.1527673113/mail2.odoo.com"
+Content-Description: Notification
+Content-Type: text/plain; charset=us-ascii
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients.
+
+--9208EA4074.1527673113/mail2.odoo.com
+Content-Description: Delivery report
+Content-Type: message/delivery-status
+
+Reporting-MTA: dns; mail2.odoo.com
+
+Final-Recipient: rfc822; test1@email.com
+Action: failed
+Status: 5.1.1
+Remote-MTA: dns; gmail-smtp-in.l.google.com
+Diagnostic-Code: smtp; 550-5.1.1 The email account that you tried to reach does
+    not exist. Please try 550-5.1.1 double-checking the recipient's email
+    address for typos or 550-5.1.1 unnecessary spaces. Learn more at 550 5.1.1
+    https://support.google.com/mail/?p=NoSuchUser i16-v6si12806013wrc.16 -
+    gsmtp
+"""
+
 MAIL_MULTIPART_MIXED = """Return-Path: <ignasse.carambar@gmail.com>
 X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
