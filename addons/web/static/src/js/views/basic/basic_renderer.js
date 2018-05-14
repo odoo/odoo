@@ -15,6 +15,18 @@ var widgetRegistry = require('web.widget_registry');
 
 var qweb = core.qweb;
 
+// Allowed decoration on fields: bold, italic and bootstrap semantics classes
+var DECORATIONS = [
+    'decoration-bf',
+    'decoration-it',
+    'decoration-danger',
+    'decoration-info',
+    'decoration-muted',
+    'decoration-primary',
+    'decoration-success',
+    'decoration-warning'
+];
+
 var BasicRenderer = AbstractRenderer.extend({
     custom_events: {
         navigation_move: '_onNavigationMove',
@@ -588,6 +600,17 @@ var BasicRenderer = AbstractRenderer.extend({
         if (async) {
             this.defs.push(def);
         }
+
+        //Render decorations
+        _.chain(node.attrs)
+            .pick(function (value, key) {
+                return DECORATIONS.indexOf(key) >= 0;
+            }).mapObject(function (value) {
+                return py.parse(py.tokenize(value));
+            }).each(function (expr, decoration) {
+                var cssClass = decoration.replace('decoration', 'text');
+                $el.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+            });
 
         // Update the modifiers registration by associating the widget and by
         // giving the modifiers options now (as the potential callback is
