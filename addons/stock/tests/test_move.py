@@ -1825,6 +1825,7 @@ class StockMove(TransactionCase):
             'category_id': self.uom_unit.category_id.id,
             'factor_inv': 3,
             'rounding': 1,
+            'uom_type': 'bigger',
         })
         for i in range(1, 4):
             lot_id = self.env['stock.production.lot'].create({
