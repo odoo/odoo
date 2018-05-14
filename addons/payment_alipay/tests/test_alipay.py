@@ -151,9 +151,9 @@ class AlipayTest(PaymentAcquirerCommon):
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
 
         # update tx
-        tx.write({'state': 'done', 'acquirer_reference': False})
+        tx.write({'acquirer_reference': False})
 
-        # update notification from alipay
+        # update notification from alipay should not go through since it has already been set as 'done'
         if self.alipay.alipay_payment_method == 'standard_checkout':
             alipay_post_data['trade_status'] = 'TRADE_FINISHED'
         else:
@@ -162,6 +162,11 @@ class AlipayTest(PaymentAcquirerCommon):
         # validate tx
         tx.form_feedback(alipay_post_data, 'alipay')
         # check tx
+        self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: notification should not go throught since it has already been validated')
+
+        # this time it should go through since the transaction is not validated yet
+        tx.write({'state': 'draft', 'acquirer_reference': False})
+        tx.form_feedback(alipay_post_data, 'alipay')
         self.assertEqual(tx.state, 'done', 'alipay: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552', 'alipay: wrong txn_id after receiving a valid pending notification')
 

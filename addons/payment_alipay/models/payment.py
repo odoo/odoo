@@ -206,6 +206,10 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def _alipay_form_validate(self, data):
+        if self.state in ['done']:
+            _logger.info('Alipay: trying to validate an already validated tx (ref %s)', self.reference)
+            return True
+
         status = data.get('trade_status')
         res = {
             'acquirer_reference': data.get('trade_no'),
@@ -214,7 +218,9 @@ class PaymentTransaction(models.Model):
             _logger.info('Validated Alipay payment for tx %s: set as done' % (self.reference))
             date_validate = fields.Datetime.now()
             res.update(state='done', date_validate=date_validate)
-            return self.write(res)
+            self.write(res)
+            self.execute_callback()
+            return True
         elif status == 'TRADE_CLOSED':
             _logger.info('Received notification for Alipay payment %s: set as Canceled' % (self.reference))
             res.update(state='cancel', state_message=data.get('close_reason', ''))
