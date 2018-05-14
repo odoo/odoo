@@ -1071,18 +1071,19 @@ class TestSinglePicking(TestStockCommon):
             'partner_id': self.partner_delta_id,
             'picking_type_id': self.picking_type_out,
         })
+        product = self.kgB
         self.MoveObj.create({
-            'name': self.productA.name,
-            'product_id': self.productA.id,
+            'name': product.name,
+            'product_id': product.id,
             'product_uom_qty': 5.5,
             'quantity_done': 5.95,
-            'product_uom': self.productA.uom_id.id,
+            'product_uom': product.uom_id.id,
             'picking_id': delivery.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
         })
         stock_location = self.env['stock.location'].browse(self.stock_location)
-        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5.5)
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5.5)
         delivery.action_confirm()
         delivery.action_assign()
         delivery.action_done()
