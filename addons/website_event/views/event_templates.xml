@@ -24,12 +24,12 @@
             <div class="row mt8">
                 <div class="col-sm-12">
                     <ol class="breadcrumb mb0">
-                        <li>
+                        <li class="breadcrumb-item">
                             <a href="/event">Our Events</a>
                         </li>
-                        <li t-if="current_date"><t t-esc="current_date"/></li>
-                        <li t-if="current_type"><t t-esc="current_type.name"/></li>
-                        <li t-if="current_country"><t t-esc="current_country.name"/></li>
+                        <li t-if="current_date" class="breadcrumb-item"><t t-esc="current_date"/></li>
+                        <li t-if="current_type" class="breadcrumb-item"><t t-esc="current_type.name"/></li>
+                        <li t-if="current_country" class="breadcrumb-item"><t t-esc="current_country.name"/></li>
                     </ol>
                 </div>
             </div>
@@ -206,20 +206,22 @@
             <div class="row mt8">
                 <div class="col-sm-7" id="event_menu">
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
-                        <li><a href="/event">All Events</a></li>
-                        <li t-if="event.event_type_id">
+                        <li class="breadcrumb-item"><a href="/event">All Events</a></li>
+                        <li t-if="event.event_type_id" class="breadcrumb-item">
                             <a t-attf-href="/event?type=#{event.event_type_id.id}" t-esc="event.event_type_id.name"/>
                         </li>
-                        <li t-if="event.country_id">
+                        <li t-if="event.country_id" class="breadcrumb-item">
                             <a t-attf-href="/event?country=#{event.country_id.id}" t-esc="event.country_id.name"/>
                         </li>
-                        <li class="active">
+                        <li class="breadcrumb-item active">
                             <span t-field="event.name"/>
                         </li>
                     </ol>
                     <ol name="Event Menu" class="breadcrumb mb0" id="event_menu" t-if="event.menu_id" t-att-data-content_menu_id="editable and event.menu_id.id">
                         <t t-foreach="event.menu_id.child_id" t-as="submenu">
-                            <t t-call="website.submenu"/>
+                            <t t-call="website.submenu">
+                                <t t-set="submenu_type" t-value="'breadcrumb'"/>
+                            </t>
                         </t>
                     </ol>
                 </div>

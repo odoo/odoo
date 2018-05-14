@@ -279,10 +279,10 @@
           <div class="row">
             <div class="col-sm-9">
                 <ol class="breadcrumb">
-                    <li><a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}"><span t-field="blog.name"/></a></li>
-                    <li t-if="tag"><a t-attf-href="#{blog_url(date_begin=None, date_end=None)}"><span t-field="tag.name"/></a></li>
-                    <li t-if="date"><a t-attf-href="#{blog_url(tag=None)}" t-esc="date"/></li>
-                    <li class="active"><span t-field="blog_post.name"/></li>
+                    <li class="breadcrumb-item"><a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}"><span t-field="blog.name"/></a></li>
+                    <li t-if="tag" class="breadcrumb-item"><a t-attf-href="#{blog_url(date_begin=None, date_end=None)}"><span t-field="tag.name"/></a></li>
+                    <li t-if="date" class="breadcrumb-item"><a t-attf-href="#{blog_url(tag=None)}" t-esc="date"/></li>
+                    <li class="breadcrumb-item active"><span t-field="blog_post.name"/></li>
                 </ol>
             </div><div class="col-sm-3">
             </div>

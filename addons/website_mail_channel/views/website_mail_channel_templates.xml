@@ -86,8 +86,8 @@
         <section class="container">
             <div class="mt8">
                 <ol class="breadcrumb pull-left">
-                    <li><a href="/groups">Mailing Lists</a></li>
-                    <li>
+                    <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
+                    <li class="breadcrumb-item">
                         <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
                     </li>
                 </ol>
@@ -147,11 +147,11 @@
         <section class="container">
             <div class="row mt8">
                 <ol class="breadcrumb pull-left">
-                    <li><a href="/groups">Mailing Lists</a></li>
-                    <li>
+                    <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
+                    <li class="breadcrumb-item">
                         <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
                     </li>
-                    <li t-if="message" class="active"><t t-esc="message.description"/></li>
+                    <li t-if="message" class="breadcrumb-item active"><t t-esc="message.description"/></li>
                 </ol>
             </div>
             <div class="row">

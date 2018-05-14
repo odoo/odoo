@@ -64,7 +64,7 @@ tour.register('sale_tour', {
     content: _t("<p><b>Print this quotation.</b> If not yet done, you will be requested to set your company data and to select a document layout.</p>"),
     position: "bottom"
 }, {
-    trigger: ".breadcrumb li:not(.active):last",
+    trigger: ".breadcrumb-item:not(.active):last",
     extra_trigger: ".o_sale_order [data-value='sent'].btn-primary",
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"

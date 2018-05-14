@@ -142,8 +142,8 @@
         <t t-set="ref_content">
             <div class="col-md-5">
                 <ol t-if="not edit_page" class="breadcrumb">
-                    <li><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
-                    <li class="active"><span t-field="partner.display_name"/></li>
+                    <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
+                    <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
                 </ol>
             </div>
             <t t-call="website_partner.partner_detail">

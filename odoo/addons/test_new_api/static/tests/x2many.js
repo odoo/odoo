@@ -349,7 +349,7 @@ odoo.define('web.test.x2many', function (require) {
     }, {
         content: "select previous created record",
         trigger: 'td:contains(test_trigger):last',
-        extra_trigger: '.breadcrumb li:containsExact(Discussions 2)',
+        extra_trigger: '.breadcrumb-item:containsExact(Discussions 2)',
     }, {
         content: "click on edit",
         trigger: '.o_cp_buttons .o_form_button_edit',
