@@ -55,8 +55,13 @@
                     <!-- This checks if the setting "Expiration Dates on Delivery Slip" was ticked-->
                     <t t-set="show_expiration_date" t-value="o.env.user.has_group('stock.group_expiration_date_on_delivery_slip')"/>
                     
-                    <t t-set="any_SN_LN" t-value="any([ml.lot_id for ml in o.move_line_ids])"/>
-                    <t t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
+                    <!-- Checks if there is any lot or serial number to display, if not the column won't be displayed-->
+                    <t t-if="show_SN_LN" t-set="any_SN_LN" t-value="any([ml.lot_id for ml in o.move_line_ids])"/>
+                    <t t-else="" t-set="any_SN_LN" t-value="False"/>
+
+                    <!-- Checks if there is any expiration date to display, if not the column won't be displayed-->
+                    <t t-if="show_expiration_date" t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
+                    <t t-else="" t-set="any_expiration_date" t-value="False"/>
 
                     <!-- of the following 3 tables, only one of them is displayed at a time  -->
                     <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
