@@ -23,7 +23,7 @@ class MrpUnbuild(models.Model):
         'product.product', 'Product',
         required=True, states={'done': [('readonly', True)]})
     product_qty = fields.Float(
-        'Quantity',
+        'Quantity', default=1.0,
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
