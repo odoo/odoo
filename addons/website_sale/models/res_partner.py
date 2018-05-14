@@ -7,4 +7,4 @@ from odoo import models, fields
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order')
+    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order', copy=False)
