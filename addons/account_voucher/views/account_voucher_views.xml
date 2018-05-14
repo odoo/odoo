@@ -156,7 +156,8 @@
             name="Voucher Entries"
             context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
             res_model="account.voucher"
-            src_model="account.journal"/>
+            binding_model="account.journal"
+            binding_views="form"/>
 
         <record model="ir.actions.act_window" id="action_review_voucher_list">
             <field name="name">Vouchers Entries</field>

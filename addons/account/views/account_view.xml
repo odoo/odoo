@@ -377,7 +377,8 @@ action = model.setting_init_bank_account_action()
            name="Bank statements"
            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.bank.statement"
-           src_model="account.journal"/>
+           binding_model="account.journal"
+           binding_views="form"/>
 
         <!-- Tags -->
         <record id="account_tag_view_form" model="ir.ui.view">

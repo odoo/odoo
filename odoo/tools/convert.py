@@ -328,13 +328,12 @@ form: module.record_id""" % (xml_id,)
         name = rec.get('name')
         xml_id = rec.get('id','')
         self._test_xml_id(xml_id)
-        type = rec.get('type') or 'ir.actions.act_window'
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(rec.get('view_id'))
         domain = rec.get('domain') or '[]'
         res_model = rec.get('res_model')
-        src_model = rec.get('src_model')
+        binding_model = rec.get('binding_model')
         view_type = rec.get('view_type') or 'form'
         view_mode = rec.get('view_mode') or 'tree,form'
         usage = rec.get('usage')
@@ -359,16 +358,16 @@ form: module.record_id""" % (xml_id,)
         eval_context = {
             'name': name,
             'xml_id': xml_id,
-            'type': type,
+            'type': 'ir.actions.act_window',
             'view_id': view_id,
             'domain': domain,
             'res_model': res_model,
-            'src_model': src_model,
+            'src_model': binding_model,
             'view_type': view_type,
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
-            'uid' : uid,
+            'uid': uid,
             'active_id': active_id,
             'active_ids': active_ids,
             'active_model': active_model,
@@ -386,12 +385,11 @@ form: module.record_id""" % (xml_id,)
                 domain, xml_id or 'n/a', exc_info=True)
         res = {
             'name': name,
-            'type': type,
+            'type': 'ir.actions.act_window',
             'view_id': view_id,
             'domain': domain,
             'context': context,
             'res_model': res_model,
-            'src_model': src_model,
             'view_type': view_type,
             'view_mode': view_mode,
             'usage': usage,
@@ -412,15 +410,12 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('target'):
             res['target'] = rec.get('target','')
-        if rec.get('multi'):
-            res['multi'] = safe_eval(rec.get('multi', 'False'))
-        if src_model:
-            res['binding_model_id'] = self.env['ir.model']._get(src_model).id
-            res['binding_type'] = 'report' if rec.get('key2') == 'client_print_multi' else 'action'
-            if rec.get('key2') in (None, 'client_action_relate'):
-                if not res.get('multi'):
-                    res['binding_type'] = 'action_form_only'
-
+        if binding_model:
+            res['binding_model_id'] = self.env['ir.model']._get(binding_model).id
+            res['binding_type'] = rec.get('binding_type') or 'action'
+            views = rec.get('binding_views')
+            if views is not None:
+                res['binding_view_types'] = views
         xid = self.make_xml_id(xml_id)
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')

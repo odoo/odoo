@@ -529,7 +529,8 @@
     <act_window
         id="act_pos_config_sessions"
         name="Sessions"
-        src_model="pos.config"
+        binding_model="pos.config"
+        binding_views="form"
         res_model="pos.session"
         domain="[('config_id', '=', active_id)]" />
 

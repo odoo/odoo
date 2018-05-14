@@ -116,7 +116,8 @@
             name="Analytic Rules"
             id="analytic_rule_action_user"
             res_model="account.analytic.default"
-            src_model="res.users"
+            binding_model="res.users"
+            binding_views="form"
             context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
             groups="analytic.group_analytic_accounting"/>
 </odoo>

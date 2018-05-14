@@ -29,9 +29,8 @@
 
         <act_window name="Invoice Membership"
             res_model="membership.invoice"
-            src_model="res.partner"
-            multi="True"
-            key2="client_action_multi"
+            binding_model="res.partner"
+            binding_views="list"
             view_mode="form"
             id="action_membership_invoice_view"/>
 

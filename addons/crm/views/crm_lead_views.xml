@@ -831,11 +831,10 @@
         -->
         <act_window name="Send an email"
                 res_model="mail.compose.message"
-                src_model="crm.lead"
+                binding_model="crm.lead"
+                binding_views="list"
                 view_mode="form"
-                multi="True"
                 target="new"
-                key2="client_action_multi"
                 id="crm.action_lead_mass_mail"
                 context="{
                             'default_composition_mode': 'mass_mail',
