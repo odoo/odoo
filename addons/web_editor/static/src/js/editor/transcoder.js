@@ -227,6 +227,26 @@ function imgToFont($editable) {
     });
 }
 
+/*
+ * Utility function to apply function over descendants elements
+ *
+ * This is needed until the following issue of jQuery is solved:
+ *  https://github.com./jquery/sizzle/issues/403
+ *
+ * @param {Element} node The root Element node
+ * @param {Function} func The function applied over descendants
+ */
+function applyOverDescendants(node, func) {
+    node = node.firstChild;
+    while (node) {
+        if (node.nodeType === 1) {
+            func(node);
+            applyOverDescendants(node, func);
+        }
+        node = node.nextSibling;
+    }
+}
+
 /**
  * Converts css style to inline style (leave the classes on elements but forces
  * the style they give as inline style).
@@ -237,9 +257,9 @@ function classToStyle($editable) {
     if (!rulesCache.length) {
         getMatchedCSSRules($editable[0]);
     }
-    $editable.find('*').each(function () {
-        var $target = $(this);
-        var css = getMatchedCSSRules(this);
+    applyOverDescendants($editable[0], function (node) {
+        var $target = $(node);
+        var css = getMatchedCSSRules(node);
         var style = $target.attr('style') || '';
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {
@@ -252,12 +272,12 @@ function classToStyle($editable) {
             $target.attr('style', style);
         }
         // Apple Mail
-        if (this.nodeName === 'TD' && !this.childNodes.length) {
-            this.innerHTML = '&nbsp;';
+        if (node.nodeName === 'TD' && !node.childNodes.length) {
+            node.innerHTML = '&nbsp;';
         }
 
         // Outlook
-        if (this.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
+        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
             var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
@@ -269,7 +289,7 @@ function classToStyle($editable) {
             $target.after($hack);
             $target.appendTo($hack.find('td'));
             // the space add a line when it's a table but it's invisible when it's a link
-            var node = $hack[0].previousSibling;
+            node = $hack[0].previousSibling;
             if (node && node.nodeType === Node.TEXT_NODE && !node.textContent.match(/\S/)) {
                 $(node).remove();
             }
@@ -297,9 +317,9 @@ function styleToClass($editable) {
 
     var $c = $('<span/>').appendTo(document.body);
 
-    $editable.find('*').each(function () {
-        var $target = $(this);
-        var css = getMatchedCSSRules(this);
+    applyOverDescendants($editable[0], function (node) {
+        var $target = $(node);
+        var css = getMatchedCSSRules(node);
         var style = '';
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {
