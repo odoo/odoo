@@ -151,6 +151,15 @@
                 <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <group expand="1" string="Group By">
                     <filter name="groupby_status" context="{'group_by' : 'state_id'}" string="Status"/>
                     <filter name="groupby_model" context="{'group_by' : 'model_id'}" string="Model"/>
@@ -164,7 +173,7 @@
         <field name="name">fleet.vehicle.kanban</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban default_group_by="state_id">
                 <field name="license_plate" />
                 <field name="model_id" />
                 <field name="driver_id" />
