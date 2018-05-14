@@ -84,16 +84,6 @@
             <field name="name">Sub-tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-            <field name="context">
-            {
-                'default_parent_id' : active_id,
-                'default_project_id' : project_id,
-                'default_name' : name + ':',
-                'default_partner_id' : partner_id,
-                'search_default_project_id': [project_id],
-            }
-            </field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
         </record>
 
@@ -403,7 +393,7 @@
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
-                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                        <button name="action_subtask" type="object" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : [('parent_id', '!=', False)]}"
                             context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
