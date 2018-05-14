@@ -90,7 +90,7 @@
                         </div>
                         <t t-if="slide.slide_type in ('presentation', 'document')">
                             <div id="PDFViewerLoader" class="oe_slides_loader">
-                                <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%"/>
+                                <img class="img-responsive" t-attf-src="/web/image/slide.slide/#{slide.id}/image_medium" style="margin:auto;height:100%" alt="suggest_slide.name"/>
                                 <h4 class="text-center">
                                     <i class="fa fa-spinner fa-spin"></i> Loading ...
                                 </h4>
@@ -98,7 +98,7 @@
                             <canvas id="PDFViewerCanvas" class="img-responsive" style="margin:auto;height:100%;display:none;"></canvas>
                         </t>
                         <t t-if="slide.slide_type in ('infographic')">
-                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%"/>
+                            <img t-attf-src="/web/image/slide.slide/#{slide.id}/datas" class="img-responsive" style="width:100%" alt="Slide image"/>
                         </t>
                     </div>
                     <!-- Fixed bottom navbar -->

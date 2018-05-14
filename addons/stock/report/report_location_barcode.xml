@@ -14,7 +14,7 @@
             <t t-foreach="page_docs" t-as="o">
                 <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>
                 <t t-if="not o.barcode"><t t-set="content" t-value="o.name"/></t>
-                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)"/>
+                <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', content, 600, 100)" alt="Barcode"/>
             </t>
         </div>
     </t>

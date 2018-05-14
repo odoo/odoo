@@ -36,7 +36,7 @@
                     <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
                         <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" aria-label="Loading"/>
                     </div>
-                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1"/>
+                    <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1" alt="Viewer"/>
                     <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
@@ -88,7 +88,7 @@
                 </script>
             </head>
             <body onload='onload_img()'>
-                <img t-att-src='src' />
+                <img t-att-src='src' alt=""/>
             </body>
         </html>
     </t>
@@ -129,6 +129,7 @@
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
                 <t t-if="!message.mailto and message.author_id[0]">
                     <img t-if="message.avatar_src and message.display_author"
+                        alt=""
                         t-att-src="message.avatar_src"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
@@ -136,6 +137,7 @@
                 </t>
                 <t t-if="message.mailto || !message.author_id[0]">
                     <img t-if="message.avatar_src and message.display_author"
+                        alt=""
                         t-att-src="message.avatar_src"
                         class="o_thread_message_avatar img-circle"/>
                 </t>

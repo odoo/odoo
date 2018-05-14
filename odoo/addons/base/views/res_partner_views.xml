@@ -294,13 +294,13 @@
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right" title="Delete" aria-label="Delete"/>
                                                 <div class="o_kanban_image">
-                                                    <img t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
+                                                    <img alt="" t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
                                                     <t t-if="!record.image_small.raw_value">
-                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
-                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
+                                                        <img alt="Delivery" t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/img/truck.png"'/>
+                                                        <img alt="Invoice" t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/img/money.png"'/>
                                                         <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
-                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
-                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar.png"'/>
+                                                            <img alt="Logo" t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/img/company_image.png"'/>
+                                                            <img alt="Avatar" t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/img/avatar.png"'/>
                                                         </t>
                                                     </t>
                                                 </div>
@@ -495,21 +495,21 @@
                             <div class="oe_kanban_global_click o_res_partner_kanban">
                                 <div class="o_kanban_image">
                                     <t t-if="record.image_small.raw_value">
-                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
+                                        <img alt="Partner" t-att-src="kanban_image('res.partner', 'image_small', record.id.raw_value)"/>
                                     </t>
                                     <t t-if="!record.image_small.raw_value">
                                         <t t-if="record.type.raw_value === 'delivery'">
-                                            <img t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                            <img alt="Delivery" t-att-src='_s + "/base/static/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                         </t>
                                         <t t-if="record.type.raw_value === 'invoice'">
-                                            <img t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                            <img alt="Invoice" t-att-src='_s + "/base/static/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
                                          </t>
                                         <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
                                             <t t-if="record.is_company.raw_value === true">
-                                                <img t-att-src='_s + "/base/static/img/company_image.png"'/>
+                                                <img alt="Logo" t-att-src='_s + "/base/static/img/company_image.png"'/>
                                             </t>
                                             <t t-if="record.is_company.raw_value === false">
-                                                <img t-att-src='_s + "/base/static/img/avatar.png"'/>
+                                                <img alt="Avatar" t-att-src='_s + "/base/static/img/avatar.png"'/>
                                             </t>
                                         </t>
                                     </t>

@@ -125,8 +125,8 @@
         <div t-if="widget.buttons.length" class="o_buttons">
             <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-default'}" type="button">
                 <t t-if="button.icon">
-                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}"/>
-                    <img t-else="" t-att-src="button.icon"/>
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" t-att-aria-label="button.name"/>
+                    <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                 </t>
                 <span><t t-esc="button.text"/></span>
             </button>
@@ -917,6 +917,7 @@
 </t>
 <t t-name="FieldBinaryImage-img">
     <img class="img img-responsive"
+        alt="Binary file"
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"/>
@@ -1329,7 +1330,7 @@
 <t t-name="Throbber">
     <div>
         <div class="oe_blockui_spin" style="height: 50px">
-            <img src="/web/static/src/img/spin.png" style="animation: fa-spin 1s infinite steps(12);"/>
+            <img src="/web/static/src/img/spin.png" style="animation: fa-spin 1s infinite steps(12);" alt="Loading..."/>
         </div>
         <br />
         <div class="oe_throbber_message" style="color:white"></div>
@@ -1407,7 +1408,7 @@
 <t t-name="UserMenu">
     <li class="o_user_menu">
         <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-            <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
+            <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'" alt="Avatar"/>
             <span class="oe_topbar_name"/>
         </a>
         <ul class="dropdown-menu" role="menu">
@@ -1448,7 +1449,7 @@
             </ul>
         </div>
         <div class="col-xs-6">
-            <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false"/>
+            <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false" alt="Upgrade to enterprise"/>
         </div>
     </div>
 </t>
@@ -1463,7 +1464,7 @@
 
 <t t-name="BaseSetting.SearchHeader">
     <div class="settingSearchHeader o_hidden">
-        <img class="icon" t-att-src="imgurl"></img>
+        <img class="icon" t-att-src="imgurl" alt="Search"></img>
         <span class="appName"><t t-esc="string"/></span>
     </div>
 </t>

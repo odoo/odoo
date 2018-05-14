@@ -79,8 +79,8 @@
             <t t-foreach="partner_stats.values()" t-as="partner_stat">
                 <div class="row mt8" t-if="partner_stat['total']" title="Top 5 partner ratings of last 15 days.">
                     <div class="col-sm-1">
-                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{partner_stat['rated_partner'].image}"/>
-                        <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png'/>
+                        <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{partner_stat['rated_partner'].image}" alt="Rated partner"/>
+                        <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-sm-4 o_smiley_no_padding_right">
                         <span class="ml8" t-esc="partner_stat['rated_partner'].name"/>
@@ -128,8 +128,8 @@
             <div t-attf-id="rating_#{rating.id}" class="container hidden">
                 <div class="row">
                     <div class="col-md-2">
-                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}"/>
-                        <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png'/>
+                        <img t-if="rating.partner_id.image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}" alt="Rated partner"/>
+                        <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
                     <div class="col-md-10">
                         <div class="mt4">
@@ -160,6 +160,7 @@
                                         <t t-foreach="ratings" t-as="rating">
                                             <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png'
                                                 class="mt4 o_rating_image"
+                                                t-att-alt="rating.name"
                                                 t-att-data-id="rating.id"
                                                 t-att-data-rating-date="rating.write_date"/>
                                             <t t-call="project.portal_project_rating_popover"/>

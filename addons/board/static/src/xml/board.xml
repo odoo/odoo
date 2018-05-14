@@ -37,8 +37,8 @@
         </p>
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
-                <img t-attf-src="/board/static/src/img/layout_#{layout}.png"/>
-                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
+                <img t-attf-src="/board/static/src/img/layout_#{layout}.png" alt=""/>
+                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success" aria-label='Layout'/>
             </li>
         </ul>
     </div>

@@ -5,7 +5,7 @@
         <div class="pos">
             <div class="pos-topheader">
                 <div class="pos-branding">
-                    <img class="pos-logo" src="/point_of_sale/static/src/img/logo.png" />
+                    <img class="pos-logo" src="/point_of_sale/static/src/img/logo.png" alt="Logo"/>
                     <span class="placeholder-UsernameWidget"></span>
                 </div>
                 <div class="pos-rightheader">
@@ -176,7 +176,7 @@
             <button class="input-button number-char">0</button>
             <button class="input-button number-char">.</button>
             <button class="input-button numpad-backspace">
-                <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
             </button>
         </div>
     </t>
@@ -184,7 +184,7 @@
     <t t-name="CategoryButton">
         <span class='category-button js-category-switch' t-att-data-category-id="category.id" >
             <div class="category-img">
-                <img t-att-src="image_url" />
+                <img t-att-src="image_url" alt="Category"/>
             </div>
             <div class="category-name">
                 <t t-esc="category.name"/>
@@ -209,7 +209,7 @@
                 </span>
                 <t t-foreach="widget.breadcrumb" t-as="category">
                     <span class="breadcrumb">
-                        <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow" />
+                        <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow" alt="Slash"/>
                         <span class="breadcrumb-button js-category-switch" t-att-data-category-id="category.id">
                             <t t-esc="category.name"/>
                         </span>
@@ -332,7 +332,7 @@
                     <i class='fa fa-camera'></i>
                 </t>
                 <t t-if='partner.id'>
-                    <img t-att-src='widget.partner_icon_url(partner.id)' />
+                    <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner"/>
                 </t>
                 <input type='file' class='image-uploader'></input>   
             </div>
@@ -402,7 +402,7 @@
     <t t-name="ClientDetails">
         <section class='client-details'>
             <div class='client-picture'>
-                <img t-att-src='widget.partner_icon_url(partner.id)' />
+                <img t-att-src='widget.partner_icon_url(partner.id)' alt="Partner logo"/>
             </div>
             <div class='client-name'><t t-esc='partner.name' /></div>
             <div class='edit-buttons'>
@@ -622,7 +622,7 @@
             <button class="input-button number-char" data-action='0'>0</button>
             <button class="input-button number-char" t-att-data-action='widget.decimal_point'><t t-esc='widget.decimal_point'/></button>
             <button class="input-button numpad-backspace" data-action='BACKSPACE' >
-                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
             </button>
         </div>
     </t>
@@ -733,7 +733,7 @@
     <t t-name="XmlReceipt">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='receipt.company.logo'>
-                <img t-att-src='receipt.company.logo' />
+                <img t-att-src='receipt.company.logo' alt="Logo"/>
                 <br/>
             </t>
             <t t-if='!receipt.company.logo'>
@@ -898,7 +898,7 @@
     <t t-name="SaleDetailsReport">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='pos.company_logo_base64'>
-                <img t-att-src='pos.company_logo_base64' />
+                <img t-att-src='pos.company_logo_base64' alt="Logo"/>
                 <br/>
             </t>
             <t t-if='!pos.company_logo_base64'>
@@ -1189,7 +1189,7 @@
                     <button class="input-button number-char" data-action='0'>0</button>
                     <button class="input-button number-char dot" t-att-data-action='widget.decimal_separator'><t t-esc='widget.decimal_separator'/></button>
                     <button class="input-button numpad-backspace" data-action='BACKSPACE' >
-                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                        <img style="pointer-events: none;" src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" alt="Backspace"/>
                     </button>
                     <br />
                 </div>
@@ -1244,7 +1244,7 @@
     <t t-name="Product">
         <span class='product' t-att-data-product-id="product.id">
             <div class="product-img">
-                <img t-att-src='image_url' /> 
+                <img t-att-src='image_url' alt="Product image"/> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
                         <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
@@ -1387,7 +1387,7 @@
                 t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
                 step="0.01" t-att-value="line.get_amount_str()" />
             <span  class='paymentline-delete'>
-                <img src="/point_of_sale/static/src/img/search_reset.gif" />
+                <img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete"/>
             </span>
         </div>
     </t>
@@ -1399,7 +1399,7 @@
             </td>
             <td class="paymentline-amount pos-right-align">
                 <input type="number" step="0.01" t-att-value="line.get_amount_str()" />
-                <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" /></span>
+                <span class='delete-payment-line'><img src="/point_of_sale/static/src/img/search_reset.gif" alt="Delete"/></span>
             </td>
         </tr>
     </t>

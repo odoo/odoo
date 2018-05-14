@@ -93,13 +93,13 @@
         <div class="row">
             <div class="col-md-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded"/>
+                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Photos of Past Events</a></div>
                 </div>
             </div>
             <div class="col-md-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/training.jpg" class="img-rounded"/>
+                    <img src="/website_event/static/src/img/training.jpg" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Our Trainings</a></div>
                 </div>
             </div>
@@ -337,7 +337,7 @@
                     <div class="panel-body">
                         <t t-if="event.google_map_img()">
                             <a t-att-href="event.google_map_link()" target="_BLANK">
-                               <img t-att-src="event.google_map_img()" width="100%%"/>
+                               <img t-att-src="event.google_map_img()" width="100%%" alt="Google Maps"/>
                             </a>
                         </t>
                         <t t-else="1">
@@ -648,7 +648,7 @@
                 <div class="country_events_list">
                     <div class="text-muted text-left">
                         <div>
-                            <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                            <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         </div>
                         <div>Events in visitor's country</div>
                     </div>
@@ -673,11 +673,11 @@
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')"></img>
+                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')" alt=""></img>
                         <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
-                        <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                        <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         <h4><b>Upcoming Events</b></h4>
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">

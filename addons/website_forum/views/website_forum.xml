@@ -974,7 +974,7 @@
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
                 <a t-att-href="user_profile_url" class="o_forum_user_info">
-                    <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+                    <img class="pull-left img img-rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
                 </a>
                 <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
@@ -1074,7 +1074,7 @@
 <template id="forum_user_tooltip">
     <div class="o_forum_user_bio text-left panel panel-body">
         <a t-att-href="user_profile_url">
-            <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar"/>
+            <img class="pull-left img img-rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
         </a>
         <div class="o_forum_tooltip_header">
             <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
@@ -1262,7 +1262,7 @@
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
             <div t-foreach="row_users" t-as="user" class="col-sm-4">
-                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
@@ -1319,7 +1319,7 @@
                     <a href="#" title="Clear" aria-label="Clear">
                         <i class="fa fa-trash-o fa-1g pull-right o_forum_profile_pic_clear"></i>
                     </a>
-                    <img class="img img-responsive img-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                    <img class="img img-responsive img-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 </div>
                 <div class="col-md-10">
                     <input name="user_id" t-att-value="user.id" type="hidden"/>
@@ -1394,7 +1394,7 @@
         </h1>
         <div class="row">
             <div class="col-sm-2">
-                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar"/>
+                <img class="img img-responsive img-circle" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
             </div>
             <div class="col-sm-10">
                 <table class="table table-condensed">
