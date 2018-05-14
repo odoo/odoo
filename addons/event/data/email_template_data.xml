@@ -6,7 +6,7 @@
             <field name="name">Event: Registration Badge</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="email_to" >${object.email or object.partner_id.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="subject">Your badge for ${object.event_id.name}</field>
             <field name="auto_delete" eval="True"/>
@@ -24,7 +24,7 @@
             <field name="name">Event: Registration</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="email_to" >${object.email or object.partner_id.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Your registration at ${object.event_id.name}</field>
@@ -152,7 +152,7 @@
             <field name="name">Event: Reminder</field>
             <field name="model_id" ref="event.model_event_registration"/>
             <field name="email_from">${(object.event_id.organizer_id.email or object.event_id.user_id.email or '')|safe}</field>
-            <field name="email_to" >${object.partner_id.email or object.email|safe}</field>
+            <field name="email_to" >${object.email or object.partner_id.email|safe}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="reply_to">${object.event_id.reply_to|safe}</field>
             <field name="subject">Reminder for ${object.event_id.name}</field>
