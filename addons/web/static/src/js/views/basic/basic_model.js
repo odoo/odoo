@@ -1974,13 +1974,16 @@ var BasicModel = AbstractModel.extend({
         return this._rpc({
                 model: model,
                 method: 'name_get',
-                args: [ids],
+                args: [_.uniq(ids)],
                 context: list.context,
             })
             .then(function (name_gets) {
-                for (var i = 0; i < name_gets.length; i++) {
-                    records[i].data.display_name = name_gets[i][1];
-                }
+                _.each(records, function (record) {
+                    var nameGet = _.find(name_gets, function (nameGet) {
+                        return nameGet[0] === record.data.id;
+                    });
+                    record.data.display_name = nameGet[1];
+                });
             });
     },
     /**

@@ -1237,6 +1237,47 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: name_get with unique ids (default_get)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].display_name = "MyTrululu";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        p: [
+                            [0, 0, { trululu: 1 }],
+                            [0, 0, { trululu: 1 }]
+                        ]
+                    });
+                }
+                if (args.method === 'name_get') {
+                    assert.deepEqual(args.args[0], _.uniq(args.args[0]),
+                        "should not have duplicates in name_get rpc");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').text(), "MyTrululuMyTrululu",
+            "both records should have the correct display_name for trululu field");
+
+        form.destroy();
+    });
+
     QUnit.test('list in form: discard newly added element with empty required field (onchange)', function (assert) {
         assert.expect(8);
 
