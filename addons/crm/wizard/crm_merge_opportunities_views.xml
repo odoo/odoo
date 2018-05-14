@@ -46,10 +46,9 @@
         <act_window
             id="action_merge_opportunities"
             name="Merge"
-            multi="True"
-            key2="client_action_multi"
             res_model="crm.merge.opportunity"
-            src_model="crm.lead"
+            binding_model="crm.lead"
+            binding_views="list"
             view_mode="form"
             target="new"
             view_type="form"

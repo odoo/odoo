@@ -3,7 +3,8 @@
     <act_window
         id="act_pos_session_orders"
         name="Orders"
-        src_model="pos.session"
+        binding_model="pos.session"
+        binding_views="form"
         res_model="pos.order"
         context="{'search_default_session_id': active_id, 'default_session_id' : active_id }"/>
 

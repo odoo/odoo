@@ -34,11 +34,10 @@
     <!-- Add action entry in the Action Menu for Partners -->
     <act_window id="send_sms_action"
         name="Send SMS"
-        src_model="res.partner"
+        binding_model="res.partner"
         res_model="sms.send_sms"
         view_type="form"
         view_mode="form"
-        key2="client_action_multi"
         target="new"/>
 
 </odoo>

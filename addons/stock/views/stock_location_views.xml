@@ -6,7 +6,8 @@
         id="act_product_location_open"
         name="Products"
         res_model="product.product"
-        src_model="stock.location"/>
+        binding_model="stock.location"
+        binding_views="form"/>
 
     <record id="view_location_form" model="ir.ui.view">
         <field name="name">stock.location.form</field>

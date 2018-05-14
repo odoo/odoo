@@ -1484,24 +1484,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # Add related action information if aksed
         if toolbar:
+            vt = 'list' if view_type == 'tree' else view_type
             bindings = self.env['ir.actions.actions'].get_bindings(self._name)
             resreport = [action
                          for action in bindings['report']
-                         if view_type == 'tree' or not action.get('multi')]
+                         if vt in (action.get('binding_view_types') or vt).split(',')]
             resaction = [action
                          for action in bindings['action']
-                         if view_type == 'tree' or not action.get('multi')]
-            resrelate = []
-            if view_type == 'form':
-                resrelate = bindings['action_form_only']
-
-            for res in itertools.chain(resreport, resaction):
-                res['string'] = res['name']
+                         if vt in (action.get('binding_view_types') or vt).split(',')]
 
             result['toolbar'] = {
                 'print': resreport,
                 'action': resaction,
-                'relate': resrelate,
             }
         return result
 
