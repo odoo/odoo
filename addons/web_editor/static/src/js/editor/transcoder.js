@@ -272,12 +272,12 @@ function classToStyle($editable) {
             $target.attr('style', style);
         }
         // Apple Mail
-        if (this.nodeName === 'TD' && !this.childNodes.length) {
-            this.innerHTML = '&nbsp;';
+        if (node.nodeName === 'TD' && !node.childNodes.length) {
+            node.innerHTML = '&nbsp;';
         }
 
         // Outlook
-        if (this.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
+        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
             var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
