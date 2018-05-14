@@ -267,8 +267,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
     def _update_values(self, cr, uid, src_partners, dst_partner, context=None):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
-
-        columns = dst_partner._columns
+        columns = dst_partner.fields_get().keys()
         def write_serializer(column, item):
             if isinstance(item, browse_record):
                 return item.id
@@ -276,8 +275,9 @@ class MergePartnerAutomatic(osv.TransientModel):
                 return item
 
         values = dict()
-        for column, field in columns.iteritems():
-            if field._type not in ('many2many', 'one2many') and not isinstance(field, fields.function):
+        for column in columns:
+            field = dst_partner._fields[column]
+            if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
                         values[column] = write_serializer(column, item[column])
