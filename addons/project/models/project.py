@@ -877,6 +877,20 @@ class Task(models.Model):
             'type': 'ir.actions.act_window'
         }
 
+    def action_subtask(self):
+        action = self.env.ref('project.project_task_action_sub_task').read()[0]
+        ctx = self.env.context.copy()
+        ctx.update({
+            'default_parent_id' : self.id,
+            'default_project_id' : self.env.context.get('project_id', self.subtask_project_id.id),
+            'default_name' : self.env.context.get('name', self.name) + ':',
+            'default_partner_id' : self.env.context.get('partner_id', self.partner_id.id),
+            'search_default_project_id': self.env.context.get('project_id', self.subtask_project_id.id),
+        })
+        action['context'] = ctx
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        return action
+
 
 class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
