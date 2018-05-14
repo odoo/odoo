@@ -92,16 +92,6 @@ class Country(models.Model):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
 
-    @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if args is None:
-            args = []
-        records = self.search([('code', '=', name)] + args, limit=limit)
-        if not records:
-            search_domain = [('name', operator, name)]
-            records = self.search(search_domain + args, limit=limit)
-        return [(record.id, record.display_name) for record in records]
-
 
 class CountryGroup(models.Model):
     _description = "Country Group"
@@ -132,10 +122,10 @@ class CountryState(models.Model):
             args = []
         if self.env.context.get('country_id'):
             args = args + [('country_id', '=', self.env.context.get('country_id'))]
-        records = self.search([('code', '=', name)] + args, limit=limit)
-        if not records:
-            search_domain = [('name', operator, name)]
-            records = self.search(search_domain + args, limit=limit)
+        firsts_records = self.search([('code', '=ilike', name)] + args, limit=limit)
+        search_domain = [('name', operator, name)]
+        search_domain.append(('id', 'not in', firsts_records.ids))
+        records = firsts_records + self.search(search_domain + args, limit=limit)
         return [(record.id, record.display_name) for record in records]
 
 
