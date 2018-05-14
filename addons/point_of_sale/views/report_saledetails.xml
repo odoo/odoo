@@ -22,7 +22,8 @@
                 </tr></thead>
                 <tbody>
                 <tr t-foreach='products' t-as='line'>
-                    <td><t t-esc="line['product_name']" /></td>
+                    <t t-set="internal_reference" t-value="line['code'] and '[%s] ' % line['code'] or ''" />
+                    <td><t t-esc="internal_reference" /><t t-esc="line['product_name']" /></td>
                     <td>
                         <t t-esc="line['quantity']" />
                         <t t-if='line["uom"] != "Unit(s)"'>
