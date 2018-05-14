@@ -175,7 +175,7 @@ class PosOrder(models.Model):
             'comment': self.note or '',
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
-            'user_id': self.env.uid,
+            'user_id': self.user_id.id,
         }
 
     @api.model
