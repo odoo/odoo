@@ -286,7 +286,7 @@ class website_event(http.Controller):
                     Registration._prepare_attendee_values(cr, uid, registration),
                     context=context))
 
-        attendees = Registration.browse(cr, uid, registration_ids, context=context)
+        attendees = Registration.browse(cr, uid, registration_ids, context=context).sudo()
         return request.website.render("website_event.registration_complete", {
             'attendees': attendees,
             'event': event,
