@@ -1,85 +1,91 @@
-// ------------------------------------------------------------------
-// Bootstrap variables
-// ------------------------------------------------------------------
+///
+/// This file is a copy of the bootstrap _variables.scss file where all the
+/// left-untouched variables definition have been removed.
+///
 
-//== Grid
-$grid-gutter-width: $o-horizontal-padding*2;
+//
+// Color system
+//
 
-//== Colors
-$brand-primary: $o-brand-primary;
+$white:    #fff !default; // This is BS default
+$gray-100: #f8f9fa !default; // This is BS default
+$gray-200: $o-color-silver; // FIXME keep this or use bootstrap default ? (also default 100 is very close to this color)
+$gray-300: #dee2e6 !default; // This is BS default
+$gray-400: #ced4da !default; // This is BS default
+$gray-500: #adb5bd !default; // This is BS default
+$gray-600: $o-color-gray-light !default; // This is BS default
+$gray-700: #495057 !default; // This is BS default
+$gray-800: #343a40 !default; // This is BS default
+$gray-900: #212529 !default; // This is BS default
+$black:    #000 !default; // This is BS default
 
-//== Greyscale
-$gray-base: #000;
-$gray-darker: lighten($gray-base, 13.5%);
-$gray-dark: lighten($gray-base, 20%);
-$gray: lighten($gray-base, 33.5%);
-$gray-light: $o-color-gray-light;
-$gray-lighter: $o-color-silver;
+$primary: $o-brand-primary;
 
-//== Titles
-$font-size-h1: $o-font-size-base + 13px;
-$font-size-h2: $o-font-size-base + 7px;
-$font-size-h3: $o-font-size-base + 3px;
-$font-size-h4: $o-font-size-base + 2px;
-$font-size-h5: $o-font-size-base + 1px;
-$font-size-h6: $o-font-size-base;
+// Body
+//
+// Settings for the `<body>` element.
 
-//== Scaffolding
 $body-bg: $o-brand-secondary;
-$text-color: $o-main-text-color;
+$body-color: $o-main-text-color;
+
+// Links
+//
+// Style anchor elements.
+
 $link-color: $o-brand-optional;
 $link-hover-decoration: none;
 
-//== Typography
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-gutter-width: $o-horizontal-padding * 2;
+
+// Components
+//
+// Define common padding and border radius sizes and more.
+
+$border-radius: 3px;
+
+$component-active-color: $o-brand-optional;
+$component-active-bg: $gray-200;
+
+// Fonts
+//
+// Font, line-height, and color for body text, headings, and more.
+
 $font-family-sans-serif: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+
 $font-size-base: $o-font-size-base;
-$headings-font-weight: bold;
+
 $line-height-base: $o-line-height-base;
 
-//== Components
-$border-radius-base: 3px;
-$component-active-bg: $gray-lighter;
-$component-active-color: $o-brand-optional;
+$h1-font-size: $o-font-size-base + 13px;
+$h2-font-size: $o-font-size-base + 7px;
+$h3-font-size: $o-font-size-base + 3px;
+$h4-font-size: $o-font-size-base + 2px;
+$h5-font-size: $o-font-size-base + 1px;
 
-//== Badges
-$badge-bg: $o-brand-optional;
-$badge-color: white;
-$badge-line-height: $o-line-height-base;
-$badge-font-weight: normal;
+$headings-font-weight: bold;
 
-//== Breadcrumbs
-$breadcrumb-active-color: #777777;
-$breadcrumb-bg: $o-control-panel-background-color;
-$breadcrumb-color: #777777;
-$breadcrumb-padding-horizontal: 0;
-$breadcrumb-padding-vertical: 0;
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
 
-//== Buttons
-$btn-default-bg: white;
-$btn-default-border: #cccccc;
-$btn-default-color: $o-main-text-color;
-$btn-primary-bg: $o-brand-optional;
-$btn-primary-border: $o-brand-optional;
-$btn-primary-color: white;
+$table-accent-bg: #EFEFF8; // FIXME: expose
+$table-hover-bg: darken($table-accent-bg, 5%);
 
-//== Dropdowns
-$dropdown-bg: white;
-$dropdown-border: $gray-lighter-dark;
-$dropdown-divider-bg: $gray-lighter-dark;
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-border-color: $gray-300;
+
 $dropdown-link-color: $o-main-text-color;
-$dropdown-link-hover-color: $gray-dark;
-$dropdown-link-hover-bg: $gray-lighter;
-$dropdown-link-active-color: $component-active-color;
-$dropdown-link-active-bg: $component-active-bg;
-$dropdown-link-disabled-color: $gray-light;
-$dropdown-header-color: $gray-light;
+$dropdown-link-hover-color: $gray-900;
+$dropdown-link-hover-bg: $gray-200;
 
-//== Modals
-$modal-sm: 300px;
-$modal-md: 650px;
-$modal-lg: 980px;
-$modal-inner-padding: $o-horizontal-padding;
-$modal-title-padding: $o-horizontal-padding;
+// Z-index master list
 
 // Change the z-index of the modal-backdrop elements to be equal to the
 // modal elements' ones. Bootstrap does not support multi-modals, and without
@@ -90,31 +96,47 @@ $modal-title-padding: $o-horizontal-padding;
 // cannot happen in odoo though as modals are not hidden but removed from
 // the DOM and are always put at the end of the body when opened.
 //
-// Note that the variable $zindex-modal-background may be renamed/removed in
-// newer versions of bootstrap.
-//
 // TODO the following code was disabled because it is saas-incompatible
 //
-// $zindex-modal-background: $zindex-modal;
+// $zindex-modal-backdrop: $zindex-modal;
 
-//== Navs
-$nav-link-padding: 10px 15px;
+// Navs
+
+$nav-link-padding-y: 10px;
+$nav-link-padding-x: 15px;
+
+$nav-tabs-link-active-bg: $white;
+
 $nav-pills-border-radius: 0;
-$nav-pills-active-link-hover-color: white;
-$nav-pills-active-link-hover-bg: $o-brand-optional;
-$nav-tabs-active-link-hover-bg: white;
+$nav-pills-link-active-color: $white;
+$nav-pills-link-active-bg: $o-brand-optional;
 
-//== Navbar
-$navbar-height: $o-navbar-height - 2;
-$navbar-margin-bottom: 0;
-$navbar-inverse-bg: #222222;
-$navbar-inverse-link-color: #9d9d9d;
-$navbar-inverse-link-hover-bg: #222222;
-$navbar-inverse-toggle-hover-bg: #222222;
-$navbar-border-radius: 0;
+// Navbar
 
-//== Tables
-$table-bg-accent: #efeff8; // FIXME: expose
-$table-bg-hover: darken($table-bg-accent,5%);
+// FIXME $navbar-height ? $navbar-margin-bottom ? $navbar-inverse-* ? $navbar-border-radius ?
 
-$icon-font-path: "/web/static/lib/bootstrap/fonts/";
+// Badges
+
+// FIXME $badge-bg, $badge-color, $badge-line-height ?
+$badge-font-weight: normal;
+
+// Modals
+
+// Padding applied to the modal body
+$modal-inner-padding: $o-horizontal-padding;
+
+// FIXME $modal-title-padding ?
+
+$modal-lg: 980px;
+$modal-md: 650px;
+
+// Breadcrumbs
+
+$breadcrumb-padding-y: 0;
+$breadcrumb-padding-x: 0;
+
+$breadcrumb-bg: $o-control-panel-background-color;
+// FIXME $breadcrumb-color ?
+$breadcrumb-active-color: #777777;
+
+// FIXME $icon-font-path ?
