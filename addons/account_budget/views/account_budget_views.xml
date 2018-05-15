@@ -85,7 +85,7 @@ Budgets
                     </div>
                     <group>
                         <group>
-                            <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}"/>
                         </group>
                         <group>
                             <label for="date_from" string="Period"/>
@@ -162,7 +162,7 @@ Budgets
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                <field name="creating_user_id"/>
+                <field name="user_id"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -176,7 +176,7 @@ Budgets
                 <field name="name"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
-                <field name="creating_user_id"/>
+                <field name="user_id"/>
                 <field name="state"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -202,8 +202,8 @@ Budgets
                                 </div>
                                 <div class="col-xs-2">
                                     <span class="pull-right">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.creating_user_id.raw_value)"
-                                             t-att-title="record.creating_user_id.value" width="24" height="24"
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
+                                             t-att-title="record.user_id.value" width="24" height="24"
                                              class="oe_kanban_avatar pull-right"/>
                                     </span>
                                 </div>

@@ -36,7 +36,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         })
         #create the budget and budget lines
         first_january = datetime.now().replace(day=1, month=1)
-        self.last_day_of_budget = first_january + timedelta(days=364)  # will be 31th of December or 30th in case of leap year
+        self.last_day_of_budget = first_january + timedelta(days=364)  # will be 30th of December or 31th in case of leap year
 
         crossovered_budget = self.env['crossovered.budget'].create({
             'name': 'test budget name',

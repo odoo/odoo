@@ -15,7 +15,6 @@ class AccountBudgetPost(models.Model):
     name = fields.Char('Name', required=True)
     account_ids = fields.Many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts',
         domain=[('deprecated', '=', False)])
-    crossovered_budget_line = fields.One2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines')
     company_id = fields.Many2one('res.company', 'Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.budget.post'))
 
@@ -46,7 +45,7 @@ class CrossoveredBudget(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char('Budget Name', required=True, states={'done': [('readonly', True)]})
-    creating_user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self.env.user, oldname='creating_user_id')
     date_from = fields.Date('Start Date', required=True, states={'done': [('readonly', True)]})
     date_to = fields.Date('End Date', required=True, states={'done': [('readonly', True)]})
     state = fields.Selection([
@@ -86,9 +85,9 @@ class CrossoveredBudgetLines(models.Model):
     _name = "crossovered.budget.lines"
     _description = "Budget Line"
 
-    name = fields.Char(compute='_compute_line_name')
     crossovered_budget_id = fields.Many2one('crossovered.budget', 'Budget', ondelete='cascade', index=True, required=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account')
+    analytic_group_id = fields.Many2one('account.analytic.group', 'Analytic Group', related='analytic_account_id.group_id', readonly=True)
     general_budget_id = fields.Many2one('account.budget.post', 'Budgetary Position')
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
@@ -156,15 +155,6 @@ class CrossoveredBudgetLines(models.Model):
                 line.is_above_budget = line.practical_amount > line.theoritical_amount
             else:
                 line.is_above_budget = line.practical_amount < line.theoritical_amount
-
-    @api.multi
-    def _compute_line_name(self):
-        computed_name = self.crossovered_budget_id.name
-        if self.general_budget_id:
-            computed_name += ' - ' + self.general_budget_id.name
-        elif self.analytic_account_id:
-            computed_name += ' - ' + self.analytic_account_id.name
-        self.name = computed_name
 
     @api.multi
     def _compute_practical_amount(self):
