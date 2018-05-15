@@ -160,7 +160,7 @@ class TestAdvMailPerformance(TransactionCase):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(margin=1, admin=47, emp=53):  # com runbot 47 - 53 // test_mail only: 35 - 41
+        with self.assertQueryCount(margin=1, admin=46, emp=52):  # com runbot 46 - 52 // test_mail only: 35 - 41
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
