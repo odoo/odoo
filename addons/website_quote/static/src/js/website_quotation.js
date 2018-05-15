@@ -122,7 +122,7 @@ if(!$('.o_website_quote').length) {
             position: "",
             width: "",
         });
-        if (config.device.size_class >= config.device.SIZES.MD) {
+        if (config.device.size_class >= config.device.SIZES.LG) {
             $bs_sidebar.css({
                 position: "fixed",
                 width: $bs_sidebar.outerWidth(),
