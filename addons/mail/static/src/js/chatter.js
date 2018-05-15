@@ -247,7 +247,7 @@ var Chatter = Widget.extend({
         }).always(function () {
             // disable widgets in create mode, otherwise enable
             self.isCreateMode ? self._disableChatter() : self._enableChatter();
-            $spinner.remove;
+            $spinner.remove();
         });
     },
     /**
