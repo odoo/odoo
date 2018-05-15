@@ -213,11 +213,6 @@ class Holidays(models.Model):
     double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id.department_id
-
     @api.multi
     @api.depends('number_of_days_temp', 'type')
     def _compute_number_of_days(self):
@@ -279,7 +274,8 @@ class Holidays(models.Model):
             self.employee_id = None
 
     @api.onchange('employee_id')
-    def _onchange_employee(self):
+    def _onchange_employee_id(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
         self.department_id = self.employee_id.department_id
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
