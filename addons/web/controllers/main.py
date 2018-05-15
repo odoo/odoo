@@ -1116,7 +1116,7 @@ class Binary(http.Controller):
             if request.httprequest.user_agent.browser == 'safari':
                 # Safari sends NFD UTF-8 (where é is composed by 'e' and [accent])
                 # we need to send it the same stuff, otherwise it'll fail
-                filename = unicodedata.normalize('NFD', ufile.filename).encode('UTF-8')
+                filename = unicodedata.normalize('NFD', ufile.filename)
 
             try:
                 attachment = Model.create({
