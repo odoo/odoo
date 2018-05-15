@@ -59,7 +59,7 @@ class AccountVoucher(models.Model):
         string='Currency', readonly=True, store=True, default=lambda self: self._get_currency())
     company_id = fields.Many2one('res.company', 'Company',
         store=True, readonly=True, states={'draft': [('readonly', False)]},
-        related='journal_id.company_id', default=lambda self: self._get_company())
+        related='journal_id.company_id')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('cancel', 'Cancelled'),
