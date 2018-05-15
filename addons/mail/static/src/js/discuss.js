@@ -861,7 +861,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             message.subtype = this.selected_message.is_note ? 'mail.mt_note': 'mail.mt_comment';
             message.subtype_id = false;
             message.message_type = 'comment';
-            message.content_subtype = 'html';
         }
         this.call('chat_manager', 'postMessage', message, options)
             .then(function () {
