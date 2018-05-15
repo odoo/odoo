@@ -477,7 +477,7 @@ odoo.define('website_sale.website_sale', function (require) {
     });
 
     core.bus.on('resize', this, function() {
-        if (config.device.size_class === config.device.SIZES.LG) {
+        if (config.device.size_class === config.device.SIZES.XL) {
             $('.toggle_summary_div').addClass('visible-lg');
         }
     });
