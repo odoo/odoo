@@ -785,6 +785,7 @@ var StatementModel = BasicModel.extend({
                         model: 'account.tax',
                         method: 'json_friendly_compute_all',
                         args: args,
+                        context: $.extend(self.context || {}, {'round': true}),
                     })
                     .then(function (result) {
                         _.each(result.taxes, function(tax){
