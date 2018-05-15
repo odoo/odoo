@@ -644,7 +644,7 @@ class AccountInvoice(models.Model):
         tax_grouped = {}
         for line in self.invoice_line_ids:
             price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.invoice_line_tax_ids.compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
+            taxes = line.invoice_line_tax_ids.with_context(invoice=self).compute_all(price_unit, self.currency_id, line.quantity, line.product_id, self.partner_id)['taxes']
             for tax in taxes:
                 val = self._prepare_tax_line_vals(line, tax)
                 key = self.env['account.tax'].browse(tax['id']).get_grouping_key(val)
@@ -1179,7 +1179,7 @@ class AccountInvoiceLine(models.Model):
         price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
         taxes = False
         if self.invoice_line_tax_ids:
-            taxes = self.invoice_line_tax_ids.compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
+            taxes = self.invoice_line_tax_ids.with_context(invoice=self.invoice_id).compute_all(price, currency, self.quantity, product=self.product_id, partner=self.invoice_id.partner_id)
         self.price_subtotal = price_subtotal_signed = taxes['total_excluded'] if taxes else self.quantity * price
         if self.invoice_id.currency_id and self.invoice_id.company_id and self.invoice_id.currency_id != self.invoice_id.company_id.currency_id:
             price_subtotal_signed = self.invoice_id.currency_id.with_context(date=self.invoice_id._get_currency_rate_date()).compute(price_subtotal_signed, self.invoice_id.company_id.currency_id)

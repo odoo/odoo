@@ -40,6 +40,8 @@ class AccountTaxPython(models.Model):
         taxes = self.filtered(lambda r: r.amount_type != 'code')
         company = self.env.user.company_id
         for tax in self.filtered(lambda r: r.amount_type == 'code'):
+            invoice = self.env.context.get('invoice', False)
+            partner = invoice and invoice.partner_shipping_id or partner
             localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
             safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
             if localdict.get('result', False):
