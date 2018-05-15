@@ -4651,6 +4651,7 @@ QUnit.module('basic_fields', {
 
         form.destroy();
     });
+
 });
 });
 });

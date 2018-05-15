@@ -869,6 +869,10 @@ var FieldFloatTime = FieldFloat.extend({
     formatType: 'float_time',
 });
 
+var FieldPercentage = FieldFloat.extend({
+    formatType:'percentage',
+});
+
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
@@ -2631,6 +2635,7 @@ return {
     FieldDomain: FieldDomain,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
+    FieldPercentage : FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
     FieldPercentPie: FieldPercentPie,
