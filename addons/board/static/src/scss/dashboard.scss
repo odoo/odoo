@@ -42,6 +42,10 @@
     }
     .oe_dashboard_column {
         vertical-align: top;
+        @include media-breakpoint-down(sm) {
+            display: block;
+            width: 100% !important;
+        }
     }
 
     // Layout selector
@@ -53,6 +57,9 @@
     // Dashboard content
     .oe_dashboard {
         width: 100%;
+        @include media-breakpoint-down(sm) {
+            table-layout: fixed;
+        }
         .oe_action {
             margin: 0 8px 8px 0;
             background-color: white;
@@ -88,12 +95,6 @@
                     content: "+";
                     margin-left: 4px;
                 }
-                .oe_header_text {
-                    width: auto;
-                    visibility: hidden;
-                    display: inline-block;
-                    cursor: text;
-                }
                 span {
                     cursor: pointer;
                 }
@@ -122,6 +123,14 @@
             // Override height of graph. min-height doesn't do the trick
             .o_graph {
                 height: 500px;
+            }
+
+            // Override height of grouped kanban view in mobile because
+            // kanban group is designed using absolute position
+            @include media-breakpoint-down(sm) {
+                .o_kanban_view.o_kanban_grouped {
+                    height: 50vh;
+                }
             }
         }
     }

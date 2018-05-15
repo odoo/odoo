@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
 <t t-name="DashBoard">
-    <div class="oe_dashboard_links">
+    <div class="oe_dashboard_links d-none d-md-block">
         <button type="button" class="button oe_dashboard_link_change_layout" title="Change Layout..">
             <img src="/board/static/src/img/layout_1-1-1.png" width="16" height="16" alt=""/>
             <span> Change Layout </span>
@@ -21,7 +21,6 @@
     <div t-att-data-id="action.attrs.id" class="oe_action">
         <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
             <span class="oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
-            <input class = "oe_header_text" type="text"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
             <span class='oe_icon oe_close'></span>
             <span class='oe_icon oe_minimize oe_fold' t-if="!action.attrs.fold"></span>
