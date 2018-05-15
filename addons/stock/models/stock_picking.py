@@ -195,7 +195,7 @@ class Picking(models.Model):
              " * Waiting Availability: still waiting for the availability of products\n"
              " * Partially Available: some products are available and reserved\n"
              " * Ready to Transfer: products reserved, simply waiting for confirmation.\n"
-             " * Transferred: has been processed, can't be modified or cancelled anymore\n"
+             " * Done: has been processed, can't be modified or cancelled anymore\n"
              " * Cancelled: has been cancelled, can't be confirmed anymore")
 
     group_id = fields.Many2one(
