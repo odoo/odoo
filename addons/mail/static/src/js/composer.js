@@ -745,8 +745,9 @@ var BasicComposer = Widget.extend({
     },
     // remove mention when user try to edit or remove it.
     _removeMention: function (event) {
-        if (window.getSelection().anchorNode.parentNode.tagName === 'A') {
-            document.getElementById(window.getSelection().anchorNode.parentNode.id).remove();
+        var anchorNode = window.getSelection().anchorNode;
+        if (anchorNode.textContent.startsWith('@') && anchorNode.parentNode.tagName === 'A') {
+            anchorNode.parentNode.remove();
         }
     },
 
