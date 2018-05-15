@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -548,6 +548,12 @@ class Task(models.Model):
     def _compute_subtask_count(self):
         for task in self:
             task.subtask_count = self.search_count([('id', 'child_of', task.id), ('id', '!=', task.id)])
+
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        for task in self:
+            if not task._check_recursion():
+                raise ValidationError(_('Error! You cannot create recursive hierarchy of task(s).'))
 
     @api.constrains('parent_id')
     def _check_subtask_project(self):
