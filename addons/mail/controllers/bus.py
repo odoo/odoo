@@ -43,7 +43,7 @@ class MailChatController(BusController):
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         mail_channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
         body = tools.plaintext2html(message_content)
-        message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=body, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext')
+        message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=body, message_type='comment', subtype='mail.mt_comment')
         return message and message.id or False
 
     @route(['/mail/chat_history'], type="json", auth="none")

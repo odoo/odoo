@@ -46,7 +46,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             message = _.extend(message, {
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
-                content_subtype: 'html',
                 context: self.context,
             });
 

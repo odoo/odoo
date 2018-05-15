@@ -730,7 +730,6 @@ var ChatManager =  AbstractService.extend({
                     args: [options.channelID],
                     kwargs: _.extend(msg, {
                         message_type: 'comment',
-                        content_subtype: 'html',
                         subtype: 'mail.mt_comment',
                         command: data.command,
                     }),
@@ -739,7 +738,6 @@ var ChatManager =  AbstractService.extend({
         if ('model' in options && 'res_id' in options) {
             // post a message in a chatter
             _.extend(msg, {
-                content_subtype: data.content_subtype,
                 context: data.context,
                 message_type: data.message_type,
                 subtype: data.subtype,
