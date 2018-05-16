@@ -1583,7 +1583,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         access_rights_uid = name_get_uid or self._uid
         ids = self._search(args, limit=limit, access_rights_uid=access_rights_uid)
         recs = self.browse(ids)
-        return recs.sudo(access_rights_uid).name_get()
+        return lazy_name_get(recs.sudo(access_rights_uid))
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -1654,7 +1654,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 order = tools.reverse_order(order)
             groups = getattr(self, field.group_expand)(groups, domain, order)
             groups = groups.sudo()
-            values = groups.name_get()
+            values = lazy_name_get(groups)
             value2key = lambda value: value and value[0]
 
         else:
@@ -2061,7 +2061,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
             m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(m2o_records.sudo().name_get())
+            data_dict = dict(lazy_name_get(m2o_records.sudo()))
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 
@@ -5251,6 +5251,13 @@ def _normalize_ids(arg, atoms=set(IdType)):
         return arg,
 
     return tuple(arg)
+
+
+def lazy_name_get(self):
+    """ Evaluate self.name_get() lazily. """
+    names = tools.lazy(lambda: dict(self.name_get()))
+    return [(rid, tools.lazy(operator.getitem, names, rid)) for rid in self.ids]
+
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
