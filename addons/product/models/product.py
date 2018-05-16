@@ -520,6 +520,8 @@ class ProductProduct(models.Model):
     def price_compute(self, price_type, uom=False, currency=False, company=False):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
+        if price_type == 'pricelist':
+            price_type = 'pricelist_id'
         if not uom and self._context.get('uom'):
             uom = self.env['product.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
