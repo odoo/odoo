@@ -2,6 +2,7 @@
     position: relative;
     .o-flex(0, 0, auto);
     .o-flex-display();
+    margin: 1px 0;
     border-top: none;
     background: @gray-lighter;
 
@@ -36,11 +37,9 @@
             cursor: text;
             display: inline-block;
             height: 100%;
+            padding: 0px 0px @o-mail-chatter-gap;
             white-space: pre-wrap;
             word-break: break-all;
-        }
-        .o_composer_text_field {
-            padding: 0 0 @o-mail-chatter-gap;
         }
         .o_composer_mention_dropdown .o_mention_proposition > a {
             .o-text-overflow();
@@ -148,6 +147,7 @@
             .o_composer {
                 display: flex;
                 min-height: 40px;
+                padding: @o-mail-chatter-gap @o-mail-chatter-gap 0 @o-mail-chatter-gap;
                 border-radius: 2px 0 0 2px;
                 border-right-width: 0;
             }
@@ -159,7 +159,6 @@
                 .o-flex-flow(row, wrap);
             }
             .o_composer_text_field {
-                padding: @o-mail-chatter-gap;
                 .o-flex(1, 1, 50%);
             }
             .o_chatter_composer_tools {
@@ -172,8 +171,8 @@
             .o_chatter_composer_tools {
                 border: none;
                 border-left: 1px solid @gray-lighter-dark;
-                padding-top: @o-mail-chatter-gap*0.5;
                 padding-left: @o-mail-chatter-gap*0.5;
+                .o-transform(translateY(-@o-mail-chatter-gap*0.5));
             }
 
             .o_composer_button_send {
@@ -197,7 +196,6 @@
             border-bottom-width: 1px;
         }
         .o_composer_input {
-            padding: @o-mail-chatter-gap;
             .o-flex-flow(row, nowrap);
 
             .o_chatter_composer_tools {
