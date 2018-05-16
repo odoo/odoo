@@ -213,7 +213,7 @@
                                 </div>
                                 <hr class="mt8 mb8"/>
                                 <div class="row">
-                                    <div class="col-xs-12 text-center">
+                                    <div class="col-12 text-center">
                                         <span>
                                             <strong>Balance: <field name="balance" widget="monetary"/></strong>
                                         </span>
@@ -348,18 +348,18 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6 pull-right text-right">
+                                    <div class="col-6 pull-right text-right">
                                         <strong><t t-esc="record.date.value"/></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <div class="col-6 text-muted">
                                         <span><t t-esc="record.account_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <span class="pull-right text-right">
                                             <field name="amount" widget="monetary"/>
                                         </span>

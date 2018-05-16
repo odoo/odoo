@@ -20,7 +20,7 @@
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
         <t t-set="ref_content">
-            <div class="col-md-12">
+            <div class="col-lg-12">
                 <h1 class="text-center">
                     Looking For a Local Store?
                 </h1><h2 class="text-center text-muted">
@@ -28,7 +28,7 @@
                 </h2>
             </div>
 
-            <div class="col-md-3 mb32" id="partner_left">
+            <div class="col-lg-3 mb32" id="partner_left">
 
                 <ul id="reseller_grades" class="nav nav-pills flex-column mt16">
                     <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
@@ -58,13 +58,13 @@
 
             </div>
 
-            <div class="col-md-8 col-md-offset-1" id="ref_content">
+            <div class="col-lg-8 offset-lg-1" id="ref_content">
                 <div class='navbar'>
                     <div>
                         <t t-call="website.pager"/>
                         <form action="" method="get" class="navbar-search pull-right pagination form-inline">
                             <div class="form-group pull-right">
-                                <input type="text" name="search" class="search-query col-md-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                                <input type="text" name="search" class="search-query col-lg-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                             </div>
                         </form>
                     </div>
@@ -140,7 +140,7 @@
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
         <t t-set="ref_content">
-            <div class="col-md-5">
+            <div class="col-lg-5">
                 <ol t-if="not edit_page" class="breadcrumb">
                     <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
                     <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
@@ -157,7 +157,7 @@
 
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
   <xpath expr="//*[@id='partner_name']" position="after">
-    <h3 class="col-md-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
+    <h3 class="col-lg-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
       <span t-field="partner.grade_id"/> Partner</h3>
   </xpath>
 </template>
@@ -239,8 +239,8 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="active">
-                            <th class="col-xs-2">Date</th>
-                            <th class="col-xs-5">Name</th>
+                            <th class="col-2">Date</th>
+                            <th class="col-5">Name</th>
                             <th>Contact Name</th>
                         </tr>
                     </thead>
@@ -305,9 +305,9 @@
                 <table class="table table-hover">
                     <thead>
                         <tr class="active">
-                            <th class="col-xs-2">Date</th>
-                            <th class="col-md-4">Name</th>
-                            <th class="col-md-2">Expected</th>
+                            <th class="col-2">Date</th>
+                            <th class="col-lg-4">Name</th>
+                            <th class="col-lg-2">Expected</th>
                             <th>Contact Name</th>
                             <th>Stage</th>
                         </tr>
@@ -340,7 +340,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
@@ -353,10 +353,10 @@
                     </div>
                 </div>
                 <div class="panel-body row">
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                            <label class="col-xs-4">Customer</label>
-                            <address class="col-xs-8">
+                            <label class="col-4">Customer</label>
+                            <address class="col-8">
                                 <div>
                                     <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
                                     <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
@@ -373,8 +373,8 @@
                             </address>
                         </div>
                         <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
-                            <label class="col-xs-4">Address</label>
-                            <address class="col-xs-8">
+                            <label class="col-4">Address</label>
+                            <address class="col-8">
                                 <div t-if="lead.street"><span t-field="lead.street"/></div>
                                 <div t-if="lead.street2"><span t-field="lead.street2"/></div>
                                 <div t-if="lead.city or lead.zip">
@@ -386,38 +386,38 @@
                             </address>
                         </div>
                         <div class="row" t-if="lead.user_id">
-                            <label class="col-xs-4">Salesperson</label>
-                            <span class="col-xs-8" t-field="lead.user_id" />
+                            <label class="col-4">Salesperson</label>
+                            <span class="col-8" t-field="lead.user_id" />
                         </div>
                         <div class="row" t-if="lead.team_id">
-                            <label class="col-xs-4">Sales Team</label>
-                            <span class="col-xs-8" t-field="lead.team_id" />
+                            <label class="col-4">Sales Team</label>
+                            <span class="col-8" t-field="lead.team_id" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div class="row" t-if="lead.date_deadline">
-                            <label class="col-xs-4">Expected Closing</label>
-                            <span class="col-xs-8" t-field="lead.date_deadline" />
+                            <label class="col-4">Expected Closing</label>
+                            <span class="col-8" t-field="lead.date_deadline" />
                         </div>
                         <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
-                            <label class="col-xs-4">Tags</label>
-                            <span class="col-xs-8">
+                            <label class="col-4">Tags</label>
+                            <span class="col-8">
                                 <t t-foreach="lead.tag_ids" t-as="tag">
                                     <span class="label label-info" t-esc="tag.name" />
                                 </t>
                             </span>
                         </div>
                         <div class="row mt16" t-if="lead.partner_assigned_id">
-                            <label class="col-xs-4">Assigned Partner</label>
-                            <address class="col-xs-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
+                            <label class="col-4">Assigned Partner</label>
+                            <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
                         </div>
                         <div class="row mt16" t-if="lead.campaign_id">
-                            <label class="col-xs-4">Campaign</label>
-                            <span class="col-xs-8" t-field="lead.campaign_id" />
+                            <label class="col-4">Campaign</label>
+                            <span class="col-8" t-field="lead.campaign_id" />
                         </div>
                         <div class="row" t-if="lead.medium_id">
-                            <label class="col-xs-4">Medium</label>
-                            <span class="col-xs-8" t-field="lead.medium_id" />
+                            <label class="col-4">Medium</label>
+                            <span class="col-8" t-field="lead.medium_id" />
                         </div>
                     </div>
                 </div>
@@ -489,10 +489,10 @@
                 </div>
             </div>
             <div class="row mt32">
-                <div class="col-md-12">
+                <div class="col-lg-12">
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
-                <div class="col-md-10 col-md-offset-1 mt16">
+                <div class="col-lg-10 offset-lg-1 mt16">
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="lead"/>
                     </t>
@@ -506,7 +506,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-lg-12">
                             <h4 style="display:inline-block">
                                 Opportunity - <span t-field="opportunity.name"/>
                             </h4>
@@ -520,13 +520,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                                 <strong><span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at <span t-field="opportunity.probability"/>%</strong>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                                 <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
@@ -536,7 +536,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-primary" style="margin-bottom: 10px;">Edit Contact</button>
                             <div role="dialog" class="modal fade modal_edit_contact">
@@ -582,10 +582,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-sm-5">
+                                                    <div class="col-md-5">
                                                         <input type="text" name="city" class="form-control city" t-att-value="opportunity.city" placeholder="City"/>
                                                     </div>
-                                                    <div class="col-sm-5">
+                                                    <div class="col-md-5">
                                                         <select name="state_id" class="form-control state_id">
                                                             <option>States...</option>
                                                             <t t-foreach="states or []" t-as="state">
@@ -595,7 +595,7 @@
                                                             </t>
                                                         </select>
                                                     </div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-md-2">
                                                         <input type="text" name="zip" class="form-control zip" t-att-value="opportunity.zip" placeholder="ZIP"/>
                                                     </div>
                                                 </div>
@@ -620,8 +620,8 @@
                             </div>
                         </div>
                         <div class="row" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
-                            <label class="col-xs-4">Customer</label>
-                            <address class="col-xs-8">
+                            <label class="col-4">Customer</label>
+                            <address class="col-8">
                                 <div>
                                     <span t-if="opportunity.partner_name" itemprop="name" t-field="opportunity.partner_name" />
                                     <span t-if="not opportunity.partner_name" itemprop="name" t-field="opportunity.contact_name" />
@@ -638,8 +638,8 @@
                             </address>
                         </div>
                         <div class="row" t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.state_id or opportunity.country_id">
-                            <label class="col-xs-4">Address</label>
-                            <address class="col-xs-8">
+                            <label class="col-4">Address</label>
+                            <address class="col-8">
                                 <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
                                 <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
                                 <div t-if="opportunity.city or opportunity.zip">
@@ -651,7 +651,7 @@
                             </address>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-lg-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-primary" style="margin-bottom: 10px;">Edit Opportunity</button>
                             <div role="dialog" class="modal fade modal_edit_opp">
@@ -666,16 +666,16 @@
                                         <main class="modal-body" id="sign-dialog">
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-md-6">
                                                         <div class="input-group">
                                                             <div class="input-group-addon"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
                                                             <input type="text" name="planned_revenue" class="form-control planned_revenue" t-att-value="opportunity.planned_revenue" placeholder="Planned Revenue"/>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-1">
+                                                    <div class="col-md-1">
                                                         <span>at </span>
                                                     </div>
-                                                    <div class="col-sm-5">
+                                                    <div class="col-md-5">
                                                         <div class="input-group">
                                                             <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
                                                             <div class="input-group-addon">%</div>
@@ -685,7 +685,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-sm-6">
+                                                    <div class="col-md-6">
                                                       <label>Priority: </label>
                                                       <div class="input-group">
                                                         <label class="radio-inline">
@@ -702,7 +702,7 @@
                                                         </label>
                                                       </div>
                                                     </div>
-                                                    <div class="col-sm-6">
+                                                    <div class="col-md-6">
                                                         <label>Deadline: </label>
                                                         <div class='input-group date'>
                                                             <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
@@ -740,24 +740,24 @@
                             </div>
                         </div>
                         <div class="row" t-if="user_activity">
-                            <label class="col-xs-4">Next Activity</label>
-                            <span class="col-xs-8">
+                            <label class="col-4">Next Activity</label>
+                            <span class="col-8">
                                 <span t-field="user_activity.activity_type_id"/>
                                 <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
                                 <span t-field="user_activity.date_deadline"/>
                             </span>
                         </div>
                         <div class="row" t-if="user_activity">
-                            <span class="col-xs-8 col-xs-offset-4" t-field="user_activity.summary"/>
+                            <span class="col-8 offset-4" t-field="user_activity.summary"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row mt32">
-                <div class="col-md-12">
+                <div class="col-lg-12">
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
-                <div class="col-md-10 col-md-offset-1 mt16">
+                <div class="col-lg-10 offset-lg-1 mt16">
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="opportunity"/>
                     </t>

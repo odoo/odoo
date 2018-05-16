@@ -28,11 +28,11 @@
             </section>
         </div>
         <div class="container mt32">
-            <div t-if="'unsubscribe' in request.params" class="col-md-offset-9 col-md-3 alert alert-info" role="status">
+            <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
                <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down pull-right" role="img" aria-label="" title="Read this !"></span></h3>
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     <img t-att-src="website.image_url(group, 'image_small')" class="pull-left" alt="Group"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
                     <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
@@ -40,14 +40,14 @@
                         <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                     </t>
                 </div>
-                <div class="col-md-4">
+                <div class="col-lg-4">
                     <div t-esc="group.description" class="text-muted"/>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2">
                     <i class='fa fa-fw fa-user' role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
                     <i class='fa fa-fw fa-envelope-o' role="img" aria-label="Traffic" title="Traffic"/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     <!--<t t-call="website_mail.follow"><t t-set="object" t-value="group"/></t>-->
 
                     <div class="js_follow_alias"
@@ -93,7 +93,7 @@
                 </ol>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-lg-12">
                     <h1 class="text-center">
                         <t t-esc="group.name"/> mailing list archives
                     </h1><h4 class="text-center text-muted" t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
@@ -101,7 +101,7 @@
                         <a t-attf-href="mailto:#{group.alias_id.alias_name}@#{group.alias_id.alias_domain}"><span t-field="group.alias_id"/></a>
                     </h4>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     <h2>Archives</h2>
                     <ul class="nav nav-pills flex-column" id="group_mode">
                         <li class="nav-item">
@@ -123,7 +123,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-9">
+                <div class="col-lg-9">
                     <div>
                         <t t-call="website.pager"/>
                     </div>
@@ -163,7 +163,7 @@
                 </h4>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-lg-3">
                     <h4>Browse archives</h4>
                     <ul class="nav nav-pills flex-column" id="group_mode">
                         <li class="nav-item">
@@ -185,14 +185,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-md-9">
+                <div class="col-lg-9">
                     <div class="row">
-                        <h4 class="col-md-6">
+                        <h4 class="col-lg-6">
                             <t t-if="prev_message"><a t-attf-href='/groups/#{slug(group)}/#{slug(prev_message)}?#{mode and "mode=%s" % mode or ""}'>
                                 <i class="fa fa-arrow-left" role="img" aria-label="Previous message" title="Previous message"/> <t t-esc="prev_message.description"/>
                             </a></t>
                         </h4>
-                        <h4 class="col-md-6">
+                        <h4 class="col-lg-6">
                             <t t-if="next_message"><a class="pull-right" t-attf-href='/groups/#{slug(group)}/#{slug(next_message)}?#{mode and "mode=%s" % mode or ""}'>
                                 <t t-esc="next_message.description"/> <i class="fa fa-arrow-right" role="img" aria-label="Next message" title="Next message"/>
                             </a></t>
@@ -226,7 +226,7 @@
                                     </a>
                                 </p>
                                 <div class="o_mg_link_content">
-                                    <div class="col-md-2 col-sm-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
+                                    <div class="col-lg-2 col-md-3 text-center" t-foreach='message.attachment_ids' t-as='attachment'>
                                         <a t-attf-href="/web/content/#{attachment.id}?download=true" target="_blank">
                                             <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/100x80"/>
                                             <div class='oe_attachment_name'><t t-raw='attachment.name' /></div>

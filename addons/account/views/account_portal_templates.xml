@@ -72,7 +72,7 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
-                <div class="col-md-3 d-print-none">
+                <div class="col-lg-3 d-print-none">
                     <div class="bs-sidebar mb16" id="sidebar_content">
                         <div class="text-center pt16 o_account_portal_sidebar">
                             <h2 class="media-heading">
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <!-- Page Content -->
-                <div id="invoice_content" class="col-md-9 o_portal_page_content d-print-none">
+                <div id="invoice_content" class="col-lg-9 o_portal_page_content d-print-none">
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                     <div class="o_portal_html_view">
@@ -142,7 +142,7 @@
 
     <template id="portal_invoice_error" name="Invoice error/warning display">
         <div class="row mr16">
-            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
+            <div t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
@@ -153,7 +153,7 @@
 
     <template id="portal_invoice_success" name="Invoice success display">
         <div class="row mr16">
-            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
+            <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>

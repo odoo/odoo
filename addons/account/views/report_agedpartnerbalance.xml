@@ -7,17 +7,17 @@
                 <h2>Aged Partner Balance</h2>
 
                 <div class="row mt32">
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Start Date:</strong>
                         <p t-esc="data['date_from']"/>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Period Length (days)</strong>
                         <p t-esc="data['period_length']"/>
                     </div>
                 </div>
                 <div class="row mb32">
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Partner's:</strong>
                         <p>
                             <span t-if="data['result_selection'] == 'customer'">Receivable Accounts</span>
@@ -25,7 +25,7 @@
                             <span t-if="data['result_selection'] == 'customer_supplier'">Receivable and Payable Accounts</span>
                         </p>
                     </div>
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <strong>Target Moves:</strong>
                         <p>
                             <span t-if="data['target_move'] == 'all'">All Entries</span>

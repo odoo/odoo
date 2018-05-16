@@ -12,11 +12,11 @@
                 <h2><span t-esc="res_company.name"/>: General ledger</h2>
 
                 <div class="row mt32">
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <strong>Journals:</strong>
                           <p t-esc="', '.join([ lt or '' for lt in print_journal ])"/>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <strong>Display Account</strong>
                         <p>
                             <span t-if="data['display_account'] == 'all'">All accounts'</span>
@@ -24,19 +24,19 @@
                             <span t-if="data['display_account'] == 'not_zero'">With balance not equal to zero</span>
                         </p>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <strong>Target Moves:</strong>
                         <p t-if="data['target_move'] == 'all'">All Entries</p>
                         <p t-if="data['target_move'] == 'posted'">All Posted Entries</p>
                     </div>
                 </div>
                 <div class="row mb32">
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <strong>Sorted By:</strong>
                         <p t-if="data['sortby'] == 'sort_date'">Date</p>
                         <p t-if="data['sortby'] == 'sort_journal_partner'">Journal and Partner</p>
                     </div>
-                    <div class="col-xs-4">
+                    <div class="col-4">
                         <t t-if="data['date_from']"><strong>Date from :</strong> <span t-esc="data['date_from']"/><br/></t>
                         <t t-if="data['date_to']"><strong>Date to :</strong> <span t-esc="data['date_to']"/></t>
                     </div>

@@ -70,7 +70,7 @@
             <div class="container mt16 mb16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
-                        <div t-attf-class="col-sm-12">
+                        <div t-attf-class="col-md-12">
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
                                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
@@ -84,10 +84,10 @@
                 <div class="container mb64">
                     <t t-if="my_details">
                         <div class="row">
-                            <div t-attf-class="col-md-9 col-lg-8">
+                            <div t-attf-class="col-lg-9 col-xl-8">
                                 <t t-raw="0"/>
                             </div>
-                            <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                            <div id="o_my_sidebar" class="col-lg-3 offset-xl-1 o_my_sidebar">
                                 <div class="o_my_contact" t-if="sales_user">
                                     <t t-call="portal.portal_contact"/>
                                 </div>
@@ -129,7 +129,7 @@
                 <ul class="o_portal_docs list-group">
                 </ul>
             </div>
-            <div class="col-md-12 oe_structure"/>
+            <div class="col-lg-12 oe_structure"/>
         </t>
     </template>
 
@@ -274,51 +274,51 @@
             <form action="/my/account" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="row o_portal_details">
-                    <div class="col-md-8">
+                    <div class="col-lg-8">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                               <div t-if="error_message" class="alert alert-danger" role="alert">
                                   <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                               </div>
                             </div>
-                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="name">Your Name</label>
                                 <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="email">Email</label>
                                 <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="phone">Phone</label>
                                 <input type="tel" name="phone" class="form-control" t-att-value="phone or partner.phone" />
                             </div>
 
                             <div class="clearfix" />
-                            <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label label-optional" for="company_name">Company Name</label>
                                 <p t-if="partner.commercial_partner_id.is_company" class="form-control" t-esc="partner.commercial_company_name"/>
                                 <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label label-optional" for="vat">VAT Number</label>
                                 <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" t-att-readonly="None if partner.can_edit_vat() else '1'" t-att-title="None if partner.can_edit_vat() else 'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.'" />
                             </div>
 
                             <div class="clearfix" />
-                            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="street">Street</label>
                                 <input type="text" name="street" class="form-control" t-att-value="street or partner.street"/>
                             </div>
-                            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="city">City</label>
                                 <input type="text" name="city" class="form-control" t-att-value="city or partner.city" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="zipcode">Zip / Postal Code</label>
                                 <input type="text" name="zipcode" class="form-control" t-att-value="zipcode or partner.zip" />
                             </div>
-                            <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label" for="country_id">Country</label>
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
@@ -329,7 +329,7 @@
                                     </t>
                                 </select>
                             </div>
-                            <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
+                            <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-xl-6">
                                 <label class="control-label label-optional" for="state_id">State / Province</label>
                                 <select name="state_id" class="form-control">
                                     <option value="">select...</option>

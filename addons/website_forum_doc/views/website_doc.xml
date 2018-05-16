@@ -48,7 +48,7 @@
             <div id="wrap">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-md-8">
                             <ol class="breadcrumb mb0">
                                 <t t-call="website_forum_doc.breadcrumb">
                                     <t t-set="toc" t-value="toc.parent_id"/>
@@ -58,7 +58,7 @@
                                 </li>
                             </ol>
                         </div>
-                        <div class="col-sm-4 text-right">
+                        <div class="col-md-4 text-right">
                             <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
                                 <div class="form-group">
                                     <input type="search" class="form-control"
@@ -87,7 +87,7 @@
             <t t-call="website.layout">
                 <section class="container mt16" t-if="toc">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-md-8">
                             <ol class="breadcrumb mb0">
                                 <t t-call="website_forum_doc.breadcrumb">
                                     <t t-set="toc" t-value="toc.parent_id"/>
@@ -97,7 +97,7 @@
                                 </li>
                             </ol>
                         </div>
-                        <div class="col-sm-4 text-right" t-if="forum">
+                        <div class="col-md-4 text-right" t-if="forum">
                             <form class="navbar-form ml-auto mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
                                 <div class="form-group">
                                     <input type="search" class="form-control"
@@ -112,7 +112,7 @@
 
                 <section class="container">
                     <div class="row">
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <h1 class="page-header" t-field="post.name"/>
                             <blockquote class="oe_toc_content" t-if="bool(post.content)">
                                 <t t-raw="post.content"/>
@@ -131,7 +131,7 @@
                                     </t>
                                 </ul>
                             </div>
-                        </div><div class="col-sm-3">
+                        </div><div class="col-md-3">
                             <div class="panel panel-default mt48" id="about_doc">
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Need more info?</h3>
@@ -194,14 +194,14 @@
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input name="post_id" t-att-value="post.id" type="hidden"/>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="reason">Question:</label>
-                                <div class="col-md-8 mt8">
+                                <label class="col-lg-3 control-label" for="reason">Question:</label>
+                                <div class="col-lg-8 mt8">
                                     <span t-field="post.name"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="reason">Publish in Chapter:</label>
-                                <div class="col-md-8">
+                                <label class="col-lg-3 control-label" for="reason">Publish in Chapter:</label>
+                                <div class="col-lg-8">
                                     <select class="form-control" name="toc_id">
                                         <option/>
                                         <t t-foreach="chapters or []" t-as="chapter">
@@ -211,7 +211,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-offset-3 col-md-8">
+                                <div class="offset-lg-3 col-lg-8">
                                     <button class="btn btn-primary">Push to documentation</button>
                                     <span class="text-muted">or</span>
                                     <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
@@ -223,7 +223,7 @@
                 <section class="container">
                     <h2 class="page-header">Samples</h2>
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <h4>Good question titles</h4>
                             <ul>
                                 <li>How to forecast sales revenues?</li>
@@ -231,7 +231,7 @@
                             </ul>
 
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <h4>Bad questions</h4>
                             <ul>
                                 <li>What report should I use to compute probabilities per stage?</li>
@@ -240,7 +240,7 @@
                         </div>
                     </div>
                     <div class="row mb64">
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <h4>Good answer structure</h4>
                             <ol>
                                 <li>Describe the business solution</li>
@@ -248,7 +248,7 @@
                                 <li>Benefits of having done this setup</li>
                             </ol>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-md-6">
                             <h4>Bad answer structure</h4>
                             <ol>
                                 <li>Explain how to configure Odoo</li>

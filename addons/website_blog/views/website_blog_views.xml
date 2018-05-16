@@ -129,16 +129,16 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <strong class="col-xs-8">
+                                    <strong class="col-8">
                                         <span t-esc="record.name.value"/>
                                     </strong>
-                                    <strong class="col-xs-4 text-right">
+                                    <strong class="col-4 text-right">
                                         <span t-esc="record.blog_id.value"/>
                                     </strong>
-                                    <div class="col-xs-8">
+                                    <div class="col-8">
                                         <i class="fa fa-clock-o" role="img" aria-label="Post date" title="Post date"/><span t-esc="record.post_date.value"/>
                                     </div>
-                                    <div class="col-xs-4 text-right">
+                                    <div class="col-4 text-right">
                                         <img t-att-src="kanban_image('res.partner', 'image_small', record.author_id.raw_value)" t-att-title="record.author_id.value" t-att-alt="record.author_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>

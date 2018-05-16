@@ -87,7 +87,7 @@
                             </div>
                             <div class="container o_kanban_card_content">
                                 <div class="row">
-                                    <div class="col-xs-6 o_kanban_primary_left">
+                                    <div class="col-6 o_kanban_primary_left">
                                         <button t-if="record.current_session_state.raw_value === 'opened'" class="btn btn-primary" name="open_ui" type="object">Resume</button>
 
                                         <button t-if="record.current_session_state.raw_value === 'opening_control'" class="btn btn-primary" name="open_existing_session_cb" type="object">Open Session</button>
@@ -97,22 +97,22 @@
                                         <button t-if="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>
 
                                     </div>
-                                    <div class="col-xs-6 o_kanban_primary_right">
+                                    <div class="col-6 o_kanban_primary_right">
 
                                         <div t-if="record.last_session_closing_date.value" class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-6">
                                                 <span>Last Closing Date</span>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-6">
                                                 <span><t t-esc="record.last_session_closing_date.value"/></span>
                                             </div>
                                         </div>
 
                                         <div t-if="record.last_session_closing_date.value" class="row">
-                                            <div class="col-xs-6">
+                                            <div class="col-6">
                                                 <span>Cash Balance</span>
                                             </div>
-                                            <div class="col-xs-6">
+                                            <div class="col-6">
                                                 <span><field name="last_session_closing_cash" widget="monetary"/></span>
                                             </div>
                                         </div>
@@ -120,7 +120,7 @@
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
-                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </div>
@@ -131,7 +131,7 @@
                                             <a name="%(action_pos_order_filtered)d" type="action">Sales Orders</a>
                                         </div>
                                     </div>
-                                    <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </div>
@@ -142,7 +142,7 @@
                                 </div>
 
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
-                                    <div role="menuitem" class="col-xs-12">
+                                    <div role="menuitem" class="col-12">
                                         <a type="edit">Settings</a>
                                     </div>
                                 </div>

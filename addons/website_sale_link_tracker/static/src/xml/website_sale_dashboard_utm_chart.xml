@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-extend="website_sale.products_table">
-        <t t-jquery=".o_top_margin .row .col-xs-12" t-operation="attributes">
-            <attribute name="class">col-md-6 col-xs-12</attribute>
+        <t t-jquery=".o_top_margin .row .col-12" t-operation="attributes">
+            <attribute name="class">col-lg-6 col-12</attribute>
         </t>
         <t t-jquery=".o_top_margin .row" t-operation="append">
-            <div class="col-md-6 col-xs-12 o_dashboard_utms">
+            <div class="col-lg-6 col-12 o_dashboard_utms">
                 <div>
                     <h4 class="pull-left">REVENUE BY</h4>
                     <t t-call="website_sale.LinkTrackersDropDown"/>

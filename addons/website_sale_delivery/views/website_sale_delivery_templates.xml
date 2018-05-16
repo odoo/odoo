@@ -49,7 +49,7 @@
             </div>
         </xpath>
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="col-md-12" id="delivery_carrier">
+            <div t-if="deliveries" class="col-lg-12" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
                 <h3 t-if="delivery_nb &gt; 1" class="mb24">Choose a delivery method</h3>
                 <div t-if="delivery_nb &gt; 1" class="panel panel-default" id="delivery_method">

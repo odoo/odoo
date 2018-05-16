@@ -659,17 +659,17 @@ The template contains the HTML markup that will be displayed by the snippet.
      <section class="snippet_testimonial">
        <div class="container text-center">
          <div class="row">
-           <div class="col-md-4">
+           <div class="col-lg-4">
              <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_1.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
            </div>
-           <div class="col-md-4">
+           <div class="col-lg-4">
              <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_2.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
            </div>
-           <div class="col-md-4">
+           <div class="col-lg-4">
              <img alt="client" class="img-circle" src="/theme_tutorial/static/src/img/client_3.jpg"/>
              <h3>Client Name</h3>
              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -931,8 +931,8 @@ Layout
 ``<section />``
   Any section element can be edited like a block of content. The publisher can move or duplicate it. It’s also possible to set a background image or color. Section is the standard main container of any snippet.
 
-``.row > .col-md-*``
-  Any medium  bootstrap columns  directly descending from a .row element, will be resizable by the publisher.
+``.row > .col-lg-*``
+  Any large bootstrap columns directly descending from a .row element, will be resizable by the publisher.
 
 ``contenteditable="False"``
   This attribute will prevent editing to the element and all its children.

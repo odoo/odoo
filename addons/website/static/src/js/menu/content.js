@@ -374,7 +374,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         this.$('.o_link_dialog_preview').remove();
         this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
         this.$modal.find('.modal-lg').removeClass('modal-lg')
-                   .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
+                   .find('.col-lg-8').removeClass('col-lg-8').addClass('col-12');
 
         // Adapt URL label
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));

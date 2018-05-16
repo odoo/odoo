@@ -3,11 +3,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website_links.RecentLink">
         <div class="row mb16">
-            <div class="col-sm-1 col-xs-2 text-center">
+            <div class="col-md-1 col-2 text-center">
                 <h4><t t-esc="widget.link_obj.count"/></h4>
                 <p class="text-muted" style="margin-top: -5px;">clicks</p>
             </div>
-            <div class="col-sm-7 col-xs-7">
+            <div class="col-md-7 col-7">
                 
                 <h4 class="truncate_text">
                     <img t-att-src="widget.link_obj.icon_src" alt="Icon"/> 
@@ -33,7 +33,7 @@
                 <p class='o_website_links_code_error' style='color:red;font-weight:bold;'></p>
             </div>
 
-            <div class="col-sm-4 col-xs-2">
+            <div class="col-md-4 col-2">
                 <button class="btn btn-info btn_shorten_url_clipboard mt8" t-att-data-clipboard-text="widget.link_obj.short_url">Copy</button>
                 <a role="button" t-attf-href="{{widget.link_obj.short_url}}+" class="btn btn-warning mt8">Stats</a>
             </div>

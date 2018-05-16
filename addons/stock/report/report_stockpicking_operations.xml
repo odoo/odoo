@@ -8,12 +8,12 @@
                     <t t-call="web.external_layout">
                         <div class="page">
                             <div class="row mb16">
-                                <div class="col-xs-4 pull-right" name="right_box">
+                                <div class="col-4 pull-right" name="right_box">
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-6">
                                     <div t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.move_ids_without_package[0].partner_id.id != o.partner_id.id">
                                         <span><strong>Delivery Address:</strong></span>
                                         <div t-field="o.move_ids_without_package[0].partner_id"
@@ -25,7 +25,7 @@
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                     </div>
                                 </div>
-                                <div class="col-xs-5 col-xs-offset-1">
+                                <div class="col-5 offset-1">
                                     <div t-if="o.picking_type_id.code=='incoming' and o.partner_id">
                                         <span><strong>Vendor Address:</strong></span>
                                     </div>

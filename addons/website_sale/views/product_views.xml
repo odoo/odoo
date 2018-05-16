@@ -239,14 +239,14 @@
         <field name="arch" type="xml">
             <form string="Product Images">
                 <div class="row o_website_sale_image_modal">
-                    <div class="col-sm-6 col-lg-5">
+                    <div class="col-md-6 col-xl-5">
                         <div class="oe_title">
                             <label class="small text-muted" for="name" string="Image Name"/>
                             <h2><field name="name" placeholder="Image Name" required="True"/></h2>
                             <field name="product_tmpl_id" invisible="1"/>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-lg-7 text-center o_website_sale_image_modal_container">
+                    <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
                         <field name="image" widget="image"/>
                     </div>
                 </div>

@@ -58,7 +58,7 @@
   {{ master_input() }}
   <div class="form-group">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-lg-12">
         <label for="name" class="control-label">Database Name</label>
         <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
       </div>
@@ -66,7 +66,7 @@
   </div>
   <div class="form-group">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-lg-12">
         <label for="login" class="control-label">Email</label>
         <input id="login" type="text" name="login" class="form-control" required="required" autocomplete="off"/>
       </div>
@@ -79,7 +79,7 @@
   </div>
   <div class="form-group">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <label for="lang" class="control-label">Language</label>
         <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
           {% for lang in langs %}
@@ -87,7 +87,7 @@
           {% endfor %}
         </select>
       </div>
-      <div class="col-md-6">
+      <div class="col-lg-6">
           <label for="country" class="control-label">Country</label>
           <select id="country" name="country_code" class="form-control" autocomplete="off">
               <option value=""></option>
@@ -112,7 +112,7 @@
 <body class="container">
   <!-- Database List -->
   <div class="row">
-    <div class="col-md-6 col-md-offset-3 o_database_list">
+    <div class="col-lg-6 offset-lg-3 o_database_list">
       <div class="text-center">
         <img src="/web/static/src/img/logo2.png" class="img-fluid center-block"/>
       </div>

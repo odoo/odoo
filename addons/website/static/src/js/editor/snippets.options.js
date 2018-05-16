@@ -279,7 +279,7 @@ options.registry.sizing_x = options.registry.sizing.extend({
         // Below condition is added to remove offset of target element only
         // and not its children to avoid design alteration of a container/block.
         if (options.isCurrent) {
-            var _class = this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-)([0-9-]+)/g, '');
+            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
             this.$target.attr('class', _class);
         }
     },
@@ -296,8 +296,8 @@ options.registry.sizing_x = options.registry.sizing.extend({
         var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         this.grid = {
-            e: [_.map(gridE, function (v) { return 'col-md-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
-            w: [_.map(gridW, function (v) { return 'col-md-offset-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+            e: [_.map(gridE, function (v) { return 'col-lg-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
+            w: [_.map(gridW, function (v) { return 'offset-lg-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
         };
         return this.grid;
     },
@@ -307,9 +307,9 @@ options.registry.sizing_x = options.registry.sizing.extend({
     _onResize: function (compass, beginClass, current) {
         if (compass === 'w') {
             // don't change the right border position when we change the offset (replace col size)
-            var beginCol = Number(beginClass.match(/col-md-([0-9]+)|$/)[1] || 0);
-            var beginOffset = Number(beginClass.match(/col-md-offset-([0-9-]+)|$/)[1] || beginClass.match(/col-lg-offset-([0-9-]+)|$/)[1] || 0);
-            var offset = Number(this.grid.w[0][current].match(/col-md-offset-([0-9-]+)|$/)[1] || 0);
+            var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+            var beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
+            var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
             if (offset < 0) {
                 offset = 0;
             }
@@ -318,11 +318,11 @@ options.registry.sizing_x = options.registry.sizing.extend({
                 colSize = 1;
                 offset = beginOffset + beginCol - 1;
             }
-            this.$target.attr('class',this.$target.attr('class').replace(/\s*(col-lg-offset-|col-md-offset-|col-md-)([0-9-]+)/g, ''));
+            this.$target.attr('class',this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
 
-            this.$target.addClass('col-md-' + (colSize > 12 ? 12 : colSize));
+            this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
             if (offset > 0) {
-                this.$target.addClass('col-md-offset-' + offset);
+                this.$target.addClass('offset-lg-' + offset);
             }
         }
         this._super.apply(this, arguments);
@@ -387,14 +387,14 @@ options.registry.layout_column = options.Class.extend({
         var colsLength = $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
-        var colClass = 'col-md-' + colSize;
+        var colClass = 'col-lg-' + colSize;
         _.each($columns, function (column) {
             var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\bcol-md-(offset-)?\d+\b/g, ''));
+            $column.attr('class', $column.attr('class').replace(/\bcol-lg-(offset-)?\d+\b/g, ''));
             $column.addClass(colClass);
         });
         if (colOffset) {
-            $columns.first().addClass('col-md-offset-' + colOffset);
+            $columns.first().addClass('offset-lg-' + colOffset);
         }
     },
     /**
@@ -907,7 +907,7 @@ options.registry.gallery = options.Class.extend({
         var imgs = this._getImages();
         var $row = $('<div/>', {class: 'row'});
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
         _.each(imgs, function (img, index) {
@@ -934,7 +934,7 @@ options.registry.gallery = options.Class.extend({
     masonry: function () {
         var imgs = this._getImages();
         var columns = this._getColumns();
-        var colClass = 'col-md-' + (12 / columns);
+        var colClass = 'col-lg-' + (12 / columns);
         var cols = [];
 
         var $row = $('<div/>', {class: 'row'});
@@ -985,9 +985,9 @@ options.registry.gallery = options.Class.extend({
         this._replaceContent($row);
 
         _.each(imgs, function (img) {
-            var wrapClass = 'col-md-3';
+            var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
-                wrapClass = 'col-md-6';
+                wrapClass = 'col-lg-6';
             }
             var $wrap = $('<div/>', {class: wrapClass}).append(img);
             $row.append($wrap);
