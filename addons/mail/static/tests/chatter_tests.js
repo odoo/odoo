@@ -370,8 +370,6 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     var done = assert.async();
     assert.expect(27);
 
-    var unpatchWindowGetSelection = testUtils.patchWindowGetSelection();
-
     var bus = new Bus();
     var BusService = createBusService(bus);
 
@@ -538,7 +536,6 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
 
             //cleanup
             form.destroy();
-            unpatchWindowGetSelection();
             done();
         });
 });
