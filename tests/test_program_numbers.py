@@ -376,11 +376,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(order.amount_untaxed, 1355.46, "The order untaxed total with programs should be 1435.45")
         self.assertEqual(len(order.order_line.ids), 13, "Order should have a new discount line for 20% on iPad")
 
-        # Check that if you delete one of the discount tax line and recompute, it got added back.
+        # Check that if you delete one of the discount tax line, the others tax lines from the same promotion got deleted as well.
         order.order_line.filtered(lambda l: '10%' in l.name)[0].unlink()
-        self.assertEqual(len(order.order_line.ids), 12, "One of the 10% discount line per tax should be removed")
+        self.assertEqual(len(order.order_line.ids), 9, "All of the 10% discount line per tax should be removed")
+        # At this point, removing the iPod's discount line (split per tax) removed also the others discount lines
+        # linked to the same program (eg: other taxes lines). So the coupon got removed from the SO since there were no discount lines left
+
+        # Add back the coupon to continue the test flow
+        self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, 'test_10pc')
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 13, "The 10% discount line that got removed should be recomputed and added back")
+        self.assertEqual(len(order.order_line.ids), 13, "The 10% discount line should be back")
 
         # Check that if you change a product qty, his discount tax line got updated
         sol2.product_uom_qty = 7
@@ -412,16 +417,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         #                                           50% excl
         # Free Keyboard        |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
         # Free iPad            |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
-        # 10% on no tax        |  1  |    -50.00  | /        |  -50.00 | -50.00  |       /
-        # 10% on tax 15% excl  |  1  |    -40.00  | 15% excl |  -60.00 | -69.00  |   -9.00
-        # 10% on tax 35%+50%   |  1  |    -30.00  | 35% incl |  -22.22 | -45.00  |  -22.78
-        #                                           50% excl
         # 20% on iPad          |  1  |    -80.00  | 15% excl | -80.00  | -92.00  |  -12.00
         # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1110.00 | 1384.00 |  274.00
-        self.assertEqual(order.amount_total, 1384, "The order total with programs should be 1654")
-        self.assertEqual(order.amount_untaxed, 1110, "The order untaxed total with programs should be 1435.45")
-        self.assertEqual(len(order.order_line.ids), 10, "Order should contains 10 lines: 4 products lines, 2 free products lines, 3 10% discount lines and a 20% discount line")
+        # TOTAL                                              | 1242.22 | 1548.00 |  305.78
+        self.assertEqual(order.amount_total, 1548, "The order total with programs should be 1548")
+        self.assertEqual(order.amount_untaxed, 1242.22, "The order untaxed total with programs should be 1242.22")
+        self.assertEqual(len(order.order_line.ids), 7, "Order should contains 7 lines: 4 products lines, 2 free products lines and a 20% discount line")
 
     def test_program_numbers_extras(self):
         # Check that you can't apply a global discount promo code if there is already an auto applied global discount
