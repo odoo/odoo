@@ -16,6 +16,7 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['sale_management', 'hr_expense'],
     'data': [
+        'data/digest_data.xml',
         'security/ir.model.access.csv',
         'security/sale_expense_security.xml',
         'data/sale_expense_data.xml',
