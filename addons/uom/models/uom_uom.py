@@ -135,7 +135,7 @@ class UoM(models.Model):
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
             if raise_if_failure:
-                raise UserError(_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (self.name, to_unit.name))
+                raise UserError(_('The unit of measure %s defined on the order line doesn\'t belong to the same category than the unit of measure %s defined on the product. Please correct the unit of measure defined on the order line or on the product, they should belong to the same category.') % (self.name, to_unit.name))
             else:
                 return qty
         amount = qty / self.factor
