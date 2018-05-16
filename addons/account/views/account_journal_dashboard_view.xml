@@ -21,7 +21,7 @@
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
                                     <t t-if="journal_type == 'general' || journal_type == 'situation'">
-                                        <div class="col-xs-6 o_kanban_primary_left">
+                                        <div class="col-6 o_kanban_primary_left">
                                             <button type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'view_no_maturity': 1}" class="btn btn-primary">
                                                 <span>Journal Entries</span>
                                             </button>
@@ -55,7 +55,7 @@
 
                         <!-- For bank and cash -->
                         <div t-if="journal_type == 'bank' || journal_type == 'cash'" class="row">
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
                                 <div class="o_kanban_card_manage_title">
                                     <span role="separator">View</span>
                                 </div>
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
                                 <div class="o_kanban_card_manage_title">
                                     <span role="separator">New</span>
                                 </div>
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reconciliation">
                                 <div class="o_kanban_card_manage_title">
                                     <span role="separator">Reconciliation</span>
                                 </div>
@@ -114,7 +114,7 @@
 
                         <!-- For purchase and sale -->
                         <div t-if="journal_type == 'purchase' || journal_type == 'sale'" class="row">
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
                                 <div class="o_kanban_card_manage_title">
                                     <span>View</span>
                                 </div>
@@ -134,7 +134,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
                                 <div class="o_kanban_card_manage_title">
                                     <span>New</span>
                                 </div>
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
                                 <div class="o_kanban_card_manage_title">
                                     <span>Reporting</span>
                                 </div>
@@ -165,7 +165,7 @@
 
                         <!-- For general and situation -->
                         <div t-if="journal_type == 'general' || journal_type == 'situation'" class="row">
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
                                 <div class="o_kanban_card_manage_title">
                                     <span>View</span>
                                 </div>
@@ -180,7 +180,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
                                 <div class="o_kanban_card_manage_title">
                                     <span>New</span>
                                 </div>
@@ -189,7 +189,7 @@
                                 </div>
                             </div>
 
-                             <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_operations">
+                             <div class="col-4 o_kanban_card_manage_section o_kanban_manage_operations">
                                 <div class="o_kanban_card_manage_title">
                                     <span>Operations</span>
                                 </div>
@@ -200,16 +200,16 @@
                         </div>
 
                         <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                            <div class="col-xs-8">
+                            <div class="col-8">
                                 <ul class="oe_kanban_colorpicker" data-field="color"/>
                             </div>
                         </div>
 
                         <div groups="account.group_account_manager" class="row o_kanban_card_settings">
-                            <div class="col-xs-6">
+                            <div class="col-6">
                                 <field name="show_on_dashboard" widget="boolean_favorite" />
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col-6 text-right">
                                 <a t-if="widget.editable" type="edit">Settings</a>
                             </div>
                         </div>
@@ -219,7 +219,7 @@
                         <!-- On the left, display :
                             - A button corresponding to the bank_statements_source, if it wasn't configured, a button for each of them
                             - If there are statements to reconcile, a link to reconcile them -->
-                        <div class="col-xs-5 o_kanban_primary_left">
+                        <div class="col-5 o_kanban_primary_left">
                             <t t-if="dashboard.number_to_reconcile > 0">
                                 <button type="object" name="action_open_reconcile" class="btn btn-primary"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
                             </t>
@@ -239,21 +239,21 @@
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->
-                        <div class="col-xs-7 o_kanban_primary_right">
+                        <div class="col-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-7">
+                                <div class="col-7">
                                     <span title="Balance in Odoo">Balance in GL</span>
                                 </div>
-                                <div class="col-xs-5 text-right">
+                                <div class="col-5 text-right">
                                     <span><t t-esc="dashboard.account_balance"/></span>
                                 </div>
                             </div>
                             <t t-if="dashboard.last_balance != dashboard.account_balance">
                                 <div class="row" name="latest_statement">
-                                  <div class="col-xs-7">
+                                  <div class="col-7">
                                     <span title="Latest Statement">Latest Statement</span>
                                   </div>
-                                  <div class="col-xs-5 text-right">
+                                  <div class="col-5 text-right">
                                     <span><t t-esc="dashboard.last_balance"/></span>
                                   </div>
                                 </div>
@@ -261,7 +261,7 @@
                         </div>
                     </t>
                     <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
-                        <div class="col-xs-5 o_kanban_primary_left">
+                        <div class="col-5 o_kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
                                 <button type="object" name="action_create_new" class="btn btn-primary o_invoice_new">
                                     <span>New Invoice</span>
@@ -273,20 +273,20 @@
                                 </button>
                             </t>
                         </div>
-                        <div class="col-xs-7 o_kanban_primary_right">
+                        <div class="col-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-7">
+                                <div class="col-7">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
                                         <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
                                         <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
-                                <div class="col-xs-5 text-right">
+                                <div class="col-5 text-right">
                                     <span><t t-esc="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-7">
+                                <div class="col-7">
                                     <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
                                         <t t-esc="dashboard.number_waiting"/> Unpaid Invoices
@@ -297,7 +297,7 @@
                                         <t t-esc="dashboard.number_waiting"/> Bills to Pay
                                     </a>
                                 </div>
-                                <div class="col-xs-5 text-right">
+                                <div class="col-5 text-right">
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>

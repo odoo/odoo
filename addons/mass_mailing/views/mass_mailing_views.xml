@@ -585,31 +585,31 @@
                                     <div class="o_kanban_record_body" attrs="{'invisible': [('sent_date', '=', False)]}">
                                         <t t-if="record.sent_date">
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_opened': True}"
                                                        type="action">Opened</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="opened_ratio"/> %
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mail_mail_statistics_mailing)d"
                                                        context="{'search_default_filter_replied': True}"
                                                        type="action">Replied</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="replied_ratio"/> %
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_view_mass_mailing_links_statistics)d"
                                                        type="action">Clicks</a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="clicks_ratio"/> %
                                                 </div>
                                             </div>

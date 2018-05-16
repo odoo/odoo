@@ -20,7 +20,7 @@
                               </div>
                             </t>
                             <t t-foreach="projects" t-as="project">
-                                <div t-if="project.percentage_satisfaction_project != -1" class="col-sm-6 col-xs-4 col-md-4 col-lg-4">
+                                <div t-if="project.percentage_satisfaction_project != -1" class="col-md-6 col-4 col-lg-4 col-xl-4">
                                     <div class="thumbnail">
                                         <div>
                                             <div class="caption">
@@ -33,7 +33,7 @@
                                                     <i class="fa fa-envelope"/> Email : <t t-esc="project.alias_name"/>@<t t-esc="project.alias_domain"/>
                                                 </p>
                                                 <div class="row">
-                                                    <div class="col-md-6 text-center">
+                                                    <div class="col-lg-6 text-center">
                                                         <h2><t t-esc="len(project.task_ids)"/></h2>
                                                         <p><t t-esc="project.label_tasks"/></p>
                                                     </div>
@@ -78,15 +78,15 @@
         <template id="portal_project_rating_partner_stat">
             <t t-foreach="partner_stats.values()" t-as="partner_stat">
                 <div class="row mt8" t-if="partner_stat['total']" title="Top 5 partner ratings of last 15 days.">
-                    <div class="col-sm-1">
+                    <div class="col-md-1">
                         <img t-if="partner_stat['rated_partner'].image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{partner_stat['rated_partner'].image}" alt="Rated partner"/>
                         <img  t-if="not partner_stat['rated_partner'].image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
-                    <div class="col-sm-4 o_smiley_no_padding_right">
+                    <div class="col-md-4 o_smiley_no_padding_right">
                         <span class="ml8" t-esc="partner_stat['rated_partner'].name"/>
                     </div>
-                    <div class="col-sm-4 o_smiley_no_padding_right">
-                        <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                    <div class="col-md-4 o_smiley_no_padding_right">
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                             <span t-if="partner_stat['rating_10']">
                                 <img title="happy" alt="Happy face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_10.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_10']"/>
@@ -96,7 +96,7 @@
                                 <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_10']"/>
                             </span>
                         </div>
-                        <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                             <span t-if="partner_stat['rating_5']">
                                 <img title="average" alt="Neutral face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_5.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_5']"/>
@@ -106,7 +106,7 @@
                                 <span class="o_rating_count o_lighter_smileys" t-esc="partner_stat['rating_5']"/>
                             </span>
                         </div>
-                        <div class="col-sm-4 o_smiley_no_padding_right o_smiley_no_padding_left">
+                        <div class="col-md-4 o_smiley_no_padding_right o_smiley_no_padding_left">
                            <span t-if="partner_stat['rating_1']">
                                 <img title="bad" alt="Sad face" class="o_top_partner_rating_image" src='/rating/static/src/img/rating_1.png'/>
                                 <span class="o_rating_count" t-esc="partner_stat['rating_1']"/>
@@ -117,7 +117,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-sm-3 o_smiley_no_padding_left">
+                    <div class="col-md-3 o_smiley_no_padding_left">
                         <strong class="pull-right"><t t-esc="partner_stat['percentage_happy']"/>%</strong>
                     </div>
                 </div>
@@ -127,11 +127,11 @@
         <template id="portal_project_rating_popover">
             <div t-attf-id="rating_#{rating.id}" class="container d-none">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-lg-2">
                         <img t-if="rating.partner_id.image" class="o_top_partner_image" t-attf-src="data:image/png;base64,#{rating.partner_id.image}" alt="Rated partner"/>
                         <img  t-if="not rating.partner_id.image" class="o_top_partner_image" src='/web/static/src/img/placeholder.png' alt="Placeholder"/>
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-lg-10">
                         <div class="mt4">
                             <strong><t t-esc="rating.rated_partner_id.name"/></strong> - <span class="rating_timeduration"><t t-esc="rating.create_date"/></span>
                         </div>
@@ -139,7 +139,7 @@
                     </div>
                 </div>
                 <div class="row o_top_partner_feedback" t-if="rating.feedback">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <t t-esc="rating.feedback" />
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                             <div>
                                 <h3 class="page-header">Customer Ratings</h3>
                                 <div class="row">
-                                    <div class="col-md-7">
+                                    <div class="col-lg-7">
                                         <t t-foreach="ratings" t-as="rating">
                                             <img t-attf-src='/rating/static/src/img/rating_#{int(rating.rating)}.png'
                                                 class="mt4 o_rating_image"
@@ -166,7 +166,7 @@
                                             <t t-call="project.portal_project_rating_popover"/>
                                         </t>
                                     </div>
-                                    <div class="col-md-5 o_vertical_separator">
+                                    <div class="col-lg-5 o_vertical_separator">
                                         <div t-if="statistics['period_statistics']['days_06']">
                                             <h5>Last 7 days</h5>
                                             <t t-call="project.portal_project_rating_progressbar">

@@ -29,14 +29,14 @@ tour.register('rte', {
             '<section>\n'+
             '    <div class="container" style="width: 600px;">\n'+
             '        <div class="row">\n'+
-            '            <div class="col-md-6 mt16">\n'+
+            '            <div class="col-lg-6 mt16">\n'+
             '<h1 id="text_content_id">Batnae municipium in Anthemusia</h1>     \n'+
             '     <p>Batnae municipium in Anthemusia conditum Macedonum manu priscorum ab Euphrate flumine brevi spatio disparatur, refertum mercatoribus opulentis, ubi annua sollemnitate prope Septembris initium mensis ad.</p>\n'+
             '     <p>    Quam <img style="width: 25%" src="/web/static/src/img/logo.png"/> quidem <span class="fa fa-flag fa-2x"></span> partem accusationis admiratus sum et moleste tuli potissimum esse Atratino datam. Neque enim decebat neque aetas.</p>\n'+
             '     <p>Et hanc quidem praeter oppida multa duae civitates exornant Seleucia opus Seleuci regis, et Claudiopolis quam deduxit coloniam Claudius Caesar. Isaura enim antehac nimium potens, olim subversa ut rebellatrix.</p>'+
             '<p>Harum trium sententiarum nulli prorsus assentior.</p>\n'+
             '        </div>\n'+
-            '        <div class="col-md-6 mt16">\n'+
+            '        <div class="col-lg-6 mt16">\n'+
             '            <img class="img img-fluid shadow mb16" src="/web/static/src/img/logo.png" alt="Odoo text and image block">\n'+
             '        </div>\n'+
             '    </div>\n'+

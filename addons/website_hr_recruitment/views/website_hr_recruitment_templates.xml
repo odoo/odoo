@@ -8,11 +8,11 @@
                 <section class="mb16">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 text-center mb16">
+                            <div class="col-lg-12 text-center mb16">
                                 <h2>Our Job Offers</h2>
                                 <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
                             </div>
-                            <div class="col-md-12 text-center">
+                            <div class="col-lg-12 text-center">
                                 <p>
                                     Join us, we offer you an extraordinary chance to learn, to
                                     develop and to be part of an exciting experience and
@@ -29,7 +29,7 @@
                     <div class="d-none" id="jobs_grid_left">
 
                     </div>
-                    <div class="col-md-12" id="jobs_grid">
+                    <div class="col-lg-12" id="jobs_grid">
                         <div t-if="not jobs">
                             <div class="text-center text-muted">
                                 <h3 class="css_editable_hidden"><a t-attf-href="/contactus">Contact us</a> for job opportunities.</h3>
@@ -120,47 +120,47 @@
                 <section id="forms">
                     <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-model_name="hr.applicant" data-success_page="/job-thank-you" t-att-data-form_field_department_id="job and job.department_id.id or False" t-att-data-form_field_job_id="job and job.id or False">
                         <div class="form-group form-field o_website_form_required_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
+                            <div class="col-lg-3 col-md-4 text-right">
                                 <label class="control-label" for="partner_name">Your Name</label>
                             </div>
-                            <div class="col-md-7 col-sm-8">
+                            <div class="col-lg-7 col-md-8">
                                 <input type="text" class="form-control o_website_form_input" name="partner_name" required=""/>
                             </div>
                         </div>
                         <div class="form-group form-field o_website_form_required_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
+                            <div class="col-lg-3 col-md-4 text-right">
                                 <label class="control-label" for="email_from">Your Email</label>
                             </div>
-                            <div class="col-md-7 col-sm-8">
+                            <div class="col-lg-7 col-md-8">
                                 <input type="email" class="form-control o_website_form_input" name="email_from" required=""/>
                             </div>
                         </div>
                         <div class="form-group form-field o_website_form_required_custom">
-                            <div class="col-md-3 col-sm-4 text-right">
+                            <div class="col-lg-3 col-md-4 text-right">
                                 <label class="control-label" for="partner_phone">Your Phone Number</label>
                             </div>
-                            <div class="col-md-7 col-sm-8">
+                            <div class="col-lg-7 col-md-8">
                                 <input type="text" class="form-control o_website_form_input" name="partner_phone" required=""/>
                             </div>
                         </div>
                         <div class="form-group form-field">
-                            <div class="col-md-3 col-sm-4 text-right">
+                            <div class="col-lg-3 col-md-4 text-right">
                                 <label class="control-label" for="description">Short Introduction</label>
                             </div>
-                            <div class="col-md-7 col-sm-8">
+                            <div class="col-lg-7 col-md-8">
                                 <textarea class="form-control o_website_form_input" name="description"></textarea>
                             </div>
                         </div>
                         <div class="form-group form-field o_website_form_custom">
-                          <div class="col-md-3 col-sm-4 text-right">
+                          <div class="col-lg-3 col-md-4 text-right">
                             <label class="control-label" for="Resume">Resume</label>
                           </div>
-                          <div class="col-md-7 col-sm-8">
+                          <div class="col-lg-7 col-md-8">
                             <input type="file" class="form-control o_website_form_input" name="Resume"/>
                           </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                            <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
                                 <a href="#" role="button" class="btn btn-primary btn-lg o_website_form_send">Submit</a>
                                 <span id="o_website_form_result"></span>
                             </div>
@@ -190,19 +190,19 @@
     <section class="o_tasks">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-md-4">
+                <div class="col-md-6 col-lg-4">
                     <h4><strong>Responsibilities</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
                     <p>US + Canada Territory</p>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <div class="col-md-6 col-lg-4">
                     <h4><strong>Challenges</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
                     <p>US + Canada Territory</p>
                 </div>
-                <div class="col-sm-6 col-md-4">
+                <div class="col-md-6 col-lg-4">
                     <h4><strong>Must Have</strong></h4>
                     <p>Full sales cycle</p>
                     <p>Achieve monthly targets</p>
@@ -230,7 +230,7 @@
     <section style="border: 0 solid #e3e3e3; border-width: 2px 0;">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6 col-md-4 mt16 mb16">
+                <div class="col-md-6 col-lg-4 mt16 mb16">
                     <div class="s_hr_rating s_hr_rating_stars s_hr_rating_3">
                         <h6 class="mb0">Job Complexity:</h6>
                         <i class="fa"/>
@@ -277,7 +277,7 @@
                         <div class="s_hr_rating_bar"/>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-4 mt16 mb16">
+                <div class="col-md-6 col-lg-4 mt16 mb16">
                     <h6 class="mb0">Team / Company Size:</h6>
                     <p class="text-uppercase ">10  / 40 people</p>
                     <h6 class="mb0">Avg Deal Size:</h6>
@@ -289,7 +289,7 @@
                     <h6 class="mb0">Company Maturity:</h6>
                     <p class="text-uppercase ">Profitable</p>
                 </div>
-                <div class="col-sm-6 col-md-4 mt16 mb16">
+                <div class="col-md-6 col-lg-4 mt16 mb16">
                     <h3 class="mt0">Need More Info?</h3>
                     <ul>
                         <li><a href="#">The founder’s story</a></li>
@@ -305,43 +305,43 @@
     <section class="o_perk mt16 mb16">
         <div class="container">
             <div class="row">
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mb0 mt8"><span class="fa fa-2x fa-heart"/>
                     Benefits</h4>
                     <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
                 </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mt8 mb0"><span class="fa fa-2x fa-sun-o"/>
                     PTOs</h4>
                     <p>Vacation, Sick, and paid leaves</p>
                 </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mt8 mb0"><span class="fa fa-2x fa-car"/>
                     Save on commute</h4>
                     <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
                     </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mb0 mt8"><span class="fa fa-2x fa-check-circle"/>
                     Discount Programs</h4>
                     <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
                 </div>
             </div><div class="row">
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mb0 mt8"><span class="fa fa-2x fa-map-marker"/>
                     Prime location</h4>
                     <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
                 </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mt8 mb0"><span class="fa fa-2x fa-calendar"/>
                     Sponsored Events</h4>
                     <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
                 </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mt8 mb0"><span class="fa fa-2x fa-futbol-o"/>
                     Sport Activity</h4>
                     <p>Play any sport with colleagues and the bill is covered</p>
                     </div>
-                <div class="text-center col-md-3 mt16 mb16">
+                <div class="text-center col-lg-3 mt16 mb16">
                     <h4 class="mb0 mt8"><span class="fa fa-2x fa-coffee"/>
                     Eat &amp; Drink</h4>
                     <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
@@ -354,24 +354,24 @@
     <section class="mt16 mb16">
         <div class="container">
             <div class="row">
-                <div class="col-sm-12 col-md-6 mt16 mb16">
+                <div class="col-md-12 col-lg-6 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_3.jpg"/>
                 </div>
-                <div class="col-sm-6 col-md-3 mt16 mb16">
+                <div class="col-md-6 col-lg-3 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_2.jpg"/>
                 </div>
-                <div class="col-sm-6 col-md-3 mt16 mb16">
+                <div class="col-md-6 col-lg-3 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_4.jpg"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-md-3 mt16 mb16">
+                <div class="col-md-6 col-lg-3 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_6.jpg"/>
                 </div>
-                <div class="col-sm-6 col-md-3 mt16 mb16">
+                <div class="col-md-6 col-lg-3 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_5.jpg"/>
                 </div>
-                <div class="col-sm-12 col-md-6 mt16 mb16">
+                <div class="col-md-12 col-lg-6 mt16 mb16">
                     <img alt="" class="img img-fluid" src="/website_hr_recruitment/static/src/img/job_image_1.jpg"/>
                 </div>
             </div>
@@ -392,7 +392,7 @@
                     <div class="oe_structure">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-lg-12">
                                     <h1 class="text-center">Congratulations!</h1>
                                     <p class="text-center">
                                         Your application has been posted successfully.
@@ -403,13 +403,13 @@
                                     <t t-set="responsible" t-value="job and job.user_id.website_published and job.user_id "/>
                                 </t>
                                 <t t-if="responsible">
-                                    <div class="col-md-12">
+                                    <div class="col-lg-12">
                                         <h3 class="mb32 text-center">Your application has been sent to:</h3>
                                     </div>
-                                    <div class="col-md-1 col-md-offset-4">
+                                    <div class="col-lg-1 offset-lg-4">
                                         <p t-field="responsible.image_small" t-field-options="{'widget': 'image', 'class': 'img-circle center-block'}"/>
                                     </div>
-                                    <div class="col-md-5 o_responsible_data">
+                                    <div class="col-lg-5 o_responsible_data">
                                         <h4 class="mt0" t-field="responsible.name"/>
                                         <p t-field="responsible.function"/>
                                         <t t-if='responsible.email'>
@@ -419,7 +419,7 @@
                                             <br/><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>
                                         </t>
                                     </div>
-                                    <div class="col-md-12 mt32 text-center">
+                                    <div class="col-lg-12 mt32 text-center">
                                         <span>
                                             We usually reply between one and three days.<br/>
                                             Feel free to contact him/her if you have further questions.
@@ -428,7 +428,7 @@
                                 </t>
                             </div>
                             <div class="row" id="o_recruitment_thank_cta">
-                                <div class="col-md-12 text-center mt32 mb32">
+                                <div class="col-lg-12 text-center mt32 mb32">
                                     In the meantime,
                                     <h3 class="mt8 mb32">Look around on our website:</h3>
                                     <a role="button" href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
@@ -455,10 +455,10 @@
         </ul>
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
-        <attribute name="class">col-md-3</attribute>
+        <attribute name="class">col-lg-3</attribute>
     </xpath>
     <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-md-9</attribute>
+        <attribute name="class">col-lg-9</attribute>
     </xpath>
 </template>
 
@@ -474,10 +474,10 @@
         </ul>
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
-        <attribute name="class">col-md-3</attribute>
+        <attribute name="class">col-lg-3</attribute>
     </xpath>
     <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-md-9</attribute>
+        <attribute name="class">col-lg-9</attribute>
     </xpath>
 </template>
 
@@ -498,10 +498,10 @@
         </ul>
     </xpath>
     <xpath expr="//div[@id='jobs_grid_left']" position="attributes">
-        <attribute name="class">col-md-3</attribute>
+        <attribute name="class">col-lg-3</attribute>
     </xpath>
     <xpath expr="//div[@id='jobs_grid']" position="attributes">
-        <attribute name="class">col-md-9</attribute>
+        <attribute name="class">col-lg-9</attribute>
     </xpath>
 </template>
 

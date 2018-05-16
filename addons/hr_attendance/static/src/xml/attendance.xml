@@ -77,13 +77,13 @@
                     <t t-else="">
                         <h3 class="mt0 mb0 text-muted">Please enter your PIN to <b t-if="checked_in">check out</b><b t-else="">check in</b></h3>
                         <div class="row">
-                            <div class="col-sm-8 col-sm-offset-2 o_hr_attendance_pin_pad">
+                            <div class="col-md-8 offset-md-2 o_hr_attendance_pin_pad">
                                 <div class="row" >
-                                    <div class="col-xs-12 mb8 mt8"><input class="o_hr_attendance_PINbox text-center" type="password" disabled="true"/></div>
+                                    <div class="col-12 mb8 mt8"><input class="o_hr_attendance_PINbox text-center" type="password" disabled="true"/></div>
                                 </div>
                                 <div class="row">
                                     <t t-foreach="['1', '2', '3', '4', '5', '6', '7', '8', '9', ['C', 'btn-warning'], '0', ['ok', 'btn-primary']]" t-as="btn_name">
-                                        <div class="col-xs-4 mb4">
+                                        <div class="col-4 mb4">
                                             <a t-attf-class="btn {{btn_name[1]? btn_name[1] : 'btn-secondary'}} btn-block btn-lg {{ 'o_hr_attendance_pin_pad_button_' + btn_name[0] }}"><t t-esc="btn_name[0]"/></a>
                                         </div>
                                     </t>

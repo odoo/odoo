@@ -13,7 +13,7 @@
                             <field name="website_id" invisible="1"/>
                             <h2>Website</h2>
                             <div class="row mt16 o_settings_container" id="webmaster_settings">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="domain_setting">
+                                <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
                                     <div class="o_setting_right_pane">
                                         <span class="o_form_label">Website Title</span>
                                         <div class="text-muted">
@@ -21,17 +21,17 @@
                                         </div>
                                         <div class="content-group">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" string="Name" for="website_name"/>
+                                                <label class="col-lg-3 o_light_label" string="Name" for="website_name"/>
                                                 <field name="website_name"/>
                                             </div>
                                             <div class="row">
-                                                <label class="col-md-3 o_light_label" for="favicon" />
+                                                <label class="col-lg-3 o_light_label" for="favicon" />
                                                 <field name="favicon" widget="image" class="pull-left oe_avatar"/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="languages_setting">
+                                <div class="col-12 col-lg-6 o_setting_box" id="languages_setting">
                                     <div class="o_setting_right_pane">
                                         <label for="language_ids"/>
                                         <div class="text-muted">
@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_setting">
+                                <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_setting">
                                     <div class="o_setting_left_pane">
                                         <field name="has_google_analytics"/>
                                     </div>
@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
+                                                <label class="col-lg-3 o_light_label" string="Tracking ID" for="google_analytics_key"/>
                                                 <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"
                                                     attrs="{'required': [('google_management_client_id', '!=', False)]}"/>
                                             </div>
@@ -76,7 +76,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                <div class="col-12 col-lg-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
                                     <div class="o_setting_left_pane">
                                         <field name="has_google_analytics_dashboard"/>
                                     </div>
@@ -87,11 +87,11 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_analytics_dashboard', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" string="Client ID" for="google_management_client_id"/>
+                                                <label class="col-lg-3 o_light_label" string="Client ID" for="google_management_client_id"/>
                                                 <field name="google_management_client_id"/>
                                             </div>
                                             <div class="row">
-                                                <label class="col-md-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
+                                                <label class="col-lg-3 o_light_label" string="Client Secret" for="google_management_client_secret"/>
                                                 <field name="google_management_client_secret"/>
                                             </div>
                                         </div>
@@ -103,7 +103,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_maps_setting">
+                                <div class="col-12 col-lg-6 o_setting_box" id="google_maps_setting">
                                     <div class="o_setting_left_pane">
                                         <field name="has_google_maps"/>
                                     </div>
@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" string="API Key" for="google_maps_api_key"/>
+                                                <label class="col-lg-3 o_light_label" string="API Key" for="google_maps_api_key"/>
                                                 <field name="google_maps_api_key"/>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_left_pane">
                                         <field name="module_website_version" widget="upgrade_boolean"/>
                                     </div>
@@ -137,7 +137,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="col-12 col-lg-6 o_setting_box">
                                     <div class="o_setting_left_pane">
                                     </div>
                                     <div class="o_setting_right_pane">
@@ -155,7 +155,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
+                                <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
                                     <div class="o_setting_left_pane">
                                         <field name="cdn_activated"/>
                                     </div>
@@ -166,21 +166,21 @@
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('cdn_activated', '=', False)]}">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" for="cdn_url"/>
+                                                <label class="col-lg-3 o_light_label" for="cdn_url"/>
                                                 <field name="cdn_url"
                                                        attrs="{'required': [('cdn_activated', '=', True)]}"
                                                        placeholder="//mycompany.mycdn.com/"
                                                        t-translation="off"/>
                                             </div>
                                             <div class="row" >
-                                                <label class="col-md-3 o_light_label" for="cdn_filters"/>
+                                                <label class="col-lg-3 o_light_label" for="cdn_filters"/>
                                                 <field name="cdn_filters" class="oe_inline"
                                                        attrs="{'required': [('cdn_activated', '=', True)]}"/>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="utm_tracker_settings" title="Analyze the efficiency of your marketing campaigns by using trackable UTM trackers (campaigns, medium, sources). Create trackers and follow clicks from the Promote menu of your website. Those trackers can be used in Google Analytics or in Odoo reports where you can see the opportunities and sales revenue generated thanks to your links.">
+                                <div class="col-12 col-lg-6 o_setting_box" id="utm_tracker_settings" title="Analyze the efficiency of your marketing campaigns by using trackable UTM trackers (campaigns, medium, sources). Create trackers and follow clicks from the Promote menu of your website. Those trackers can be used in Google Analytics or in Odoo reports where you can see the opportunities and sales revenue generated thanks to your links.">
                                     <div class="o_setting_left_pane">
                                         <field name="module_website_links"/>
                                     </div>

@@ -536,7 +536,7 @@ define([
      * @param {String} body
      */
     var tplShortcut = function (title, keys) {
-      var keyClass = 'note-shortcut-col col-xs-6 note-shortcut-';
+      var keyClass = 'note-shortcut-col col-6 note-shortcut-';
       var body = [];
 
       for (var i in keys) {
@@ -548,7 +548,7 @@ define([
         }
       }
 
-      return '<div class="note-shortcut-row row"><div class="' + keyClass + 'title col-xs-offset-6">' + title + '</div></div>' +
+      return '<div class="note-shortcut-row row"><div class="' + keyClass + 'title offset-6">' + title + '</div></div>' +
              '<div class="note-shortcut-row row">' + body.join('</div><div class="note-shortcut-row row">') + '</div>';
     };
 
@@ -616,7 +616,7 @@ define([
     };
 
     var tplShortcutTable = function (lang, options) {
-      var colClass = 'class="note-shortcut note-shortcut-col col-sm-6 col-xs-12"';
+      var colClass = 'class="note-shortcut note-shortcut-col col-md-6 col-12"';
       var template = [
         '<div ' + colClass + '>' + tplShortcutAction(lang, options) + '</div>' +
         '<div ' + colClass + '>' + tplShortcutText(lang, options) + '</div>',

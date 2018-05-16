@@ -62,19 +62,19 @@
 
             <xpath expr="//t[@name='second_options']" position="after">
                 <div class="row" t-if="record.quotations_count.raw_value">
-                    <div class="col-xs-8">
+                    <div class="col-8">
                         <a name="%(action_quotations_salesteams)d" type="action" context="{'search_default_draft': True, 'search_default_sent': True}">
                             <field name="quotations_count"/>
                             <t t-if="record.quotations_count.raw_value == 1">Quotation</t>
                             <t t-else="">Quotations</t>
                         </a>
                     </div>
-                    <div class="col-xs-4 text-right">
+                    <div class="col-4 text-right">
                         <field name="quotations_amount" widget="monetary"/>
                     </div>
                 </div>
                 <div class="row" name="orders_to_invoice" t-if="record.sales_to_invoice_count.raw_value">
-                    <div class="col-xs-8">
+                    <div class="col-8">
                         <a name="%(action_orders_to_invoice_salesteams)d" type="action">
                             <field name="sales_to_invoice_count"/>
                             <t t-if="record.sales_to_invoice_count.raw_value == 1">Order to Invoice</t>
@@ -86,10 +86,10 @@
 
             <xpath expr="//div[hasclass('bottom_block')]" position="inside">
                 <t groups="sales_team.group_sale_manager">
-                    <t t-if="record.use_invoices.raw_value &amp;&amp; record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom">
+                    <t t-if="record.use_invoices.raw_value &amp;&amp; record.invoiced_target.raw_value" class="col-12 o_kanban_primary_bottom">
                         <field name="invoiced" widget="progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                     </t>
-                    <t t-if="record.use_invoices.raw_value &amp;&amp; !record.invoiced_target.raw_value" class="col-xs-12 o_kanban_primary_bottom text-center">
+                    <t t-if="record.use_invoices.raw_value &amp;&amp; !record.invoiced_target.raw_value" class="col-12 o_kanban_primary_bottom text-center">
                         <a href="#" class="sales_team_target_definition o_inline_link">Click to define a target</a>
                     </t>
                 </t>

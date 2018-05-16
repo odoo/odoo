@@ -2689,7 +2689,7 @@ var ImageSelection = AbstractField.extend({
         var self = this;
         this.$el.empty();
         _.each(this.nodeOptions, function (val, key) {
-            var $container = $('<div>').addClass('col-xs-3 text-center');
+            var $container = $('<div>').addClass('col-3 text-center');
             var $img = $('<img>')
                 .addClass('img img-fluid img-thumbnail ml16')
                 .toggleClass('btn-info', key === self.value)

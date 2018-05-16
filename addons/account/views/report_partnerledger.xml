@@ -11,15 +11,15 @@
                     <h2>Partner Ledger</h2>
 
                     <div class="row">
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Company:</strong>
                             <p t-esc="res_company.name"/>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <t t-if="data['form']['date_from']"><strong>Date from :</strong> <span t-esc="data['form']['date_from']"/><br/></t>
                             <t t-if="data['form']['date_to']"><strong>Date to :</strong> <span t-esc="data['form']['date_to']"/></t>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-3">
                             <strong>Target Moves:</strong>
                             <p t-if="data['form']['target_move'] == 'all'">All Entries</p>
                             <p t-if="data['form']['target_move'] == 'posted'">All Posted Entries</p>

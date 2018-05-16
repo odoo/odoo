@@ -31,7 +31,7 @@
                 <t t-if='len(atts)'>
                     <h3 class="text-center mb32">Specifications for <t t-esc="product.name"/></h3>
                     <div class="row">
-                        <div class='col-md-8 col-md-offset-2' id='product_specifications'>
+                        <div class='col-lg-8 offset-lg-2' id='product_specifications'>
                             <table class='table table-striped table-condensed table-hover'>
                                 <t t-foreach="atts.keys()" t-as="spec">
                                     <t t-if="len(atts.keys())&gt;1">
@@ -122,10 +122,10 @@
 
     <template id="product_product" name="Comparator - Product row in comparator popover">
         <div class="row mt8 o_product_row" t-att-data-category_ids="product.public_categ_ids.ids">
-            <div class="col-sm-3 col-xs-3 mb8">
+            <div class="col-md-3 col-3 mb8">
                 <img class="img img-fluid" t-attf-src="/web/image/product.product/#{product.id}/image_small" style="max-height: 50px;" alt="Product image"/>
             </div>
-            <div class="col-sm-7 col-xs-7 mb8 text-left">
+            <div class="col-md-7 col-7 mb8 text-left">
                 <h5>
                     <strong><a t-attf-href="/shop/product/#{product.product_tmpl_id[0].id}"><t t-esc="product.display_name" /></a></strong>
                 </h5>
@@ -138,7 +138,7 @@
                     </strong>
                 </h5>
             </div>
-            <div class="col-sm-1 col-xs-1 mt32">
+            <div class="col-md-1 col-1 mt32">
                 <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
                     <i class="fa fa-trash" role="img" aria-label="Remove"></i>
                 </a>

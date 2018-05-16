@@ -210,11 +210,11 @@
     <xpath expr="//footer" position="inside">
         <div class="container o_footer_copyright">
             <div class="row">
-                <div class="col-md-6 text-muted text-center-xs">
+                <div class="col-lg-6 text-muted text-center-xs">
                     <span>Copyright &amp;copy;</span> <span t-field="res_company.name" itemprop="name">Company name</span>
                     <t t-call="website.language_selector"/>
                 </div>
-                <div class="col-md-6 text-right o_not_editable" t-if="not editable">
+                <div class="col-lg-6 text-right o_not_editable" t-if="not editable">
                     <t t-call="website.brand_promotion"/>
                 </div>
             </div>
@@ -268,13 +268,13 @@
             <section class="s_text_block pt16 pb8">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>Our Products &amp; Services</h4>
                             <ul class="list-unstyled">
                                 <li><a href="/">Home</a></li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>Connect with us</h4>
                             <ul class="list-unstyled">
                                 <li><a href="/contactus">Contact us</a></li>
@@ -290,7 +290,7 @@
                                 <a t-if="website.social_github" t-att-href="website.social_github" class="btn btn-xs btn-link"><i class="fa fa-2x fa-github"/></a>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-lg-4">
                             <h4>
                                 <span t-field="res_company.name"/>
                                 <small> - <a href="/aboutus">About us</a></small>
@@ -744,11 +744,11 @@
                         </header>
                         <main class="modal-body">
                             <div class="form-group mb0">
-                                <label for="page-name" class="col-sm-9">
+                                <label for="page-name" class="col-md-9">
                                     <p>The selected templates will be reset to their factory settings.</p>
                                     <p>Type '<i class="confirm_word">yes</i>' in the box below if you want to confirm.</p>
                                 </label>
-                                <div class="col-sm-3 mt16">
+                                <div class="col-md-3 mt16">
                                     <input type="text" class="form-control" required="required" placeholder="yes"/>
                                 </div>
                             </div>
@@ -911,10 +911,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <tr class="active">
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
-                      <th class="col-sm-3 col-md-2"></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="col-lg-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
+                      <th class="col-md-3 col-lg-2"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">

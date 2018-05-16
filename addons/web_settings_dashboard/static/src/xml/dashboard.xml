@@ -5,16 +5,16 @@
         <div class="container-fluid o_web_settings_dashboard">
             <div class="row">
                 <div class="o_web_settings_dashboard_enterprise"/>
-                <div class="col-sm-12 o_web_settings_dashboard_container" >
-                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                <div class="col-md-12 o_web_settings_dashboard_container" >
+                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
                         <div class="text-center o_web_settings_dashboard_apps"></div>
                         <div class="text-center o_web_settings_dashboard_translations"></div>
                     </div>
-                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
                         <div class="text-center o_web_settings_dashboard_invitations"></div>
                         <div class="text-center o_web_settings_dashboard_company"></div>
                     </div>
-                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                   <div class="col-xl-4 col-lg-4 col-md-12 col-12 o_web_settings_dashboard_col">
                         <div class="text-center o_web_settings_dashboard_share"></div>
                     </div>
                 </div>
@@ -102,9 +102,9 @@
                 </small>
             </div>
             <div class="row mt16">
-                <div class="col-xs-4"><a href="#" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
-                <div class="col-xs-4"><a href="#" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
-                <div class="col-xs-4"><a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+                <div class="col-4"><a href="#" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
+                <div class="col-4"><a href="#" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
+                <div class="col-4"><a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
             </div>
             <hr/>
             <t t-set="server_version" t-value="widget.data.server_version"/>
@@ -129,7 +129,7 @@
             </div>
             <hr/>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-lg-12">
                     <a t-if="debug != true" class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
                     <br t-if="debug != true"/>
                     <a t-if="debug != 'assets'" class="oe_activate_debug_mode pull-right" href="?debug=assets" >Activate the developer mode (with assets)</a>

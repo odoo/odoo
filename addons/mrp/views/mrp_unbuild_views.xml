@@ -78,10 +78,10 @@
                                     <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-8 text-muted">
+                                    <div class="col-8 text-muted">
                                         <span><t t-esc="record.product_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-4">
+                                    <div class="col-4">
                                         <span class="pull-right text-right">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
                                         </span>

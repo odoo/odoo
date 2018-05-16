@@ -152,7 +152,7 @@ class HardwareScreen(web.Home):
                     <div hidden class="shadow"></div>
                     <div class="container">
                     <div class="row">
-                        <div class="col-md-4 col-md-offset-4">
+                        <div class="col-lg-4 offset-lg-4">
                             <h1>Odoo Point of Sale</h1>
                             <h2>POSBox Client display</h2>
                             <h3>My IPs</h3>

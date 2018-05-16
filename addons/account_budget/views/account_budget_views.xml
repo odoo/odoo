@@ -182,12 +182,12 @@ Budgets
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="row mb4">
-                                <div class="col-xs-8">
+                                <div class="col-8">
                                     <strong>
                                         <field name="name"/>
                                     </strong>
                                 </div>
-                                <div class="col-xs-4">
+                                <div class="col-4">
                                     <span class="pull-right">
                                         <field name="state" widget="kanban_label_selection"
                                                options="{'classes': {'draft': 'default', 'done': 'success'}}"/>
@@ -195,12 +195,12 @@ Budgets
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-10">
+                                <div class="col-10">
                                     <i class="fa fa-clock-o" role="img" aria-label="Period" title="Period"/>
                                     <t t-esc="record.date_from.value"/>-
                                     <t t-esc="record.date_to.value"/>
                                 </div>
-                                <div class="col-xs-2">
+                                <div class="col-2">
                                     <span class="pull-right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                              t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24"

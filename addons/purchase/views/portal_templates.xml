@@ -71,7 +71,7 @@
           <div class="panel panel-default">
             <div class="panel-heading">
               <div class="row">
-                <div class="col-md-12">
+                <div class="col-lg-12">
                   <h4>
                     Purchase Order
                     <span t-esc="order.name"/>
@@ -84,34 +84,34 @@
                   <strong>Date:</strong> <span t-field="order.date_order" t-options='{"widget": "date"}'/>
               </div>
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-lg-6">
                   <strong>Product</strong>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-lg-2 text-right">
                   <strong>Unit Price</strong>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-lg-2 text-right">
                   <strong>Quantity</strong>
                 </div>
-                <div class="col-md-2 text-right">
+                <div class="col-lg-2 text-right">
                   <strong>Subtotal</strong>
                 </div>
               </div>
               <t t-foreach="order.order_line" t-as="ol">
                 <div class="row purchases_vertical_align">
-                  <div class="col-md-1 text-center">
+                  <div class="col-lg-1 text-center">
                       <img t-att-src="'/web/image/purchase.order.line/%s/product_image/48x48' % ol.id" alt="Product"/>
                   </div>
-                  <div id='product_name' class="col-md-5">
+                  <div id='product_name' class="col-lg-5">
                     <span t-esc="ol.product_id.name"/>
                   </div>
-                  <div class="col-md-2 text-right">
+                  <div class="col-lg-2 text-right">
                     <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                   </div>
-                  <div class="col-md-2 text-right">
+                  <div class="col-lg-2 text-right">
                       <span t-esc="ol.product_qty"/>
                   </div>
-                  <div class="col-md-2 text-right">
+                  <div class="col-lg-2 text-right">
                     <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                   </div>
                 </div>
@@ -120,28 +120,28 @@
               <hr/>
 
               <div class="row">
-                <div class="col-md-12 text-right">
+                <div class="col-lg-12 text-right">
                   <div class="row">
-                    <div class="col-md-10 text-right">
+                    <div class="col-lg-10 text-right">
                       Untaxed Amount:
                     </div>
-                    <div class="col-md-2 text-right">
+                    <div class="col-lg-2 text-right">
                       <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-10 text-right">
+                    <div class="col-lg-10 text-right">
                       Taxes:
                     </div>
-                    <div class="col-md-2 text-right">
+                    <div class="col-lg-2 text-right">
                       <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-10 text-right">
+                    <div class="col-lg-10 text-right">
                       <strong>Total:</strong>
                     </div>
-                    <div class="col-md-2 text-right">
+                    <div class="col-lg-2 text-right">
                       <strong><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/></strong>
                     </div>
                   </div>

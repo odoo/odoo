@@ -6,12 +6,12 @@
             <div class="page">
                 <h3><strong>Payment Receipt: <span t-field="o.name"/></strong></h3>
                 <div class="row mt64">
-                    <div class="col-xs-6" t-if="o.payment_date">
+                    <div class="col-6" t-if="o.payment_date">
                         <strong>Payment Date: </strong> <span t-field="o.payment_date"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-6" t-if="o.partner_type">
+                    <div class="col-6" t-if="o.partner_type">
                         <t t-if="o.partner_type == 'customer'">
                             <strong>Customer: </strong>
                         </t>
@@ -19,15 +19,15 @@
                             <strong>Vendor: </strong>
                         </t><span t-field="o.partner_id"/>
                     </div>
-                    <div class="col-xs-6" t-if="o.payment_method_id">
+                    <div class="col-6" t-if="o.payment_method_id">
                         <strong>Payment Method: </strong><span t-field="o.payment_method_id.name"/>
                     </div>
                 </div>
                 <div class="row mb64">
-                    <div class="col-xs-6" t-if="o.amount">
+                    <div class="col-6" t-if="o.amount">
                         <strong>Payment Amount: </strong><span t-field="o.amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                      </div>
-                    <div class="col-xs-6" t-if="o.communication">
+                    <div class="col-6" t-if="o.communication">
                         <strong>Memo: </strong><span t-field="o.communication"/>
                      </div>
                 </div>
