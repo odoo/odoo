@@ -40,6 +40,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
+    // compute price if there is only one delivery method.
+    if ($carriers.length === 1) {
+        $carriers.click();
+    }
 
     /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {
