@@ -654,7 +654,10 @@ class AccountInvoice(models.Model):
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref('account.email_template_edi_invoice', False)
+        if self.type == 'out_refund':
+            template = self.env.ref('account.email_credit_note', False)
+        else:
+            template = self.env.ref('account.email_template_edi_invoice', False)
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', False)
         ctx = dict(
             default_model='account.invoice',
