@@ -6,12 +6,13 @@
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
     'description': "",
-    'depends': ['website', 'sale_payment', 'website_payment', 'website_mail', 'website_form', 'website_rating'],
+    'depends': ['website', 'sale_payment', 'website_payment', 'website_mail', 'website_form', 'website_rating', 'digest'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_sale.xml',
         'data/data.xml',
         'data/mail_template_data.xml',
+        'data/digest_data.xml',
         'views/product_views.xml',
         'views/account_views.xml',
         'views/sale_report_views.xml',
@@ -20,6 +21,7 @@
         'views/templates.xml',
         'views/snippets.xml',
         'views/res_config_settings_views.xml',
+        'views/digest_views.xml',
     ],
     'demo': [
         'data/demo.xml',
