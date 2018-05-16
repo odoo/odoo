@@ -4100,10 +4100,20 @@ var BasicModel = AbstractModel.extend({
                 var r2 = self.localData[record2ID];
                 var data1 = _.extend({}, r1.data, r1._changes);
                 var data2 = _.extend({}, r2.data, r2._changes);
-                if (data1[order.name] < data2[order.name]) {
+
+                // Default value to sort against: the value of the field
+                var orderData1 = data1[order.name];
+                var orderData2 = data2[order.name];
+
+                // If the field is a relation, sort on the display_name of those records
+                if (list.fields[order.name].type === 'many2one') {
+                    orderData1 = orderData1 ? self.localData[orderData1].data.display_name : "";
+                    orderData2 = orderData2 ? self.localData[orderData2].data.display_name : "";
+                }
+                if (orderData1 < orderData2) {
                     return order.asc ? -1 : 1;
                 }
-                if (data1[order.name] > data2[order.name]) {
+                if (orderData1 > orderData2) {
                     return order.asc ? 1 : -1;
                 }
                 return compareRecords(record1ID, record2ID, level + 1);
