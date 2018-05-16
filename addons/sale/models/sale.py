@@ -1134,10 +1134,7 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        name = product.name_get()[0][1]
-        if product.description_sale:
-            name += '\n' + product.description_sale
-        vals['name'] = name
+        vals['name'] = self._get_default_name_based_on_product(product)
 
         self._compute_tax_id()
 
@@ -1264,3 +1261,9 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
+
+    def _get_default_name_based_on_product(self, product):
+        """ compute a default name for this sale order line, based on its product
+        this method exists so it can be overridden in other modules to change how the default name is computed
+        """
+        return product.get_default_name_for_sale_order()

@@ -251,9 +251,7 @@ class SaleOrderOption(models.Model):
         product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
         self.price_unit = product.list_price
         self.website_description = product.quote_description or product.website_description
-        self.name = product.name
-        if product.description_sale:
-            self.name += '\n' + product.description_sale
+        self.name = product.get_default_name_for_sale_order()
         self.uom_id = self.uom_id or product.uom_id
         pricelist = self.order_id.pricelist_id
         if pricelist and product:

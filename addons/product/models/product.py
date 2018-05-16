@@ -532,7 +532,6 @@ class ProductProduct(models.Model):
 
         return prices
 
-
     # compatibility to remove after v10 - DEPRECATED
     @api.multi
     def price_get(self, ptype='list_price'):
@@ -563,6 +562,14 @@ class ProductProduct(models.Model):
             empty_list_help_document_name=_("product"),
         )
         return super(ProductProduct, self).get_empty_list_help(help)
+
+    def get_default_name_for_sale_order(self):
+        """ compute a default name to be used on a sale order line referencing this product
+        """
+        name = self.display_name
+        if self.description_sale:
+            name += '\n' + self.description_sale
+        return name
 
 
 class ProductPackaging(models.Model):
