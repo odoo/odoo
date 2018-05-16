@@ -50,6 +50,7 @@ class SalesOrderLine(models.Model):
     def unlink(self):
         # Due to delivery_set and delivery_unset methods that are called everywhere, don't unlink
         # reward lines if it's a free shipping
+        self = self.exists()
         orders = self.mapped('order_id')
         applied_programs = orders.mapped('no_code_promo_program_ids') + \
                            orders.mapped('code_promo_program_id') + \
