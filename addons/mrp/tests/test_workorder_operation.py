@@ -235,7 +235,7 @@ class TestWorkOrderProcess(common.TransactionCase):
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
         unit = self.ref("product.product_uom_unit")
-        custom_laptop = self.env.ref("product.product_product_27")
+        custom_laptop = self.env.ref("product.product_product_25")
         custom_laptop.tracking = 'lot'
 
         # Create new product charger and keybord

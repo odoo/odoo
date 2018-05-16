@@ -412,17 +412,17 @@
             <field name="default_code">E-COM94</field>
         </record>
 
-        <record id="product.product_product_27" model="product.product">
+        <record id="product.product_product_25" model="product.product">
             <field name="tracking">lot</field>
         </record>
 
         <record id="lot_product_27_0" model="stock.production.lot">
             <field name="name">0000000000030</field>
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
         </record>
         <record id="lot_product_27_1" model="stock.production.lot">
             <field name="name">0000000000031</field>
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
         </record>
         <record id="lot_product_laptop_charger" model="stock.production.lot">
             <field name="name">0000000000032</field>
@@ -436,11 +436,11 @@
         <record id="stock_inventory_product_27" model="stock.inventory">
             <field name="name">Inventory for laptop customized</field>
             <field name="filter">product</field>
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
         </record>
 
         <record id="stock_inventory_product_27_lot0" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_product_27"/>
             <field name="product_qty">50</field>
@@ -449,7 +449,7 @@
         </record>
 
         <record id="stock_inventory_product_27_lot1" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_product_27"/>
             <field name="product_qty">40</field>
@@ -485,7 +485,7 @@
         </record>
 
         <record id="mrp_bom_laptop_cust" model="mrp.bom">
-            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_tmpl_id" ref="product.product_product_25_product_template"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">1</field>
         </record>
@@ -505,7 +505,7 @@
         </record>
 
         <record id="mrp_bom_laptop_cust_rout" model="mrp.bom">
-            <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
+            <field name="product_tmpl_id" ref="product.product_product_25_product_template"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="routing_id" ref="mrp_routing_1"/>
@@ -525,11 +525,11 @@
             <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
         </record>
 
-        <record id="product.product_product_27" model="product.product">
+        <record id="product.product_product_25" model="product.product">
             <field name="type">product</field>
         </record>
         <record id="mrp_production_laptop_cust" model="mrp.production">
-            <field name="product_id" ref="product.product_product_27"/>
+            <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>
             <field name="product_qty">5</field>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
