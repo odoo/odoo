@@ -74,7 +74,7 @@
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
             <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
-            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Your Details</li>
+            <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
 
@@ -113,7 +113,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h4>Your Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
+                                    <h4>Details <a role="button" href="/my/account" class="btn btn-sm btn-link"><i class="fa fa-pencil"/> Edit</a></h4>
                                     <hr class="mt-1 mb-0"/>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
@@ -147,7 +147,7 @@
             <t t-set="my_details" t-value="True"/>
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                <h3>Your Documents</h3>
+                <h3>Documents</h3>
                 <div class="o_portal_docs list-group">
                 </div>
             </div>
@@ -350,8 +350,7 @@
 
     <template id="portal_my_details">
         <t t-call="portal.portal_layout">
-            <t t-set="additional_title">Your Contact Details</t>
-            <h3>Your Details</h3>
+            <t t-set="additional_title">Contact Details</t>
             <form action="/my/account" method="post">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="row o_portal_details">
@@ -363,7 +362,7 @@
                               </div>
                             </div>
                             <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">
-                                <label class="col-form-label" for="name">Your Name</label>
+                                <label class="col-form-label" for="name">Name</label>
                                 <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="name or partner.name" />
                             </div>
                             <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">

@@ -187,10 +187,10 @@
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'lead' or lead" t-attf-class="breadcrumb-item #{'active ' if not lead else ''}">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
-                    My Leads
+                    Leads
                 </a>
                 <t t-else="">
-                    My Leads
+                    Leads
                 </t>
             </li>
             <li t-if="lead" class="breadcrumb-item active">
@@ -198,10 +198,10 @@
             </li>
             <li t-if="page_name == 'opportunity' or opportunity" t-attf-class="breadcrumb-item #{'active ' if not opportunity else ''}">
                 <a t-if="opportunity" t-attf-href="/my/opportunities?{{ keep_query() }}">
-                    My Opportunities
+                    Opportunities
                 </a>
                 <t t-else="">
-                    My Opportunities
+                    Opportunities
                 </t>
             </li>
             <li t-if="opportunity" class="breadcrumb-item active">
@@ -213,12 +213,12 @@
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-if="lead_count" t-call="portal.portal_docs_entry">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
                 <t t-set="count" t-value="lead_count"/>
             </t>
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="count" t-value="opp_count"/>
             </t>
@@ -227,8 +227,10 @@
 
     <template id="portal_my_leads" name="My Leads">
         <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Leads</t>
+                <t t-set="title">Leads</t>
             </t>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
@@ -259,7 +261,7 @@
             <t t-set="breadcrumbs_searchbar" t-value="True"/>
 
             <t t-call="portal.portal_searchbar">
-                <t t-set="title">My Opportunities</t>
+                <t t-set="title">Opportunities</t>
 
                 <div class="form-inline ml-lg-4" t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-success btn-sm" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
