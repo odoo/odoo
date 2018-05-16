@@ -9,7 +9,7 @@
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
-                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li><a href="/my/home"><i class="fa fa-home" aria-label="Home" title="Home"/></a></li>
                                 <li>Payment Methods</li>
                             </ol>
                         </div>
@@ -98,7 +98,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
-                                    <a t-attf-class="btn btn-#{status} pull-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
+                                    <a t-attf-class="btn btn-#{status} pull-right" href="/my/home"><span class="fa fa-arrow-circle-right"> Back to My Account</span></a>
                                 </div>
                                 <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
                                     <span t-field="tx.acquirer_id.image_small" t-att-title="tx.acquirer_id.name" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>

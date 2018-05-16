@@ -42,10 +42,10 @@
                                     <strong class="o_kanban_record_title"><field name="name"/></strong>
                                     <div>
                                         <p>
-                                            <i class="fa fa-user"></i>
+                                            <i class="fa fa-user" aria-label="User" title="User"></i>
                                             <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
                                             <br/>
-                                            <i class="fa fa-comments"></i>
+                                            <i class="fa fa-comments" aria-label="Comments" title="Comments"></i>
                                             <t t-esc="record.nbr_channel.raw_value"/> Sessions
                                             <div>
                                                 <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
@@ -106,7 +106,7 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div>
-                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right" aria-label="Delete"/>
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right" aria-label="Delete" title="Delete"/>
                                                 <div class="o_kanban_image">
                                                     <img t-att-src="kanban_image('res.users', 'image', record.id.raw_value)" alt="User"/>
                                                 </div>

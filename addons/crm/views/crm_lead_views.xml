@@ -324,7 +324,7 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -350,7 +350,7 @@
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
                                             <t t-if="record.message_needaction_counter.raw_value">
-                                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                             </t>
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>

@@ -4,7 +4,7 @@
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
         <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
-            <span class="fa fa-clock-o fa-lg fa-fw" t-att-title="widget.selection[widget.activity_state]"/>
+            <span class="fa fa-clock-o fa-lg fa-fw" t-att-title="widget.selection[widget.activity_state]" t-att-aria-label="widget.selection[widget.activity_state]"/>
         </a>
         <ul class="dropdown-menu o_activity" role="menu">
         </ul>
@@ -13,7 +13,7 @@
 
 <t t-name="mail.KanbanActivityLoading">
     <li class="text-center o_no_activity">
-        <span class="fa fa-spinner fa-spin fa-2x" />
+        <span class="fa fa-spinner fa-spin fa-2x" aria-label="Loading..." title="Loading..."/>
     </li>
 </t>
 
@@ -32,15 +32,15 @@
                 </li>
                 <li t-foreach="logs" t-as="log" t-att-data-activity-id="log.id" class="o_schedule_activity">
                     <div class="o_activity_title pull-left">
-                        <span t-attf-class="fa #{log.icon} fa-fw" />
+                        <span t-attf-class="fa #{log.icon} fa-fw" aria-label="Log" title="Log"/>
                         <strong>
                             <t t-esc="log.title_action or log.activity_type_id[1]" />
                         </strong>
                         <div>
-                            <span class="fa fa-clock-o fa-fw" />
+                            <span class="fa fa-clock-o fa-fw" aria-label="Deadline" title="Deadline"/>
                             <span t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></span>
                             <t t-if="log.user_id[0] != uid">
-                                <span class="ml4 fa fa-user" />
+                                <span class="ml4 fa fa-user" aria-label="User" title="User"/>
                                 <span><t t-esc="log.user_id[1]" /></span>
                             </t>
                         </div>
@@ -54,7 +54,7 @@
     </li>
     <li class="o_schedule_activity text-center">
         <span class="btn btn-link btn-block">
-            <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
+            <i class="fa fa-plus fa-fw" aria-label="Add" title="Add"></i><strong>Schedule an activity</strong>
         </span>
     </li>
 </t>

@@ -43,8 +43,9 @@
             <li class="divider hidden"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li id="my_cart" t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
                 <a href="/shop/cart">
-                    <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+                    <span class="fa fa-shopping-cart">
+                        My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+                    </span>
                 </a>
             </li>
         </xpath>
@@ -141,12 +142,12 @@
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
-                <a class="btn btn-default btn-xs a-submit">
+                <a class="btn btn-default btn-xs a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
             <t t-if="len(product.product_variant_ids) &gt; 1">
-                <a class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))">
+                <a class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -301,7 +302,9 @@
 
     <template id="option_collapse_categories_recursive" name="Collapse Category Recursive">
         <li t-att-class="'active' if categ.id == int(category or 0) else None">
-            <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}" />
+            <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}"
+               t-attf-title="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
+               t-attf-aria-label="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"/>
             <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-field="categ.name"></a>
             <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
                 <t t-foreach="categ.child_id" t-as="categ">
@@ -436,10 +439,10 @@
 
                                 <t t-if="len(image_ids) or variant_img">
                                     <a class="carousel-control left" href="#o-carousel-product" role="button" data-slide="prev" >
-                                        <span class="fa fa-chevron-left" aria-label="Previous"/>
+                                        <span class="fa fa-chevron-left" aria-label="Previous" title="Previous"/>
                                     </a>
                                     <a class="carousel-control right" href="#o-carousel-product" role="button" data-slide="next">
-                                        <span class="fa fa-chevron-right" aria-label="Next"/>
+                                        <span class="fa fa-chevron-right" aria-label="Next" title="Next"/>
                                     </a>
                                 </t>
                               </div>
@@ -577,11 +580,11 @@
     <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
       <xpath expr="//a[@id='add_to_cart']" position="before">
         <div class="css_quantity input-group oe_website_spinner" contenteditable="false">
-            <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+            <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" aria-label="Remove one" title="Remove one">
                 <i class="fa fa-minus"></i>
             </a>
             <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
-            <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+            <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" aria-label="Add one" title="Add one">
                 <i class="fa fa-plus"></i>
             </a>
         </div>
@@ -776,8 +779,8 @@
                                             <div class="col-md-3 col-sm-4">
                                             </div>
                                             <div class="col-md-9 col-sm-8">
-                                                <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" /> Previous</a>
-                                                <a class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" > Previous</span></a>
+                                                <a class="fa fa-chevron-suffix-right btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next</a>
                                             </div>
                                         </div>
                                     </form>
@@ -842,11 +845,11 @@
                         </td>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group oe_website_spinner">
-                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
+                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs" aria-label="Remove one" title="Remove one">
                                     <i class="fa fa-minus"></i>
                                 </a>
                                 <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
+                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs" aria-label="Add one" title="Add one">
                                     <i class="fa fa-plus"></i>
                                 </a>
                             </div>
@@ -859,7 +862,7 @@
                             <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" groups="sale.group_show_price_total" />
                         </td>
                         <td class="td-action">
-                            <a href='#' class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i></small></a>
+                            <a href='#' aria-label="Remove from cart" title="Remove from cart" class='js_delete_product no-decoration'> <small><i class='fa fa-trash-o'></i></small></a>
                         </td>
                     </tr>
                 </t>
@@ -898,12 +901,10 @@
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
                                     <a href="/shop" class="btn btn-default mb32 hidden-xs hidden-sm hidden-md">
-                                        <span class="fa fa-chevron-left" />
-                                        <span class="">Continue Shopping</span>
+                                        <span class="fa fa-chevron-left">Continue Shopping</span>
                                     </a>
                                     <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
-                                        <span class="">Process Checkout</span>
-                                        <span class="fa fa-chevron-right" />
+                                        <span class="fa fa-chevron-suffix-right">Process Checkout</span>
                                     </a>
                                     <div class="oe_structure" />
                                 </div>
@@ -913,12 +914,11 @@
                             <t t-call='website_sale.short_cart_summary'/>
                             <div class='hidden-lg'>
                                 <a href="/shop" class="btn btn-default mb32">
-                                    <span class="fa fa-chevron-left" />
-                                    Continue<span class="hidden-xs"> Shopping</span>
+                                    <span class="fa fa-chevron-left">
+                                    Continue<span class="hidden-xs"> Shopping</span></span>
                                 </a>
                                 <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
-                                    <span class="">Process Checkout</span>
-                                    <span class="fa fa-chevron-right" />
+                                    <span class="fa fa-suffix-chevron-right">Process Checkout</span>
                                 </a>
                             </div>
                         </div>
@@ -1056,7 +1056,7 @@
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                     <a class='a-submit btn btn-default mb16 btn-block'>
-                                                        <i class="fa fa-plus-square"></i> Add an address
+                                                        <span class="fa fa-plus-square"> Add an address</span>
                                                     </a>
                                                 </form>
                                             </div>
@@ -1078,8 +1078,8 @@
                             <div class="clearfix" />
                             <div>
                                 <a href="/shop/cart" class="btn btn-default mb32">
-                                    <span class="fa fa-chevron-left" /> Return to Cart</a>
-                                <a class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-chevron-right" /></a>
+                                    <span class="fa fa-chevron-left" > Return to Cart</span></a>
+                                <a class="btn btn-primary pull-right mb32 " href="/shop/confirm_order"><span class="fa fa-suffix-chevron-right">Confirm</span></a>
                             </div>
                         </div>
                     </div>
@@ -1097,7 +1097,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address"><i class='fa fa-edit'/></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
@@ -1105,7 +1105,7 @@
                 <div class='panel-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
                         <a class="btn btn-block btn-primary">
-                            <i class='fa fa-check'></i> Ship to this address
+                            <span class='fa fa-check'> Ship to this address</span>
                         </a>
                     </span>
                     <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
@@ -1250,10 +1250,10 @@
                                     <div class="clearfix"/>
                                     <div style='padding: 0 15px'>
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
-                                            <span class="fa fa-chevron-left" /> Back
+                                            <span class="fa fa-chevron-left">Back </span>
                                         </a>
                                         <a class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
-                                            <span>Next </span><span class="fa fa-chevron-right" />
+                                            <span class="fa fa-suffix-chevron-right">Next </span>
                                         </a>
                                     </div>
                                 </form>
@@ -1298,7 +1298,7 @@
                                 <div class="panel panel-default">
                                   <div class="panel-headisng"></div>
                                   <div class="panel-body">
-                                    <a class='pull-right no-decoration' href='/shop/checkout'><i class='fa fa-edit'/> Edit</a>
+                                      <a class='pull-right no-decoration' href='/shop/checkout'><span class='fa fa-edit'> Edit</span></a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
@@ -1332,7 +1332,7 @@
                                 <a class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-arrow-right"></i> Add payment acquirers
+                                    <span class="fa fa-arrow-right"> Add payment acquirers</span>
                                 </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
@@ -1340,8 +1340,8 @@
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <a class="btn btn-primary a-submit">
-                                            <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
-                                            <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
+                                            <span class="fa fa-suffix-chevron-right" t-if="order.amount_total &gt; 0">Pay Now </span>
+                                            <span class="fa fa-suffix-chevron-right" t-if="order.amount_total == 0">Confirm Order </span>
                                         </a>
                                     </form>
                                 </div>
@@ -1378,7 +1378,7 @@
             <div class="panel-body row">
                 <div class='toggle_summary col-md-12 hidden-lg'>
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border pull-right'></span>
+                    <span class='fa fa-chevron-down fa-border pull-right' aria-label="Details" title="Details"></span>
                 </div>
 
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">
@@ -1451,7 +1451,7 @@
                             <div class="oe_cart">
                                 <div class="thanks_msg mb32">
                                     <h2>Thank you for your order.
-                                        <a class="btn btn-primary hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>
+                                        <a class="btn btn-primary hidden-xs" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
                                     </h2>
                                 </div>
                                 <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
@@ -1564,7 +1564,7 @@
                     (payment_tx_id.state == 'done' and 'panel-success') or
                     (payment_tx_id.state == 'authorized' and 'panel-success') or
                     'panel-danger')">
-                <a groups="base.group_system" class="btn pull-right" target="_blank"
+                <a groups="base.group_system" class="btn pull-right" target="_blank" aria-label="Edit" title="Edit"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-pencil"></i>
                 </a>
@@ -1603,8 +1603,8 @@
         <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
             <li groups="sales_team.group_sale_manager">
                 <a id="create-new-product" href="#" data-action="new_product">
-                    <i class="fa fa-shopping-cart" />
-                    <p>New Product</p>
+                    <p class="fa fa-shopping-cart">
+                    New Product</p>
                 </a>
             </li>
         </xpath>

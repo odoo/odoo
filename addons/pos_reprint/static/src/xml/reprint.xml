@@ -3,14 +3,13 @@
 
     <t t-name="ReprintButton">
         <div class='control-button js_reprint'>
-            <i class="fa fa-retweet"></i> Reprint Receipt
+            <span class="fa fa-retweet"> Reprint Receipt</span>
         </div>
     </t>
 
     <t t-name="ReprintReceiptScreenWidget" t-extend="ReceiptScreenWidget">
         <t t-jquery="div.top-content" t-operation="inner">
-            <span class='button back'>
-                <i class='fa fa-angle-double-left'></i>
+            <span class='button back fa fa-angle-double-left'>
                 Back
             </span>
         </t>

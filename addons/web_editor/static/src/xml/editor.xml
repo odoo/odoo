@@ -9,8 +9,8 @@
         <div id="web_editor-top-edit">
             <div id="web_editor-toolbars"/>
             <form class="navbar-form text-muted">
-                <button type="button" class="btn btn-sm btn-default" data-action="cancel"><i class="fa fa-times"/> Discard</button>
-                <button type="button" class="btn btn-sm btn-primary" data-action="save"><i class="fa fa-floppy-o"/> Save</button>
+                <button type="button" class="btn btn-sm btn-default fa fa-times" data-action="cancel">Discard</button>
+                <button type="button" class="btn btn-sm btn-primary fa fa-floppy-o" data-action="save">Save</button>
             </form>
         </div>
     </t>
@@ -54,17 +54,17 @@
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
-                        <a class="btn btn-default disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
+                        <a class="btn btn-default disabled" href="#"><span class="fa fa-angle-left">&#32;Previous</span></a>
                     </li>
                     <li class="next">
-                        <a class="btn btn-default disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
+                        <a class="btn btn-default disabled" href="#"><span class="fa fa-suffix-angle-right">Next&#32;</span></a>
                     </li>
                 </ul>
             </li>
             <li class="search pull-right">
                 <div class="form-group">
                     <input class="form-control" id="icon-search" type="search"/>
-                    <span class="fa fa-search"/>
+                    <span class="fa fa-search" title="Search" aria-label="Search"/>
                 </div>
             </li>
         </ul>
@@ -193,7 +193,7 @@
                 <div class="form-group" id="o_video_form_group">
                     <label class="mt8" for="o_video_text">Video code <small class="text-muted">(URL or Embed)</small></label>
                     <textarea class="form-control url" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
-                    <label class="control-label o_validate_feedback" for="o_video_text"><i class="fa fa-check"/><i class="fa fa-exclamation-triangle"/></label>
+                    <label class="control-label o_validate_feedback" for="o_video_text"><i class="fa fa-check" aria-label="Checked" title="Checked"/><i class="fa fa-exclamation-triangle" aria-label="Attention" title="Attention"/></label>
                 </div>
                 <div class="text-right">
                     <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Instagram</i></b>, <b><i>Vine.co</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
@@ -294,7 +294,7 @@
                 <div class="form-group text-center">
                     <label>Preview</label>
                     <div style="overflow: auto; max-width: 100%; max-height: 200px;">
-                        <a href="#" id="link-preview"/>
+                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
                     </div>
                 </div>
             </div>

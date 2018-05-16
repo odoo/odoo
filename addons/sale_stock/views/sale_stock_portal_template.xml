@@ -10,20 +10,20 @@
                     <t t-foreach="order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
                         <t t-set="report_url" t-value="'/my/picking/pdf/%s?%s' % (i.id, keep_query())"/>
                         <div id='picking_info'>
-                            <a t-att-href="report_url"><span class="fa fa-download"/></a>
+                            <a t-att-href="report_url"><span class="fa fa-download" aria-label="Download" title="Download"/></a>
                             <a t-att-href="report_url"><span t-field="i.name"/></a>
                             <span class="text-muted" t-field="i.date" t-options='{"widget": "date"}'/>
                             <t t-if="i.state == 'done'">
-                                <span class="label label-success label-text-align"><i class="fa fa-fw fa-truck"/> Shipped</span>
+                                <span class="label label-success label-text-align"><span class="fa fa-fw fa-truck"> Shipped</span></span>
                             </t>
                             <t t-if="i.state == 'partially_available'">
-                                <span class="label label-warning label-text-align"><i class="fa fa-fw fa-clock-o"/> Partially Available</span>
+                                <span class="label label-warning label-text-align"><span class="fa fa-fw fa-clock-o"> Partially Available</span></span>
                             </t>
                             <t t-if="i.state == 'cancel'">
-                                <span class="label label-danger label-text-align"><i class="fa fa-fw fa-times"/> Cancelled</span>
+                                <span class="label label-danger label-text-align"><span class="fa fa-fw fa-times"> Cancelled</span></span>
                             </t>
                             <t t-if="i.state in ['draft', 'waiting', 'confirmed', 'assigned']">
-                                <span class="label label-info label-text-align"><i class="fa fa-fw fa-clock-o"/> Preparation</span>
+                                <span class="label label-info label-text-align"><span class="fa fa-fw fa-clock-o"> Preparation</span></span>
                             </t>
                         </div>
                     </t>

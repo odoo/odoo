@@ -118,14 +118,14 @@
     <div t-attf-class="o_notification #{widget.className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
         <div class="o_notification_title">
-            <span t-attf-class="o_icon fa fa-3x #{widget.icon}"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
             <t t-raw="widget.title"/>
         </div>
         <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
         <div t-if="widget.buttons.length" class="o_buttons">
             <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-default'}" type="button">
                 <t t-if="button.icon">
-                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" t-att-aria-label="button.name"/>
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" t-att-aria-label="button.name" t-att-title="button.name"/>
                     <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                 </t>
                 <span><t t-esc="button.text"/></span>
@@ -144,7 +144,7 @@
 <div t-name="CrashManager.error" class="o_dialog_error">
     <div class="alert alert-warning clearfix" role="alert">
         <button class="btn btn-sm btn-primary pull-right ml8 o_clipboard_button">
-            <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
+            <span class="fa fa-clipboard mr8">Copy the full error to clipboard</span>
         </button>
         <p><b>An error occurred</b></p>
         <p>Please use the copy button to report the error to your support service.</p>
@@ -206,7 +206,7 @@
     <t t-foreach="views" t-as="view">
         <button type="button" t-att-accesskey="view.accessKey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
-            t-att-aria-label="view.type"
+            t-att-aria-label="view.label"
             t-att-data-view-type="view.type" t-att-title="view.label" tabindex="-1"/>
     </t>
 </t>
@@ -591,12 +591,12 @@
 </t>
 <t t-name="FieldDomain.content">
     <div t-if="hasModel" class="o_field_domain_panel">
-        <i class="fa fa-arrow-right"/>
+        <i class="fa fa-arrow-right" aria-label="Domain" title="Domain"/>
 
         <button t-if="isValid" class="btn btn-xs btn-default o_domain_show_selection_button" type="button">
             <t t-esc="nbRecords"/> record(s)
         </button>
-        <span t-else="" class="text-warning"><i class="fa fa-exclamation-triangle"/> Invalid domain</span>
+        <span t-else="" class="text-warning"><i class="fa fa-exclamation-triangle" aria-label="Warning" title="Warning"/> Invalid domain</span>
 
         <button t-if="inDialogEdit" class="btn btn-xs btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
@@ -630,7 +630,7 @@
 <div t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
     <t t-if="widget.children.length === 0">
         <span>Match <strong>all records</strong></span>
-        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><span class="fa fa-plus"> Add filter</span></button>
     </t>
     <t t-else="">
         <div class="o_domain_tree_header">
@@ -686,12 +686,12 @@
                 <t t-if="_.contains(['in', 'not in'], widget.operator)">
                     <div class="o_domain_leaf_value_input">
                         <span class="badge" t-foreach="widget.displayValue" t-as="val">
-                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val"/>
+                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" aria-label="Remove tag" title="Remove tag"/>
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
                         <input placeholder="Add new value" type="text" class="o_input"/>
-                        <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"/>
+                        <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag"/>
                     </div>
                 </t>
                 <t t-else="">
@@ -746,7 +746,7 @@
 <t t-name="ModelFieldSelector.value">
     <t t-foreach="chain" t-as="fieldName">
         <t t-if="fieldName_index > 0">
-            <i class="fa fa-chevron-right"/>
+            <i class="fa fa-chevron-right" aria-label="Followed by" title="Followed by"/>
         </t>
         <span class="o_field_selector_chain_part">
             <t t-set="fieldInfo" t-value="_.findWhere(pages[fieldName_index], {'name': fieldName})"/>
@@ -761,7 +761,7 @@
             t-att-data-name="line.name">
             <t t-esc="line.string"/>
             <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
-            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon"/>
+            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" aria-label="Relation to follow" title="Relation to follow"/>
         </li>
     </t>
 </ul>
@@ -814,7 +814,7 @@
                 t-att-id="widget.idForLabel"/>
             <span class="o_dropdown_button" draggable="false"/>
         </div>
-        <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
+        <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false" aria-label="External link" title="External link"/>
     </div>
 </t>
 <t t-name="FieldReference" t-extend="FieldMany2One">
@@ -986,7 +986,7 @@
 <div t-name="FieldBinaryFileUploader" t-attf-class="oe_fileupload #{widget.attrs.class ? widget.attrs.class :''}">
     <div class="oe_placeholder_files"/>
     <div t-if="widget.mode !== 'readonly'" class="oe_add">
-        <button class="btn btn-default o_attach"><span class="fa fa-paperclip"/> <t t-esc="widget.string"/></button>
+        <button class="btn btn-default o_attach" title="Attach"><span class="fa fa-paperclip" aria-label="Attach"/> <t t-esc="widget.string"/></button>
         <t t-call="HiddenInputFile">
             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
@@ -1020,7 +1020,7 @@
         <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
             <div>Uploading...</div>
             <a t-att-title="file.name" t-att-aria-label="file.name" t-att-name="file.name" class="o_image">
-                <i class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
+                <i class="fa fa-spinner fa-spin fa-5x fa-fw" aria-label="Loading, please wait..." title="Loading, please wait..."></i>
             </a>
             <div><t t-esc="file.name"/></div>
         </div>
@@ -1124,7 +1124,7 @@
         <t t-esc="widget.model.get('category')"/>
     </span>
     <div class="o_facet_values"/>
-    <div class="fa fa-sm fa-remove o_facet_remove"/>
+    <div class="fa fa-sm fa-remove o_facet_remove" aria-label="Remove" title="Remove"/>
 </div>
 <span t-name="SearchView.FacetView.Value">
     <t t-esc="widget.model.get('label') + (widget.intervalLabel ? (': ' + widget.intervalLabel) : '')"/>
@@ -1211,7 +1211,7 @@
                     </option>
                 </t>
             </select>
-            <span class="o_searchview_extended_delete_prop fa fa-trash-o"/>
+            <span class="o_searchview_extended_delete_prop fa fa-trash-o" aria-label="Delete" title="Delete"/>
         </span>
         <select class="o_input o_searchview_extended_prop_op"/>
         <span class="o_searchview_extended_prop_value"/>
@@ -1233,7 +1233,7 @@
 </t>
 
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1" aria-label="Favorites" title="Favorites">
         <span class="fa fa-star"/> Favorites <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">
@@ -1249,7 +1249,7 @@
             <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Use by default</span>
         </li>
         <li class="o_save_name">
-            <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Share with all users </span><span class="fa fa-users"/>
+            <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Share with all users </span><span class="fa fa-users" aria-label="Users" title="Users"/>
         </li>
         <li class="o_save_name">
             <button type="button" class="btn btn-primary btn-sm">Save</button>
@@ -1310,7 +1310,7 @@
     class="o_export_tree_item"
     tabindex="-1"> <!-- tabindex make the div focusable -->
     <span t-if="field.children &amp;&amp; (field.id).split('/').length != 3"
-          class="o_expand_parent fa fa-plus"/>
+          class="o_expand_parent fa fa-plus" aria-label="Expand parents" title="Expand parents"/>
     <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
 </div>
 <t t-name="Export.SaveList">
@@ -1337,7 +1337,7 @@
     </div>
 </t>
 <t t-name="Spinner">
-    <div class="o_spinner"><i class="fa fa-spinner fa-spin"/></div>
+    <div class="o_spinner"><i class="fa fa-spinner fa-spin" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
 </t>
 <t t-name="M2ODialog">
     <div>
@@ -1377,8 +1377,8 @@
             <t t-set="att_prev" t-value="{'accesskey': 'p'}" />
             <t t-set="att_next" t-value="{'accesskey': 'n'}" />
         </t>
-        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev" aria-label="Previous" tabindex="-1"/>
-        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next" aria-label="Next" tabindex="-1"/>
+        <button type="button" class="fa fa-chevron-left btn btn-icon o_pager_previous" t-att="att_prev" aria-label="Previous" title="Next" tabindex="-1"/>
+        <button type="button" class="fa fa-chevron-right btn btn-icon o_pager_next" t-att="att_next" aria-label="Next" title="Next" tabindex="-1"/>
     </span>
 </div>
 
@@ -1428,7 +1428,7 @@
 
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
-        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#" aria-label="Dropdown menu" title="Dropdown menu">
             <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/> <span class="caret"/>
         </a>
         <ul class="dropdown-menu" role="menu"/>
@@ -1440,12 +1440,12 @@
         <div class="col-xs-6">
             Get this feature and much more with Odoo Enterprise!
             <ul class="list-unstyled">
-                <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
-                <li><i class="fa fa-check"></i> New design</li>
-                <li><i class="fa fa-check"></i> Mobile support</li>
-                <li><i class="fa fa-check"></i> Upgrade to future versions</li>
-                <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
-                <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
+                <li><i class="fa fa-check" aria-label="Checked" title="Checked"></i> Access to all Enterprise Apps</li>
+                <li><i class="fa fa-check" aria-label="Checked" title="Checked"></i> New design</li>
+                <li><i class="fa fa-check" aria-label="Checked" title="Checked"></i> Mobile support</li>
+                <li><i class="fa fa-check" aria-label="Checked" title="Checked"></i> Upgrade to future versions</li>
+                <li><i class="fa fa-check" aria-label="Checked" title="Checked"></i> Bugfixes guarantee</li>
+                <li><a href="http://www.odoo.com/editions" target="_blank"><span class="fa fa-plus"> And more</span></a></li>
             </ul>
         </div>
         <div class="col-xs-6">

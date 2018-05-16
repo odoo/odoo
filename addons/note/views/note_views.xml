@@ -97,7 +97,7 @@
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
-                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                         <span class="fa fa-ellipsis-v"/>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -106,8 +106,8 @@
                     </ul>
                 </div>
                   <span>
-                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
+                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" aria-label="Opened" title="Opened"/></a>
+                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" aria-label="Closed" title="Closed"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">

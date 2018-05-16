@@ -97,8 +97,8 @@ response = request.website.render("website.template_partner_post", {'partner': p
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-primary">
-                                Send <span class="fa fa-long-arrow-right"/>
+                            <button type="submit" class="btn btn-primary" aria-label="Send">
+                                <span class="fa fa-suffix-long-arrow-right">Send </span>
                             </button>
                         </div>
                     </div>
@@ -159,10 +159,10 @@ response = request.render("website.template_partner_comment", {
                             </div>
                           </div>
                         </div>
-                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                        <div class="carousel-control left hidden" data-slide="prev" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" aria-label="Previous" title="Previous">
                           <i class="fa fa-chevron-left"/>
                         </div>
-                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%">
+                        <div class="carousel-control right hidden" data-slide="next" data-target="#myCarousel0" href="#myCarousel0" style="width: 10%" aria-label="Next" title="Next">
                           <i class="fa fa-chevron-right"/>
                         </div>
                       </div>

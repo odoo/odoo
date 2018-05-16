@@ -58,7 +58,7 @@
     <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
         <xpath expr="//h3" position="replace">
             <t t-set="ids" t-value="str(product.product_variant_id.id) + ','+ ','.join([str(a) for a in product.alternative_product_ids.mapped('product_variant_id.id')])"/>
-            <div><span class='h3'>Suggested alternatives: </span><a class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
+            <div><span class='h3'>Suggested alternatives: </span><a class="btn btn-primary fa fa-exchange" t-attf-href="/shop/compare/?products=#{ids}"> Compare</a></div>
         </xpath>
     </template>
 
@@ -95,7 +95,7 @@
 
                                         <form action="/shop/cart/update" method="post" class="text-center">
                                             <input name="product_id" t-att-value="product.id" type="hidden"/>
-                                            <a class="btn btn-primary btn-block a-submit"><i class="fa fa-shopping-cart"></i>&amp;nbsp;Add to Cart</a>
+                                            <a class="btn btn-primary btn-block a-submit fa fa-shopping-cart">&amp;nbsp;Add to Cart</a>
                                         </form>
                                     </div>
                                 </td>
@@ -104,7 +104,7 @@
                             <t t-foreach="specs.keys()" t-as="spec">
                                 <t t-if="len(specs.keys())&gt;1">
                                     <tr class="success text-left breadcrumb clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
-                                        <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase"></i><t t-esc="spec"/></th>
+                                        <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
                                     </tr>
                                 </t>
                                 <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in ' + spec.split()[0]">

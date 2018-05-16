@@ -9,7 +9,7 @@
                 <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
                 <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
                     t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
-                    <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
+                    <i class="fa fa-arrow-circle-right" title="Pay now" aria-label="Pay now" role="img"/><span class='hidden-xs'> Pay Now</span>
                 </a>
             </td>
         </xpath>
@@ -73,15 +73,15 @@
             <div class="mb8 ml16 mr16">
                 <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
                     class="btn btn-primary btn-block" data-toggle="modal" data-target="#pay_with">
-                    <i class="fa fa-arrow-circle-right"/> Pay Now
+                    <span class="fa fa-arrow-circle-right">Pay Now</span>
                 </a>
                 <a t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'"
                     class="btn btn-warning btn-block" disabled="disabled">
-                    <i class="fa fa-check-circle"/> Pending
+                    <span class="fa fa-check-circle">Pending</span>
                 </a>
                 <a t-if="invoice.state == 'paid'"
                     class="btn btn-success btn-block" disabled="disabled">
-                    <i class="fa fa-check-circle"/> Paid
+                    <span class="fa fa-check-circle">Paid</span>
                 </a>
             </div>
         </xpath>

@@ -82,7 +82,7 @@
                                         t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                               </td>
                               <td class="text-center">
-                                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id">
+                                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;unlink=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json hidden-print" t-if="line.option_line_id" aria-label="Remove" title="Remove">
                                       <span class="fa fa-trash-o"></span>
                                   </a>
                               </td>
@@ -149,13 +149,13 @@
       <xpath expr="//div[@id='quote_qty']" position="replace">
           <div class="input-group oe_website_spinner">
               <span class="input-group-addon hidden-print">
-                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;remove=True&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Remove one" title="Remove one">
                       <span class="fa fa-minus"/>
                   </a>
               </span>
               <input type="text" class="js_quantity form-control" t-att-data-id="line.id" t-att-value="line.product_uom_qty"/>
               <span class="input-group-addon hidden-print">
-                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json">
+                  <a t-attf-href="./update_line/#{ line.id }/?order_id=#{ quotation.id }&amp;token=#{ quotation.access_token }" class="mb8 js_update_line_json" aria-label="Add one" title="Add one">
                       <span class="fa fa-plus"/>
                   </a>
               </span>
@@ -203,10 +203,10 @@
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
                               <a t-if="order_valid and not quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Accept Order
+                                  <span class="fa fa-check"> Accept Order</span>
                               </a>
                               <a t-if="order_valid and quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Accept &amp; Pay
+                                  <span class="fa fa-check"> Accept &amp; Pay</span>
                               </a>
                               <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
@@ -220,7 +220,7 @@
                           </div>
                           <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
                               <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <i class="fa fa-check"></i> Pay Now
+                                  <span class="fa fa-check"> Pay Now</span>
                               </a>
                           </div>
                           <hr class="mt0 mb0"/>
@@ -231,7 +231,7 @@
                               <div class="mt8" t-if="days_valid &gt; 0">
                                   <strong>This offer expires in</strong>
                                   <div class="day_counter mt8 mb16">
-                                      <i class="fa fa-clock-o"></i>
+                                      <i class="fa fa-clock-o" aria-title="Dates" title="Dates"></i>
                                       <t t-esc="days_valid"/>
                                       <t t-if="days_valid &gt; 1">
                                           days
@@ -387,18 +387,18 @@
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
                           <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
-                              <i class="fa fa-check"></i> Accept
+                              <span class="fa fa-check"> Accept</span>
                           </a>
                           <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
-                              <i class="fa fa-check"></i> Accept &amp; Pay
+                              <span class="fa fa-check"> Accept &amp; Pay</span>
                           </a>
                           <a class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
-                              <i class="fa fa-times"></i> Reject
+                              <span class="fa fa-times"> Reject</span>
                           </a>
                       </div>
                       <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
                           <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
-                              <i class="fa fa-check"></i> Pay Now
+                              <span class="fa fa-check"> Pay Now</span>
                           </a>
                       </div>
 
@@ -424,7 +424,7 @@
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
           <a class="btn btn-info" type="submit" href="#discussion">
-              <i class="fa fa-comment"></i> Feedback
+              <span class="fa fa-comment"> Feedback</span>
           </a>
       </xpath>
   </template>
@@ -586,7 +586,7 @@
                                 </strong>
                             </td>
                             <td class="text-center" t-if="quotation.state in ['draft', 'sent']">
-                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print">
+                                <a t-attf-href="/quote/add_line/#{ option.id }/#{ quotation.id }/#{ quotation.access_token }" class="mb8 hidden-print" aria-label="Add to cart" title="Add to cart">
                                     <span class="fa fa-shopping-cart"/>
                                 </a>
                             </td>

@@ -74,7 +74,7 @@
                     <div t-if="not no_breadcrumbs" class="row">
                         <div t-attf-class="col-sm-12">
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
-                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'">Your Details</li>
                             </ol>
                             <t t-call='portal.record_pager'/>
@@ -343,8 +343,7 @@
                         </div>
                         <div class="clearfix">
                             <button type="submit" class="btn btn-primary pull-right mb32 ">
-                                Confirm
-                                <span class="fa fa-long-arrow-right" />
+                                <span class="fa fa-long-arrow-right">Confirm</span>
                             </button>
                         </div>
                     </div>
@@ -356,8 +355,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
           <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-label="Previous"></i></a>
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-label="Next"></i></a>
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-label="Previous" title="Previous"></i></a>
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-label="Next" title="Previous"></i></a>
           </div>
         </t>
     </template>

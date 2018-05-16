@@ -84,7 +84,7 @@
                                         </strong>
                                     </div>
                                     <span class="badge" title="Number of bounced email.">
-                                        <i class="fa fa-exclamation-triangle" aria-label="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
+                                        <i class="fa fa-exclamation-triangle" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
                                     </span>
                                 </div>
                                 <div class="o_kanban_record_body">
@@ -313,7 +313,7 @@
                                     </div>
                                     <div class="o_kanban_card_manage_pane">
                                         <div class="o_kanban_card_manage_section o_dropdown_kanban dropdown">
-                                            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                                 <span class="fa fa-ellipsis-v"/>
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
@@ -331,7 +331,7 @@
                                     <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
                                         <div>
                                             <span class="badge">
-                                                <i class="fa fa-user"/>
+                                                <i class="fa fa-user" aria-label="Contacts" title="Contacts"/>
                                                 <t t-esc="record.contact_nbr.value"/>
                                             </span>
                                         </div>
@@ -566,7 +566,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing">
                                 <div class="o_dropdown_kanban dropdown">
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -920,7 +920,7 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_mass_mailing_campaign">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">

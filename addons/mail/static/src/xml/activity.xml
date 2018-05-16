@@ -3,7 +3,7 @@
     <t t-name="mail.activity_items">
         <div class="o_thread_date_separator o_border_dashed" data-toggle="collapse" data-target="#o_chatter_planned_activities">
             <span class="o_thread_date btn">
-                <i class="fa fa-fw fa-caret-down"/>
+                <i class="fa fa-fw fa-caret-down" aria-label="Details" title="Details"/>
                 Planned activities
                 <small class="o_chatter_planned_activities_summary ml8">
                     <span class="label img-circle label-danger"><t t-esc="nbOverdueActivities"/></span>
@@ -30,7 +30,7 @@
                             <em> for </em>
                             <t t-esc="activity.user_id[1]" />
                             <a class="btn btn-link btn-info text-muted collapsed o_activity_info ml4" role="button" data-toggle="collapse" t-attf-data-target="#o_chatter_activity_info_#{activity.id}">
-                                <i class="fa fa-info-circle"></i>
+                                <i class="fa fa-info-circle" aria-label="Info" title="Info"></i>
                             </a>
                             <div class="o_thread_message_collapse collapse" t-attf-id="o_chatter_activity_info_#{activity.id}">
                                 <dl class="dl-horizontal well">
@@ -56,13 +56,13 @@
                         </div>
                         <div class="o_thread_message_tools btn-group">
                             <a href="#" class="btn btn-link btn-success text-muted btn-sm o_activity_done o_activity_link mr8" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" data-toggle="popover">
-                                <i class="fa fa-check"/> Mark Done
+                                <span class="fa fa-check">Mark Done</span>
                             </a>
                             <a href="#" class="btn btn-link btn-default text-muted btn-sm o_activity_edit o_activity_link" t-att-data-activity-id="activity.id">
-                                <i class="fa fa-pencil"/> Edit
+                                <span class="fa fa-pencil">Edit</span>
                             </a>
                             <a href="#" class="btn btn-link btn-sm btn-danger text-muted o_activity_unlink o_activity_link" t-att-data-activity-id="activity.id">
-                                <i class="fa fa-times"/> Cancel
+                                <span class="fa fa-times">Cancel</span>
                             </a>
                         </div>
                     </div>

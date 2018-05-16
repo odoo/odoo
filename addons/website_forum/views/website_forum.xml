@@ -88,7 +88,7 @@
                                 <t t-call="website.website_search_box"/>
                                 <span class="dropdown" groups="base.group_erp_manager">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <i class="fa fa-cog"/>
+                                        <i class="fa fa-cog" aria-label="Dropdown menu" title="Dropdown menu"/>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                         <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
@@ -389,7 +389,7 @@
                 <div t-if="not forums" class="well">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
-                        <div class="fa fa-5x fa-comment mb16"/>
+                        <div class="fa fa-5x fa-comment mb16" aria-label="Forum" title="Forum"/>
                         <div t-field="forum.name"/>
                     </a>
                 </div>
@@ -742,10 +742,12 @@
     <div class="vote text-center">
         <a t-attf-class="vote_up fa fa-caret-up no-decoration #{own_vote == 1 and 'text-success' or ''} #{((own_vote == 1 and not can_downvote) or not can_upvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{own_vote == 1 and karma_down or karma_up}"
+            aria-label="Positive vote" title="Positive vote"
             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"/>
         <div class="vote_count text-muted" t-esc="post.vote_count"/>
         <a t-attf-class="vote_down fa fa-caret-down no-decoration #{own_vote == -1 and 'text-warning' or ''} #{((own_vote == -1 and not can_upvote) or not can_downvote) and 'karma_required' or ''}"
             t-attf-data-karma="#{own_vote == -1 and karma_up or karma_down}"
+            aria-label="Negative vote" title="Negative vote"
             t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"/>
         <t t-raw="0"/>
     </div>
@@ -763,8 +765,8 @@
     <t t-call="website_forum.header">
         <div class="alert alert-info text-center" role="alert" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <p class='text-muted mb16'>This post is currently awaiting moderation and not yet published... Do you want <i>Accept</i> or <i>Reject</i> this post ?</p>
-            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">Accept <i class="fa fa-check"/></a>
-            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">Reject <i class="fa fa-times"/></a>
+            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success"><span class="fa fa-suffix-check">Accept </span></a>
+            <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger"><span class="fa fa-suffix-times">Reject </span></a>
         </div>
         <div class="alert alert-info text-center" role="alert" t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate">
             Waiting for validation
@@ -774,7 +776,7 @@
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
                     <div class="mt4">
-                        <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
+                        <a t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite" aria-label="Toggle favorite status" title="Toggle favorite status"
                             t-attf-class="favourite_question no-decoration fa fa-2x fa-star #{question.user_favourite and 'forum_favourite_question' or ''}"/>
                     </div>
                 </t>
@@ -960,6 +962,7 @@
                 <div t-if="question.post_type == 'question'" class="mt4">
                     <a t-attf-class="accept_answer fa fa-2x fa-check-circle no-decoration #{answer.is_correct and 'oe_answer_true' or 'oe_answer_false'} #{not answer.can_accept and 'karma_required' or ''}"
                         t-attf-data-karma="#{answer.karma_accept}"
+                        aria-label="Send answer" title="Send answer"
                         t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct"/>
                 </div>
             </t>
@@ -1098,6 +1101,8 @@
                     <t t-call="website_forum.link_button">
                         <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
                         <t t-set="label"> </t>
+                        <t t-set="aria-label">Delete</t>
+                        <t t-set="title">Delete</t>
                         <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
                         <t t-set="classes" t-value="'close comment_delete fa-times'"/>
                         <t t-set="form_classes" t-value="'pull-right'"/>
@@ -1147,7 +1152,7 @@
         </p>
         <nav t-if="pager_tag_chars">
             <ul class="pagination mt0 mb0">
-                <li class="disabled"><a><i class="fa fa-filter"></i></a></li>
+                <li class="disabled"><a aria-label="Filter" title="Filter"><i class="fa fa-filter"></i></a></li>
                 <t t-foreach="pager_tag_chars" t-as="tuple_char">
                     <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}"><t t-esc="tuple_char[0]"/></a></li>
                 </t>
@@ -1155,7 +1160,7 @@
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times'/>&amp;nbsp;&amp;nbsp;</span>
+                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
                         t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
                     <span t-field="tag.name"/>
@@ -1189,9 +1194,9 @@
             <tr t-foreach="badges" t-as="badge">
                 <td>
                     <span class="badge pull-left">
-                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold"/>
-                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver"/>
-                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze"/>
+                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" aria-label="Gold badge"/>
+                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" aria-label="Silver badge"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" aria-label="Bronwe badge"/>
                         <span> </span><span t-field="badge.name"/>
                     </span>
                 </td><td>
@@ -1238,10 +1243,10 @@
         <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
             <div class="col-sm-2 o_js_validation_queue">
                 <div class="panel panel-default text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
-                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;"><i class="fa fa-check fa-2x"/></a>
-                    <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse"><i class="fa fa-times fa-2x"/></a>
-                    <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive"><i class="fa fa-times fa-2x"/></a>
-                    <a href="#" t-if="queue_type == 'offensive'" disabled="True"><i class="fa fa-times fa-2x" style="color:rgb(179, 179, 179);"/></a>
+                    <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;" title="Validate" aria-label="Validate"><i class="fa fa-check fa-2x"/></a>
+                    <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse"><i class="fa fa-times fa-2x"/></a>
+                    <a t-if="queue_type == 'flagged'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive"><i class="fa fa-times fa-2x"/></a>
+                    <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive"><i class="fa fa-times fa-2x" style="color:rgb(179, 179, 179);"/></a>
                 </div>
             </div>
             <div class="col-sm-10">
@@ -1273,11 +1278,11 @@
                     <div>
                         <b> badges:</b>
                         <span>
-                            <span class="fa fa-circle badge-gold"/>
+                            <span class="fa fa-circle badge-gold" aria-label="Gold badge" title="Gold badge"/>
                             <span t-esc="user.gold_badge" class="ml4"/>
-                            <span class="fa fa-circle badge-silver ml8" />
+                            <span class="fa fa-circle badge-silver ml8" aria-label="Silver badge" title="Silver badge"/>
                             <span t-esc="user.silver_badge" class="ml4" />
-                            <span class="fa fa-circle badge-bronze ml8" />
+                            <span class="fa fa-circle badge-bronze ml8" aria-label="Bronze badge" title="Bronze badge"/>
                             <span t-esc="user.bronze_badge" class="ml4" />
                         </span>
                     </div>
@@ -1405,9 +1410,9 @@
                 </tr><tr>
                     <td>votes</td>
                     <td>
-                        <span class="fa fa-thumbs-up"/>
+                        <span class="fa fa-thumbs-up" aria-label="Positive votes" title="Positive votes"/>
                         <span t-esc="up_votes"/>
-                        <span class="fa fa-thumbs-down"/>
+                        <span class="fa fa-thumbs-down" aria-label="Negative votes" title="Negative votes"/>
                         <span t-esc="down_votes"/>
                     </td>
                 </tr>
@@ -1528,9 +1533,9 @@
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
                 <span class="badge pull-left">
-                    <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold"/>
-                    <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver"/>
-                    <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze"/>
+                    <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold" aria-label="Gold badge" title="Gold badge"/>
+                    <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver" aria-label="Silver badge" title="Silver badge"/>
+                    <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze" aria-label="Bronze badge" title="Bronze badge"/>
                     <span t-field="badge.badge_id.name"/>
                 </span>
             </td><td>
@@ -1550,8 +1555,8 @@
 <template id="user_votes">
     <div t-foreach="vote_post" t-as="vote">
         <t t-esc="vote.post_id.create_date"/>
-        <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px"/>
-        <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px"/>
+        <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" aria-label="Positive vote" title="Positive vote"/>
+        <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" aria-label="Negative vote" title="Negative vote"/>
         <t t-if="vote.post_id.parent_id">
             <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
         </t>
@@ -1567,7 +1572,7 @@
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><p class="fa fa-comment">New Forum</p></a></li>
     </xpath>
 </template>
 

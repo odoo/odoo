@@ -57,7 +57,7 @@
                                         }'/>
                                     <span t-if="not job.website_published" class="label label-danger">unpublished</span>
                                     <div class="text-muted">
-                                        <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
+                                        <i class="fa fa-clock-o" title="Publication date" aria-label="Publication date"/> <span t-field="job.write_date"/>
                                     </div>
                                 </div>
                             </li>
@@ -306,44 +306,36 @@
         <div class="container">
             <div class="row">
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-heart"/>
-                    <h4 class="mb0 mt8">Benefits</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-heart">Benefits</h4>
                     <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-sun-o"/>
-                    <h4 class="mt8 mb0">PTOs</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-sun-o">PTOs</h4>
                     <p>Vacation, Sick, and paid leaves</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-car"/>
-                    <h4 class="mt8 mb0">Save on commute</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-car">Save on commute</h4>
                     <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
                     </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-check-circle"/>
-                    <h4 class="mb0 mt8">Discount Programs</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-check-circle">Discount Programs</h4>
                     <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
                 </div>
             </div><div class="row">
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-map-marker"/>
-                    <h4 class="mb0 mt8">Prime location</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-map-marker">Prime location</h4>
                     <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-calendar"/>
-                    <h4 class="mt8 mb0">Sponsored Events</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-calendar">Sponsored Events</h4>
                     <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-futbol-o"/>
-                    <h4 class="mt8 mb0">Sport Activity</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-futbol-o">Sport Activity</h4>
                     <p>Play any sport with colleagues and the bill is covered</p>
                     </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-coffee"/>
-                    <h4 class="mb0 mt8">Eat &amp; Drink</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-coffee">Eat &amp; Drink</h4>
                     <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
                 </div>
             </div>
@@ -413,10 +405,10 @@
                                         <h4 class="mt0" t-field="responsible.name"/>
                                         <p t-field="responsible.function"/>
                                         <t t-if='responsible.email'>
-                                            <i class="fa fa-envelope"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
+                                            <i class="fa fa-envelope" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
                                         </t>
                                         <t t-if='responsible.phone'>
-                                            <br/><i class="fa fa-phone"></i> <span t-field="responsible.phone"/>
+                                            <br/><i class="fa fa-phone" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>
                                         </t>
                                     </div>
                                     <div class="col-md-12 mt32 text-center">
@@ -506,7 +498,7 @@
 <!-- User Navbar -->
 <template id="content_new_job_offer" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="hr_recruitment.group_hr_recruitment_manager"><a href="/jobs/add" class="js_link2post"><i class="fa fa-briefcase"/><p>New Job Offer</p></a></li>
+        <li groups="hr_recruitment.group_hr_recruitment_manager"><a href="/jobs/add" class="js_link2post"><p class="fa fa-briefcase">New Job Offer</p></a></li>
     </xpath>
 </template>
 

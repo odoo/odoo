@@ -36,8 +36,8 @@
                 </div>
             </div>
         </div>
-        <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%"><i class="fa fa-chevron-left"></i></div>
-        <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%"><i class="fa fa-chevron-right"></i></div>
+        <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%" aria-label="Previous" title="Previous"><i class="fa fa-chevron-left"></i></div>
+        <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%" aria-label="Next" title="Next"><i class="fa fa-chevron-right"></i></div>
     </div>
 </template>
 
@@ -148,21 +148,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <span class="fa fa-suitcase fa-5x"></span>
+                    <span class="fa fa-suitcase fa-5x" aria-label="Suitcase" title="Suitcase"></span>
                     <div>
                         <h3 class="mt8 mb0">First Feature</h3>
                         <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
-                    <span class="fa fa-lock fa-5x"></span>
+                    <span class="fa fa-lock fa-5x" aria-label="Lock" title="Lock"></span>
                     <div>
                         <h3 class="mt8 mb0">Second Feature</h3>
                         <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
                     </div>
                 </div>
                 <div class="col-md-4 text-center">
-                    <span class="fa fa-heart fa-5x"></span>
+                    <span class="fa fa-heart fa-5x" aria-label="Heart" title="Heart"></span>
                     <div>
                         <h3 class="mt8 mb0">Third Feature</h3>
                         <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
@@ -274,11 +274,11 @@
     <div class="oe_share s_share">
         <h3>
             <span>Share</span>
-            <a target="_Blank" class="oe_share_facebook" href="https://www.facebook.com/sharer/sharer.php?u={url}"><i class="fa fa-facebook-square"></i></a>
-            <a target="_Blank" class="oe_share_twitter" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}"><i class="fa fa-twitter"></i></a>
-            <a target="_Blank" class="oe_share_linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;"><i class="fa fa-linkedin"></i></a>
-            <a target="_Blank" class="oe_share_google" href="https://plus.google.com/share?url={url}"><i class="fa fa-google-plus-square"></i></a>
-            <a href="mailto:?body={url}&amp;subject={title}"><i class="fa fa-envelope-o"></i></a>
+            <a target="_Blank" class="oe_share_facebook" href="https://www.facebook.com/sharer/sharer.php?u={url}" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square"></i></a>
+            <a target="_Blank" class="oe_share_twitter" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter"></i></a>
+            <a target="_Blank" class="oe_share_linkedin" href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"></i></a>
+            <a target="_Blank" class="oe_share_google" href="https://plus.google.com/share?url={url}" aria-label="Google Plus" title="Google Plus"><i class="fa fa-google-plus-square"></i></a>
+            <a href="mailto:?body={url}&amp;subject={title}" aria-label="Email" title="Email"><i class="fa fa-envelope-o"></i></a>
         </h3>
     </div>
 </template>
@@ -287,7 +287,7 @@
     <div class="o_facebook_page">
         <div class="o_facebook_alert alert alert-info">
             <span class="o_add_facebook_page">
-                <i class="fa fa-plus-circle"/> Add Facebook Page
+                <span class="fa fa-plus-circle"> Add Facebook Page</span>
             </span>
         </div>
     </div>
@@ -296,7 +296,7 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_editable_mode_display text-center" ><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+            <div class="alert alert-info css_editable_mode_display text-center" ><span class="o_add_images" style="cursor: pointer;"><span class="fa fa-plus-circle"> Add Images</span></span></div>
         </div>
     </section>
 </template>
@@ -465,7 +465,7 @@
                     </p>
                 </div>
                 <div class="col-md-3">
-                    <a href="/contactus" class="btn btn-primary btn-lg pull-right mt8">
+                    <a href="/contactus" class="btn btn-primary btn-lg pull-right mt8" aria-label="Contact Us Now" title="">
                         <span>Contact Us Now</span>
                         <i class="fa fa-chevron-right"></i>
                     </a>
@@ -577,17 +577,17 @@
                             <h5 class="text-muted">Add a great slogan</h5>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16" aria-label="Change icons" title="Change icons"></span>
                             <h4 class="mt0 mb0">Change Icons</h4>
                             <p>Click on the icon to adapt it to your feature</p><br/>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16" aria-label="Duplicate" title="Duplicate"></span>
                             <h4 class="mt0 mb0">Duplicate</h4>
                             <p>Duplicate blocks to add more features.</p><br/>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16" aria-label="Delete blocks" title="Delete blocks"></span>
                             <h4 class="mt0 mb0">Delete Blocks</h4>
                             <p>Select and delete blocks to remove some features.</p><br/>
                         </div>
@@ -600,17 +600,17 @@
                             <h5 class="text-muted">Add a great slogan</h5>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16" aria-label="Great value" title="Great value"></span>
                             <h4 class="mt0 mb0">Great Value</h4>
                             <p>Tell features the visitor would like to know, not what you'd like to say.</p>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16" aria-label="Change background" title="Change background"></span>
                             <h4 class="mt0 mb0">Change Background</h4>
                             <p>From the main container, you can change the background to highlight features.</p>
                         </div>
                         <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16"></span>
+                            <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16" aria-label="Sample images" title="Change background"></span>
                             <h4 class="mt0 mb0">Sample images</h4>
                             <p>All these icons are licensed under creative commons so that you can use them.</p>
                         </div>
@@ -688,7 +688,7 @@
         <div id="o_scroll">
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-th-large"/> Structure
+                    <span class="fa fa-th-large"> Structure</span>
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
@@ -706,7 +706,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-diamond"/> Feature
+                    <span class="fa fa-diamond"> Feature</span>
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
@@ -721,7 +721,7 @@
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-magic icon-fix"/> Effect
+                    <span class="fa fa-magic icon-fix"> Effect</span>
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
@@ -731,7 +731,7 @@
 
             <div id="snippet_content" class="o_panel">
                 <div class="o_panel_header">
-                    <i class="fa fa-indent"/> Inner content
+                    <span class="fa fa-indent"> Inner content</span>
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
@@ -764,11 +764,11 @@
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='gallery' data-selector=".o_gallery">
-        <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li data-add-images="true" data-no-preview="true"><a href="#"><span class="fa fa-plus-circle">Add images</span></a></li>
+        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><span class="fa fa-trash">Remove all images</span></a></li>
         <li class="separator"/>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
+            <a tabindex="-2" href="#"><span class="fa fa-magic">Mode</span></a>
             <ul class="dropdown-menu">
                 <li data-mode="nomode"><a href="#">Float</a></li>
                 <li data-mode="masonry"><a href="#">Masonry</a></li>
@@ -777,7 +777,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
+            <a tabindex="-2" href="#"><span class="fa fa-clock-o">Slideshow speed</span></a>
             <ul class="dropdown-menu">
                  <li data-interval="1000"><a href="#">1s</a></li>
                  <li data-interval="2000"><a href="#">2s</a></li>
@@ -788,7 +788,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-th"/>Columns</a>
+            <a tabindex="-2" href="#"><span class="fa fa-th">Columns</span></a>
             <ul class="dropdown-menu">
                 <li data-columns="1"><a href="#">1</a></li>
                 <li data-columns="2"><a href="#">2</a></li>
@@ -799,7 +799,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
+            <a tabindex="-2" href="#"><span class="fa fa-arrows-h">Images spacing</span></a>
 
             <ul class="dropdown-menu">
                 <li data-select-class="o_spc-none"><a href="#">None</a></li>
@@ -809,7 +809,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-           <a tabindex="-2" href="#"><i class="fa fa-paint-brush"/>Styling</a>
+           <a tabindex="-2" href="#"><span class="fa fa-paint-brush">Styling</span></a>
            <ul class="dropdown-menu">
                <li data-styling=""><a href="#">Square</a></li>
                <li data-styling="img-rounded"><a href="#">Rounded corners</a></li>
@@ -824,14 +824,14 @@
     <div data-js="background"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
         <li data-choose-image="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Choose Background Image</a>
+            <a tabindex="-1" href="#"><span class="fa fa-picture-o">Choose Background Image</span></a>
         </li>
     </div>
 
     <div data-js="background_position"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
         <li class="background_position_li" data-background-position="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
+            <a tabindex="-1" href="#"><span class="fa fa-arrows">Background Image Sizing</span></a>
         </li>
     </div>
 
@@ -839,7 +839,7 @@
         data-selector="section, :not(.o_gallery > .container) > .carousel"
         data-exclude=".parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
+            <a tabindex="-1" href="#"><span class="fa fa-eyedropper">Background Color</span></a>
             <ul class="dropdown-menu">
                 <li></li>
             </ul>
@@ -851,7 +851,7 @@
         data-palette-default="transparent_grayscale"
         data-palette-title="Overlay Color">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <a tabindex="-1" href="#"><span class="fa fa-eyedropper">Overlay color</span></a>
             <ul class="dropdown-menu">
                 <li></li>
             </ul>
@@ -860,7 +860,7 @@
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
+            <a tabindex="-2" href="#"><span class="fa fa-refresh">Re-order</span></a>
             <ul class="dropdown-menu" data-no-preview="true">
                 <li data-position="first"><a href="#">Move to first</a></li>
                 <li data-position="prev"><a href="#">Move to previous</a></li>
@@ -874,7 +874,7 @@
         data-selector=":not(.o_gallery > .container) > .carousel">
         <li class="divider"></li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
+            <a tabindex="-2" href="#"><span class="fa fa-clock-o">Slideshow speed</span></a>
             <ul class="dropdown-menu">
                  <li data-interval="1000"><a href="#">1s</a></li>
                  <li data-interval="2000"><a href="#">2s</a></li>
@@ -884,8 +884,8 @@
                  <li data-interval="0"><a href="#">Disable autoplay</a></li>
             </ul>
         </li>
-        <li data-add-slide="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
-        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
+        <li data-add-slide="true" data-no-preview="true"><a href="#"><span class="fa fa-plus-circle">Add Slide</span></a></li>
+        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><span class="fa fa-trash-o">Remove Slide</span></a></li>
     </div>
 
     <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
@@ -900,7 +900,7 @@
         data-target="> * > .row"
         data-exclude=".s_text_block_image_fw, .s_company_team, .s_big_picture">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-columns"/>Number of columns</a>
+            <a tabindex="-2" href="#"><span class="fa fa-columns">Number of columns</span></a>
             <ul class="dropdown-menu" data-no-preview="true">
                 <li data-select-count="1"><a href="#">1</a></li>
                 <li data-select-count="2"><a href="#">2</a></li>
@@ -930,7 +930,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
+            <a tabindex="-2" href="#"><span class="fa fa-expand">Margin</span></a>
             <ul class="dropdown-menu">
                 <li data-select-class="o_margin_xl"><a href="#">Extra-Large</a></li>
                 <li data-select-class="o_margin_l"><a href="#">Large</a></li>
@@ -943,7 +943,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
+            <a tabindex="-2" href="#"><span class="fa fa-magnet">Float</span></a>
             <ul class="dropdown-menu" data-no-preview="true">
                 <li data-select-class="pull-left"><a href="#">Left</a></li>
                 <li data-select-class="pull-right"><a href="#">Right</a></li>
@@ -953,7 +953,7 @@
 
     <div data-js="parallax" data-selector=".parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
+            <a tabindex="-1" href="#"><span class="fa fa-clock-o">Scroll Speed</span></a>
             <ul class="dropdown-menu" name="parallax-scroll">
                 <li data-scroll="0"><a href="#">No-scroll</a></li>
                 <li class="separator"/>
@@ -974,7 +974,7 @@
 
     <div data-js="facebookPage" data-selector=".o_facebook_page">
         <li data-fb-page-options="true" data-no-preview="true">
-            <a href="#"><i class="fa fa-facebook"/>Options</a>
+            <a href="#"><span class="fa fa-facebook">Options</span></a>
         </li>
     </div>
 

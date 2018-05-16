@@ -10,13 +10,13 @@
                 <ul id="oe_applications">
                     <li class="dropdown active">
                         <a class="dropdown full" data-toggle="dropdown" href="#">
-                            <i class="fa fa-th-large"/> WEBSITE <b class="caret"/>
+                            <span class="fa fa-th-large"> WEBSITE </span><b class="caret"/>
                         </a>
                         <ul class="dropdown-menu">
                             <li t-as="menu" t-foreach="menu_data['children']">
                                 <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
                                 <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-data-menu-xmlid="menu.get('xmlid')" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
-                                    <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')"/>
+                                    <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')" aria-label="Menu" title="Menu"/>
                                     <span class="oe_menu_text">
                                         <t t-esc="menu['name']"/>
                                     </span>
@@ -26,7 +26,7 @@
                     </li>
                 </ul>
 
-                <button type="button" class="fa fa-bars pull-right visible-xs-block o_mobile_menu_toggle"/>
+                <button type="button" class="fa fa-bars pull-right visible-xs-block o_mobile_menu_toggle" aria-label="Menu" title="Menu"/>
 
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
@@ -75,15 +75,15 @@
                     </li>
                     <!-- Page Edition -->
                     <li class="o_new_content_menu" id="new-content-menu">
-                        <a href="#"><span class="fa fa-plus"/>New</a>
+                        <a href="#"><span class="fa fa-plus">New</span></a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <ul>
-                                <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
+                                <li groups="website.group_website_designer"><a href="#" data-action="new_page" aria-label="New page" title="New page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
                             </ul>
                         </div>
                     </li>
                     <li t-if="not translatable" id="edit-page-menu">
-                        <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
+                        <a data-action="edit" href="#"><span class="fa fa-pencil">Edit</span></a>
                     </li>
                     <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
                         <a class="btn btn-primary btn-xs dropdown-toggle css_edit_dynamic" data-toggle="dropdown">

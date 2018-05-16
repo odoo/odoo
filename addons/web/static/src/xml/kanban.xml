@@ -13,9 +13,9 @@
         <div class="o_kanban_header">
             <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
                 <span class="o_column_title"><t t-esc="widget.title"/></span>
-                <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear" aria-label="Settings" title="Settings"/></a>
                     <ul class="dropdown-menu" role="menu">
                         <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.grouped_by_m2o">
@@ -28,7 +28,7 @@
                         </t>
                     </ul>
                 </span>
-                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
@@ -44,7 +44,7 @@
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
         <div class="o_quick_create_folded">
-            <span class="o_kanban_add_column"><i class="fa fa-plus"/></span>
+            <span class="o_kanban_add_column"><i class="fa fa-plus" aria-label="Add column" title="Add column"/></span>
             <span class="o_kanban_title">Add a Column</span>
         </div>
         <div class="o_quick_create_unfolded">

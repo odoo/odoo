@@ -78,7 +78,7 @@
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" /></button></h3>
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".customer_map_modal"><span class="fa fa-external-link" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/customers/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
@@ -130,7 +130,7 @@
         <h3 t-if="len(tags)">References by Tag</h3>
         <ul class="nav nav-pills nav-stacked mt16 mb32" t-if="len(tags)">
             <a class="mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
-                <span class="fa fa-1x fa-tags"/> All </a>
+                <span class="fa fa-1x fa-tags"> All </span></a>
             <t t-foreach="tags" t-as="o_tag">
                 <a t-attf-class="label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>

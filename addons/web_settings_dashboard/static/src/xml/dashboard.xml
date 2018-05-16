@@ -24,7 +24,7 @@
 
     <t t-name="DashboardApps">
         <div class="text-center o_web_settings_dashboard_apps">
-            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;"></i>
+            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;" aria-label="Browse Apps" title="Browse Apps"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="installed_apps" t-value="widget.data.installed_apps"/>
                 <t t-if="installed_apps">
@@ -40,8 +40,8 @@
                 <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
             </div>
             <div class="o_web_settings_dashboard_pills">
-                <a href="https://www.odoo.com/apps/modules" target="_blank" class="pull-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
-                <a href="https://www.odoo.com/apps/themes" target="_blank" class="pull-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
+                <a href="https://www.odoo.com/apps/modules" target="_blank" class="pull-left"><span class="fa fa-rocket fa-2x text-muted"> App store</span></a>
+                <a href="https://www.odoo.com/apps/themes" target="_blank" class="pull-right"><span class="fa fa-picture-o fa-2x text-muted"> Theme store</span></a>
             </div>
             <div class="clearfix"/>
         </div>
@@ -58,7 +58,7 @@
 
     <t t-name="DashboardInvitations">
         <div class="text-center o_web_settings_dashboard_invitations">
-            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;"></i>
+            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;" aria-label="Access rights" title="Access rights"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="pending_users" t-value="widget.data.pending_users"></t>
@@ -94,7 +94,7 @@
 
     <t t-name="DashboardShare">
         <div class="text-center o_web_settings_dashboard_share">
-            <i class="fa fa-share-alt fa-4x text-muted"/>
+            <i class="fa fa-share-alt fa-4x text-muted" aria-label="Share" title="Share"/>
             <div class="o_web_settings_dashboard_header">Share the Love</div>
             <div>
                 <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
@@ -102,9 +102,9 @@
                 </small>
             </div>
             <div class="row mt16">
-                <div class="col-xs-4"><a href="#"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
-                <div class="col-xs-4"><a href="#"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
-                <div class="col-xs-4"><a href="#"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter-square fa-4x tw_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square fa-4x fb_share"/></a></div>
+                <div class="col-xs-4"><a href="#" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin-square fa-4x li_share"/></a></div>
             </div>
             <hr/>
             <t t-set="server_version" t-value="widget.data.server_version"/>
@@ -155,7 +155,7 @@
 
     <t t-name="DashboardTranslations">
         <div class="text-center o_web_settings_dashboard_translations mt8">
-            <i class="fa fa-globe fa-4x text-muted"></i>
+            <i class="fa fa-globe fa-4x text-muted" aria-label="Translations" title="Translations"></i>
             <div class="o_web_settings_dashboard_header">
                 Translations
             </div>
@@ -172,7 +172,7 @@
 
     <t t-name="DashboardCompany">
         <div class="text-center o_web_settings_dashboard_company mt8">
-            <i class="fa fa-suitcase fa-4x text-muted"></i>
+            <i class="fa fa-suitcase fa-4x text-muted" aria-label="Company" title="Company"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-esc="widget.data.company_name"></t>
             </div>
