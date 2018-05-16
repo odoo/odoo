@@ -18,7 +18,8 @@
         'fetchmail',
         'utm',
         'web_tour',
-        'contacts'
+        'contacts',
+        'digest',
     ],
     'data': [
         'security/crm_security.xml',
@@ -28,6 +29,7 @@
         'data/crm_stage_data.xml',
         'data/crm_lead_data.xml',
         'data/mail_template_data.xml',
+        'data/digest_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
@@ -44,6 +46,7 @@
         'report/crm_opportunity_report_views.xml',
         'views/crm_team_views.xml',
         'views/res_users_views.xml',
+        'views/digest_views.xml',
     ],
     'demo': [
         'data/crm_demo.xml',
