@@ -377,6 +377,15 @@ var AbstractField = Widget.extend({
      * @returns {Deferred|undefined}
      */
     _render: function () {
+        var self = this;
+        if (this.attrs.decorations) {
+            this.attrs.decorations.forEach(function (dec) {
+                var isToggled = py.PY_isTrue(
+                    py.evaluate(dec.expression, self.record.evalContext)
+                );
+                self.$el.toggleClass(dec.className, isToggled);
+            });
+        }
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {

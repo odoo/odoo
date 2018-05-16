@@ -206,6 +206,27 @@ QUnit.module('Views', {
         def.resolve();
     });
 
+    QUnit.test('decoration works on widgets', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="display_name" decoration-danger="int_field &lt; 5"/>' +
+                    '<field name="foo" decoration-danger="int_field &gt; 5"/>' +
+                '</form>',
+            res_id: 2,
+        });
+        assert.ok(!form.$('span[name="display_name"]').hasClass('text-danger'),
+            'field display name should not have decoration');
+        assert.ok(form.$('span[name="foo"]').hasClass('text-danger'),
+            'field foo should have decoration');
+        form.destroy();
+    });
+
     QUnit.test('only necessary fields are fetched with correct context', function (assert) {
         assert.expect(2);
 
