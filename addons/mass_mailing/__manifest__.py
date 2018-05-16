@@ -24,6 +24,7 @@
         'wizard/mass_mailing_list_merge_views.xml',
         'wizard/test_mailing_views.xml',
         'wizard/mass_mailing_schedule_date_views.xml',
+        'views/res_partner_views.xml',
         'views/mass_mailing_report_views.xml',
         'views/mass_mailing_stats_views.xml',
         'views/link_tracker_views.xml',
@@ -35,7 +36,9 @@
         'views/themes_templates.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
+        'views/mail_blacklist_views.xml',
         'views/res_users_views.xml',
+
     ],
     'demo': [
         'data/mass_mailing_demo.xml',

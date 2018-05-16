@@ -60,7 +60,7 @@ class TestMassMailingCommon(common.TransactionCase):
     def test_01_mass_mail_blacklist(self):
         MassMailingContacts = self.env['mail.mass_mailing.contact']
         MassMailing = self.env['mail.mass_mailing']
-        MailBlacklist = self.env['mail.blacklist']
+        MailBlacklist = self.env['mail.mass_mailing.blacklist']
 
         # create mailing contact record
         self.mailing_contact_1 = MassMailingContacts.create({'name': 'test email 1', 'email': 'test1@email.com'})
@@ -91,4 +91,4 @@ class TestMassMailingCommon(common.TransactionCase):
         }
         composer = self.env['mail.compose.message'].with_context(active_ids=res_ids, mass_mailing_seen_list=self.mass_mailing._get_seen_list()).create(composer_values)
         composer.send_mail()
-        self.assertEqual(self.mass_mailing.failed, 2, 'blacklist failed email number incorrect, should be equals to 2')
+        self.assertEqual(self.mass_mailing.ignored, 2, 'blacklist ignored email number incorrect, should be equals to 2')

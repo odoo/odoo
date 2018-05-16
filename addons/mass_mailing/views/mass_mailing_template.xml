@@ -5,12 +5,14 @@
             <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.scss"/>
             <link rel="stylesheet" href="/mass_mailing/static/src/css/email_template.css"/>
             <script type="text/javascript" src="/mass_mailing/static/src/js/mass_mailing.js"></script>
+            <script type="text/javascript" src="/mass_mailing/static/src/js/blacklist_widget.js"></script>
         </xpath>
     </template>
 
     <template id="assets_editor" inherit_id="web_editor.assets_editor">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/mass_mailing.ui.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/mass_mailing/static/src/scss/blacklist.scss"/>
         </xpath>
     </template>
 </odoo>

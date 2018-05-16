@@ -13,6 +13,7 @@
                 <filter string="Received" name="filter_received" domain="[('sent', '!=', False), ('bounced', '=', False)]"/>
                 <filter string="Scheduled" name="filter_scheduled" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False)]"/>
                 <filter string="Failed" name="filter_failed" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '!=', False)]"/>
+                <filter string="Ignored" name="filter_ignored" domain="[('scheduled', '!=', False), ('sent', '=', False), ('exception', '=', False), ('ignored', '!=', False)]"/>
                 <separator/>
                 <filter string="Opened" name="filter_opened" domain="[('opened', '!=', False)]"/>
                 <filter string="Clicked" name="filter_clicked" domain="[('clicked', '!=', False)]"/>

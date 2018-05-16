@@ -33,6 +33,7 @@ class MailMailStats(models.Model):
         string='Mass Mailing Campaign',
         store=True, readonly=True)
     # Bounce and tracking
+    ignored = fields.Datetime(help='Date when the email has been ignored')
     scheduled = fields.Datetime(help='Date when the email has been created', default=fields.Datetime.now)
     sent = fields.Datetime(help='Date when the email has been sent')
     exception = fields.Datetime(help='Date of technical error leading to the email not being sent')
@@ -49,17 +50,20 @@ class MailMailStats(models.Model):
                                         ('sent', 'Sent'),
                                         ('opened', 'Opened'),
                                         ('replied', 'Replied'),
-                                        ('bounced', 'Bounced')], store=True)
+                                        ('bounced', 'Bounced'),
+                                        ('ignored', 'Ignored')], store=True)
     state_update = fields.Datetime(compute="_compute_state", string='State Update',
                                     help='Last state update of the mail',
                                     store=True)
     recipient = fields.Char(compute="_compute_recipient")
 
-    @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception')
+    @api.depends('sent', 'opened', 'clicked', 'replied', 'bounced', 'exception', 'ignored')
     def _compute_state(self):
         self.update({'state_update': fields.Datetime.now()})
         for stat in self:
-            if stat.exception:
+            if stat.ignored:
+                stat.state = 'ignored'
+            elif stat.exception:
                 stat.state = 'exception'
             elif stat.sent:
                 stat.state = 'sent'

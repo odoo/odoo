@@ -28,6 +28,7 @@
             <field name="name">Carol Cartridge</field>
             <field name="email">cc@example.com</field>
             <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_list_2')])]"/>
+            <field name="opt_out" eval="True"/>
         </record>
 
         <!-- Demo newsletter template -->
@@ -121,5 +122,10 @@
             <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
         </record>
 
+        <!-- record in global blacklist -->
+        <record id="mail_blacklist_1" model="mail.mass_mailing.blacklist">
+            <field name="name">Eric Milwaukee</field>
+            <field name="email">em@example.com</field>
+        </record>
     </data>
 </odoo>

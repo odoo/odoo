@@ -134,3 +134,201 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
 
 //==============================================================================
 
+odoo.define('mass_mailing.unsubscribe', function (require) {
+    'use strict';
+
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    require('web.dom_ready');
+
+    var _t = core._t;
+
+    if (!$('.o_unsubscribe_form').length) {
+        return $.Deferred().reject("DOM doesn't contain '.o_unsubscribe_form'");
+    }
+
+    $('#unsubscribe_form').on('submit', function (e) {
+        e.preventDefault();
+
+        var email = $("input[name='email']").val();
+        var mailing_id = parseInt($("input[name='mailing_id']").val());
+
+        var checked_ids = [];
+        $("input[type='checkbox']:checked").each(function (i){
+          checked_ids[i] = parseInt($(this).val());
+        });
+
+        var unchecked_ids = [];
+        $("input[type='checkbox']:not(:checked)").each(function (i){
+          unchecked_ids[i] = parseInt($(this).val());
+        });
+
+        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
+            .then(function (result) {
+                $('.alert-info').html(_t('Your changes have been saved.')).removeClass('alert-info').addClass('alert-success');
+            })
+            .fail(function () {
+                $('.alert-info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
+            });
+    });
+});
+
+//=====================================================================================
+
+odoo.define('mass_mailing.unsubscribed', function (require) {
+    'use strict';
+
+    var ajax = require('web.ajax');
+    var core = require('web.core');
+    require('web.dom_ready');
+
+    var _t = core._t;
+
+    function clear_blacklist_msg() {
+        $('#div_confirm_blacklisted').hide();
+        $('#div_found').hide();
+        $('#div_error').hide();
+        $('#div_not_found').hide();
+        $('#div_removed_blacklist').hide();
+        $('#div_blacklist_add').hide();
+        $('#div_blacklist_remove').hide();
+        $('#div_state_blacklist').hide();
+    }
+
+    function clear_subscription_msg() {
+        $('#div_unsubscribed').hide();
+        $('#div_contact_subscribed').hide()
+    }
+
+    var email = $("input[name='email']").val();
+    var mailing_id = parseInt($("input[name='mailing_id']").val());
+    var res_id = parseInt($("input[name='res_id']").val());
+
+    if (email != '' && email != undefined){
+        check_blacklist_state(email);
+    }
+    else {
+        $('#div_blacklist').hide();
+    }
+
+    var mailing_list_name = $("input[name='mailing_list_name']").val();
+    if (mailing_list_name != '' && mailing_list_name != undefined){
+        $('.mailing_list_name').html(" from <strong>"+mailing_list_name+"</strong>");
+    }
+
+//  ==================
+//      Opt-out
+//  ==================
+    $('#button_re_subscribe').click(function (e) {
+        e.preventDefault();
+
+        ajax.jsonRpc('/mail/mailing/subscribe_contact', 'call', {'email': email, 'mailing_id': mailing_id, 'res_id': res_id})
+            .then(function (result) {
+                clear_subscription_msg();
+                if (result == 'success') {
+                    $('#div_contact_subscribed').show();
+                        if (mailing_list_name != '' && mailing_list_name != undefined){
+                            $('.mailing_list_name').html(" to <strong>"+mailing_list_name+"</strong>");
+                        }
+                }
+                else {
+                    $('#div_subscription_error').show();
+                }
+            })
+            .fail(function () {
+                clear_subscription_msg();
+                $('#div_subscription_error').show();
+            });
+    });
+
+    $('#button_unsubscribe').click(function (e) {
+        e.preventDefault();
+
+        ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'mailing_id': mailing_id, 'opt_in_ids': [], 'opt_out_ids': [res_id], 'email': email})
+            .then(function (result) {
+                clear_subscription_msg();
+                $('#div_unsubscribed').show();
+                    if (mailing_list_name != '' && mailing_list_name != undefined){
+                        $('.mailing_list_name').html(" from <strong>"+mailing_list_name+"</strong>");
+                    }
+            })
+            .fail(function () {
+                clear_subscription_msg();
+                $('#div_subscription_error').show();
+            });
+    });
+
+
+//  ==================
+//      Blacklist
+//  ==================
+    $('#button_add_blacklist').click(function (e) {
+        e.preventDefault();
+
+        ajax.jsonRpc('/mail/mailing/blacklist/add', 'call', {'email': email})
+            .then(function (result) {
+                clear_blacklist_msg();
+                if (result == 'success') {
+                    $('#div_confirm_blacklisted').show();
+                }
+                else if (result == 'found') {
+                    $('#div_found').show();
+                }
+                else {
+                    $('#div_error').show();
+                }
+                $('#div_blacklist_remove').show();
+            })
+            .fail(function () {
+                clear_blacklist_msg();
+                $('#div_error').show();
+            });
+    });
+
+    $('#button_remove_blacklist').click(function (e) {
+        e.preventDefault();
+
+        ajax.jsonRpc('/mail/mailing/blacklist/remove', 'call', {'email': email})
+            .then(function (result) {
+                clear_blacklist_msg();
+                if (result == 'success') {
+                    $('#div_removed_blacklist').show();
+                }
+                else if (result == 'not found') {
+                    $('#div_not_found').show();
+                }
+                else {
+                    $('#div_error').show();
+                }
+                $('#div_blacklist_add').show();
+            })
+            .fail(function () {
+                clear_blacklist_msg();
+                $('#div_error').show();
+            });
+    });
+
+    function check_blacklist_state(email){
+        ajax.jsonRpc('/mail/mailing/blacklist/check', 'call', {'email': email})
+        .then(function (result) {
+            if (result == 'found') {
+                $('#state_blacklist').html("You are currently <strong>not able</strong> to be contacted by our services.");
+                $('#div_state_blacklist').show();
+                $('#div_blacklist_add').hide();
+                $('#div_blacklist_remove').show();
+            }
+            else if (result == 'not found') {
+                $('#state_blacklist').html("You are currently <strong>able</strong> to be contacted by our services.");
+                $('#div_state_blacklist').show();
+                $('#div_blacklist_remove').hide();
+                $('#div_blacklist_add').show();
+            }
+            else {
+                $('#div_error').show();
+            }
+        })
+        .fail(function () {
+            $('#div_error').show();
+        });
+    }
+});
