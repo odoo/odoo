@@ -15,8 +15,8 @@
                 <div class="mb16 mt16">
                     <div t-foreach='event.specific_question_ids' t-as='question'>
                         <div class="row mb4">
-                            <span class="col-md-7 mt4 text-right"><t t-esc="question.title"/></span>
-                            <div class="col-md-5">
+                            <span class="col-lg-7 mt4 text-right"><t t-esc="question.title"/></span>
+                            <div class="col-lg-5">
                                 <select t-attf-name="#{counter}-answer_ids-#{question.id}" class="o_specific_answer" required="true">
                                     <t t-foreach='question.answer_ids' t-as="answer">
                                         <option t-esc='answer.name' t-att-value='answer.id'/>
@@ -36,8 +36,8 @@
                 <div>
                     <div t-foreach='event.general_question_ids' t-as='question'>
                         <div class="row mb4">
-                            <span class="col-md-7 mt4 text-right"><t t-esc='question.title'/></span>
-                            <div class="col-md-5">
+                            <span class="col-lg-7 mt4 text-right"><t t-esc='question.title'/></span>
+                            <div class="col-lg-5">
                                 <select t-attf-name="0-answer_ids-#{question.id}" class="o_general_answer" required="true">
                                     <t t-foreach='question.answer_ids' t-as="answer">
                                         <option t-esc='answer.name' t-att-value='answer.id'/>

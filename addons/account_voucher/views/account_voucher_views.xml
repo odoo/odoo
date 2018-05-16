@@ -45,18 +45,18 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><span class="pull-right text-right"><t t-esc="record.amount.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6 text-muted">
+                                    <div class="col-6 text-muted">
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <span class="pull-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
                                             'posted': 'success'}}"/>

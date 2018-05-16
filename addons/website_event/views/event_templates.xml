@@ -22,7 +22,7 @@
         <div class="oe_structure"/>
         <div class="container">
             <div class="row mt8">
-                <div class="col-sm-12">
+                <div class="col-md-12">
                     <ol class="breadcrumb mb0">
                         <li class="breadcrumb-item">
                             <a href="/event">Our Events</a>
@@ -34,12 +34,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-xs-offset-3">
+                <div class="col-md-6 offset-3">
                     <t t-call="website.pager"/>
                 </div>
             </div>
             <div class="row mt32 mb32">
-                <div class="col-md-9" id="middle_column">
+                <div class="col-lg-9" id="middle_column">
                     <div class="text-center text-muted" t-if="not event_ids">
                         <h1>No event found</h1>
                         <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
@@ -75,11 +75,11 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 col-xs-offset-3">
+                    <div class="col-md-6 offset-3">
                         <t t-call="website.pager"/>
                     </div>
                 </div>
-                <div class="col-md-3 oe_structure" id="right_column">
+                <div class="col-lg-3 oe_structure" id="right_column">
                 </div>
             </div>
         </div>
@@ -91,13 +91,13 @@
 <template id="event_right_photos" inherit_id="website_event.index" active="False" customize_show="True" name="Photos">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
-            <div class="col-md-12 mb16">
+            <div class="col-lg-12 mb16">
                 <div class="oe_demo">
                     <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Photos of Past Events</a></div>
                 </div>
             </div>
-            <div class="col-md-12 mb16">
+            <div class="col-lg-12 mb16">
                 <div class="oe_demo">
                     <img src="/website_event/static/src/img/training.jpg" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Our Trainings</a></div>
@@ -110,7 +110,7 @@
 <template id="event_right_quotes" inherit_id="website_event.index" active="False" customize_show="True" name="Quotes">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
-            <div class="col-md-12 mb16">
+            <div class="col-lg-12 mb16">
                 <blockquote class="oe_snippet_body">
                     <p>
                         Write here a quote from one of your attendees.
@@ -127,7 +127,7 @@
 <template id="event_right_country_event" inherit_id="website_event.index" active="False" customize_show="True" name="Country Events">
     <xpath expr="//div[@id='right_column']" position="inside">
         <div class="row">
-            <div class="col-md-12 mb16 mt16 country_events">
+            <div class="col-lg-12 mb16 mt16 country_events">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
                         <h1>
@@ -142,10 +142,10 @@
 
 <template id="event_left_column" customize_show="True" inherit_id="website_event.index" name="Filters">
     <xpath expr="//div[@id='middle_column']" position="attributes">
-        <attribute name="class">col-md-6</attribute>
+        <attribute name="class">col-lg-6</attribute>
     </xpath>
     <xpath expr="//div[@id='middle_column']" position="before">
-        <div class="col-md-3 css_noprint" id="left_column">
+        <div class="col-lg-3 css_noprint" id="left_column">
             <ul class="nav nav-pills flex-column">
                 <t t-foreach="dates" t-as="date">
                     <li class="nav-item" t-if="date[3] or (date[0] in ('old','all'))">
@@ -204,7 +204,7 @@
       <div id="wrap" class="js_event o_website_event">
         <div class="container">
             <div class="row mt8">
-                <div class="col-sm-7" id="event_menu">
+                <div class="col-md-7" id="event_menu">
                     <ol class="breadcrumb mb0" t-if="not event.menu_id">
                         <li class="breadcrumb-item"><a href="/event">All Events</a></li>
                         <li t-if="event.event_type_id" class="breadcrumb-item">
@@ -304,7 +304,7 @@
 
 <template id="event_description_full">
     <t t-call="website_event.event_details">
-        <div class="col-md-8">
+        <div class="col-lg-8">
             <div t-if="event.state == 'done' or not registrable" class="alert alert-info" role="status">Registration for this event is now closed</div>
             <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
@@ -327,7 +327,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-4 css_noprint">
+        <div class="col-lg-4 css_noprint">
             <div class="clearfix"/>
 
             <t t-if="not event.is_online">
@@ -418,16 +418,16 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="panel-heading d-none d-lg-block">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <h5><b>Ticket Type</b></h5>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <h5><b>End of Registration</b></h5>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <h5><b>Price</b></h5>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-lg-3">
                         <h5><b>Quantity</b></h5>
                     </div>
                 </div>
@@ -459,7 +459,7 @@
             </t>
             <div class="panel-footer">
                 <div class="row">
-                    <div class="col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9">
+                    <div class="col-lg-4 offset-lg-8 col-xl-3 offset-xl-9">
                         <button type="submit" class="btn btn-primary btn-lg btn-block a-submit" t-attf-id="#{event.id}">
                             Register Now
                         </button>
@@ -485,7 +485,7 @@
 </template>
 
 <template id="ticket" name="Ticket offer template">
-    <div class="col-xs-12 d-lg-none panel-heading mb4">
+    <div class="col-12 d-lg-none panel-heading mb4">
         <h5>
             <strong>Ticket Type:</strong>
             <t t-raw="name"/>
@@ -496,21 +496,21 @@
     </div>
     <div class="panel-body">
         <div class="row" itemscope="itemscope" itemtype="http://schema.org/Offer">
-            <div class="col-md-3 d-none d-lg-block" t-raw="name"/>
-            <div class="col-xs-6 d-lg-none">
+            <div class="col-lg-3 d-none d-lg-block" t-raw="name"/>
+            <div class="col-6 d-lg-none">
                 <h6>End of Registration</h6>
             </div>
-            <div class="col-xs-6 col-md-3" itemprop="availabilityEnds" t-raw="registration_end"/>
+            <div class="col-6 col-lg-3" itemprop="availabilityEnds" t-raw="registration_end"/>
             <div class="clearfix d-lg-none mb4"/>
-            <div class="col-xs-6 d-lg-none">
+            <div class="col-6 d-lg-none">
                 <h6>Price</h6>
             </div>
-            <div class="col-xs-6 col-md-3" t-raw="price"/>
+            <div class="col-6 col-lg-3" t-raw="price"/>
             <div class="clearfix d-lg-none mb4"/>
-            <div class="col-xs-6 d-lg-none">
+            <div class="col-6 d-lg-none">
                 <h6>Quantity</h6>
             </div>
-            <div class="col-xs-6 col-md-3">
+            <div class="col-6 col-lg-3">
                 <t t-if="tickets_available">
                     <link itemprop="availability" content="http://schema.org/InStock"/>
                     <t t-raw="quantity"/>
@@ -547,17 +547,17 @@
                                     </strong>
                                 </h4>
                                 <div class="row">
-                                    <div class="col-md-4"><strong>Name</strong></div>
-                                    <div class="col-md-5"><strong>Email</strong></div>
-                                    <div class="col-md-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
+                                    <div class="col-lg-4"><strong>Name</strong></div>
+                                    <div class="col-lg-5"><strong>Email</strong></div>
+                                    <div class="col-lg-3"><strong>Phone</strong> <span class="text-muted">(Optional)</span></div>
                                 </div>
                                 <t t-foreach="range(1, ticket['quantity'] + 1)" t-as="att_counter" name="attendee_loop">
                                     <t t-set="counter" t-value="counter + 1"/>
                                     <div class="row mb4">
                                         <t t-set="attendee_placeholder">Attendee #%s</t>
-                                        <div class="col-md-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/></div>
-                                        <div class="col-md-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
-                                        <div class="col-md-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
+                                        <div class="col-lg-4"><input class='form-control' type='text' t-attf-name="#{counter}-name" required="This field is required" t-att-placeholder="attendee_placeholder %counter"/></div>
+                                        <div class="col-lg-5"><input class='form-control' type='email' t-attf-name="#{counter}-email" required="This field is required"/></div>
+                                        <div class="col-lg-3"><input class='form-control' type='tel' t-attf-name="#{counter}-phone"/></div>
                                         <input class='d-none' type='text' t-attf-name="#{counter}-ticket_id" t-attf-value="#{ticket['id']}"/>
                                     </div>
                                 </t>
@@ -582,10 +582,10 @@
         <div class="container">
             <h3>We are glad to confirm your registration to our event</h3>
             <div class="row">
-                <div class="col-md-3 mt16">
+                <div class="col-lg-3 mt16">
                     <h4>Event Details</h4>
                 </div>
-                <div class="col-md-9 mt16">
+                <div class="col-lg-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
                     <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div id="add_to_calendar" class="mt4">
@@ -601,10 +601,10 @@
                             "fields": ["name", "address", "phone", "mobile", "email"]
                             }'/>
                 </div>
-                <div class="col-md-3 mt16">
+                <div class="col-lg-3 mt16">
                     <h4>Your registration</h4>
                 </div>
-                <div class="col-md-9 mt16">
+                <div class="col-lg-9 mt16">
                     <table class='table table-bordered table-striped'>
                         <thead>
                             <tr>

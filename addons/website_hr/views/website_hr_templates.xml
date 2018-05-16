@@ -13,10 +13,10 @@
             <t t-set="is_publisher" t-value="request.env['res.users'].has_group('website.group_website_publisher')" />
             <t t-set="employees_domain" t-value="[] if is_publisher else [('website_published', '=', True)]" />
             <t t-set="employees" t-value="request.env['hr.employee'].search(employees_domain)" />
-            <div class="col-sm-12 text-center" t-if="len(employees)">
+            <div class="col-md-12 text-center" t-if="len(employees)">
                 <h2>Our Team</h2>
             </div>
-            <div t-foreach="employees" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center o_avatar_info_container">
+            <div t-foreach="employees" t-as="employee" class="col-md-3 col-xl-2 mt16 text-center o_avatar_info_container">
                 <t t-call="website.publish_management" class="text-center">
                     <t t-set="object" t-value="employee"/>
                     <t t-set="publish_edit" t-value="True"/>

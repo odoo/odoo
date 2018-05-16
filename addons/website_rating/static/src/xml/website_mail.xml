@@ -20,7 +20,7 @@
 
     <t t-name="website_rating.rating_card">
         <div class="row o_website_rating_card_container">
-            <div class="col-md-3 col-md-offset-2" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+            <div class="col-lg-3 offset-lg-2" t-if="!_.isEmpty(widget.get('rating_card_values'))">
                 <p><strong>Average</strong></p>
                 <div class="o_website_rating_avg text-center">
                     <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
@@ -30,7 +30,7 @@
                     <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
-            <div class="col-md-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+            <div class="col-lg-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">
                 <p><strong>Details</strong></p>
                 <div class="o_website_rating_progress_bars">
                     <table class="o_website_rating_progress_table">

@@ -37,20 +37,20 @@
                     <div t-if="is_embedded" class="navbar-default oe_slides_share_bar">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4 text-left">
+                                <div class="col-xl-8 col-lg-8 col-md-4 col-4 text-left">
                                     <div class="oe_slides_ellipsis">
                                         <a target="_new" t-att-href="slide.website_url">
                                             <span  t-esc="slide.name" t-attf-title="#{slide.name}"/>
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-2 text-right">
                                     <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_share"><i class="fa fa-share-alt"></i> Share</b>
                                 </div>
-                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-2 text-right">
                                     <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_email"><i class="fa fa-envelope"></i> Email</b>
                                 </div>
-                                <div class="col-lg-1 col-md-1 col-sm-2 col-xs-2 text-right">
+                                <div class="col-xl-1 col-lg-1 col-md-2 col-2 text-right">
                                     <b class="oe_slide_js_embed_option_link" data-slide-option-id="#slide_embed"><i class="fa fa-code"></i> Embed</b>
                                 </div>
                             </div>
@@ -75,7 +75,7 @@
                         </t>
                         <div id="slide_suggest" class="oe_slide_embed_option">
                             <t t-foreach="related_slides" t-as="suggest_slide">
-                                <div class="col-md-4 col-sm-4 col-xs-4 oe_slides_suggestion_media">
+                                <div class="col-lg-4 col-md-4 col-4 oe_slides_suggestion_media">
                                     <a t-att-href="suggest_slide.website_url" target="_new">
                                         <div class="oe_slides_suggestion_caption">
                                             <h4><t t-esc="suggest_slide.name"/></h4>
@@ -105,34 +105,34 @@
                     <div class="navbar navbar-default navbar-fixed-bottom" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
                         <div class="container-fluid oe_slides_panel_footer">
                             <div class="row" style="padding-top:15px;">
-                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-left">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-2 text-left">
                                     <input type="number" class="text-center" id="page_number"></input> / <span id="page_count"></span>
                                 </div>
-                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 d-none o_slide_navigation_buttons">
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
-                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                <div class="col-xl-8 col-lg-8 col-md-8 col-8 d-none o_slide_navigation_buttons">
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-4 text-center"></div>
+                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
                                         <span id="first" title="First slide" role="img" aria-label="First slide">
                                             <i class="fa fa-step-backward fa-2x"></i>
                                         </span>
                                     </div>
-                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
                                         <a id="previous" title="Previous slide" aria-label="Previous slide"  role="button">
                                             <i class="fa fa-arrow-circle-left fa-2x"></i>
                                         </a>
                                     </div>
-                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
                                         <a id="next" title="Next slide" aria-label="Next slide" role="button">
                                             <i class="fa fa-arrow-circle-right fa-2x"></i>
                                         </a>
                                     </div>
-                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
+                                    <div class="col-xl-1 col-lg-1 col-md-1 col-1 text-center">
                                         <a id="last" title="Last slide" aria-label="Last slide" role="button">
                                             <i class="fa fa-step-forward fa-2x"></i>
                                         </a>
                                     </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
+                                    <div class="col-xl-4 col-lg-4 col-md-4 col-4 text-center"></div>
                                 </div>
-                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pull-right text-right">
+                                <div class="col-xl-2 col-lg-2 col-md-2 col-2 pull-right text-right">
                                     <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
                                         <i class="fa fa-download fa-2x" role="img" aria-label="Download"></i>
                                     </a>

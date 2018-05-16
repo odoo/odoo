@@ -188,24 +188,24 @@
                                                            #{record.product_qty.raw_value!=record.theoretical_qty.raw_value ? 'oe_kanban_color_6' : ''}
                                                            #{record.theoretical_qty.raw_value&lt;0 ? 'oe_kanban_color_2' : ''}">
                                             <div class="row">
-                                                <div class="col-xs-12">
+                                                <div class="col-12">
                                                     <strong>
                                                         <field name='product_id'/>
                                                     </strong>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-12 text-muted">
+                                                <div class="col-12 text-muted">
                                                     <span><t t-esc='record.location_id.string'/>: <t t-esc='record.location_id.value'/></span>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-12 text-muted">
+                                                <div class="col-12 text-muted">
                                                     <span><t t-esc='record.theoretical_qty.string'/>: <t t-esc='record.theoretical_qty.value'/></span>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-xs-12 text-muted">
+                                                <div class="col-12 text-muted">
                                                     <span><t t-esc='record.product_qty.string'/>: <t t-esc='record.product_qty.value'/></span>
                                                 </div>
                                             </div>

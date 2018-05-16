@@ -54,10 +54,10 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <strong><field name="name"/></strong>
                                     </div>
-                                    <div class="col-xs-12">
+                                    <div class="col-12">
                                         <span>Code <field name="code"/></span>
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@
                                 </div>
                                 <div class="container o_kanban_card_content">
                                     <div class="row">
-                                        <div class="col-xs-6 o_kanban_primary_left">
+                                        <div class="col-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
                                                 <button class="btn btn-primary" name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1, 'search_default_progress': 1, 'search_default_pending': 1}">
@@ -182,44 +182,44 @@
                                             </t>
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 o_kanban_primary_right">
+                                        <div class="col-6 o_kanban_primary_right">
                                             <div class="row" t-if="record.workorder_ready_count.raw_value &gt; 0">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_work_orders)d" type="action" context="{'search_default_ready': 1}">
                                                         To Launch
                                                     </a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="workorder_ready_count"/>
                                                 </div>
                                             </div>
                                             <div class="row" t-if="record.workorder_progress_count.raw_value &gt; 0">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_work_orders)d" type="action" context="{'search_default_progress': 1}">
                                                         In Progress
                                                     </a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="workorder_progress_count"/>
                                                 </div>
                                             </div>
                                             <div class="row" t-if="record.workorder_late_count.raw_value &gt; 0">
-                                                <div class="col-xs-8">
+                                                <div class="col-8">
                                                     <a name="%(action_work_orders)d" type="action" context="{'search_default_late': 1}">
                                                         Late
                                                     </a>
                                                 </div>
-                                                <div class="col-xs-4 text-right">
+                                                <div class="col-4 text-right">
                                                     <field name="workorder_late_count"/>
                                                 </div>
                                             </div>
                                             <div class="row" t-if="record.oee.raw_value &gt; 0">
-                                                <div class="col-xs-6">
+                                                <div class="col-6">
                                                     <a name="%(mrp_workcenter_productivity_report_oee)d" type="action">
                                                         OEE
                                                     </a>
                                                 </div>
-                                                <div class="col-xs-6 text-right">
+                                                <div class="col-6 text-right">
                                                     <span t-att-class="record.oee_target.raw_value and (record.oee.raw_value &lt; record.oee_target.raw_value) and 'text-danger' or (record.oee.raw_value &gt; record.oee_target.raw_value) and 'text-success' or 'text-warning'">
                                                         <strong>
                                                             <field name="oee"/>%
@@ -230,7 +230,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
+                                        <div class="col-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
                                             <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status pull-right"
                                                 title="No workorder currently in progress. Click to mark work center as blocked."
                                                 aria-label="No workorder currently in progress. Click to mark work center as blocked."
@@ -247,7 +247,7 @@
                                     </div>
                                 </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                     <div class="row">
-                                        <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                             <div role="menuitem" class="o_kanban_card_manage_title">
                                                 <span>Actions</span>
                                             </div>
@@ -255,7 +255,7 @@
                                                 <a name="%(action_work_orders)d" type="action">Plan Orders</a>
                                             </div>
                                         </div>
-                                        <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                        <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
                                             <div role="menuitem" class="o_kanban_card_manage_title">
                                                 <span>Reporting</span>
                                             </div>
@@ -274,10 +274,10 @@
                                     </div>
 
                                     <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                        <div role="menuitem" aria-haspopup="true" class="col-xs-8">
+                                        <div role="menuitem" aria-haspopup="true" class="col-8">
                                             <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
-                                        <div role="menuitem" class="col-xs-4 text-right">
+                                        <div role="menuitem" class="col-4 text-right">
                                             <a type="edit">Settings</a>
                                         </div>
                                     </div>

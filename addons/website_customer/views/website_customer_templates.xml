@@ -15,9 +15,9 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3 mb32" id="ref_left_column">
+                    <div class="col-lg-3 mb32" id="ref_left_column">
                     </div>
-                    <div class="col-md-8 col-md-offset-1" id="ref_content">
+                    <div class="col-lg-8 offset-lg-1" id="ref_content">
                         <div class='navbar mb0'>
                             <t t-call="website.pager">
                                <t t-set="classname" t-value="'pull-left'"/>
@@ -147,7 +147,7 @@
         <div class="oe_structure"/>
         <div class="container mt16">
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-lg-5">
                     <ol t-if="not edit_page" class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/customers">Our References</a></li>
                         <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>

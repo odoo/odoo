@@ -103,7 +103,7 @@
 
         <div id="wrap" class="container">
             <div class="row mb16">
-                <div class="col-sm-9">
+                <div class="col-md-9">
                     <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable" role="status">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                         <div t-field="notification.body"/>
@@ -126,16 +126,16 @@
                     </div>
                     <t t-raw="0"/>
                 </div>
-                <div class="col-sm-3" id="right-column">
+                <div class="col-md-3" id="right-column">
                     <div t-if="not header.get('ask_hide')" t-attf-class="btn-group btn-block mb16 #{(user.karma &lt; forum.karma_ask) and not is_public_user and 'karma_required' or ''}" t-attf-data-karma="#{forum.karma_ask}">
                         <t t-set="multi_type" t-value="(forum.allow_link and forum.allow_question) or (forum.allow_link and forum.allow_discussion) or (forum.allow_question and forum.allow_discussion)"/>
-                        <a role="button" type="button"  t-attf-class="btn btn-primary btn-lg #{'col-sm-10' if multi_type else 'col-sm-12'}" t-attf-href="/forum/#{slug(forum)}/ask?post_type=#{forum.default_post_type}">
+                        <a role="button" type="button"  t-attf-class="btn btn-primary btn-lg #{'col-md-10' if multi_type else 'col-md-12'}" t-attf-href="/forum/#{slug(forum)}/ask?post_type=#{forum.default_post_type}">
                             <t t-if="forum.default_post_type == 'question'">Ask a Question</t>
                             <t t-if="forum.default_post_type == 'link'">Submit a Link</t>
                             <t t-if="forum.default_post_type == 'discussion'">New Discussion</t>
                         </a>
                         <t t-if="multi_type">
-                            <button type="button" class="btn btn-primary btn-lg col-sm-2 dropdown-toggle" data-toggle="dropdown">
+                            <button type="button" class="btn btn-primary btn-lg col-md-2 dropdown-toggle" data-toggle="dropdown">
                                 <span class="sr-only">Select Post</span>
                             </button>
                             <div class="dropdown-menu" role="menu">
@@ -385,7 +385,7 @@
             <h1 class="mb32">Our forums</h1>
             <div class="row">
                 <div t-if="not forums" class="well">No forum post yet.</div>
-                <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
+                <div t-foreach="forums" t-as="forum" class="col-md-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
                         <div class="fa fa-5x fa-comment mb16" role="img" aria-label="Forum" title="Forum"/>
                         <div t-field="forum.name"/>
@@ -475,29 +475,29 @@
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="content_link">URL to Share</label>
-                <div class="col-sm-8">
+                <label class="col-md-2 control-label" for="content_link">URL to Share</label>
+                <div class="col-md-8">
                     <input type="text" name="content_link" required="True" t-attf-value="#{post_name}"
                         class="form-control mb16 o_forum_post_link" placeholder="e.g. https://www.odoo.com"/>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="post_name">Post Title</label>
-                <div class="col-sm-8">
+                <label class="col-md-2 control-label" for="post_name">Post Title</label>
+                <div class="col-md-8">
                     <input type="text" name="post_name" required="True" t-attf-value="#{content}"
                         class="form-control"/>
                 </div>
             </div>
             <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="post_tags">Tags</label>
-                <div class="col-sm-8">
+                <label class="col-md-2 control-label" for="post_tags">Tags</label>
+                <div class="col-md-8">
                     <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                     <input type="text" name="post_tags" class="form-control js_select2"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-8">
+                <div class="offset-md-2 col-md-8">
                     <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                         t-att-data-karma="forum.karma_ask"
                         disabled="True" data-hashtags="#link" data-social-target-type="other">Post</button>
@@ -603,7 +603,7 @@
             <div t-if="not is_answer">
                 <br/>
                 <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
-                <input type="text" name="post_tags" class="form-control col-md-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags" t-att-readonly="user.karma &lt; forum.karma_edit_retag" t-att-title="'You need to have sufficient karma to edit tags' if user.karma &lt; forum.karma_edit_retag else ''"/>
+                <input type="text" name="post_tags" class="form-control col-lg-9 js_select2" placeholder="Tags" t-attf-data-init-value="#{tags}" value="Tags" t-att-readonly="user.karma &lt; forum.karma_edit_retag" t-att-title="'You need to have sufficient karma to edit tags' if user.karma &lt; forum.karma_edit_retag else ''"/>
                 <br/>
             </div>
             <button type="submit" class="btn btn-primary btn-lg">Save</button>
@@ -632,8 +632,8 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="reason">Post:</label>
-                <div class="col-md-8 mt8">
+                <label class="col-lg-3 control-label" for="reason">Post:</label>
+                <div class="col-lg-8 mt8">
                     <t t-if="not question.parent_id">
                         <span t-field="question.name"/>
                     </t>
@@ -643,8 +643,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-3 control-label" for="reason">Reason:</label>
-                <div class="col-md-8">
+                <label class="col-lg-3 control-label" for="reason">Reason:</label>
+                <div class="col-lg-8">
                     <select class="form-control" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
                             <option t-att-value="reason.id" t-att-selected="reason.id == question.closed_reason_id.id"><t t-esc="reason.name"/></option>
@@ -653,7 +653,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-3 col-md-8">
+                <div class="offset-lg-3 col-lg-8">
                     <button type="submit" class="btn btn-primary">
                         <t t-if="offensive">Mark as offensive</t>
                         <t t-if="not offensive">Close post</t>
@@ -1036,7 +1036,7 @@
                 </t>
             </div>
             <div class="clearfix" t-if="len(answer.website_message_ids)">
-                <div class="col-sm-offset-2 col-sm-2">
+                <div class="offset-md-2 col-md-2">
                     <ul class="list-inline mb0">
                         <li t-if="question.post_type == 'question'">
                             <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
@@ -1073,7 +1073,7 @@
 <!-- Utility template: Post a Comment -->
 <template id="post_comment">
     <div class="row clearfix">
-        <div class="col-sm-10 col-sm-offset-2">
+        <div class="col-md-10 offset-md-2">
             <div t-foreach="reversed(object.website_message_ids)" t-as="message" class="comment oe_comment_grey">
                 <small class="text-muted">
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
@@ -1138,7 +1138,7 @@
             </ul>
         </nav>
         <div class="row">
-            <div class="col-sm-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
+            <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" role="img" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
                         t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
@@ -1213,7 +1213,7 @@
             <t t-if="queue_type == 'offensive'">The offensive queue is empty.</t>
         </div>
         <div t-foreach="posts_ids" t-as="question" class="mb16 row post_to_validate" style="padding-bottom:16px;border-bottom:1px solid #e7e7e7;">
-            <div class="col-sm-2 o_js_validation_queue">
+            <div class="col-md-2 o_js_validation_queue">
                 <div class="panel panel-default text-center" style="background-color:#eee;margin:0;padding:5px 12px 5px 12px;">
                     <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" style="padding-right:8px;" title="Validate" aria-label="Validate"><i class="fa fa-check fa-2x"/></a>
                     <a t-if="queue_type == 'validation'" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" title="Refuse" aria-label="Refuse"><i class="fa fa-times fa-2x"/></a>
@@ -1221,7 +1221,7 @@
                     <a href="#" t-if="queue_type == 'offensive'" disabled="True" aria-label="Offensive" title="Offensive"><i class="fa fa-times fa-2x" style="color:rgb(179, 179, 179);"/></a>
                 </div>
             </div>
-            <div class="col-sm-10">
+            <div class="col-md-10">
                 <t t-if="question.parent_id">
                     <div t-foreach="question" t-as="answer" style="display: inline-block;">
                         <t t-call="website_forum.moderation_display_post_answer"/>
@@ -1238,7 +1238,7 @@
 <template id="users">
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
-            <div t-foreach="row_users" t-as="user" class="col-sm-4">
+            <div t-foreach="row_users" t-as="user" class="col-md-4">
                 <img class="pull-left img img-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
@@ -1289,7 +1289,7 @@
             <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
-                <div class="col-md-2">
+                <div class="col-lg-2">
                     <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
                         <i class="fa fa-pencil fa-1g pull-left" title="Edit"></i>
                     </a>
@@ -1298,24 +1298,24 @@
                     </a>
                     <img class="img img-fluid img-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 </div>
-                <div class="col-md-10">
+                <div class="col-lg-10">
                     <input name="user_id" t-att-value="user.id" type="hidden"/>
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16" for="user_name">Real name</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16" for="user_name">Real name</label>
+                        <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
-                        <div class="col-md-8 mb16" t-if="user.id == uid">
+                        <label class="col-lg-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                        <div class="col-lg-8 mb16" t-if="user.id == uid">
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16" for="user_website">Website</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16" for="user_website">Website</label>
+                        <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                         </div>
                     </div>
@@ -1324,20 +1324,20 @@
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                         </div>
-                        <label class="col-md-2 control-label mb16" for="user_email">Email</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16" for="user_email">Email</label>
+                        <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16" for="user_city">City</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16" for="user_city">City</label>
+                        <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16">Country</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16">Country</label>
+                        <div class="col-lg-8 mb16">
                             <select class="form-control" name="country">
                                 <option value="">Country...</option>
                                 <t t-foreach="countries or []" t-as="country">
@@ -1348,13 +1348,13 @@
                     </div>
                     <!--Note: using website_description fiels instead of using commnt firld of partner-->
                     <div class="form-group">
-                        <label class="col-md-2 control-label mb16" for="description">Biography</label>
-                        <div class="col-md-8 mb16">
+                        <label class="col-lg-2 control-label mb16" for="description">Biography</label>
+                        <div class="col-lg-8 mb16">
                             <textarea name="description" id="description" style="min-height: 120px" required="True"
                                 class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                         </div>
                     </div>
-                    <div class="col-sm-offset-2 col-md-2 mb16">
+                    <div class="offset-md-2 col-lg-2 mb16">
                         <button type="submit" class="btn btn-primary btn-lg">Update</button>
                     </div>
                 </div>
@@ -1370,10 +1370,10 @@
             <small>profile</small>
         </h1>
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-md-2">
                 <img class="img img-fluid img-circle" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
             </div>
-            <div class="col-sm-10">
+            <div class="col-md-10">
                 <table class="table table-condensed">
                 <tr>
                     <td rowspan="4" valign="top"><span class="text-muted">stats</span></td>

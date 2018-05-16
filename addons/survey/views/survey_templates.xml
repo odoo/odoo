@@ -244,7 +244,7 @@
 
     <template id="simple_choice" name="Simple choice">
         <div t-if="question.display_mode == 'dropdown' and token" class="js_drop row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
                 <select class="form-control" t-att-name="prefix">
                     <option disabled="1" selected="1" value="">Choose...</option>
                     <t t-foreach='question.labels_ids' t-as='label'>
@@ -255,29 +255,29 @@
                     </t>
                 </select>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-md-6">
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-lg-6">
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12 mt16">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12 mt16">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
         </div>
         <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="radio" t-att-name="prefix" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-md-12" >
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-lg-12" >
                 <label>
                     <input type="radio" t-att-name="prefix" value="-1"/>
                     <span t-field="question.comments_message" />
                 </label>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>
@@ -286,20 +286,20 @@
 
     <template id="multiple_choice" name="Multiple choice">
         <div class="row">
-            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-lg-#{question.column_nb}">
                 <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else None">
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
                     <span t-field='label.value'/>
                 </label>
             </div>
-            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-md-12" >
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-lg-12" >
                 <label>
                     <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
                     <span t-field="question.comments_message" />
                 </label>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
             </div>
-            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-lg-12">
                 <span t-field="question.comments_message"/>
                 <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
             </div>

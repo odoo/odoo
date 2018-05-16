@@ -54,12 +54,12 @@
                     <h1><span>Livechat Channel</span>  <small t-field="channel.name" /></h1>
                     <div t-field="channel.website_description" class="oe_structure mt16" />
                     <div class="row mt32">
-                        <div class="col-md-8">
+                        <div class="col-lg-8">
                             <t t-if="len(ratings) &gt; 0">
                                 <div class="row">
                                     <h3>Statistics</h3>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-lg-3">
                                             <div class="panel panel-warming">
                                                 <div class="panel-body text-center bg-warning">
                                                     <img src="/rating/static/src/img/rating_5.png" style="height:50px" alt="Neutral face"/>
@@ -74,7 +74,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-lg-4">
                                             <div class="panel panel-success">
                                                 <div class="panel-body text-center bg-success">
                                                     <img src="/rating/static/src/img/rating_10.png" style="height:60px" alt="Happy face"/>
@@ -89,7 +89,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-lg-3">
                                             <div class="panel panel-danger">
                                                 <div class="panel-body text-center bg-danger">
                                                     <img src="/rating/static/src/img/rating_1.png" style="height:40px" alt="Sad face"/>
@@ -107,7 +107,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12 mb32">
+                                    <div class="col-lg-12 mb32">
                                         <h3>The <t t-esc="len(ratings)"/> last feedbacks</h3>
                                         <div style="text-align:center">
                                             <t t-foreach="ratings" t-as="rating" class="media">
@@ -124,7 +124,7 @@
                                 <h4 style="text-align:center">This is no rating for this channel for now.</h4>
                             </t>
                         </div>
-                        <div class="col-md-4 mb32">
+                        <div class="col-lg-4 mb32">
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
@@ -153,12 +153,12 @@
                         <h1>Livechat Support Channels</h1>
                         <div class="row mt32 mb32">
                             <t t-if="not len(channels)">
-                                <div class="col-md-6 col-md-offset-3">
+                                <div class="col-lg-6 offset-lg-3">
                                     There is no public livechat channel to show.
                                 </div>
                             </t>
                             <t t-if="len(channels)">
-                                <div class="col-md-6 col-md-offset-3">
+                                <div class="col-lg-6 offset-lg-3">
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
                                             <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">

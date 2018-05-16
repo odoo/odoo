@@ -25,35 +25,35 @@
                             </div>
                             <div class="container o_kanban_card_content">
                                 <div class="row o_kanban_card_upper_content">
-                                    <div class="col-xs-6 o_kanban_primary_left" name="to_replace_in_sale_crm">
+                                    <div class="col-6 o_kanban_primary_left" name="to_replace_in_sale_crm">
                                         <button type="object" class="btn btn-primary" name="action_primary_channel_button"><field name="dashboard_button_name"/></button>
                                     </div>
-                                    <div class="col-xs-6 o_kanban_primary_right" style="padding-bottom:0;">
+                                    <div class="col-6 o_kanban_primary_right" style="padding-bottom:0;">
                                         <t name="first_options"/>
                                         <t name="second_options"/>
                                         <t name="third_options"/>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12 o_kanban_primary_bottom">
+                                    <div class="col-12 o_kanban_primary_bottom">
                                         <t t-call="SalesTeamDashboardGraph"/>
                                     </div>
-                                    <div class="col-xs-12 o_kanban_primary_bottom bottom_block">
+                                    <div class="col-12 o_kanban_primary_bottom bottom_block">
                                     </div>
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_new">
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_new">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>New</span>
                                         </div>
                                     </div>
-                                    <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                    <div class="col-4 o_kanban_card_manage_section o_kanban_manage_reports">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </div>
@@ -61,15 +61,15 @@
                                 </div>
 
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="sales_team.group_sale_manager">
-                                    <div role="menuitem" aria-haspopup="true" class="col-xs-8">
+                                    <div role="menuitem" aria-haspopup="true" class="col-8">
                                         <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                     </div>
-                                    <div role="menuitem" class="col-xs-4 text-right">
+                                    <div role="menuitem" class="col-4 text-right">
                                         <a type="edit">Settings</a>
                                     </div>
                                 </div>
                                 <div class="row mb16">
-                                    <div role="menuitem" class="col-xs-6">
+                                    <div role="menuitem" class="col-6">
                                         <field name="is_favorite" widget="boolean_favorite" />
                                     </div>
                                 </div>

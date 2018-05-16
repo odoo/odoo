@@ -5,7 +5,7 @@
         <div class="container o_mrp_bom_report_page">
             <t t-if="data.get('components') or data.get('lines')">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <h1>BoM Structure &amp; Cost</h1>
                         <h3>
                             <a t-if="data['report_type'] == 'html'" t-att-data-res-id="data['product'].id" t-att-data-model="data['product']._name" class="o_mrp_bom_action">
@@ -18,7 +18,7 @@
                 </div>
                 <t t-set="currency" t-value="data['currency']"/>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-lg-12">
                         <div class="mt16">
                             <table width="100%" class="o_mrp_bom_expandable">
                                 <thead>

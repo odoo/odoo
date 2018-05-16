@@ -39,7 +39,7 @@
             </section>
             <section class="container">
                 <div class="row">
-                    <div class="col-md-12 text-center">
+                    <div class="col-lg-12 text-center">
                         <h1>Latest Posts</h1>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
                 <div class="row">
                     <t t-set="count" t-value="0"/>
                     <t t-foreach="posts" t-as="post">
-                      <div class="col-md-4">
+                      <div class="col-lg-4">
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
@@ -106,7 +106,7 @@
             <section class="mb0">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-12 mb32 mt16 text-center">
+                        <div class="col-lg-12 mb32 mt16 text-center">
                             <h1 t-field="blog.name"/>
                             <h3 class="text-muted" t-field="blog.subtitle"/>
                         </div>
@@ -116,7 +116,7 @@
         </div>
         <div class="container">
             <div class="row">
-              <div class="col-md-8 col-md-offset-2" t-ignore="True" id="main_column">
+              <div class="col-lg-8 offset-lg-2" t-ignore="True" id="main_column">
 
                 <div t-if="not blog_posts" class="container mb64">
                     <p class="css_editable_hidden">
@@ -197,7 +197,7 @@
 <template id="opt_blog_post_grid_layout" name="Grid view"
         customize_show="True" active="False" inherit_id="website_blog.blog_post_short">
     <xpath expr="//div[@name='blog_post']" position="attributes">
-        <attribute name="class" add="col-sm-5 o_grid" separator=" "/>
+        <attribute name="class" add="col-md-5 o_grid" separator=" "/>
     </xpath>
 </template>
 
@@ -277,14 +277,14 @@
     <xpath expr="//div[@id='title']" position="before">
         <div class="container">
           <div class="row">
-            <div class="col-sm-9">
+            <div class="col-md-9">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}"><span t-field="blog.name"/></a></li>
                     <li t-if="tag" class="breadcrumb-item"><a t-attf-href="#{blog_url(date_begin=None, date_end=None)}"><span t-field="tag.name"/></a></li>
                     <li t-if="date" class="breadcrumb-item"><a t-attf-href="#{blog_url(tag=None)}" t-esc="date"/></li>
                     <li class="breadcrumb-item active"><span t-field="blog_post.name"/></li>
                 </ol>
-            </div><div class="col-sm-3">
+            </div><div class="col-md-3">
             </div>
           </div>
         </div>
@@ -381,7 +381,7 @@
 <template id="index_right" name="Right Column"
         inherit_id="website_blog.blog_post_short">
     <xpath expr="//div[@id='main_column']" position="after">
-        <div class="col-lg-3 col-lg-offset-1 col-sm-4" id="blog_right_column"/>
+        <div class="col-xl-3 offset-xl-1 col-md-4" id="blog_right_column"/>
     </xpath>
 </template>
 
@@ -407,7 +407,7 @@
 <template id="opt_blog_rc_tags" name="Tags"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 blog_tags">
@@ -431,7 +431,7 @@
 <template id="opt_blog_rc_history" name="Archives"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
@@ -461,7 +461,7 @@
 <template id="opt_blog_rc_about_us" name="About Us" priority="2"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
@@ -478,7 +478,7 @@
 <template id="opt_blog_rc_follow_us" name="Subscription" priority="4"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32">
@@ -509,7 +509,7 @@
 <template id="opt_blog_rc_status" name="Status" priority="5"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32" groups="website.group_website_designer">
@@ -531,7 +531,7 @@
 <template id="opt_blog_rc_blogs" name="Our Blogs" priority="6"
         inherit_id="website_blog.index_right" active="True" customize_show="True">
     <xpath expr="//div[@id='main_column']" position="attributes">
-        <attribute name="class">col-sm-8</attribute>
+        <attribute name="class">col-md-8</attribute>
     </xpath>
     <xpath expr="//div[@id='blog_right_column']" position="inside">
         <section class="mt32 mb32">
