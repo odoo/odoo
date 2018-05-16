@@ -4107,8 +4107,12 @@ var BasicModel = AbstractModel.extend({
 
                 // If the field is a relation, sort on the display_name of those records
                 if (list.fields[order.name].type === 'many2one') {
-                    orderData1 = orderData1 ? self.localData[orderData1].data.display_name : "";
-                    orderData2 = orderData2 ? self.localData[orderData2].data.display_name : "";
+                    orderData1 = orderData1 ? _.extend({}, self.localData[orderData1].data,
+                                                           self.localData[orderData1]._changes
+                                                           ).display_name : "";
+                    orderData2 = orderData2 ? _.extend({}, self.localData[orderData2].data,
+                                                           self.localData[orderData2]._changes
+                                                           ).display_name : "";
                 }
                 if (orderData1 < orderData2) {
                     return order.asc ? -1 : 1;
