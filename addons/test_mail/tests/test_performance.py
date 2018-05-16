@@ -206,7 +206,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
 
-        with self.assertQueryCount(margin=1, admin=42, emp=55):  # test_mail only: 42 - 55
+        with self.assertQueryCount(margin=1, admin=44, emp=55):  # test_mail only: 44 - 55
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -262,7 +262,7 @@ class TestAdvMailPerformance(TransactionCase):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(margin=1, admin=37, emp=48):  # com runbot 35 - 46 // test_mail only: 37 - 48
+        with self.assertQueryCount(margin=1, admin=39, emp=48):  # com runbot 37 - 46 // test_mail only: 39 - 48
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -472,7 +472,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=67, emp=87):  # com runbot: 66 - 86 // test_mail only: 67 - 87
+        with self.assertQueryCount(admin=67, emp=85):  # com runbot: 66 - 84 // test_mail only: 67 - 85
             rec.write({'user_id': self.user_portal.id})
 
         self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
