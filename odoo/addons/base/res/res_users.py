@@ -14,6 +14,7 @@ from hashlib import sha256
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
+from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, pycompat
@@ -467,8 +468,12 @@ class Users(models.Model):
                     user.sudo(user_id).check_credentials(password)
                     user.sudo(user_id)._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
+
+        status = "successful" if user_id else "failed"
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info("Login %s for db:%s login:%s from %s", status, db, login, ip)
+
         return user_id
 
     @classmethod
