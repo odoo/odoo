@@ -21,11 +21,13 @@ class TestStockValuation(TransactionCase):
             'name': 'Stock Input',
             'code': 'StockIn',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True,
         })
         self.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True,
         })
         self.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
@@ -286,11 +288,13 @@ class TestStockValuationWithCOA(AccountingTestCase):
             'name': 'Stock Input',
             'code': 'StockIn',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True,
         })
         self.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'reconcile': True,
         })
         self.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
