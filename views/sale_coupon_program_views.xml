@@ -28,12 +28,12 @@
                                 <field name="rule_min_quantity" class="oe_inline"/>
                             </div>
                             <label string="Minimum Purchase Of" for="rule_minimum_amount" />
-                            <div name="rule_minimum_amount" class="row col-md-12">
+                            <div name="rule_minimum_amount" class="row col-lg-12">
                                 <field name="currency_id" invisible="1"/>
-                                <div class="col-xs-6">
+                                <div class="col-6">
                                     <field name="rule_minimum_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                 </div>
-                                <div class="col-xs-6">
+                                <div class="col-6">
                                     <field name="rule_minimum_amount_tax_inclusion"/>
                                 </div>
                             </div>
@@ -149,12 +149,12 @@
                             </div>
                             <hr class="mt4 mb4"/>
                             <div class="row">
-                                <div class="col-xs-4 text-center"><strong>Coupons</strong></div>
-                                <div class="col-xs-4 text-center"><strong>Sales</strong></div>
-                                <div class="col-xs-4 text-center"><strong>Active</strong></div>
-                                <div class="col-xs-4 text-center"><field name="coupon_count"/></div>
-                                <div class="col-xs-4 text-center"><field name="order_count"/></div>
-                                <div class="col-xs-4 text-center">
+                                <div class="col-4 text-center"><strong>Coupons</strong></div>
+                                <div class="col-4 text-center"><strong>Sales</strong></div>
+                                <div class="col-4 text-center"><strong>Active</strong></div>
+                                <div class="col-4 text-center"><field name="coupon_count"/></div>
+                                <div class="col-4 text-center"><field name="order_count"/></div>
+                                <div class="col-4 text-center">
                                     <field name="active" widget="boolean"/>
                                 </div>
                             </div>
