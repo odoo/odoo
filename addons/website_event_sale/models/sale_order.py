@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
             values['event_id'] = ticket.event_id.id
             values['event_ticket_id'] = ticket.id
             values['price_unit'] = ticket.price_reduce or ticket.price
-            values['name'] = "%s\n%s" % (ticket.event_id.display_name, ticket.name)
+            values['name'] = ticket.get_default_name_for_sale_order()
 
         # avoid writing related values that end up locking the product record
         values.pop('event_ok', None)

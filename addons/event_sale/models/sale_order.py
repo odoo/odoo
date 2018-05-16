@@ -28,14 +28,6 @@ class SaleOrderLine(models.Model):
     event_ok = fields.Boolean(related='product_id.event_ok', readonly=True)
 
     @api.multi
-    def _prepare_invoice_line(self, qty):
-        self.ensure_one()
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        if self.event_id:
-            res['name'] = '%s: %s' % (res.get('name', ''), self.event_id.name)
-        return res
-
-    @api.multi
     def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None):
         """ Create or update registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
@@ -66,3 +58,18 @@ class SaleOrderLine(models.Model):
         currency = company.currency_id
         self.price_unit = currency._convert(
             self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())
+
+        # we call this to force update the default name
+        self.product_id_change()
+
+    def _get_default_name_based_on_product(self, product):
+        """ we override this method because we decided that the default sale order description must be different if it is for an event ticket
+        """
+        if self.event_ticket_id:
+            ticket = self.event_ticket_id.with_context(
+                lang=self.order_id.partner_id.lang,
+            )
+
+            return ticket.get_default_name_for_sale_order()
+        else:
+            return super(SaleOrderLine, self)._get_default_name_based_on_product(product)

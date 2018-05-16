@@ -61,6 +61,7 @@ class Event(models.Model):
             return True
         return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
 
+
 class EventTicket(models.Model):
     _name = 'event.event.ticket'
     _description = 'Event Ticket'
@@ -159,6 +160,36 @@ class EventTicket(models.Model):
     @api.onchange('product_id')
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
+
+    def get_default_name_for_sale_order(self):
+        """ Compute a default name to be used on a sale order line referencing this event ticket.
+
+        1. the first line is either the event name (if exists) or the product name (if exists)
+        2. then the ticket name
+        3. then (if exists) the product name only if different than the event name (avoid duplicate)
+            we use event_id.name for the check and not event_id.display_name
+            because the display_name will always be different since it contains the date as well
+        4. and finally the product description_sale (if exists)
+
+        This makes the default name consitent with what is done for the standard products while adding the info from the event/ticket and also avoiding duplicate info.
+        """
+
+        name = ""
+
+        if self.event_id:
+            name += self.event_id.display_name + '\n'
+        elif self.product_id:
+            name += self.product_id.display_name + '\n'
+
+        name += self.display_name
+
+        if self.event_id and self.product_id and self.product_id.display_name != self.event_id.name:
+            name += '\n' + self.product_id.display_name
+
+        if self.product_id and self.product_id.description_sale:
+            name += '\n' + self.product_id.description_sale
+
+        return name
 
 
 class EventRegistration(models.Model):
