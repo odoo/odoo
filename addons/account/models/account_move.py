@@ -1509,7 +1509,7 @@ class AccountMoveLine(models.Model):
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
             'partner_id': self.partner_id.id,
-            'company_id': self.env.user.company_id.id,
+            'company_id': self.analytic_account_id.company_id.id or self.env.user.company_id.id,
         }
 
     def _prepare_analytic_distribution_line(self, distribution):
@@ -1532,7 +1532,7 @@ class AccountMoveLine(models.Model):
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
-            'company_id': self.env.user.company_id.id
+            'company_id': distribution.account_id.company_id.id or self.env.user.company_id.id,
         }
 
     @api.model
