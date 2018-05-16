@@ -28,7 +28,6 @@
         'data/crm_data.xml',
         'data/crm_stage_data.xml',
         'data/crm_lead_data.xml',
-        'data/mail_template_data.xml',
         'data/digest_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
