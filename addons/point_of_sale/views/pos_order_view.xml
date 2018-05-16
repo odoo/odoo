@@ -163,6 +163,13 @@
             </p>
         </field>
     </record>
+    <record id="action_pos_sale_graph" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_mode">graph,tree,kanban,form</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+    </record>
     <record id="view_pos_order_tree" model="ir.ui.view">
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
