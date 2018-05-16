@@ -17,7 +17,7 @@
                     <div class="clearfix">
                         <div class="row">
                             <div class="col-md-8">
-                                <h3>Manage your Payment Methods</h3>
+                                <h3>Manage Payment Methods</h3>
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="acquirers" t-value="acquirers"/>
                                     <t t-set="mode" t-value="'manage'"/>
@@ -35,7 +35,7 @@
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s'), ('company_id', '=', request.env.user.company_id.id)])">
-                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage payment methods</a></div>
             </t>
         </xpath>
     </template>
