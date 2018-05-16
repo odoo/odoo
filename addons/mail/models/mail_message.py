@@ -401,7 +401,6 @@ class Message(models.Model):
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'channel_ids', 'partner_ids',  # recipients
-            'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ])
         message_tree = dict((m.id, m) for m in self.sudo())
@@ -414,6 +413,7 @@ class Message(models.Model):
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         xml_comment_id = self.env.ref('mail.mt_comment').id
         for message in message_values:
+            message['needaction_partner_ids'] = self.env['mail.notification'].sudo().search([('mail_message_id', '=', message['id']), ('is_read', '=', False)]).mapped('res_partner_id').ids
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
             message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
