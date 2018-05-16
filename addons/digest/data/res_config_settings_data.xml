@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="default_emails_digest" model="ir.config_parameter">
+        <field name="key">digest.default_digest_emails</field>
+        <field name="value">True</field>
+    </record>
+    <record id="default_digest" model="ir.config_parameter">
+        <field name="key">digest.default_digest_id</field>
+        <field name="value" ref="digest.digest_digest_default"/>
+    </record>
+</odoo>
