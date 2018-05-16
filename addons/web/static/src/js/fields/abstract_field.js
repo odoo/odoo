@@ -172,6 +172,12 @@ var AbstractField = Widget.extend({
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
         this.parseOptions = {};
+
+        // if we add decorations, we need to reevaluate the field whenever any
+        // value from the record is changed
+        if (this.attrs.decorations) {
+            this.resetOnAnyFieldChange = true;
+        }
     },
     /**
      * Loads the libraries listed in this.jsLibs and this.cssLibs
@@ -377,6 +383,15 @@ var AbstractField = Widget.extend({
      * @returns {Deferred|undefined}
      */
     _render: function () {
+        var self = this;
+        if (this.attrs.decorations) {
+            this.attrs.decorations.forEach(function (dec) {
+                var isToggled = py.PY_isTrue(
+                    py.evaluate(dec.expression, self.record.evalContext)
+                );
+                self.$el.toggleClass(dec.className, isToggled);
+            });
+        }
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {
