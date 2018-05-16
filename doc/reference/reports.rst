@@ -297,7 +297,7 @@ the function ``render_html`` and pass objects in the ``docargs`` dictionary:
             docargs = {
                 'doc_ids': docids,
                 'doc_model': report.model,
-                'docs': self,
+                'docs': report.model.browse(docids),
             }
             return report_obj.render('module.report_name', docargs)
 
