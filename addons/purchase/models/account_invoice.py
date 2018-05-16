@@ -218,9 +218,7 @@ class AccountInvoice(models.Model):
                         price_unit_val_dif = price_unit - valuation_price_unit
 
                         price_val_dif = price_before - interim_account_price
-                        po_line = i_line.purchase_line_id
-                        po_line_price_unit_inv_cur = po_line.currency_id.with_context(date=po_line.order_id.date_order).compute(po_line.price_unit, inv.currency_id)
-                        if inv.currency_id.compare_amounts(i_line.price_unit, po_line_price_unit_inv_cur) != 0 and acc:
+                        if inv.currency_id.compare_amounts(i_line.price_unit, valuation_price_unit) != 0 and acc:
                             # If the unit prices have not changed and we have a
                             # valuation difference, it means this difference is due to exchange rates,
                             # so we don't create anything, the exchange rate entries will
