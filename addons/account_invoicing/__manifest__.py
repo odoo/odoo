@@ -15,11 +15,13 @@ You could use this simplified accounting in case you work with an (external) acc
     """,
     'category': 'Invoicing Management',
     'website': 'https://www.odoo.com/page/billing',
-    'depends': ['account'],
+    'depends': ['account', 'digest'],
     'data': [
+        'data/digest_data.xml',
         'views/account_menuitem_views.xml',
         'views/account_invoicing_templates.xml',
         'views/account_invoicing_views.xml',
+        'views/digest_views.xml',
 
     ],
     'demo': [
