@@ -26,6 +26,9 @@ class AccountInvoice(models.Model):
         states={'draft': [('readonly', False)]},
         help="Delivery address for current invoice.")
 
+    def _get_partner_shipping_id(self):
+        return self.partner_shipping_id
+
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
         """
