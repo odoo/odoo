@@ -33,6 +33,7 @@ class ResPartner(models.Model):
     signup_url = fields.Char(compute='_compute_signup_url', string='Signup URL')
 
     @api.multi
+    @api.depends('signup_token', 'signup_expiration')
     def _compute_signup_valid(self):
         dt = now()
         for partner in self:
