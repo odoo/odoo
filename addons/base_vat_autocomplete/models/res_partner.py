@@ -32,6 +32,11 @@ class ResPartner(models.Model):
                     cp = lines.pop()
                     city = lines.pop()
                     return (cp, city)
+            elif country == 'SE':
+                result = re.match('([0-9]{3}\s?[0-9]{2})\s?([A-Z]+)', lines[-1])
+                if result:
+                    lines.pop()
+                    return (result.group(1), result.group(2))
             else:
                 result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
                 if result:

@@ -70,7 +70,7 @@ class ProjectTask(models.Model):
     @api.model
     def create(self, values):
         # sub task has the same so line than their parent
-        if 'parent_id' in values:
+        if 'parent_id' in values and values['parent_id']:
             values['sale_line_id'] = self.env['project.task'].browse(values['parent_id']).sudo().sale_line_id.id
         return super(ProjectTask, self).create(values)
 

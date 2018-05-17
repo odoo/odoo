@@ -599,6 +599,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one in non edit mode', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                            '<field name="trululu"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a.o_form_uri').length, 1,
+            "should display 1 m2o link in form");
+        assert.strictEqual(form.$('a.o_form_uri').attr('href'), "#id=4&model=partner",
+            "href should contain id and model");
+
+        // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_many2one input').val('').trigger('keyup').trigger('focusout');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('a.o_form_uri').attr('href'), "#",
+            "href should have #");
+
+        form.destroy();
+    });
+
     QUnit.test('many2one searches with correct value', function (assert) {
         var done = assert.async();
         assert.expect(6);
@@ -2238,6 +2267,43 @@ QUnit.module('relational_fields', {
             "the modal should be closed");
         assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
             "the partner name should have been updated to 'test'");
+
+        form.destroy();
+    });
+
+    QUnit.test('x2many list sorted by many2one', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.fields.trululu.sortable = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="id"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '124',
+            "should have correct order initially");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '412',
+            "should have correct order (ASC)");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '214',
+            "should have correct order (DESC)");
 
         form.destroy();
     });

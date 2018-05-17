@@ -175,6 +175,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _analytic_compute_delivered_quantity_domain(self):
         domain = super(SaleOrderLine, self)._analytic_compute_delivered_quantity_domain()
+        domain = expression.AND([domain, [('project_id', '=', False)]])
         timesheet_domain = self._timesheet_compute_delivered_quantity_domain()
         return expression.OR([domain, timesheet_domain])
 
