@@ -46,9 +46,6 @@ class WebsiteSaleDelivery(WebsiteSale):
         has_stockable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
         if has_stockable_products:
             if order.carrier_id and not order.delivery_rating_success:
-                values['errors'].append(
-                    (_("Ouch, you cannot choose this carrier!"),
-                     _("%s does not ship to your address, please choose another one.\n(Error: %s)" % (order.carrier_id.name, order.delivery_message))))
                 order._remove_delivery_line()
 
             delivery_carriers = order._get_delivery_methods()
