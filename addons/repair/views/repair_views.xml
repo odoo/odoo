@@ -31,7 +31,7 @@
                     type="object" string="Start Repair" class="oe_highlight"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                    <button name="action_repair_end" states="under_repair" type="object" string="End Repair" class="oe_highlight"/>
-                   <button name="action_repair_invoice_create" states="2binvoiced" type="object" string="Create Invoice" class="oe_highlight"/>
+                   <button name="action_repair_invoice_create" states="2binvoiced" type="object" string="Create Invoice" class="oe_highlight" groups="account.group_account_invoice"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', 'not in',('confirmed','2binvoiced','ready','under_repair'))]}"/>
                    <button name="action_repair_cancel" states="draft" type="object" string="Cancel Repair"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
@@ -41,7 +41,8 @@
                         <button name="action_created_invoice"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o" string="Invoice" attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}">
+                            icon="fa-pencil-square-o" string="Invoice" attrs="{'invisible': ['|',('invoice_method','=','none'), ('state','in',('confirmed','2binvoiced','draft'))]}"
+                            groups="account.group_account_invoice">
                         </button>
                     </div>
                     <label for="name"/>
