@@ -4,7 +4,6 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.tools import float_repr
 
 
 class WebsiteSaleDelivery(WebsiteSale):
@@ -64,8 +63,15 @@ class WebsiteSaleDelivery(WebsiteSale):
             return {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
-                    'new_amount_delivery': float_repr(currency.round(order.delivery_price), currency.decimal_places),
-                    'new_amount_untaxed': order.amount_untaxed,
-                    'new_amount_tax': order.amount_tax,
-                    'new_amount_total': order.amount_total,
+                    'new_amount_delivery': self._format_amount(order.delivery_price, currency),
+                    'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
+                    'new_amount_tax': self._format_amount(order.amount_tax, currency),
+                    'new_amount_total': self._format_amount(order.amount_total, currency),
             }
+
+    def _format_amount(self, amount, currency):
+        fmt = "%.{0}f".format(currency.decimal_places)
+        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
+
+        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
