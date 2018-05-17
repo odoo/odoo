@@ -1664,4 +1664,25 @@ body .modal {
             border-left: 1px solid $gray-lighter;
         }
     }
+    // Crop Dialog
+    .o_crop_image_dialog .o_crop_area {
+        height: 350px;
+        .cropper-point {
+            background-color: white;
+            @include o-transition(all, 400ms, $o-we-md-ease);
+            @include o-transform(scale(1.5, 1.5));
+            border-radius: 10px;
+            box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
+            opacity: 1;
+            &:hover {
+                @include o-transform(scale(2.5, 2.5));
+            }
+        }
+        .cropper-line {
+            background: black;
+        }
+        .cropper-view-box {
+            outline: 2px solid white;
+        }
+    }
 }
