@@ -185,6 +185,73 @@ class TestPickShip(TestStockCommon):
         # the client picking should not be assigned anymore, as we returned partially what we took
         self.assertEqual(picking_client.state, 'confirmed')
 
+    def test_mto_moves_return_return(self):
+        picking_pick, picking_client = self.create_pick_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '123456789'
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0, lot_id=lot)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.button_validate()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_client.state, 'assigned')
+
+        # return this picking
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].write({
+            'qty_done': 10.0,
+            'lot_id': lot.id,
+        })
+        return_pick.button_validate()
+        # return this return of this picking
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_id=return_pick.id)\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_return_pick.move_lines[0].move_line_ids[0].write({
+            'qty_done': 10.0,
+            'lot_id': lot.id,
+        })
+        return_return_pick.button_validate()
+        # test computation of traceability
+        vals = {
+            'line_id': 1,
+            'model_name': 'stock.move.line',
+            'level': 11,
+            'parent_quant': False,
+        }
+        lines = self.env['stock.traceability.report'].get_lines(
+            model_id=return_return_pick.move_line_ids[0].id,
+            stream='upstream',
+            **vals
+        )
+        self.assertEqual(
+            [l.get('res_id') for l in lines],
+            [return_return_pick.id, return_pick.id, picking_pick.id],
+            "Upstream computation from return of return worked"
+        )
+        lines = self.env['stock.traceability.report'].get_lines(
+            model_id=picking_pick.move_line_ids[0].id,
+            stream='downstream',
+            **vals
+        )
+        self.assertEqual(
+            [l.get('res_id') for l in lines],
+            [picking_pick.id, return_pick.id, return_return_pick.id],
+            "Downstream computation from original picking worked"
+        )
+
     def test_mto_resupply_cancel_ship(self):
         """ This test simulates a pick pack ship with a resupply route
         set. Pick and pack are validated, ship is cancelled. This test
