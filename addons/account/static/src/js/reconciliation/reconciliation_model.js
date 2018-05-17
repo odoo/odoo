@@ -1321,6 +1321,8 @@ var ManualModel = StatementModel.extend({
         var self = this;
         this.context = context;
 
+        this.context = context;
+
         var domain_account_id = [];
         if (context && context.company_ids) {
             domain_account_id.push(['company_id', 'in', context.company_ids]);

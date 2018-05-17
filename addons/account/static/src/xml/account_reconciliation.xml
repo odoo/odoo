@@ -71,6 +71,9 @@
                 <button class="button_close_statement btn btn-primary" style="display: inline-block;">Close statement</button>
             </t>
         </p>
+        <t t-if="context['active_model'] === 'account.payment'">
+            <button class="button_back_to_payment btn btn-default btn-sm" style="display: inline-block;" t-att-data-active_id="context['active_id']">Go Back to Payment</button>
+        </t>
     </t>
 </div>
 

@@ -222,6 +222,14 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             view_mode: 'form',
         });
     },
+     /**
+     * Open the form view for account.payment model
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onGoToBankPayment: function (e) {
+        this.trigger_up('history_back');
+    },
     /**
      * Load more statement lines for reconciliation
      * @private
