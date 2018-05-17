@@ -65,12 +65,11 @@ class SaleOrder(models.Model):
                         carrier = delivery
                         break
                 self.write({'carrier_id': carrier.id})
+            self._remove_delivery_line()
             if carrier:
                 self.get_delivery_price()
                 if self.delivery_rating_success:
                     self.set_delivery_line()
-            else:
-                self._remove_delivery_line()
 
         return bool(carrier)
 
