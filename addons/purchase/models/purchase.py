@@ -323,6 +323,7 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def print_quotation(self):
+        self.write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     @api.multi
