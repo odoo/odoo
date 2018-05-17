@@ -114,8 +114,8 @@ class TestPyLint(TransactionCase):
     def test_pylint(self):
         if pylint is None:
             self._skip_test('please install pylint')
-        if LooseVersion(getattr(pylint, '__version__', '0.0.1')) < LooseVersion('1.6.4'):
-            self._skip_test('please upgrade pylint to >= 1.6.4')
+        if LooseVersion(getattr(pylint, '__version__', '0.0.1')) < LooseVersion('1.7.0'):
+            self._skip_test('please upgrade pylint to >= 1.7.0')
 
         paths = [tools.config['root_path']]
         for module in get_modules():
