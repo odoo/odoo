@@ -254,6 +254,7 @@ var ServicesMixin = {
      * @see displayNotification
      */
     do_warn: function (title, message, sticky, className) {
+        console.warn(title, message);
         return this.displayNotification({
             type: 'danger',
             title: title,
