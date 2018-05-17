@@ -91,7 +91,7 @@ class StockMove(models.Model):
     quantity_available = fields.Float(
         'Quantity Available', compute="_qty_available",
         digits=dp.get_precision('Product Unit of Measure'))
-    quantity_done_store = fields.Float('Quantity', digits=0)
+    quantity_done_store = fields.Float('Quantity done store', digits=0)
     quantity_done = fields.Float(
         'Quantity', compute='_qty_done_compute', inverse='_qty_done_set',
         digits=dp.get_precision('Product Unit of Measure'))
