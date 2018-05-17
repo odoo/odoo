@@ -120,6 +120,10 @@ var IframeRoot = BodyManager.extend({
             var editorInstance = new (editor.Class)(this);
             defs.push(editorInstance.prependTo(this.$el));
         }
+        if (ctx.editable && window.location.search.indexOf('enable_editor') <= 0) {
+            var editorEditBtn = new (editor.EditorMenuBarEdit)(this);
+            defs.push(editorEditBtn.prependTo(this.$el));
+        }
 
         if (ctx.edit_translations) {
             var translator = new (translate.Class)(this, this.$('#wrapwrap'));
