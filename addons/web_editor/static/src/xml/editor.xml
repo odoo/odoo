@@ -300,6 +300,48 @@
         </div>
     </div>
 
+    <!-- Crop Image Dialog (allows to crop image on the page) -->
+    <div t-name="web_editor.dialog.crop_image" class="o_crop_image_dialog">
+        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center">
+            <i class="fa fa-exclamation-triangle fa-2x"/>
+            <h4>This image is an external image</h4>
+            <p>
+                This type of image is not supported for cropping.<br/>
+                If you want to crop it, please first download it from the original source and upload it in Odoo.
+            </p>
+        </div>
+        <t t-else="">
+           <div class="o_crop_area">
+                <img class="img img-responsive o_cropper_image" t-att-src="widget.imageData.src" />
+           </div>
+           <div class="o_crop_options text-center mt16">
+               <div class="btn-group" title="Aspect Ratio" data-toggle="buttons">
+                   <t t-foreach="widget.aspectRatioList" t-as="ratio">
+                       <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
+                       <a href="#" t-attf-class="btn btn-default#{is_active and ' active' or ''}" data-event="ratio" t-att-data-value="ratio[1]">
+                            <t t-esc="ratio[0]"/>
+                       </a>
+                   </t>
+               </div>
+               <div class="btn-group" role="group">
+                   <a href="#" class="btn btn-default" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></a>
+                   <a href="#" class="btn btn-default" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></a>
+               </div>
+               <div class="btn-group" role="group">
+                   <a href="#" class="btn btn-default" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></a>
+                   <a href="#" class="btn btn-default" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></a>
+               </div>
+               <div class="btn-group" role="group">
+                   <a href="#" class="btn btn-default" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></a>
+                   <a href="#" class="btn btn-default" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></a>
+               </div>
+               <div class="btn-group" role="group">
+                   <a href="#" class="btn btn-default" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</a>
+               </div>
+           </div>
+       </t>
+    </div>
+
     <!--=================-->
     <!-- Snippet options -->
     <!--=================-->
