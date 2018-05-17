@@ -14,4 +14,10 @@
             </xpath>
         </field>
     </record>
+
+    <record id="hr_expense.hr_expense_product" model="ir.actions.act_window">
+        <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service',
+            'default_invoice_policy':'delivery', 'default_expense_policy' : 'cost'}</field>
+    </record>
+
 </odoo>
