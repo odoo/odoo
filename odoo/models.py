@@ -714,9 +714,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if not batch_invalidate:
             splittor = lambda rs: rs
 
-        # both _ensure_xml_id and the splitter want to work on recordsets but
-        # neither returns one, so can't really be composed...
-        xids = dict(self.__ensure_xml_id(skip=['id'] not in fields))
         # memory stable but ends up prefetching 275 fields (???)
         for record in splittor(self):
             # main line of record, initially empty
@@ -738,9 +735,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if name == '.id':
                     current[i] = str(record.id)
                 elif name == 'id':
-                    xid = xids.get(record)
-                    assert xid, "no xid was generated for the record %s" % record
-                    current[i] = xid
+                    current[i] = (record._name, record.id)
                 else:
                     field = record._fields[name]
                     value = record[name]
@@ -773,6 +768,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             lines += lines2[1:]
                         else:
                             current[i] = False
+
+        # if any xid should be exported, only do so at toplevel
+        if batch_invalidate and any(f[-1] == 'id' for f in fields):
+            bymodels = collections.defaultdict(set)
+            xidmap = collections.defaultdict(list)
+            # collect all the tuples in "lines" (along with their coordinates)
+            for i, line in enumerate(lines):
+                for j, cell in enumerate(line):
+                    if type(cell) is tuple:
+                        bymodels[cell[0]].add(cell[1])
+                        xidmap[cell].append((i, j))
+            # for each model, xid-export everything and inject in matrix
+            for model, ids in bymodels.items():
+                for record, xid in self.env[model].browse(ids).__ensure_xml_id():
+                    for i, j in xidmap.pop((record._name, record.id)):
+                        lines[i][j] = xid
+            assert not xidmap, "failed to export xids for %s" % ', '.join('{}:{}' % it for it in xidmap.items())
 
         return lines
 
