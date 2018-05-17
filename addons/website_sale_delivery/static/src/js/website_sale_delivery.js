@@ -27,6 +27,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         else {
             console.error(result.error_message);
             $compute_badge.text(result.error_message);
+            $amount_delivery.text(result.new_amount_delivery);
+            $amount_untaxed.text(result.new_amount_untaxed);
+            $amount_tax.text(result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
         }
     };
 
