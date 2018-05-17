@@ -826,17 +826,23 @@ class AccountMoveLine(models.Model):
         return debit, credit
 
     def auto_reconcile_lines(self):
-        """ This function iterates recursively on the recordset given as parameter as long as it
+        """ This function iterates on the recordset given as parameter as long as it
             can find a debit and a credit to reconcile together. It returns the recordset of the
             account move lines that were not reconciled during the process.
         """
         if not self.ids:
             return self
-        sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
-        #there is no more pair to reconcile so return what move_line are left
-        if not sm_credit_move or not sm_debit_move:
-            return self
 
+        while self:
+            sm_debit_move, sm_credit_move = self._get_pair_to_reconcile()
+            #there is no more pair to reconcile so return what move_line are left
+            if not sm_credit_move or not sm_debit_move:
+                return self
+            self = self._auto_reconcile_lines_pair(sm_credit_move, sm_debit_move)
+
+        return self
+
+    def _auto_reconcile_lines_pair(self, sm_credit_move, sm_debit_move):
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
         if not sm_debit_move.debit and not sm_debit_move.credit:
             #both debit and credit field are 0, consider the amount_residual_currency field because it's an exchange difference entry
@@ -879,8 +885,7 @@ class AccountMoveLine(models.Model):
             'currency_id': currency,
         })
 
-        #Iterate process again on self
-        return self.auto_reconcile_lines()
+        return self
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
