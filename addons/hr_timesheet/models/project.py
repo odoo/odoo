@@ -154,8 +154,10 @@ class Task(models.Model):
             # a timesheet must have an analytic account (and a project)
             if self and not project_id:
                 raise UserError(_('This task must have a project since they are linked to timesheets.'))
+            account_id = self.env['project.project'].browse(project_id).sudo().analytic_account_id
             self.sudo().mapped('timesheet_ids').write({
                 'project_id': project_id,
-                'account_id': self.env['project.project'].browse(project_id).sudo().analytic_account_id.id
+                'account_id': account_id.id,
+                'company_id': account_id.company_id.id,
             })
         return result

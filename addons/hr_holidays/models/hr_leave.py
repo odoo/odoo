@@ -114,11 +114,6 @@ class HolidaysRequest(models.Model):
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
 
-    @api.onchange('employee_id')
-    def _onchange_employee_id(self):
-        self.manager_id = self.employee_id and self.employee_id.parent_id
-        self.department_id = self.employee_id.department_id
-
     @api.multi
     @api.depends('number_of_days_temp')
     def _compute_number_of_days(self):
@@ -160,7 +155,8 @@ class HolidaysRequest(models.Model):
             self.department_id = None
 
     @api.onchange('employee_id')
-    def _onchange_employee(self):
+    def _onchange_employee_id(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
         if self.holiday_type == 'employee':
             self.department_id = self.employee_id.department_id
 

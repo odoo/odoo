@@ -21,6 +21,11 @@ class ProductTemplate(models.Model):
                 raise UserError(_('You cannot delete a product saleable in point of sale while a session is still opened.'))
         return super(ProductTemplate, self).unlink()
 
+    @api.onchange('sale_ok')
+    def _onchange_sale_ok(self):
+        if not self.sale_ok:
+            self.available_in_pos = False
+
 
 class UomCateg(models.Model):
     _inherit = 'uom.category'

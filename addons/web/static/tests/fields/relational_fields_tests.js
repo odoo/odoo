@@ -2272,6 +2272,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('x2many list sorted by many2one', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.fields.trululu.sortable = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="id"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '124',
+            "should have correct order initially");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '412',
+            "should have correct order (ASC)");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '214',
+            "should have correct order (DESC)");
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list add *many* records, remove, re-add', function (assert) {
         assert.expect(5);
 

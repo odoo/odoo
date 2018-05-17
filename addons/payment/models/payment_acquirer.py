@@ -687,6 +687,10 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def get_next_reference(self, reference):
+        return self._get_next_reference(reference)
+
+    @api.model
+    def _get_next_reference(self, reference, acquirer=None):
         ref_suffix = 1
         init_ref = reference
         while self.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):

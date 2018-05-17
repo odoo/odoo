@@ -184,7 +184,7 @@ var Chatter = Widget.extend({
             input_baseline: 14,
             is_log: options && options.is_log,
             record_name: this.record_name,
-            default_body: old_composer && old_composer.$input && old_composer.$input.html(),
+            default_body: old_composer && old_composer.$input && old_composer.$input.val(),
             default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
@@ -247,7 +247,7 @@ var Chatter = Widget.extend({
         }).always(function () {
             // disable widgets in create mode, otherwise enable
             self.isCreateMode ? self._disableChatter() : self._enableChatter();
-            $spinner.remove;
+            $spinner.remove();
         });
     },
     /**

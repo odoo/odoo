@@ -62,7 +62,6 @@ class WebsiteEventController(http.Controller):
         ]
 
         # search domains
-        # TDE note: WTF ???
         current_date = None
         current_type = None
         current_country = None
@@ -117,9 +116,12 @@ class WebsiteEventController(http.Controller):
             step=step,
             scope=5)
 
-        order = 'website_published desc, date_begin'
+        order = 'date_begin'
         if searches.get('date', 'all') == 'old':
-            order = 'website_published desc, date_begin desc'
+            order = 'date_begin desc'
+        if searches["country"] != 'all':   # if we are looking for a specific country
+            order = 'is_online, ' + order  # show physical events first
+        order = 'website_published desc, ' + order
         events = Event.search(dom_without("none"), limit=step, offset=pager['offset'], order=order)
 
         values = {

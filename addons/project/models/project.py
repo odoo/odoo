@@ -620,6 +620,12 @@ class Task(models.Model):
             default['name'] = _("%s (copy)") % self.name
         return super(Task, self).copy(default)
 
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        for task in self:
+            if not task._check_recursion():
+                raise ValidationError(_('Error! You cannot create recursive hierarchy of task(s).'))
+
     # Override view according to the company definition
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -966,6 +972,20 @@ class Task(models.Model):
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window'
         }
+
+    def action_subtask(self):
+        action = self.env.ref('project.project_task_action_sub_task').read()[0]
+        ctx = self.env.context.copy()
+        ctx.update({
+            'default_parent_id': self.id,
+            'default_project_id': self.env.context.get('project_id', self.project_id.id),
+            'default_name': self.env.context.get('name', self.name) + ':',
+            'default_partner_id': self.env.context.get('partner_id', self.partner_id.id),
+            'search_default_project_id': self.env.context.get('project_id', self.project_id.id),
+        })
+        action['context'] = ctx
+        action['domain'] = [('id', 'child_of', self.id), ('id', '!=', self.id)]
+        return action
 
     # ---------------------------------------------------
     # Rating business
