@@ -2522,6 +2522,39 @@ class TestStockValuation(TransactionCase):
         move2.move_line_ids.qty_done = 0
         self.assertEqual(self.product1.stock_value, -187.5)
 
+    def test_average_perpetual_4(self):
+        self.product1.product_tmpl_id.cost_method = 'average'
+
+        move1 = self.env['stock.move'].create({
+            'name': 'Receive 1 unit at 10',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 10,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 1.0
+        move1._action_done()
+
+        move2 = self.env['stock.move'].create({
+            'name': 'Receive 3 units at 5',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 3.0,
+            'price_unit': 5,
+        })
+        move2._action_confirm()
+        move2._action_assign()
+        move2.move_line_ids.qty_done = 1.0
+        move2._action_done()
+
+        self.assertAlmostEqual(self.product1.standard_price, 7.5)
+
     def test_average_negative_1(self):
         """ Test edit in the past. Receive 10, send 20, edit the second move to only send 10.
         """

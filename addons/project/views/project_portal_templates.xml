@@ -142,7 +142,7 @@
                             <thead>
                                 <tr class="active">
                                     <th t-if="groupby == 'none'" class="col-md-9">Name</th>
-                                    <th t-else="" class="col-md-9"><span t-field="tasks[0].project_id.label_tasks"/> for project: <span t-field="tasks[0].project_id.name"/></th>
+                                    <th t-else="" class="col-md-9"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project: <span t-field="tasks[0].sudo().project_id.name"/></th>
                                     <th class="col-md-2">Stage</th>
                                     <th>Ref</th>
                                 </tr>

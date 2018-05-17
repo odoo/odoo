@@ -182,7 +182,7 @@ class PaymentTransaction(models.Model):
                 'currency_id': order.pricelist_id.currency_id.id,
                 'partner_id': order.partner_id.id,
                 'partner_country_id': order.partner_id.country_id.id,
-                'reference': self.get_next_reference(order.name),
+                'reference': self._get_next_reference(order.name, acquirer=acquirer),
                 'sale_order_id': order.id,
             }
             if add_tx_values:
