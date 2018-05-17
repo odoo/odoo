@@ -49,8 +49,8 @@ var ThreadField = AbstractField.extend({
         this._threadWidget.on('load_more_messages', this, this._onLoadMoreMessages);
         this._threadWidget.on('redirect', this, this._onRedirect);
         this._threadWidget.on('redirect_to_channel', this, this._onRedirectToChannel);
-        this._threadWidget.on('toggle_star_status', this, function (messageID) {
-            var message = self.call('mail_service', 'getMessage', messageID);
+        this._threadWidget.on('toggle_star_status', this, function (ev) {
+            var message = self.call('mail_service', 'getMessage', ev.data.messageID);
             message.toggleStarStatus();
         });
 
@@ -82,12 +82,13 @@ var ThreadField = AbstractField.extend({
      * @param  {integer[]} message.partner_ids
      * @return {$.Promise}
      */
-    postMessage: function (message) {
+    postMessage: function (ev) {
         var self = this;
+        var message = ev.data.message;
         return this._documentThread.postMessage(message)
             .then(function () {
                 if (message.partner_ids.length) {
-                    self.trigger_up('reload_mail_fields', { followers: true });
+                    self.trigger('reload_mail_fields', { followers: true });
                 }
             })
             .fail(function () {
@@ -183,7 +184,8 @@ var ThreadField = AbstractField.extend({
      * @private
      * @param {mail.model.Message}
      */
-    _onNewMessage: function (message) {
+    _onNewMessage: function (ev) {
+        var message = ev.data.message;
         if (
             message.isLinkedToDocumentThread() &&
             message.getDocumentModel() === this.model &&
@@ -200,11 +202,11 @@ var ThreadField = AbstractField.extend({
      * @private
      * @param {integer} channelID
      */
-    _onRedirectToChannel: function (channelID) {
+    _onRedirectToChannel: function (ev) {
         var self = this;
-        this.call('mail_service', 'joinChannel', channelID).then(function () {
+        this.call('mail_service', 'joinChannel', ev.data.channelID).then(function () {
             // Execute Discuss with 'channel' as default channel
-            self.do_action('mail.action_discuss', { active_id: channelID });
+            self.do_action('mail.action_discuss', { active_id: ev.data.channelID });
         });
     },
     /**
@@ -212,17 +214,18 @@ var ThreadField = AbstractField.extend({
      * @param {string} resModel
      * @param {integer} resID
      */
-    _onRedirect: function (resModel, resID) {
+    _onRedirect: function (ev) {
         this.trigger_up('redirect', {
-            res_id: resID,
-            res_model: resModel,
+            res_id: ev.data.resID,
+            res_model: ev.data.resModel,
         });
     },
     /**
      * @private
      * @param {mail.model.Message}
      */
-    _onUpdateMessage: function (message) {
+    _onUpdateMessage: function (ev) {
+        var message = ev.data.message;
         if (
             message.isLinkedToDocumentThread() &&
             message.getDocumentModel() === this.model &&
@@ -230,7 +233,7 @@ var ThreadField = AbstractField.extend({
         ) {
             this._fetchAndRenderThread();
         }
-    },
+    }
 });
 
 field_registry.add('mail_thread', ThreadField);

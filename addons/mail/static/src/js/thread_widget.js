@@ -421,7 +421,10 @@ var ThreadWidget = Widget.extend({
         if ('channelID' in options) {
             this.trigger('redirect_to_channel', options.channelID);
         } else {
-            this.trigger('redirect', options.model, options.id);
+            this.trigger_up('redirect', {
+                resModel:options.model,
+                resID: options.id
+            });
         }
     }, 500, true),
     /**

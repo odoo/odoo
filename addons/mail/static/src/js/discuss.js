@@ -822,18 +822,18 @@ var Discuss = AbstractAction.extend({
         });
 
         this._threadWidget
-            .on('redirect', this, function (resModel, resID) {
-                this.call('mail_service', 'redirect', resModel, resID, this._setThread.bind(this));
+            .on('redirect', this, function (ev) {
+                this.call('mail_service', 'redirect', ev.data.resModel, ev.data.resID, this._setThread.bind(this));
             })
-            .on('redirect_to_channel', this, function (channelID) {
-                this.call('mail_service', 'joinChannel', channelID).then(this._setThread.bind(this));
+            .on('redirect_to_channel', this, function (ev) {
+                this.call('mail_service', 'joinChannel', ev.data.channelID).then(this._setThread.bind(this));
             })
             .on('load_more_messages', this, this._loadMoreMessages)
-            .on('mark_as_read', this, function (messageID) {
-                this.call('mail_service', 'markMessagesAsRead', [messageID]);
+            .on('mark_as_read', this, function (ev) {
+                this.call('mail_service', 'markMessagesAsRead', [ev.data.messageID]);
             })
-            .on('toggle_star_status', this, function (messageID) {
-                var message = this.call('mail_service', 'getMessage', messageID);
+            .on('toggle_star_status', this, function (ev) {
+                var message = this.call('mail_service', 'getMessage', ev.data.messageID);
                 message.toggleStarStatus();
             })
             .on('select_message', this, this._selectMessage)
@@ -896,9 +896,9 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {integer} messageID
      */
-    _selectMessage: function (messageID) {
+    _selectMessage: function (ev) {
         this.$el.addClass('o_mail_selection_mode');
-        var message = this.call('mail_service', 'getMessage', messageID);
+        var message = this.call('mail_service', 'getMessage', ev.data.messageID);;
         this._selectedMessage = message;
         var subject = "Re: " + message.getDocumentName();
         this._extendedComposer.setSubject(subject);
@@ -910,7 +910,7 @@ var Discuss = AbstractAction.extend({
         this._extendedComposer.do_show();
 
         this._threadWidget.scrollToMessage({
-            msgID: messageID,
+            msgID: ev.data.messageID,
             duration: 200,
             onlyIfNecessary: true
         });
@@ -1252,12 +1252,12 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {integer|string} channelID
      */
-    _onChannelLeft: function (channelID) {
-        if (this._thread.getID() === channelID) {
+    _onChannelLeft: function (ev) {
+        if (this._thread.getID() === ev.data.channelID) {
             this._setThread('mailbox_inbox');
         }
         this._updateThreads();
-        delete this._threadsScrolltop[channelID];
+        delete this._threadsScrolltop[ev.data.channelID];
     },
     /**
      * @private
@@ -1376,7 +1376,9 @@ var Discuss = AbstractAction.extend({
      * @param {mail.model.Message} message
      * @param {string} [type] the channel
      */
-    _onMessageUpdated: function (message, type) {
+    _onMessageUpdated: function (ev) {
+        var message = ev.data.message;
+        var type = ev.data.type;
         var self = this;
         var currentThreadID = this._thread.getID();
         if (
@@ -1413,17 +1415,18 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {mail.model.Channel} channel
      */
-    _onNewChannel: function (channel) {
+    _onNewChannel: function (ev) {
         this._updateThreads();
-        if (channel.isAutoswitch()) {
-            this._setThread(channel.getID());
+        if (ev.data.channel.isAutoswitch()) {
+            this._setThread(ev.data.channel.getID());
         }
     },
     /**
      * @private
      * @param {mail.model.Message} message
      */
-    _onNewMessage: function (message) {
+    _onNewMessage: function (ev) {
+        var message = ev.data.message;
         var self = this;
         if (_.contains(message.getThreadIDs(), this._thread.getID())) {
             if (this._thread.getType() !== 'mailbox' && this._threadWidget.isAtBottom()) {
@@ -1457,7 +1460,8 @@ var Discuss = AbstractAction.extend({
      * @private
      * @param {Object} messageData
      */
-    _onPostMessage: function (messageData) {
+    _onPostMessage: function (ev) {
+        var messageData = ev.data.message;
         var self = this;
         var options = {};
         if (this._selectedMessage) {
