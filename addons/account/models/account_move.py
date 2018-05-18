@@ -681,7 +681,8 @@ class AccountMoveLine(models.Model):
                 amount_reconcile = temp_amount_residual
 
             if cash_basis:
-                cash_basis_percentage_before_rec.append(debit_move._get_matched_percentage())
+                tmp_set = debit_move | credit_move
+                cash_basis_percentage_before_rec.append(tmp_set._get_matched_percentage())
 
             to_create.append({
                 'debit_move_id': debit_move.id,
