@@ -22,6 +22,7 @@ var framework = require('web.framework');
 var pyeval = require('web.pyeval');
 var Widget = require('web.Widget');
 
+var _t = core._t;
 var ActionManager = Widget.extend({
     className: 'o_content',
     custom_events: {
@@ -547,7 +548,13 @@ var ActionManager = Widget.extend({
             framework.redirect(url);
             return $.Deferred();
         } else {
-            window.open(url, '_blank');
+            var w = window.open(url, '_blank');
+            if (!w || w.closed || typeof w.closed === 'undefined') {
+                var message = _t('A popup window was blocked. You ' +
+                             'may need to change your browser settings to allow ' +
+                             'popup windows for this page.');
+                this.do_warn(_t('Warning'), message, true);
+            }
         }
 
         options.on_close();
