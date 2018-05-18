@@ -1974,13 +1974,16 @@ var BasicModel = AbstractModel.extend({
         return this._rpc({
                 model: model,
                 method: 'name_get',
-                args: [ids],
+                args: [_.uniq(ids)],
                 context: list.context,
             })
             .then(function (name_gets) {
-                for (var i = 0; i < name_gets.length; i++) {
-                    records[i].data.display_name = name_gets[i][1];
-                }
+                _.each(records, function (record) {
+                    var nameGet = _.find(name_gets, function (nameGet) {
+                        return nameGet[0] === record.data.id;
+                    });
+                    record.data.display_name = nameGet[1];
+                });
             });
     },
     /**
@@ -2466,7 +2469,16 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var def;
         if (list.static) {
-            def = this._readUngroupedList(list);
+            def = this._readUngroupedList(list).then(function () {
+                if (list.parentID && self.isNew(list.parentID)) {
+                    // list from a default_get, so fetch display_name for many2one fields
+                    var many2ones = self._getMany2OneFieldNames(list);
+                    var defs = _.map(many2ones, function (name) {
+                        return self._fetchNameGets(list, name);
+                    });
+                    return $.when.apply($, defs);
+                }
+            });
         } else {
             def = this._searchReadUngroupedList(list);
         }
@@ -3033,6 +3045,23 @@ var BasicModel = AbstractModel.extend({
         var fieldsInfo = element.fieldsInfo;
         var viewType = options && options.viewType || element.viewType;
         return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
+    },
+    /**
+     * Get many2one fields names in a datapoint. This is useful in order to
+     * fetch their names in the case of a default_get.
+     *
+     * @private
+     * @param {Object} datapoint a valid resource object
+     * @returns {string[]} list of field names that are many2one
+     */
+    _getMany2OneFieldNames: function (datapoint) {
+        var many2ones = [];
+        _.each(datapoint.fields, function (field, name) {
+            if (field.type === 'many2one') {
+                many2ones.push(name);
+            }
+        });
+        return many2ones;
     },
     /**
      * Evaluate the record evaluation context.  This method is supposed to be

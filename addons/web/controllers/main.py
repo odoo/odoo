@@ -1047,8 +1047,12 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
-        height = int(height or 0)
-        width = int(width or 0)
+        if headers and dict(headers).get('Content-Type', '') == 'image/svg+xml':  # we shan't resize svg images
+            height = 0
+            width = 0
+        else:
+            height = int(height or 0)
+            width = int(width or 0)
 
         if crop and (width or height):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
