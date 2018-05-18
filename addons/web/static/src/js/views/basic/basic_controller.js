@@ -142,12 +142,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var data = this.model.get(this.handle, {raw: true});
         this.pager = new Pager(this, data.count, data.offset + 1, data.limit, options);
 
-        this.pager.on('pager_changed', this, function (newState) {
+        this.pager.on('pager_changed', this, function (ev) {
             var self = this;
             this.pager.disable();
             data = this.model.get(this.handle, {raw: true});
-            var limitChanged = (data.limit !== newState.limit);
-            this.reload({limit: newState.limit, offset: newState.current_min - 1})
+            var limitChanged = (data.limit !== ev.data.limit);
+            this.reload({limit: ev.data.limit, offset: ev.data.current_min - 1})
                 .then(function () {
                     // Reset the scroll position to the top on page changed only
                     if (!limitChanged) {

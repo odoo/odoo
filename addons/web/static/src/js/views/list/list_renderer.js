@@ -399,13 +399,13 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderGroupPager: function (group) {
         var pager = new Pager(this, group.count, group.offset + 1, group.limit);
-        pager.on('pager_changed', this, function (newState) {
+        pager.on('pager_changed', this, function (ev) {
             var self = this;
             pager.disable();
             this.trigger_up('load', {
                 id: group.id,
-                limit: newState.limit,
-                offset: newState.current_min - 1,
+                limit: ev.data.limit,
+                offset: ev.data.current_min - 1,
                 on_success: function (reloadedGroup) {
                     _.extend(group, reloadedGroup);
                     self._renderView();

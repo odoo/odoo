@@ -1047,11 +1047,11 @@ var FieldX2Many = AbstractField.extend({
                 return isList ? self.renderer.unselectRow() : $.when();
             },
         });
-        this.pager.on('pager_changed', this, function (new_state) {
+        this.pager.on('pager_changed', this, function (ev) {
             self.trigger_up('load', {
                 id: self.value.id,
-                limit: new_state.limit,
-                offset: new_state.current_min - 1,
+                limit: ev.data.limit,
+                offset: ev.data.current_min - 1,
                 on_success: function (value) {
                     self.value = value;
                     self._render();

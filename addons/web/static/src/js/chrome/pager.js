@@ -105,7 +105,7 @@ var Pager = Widget.extend({
         _.extend(this.state, state);
         this._render();
         if (options && options.notifyChange) {
-            this.trigger('pager_changed', _.clone(this.state));
+            this.trigger_up('pager_changed', _.clone(this.state));
         }
     },
 
@@ -141,7 +141,7 @@ var Pager = Widget.extend({
             // (and a common use is to disable the pager when this event is
             // triggered, and to re-enable it when the data have been reloaded)
             self._render();
-            self.trigger('pager_changed', _.clone(self.state));
+            self.trigger_up('pager_changed', _.clone(self.state));
         });
     },
     /**
@@ -214,7 +214,7 @@ var Pager = Widget.extend({
                     // The state has been given as a single value -> set the limit to 1
                     self.state.limit = 1;
                 }
-                self.trigger('pager_changed', _.clone(self.state));
+                self.trigger_up('pager_changed', _.clone(self.state));
             }
         }).always(function() {
             // Render the pager's new state (removes the input)
