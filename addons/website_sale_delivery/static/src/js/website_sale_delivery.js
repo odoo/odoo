@@ -40,11 +40,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
-    // Ugly, ugly, ugly workaround to:
-    // - update the amount/error on the label at first rendering
-    // - prevent clicking on 'Pay Now' if the shipper rating fails
-    if ($carriers.length > 0) {
-        $carriers.filter(':checked').click();
+    // Ugly, ugly, ugly workaround to force user to choose a shipper
+    if ($carriers.length > 1) {
+        $carriers.prop('checked', false);
+        $pay_button.prop('disabled', true);
     }
 
     /* Handle stuff */

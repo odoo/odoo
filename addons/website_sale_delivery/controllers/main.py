@@ -17,6 +17,8 @@ class WebsiteSaleDelivery(WebsiteSale):
             carrier_id = int(carrier_id)
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id)
+            if len(order._get_delivery_methods()) > 1:
+                order._remove_delivery_line()
             if carrier_id:
                 return request.redirect("/shop/payment")
 
