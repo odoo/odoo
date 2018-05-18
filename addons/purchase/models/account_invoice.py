@@ -163,12 +163,14 @@ class AccountInvoice(models.Model):
             # calculate and write down the possible price difference between invoice price and product price
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
-                    valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
+                    # valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
+                    valuation_price_unit = company_currency.compute(i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id), inv.currency_id, round=False)
                     line_quantity = line['quantity']
 
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
+                        po_currency = i_line.purchase_id.currency_id
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves
-                        valuation_price_unit = i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id)
+                        valuation_price_unit = po_currency.with_context(date=inv.date_invoice).compute(i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id), inv.currency_id, round=False)
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([
                             ('purchase_line_id', '=', i_line.purchase_line_id.id),
@@ -183,22 +185,20 @@ class AccountInvoice(models.Model):
                             valuation_price_unit_total = 0
                             valuation_total_qty = 0
                             for val_stock_move in valuation_stock_move:
-                                valuation_price_unit_total += abs(val_stock_move.price_unit) * val_stock_move.product_qty
+                                # In case val_stock_move is a return move, its valuation entries have been made with the
+                                # currency rate corresponding to the original stock move
+                                valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date_expected
+                                valuation_price_unit_total += company_currency.with_context(date=valuation_date).compute(abs(val_stock_move.price_unit) * val_stock_move.product_qty, inv.currency_id, round=False)
                                 valuation_total_qty += val_stock_move.product_qty
                             valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                             valuation_price_unit = i_line.product_id.uom_id._compute_price(valuation_price_unit, i_line.uom_id)
                             line_quantity = valuation_total_qty
 
-                        elif i_line.product_id.cost_method == 'real':
+                        elif i_line.product_id.cost_method == 'fifo':
                             # In this condition, we have a real price-valuated product which has not yet been received
-                            valuation_price_unit = i_line.purchase_line_id.price_unit
+                            valuation_price_unit = po_currency.with_context(date=inv.date_invoice).compute(i_line.purchase_line_id.price_unit, inv.currency_id, round=False)
 
                     interim_account_price = valuation_price_unit * line_quantity
-                    if inv.currency_id.id != company_currency.id:
-                            # We express everyhting in the invoice currency
-                            valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                            interim_account_price = company_currency.with_context(date=inv.date_invoice).compute(interim_account_price, inv.currency_id, round=False)
-
                     invoice_cur_prec = inv.currency_id.decimal_places
 
                     if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
