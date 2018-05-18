@@ -228,7 +228,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Phân hệ này đã được cài lên hệ thống"
+"Phân hệ này đã được cài lên hệ thống rồi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale
@@ -237,6 +237,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Channel for the point of sale to be able to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Mô-đun này thêm Kênh bán hàng vào các Điểm bán lẻ để có thể xem và quản lý các điểm bán lẻ dễ dàng hơn.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -249,6 +252,13 @@ msgid ""
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Mô-đun này bổ sung một số các tính năng nhà hàng vào Điểm bán lẻ:\n"
+"- In Bill: Cho phép bạn in biên lai trước khi đơn bán được thanh toán\n"
+"- Tách Bill: Cho phép bạn tách một đơn bán thành nhiều đơn bán (vd: khi tách bàn cho khách)\n"
+"- In Lệnh cho Nhà bếp: Cho phép bạn in lệnh đặt sang máy in ở Nhà bếp hoặc Quầy Bar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_discount
@@ -259,6 +269,11 @@ msgid ""
 "sale discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Mô-đun này cho phép thu ngân chiết khấu nhanh phần trăm giá bán\n"
+"cho một khách hàng.\n"
+"\n"
 
 #. module: base
 #: code:addons/model.py:136
@@ -321,6 +336,8 @@ msgid ""
 "\n"
 "        Accounting Data for Vietnamese Payroll Rules"
 msgstr ""
+"\n"
+"        Dữ liệu kế toán cho các Quy tắc Lương Việt Nam"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_to_l10n_vn_hr_insurance_account
@@ -328,6 +345,8 @@ msgid ""
 "\n"
 "        Accounting Data for Vietnamese Payroll Rules with Insurance & Labor Union fees"
 msgstr ""
+"\n"
+"        Dữ liệu kế toán cho các Quy tắc Bảo hiểm và Phí công đoàn cho ứng dụng Tiền lương Việt Nam"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_to_vat_counterpart
@@ -11346,7 +11365,7 @@ msgid ""
 "View `%(view_name)s`"
 msgstr ""
 "Ngữ cảnh khi lỗi:\n"
-"Xem `%(view_name)s`"
+"Giao diện `%(view_name)s`"
 
 #. module: base
 #: code:addons/models.py:1027
@@ -13346,6 +13365,9 @@ msgid ""
 "deleting it (if you delete a native record rule, it may be re-created when "
 "you reload the module)."
 msgstr ""
+"Nếu bạn bỏ đánh dấu trường hiệu lực, điều này sẽ cho phép bạn ẩn quy tắc bản "
+"ghi mà không cần phải xoá nó (nếu bạn xoá bản quy tắc bản ghi nguyên thuỷ, "
+"nó có thể tự động được tạo lại khi bạn nâng cấp mô-đun"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -13367,12 +13389,12 @@ msgstr "Các Phân hệ bị ảnh hưởng"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_model_ids
 msgid "Impacted data models"
-msgstr ""
+msgstr "Các mô hình dữ liệu bị ảnh hưởng"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_uninstall_module_ids
 msgid "Impacted modules"
-msgstr ""
+msgstr "Các mô-đun bị ảnh hưởng"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_implementation
@@ -13400,12 +13422,12 @@ msgstr "Nhập Ngôn ngữ dịch"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
 #: model:ir.model.fields,field_description:base.field_ir_model_modules
 msgid "In Apps"
-msgstr "Trong Ứng dụng"
+msgstr "Trong-Ứng-dụng"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iap
 msgid "In-App Purchases"
-msgstr ""
+msgstr "Mua Trong-Ứng-dụng"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -13462,7 +13484,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
 msgid "Indian Payroll"
-msgstr ""
+msgstr "Bảng lương Ấn độ"
 
 #. module: base
 #: selection:res.partner,company_type:0
@@ -13482,7 +13504,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr ""
+msgstr "Ngành nghề"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_info
@@ -13503,12 +13525,12 @@ msgstr "Được kế thừa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_id
 msgid "Inherited View"
-msgstr ""
+msgstr "Giao diện được Kế thừa"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Inherited Views"
-msgstr "View được kế thừa"
+msgstr "Giao diện được kế thừa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherited_model_ids
@@ -21966,7 +21988,7 @@ msgstr ""
 #: selection:ir.translation,type:0
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr "Xem"
+msgstr "Giao diện"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch
@@ -21975,22 +21997,22 @@ msgstr "Xem"
 #: model:ir.ui.view,arch_db:base.view_view_custom_form
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
-msgstr "Kiến trúc Xem"
+msgstr "Kiến trúc Giao diện"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "View ID"
-msgstr ""
+msgstr "ID Giao diện"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
 msgid "View Mode"
-msgstr ""
+msgstr "Chế độ Xem"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
 msgid "View Name"
-msgstr ""
+msgstr "Tên Giao diện"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_id
@@ -22003,17 +22025,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_type
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 msgid "View Type"
-msgstr ""
+msgstr "Kiểu Giao diện"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_to_account_reports
 msgid "View and create reports"
-msgstr ""
+msgstr "Xem vào tạo các báo cáo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Chế độ kế thừa giao diện"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
@@ -22026,7 +22048,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:577
 #, python-format
 msgid "View: %s"
-msgstr ""
+msgstr "Giao diện: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -22055,7 +22077,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Giao diện mà kế thừa từ giao diện này"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -22100,7 +22122,7 @@ msgstr "Cải tiến Kho"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Picking"
-msgstr ""
+msgstr "Quản lý Kho: Lô Giao nhận"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_to_orderpoint_mail_thread
@@ -22110,7 +22132,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_to_wh_vn_legal_reports
 msgid "Warehouse Vietnam Legal Reports"
-msgstr ""
+msgstr "Báo cáo Kho Luật định Việt Nam"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:477
