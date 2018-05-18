@@ -249,7 +249,7 @@ class Partner(models.Model):
         """ compute the number of needaction of the current user """
         if self.env.user.partner_id:
             self.env.cr.execute("""
-                SELECT count(*) as needaction_count
+                SELECT count(DISTINCT mail_message_id) as needaction_count
                 FROM mail_message_res_partner_needaction_rel R
                 WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
