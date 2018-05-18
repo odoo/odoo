@@ -146,7 +146,7 @@ class AccountMove(models.Model):
                             if not journal.refund_sequence_id:
                                 raise UserError(_('Please define a sequence for the refunds'))
                             sequence = journal.refund_sequence_id
-                                                            
+
                         new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
@@ -206,15 +206,14 @@ class AccountMove(models.Model):
     def assert_balanced(self):
         if not self.ids:
             return True
-        prec = self.env['decimal.precision'].precision_get('Account')
 
         self._cr.execute("""\
             SELECT      move_id
             FROM        account_move_line
             WHERE       move_id in %s
             GROUP BY    move_id
-            HAVING      abs(sum(debit) - sum(credit)) > %s
-            """, (tuple(self.ids), 10 ** (-max(5, prec))))
+            HAVING      abs(sum(debit) - sum(credit)) >= %s
+            """, (tuple(self.ids), self[0].currency_id.rounding))
         if len(self._cr.fetchall()) != 0:
             raise UserError(_("Cannot create unbalanced journal entry."))
         return True
