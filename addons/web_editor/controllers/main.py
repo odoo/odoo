@@ -245,6 +245,23 @@ class Web_Editor(http.Controller):
             attachments_to_remove.unlink()
         return removal_blocked_by
 
+    ## This route is used from CropImageDialog to get image info.
+    ## It is used to display the original image when we crop a previously
+    ## cropped image
+    @http.route('/web_editor/get_image_info', type='json', auth='user')
+    def get_image_info(self, image_id=None, xml_id=None):
+        if xml_id:
+            record = request.env.ref(xml_id)
+        elif image_id:
+            record = request.env['ir.attachment'].browse(image_id)
+        result = {
+            'id': record.id,
+            'mimetype': record.mimetype,
+        }
+        if image_id and record.url:
+            result['src'] = record.url
+        return result
+
     ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
     ## editor needs to work.
     ## @param key - the xml_id or id of the view the resources are related to

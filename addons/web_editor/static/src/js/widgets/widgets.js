@@ -1,11 +1,11 @@
 odoo.define('web_editor.widget', function (require) {
 'use strict';
 
+var ajax = require('web.ajax');
 var base = require('web_editor.base');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var utils = require('web.utils');
 var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
@@ -337,6 +337,14 @@ var ImageWidget = MediaWidget.extend({
                 self.options.onUpload([img]);
             }
 
+            // Remove crop related attributes
+            if (self.$media.attr('data-aspect-ratio')) {
+                var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
+                _.each(attrs, function (attr) {
+                    self.$media.removeData(attr);
+                    self.$media.removeAttr('data-' + attr);
+                });
+            }
             return self.media;
         });
     },
@@ -1541,10 +1549,275 @@ var LinkDialog = Dialog.extend({
     },
 });
 
+/**
+ * CropImageDialog widget. Let users crop an image.
+ */
+var CropImageDialog = Dialog.extend({
+    template: 'web_editor.dialog.crop_image',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/web_editor/static/src/xml/editor.xml']
+    ),
+    jsLibs: [
+        '/web_editor/static/lib/cropper/js/cropper.js',
+    ],
+    cssLibs: [
+        '/web_editor/static/lib/cropper/css/cropper.css',
+    ],
+    events : _.extend({}, Dialog.prototype.events, {
+        'click .o_crop_options [data-event]': '_onCropOptionClick',
+    }),
+
+    /**
+     * @constructor
+     */
+    init: function (parent, options, $editable, media) {
+        this.media = media;
+        this.$media = $(this.media);
+        var srcSplit = this.$media.attr('src').split('?');
+        var src = srcSplit[0];
+        this.imageData = {
+            initialSrc: src,
+            src: src, // the original src for cropped DB images will be fetched later
+            srcParams: $.deparam(srcSplit[1] || ''),
+            mimetype: _.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg', // the mimetype for DB images will be fetched later
+            aspectRatio: this.$media.data('aspectRatio') || 0,
+            isExternalImage: src[0] !== '/' && src.indexOf(window.location.host) < 0,
+        };
+        this.aspectRatioList = [
+            [_t("Free"), 0],
+            ['16:9', 16 / 9],
+            ['4:3', 4 / 3],
+            ['1:1', 1],
+            ['2:3', 2 / 3],
+        ];
+        this.options = _.extend({
+            title: _t("Crop Image"),
+            buttons: this.imageData.isExternalImage ? [{
+                text: _t("Close"),
+                close: true,
+            }] : [{
+                text: _t("Save"),
+                classes: 'btn-primary',
+                click: this.save,
+            }, {
+                text: _t("Discard"),
+                close: true,
+            }],
+        }, options || {});
+        this._super(parent, this.options);
+    },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        var def = this._super.apply(this, arguments);
+        if (this.imageData.isExternalImage) {
+            return def;
+        }
+
+        var defs = [def, ajax.loadLibs(this)];
+        var params = {};
+        var isDBImage = false;
+        var matchImageID = this.imageData.src.match(/^\/web\/image\/(\d+)/);
+        if (matchImageID) {
+            params['image_id'] = parseInt(matchImageID[1]);
+            isDBImage = true;
+        } else {
+            var matchXmlID = this.imageData.src.match(/^\/web\/image\/([^/?]+)/);
+            if (matchXmlID) {
+                params['xml_id'] = matchXmlID[1];
+                isDBImage = true;
+            }
+        }
+        if (isDBImage) {
+            defs.push(this._rpc({
+                route: '/web_editor/get_image_info',
+                params: params,
+            }).then(function (res) {
+                _.extend(self.imageData, res);
+            }));
+        }
+        return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$cropperImage = this.$('.o_cropper_image');
+        if (this.$cropperImage.length) {
+            this.$cropperImage.cropper({
+                viewMode: 1,
+                autoCropArea: 1,
+                data: _.pick(this.$media.data(), 'aspectRatio', 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
+            });
+        }
+        return this._super.apply(this, arguments);
+     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.$cropperImage.length) {
+            this.$cropperImage.cropper('destroy');
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
+     * Stores the cropped image in database.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    save: function () {
+        var _super = this._super.bind(this);
+        var def;
+        if (this.imageData.initialSrc === this.imageData.src) {
+            // When this is a new image being cropped
+            def = this._createImage();
+        } else {
+            // When this is a previously cropped image
+            def = this._updateImage();
+        }
+        return def.then(_super);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Gets the base64 data from the cropper canvas.
+     *
+     * @private
+     * @returns {string} base64 image data
+     */
+    _getImageBase64: function () {
+        var cropperData = this.$cropperImage.cropper('getData');
+        var canvas = this.$cropperImage.cropper('getCroppedCanvas', {
+            width: cropperData.width,
+            height: cropperData.height,
+        });
+        return canvas.toDataURL(this.imageData.mimetype).split(',')[1];
+    },
+    /**
+     * Creates a new attachment for the cropped image data and updates the image
+     * with the correct URL.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _createImage: function () {
+        var self = this;
+        var name = this.imageData.src + '.crop';
+        return this._rpc({
+            model: 'ir.attachment',
+            method: 'create',
+            args: [{
+                res_model: this.options.res_model,
+                res_id: this.options.res_id,
+                name: name,
+                datas_fname: name,
+                datas: this._getImageBase64(),
+                mimetype: this.imageData.mimetype,
+                url: this.imageData.src, // To save the original image that was cropped
+            }],
+        }).then(function (attachmentID) {
+            return self._rpc({
+                model: 'ir.attachment',
+                method: 'generate_access_token',
+                args: [[attachmentID]],
+            }).then(function (access_token) {
+                var params = _.omit(self.imageData.srcParams, 'unique');
+                params.access_token = access_token[0];
+                self.$media.attr('src', '/web/image/' + attachmentID + '?' + $.param(params));
+                self._setCropBoxData();
+            });
+        });
+    },
+    /**
+     * Writes the cropped image attachment with the new data and forces a
+     * refresh of the image.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _updateImage: function () {
+        var self = this;
+        return this._rpc({
+            model: 'ir.attachment',
+            method: 'write',
+            args: [[this.imageData.id], {datas: this._getImageBase64()}],
+        }).then(function () {
+            self.$media.addClass('o_cropped_img_to_clean');
+            var params = _.clone(self.imageData.srcParams);
+            params.unique = new Date().getTime();
+            self.$media.attr('src', '/web/image/' + self.imageData.id + '?' + $.param(params));
+            self._setCropBoxData();
+        });
+    },
+    /**
+     * Saves current crop configuration data as image attributes for future
+     * edition.
+     *
+     * @private
+     */
+    _setCropBoxData: function () {
+        var self = this;
+        var cropBoxData = _.extend({
+            aspectRatio: this.imageData.aspectRatio, // Library's getData does not export aspect ratio
+        }, this.$cropperImage.cropper('getData'));
+        _.each(cropBoxData, function (value, key) {
+            key = _.str.dasherize(key);
+            self.$media.attr('data-' + key, value);
+            self.$media.data(key, value);
+        });
+        this.$media.trigger('content_changed');
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when a crop option is clicked -> change the crop area accordingly.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onCropOptionClick: function (ev) {
+        ev.preventDefault();
+        var $option = $(ev.currentTarget);
+        var opt = $option.data('event');
+        var value = $option.data('value');
+        switch (opt) {
+            case 'ratio':
+                $option.siblings().removeClass('active');
+                $option.addClass('active');
+                this.$cropperImage.cropper('reset');
+                this.imageData.aspectRatio = value;
+                this.$cropperImage.cropper('setAspectRatio', this.imageData.aspectRatio);
+                break;
+            case 'zoom':
+            case 'rotate':
+            case 'reset':
+                this.$cropperImage.cropper(opt, value);
+                break;
+            case 'flip':
+                var direction = value === 'horizontal' ? 'x' : 'y';
+                var scaleAngle = -$option.data(direction);
+                $option.data(direction, scaleAngle);
+                this.$cropperImage.cropper('scale' + direction.toUpperCase(), scaleAngle);
+                break;
+        }
+    },
+});
+
 return {
     Dialog: Dialog,
     AltDialog: AltDialog,
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
+    CropImageDialog: CropImageDialog,
 };
 });
