@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-extend="mail.chat.MessagingMenu">
+        <t t-jquery=".o_mail_navbar_dropdown" t-operation="append">
+            <li t-if="widget.supportChannel" class="o_mail_navbar_dropdown_bottom">
+                <t t-set="channel" t-value="widget.supportChannel"/>
+                <t t-call="mail.chat.ChannelPreview"/>
+            </li>
+        </t>
+    </t>
+
+</templates>
