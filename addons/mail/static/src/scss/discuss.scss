@@ -271,35 +271,6 @@
         @include o-flex-flow(column, nowrap);
         background: white;
 
-        .o_mail_chat_mobile_control_panel {
-            @include o-flex(0, 0, auto);
-            padding: 5px;
-            min-height: 44px;
-            border-bottom: 1px solid #ebebeb;
-            box-shadow: 0px 0px 10px #afafaf;
-            z-index: 1; // so that box shaddow is above thread's images
-            .o_searchview {
-                border: none;
-                padding: 5px 5px 0px 5px;
-                .o_searchview_input {
-                    font-size: 15px;
-                }
-                .o_searchview_more {
-                    display: none;
-                }
-            }
-            .o_enable_searchview, .o_enable_searchview:focus,
-                .o_enable_searchview:hover, .o_enable_searchview:active  {
-                    @include o-position-absolute($right: 5px, $top: 5px);
-                    color: gray;
-                    background: none;
-                    font-size: 15px;
-                    &:active {
-                        box-shadow: none;
-                    }
-            }
-        }
-
         .o_mail_chat_mobile_inbox_buttons {
             @include o-flex-display;
             @include o-flex(0, 0, auto);

@@ -5,84 +5,90 @@
 }
 
 .o_searchview {
-    @include o-flex-display;
-    @include o-flex-flow(row, wrap);
     @include o-align-items(flex-end);
     position: relative;
     padding: 0 20px 1px 0;
-
-    .o_searchview_facet {
-        $o-searchview-facet-remove-width: 18px;
-
-        @include o-flex(0, 0, auto);
-        max-width: 100%;
-        @include o-flex-display;
-        position: relative;
-        margin: 1px 3px 0 0;
-
-        .o_searchview_facet_label {
-            @include o-flex(0, 0, auto);
-            @include o-text-overflow;
-            padding: 0 3px;
-            color: white;
-
-            @include o-flex-display;
-            @include o-align-items(center);
-        }
-
-        .o_facet_values {
-            padding: 0 $o-searchview-facet-remove-width 0 5px;
-            .o_facet_values_sep {
-                font-style: italic;
-            }
-        }
-        .o_facet_remove {
-            @include o-flex(0, 0, auto);
-            @include o-flex-display;
-            @include o-justify-content(center);
-            @include o-align-items(center);
-            @include o-position-absolute(0, 0, 0);
-            width: $o-searchview-facet-remove-width;
-            cursor: pointer;
-        }
-    }
-
-    .o_searchview_input {
-        width: 100px;
-        @include o-flex(1, 0, auto);
-    }
 
     .o_searchview_more {
         font-size: 16px;
         cursor: pointer;
     }
 
-    .o_searchview_autocomplete {
-        @include o-position-absolute(100%, $left: auto);
-        width: 100%;
+    .o_searchview_input_container {
+        @include o-flex-display;
+        @include o-flex-flow(row, wrap);
 
-        li {
-            padding-left: 25px;
+        .o_searchview_facet {
+            $o-searchview-facet-remove-width: 18px;
+            @include o-flex(0, 0, auto);
+            max-width: 100%;
+            @include o-flex-display;
             position: relative;
-            &.o-indent {
-                padding-left: 50px;
+            margin: 1px 3px 0 0;
+
+            .o_searchview_facet_label {
+                @include o-flex(0, 0, auto);
+                @include o-text-overflow;
+                padding: 0 3px;
+                color: white;
+
+                @include o-flex-display;
+                @include o-align-items(center);
             }
-            a {
-                display: inline-block;
-                padding-left: 0px;
-                padding-right: 0px;
-                &:hover {
-                    background-color: inherit;
+
+            .o_facet_values {
+                padding: 0 $o-searchview-facet-remove-width 0 5px;
+                .o_facet_values_sep {
+                    font-style: italic;
                 }
-                &.o-expand, &.o-expanded { // caret
-                    @include o-position-absolute($left: 6px);
-                    padding: 3px;
+            }
+            .o_facet_remove {
+                @include o-flex(0, 0, auto);
+                @include o-flex-display;
+                @include o-justify-content(center);
+                @include o-align-items(center);
+                @include o-position-absolute(0, 0, 0);
+                width: $o-searchview-facet-remove-width;
+                cursor: pointer;
+            }
+        }
+        .o_searchview_input {
+            width: 100px;
+            @include o-flex(1, 0, auto);
+        }
+
+        .o_searchview_more {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .o_searchview_autocomplete {
+            @include o-position-absolute(100%, $left: auto);
+            width: 100%;
+
+            li {
+                padding-left: 25px;
+                position: relative;
+                &.o-indent {
+                    padding-left: 50px;
                 }
-                &.o-expand:before {
-                    @include o-caret-right;
-                }
-                &.o-expanded:before {
-                    @include o-caret-down;
+                a {
+                    display: inline-block;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    &:hover {
+                        background-color: inherit;
+                    }
+                    &.o-expand, &.o-expanded { // caret
+                        @include o-position-absolute($left: 6px);
+                        padding: 3px;
+                    }
+                    &.o-expand:before {
+                        @include o-caret-right;
+                    }
+                    &.o-expanded:before {
+                        @include o-caret-down;
+                    }
                 }
             }
         }
