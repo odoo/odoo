@@ -12,8 +12,8 @@ class TestMrpRepair(AccountingTestCase):
         self.MrpRepair = self.env['mrp.repair']
         self.ResUsers = self.env['res.users']
         self.MrpRepairMakeInvoice = self.env['mrp.repair.make_invoice']
-        self.res_group_user = self.env.ref('stock.group_stock_user')
-        self.res_group_manager = self.env.ref('stock.group_stock_manager')
+        self.res_group_user = self.env.ref('mrp_repair.group_mrp_repair_user')
+        self.res_group_manager = self.env.ref('mrp_repair.group_mrp_repair_manager')
         self.mrp_repair_rmrp0 = self.env.ref('mrp_repair.mrp_repair_rmrp0')
         self.mrp_repair_rmrp1 = self.env.ref('mrp_repair.mrp_repair_rmrp1')
         self.mrp_repair_rmrp2 = self.env.ref('mrp_repair.mrp_repair_rmrp2')
