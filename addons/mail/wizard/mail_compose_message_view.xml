@@ -67,7 +67,9 @@
                             attrs="{'invisible':['|', ('no_auto_thread', '=', False), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
-                    <field name="body" options="{'style-inline': true}"/>
+                    <field name="template_view" invisible="1"/>
+                    <field name="body" options="{'style-inline': true}" attrs="{'invisible':[('template_view', '!=', False), ('composition_mode', '=', 'mass_mail')]}"/>
+                    <field name="template_arch" widget="html" attrs="{'invisible':['|', ('template_view', '=', False), ('composition_mode', '!=', 'mass_mail')]}"/>
                     <group col="4">
                         <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         <field name="template_id" options="{'no_create': True}"
