@@ -64,7 +64,7 @@ class MrpWorkorder(models.Model):
         compute='_compute_is_produced')
 
     state = fields.Selection([
-        ('pending', 'Pending'),
+        ('pending', 'Waiting for another WO'),
         ('ready', 'Ready'),
         ('progress', 'In Progress'),
         ('done', 'Finished'),
