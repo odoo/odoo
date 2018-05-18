@@ -157,6 +157,11 @@ renderer.tplPopovers = function (lang, options) {
             event: 'delete'
         })).appendTo($imageprop);
 
+    $(tplIconButton('fa fa-crop', {
+        title: _t('Crop Image'),
+        event: 'cropImage',
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
+
     $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
@@ -406,6 +411,14 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     core.bus.trigger('alt_dialog_demand', {
+        $editable: $editable,
+        media: $selection.data('target'),
+    });
+};
+$.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
+    var $editable = layoutInfo.editable();
+    var $selection = layoutInfo.handle().find('.note-control-selection');
+    core.bus.trigger('crop_image_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -1024,6 +1037,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         this.setParent(parent);
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1034,6 +1048,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.destroy.call(this);
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1065,6 +1080,34 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             altDialog.on('cancel', this, data.onCancel);
         }
         altDialog.open();
+    },
+
+    /**
+     * Called when a demand to open a crop dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onCropImageDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var cropImageDialog = new weWidgets.CropImageDialog(this,
+            _.extend({
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+            }, data.options || {}),
+            data.$editable,
+            data.media
+        );
+        if (data.onSave) {
+            cropImageDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            cropImageDialog.on('cancel', this, data.onCancel);
+        }
+        cropImageDialog.open();
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.
