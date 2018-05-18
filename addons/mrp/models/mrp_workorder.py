@@ -219,6 +219,7 @@ class MrpWorkorder(models.Model):
                             'done_wo': False,
                             'location_id': move.location_id.id,
                             'location_dest_id': move.location_dest_id.id,
+                            'date': move.date,
                         })
                         qty_todo -= 1
                 elif float_compare(qty_todo, 0.0, precision_rounding=rounding) < 0:
@@ -410,7 +411,12 @@ class MrpWorkorder(models.Model):
 
     @api.multi
     def button_start(self):
-        # TDE CLEANME
+        self.ensure_one()
+        # As button_start is automatically called in the new view
+        if self.state in ('done', 'cancel'):
+            return True
+
+        # Need a loss in case of the real time exceeding the expected
         timeline = self.env['mrp.workcenter.productivity']
         if self.duration < self.duration_expected:
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
