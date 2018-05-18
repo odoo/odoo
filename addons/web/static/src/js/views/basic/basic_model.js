@@ -1542,8 +1542,10 @@ var BasicModel = AbstractModel.extend({
                             rec = self._makeDataPoint(params);
                             list._cache[rec.res_id] = rec.id;
                         }
-
-                        rec._noAbandon = true;
+                        // Do not abandon the record if it has been created
+                        // from `default_get`. The list has a savepoint only
+                        // after having fully executed `default_get`.
+                        rec._noAbandon = !list._savePoint;
                         list._changes.push({operation: 'ADD', id: rec.id});
                         if (command[0] === 1) {
                             list._changes.push({operation: 'UPDATE', id: rec.id});
