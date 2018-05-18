@@ -476,7 +476,7 @@ function prettify_html(html) {
             while (i--) space += '  ';
             return space;
         },
-        reg = /^<\/?(a|span|font|strong|u|i|strong|b)(\s|>)/i,
+        reg = /^<\/?(a|span|font|u|em|i|strong|b)(\s|>)/i,
         inline_level = Infinity,
         tokens = _.compact(_.flatten(_.map(html.split(/</), function (value) {
             value = value.replace(/\s+/g, ' ').split(/>/);
