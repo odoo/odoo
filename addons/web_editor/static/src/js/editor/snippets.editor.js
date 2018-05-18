@@ -640,6 +640,14 @@ var SnippetsMenu = Widget.extend({
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
             .removeProp('contentEditable');
+
+        // Removing query_string used to invalidate cache during image crop
+        _.each(this.$editable.find('.o_cropped_img'), function (croppedImg) {
+            var $croppedImg = $(croppedImg);
+            var src = $croppedImg.attr('src').split('?')[0];
+            $croppedImg.attr('src', src);
+            $croppedImg.removeClass('o_cropped_img');
+        });
     },
 
     //--------------------------------------------------------------------------
