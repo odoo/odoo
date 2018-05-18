@@ -369,6 +369,8 @@ class AccountInvoice(models.Model):
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
+    source_email = fields.Char(string='Source Email')
+    partner_name = fields.Char(string='Vendor', compute="_compute_partner_name")
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
@@ -454,6 +456,11 @@ class AccountInvoice(models.Model):
             sequence = journal_sequence._get_current_sequence()
             sequence.number_next = int(result.group(2))
 
+    @api.depends('partner_id')
+    def _compute_partner_name(self):
+        for inv in self:
+            inv.partner_name = inv.partner_id and inv.partner_id.name or _('Undefined')
+
     @api.multi
     def _get_printed_report_name(self):
         self.ensure_one()
@@ -537,7 +544,18 @@ class AccountInvoice(models.Model):
                     view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
-        return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'tree':
+            draft_bill = self.search([
+                ('type', '=', 'in_invoice'), ('state', '=', 'draft')
+            ], limit=1)
+            doc = etree.XML(res['arch'])
+            if draft_bill:
+                origin_field = doc.find(".//field[@name='origin']")
+                node = origin_field.getparent()
+                node.insert(node.index(origin_field) + 1, etree.XML("<field name='source_email'/>"))
+            res['arch'] = etree.tostring(doc, encoding='unicode')
+        return res
 
     @api.model_cr_context
     def _init_column(self, column_name):
@@ -638,7 +656,8 @@ class AccountInvoice(models.Model):
         # which was generated from email alias.
         [to_email] = email_split((msg_dict.get('to') or ''))
         alias_name = to_email.split('@')
-        values = dict(custom_values or {}, partner_id=partner_id, origin=to_email)
+        [from_email] = email_split((msg_dict.get('from') or ''))
+        values = dict(custom_values or {}, partner_id=partner_id, source_email=from_email)
         journal = self.env['account.journal'].search([
             ('type', '=', 'purchase'), ('alias_prefix', '=', alias_name[0])
         ], limit=1)
