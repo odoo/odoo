@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="crm_reveal_lead_form" model="ir.ui.view">
+        <field name="name">crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='extra']/group" position="inside">
+                <group string="Lead Generation Information" attrs="{'invisible': [('reveal_ip', '=', False)]}" groups="base.group_no_one">
+                    <field name="reveal_ip"/>
+                    <field name="reveal_iap_credits"/>
+                    <field name="reveal_rule_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="crm_reveal_lead_opportunity_form" model="ir.ui.view">
+        <field name="name">crm.lead.opportunity.inherited.crm</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='lead']/group" position="after">
+                <group string="Lead Generation Information" attrs="{'invisible': [('reveal_ip', '=', False)]}" groups="base.group_no_one">
+                    <field name="reveal_ip"/>
+                    <field name="reveal_iap_credits"/>
+                    <field name="reveal_rule_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
