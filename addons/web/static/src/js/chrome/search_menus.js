@@ -1,6 +1,7 @@
 odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
 var pyeval = require('web.pyeval');
@@ -38,6 +39,7 @@ return Widget.extend({
         this.action = action;
         this.action_id = action.id;
         this.filters = {};
+        this.isMobile = config.device.isMobile;
         _.each(filters, this.add_filter.bind(this));
     },
     start: function () {
@@ -305,6 +307,7 @@ return Widget.extend({
 odoo.define('web.FilterMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var search_filters = require('web.search_filters');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -333,6 +336,7 @@ return Widget.extend({
     },
     init: function (parent, filters, fields) {
         this._super(parent);
+        this.isMobile = config.device.isMobile;
         this.filters = filters || [];
         this.searchview = parent;
         this.propositions = [];
@@ -409,6 +413,7 @@ return Widget.extend({
 odoo.define('web.GroupByMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -433,6 +438,7 @@ return Widget.extend({
         var self = this;
         this._super(parent);
         this.searchview = parent;
+        this.isMobile = config.device.isMobile;
         this.groups = groups || [];
         this.groupableFields = [];
         var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];

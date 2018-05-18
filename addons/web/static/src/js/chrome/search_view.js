@@ -326,18 +326,19 @@ var SearchView = Widget.extend({
             .toggleClass('fa-search-plus', !this.visible_filters);
         var menu_defs = [];
         this.prepare_search_inputs();
-        if (this.$buttons) {
+        var $buttons = this._getButtonsElement();
+        if ($buttons) {
             if (!this.options.disable_filters) {
                 this.filter_menu = new FilterMenu(this, this.filters, this.fields);
-                menu_defs.push(this.filter_menu.appendTo(this.$buttons));
+                menu_defs.push(this.filter_menu.appendTo($buttons));
             }
             if (!this.options.disable_groupby) {
                 this.groupby_menu = new GroupByMenu(this, this.groupbys, this.fields);
-                menu_defs.push(this.groupby_menu.appendTo(this.$buttons));
+                menu_defs.push(this.groupby_menu.appendTo($buttons));
             }
             if (!this.options.disable_favorites) {
                 this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action, this.favorite_filters);
-                menu_defs.push(this.favorite_menu.appendTo(this.$buttons));
+                menu_defs.push(this.favorite_menu.appendTo($buttons));
             }
         }
         return $.when.apply($, menu_defs).then(this.set_default_filters.bind(this));
@@ -454,7 +455,7 @@ var SearchView = Widget.extend({
                 return self.$('.o_searchview_input').val().trim();
             },
         });
-        this.autocomplete.appendTo(this.$el);
+        this.autocomplete.appendTo(this.$('.o_searchview_input_container'));
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
@@ -528,11 +529,11 @@ var SearchView = Widget.extend({
 
         this.query.each(function (facet) {
             var f = new FacetView(this, facet);
-            started.push(f.appendTo(self.$el));
+            started.push(f.appendTo(self.$('.o_searchview_input_container')));
             self.input_subviews.push(f);
         }, this);
         var i = new InputView(this);
-        started.push(i.appendTo(self.$el));
+        started.push(i.appendTo(self.$('.o_searchview_input_container')));
         self.input_subviews.push(i);
         _.each(this.input_subviews, function (childView) {
             childView.on('focused', self, self.proxy('childFocused'));
@@ -540,7 +541,12 @@ var SearchView = Widget.extend({
         });
 
         $.when.apply(null, started).then(function () {
-            _.last(self.input_subviews).$el.focus();
+            if (!config.device.isMobile) {
+                // in mobile mode, we would rathor not focusing manually the
+                // input, because it opens up the integrated keyboard, which is
+                // not what you expect when you just selected a filter.
+                _.last(self.input_subviews).$el.focus();
+            }
         });
     },
     childFocused: function () {
@@ -666,6 +672,18 @@ var SearchView = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
+
+    /**
+     * Will return $element where Filters, Group By and Favorite buttons are
+     * going to be pushed. This method is overriden by the mobile search view
+     * to add these buttons somewhere else in the dom.
+     *
+     * @private
+     * @returns {jQueryElement}
+     */
+    _getButtonsElement: function () {
+        return this.$buttons;
+    },
     /**
      * Processes a fieldsView in place. In particular, parses its arch.
      *

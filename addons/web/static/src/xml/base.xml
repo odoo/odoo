@@ -1013,7 +1013,26 @@
 </div>
 <div t-name="SearchView" class="o_searchview">
     <span class="o_searchview_more fa" title="Advanced Search..."/>
+    <div class="o_searchview_input_container"/>
 </div>
+<t t-name="SearchViewMobile">
+    <div class="o_searchview">
+        <button class="o_enable_searchview btn btn-sm fa fa-search"/>
+        <div class="o_mobile_search o_hidden">
+            <div class="o_mobile_search_header">
+                <span class="o_mobile_search_close pull-left mt16 mb16 mr8 ml16">
+                    <i class="fa fa-arrow-left"/>
+                    <strong class="pull-right ml8">FILTER</strong>
+                </span>
+                <span class="pull-right o_mobile_search_clear_facets mt16 mr16">CLEAR</span>
+            </div>
+            <div class="o_searchview_input_container"/>
+            <div class="o_mobile_search_filter o_search_options mb8 mt8 ml16 mr16"/>
+            <div class="btn btn-primary o_mobile_search_show_result">SEE RESULT</div>
+        </div>
+    </div>
+</t>
+
 <input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..."/>
 <div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet">
     <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
@@ -1031,7 +1050,7 @@
 </t>
 <div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
-        <span class="fa fa-filter"/> Filters <span class="caret"/>
+        <span class="fa fa-filter"/> Filters <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_filters_menu" role="menu">
         <li class="o_add_filter o_closed_menu">
@@ -1141,9 +1160,9 @@
         </option>
     </select>
 </t>
-<div t-name="SearchView.GroupByMenu" class="btn-group hidden-xs o_dropdown">
+<div t-name="SearchView.GroupByMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
-        <span class="fa fa-bars"/> Group By <span class="caret"/>
+        <span class="fa fa-bars"/> Group By <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_group_by_menu" role="menu">
         <li class="divider"/>
@@ -1164,7 +1183,7 @@
 </t>
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
-        <span class="fa fa-star"/> Favorites <span class="caret"/>
+        <span class="fa fa-star"/> Favorites <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
     </button>
     <ul class="dropdown-menu o_favorites_menu" role="menu">
         <li class="divider user_filter"/>
