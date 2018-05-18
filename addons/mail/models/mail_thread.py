@@ -832,10 +832,8 @@ class MailThread(models.AbstractModel):
         if not self:
             return {}
         self.ensure_one()
-        database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         return {'headers': repr({
             'X-Odoo-Objects': "%s-%s" % (self._name, self.id),
-            'X-Odoo-db-uuid': database_uuid
         })}
 
     @api.model
