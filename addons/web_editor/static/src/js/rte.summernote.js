@@ -552,7 +552,10 @@ $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable
             $editor.hide();
         } else {
             // save changes
-            $editor.prop('innerHTML', $textarea.val().replace(/\s*\n\s*/g, '')).trigger('content_changed');
+            var spaceCleanedText = $textarea.val()
+                .replace(/\s*\n\s*/g, ' ') // Replace spaces and new lines by a *space*
+                .replace(/^ (<)|(>) (<)|(>) $/g, '$1$2$3$4'); // Spaces that are not in content should be dismissed
+            $editor.prop('innerHTML', spaceCleanedText).trigger('content_changed');
             $textarea.remove();
             $editor.show();
         }
