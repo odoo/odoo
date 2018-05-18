@@ -425,7 +425,7 @@ class HrPayslip(models.Model):
                 if to_date is None:
                     to_date = fields.Date.today()
                 self.env.cr.execute("""
-                    SELECT sum(amount) as sum
+                    SELECT sum(case when hp.credit_note = False then (amount) else (-amount) end) as sum
                     FROM hr_payslip as hp, hr_payslip_input as pi
                     WHERE hp.employee_id = %s AND hp.state = 'done'
                     AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s""",
