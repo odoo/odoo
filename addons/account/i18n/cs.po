@@ -16,19 +16,21 @@
 # Ondřej Skuhravý <ondra.sk@volny.cz>, 2016
 # Ondřej Janovský <ondrej.janovsky@alarex.cz>, 2016
 # Martin N <nedbalm@gmail.com>, 2017
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Martin N <nedbalm@gmail.com>, 2017\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -1074,6 +1076,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"Deník se používá k zaznamenávání transakcí všech účetních údajů\n"
+" vztahujících se k každodenní činnosti."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1100,7 +1104,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:731
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr ""
+msgstr "Sladění musí zahrnovat nejméně 2 pohyby."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:867
@@ -1124,7 +1128,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Daňovou fiskální pozici lze definovat pouze jednou na stejné daně."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:380
@@ -2113,7 +2117,7 @@ msgstr "Automatické formátování"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Automatické vyúčtování"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:473
@@ -2253,12 +2257,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_tree
 msgid "Bank Reconciliation Move Presets"
-msgstr ""
+msgstr "Předvolby bankovního vyúčtování"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Bank Reconciliation Move preset"
-msgstr ""
+msgstr "Předvolba bankovního vyúčtování"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2491,7 +2495,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Zrušit položku"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -2837,7 +2841,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_reconcile_model
 msgid "Click to create a reconciliation model."
-msgstr ""
+msgstr "Klepnutím vytvořit model vyúčtování."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -4644,7 +4648,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:478
 #, python-format
 msgid "Go to the configuration panel"
-msgstr ""
+msgstr "Přejít na panel konfigurace"
 
 #. module: account
 #: selection:res.partner,trust:0
@@ -5118,6 +5122,8 @@ msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
 msgstr ""
+"Zprostředkovatelský účet používaný při přesouvání peněz z účtu likvidity na "
+"jiný"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_narration
@@ -5217,7 +5223,7 @@ msgstr "Dobropis vydaný"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_state
 msgid "Invoice Status"
-msgstr ""
+msgstr "Stav faktury"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -5988,7 +5994,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_config_settings_period_lock_date
 #: model:ir.model.fields,field_description:account.field_res_company_period_lock_date
 msgid "Lock Date for Non-Advisers"
-msgstr ""
+msgstr "Datum uzamčení pro uživatele kteří nejsou poradci"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -6256,7 +6262,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 msgid "More Info"
-msgstr ""
+msgstr "Více informací"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6417,6 +6423,8 @@ msgid ""
 "No users, including Advisers, can edit accounts prior to and inclusive of "
 "this date. Use it for fiscal year locking for example."
 msgstr ""
+"Žádní uživatelé, včetně poradců, nemohou upravovat účty před a včetně tohoto"
+" data. Použijte jej například pro uzavření fiskálního roku."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template_code_digits
@@ -6580,6 +6588,9 @@ msgid ""
 " need to review a few of them when a <strong>'Reconcile Items'</strong> "
 "button appears on your Vendor Bills dash."
 msgstr ""
+"Odoo by měl provádět většinu vyúčtování automaticky, takže budete muset "
+"pouze zkontrolovat několik z nich, když se na vaší úvodní stránce ukáže "
+"tlačítko <strong>\"Vyúčtovat položky\"</strong>."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -6646,7 +6657,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:780
 #, python-format
 msgid "Only administrators can change the settings"
-msgstr ""
+msgstr "Pouze správci mohou změnit nastavení"
 
 #. module: account
 #. openerp-web
@@ -6663,6 +6674,8 @@ msgid ""
 "of this date. Use it for period locking inside an open fiscal year, for "
 "example."
 msgstr ""
+"Pouze uživatelé s rolí \"poradce\" mohou upravit účty před tímto datem "
+"včetně. Použijte ji například pro uzamčení v otevřeném fiskálním roce."
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -7662,12 +7675,12 @@ msgstr "Vyrovnanost"
 #: model:ir.actions.act_window,name:account.action_account_reconcile_model
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Reconciliation Models"
-msgstr ""
+msgstr "Modely vyúčtování"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_partial_reconcile_ids
 msgid "Reconciliation Parts"
-msgstr ""
+msgstr "Části vyúčtování"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
@@ -7678,7 +7691,7 @@ msgstr "Vyrovnávací transakce"
 #: model:ir.actions.client,name:account.action_bank_reconcile
 #: model:ir.actions.client,name:account.action_bank_reconcile_bank_statements
 msgid "Reconciliation on Bank Statements"
-msgstr ""
+msgstr "Vyúčtování bankovních výkazů"
 
 #. module: account
 #. openerp-web
@@ -8732,7 +8745,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_register_payments_payment_method_code
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
-msgstr ""
+msgstr "Technické pole použité k přizpůsobení rozhraní vybranému typu platby."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -9293,7 +9306,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_journal_id
 #: model:ir.model.fields,help:account.field_account_reconcile_model_second_journal_id
 msgid "This field is ignored in a bank statement reconciliation."
-msgstr ""
+msgstr "Toto pole je ignorováno při vyúčtování bankovního výpisu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_date_maturity
@@ -9429,6 +9442,9 @@ msgid ""
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
 msgstr ""
+"Toto technické pole lze použít při vytváření / importu řádku příkazu, aby se"
+" později zabránilo procesu vyúčtování. Řádek prohlášení jednoduše vytvoří "
+"protějšek na tomto účtu"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -9616,7 +9632,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_chart_template_transfer_account_id
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_transfer_account_id
 msgid "Transfer Account"
-msgstr ""
+msgstr "Převodní účet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_destination_journal_id
@@ -9683,7 +9699,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:278
 #, python-format
 msgid "Undo the partial reconciliation."
-msgstr ""
+msgstr "Zrušit částečné vyúčtování."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_unit
@@ -10266,6 +10282,8 @@ msgid ""
 "You cannot change the value of the reconciliation on this account as it "
 "already has some moves"
 msgstr ""
+"Nemůžete změnit hodnotu vyúčtování v tomto účtu, jelikož již proběhly "
+"některé pohyby"
 
 #. module: account
 #: code:addons/account/models/account_move.py:418
