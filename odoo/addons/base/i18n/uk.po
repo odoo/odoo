@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_reprint
@@ -7147,7 +7147,7 @@ msgstr "Зміна моделі поля заборонена!"
 #: code:addons/base/ir/ir_model.py:512
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
-msgstr ""
+msgstr "Зміну системи зберігання для поля \"%s\" не дозволено."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:537
@@ -10793,6 +10793,9 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Якщо встановлено, це поле буде зберігатися у рідкій структурі поля "
+"серіалізації, замість того, щоби мати власну колонку бази даних. Це не можна"
+" змінити після створення."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -10983,7 +10986,7 @@ msgstr "Неактивні користувачі"
 #: model:ir.model.fields,field_description:base.field_wkf_activity_in_transitions
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Вхідне переміщення"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:607
@@ -12390,7 +12393,7 @@ msgstr "Розсилка"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Mass Mailing Campaigns"
-msgstr ""
+msgstr "Кампанії масової розсилки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_themes
@@ -12401,7 +12404,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
 #: model:ir.module.module,summary:base.module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "Майстер виробничого розкладу"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -14694,7 +14697,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:514
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
-msgstr ""
+msgstr "Перейменування рідкого поля \"%s\" не дозволено"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_repair
@@ -15408,13 +15411,13 @@ msgstr "Сербія"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_serialization_field_id
 msgid "Serialization Field"
-msgstr ""
+msgstr "Поле серіалізаціі"
 
 #. module: base
 #: code:addons/models.py:339
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
-msgstr ""
+msgstr "Поле серіалізаціі `%s` не знайдено для рідкого поля `%s`!"
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -17214,7 +17217,7 @@ msgstr "Тувалу"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_twitter
 msgid "Twitter Roller"
-msgstr ""
+msgstr "Twitter Roller"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
