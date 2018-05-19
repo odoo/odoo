@@ -6,7 +6,7 @@
 # Stefan Stieranka <stieranka@itec.sk>, 2017
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Matus Krnac <matus.krnac@gmail.com>, 2017
 # gebri <gebri@inmail.sk>, 2017
 msgid ""
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:43
@@ -2237,6 +2237,11 @@ msgstr "Vyrobené množstvo"
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Quantity To Produce"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move_quantity_done_store
+msgid "Quantity done store"
 msgstr ""
 
 #. module: mrp

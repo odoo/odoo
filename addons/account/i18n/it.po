@@ -136,7 +136,7 @@ msgstr ""
 " * Lo stato 'Pro-forma' serve per fatture senza una numerazione.\n"
 " * Lo stato 'Aperto' identifica fatture con importo da Incassare per intero o in parte.\n"
 " * Lo stato 'Pagato' indica fatture con importo completamente incassato.\n"
-" * Lo stato 'Annullato' indica fatture cancellate."
+" * Lo stato 'Annullato' indica fatture annullate."
 
 #. module: account
 #. openerp-web
@@ -2517,7 +2517,7 @@ msgstr "Annulla registrazione"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
 msgid "Cancel Invoice"
-msgstr "Elimina Fattura"
+msgstr "Annulla Fattura"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
@@ -2528,7 +2528,7 @@ msgstr "Annulla fatture"
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 #: model:ir.ui.view,arch_db:account.account_invoice_cancel_view
 msgid "Cancel Selected Invoices"
-msgstr "Cancella lefatture scelte"
+msgstr "Annulla le fatture selezionate"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -2786,7 +2786,7 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Spuntare la casella se si vuole permettere la cancellazione delle "
+"Spuntare la casella se si vuole permettere l'annullamento delle "
 "registrazioni di questo sezionale o delle fatture collegate a questo "
 "sezionale."
 
@@ -5391,7 +5391,7 @@ msgstr "La fattura deve essere in bozza al fine di impostarla come Pro-forma"
 #: code:addons/account/models/account_invoice.py:535
 #, python-format
 msgid "Invoice must be cancelled in order to reset it to draft."
-msgstr "La fattura deve essere cancellata al fine di reimpostarla in bozza."
+msgstr "La fattura deve essere annullata al fine di reimpostarla in bozza."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:563
@@ -8407,7 +8407,7 @@ msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
 msgstr ""
-"Le fatture selezionate non possono essere eliminate perché sono già in stato"
+"Le fatture selezionate non possono essere annullate perché sono già in stato"
 " 'Annullato' o 'Completato'."
 
 #. module: account
@@ -8959,8 +8959,8 @@ msgid ""
 msgstr ""
 "Campo tecnico che include il numero dato alla fattura, definito "
 "automaticamente quando la fattura è validata e gestita, da definire se si "
-"vuole avere lo stesso numero di fattura se questa è cancellata. Impostare in"
-" stato bozza e ri-validarla."
+"vuole avere lo stesso numero di fattura se questa è annullata. Impostare in "
+"stato bozza e ri-validarla."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_move_name
@@ -10674,7 +10674,7 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr ""
-"Non è possibile eliminare una fattura che è parzialmente pagata. È "
+"Non è possibile annullare una fattura che è parzialmente pagata. È "
 "necessario prima annullare la riconciliazione dei relativi pagamenti."
 
 #. module: account
@@ -10731,8 +10731,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
 msgstr ""
-"Non è possibile cancellare una fattura che non sia bozza o annullata. Creare"
-" una nota di credito."
+"Non è possibile eliminare una fattura che non sia bozza o annullata. Creare "
+"una nota di credito."
 
 #. module: account
 #: code:addons/account/models/account.py:193
