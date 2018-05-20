@@ -5,19 +5,21 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
@@ -246,12 +248,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom_active
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All"
-msgstr ""
+msgstr "Vše"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:441
@@ -319,7 +321,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Archivováno"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_sequence
@@ -387,7 +389,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_barcode
 #: model:ir.model.fields,field_description:product.field_product_template_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Čárový kód"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_barcode
@@ -536,7 +538,7 @@ msgstr "Zrušit"
 #: model:ir.model.fields,field_description:product.field_product_uom_category_id
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -623,7 +625,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_color
 #: model:ir.model.fields,field_description:product.field_product_template_color
 msgid "Color Index"
-msgstr ""
+msgstr "Barevný index"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_6
@@ -662,7 +664,7 @@ msgstr "Firma"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "Kompletní jméno"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
@@ -715,7 +717,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr ""
+msgstr "Cena"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -742,12 +744,12 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr ""
+msgstr "Skupina zemí"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "Skupiny zemí"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_create_variant
@@ -843,12 +845,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_datetime
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_day
 msgid "Day(s)"
-msgstr ""
+msgstr "Den(Dnů)"
 
 #. module: product
 #: code:addons/product/models/res_company.py:59
@@ -951,7 +953,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_end
 msgid "End Date"
-msgstr ""
+msgstr "Datum ukončení"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_end
@@ -1139,7 +1141,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr ""
+msgstr "Obecná informace"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1164,7 +1166,7 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
-msgstr ""
+msgstr "Globální"
 
 #. module: product
 #: code:addons/product/models/product_template.py:30
@@ -1312,7 +1314,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_image
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
@@ -1371,7 +1373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_default_code
 #: model:ir.model.fields,field_description:product.field_product_template_default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "Interní reference"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_barcode
@@ -1382,7 +1384,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "Inventář"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -1492,7 +1494,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_attribute_line_ids
 msgid "Lines"
-msgstr ""
+msgstr "Linky"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_litre
@@ -1539,7 +1541,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product_image_medium
 #: model:ir.model.fields,field_description:product.field_product_template_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Středně velký obrázek"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_image_medium
@@ -1620,7 +1622,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_name
 #: model:ir.model.fields,field_description:product.field_product_uom_categ_name
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -1630,7 +1632,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Notes"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -1826,7 +1828,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
 #: model:ir.model.fields,field_description:product.field_res_country_group_pricelist_ids
 msgid "Pricelists"
-msgstr ""
+msgstr "Ceníky"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
@@ -1901,7 +1903,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_category_list_view
 #: model:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr ""
+msgstr "kategorie produktů"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2233,7 +2235,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 #: model:product.category,name:product.product_category_3
 msgid "Services"
-msgstr ""
+msgstr "Služby"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_price_round
@@ -2363,7 +2365,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_date_start
 msgid "Start Date"
-msgstr ""
+msgstr "Datum zahájení"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_date_start
@@ -2696,7 +2698,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
-msgstr ""
+msgstr "Dnešní činnosti"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_7
@@ -2750,7 +2752,7 @@ msgstr "Měrná jednotka"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Kategorie měrných jednotek"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -2763,7 +2765,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.product_uom_form_view
 #: model:ir.ui.view,arch_db:product.product_uom_tree_view
 msgid "Units of Measure"
-msgstr ""
+msgstr "Měrné jednotky"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_uom_categ_form_view
@@ -2913,7 +2915,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_volume
 #: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
-msgstr ""
+msgstr "Objem"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -3232,7 +3234,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_partner_property_form
@@ -3247,4 +3249,4 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr ""
+msgstr "k"

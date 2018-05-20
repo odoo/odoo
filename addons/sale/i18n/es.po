@@ -6,6 +6,7 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
 # Gelo Joga Landoo <gj@landoo.es>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # Carlos Lopez <celm1990@hotmail.com>, 2017
@@ -76,6 +77,51 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Estimado ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set pay_sign_name = object.get_portal_confirmation_action()\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and object.get_mail_url() or ''\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+" (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Le enviamos\n"
+"% if ctx.get('proforma')\n"
+"in attachment, your pro-forma invoice\n"
+"% else\n"
+"the ${doc_name} <strong>${object.name}</strong>\n"
+"% endif\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"de importe <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"desde ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online and not ctx.get('proforma'):\n"
+" <br/><br/>\n"
+" <center>\n"
+" <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+" <br/><br/><br/>\n"
+" <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+" </center>\n"
+" <br/>\n"
+"% endif\n"
+"\n"
+"<p>Para cualquier duda puede responder a este email.</p>\n"
+"<p>Muchas gracias,</p>\n"
+"\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+" ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -102,7 +148,7 @@ msgstr "# de Pedidos"
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "# de Pedido de Ventas"
+msgstr "# de Pedido de Venta"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -220,6 +266,78 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- CABECERA -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENIDO -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- PIE -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -267,7 +385,7 @@ msgid ""
 "Expired</span>"
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
-"clock-o\"/>Expirado</span>"
+"clock-o\"/>Caducado</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -303,6 +421,8 @@ msgid ""
 "<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
 "check\"/><span class=\"hidden-xs\"> Done</span></span>"
 msgstr ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Realizado </span></span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -319,6 +439,8 @@ msgid ""
 "<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
 "Done</span>"
 msgstr ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Realizado </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -333,7 +455,7 @@ msgstr "<strong>Contacto</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Date Ordered:</strong>"
-msgstr "<strong>Fecha ordenada:</strong>"
+msgstr "<strong>Fecha de pedido:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -418,7 +540,7 @@ msgstr "<strong>Total</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Unit Price</strong>"
-msgstr "<strong>Precio de Unidad</strong>"
+msgstr "<strong>Precio Unidad</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -441,8 +563,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
-"Posibilidad de seleccionar un tipo de paquete en pedidos de venta y forzar "
-"una cantidad que es un múltiplo de la cantidad de unidades por paquete."
+"Posibilidad de seleccionar un tipo de empaquetado en pedidos de venta y "
+"forzar una cantidad que es un múltiplo de la cantidad de unidades por "
+"paquete."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -479,7 +602,7 @@ msgstr "Anticipo: %s"
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "All Channels Sales Orders"
-msgstr "Todos lo pedidos de ventas"
+msgstr "Pedidos de venta de todos los canales"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
@@ -490,7 +613,7 @@ msgstr "Análisis de Todos los canales de pedidos de venta"
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "All sales orders grouped by sales channels"
-msgstr "Todos los pedidos de ventas agrupados por canales de venta"
+msgstr "Todos los pedidos de venta agrupados por canal"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -539,7 +662,7 @@ msgstr "Cuenta analítica"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr "Contabilidad analítica para las ventas"
+msgstr "Contabilidad analítica para ventas"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -554,7 +677,7 @@ msgstr "Etiquetas Analíticas"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr "A costo"
+msgstr "A coste"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -676,32 +799,32 @@ msgstr "Compañía"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Calcular los costos de envío y enviar con DHL"
+msgstr "Calcular los costes de envío y enviar con DHL"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "Calcular los costos de envío y enviar con FedEx"
+msgstr "Calcular los costes de envío y enviar con FedEx"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "Calcular los costos de envío y enviar con UPS"
+msgstr "Calcular los costes de envío y enviar con UPS"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr "Calcular los costos de envío y enviar con USPS"
+msgstr "Calcular los costes de envío y enviar con USPS"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "Calcular los costos de envío y enviar con bpost"
+msgstr "Calcular los costes de envío y enviar con bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "Calcular los costos de envío en pedidos"
+msgstr "Calcular los costes de envío en pedidos"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
