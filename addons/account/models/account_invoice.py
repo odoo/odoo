@@ -736,12 +736,8 @@ class AccountInvoice(models.Model):
                         tax_ids.append((4, child.id, None))
             analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
             #Codigo agregado por TRESCLOUD
-            try:
-                #Colocamos este código en un try para que si internal_number no existe se mantenga
-                #el funcionamiento nativo
-                name = line.invoice_id.internal_number or line.name.split('\n')[0][:64]
-            except:
-                name = line.name.split('\n')[0][:64]
+            #Adicionamos el display_name que en nuestro core se computa como "Fact 001-001-0000001"
+            name = " ".join([line.invoice_id.display_name,line.name.split('\n')[0][:64]])
             move_line_dict = {
                 'invl_id': line.id,
                 'type': 'src',
@@ -777,12 +773,8 @@ class AccountInvoice(models.Model):
                         done_taxes.append(child_tax.id)
                 done_taxes.append(tax.id)
                 #Codigo agregado por TRESCLOUD
-                try:
-                    #Colocamos este código en un try para que si internal_number no existe se mantenga
-                    #el funcionamiento nativo
-                    name = tax_line.invoice_id.internal_number or tax_line.name
-                except:
-                    name = tax_line.name
+                #Adicionamos el display_name que en nuestro core se computa como "Fact 001-001-0000001"
+                name = " ".join([tax_line.invoice_id.display_name,tax_line.name])
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -838,11 +830,20 @@ class AccountInvoice(models.Model):
         return line
 
     #Este metodo es agregado por TresCloud
-    def _get_payable_accounts(self, total, total_currency, iml, ctx):
+    def _payable_receivable_moves_get(self, total, total_currency, iml, ctx):
         """"
-            Se agrega el metodo get_payable_accounts para poder modificar la forma en que el sistema agrega los movimientos contables en cuentas por pagar.
+        Carga los account.move.lines correspondientes a la cuenta de contrapartida por cobrar o por pagar
+        Tiene la siguientes modificaciones:
+        - Modifica el nombre del asiento, agregando la palabra "Cuota 1 de 3" cuando corresponde
+        - Permite heredar para proyecto X haciendo una CxC o CxP por cada división
+        @self: corresponde a una sola factura, pues al invocar el metodo se puso inv._payable....
+        
+        #TODO: Dejar como estaba en el core original de odoo, pero con una modificacion que
+        permita pasar por contexto un listado de criterios de agrupacion, util para usar
+        divisiones.
+        
+        #NOTA: Es redefinido por completo en alguns proyectos (Proyecto X)
         """
-        name = self.name or '/'
         diff_currency = self.currency_id != self.company_currency_id
         if self.payment_term_id:
             totlines = self.with_context(ctx).payment_term_id.with_context(currency_id=self.company_currency_id.id,
@@ -864,10 +865,13 @@ class AccountInvoice(models.Model):
                 res_amount_currency -= amount_currency or 0
                 if i + 1 == len(totlines):
                     amount_currency += res_amount_currency
+                #agregado por trescloud
+                name = self.display_name
+                if len(totlines) > 1: #solo agregamos el "Cuota 1 de 3" cuando hay mas de una cuota
+                    name = name + ' Cuota ' + str(count) + ' de ' + str(len(totlines))
                 iml.append({
                     'type': 'dest',
-                    # Codigo modificado por TRESCLOUD
-                    'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
+                    'name': name,
                     'price': t[1],
                     'account_id': self.account_id.id,
                     'date_maturity': t[0],
@@ -922,16 +926,18 @@ class AccountInvoice(models.Model):
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
+            
             #SECCION MODIFICADA POR TRESCLOUD
-            iml = self._get_payable_accounts(total, total_currency, iml, ctx)
+            #El codigo removido en esa seccion esta en el nuevo metodo _payable_receivable_accounts_get
+            #TODO: usar "iml +=" para mantener estetica similar al invoice_line_move_line_get y tax_line_move_line_get
+            iml = inv._payable_receivable_moves_get(total, total_currency, iml, ctx)
+            #para pasar el msg de error a otros metodos
             if self._context.get('error_msg'):
                 ctx.update({'error_msg': self._context['error_msg']})
-            #El codigo removido en esa seccion esta en el metodo _get_payable_accounts
-
-            #SECCION MODIFICADA POR TRESCLOUD
             #hook para hacer los asientos contables a favor de terceros
             move_partner_id = inv._get_account_partner()
             part = self.env['res.partner']._find_accounting_partner(move_partner_id)
+            #FIN DE SECCIÓN MODIFICADA POR TRESCLOUD
             
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
             line = inv.group_lines(iml, line)
