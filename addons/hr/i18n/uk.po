@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:75
@@ -71,7 +71,7 @@ msgid ""
 "                                    <span class=\"o_following\">Following</span>"
 msgstr ""
 "<span class=\"o_unfollow\">Відмовитися</span>\n"
-"                                    <span class=\"o_following\">Слідкування</span>"
+"                                    <span class=\"o_following\">Слідкувати</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -117,7 +117,7 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "A good job in a young and dynamic team"
-msgstr "Хороша робота в молоді і активній команді"
+msgstr "Хороша робота в молодій і активній команді"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_active
@@ -183,7 +183,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Birth"
-msgstr "Народження"
+msgstr "Поява"
 
 #. module: hr
 #: model:hr.job,name:hr.job_ceo
@@ -448,7 +448,7 @@ msgstr "Помилка! Ви не можете створити рекурсив
 #: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "Помилка! Ви не можете створити рекурсивну ієрархію працівників (ів)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -540,12 +540,12 @@ msgstr "Групувати за"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "HR Department"
-msgstr "Віділ"
+msgstr "Відділ кадрів"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "HR Settings"
-msgstr "Налаштування ЛР"
+msgstr "Налаштування Відділу кадрів"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -565,7 +565,7 @@ msgstr "Залучіть команду чудових виконавців"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr "Наймайте команду чудових людей з маркетингу"
+msgstr "Найміть команду чудових людей з маркетингу"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
@@ -580,7 +580,7 @@ msgstr "Людські ресурси"
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
 msgid "Human Resources Manager"
-msgstr "Керівник з людських ресурсів"
+msgstr "Керівник відділу кадрів"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -588,7 +588,7 @@ msgstr "Керівник з людських ресурсів"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_identification_id
@@ -633,7 +633,7 @@ msgstr "Збільшити можливості"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Increase the visibility of the product"
-msgstr "Збільшити видимість продукту"
+msgstr "Збільшити видимість товару"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
@@ -668,8 +668,8 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
-"Робота Позиції використовуються для визначення робочих місць та їх вимог.\n"
-"Ви можете відслідковувати кількість співробітників, які ви маєте на робочуу\n"
+"Вакансія використовуються для визначення робочих місць та їх вимог.\n"
+"Ви можете відслідковувати кількість співробітників, які ви маєте на робочу\n"
 "позицію і слідкувати за розвитком відповідно до того, що ви планували\n"
 "для майбутнього."
 
@@ -716,7 +716,7 @@ msgstr "Запуск нових маркетингових кампаній та
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Launch new products, Human Resources campaigns and offers"
-msgstr "Запуск нових продуктів, кампаній з кадрів та пропозицій"
+msgstr "Запуск нових товарів, кампаній з кадрів та пропозицій"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1158,8 +1158,7 @@ msgstr "Стажер"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
-msgstr ""
-"Перетворення нашого продукту в набір добре розташованих бізнес-додатків"
+msgstr "Перетворення нашого товару в набір добре розташованих бізнес-додатків"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -1228,7 +1227,7 @@ msgid ""
 "them."
 msgstr ""
 "Ми шукаємо пристрасного менеджера з управління персоналом, щоб допомогти нам"
-" зробити продукти, які люди люблять у використанні. Нам потрібен хтось "
+" зробити продукцію, які люди люблять у використанні. Нам потрібен хтось "
 "амбіційний, запальний, і ..... не боїться починати нові речі, багато нових "
 "речей і масштабувати їх."
 
@@ -1240,7 +1239,7 @@ msgid ""
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 "Ми шукаємо активного виконавчого менеджера, який допомагає нам зробити "
-"продукти, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
+"продукцію, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
 "пристрасний, і ..... не боїться починати нові речі, багато нових речей і "
 "масштабувати їх."
 
@@ -1252,7 +1251,7 @@ msgid ""
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
 "Ми шукаємо пристрасного менеджера маркетингу, який допомагає нам зробити "
-"продукти, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
+"продукцію, які люди люблять у використанні. Нам потрібен хтось амбіційний, "
 "пристрасний, і ..... не боїться починати нові речі, багато нових речей і "
 "масштабувати їх."
 
@@ -1517,7 +1516,7 @@ msgstr "Ви спочатку будете тренуватися зі стар�
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr "Ви спочатку будете тренуватися зі старшим технічним працивником"
+msgstr "Ви спочатку будете тренуватися зі старшим технічним працівником"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
@@ -1560,7 +1559,7 @@ msgid ""
 msgstr ""
 "Ваш документ не створено, оскільки ваша електронна адреса не розпізнається. "
 "Будь-ласка, надсилайте електронні листи з адресою електронної пошти, "
-"записаною на інформацію працівника, або зверніться до менеджера з персоналу."
+"записаною на інформації працівника, або зверніться до менеджера з персоналу."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form

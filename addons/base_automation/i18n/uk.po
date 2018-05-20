@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
@@ -80,7 +80,7 @@ msgstr "Призначено адміністратору"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "Автоматизована дія"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -275,7 +275,7 @@ msgstr "Години"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
@@ -335,12 +335,12 @@ msgstr "Останнє оновлення"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_lead_id
 msgid "Lead"
-msgstr "Привід"
+msgstr "Лід"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_line_ids
 msgid "Line"
-msgstr "Лінія"
+msgstr "Рядок"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_link_field_id
@@ -361,7 +361,7 @@ msgstr "Модель"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_name
 msgid "Model Description"
-msgstr "Опис"
+msgstr "Опис моделі"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_crud_model_id
@@ -437,7 +437,7 @@ msgstr "В очікуванні"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
 msgid "Priority"
-msgstr "Приорітет"
+msgstr "Пріоритет"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id

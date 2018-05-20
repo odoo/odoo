@@ -5,29 +5,31 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
 msgid "Action Description"
-msgstr ""
+msgstr "Popis akce"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_name
 msgid "Action Name"
-msgstr ""
+msgstr "Název akce"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
@@ -42,18 +44,18 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_state
 msgid "Action To Do"
-msgstr ""
+msgstr "Akce k provedení"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_type
 msgid "Action Type"
-msgstr ""
+msgstr "Typ akce"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_active
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_active
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_channel_ids
@@ -78,7 +80,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "Automatizovaná akce"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -89,7 +91,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
-msgstr ""
+msgstr "Automatizace"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -152,12 +154,12 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Vazebný model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Typ vazby"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -167,12 +169,12 @@ msgstr "Zrušeno"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Zaškrtnout toto pole, pokud je tento kontakt zákazníkem."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Podřízené akce"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_child_ids
@@ -180,6 +182,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Podřízené akce serveru, které budou provedeny. Všimněte si, že poslední "
+"vrácená zpětná hodnota akce bude použita jako globální návratová hodnota."
 
 #. module: base_automation
 #: model:ir.actions.act_window,help:base_automation.base_automation_act
@@ -199,7 +203,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Vytvořit / zapsat cílový model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -218,7 +222,7 @@ msgstr "Vytvořeno"
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Days"
-msgstr ""
+msgstr "Dny"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
@@ -258,12 +262,12 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_xml_id
 msgid "External ID"
-msgstr ""
+msgstr "Externí ID"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Hours"
-msgstr ""
+msgstr "Hodiny"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_id
@@ -294,7 +298,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "Je zákazník"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_date_action_last
@@ -345,7 +349,7 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Minutes"
-msgstr ""
+msgstr "Minut"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
@@ -373,17 +377,17 @@ msgstr ""
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
 msgid "Months"
-msgstr ""
+msgstr "měsíců"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_name
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_on_change_fields
@@ -484,7 +488,7 @@ msgstr "Stav"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_name
 msgid "Subject"
-msgstr ""
+msgstr "Předmět"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
@@ -511,7 +515,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
 msgid "Usage"
-msgstr ""
+msgstr "Použití"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_calendar_id
@@ -531,7 +535,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_user_id
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
@@ -574,4 +578,4 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "ir.actions.server"
-msgstr ""
+msgstr "ir.actions.server"

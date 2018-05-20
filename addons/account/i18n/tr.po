@@ -28,6 +28,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n"
+" * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı faturayı ödeyinceye kadar açık durumdadır.\n"
+" * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış  yada uzlaştırılmamış olmasıyla ilgilidir.\n"
+" * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -1689,17 +1693,17 @@ msgstr "Vergi Düzeltme"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Düzeltme Türü"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Adjustment in favor of the Estate"
-msgstr ""
+msgstr "Emlak lehine ayarla"
 
 #. module: account
 #: selection:tax.adjustments.wizard,adjustment_type:0
 msgid "Adjustment in your favor"
-msgstr ""
+msgstr "Sizin lehinize ayarlama"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form

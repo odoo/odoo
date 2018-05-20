@@ -3,21 +3,23 @@
 # * anonymization
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
@@ -120,7 +122,7 @@ msgstr "Vytvořeno"
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Anonymizace databáze"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
@@ -130,12 +132,12 @@ msgstr "Anonymizace databáze"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_date
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_direction
 msgid "Direction"
-msgstr ""
+msgstr "Směr"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_display_name
@@ -148,7 +150,7 @@ msgstr "Zobrazovaný název"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:141
@@ -165,29 +167,29 @@ msgstr "Nastala vyjímka"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_export
 msgid "Export"
-msgstr ""
+msgstr "Export"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_id
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_field_name
 msgid "Field"
-msgstr ""
+msgstr "Pole"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
 msgid "Field Name"
-msgstr ""
+msgstr "Pole Název"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Fields"
-msgstr ""
+msgstr "Pole"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_name
 msgid "File Name"
-msgstr ""
+msgstr "Název souboru"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_filepath
@@ -246,7 +248,7 @@ msgstr "Naposled upraveno"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_msg
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_model_name
@@ -256,7 +258,7 @@ msgstr ""
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: anonymization
 #: code:addons/anonymization/wizard/anonymize_wizard.py:155
@@ -272,12 +274,12 @@ msgstr "Neexistující"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_id
 msgid "Object"
-msgstr ""
+msgstr "Objekt"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
 msgid "Object Name"
-msgstr ""
+msgstr "Název objektu"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
@@ -310,7 +312,7 @@ msgstr "Stav"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_summary
 msgid "Summary"
-msgstr ""
+msgstr "Shrnutí"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version

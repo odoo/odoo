@@ -80,7 +80,7 @@ msgstr ""
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or '未定义主题'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or '未定义联系人'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or '未定义国家' }, ${lead.lead_id.email_from or '未定义电子邮件'}, ${lead.lead_id.phone or ''} </li><br/>\n"
 "% endfor\n"
 "</ol>\n"
 "\n"
@@ -166,7 +166,7 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">您需要先填写下一步操作字段并联系客户，然后再接受线索</span>"
+"style=\"display:none;\">您需要先填写下一步操作表单并联系客户，然后再接受线索</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead

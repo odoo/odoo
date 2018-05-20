@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_import
 #. openerp-web
@@ -137,7 +137,7 @@ msgstr "Десятковий розділювач"
 #: code:addons/base_import/static/src/xml/base_import.xml:71
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Відкласти батьківське/дочірнє обчислення"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
@@ -276,7 +276,7 @@ msgstr "Ось початок файла, який не вдалося імпо�
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: base_import
 #. openerp-web
@@ -315,6 +315,9 @@ msgid ""
 "                      parent / child relation occurs on every line, and lead"
 " to a slower import.                     Defering it can speed up import."
 msgstr ""
+"Якщо в моделі використовуються відносини між батьківським та дочірнім, "
+"обчислення батьківського/дочірнього зв'язку відбувається на кожному рядку та"
+" призводить до повільного імпорту. Відстрочка може прискорити імпорт."
 
 #. module: base_import
 #. openerp-web
@@ -506,14 +509,14 @@ msgstr "Пробіл"
 #: code:addons/base_import/static/src/js/import_action.js:178
 #, python-format
 msgid "Tab"
-msgstr "табуляція"
+msgstr "Tab"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr ""
+msgstr "Тестувати імпорт"
 
 #. module: base_import
 #. openerp-web

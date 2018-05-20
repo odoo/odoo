@@ -5,19 +5,21 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# trendspotter, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: trendspotter, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -519,7 +521,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -550,7 +552,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivováno"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -569,7 +571,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "Účast"
 
 #. module: event
 #: selection:event.registration,state:0
@@ -653,7 +655,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "Čárový kód"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -718,7 +720,7 @@ msgstr "Zrušeno"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -744,7 +746,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr ""
+msgstr "Sdělení"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
@@ -771,12 +773,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdit"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -825,7 +827,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr ""
+msgstr "Země"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -893,7 +895,7 @@ msgstr ""
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Den(Dnů)"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -938,7 +940,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -950,7 +952,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -967,7 +969,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr ""
+msgstr "Datum ukončení"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -981,7 +983,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr ""
+msgstr "Událost"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -1087,7 +1089,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_event_tree
 msgid "Events"
-msgstr ""
+msgstr "Události"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_event_action_pivot
@@ -1581,7 +1583,7 @@ msgstr "Kontakt"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
@@ -1636,7 +1638,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_registration_pivot
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Registration"
-msgstr ""
+msgstr "Registrace"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_registration_badge
@@ -1772,7 +1774,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "Nastavení"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
@@ -1787,7 +1789,7 @@ msgstr "Zdrojový dokument"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "Datum zahájení"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1962,7 +1964,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2086,7 +2088,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: event
 #: code:addons/event/models/event.py:499

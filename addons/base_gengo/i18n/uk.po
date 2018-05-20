@@ -19,17 +19,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Private Key..."
-msgstr "Додати Gengo увійшовши через приватний ключ..."
+msgstr "Додати Gengo, увійшовши через приватний ключ..."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Add Gengo login Public Key..."
-msgstr "Додати Gengo увійшовши через публічний ключ..."
+msgstr "Додати Gengo, увійшовши через публічний ключ..."
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
@@ -181,19 +181,19 @@ msgstr "Gengo: Ручний запит перекладу"
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
 msgid "Gengo: Sync translation (Request)"
-msgstr ""
+msgstr "Gengo: Синхронізувати переклад (Запит)"
 
 #. module: base_gengo
 #: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
 #: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
 msgid "Gengo: Sync translation (Response)"
-msgstr ""
+msgstr "Gengo: Синхронізувати переклад (Відповідь)"
 
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_gengo_translations_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: base_gengo
 #: model:ir.model.fields,help:base_gengo.field_res_company_gengo_auto_approve
@@ -240,7 +240,7 @@ msgstr ""
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Private Key"
-msgstr ""
+msgstr "Приватний ключ"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -250,7 +250,7 @@ msgstr "Професіонал"
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.res_config_settings_view_form
 msgid "Public Key"
-msgstr ""
+msgstr "Публічний ключ"
 
 #. module: base_gengo
 #: selection:base.gengo.translations,sync_type:0

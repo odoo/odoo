@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.recruitment_1_3_1
@@ -154,7 +154,7 @@ msgstr "Безкоштовно, таке як чай, кава та канцел
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_1_1
 msgid "From which university will you graduate?"
-msgstr ""
+msgstr "З якого університету ви випустилися?"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_2
@@ -207,7 +207,7 @@ msgstr "Форма інтерв'ю"
 #. module: hr_recruitment_survey
 #: model:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Forms"
-msgstr ""
+msgstr "Форми інтерв'ю"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -242,7 +242,7 @@ msgstr "Не працює поза часом"
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rcol_3_1_1
 msgid "Not important"
-msgstr ""
+msgstr "Не важливо"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_3
@@ -272,7 +272,7 @@ msgstr "Оцініть важливість"
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.recruitment_form
 msgid "Recruitment Form"
-msgstr ""
+msgstr "Форма рекрутингу"
 
 #. module: hr_recruitment_survey
 #: model:survey.label,value:hr_recruitment_survey.rrow_2_1_12
@@ -343,4 +343,4 @@ msgstr "До яких груп ви належите?"
 #. module: hr_recruitment_survey
 #: model:survey.question,question:hr_recruitment_survey.recruitment_1_2
 msgid "What is your gender?"
-msgstr ""
+msgstr "Яка ваша стать?"
