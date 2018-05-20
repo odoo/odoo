@@ -19,6 +19,7 @@
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
 # Alex Duan <alex.duan@elico-corp.com>, 2017
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
@@ -31,7 +32,6 @@
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -427,7 +427,7 @@ msgstr "所有可用的价目表必须在相同的货币作为公司或销售日
 msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
-msgstr "所有付款方式必须与销售日记账或公司货币相同，如果没有设置的话。"
+msgstr "如果未在销售日记账中设置货币，则所有付款方式必须与销售日记账或公司货币相同。"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -1676,9 +1676,7 @@ msgid ""
 "If you put a photo on the category, the layout of the\n"
 "                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens."
-msgstr ""
-"如果你对类别设置了图片，触摸屏界面就会自动显示布局。\n"
-"对于小屏幕(1024x768)我们不建议给类别设置图片。"
+msgstr "如果你对类别设置了图片，则会自动调整触摸屏界面布局。对于小屏幕 (1024x768) 我们不建议给类别设置图片。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
@@ -4205,7 +4203,7 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
-"您可以在以下\n"
+"您可以在 <name> 付款方式的\n"
 "                                <i>收银机</i>选项卡上定义其他可用货币列表 "
 
 #. module: point_of_sale

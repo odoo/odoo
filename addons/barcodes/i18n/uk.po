@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: barcodes
 #: code:addons/barcodes/models/barcodes.py:202
@@ -112,12 +112,12 @@ msgstr "Номенклатура штрихкодів"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_pattern
 msgid "Barcode Pattern"
-msgstr "Шаблон штрихкода"
+msgstr "Шаблон штрихкоду"
 
 #. module: barcodes
 #: model:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "Правило штрихкодування"
+msgstr "Правило штрихкоду"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
@@ -200,7 +200,7 @@ msgstr "Кодування"
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:301
 #, python-format
 msgid "Error : Barcode command is undefined"
-msgstr ""
+msgstr "Помилка: команда штрих-коду невизначена"
 
 #. module: barcodes
 #. openerp-web
@@ -226,7 +226,7 @@ msgstr "Маршрутизація HTTP"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_id
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature___last_update
@@ -283,14 +283,14 @@ msgid ""
 "                                zeroes."
 msgstr ""
 "Шаблон також може визначати як числові значення, такі як вага чи ціна, можуть\n"
-"бути зашиті в штрихкод. Вони вказуються як <code>{NNN}</code>, де N\n"
+"бути зашиті у штрихкод. Вони вказуються як <code>{NNN}</code>, де N\n"
 "визначають місце і кількість цифр. Числа з комою також підтримуються, якщо\n"
 "вказати числа після коми літерами D, наприклад, <code>{NNNDD}</code>. В цьому випадку, штрихкод у відповідних записах <i>повинен</i> вказувати ці числа, як нулі."
 
 #. module: barcodes
 #: selection:barcode.rule,type:0
 msgid "Priced Product"
-msgstr "Цінний товар"
+msgstr "Оцінений товар"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_name
@@ -329,12 +329,12 @@ msgstr "Столи"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_pattern
 msgid "The barcode matching pattern"
-msgstr "Відповідний шаблон штрихкода"
+msgstr "Відповідний шаблон штрихкоду"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature_rule_ids
 msgid "The list of barcode rules"
-msgstr "Список правил штрихкодування"
+msgstr "Список правил штрихкоду"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_alias
@@ -347,7 +347,7 @@ msgstr "Відповідний шаблон буде призначено як �
 #: code:addons/barcodes/models/barcodes.py:200
 #, python-format
 msgid "There is a syntax error in the barcode pattern "
-msgstr "В шаблоні штрих-кода виявлено синтаксичну помилку"
+msgstr "У шаблоні штрихкоду виявлено синтаксичну помилку"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule_encoding
@@ -363,14 +363,15 @@ msgstr ""
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
-msgstr "Для зміни цього документа, спочатку запустіть редагування."
+msgstr "Для зміни цього документу, спочатку запустіть редагування."
 
 #. module: barcodes
 #. openerp-web
 #: code:addons/barcodes/static/src/js/barcode_form_view.js:333
 #, python-format
 msgid "To set the quantity please scan a barcode first."
-msgstr "для вказання кількості, будь ласка, спочатку відскануйте штрихкод."
+msgstr ""
+"Для встановлення кількості, будь ласка, спочатку відскануйте штрихкод."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule_type
@@ -414,8 +415,8 @@ msgstr "Одиничний товар"
 msgid ""
 "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"Використовується для впорядкування правил. Правила з меньшим значенням "
-"будуть відображатися першими."
+"Використовується для впорядкування правил. Правила з меншим значенням будуть"
+" відображатися першими."
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin__barcode_scanned
@@ -430,7 +431,7 @@ msgstr "Зважений товар"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
 msgid "barcode.nomenclature"
-msgstr "штрихкод.номенклатура"
+msgstr "barcode.nomenclature"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_rule
@@ -440,4 +441,4 @@ msgstr "barcode.rule"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "barcodes.barcode_events_mixin"
-msgstr "штрих-коди.штрихкод_події_змішаний"
+msgstr "barcodes.barcode_events_mixin"

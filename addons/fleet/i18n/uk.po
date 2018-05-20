@@ -5,24 +5,23 @@
 # Translators:
 # Yaroslav Molochko <onorua@gmail.com>, 2017
 # Bohdan Lisnenko, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 # ТАрас <tratatuta@i.ua>, 2017
 # Martin Trigaux, 2017
 # Zoriana Zaiats, 2017
-# Kateryna Onyshchenko <Katrona17@gmail.com>, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
+"Last-Translator: Zoriana Zaiats, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: fleet
 #: code:addons/fleet/models/fleet_vehicle.py:198
@@ -247,22 +246,22 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
 msgid "Click to add a new tag."
-msgstr "Натисніть, щоб додати нову мітку"
+msgstr "Натисніть, щоб додати нову мітку."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid "Click to create a new contract."
-msgstr "Натисніть, для створення нового контракту"
+msgstr "Натисніть, для створення нового контракту."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
 msgid "Click to create a new cost."
-msgstr "Натисніть щоб створити нову ціну"
+msgstr "Натисніть, щоб створити нову вартість."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Click to create a new fuel log."
-msgstr "Натисніть щоб створити новий журнал витрат пального"
+msgstr "Натисніть, щоб створити новий журнал витрат пального."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
@@ -272,17 +271,17 @@ msgstr "Натисніть, щоб створити новий макет."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "Click to create a new model."
-msgstr "Натисніть щоб створити нову модель"
+msgstr "Натисніть, щоб створити нову модель."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "Click to create a new odometer log."
-msgstr "Натисніть щоб створити новий журнал одометра"
+msgstr "Натисніть, щоб створити новий журнал одометра."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
 msgid "Click to create a new service entry."
-msgstr "Натисніть щоб створити новий запис послуги"
+msgstr "Натисніть, щоб створити новий запис послуги."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
@@ -292,17 +291,17 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Click to create a new type of service."
-msgstr "Натисніть щоб створити новий тип послуг"
+msgstr "Натисніть, щоб створити новий тип послуг."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Click to create a new vehicle."
-msgstr "Натисніть щоб створити новий транспортний засіб"
+msgstr "Натисніть, щоб створити новий транспортний засіб."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
 msgid "Click to create a vehicle status."
-msgstr "Натисніть щоб створити статус транспортного засобу"
+msgstr "Натисніть, щоб створити статус транспортного засобу."
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -479,7 +478,7 @@ msgstr "Тип вартості, придбаний за цією вартіст
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Costs"
-msgstr "Costs"
+msgstr "Вартість"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_action
@@ -619,7 +618,7 @@ msgstr "Заміна двигуна/регулятора дверей"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_doors
 msgid "Doors Number"
-msgstr "Номер дверей"
+msgstr "Кількість дверей"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_driver_id
@@ -789,7 +788,7 @@ msgstr "Пальне використане транспортним засоб�
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
-msgstr "Паливний бензин для автомобілів"
+msgstr "Бензин для автомобілів"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -880,7 +879,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
 msgid "Horsepower"
-msgstr "Кіньских сил"
+msgstr "Кінські сили"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower_tax
@@ -905,7 +904,7 @@ msgstr "Гибрид"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2903
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_29
@@ -1268,7 +1267,7 @@ msgstr "Кількість дверей в транспортному засоб
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
 msgid "Number of seats of the vehicle"
-msgstr "Кількість міць для сидіння в транспортному засобі"
+msgstr "Кількість місць для сидіння в транспортному засобі"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
@@ -1443,7 +1442,7 @@ msgstr "Особа, на яку підписаний договір"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_power
 msgid "Power"
-msgstr "Степінь"
+msgstr "Потужність"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_35
@@ -1466,12 +1465,12 @@ msgstr "Потужність у кВт транспортного засобу"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Price"
-msgstr "Разом"
+msgstr "Ціна"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
 msgid "Price Per Liter"
-msgstr "Ціна за літер"
+msgstr "Ціна за літр"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
@@ -1850,7 +1849,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
 msgid "Unit"
-msgstr "Штуки"
+msgstr "Одиниця"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer_unit
@@ -1961,7 +1960,7 @@ msgstr "Контракти на транспортні засоби"
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 msgid "Vehicles Fuel Logs"
-msgstr "Транспортні засоби паливних колод"
+msgstr "Паливні колоди транспортних засобів"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
@@ -2119,7 +2118,7 @@ msgstr "fleet.vehicle.state"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_tag
 msgid "fleet.vehicle.tag"
-msgstr "Мітки"
+msgstr "fleet.vehicle.tag"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
