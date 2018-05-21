@@ -562,7 +562,7 @@ def users(*logins):
     return wrapper
 
 
-def skip_if_addons_installed(*addons, reason="Found incompatible addons installed: %s")
+def skip_if_addons_installed(*addons, reason="Found incompatible addons installed: %s"):
     """Decorator to skip a test if some addons are installed.
 
     :param *str addons:
@@ -581,7 +581,7 @@ def skip_if_addons_installed(*addons, reason="Found incompatible addons installe
     return _wrapper
 
 
-def skip_unless_addons_installed(*addons, reason="Required addons not installed: %s")
+def skip_unless_addons_installed(*addons, reason="Required addons not installed: %s"):
     """Decorator to skip a test unless some addons are installed.
 
     :param *str addons:
