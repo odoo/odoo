@@ -405,11 +405,11 @@
 
 <t t-name="ListView.SelectAll">
     <div class="alert alert-warning text-center mb0 pt4 pb4 o_list_view_select_all">
-        <t t-set="action_title" t-value="'All '+ state.data.length +' records of this page are selected'"/>
+        <t t-set="action_title" t-value="'All '+ data.selectedRecords +' records of this page are selected'"/>
         <t t-set="action_type" t-value="'select_all'"/>
-        <t t-set="action_label" t-value="'Select all '+ state.count +' records'"/>
-        <t t-if="hasAllSelector">
-            <t t-set="action_title" t-value="'All '+ state.count +' records are selected'"/>
+        <t t-set="action_label" t-value="'Select all '+ data.totalRecords +' records'"/>
+        <t t-if="data.hasAllSelector">
+            <t t-set="action_title" t-value="'All '+ data.totalRecords +' records are selected'"/>
             <t t-set="action_type" t-value="'clear_selection'"/>
             <t t-set="action_label" t-value="'Clear Selection'"/>
         </t>
