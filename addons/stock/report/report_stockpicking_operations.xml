@@ -115,7 +115,7 @@
                                                     </div>
                                                 </td>
                                                 <td width="15%" class=" text-center h6" t-if="has_serial_number">
-                                                    <img t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px"/>
+                                                    <img t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', ml.lot_id.name, 600, 100)" style="width:100%;height:35px;"/>
                                                 </td>
                                                 <td width="15%" class="text-center" t-if="has_barcode">
                                                     <t t-if="product_barcode != move.product_id.barcode">
