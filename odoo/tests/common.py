@@ -574,8 +574,9 @@ def skip_if_addons_installed(*addons, reason="Found incompatible addons installe
 
     @decorator
     def _wrapper(method, self, *args, **kwargs):
-        if self.addons_installed(*addons):
-            self.skipTest(reason % ",".join(found.mapped("name")))
+        installed = self.addons_installed(*addons)
+        if installed:
+            self.skipTest(reason % ",".join(sorted(installed)))
         return method(self, *args, **kwargs)
 
     return _wrapper
@@ -593,8 +594,10 @@ def skip_unless_addons_installed(*addons, reason="Required addons not installed:
 
     @decorator
     def _wrapper(method, self, *args, **kwargs):
-        if not self.addons_installed(*addons):
-            self.skipTest(reason % ",".join(found.mapped("name")))
+        installed = self.addons_installed(*addons)
+        if not installed:
+            missing = set(addons) - installed
+            self.skipTest(reason % ",".join(sorted(missing)))
         return method(self, *args, **kwargs)
 
     return _wrapper
