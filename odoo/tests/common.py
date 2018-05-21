@@ -141,6 +141,14 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
 
+    def addons_installed(self, *addons):
+        """Know if the specified addons are installed."""
+        found = self.env["ir.module.module"].search([
+            ("name", "in", addons),
+            ("state", "not in", ["uninstalled", "uninstallable"]),
+        ])
+        return set(addons) - set(found.mapped("name"))
+
     def cursor(self):
         return self.registry.cursor()
 
@@ -552,6 +560,44 @@ def users(*logins):
             self.uid = old_uid
 
     return wrapper
+
+
+def skip_if_addons_installed(*addons, reason="Found incompatible addons installed: %s")
+    """Decorator to skip a test if some addons are installed.
+
+    :param *str addons:
+        Addon names that shouldn't be installed.
+
+    :param reason:
+        Explain why you must skip this test.
+    """
+
+    @decorator
+    def _wrapper(method, self, *args, **kwargs):
+        if self.addons_installed(*addons):
+            self.skipTest(reason % ",".join(found.mapped("name")))
+        return method(self, *args, **kwargs)
+
+    return _wrapper
+
+
+def skip_unless_addons_installed(*addons, reason="Required addons not installed: %s")
+    """Decorator to skip a test unless some addons are installed.
+
+    :param *str addons:
+        Addon names that should be installed.
+
+    :param reason:
+        Explain why you must skip this test.
+    """
+
+    @decorator
+    def _wrapper(method, self, *args, **kwargs):
+        if not self.addons_installed(*addons):
+            self.skipTest(reason % ",".join(found.mapped("name")))
+        return method(self, *args, **kwargs)
+
+    return _wrapper
 
 
 @decorator
