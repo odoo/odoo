@@ -141,14 +141,6 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
     warm = True             # False during warm-up phase (see :func:`warmup`)
 
-    def addons_installed(self, *addons):
-        """Know if the specified addons are installed."""
-        found = self.env["ir.module.module"].search([
-            ("name", "in", addons),
-            ("state", "not in", ["uninstalled", "uninstallable"]),
-        ])
-        return set(addons) - set(found.mapped("name"))
-
     def cursor(self):
         return self.registry.cursor()
 
@@ -562,42 +554,33 @@ def users(*logins):
     return wrapper
 
 
-def skip_if_addons_installed(*addons, reason="Found incompatible addons installed: %s"):
-    """Decorator to skip a test if some addons are installed.
+def skip_if_addons_states(addons, states=("installed",), reason="Found incompatible addons in unwanted states: %s", inverse=False):
+    """Decorator to skip a test if some addons are in an unwanted state.
 
-    :param *str addons:
-        Addon names that shouldn't be installed.
+    By default, it checks that given :param:`addons` are installed.
+
+    :param [str] addons:
+        Addon names to match.
+
+    :param [str] states:
+        Addon states to match.
 
     :param reason:
         Explain why you must skip this test.
+
+    :param bool inverse:
+        When ``True``, addons are expected to be in any state except the ones set in :param:`states`.
     """
 
     @decorator
     def _wrapper(method, self, *args, **kwargs):
-        installed = self.addons_installed(*addons)
-        if installed:
-            self.skipTest(reason % ",".join(sorted(installed)))
-        return method(self, *args, **kwargs)
-
-    return _wrapper
-
-
-def skip_unless_addons_installed(*addons, reason="Required addons not installed: %s"):
-    """Decorator to skip a test unless some addons are installed.
-
-    :param *str addons:
-        Addon names that should be installed.
-
-    :param reason:
-        Explain why you must skip this test.
-    """
-
-    @decorator
-    def _wrapper(method, self, *args, **kwargs):
-        installed = self.addons_installed(*addons)
-        if not installed:
-            missing = set(addons) - installed
-            self.skipTest(reason % ",".join(sorted(missing)))
+        found = self.env["ir.module.module"].search([
+            ("name", "in", addons),
+            ("state", "not in" if inverse else "in", states),
+        ])
+        if found:
+            msg = ", ".join("{0.name} is {0.state}".format(addon) for addon in found)
+            self.skipTest(reason % msg)
         return method(self, *args, **kwargs)
 
     return _wrapper
