@@ -297,7 +297,7 @@
             <field name="name">mail.mass_mailing.list.kanban</field>
             <field name="model">mail.mass_mailing.list</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list">
+                <kanban class="o_kanban_mobile" on_create="mass_mailing.open_create_mass_mailing_list" default_action="mass_mailing.action_view_mass_mailing_contacts_from_list">
                     <field name="name"/>
                     <field name="contact_nbr"/>
                     <templates>
