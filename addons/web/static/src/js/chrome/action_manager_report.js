@@ -191,7 +191,6 @@ ActionManager.include({
             }
         } else {
             var serializedOptionsPath = '?options=' + encodeURIComponent(JSON.stringify(action.data));
-            serializedOptionsPath += '&context=' + encodeURIComponent(JSON.stringify(action.context));
             reportUrls = _.mapObject(reportUrls, function (value) {
                 return value += serializedOptionsPath;
             });

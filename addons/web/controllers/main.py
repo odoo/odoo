@@ -1939,18 +1939,12 @@ class ReportController(http.Controller):
             docids = [int(i) for i in docids.split(',')]
         if data.get('options'):
             data.update(json.loads(data.pop('options')))
-        if data.get('context'):
-            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
-            # the user explicitely wants to change the lang, this mechanism overwrites it.
-            data['context'] = json.loads(data['context'])
-            if data['context'].get('lang'):
-                del data['context']['lang']
-            context.update(data['context'])
+        landscape = data.get('orientation') == 'landscape'
         if converter == 'html':
-            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
+            html = report.with_context(landscape=landscape).render_qweb_html(docids, data=data)[0]
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
+            pdf = report.with_context(landscape=landscape).render_qweb_pdf(docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         elif converter == 'text':
