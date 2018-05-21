@@ -845,8 +845,6 @@ class AccountInvoice(models.Model):
         #NOTA: Es redefinido por completo en alguns proyectos (Proyecto X)
         """
         diff_currency = self.currency_id != self.company_currency_id
-        #agregado por trescloud
-        name = ' '.join([self.display_name, self.name or '' ])
         if self.payment_term_id:
             totlines = self.with_context(ctx).payment_term_id.with_context(currency_id=self.company_currency_id.id,
                                                                            active_model='account.invoice',
@@ -868,6 +866,11 @@ class AccountInvoice(models.Model):
                 if i + 1 == len(totlines):
                     amount_currency += res_amount_currency
                 #agregado por trescloud
+                array_name = []
+                array_name.append(self.display_name)
+                if self.name:
+                    array_name.append(self.name)
+                name = ' '.join(item for item in array_name)
                 if len(totlines) > 1: #solo agregamos el "Cuota 1 de 3" cuando hay mas de una cuota
                     name = name + ' Cuota ' + str(count) + ' de ' + str(len(totlines))
                 iml.append({
@@ -881,6 +884,11 @@ class AccountInvoice(models.Model):
                     'invoice_id': self.id
                 })
         else:
+            array_name = []
+            array_name.append(self.display_name)
+            if self.name:
+                array_name.append(self.name)
+            name = ' '.join(item for item in array_name)
             iml.append({
                 'type': 'dest',
                 'name': name,
