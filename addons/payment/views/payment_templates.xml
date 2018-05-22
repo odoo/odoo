@@ -68,11 +68,11 @@
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class="'' if (i &lt; MAX_BRAND_LINE) else 'd-none'">
+                                <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
                                     <span t-field="pm_icon.image_payment_form"
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
-                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
                                     <span class="pull-right more_option text-info">
                                         <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>
@@ -105,11 +105,11 @@
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class=" '' if (i &lt; MAX_BRAND_LINE) else 'd-none'">
+                                <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
                                     <span t-field="pm_icon.image_payment_form"
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
-                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
                                     <span class="pull-right more_option text-info">
                                         <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>

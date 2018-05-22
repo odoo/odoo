@@ -314,7 +314,7 @@
 
 <template id="language_selector">
     <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-        <li>
+        <li class="list-inline-item">
             <div class="dropup">
                 <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][1].split('/').pop()"/>
@@ -332,7 +332,7 @@
                 </div>
             </div>
         </li>
-        <li groups="website.group_website_publisher">
+        <li groups="website.group_website_publisher" class="list-inline-item">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
                 <i class="fa fa-plus-circle"/>

@@ -135,16 +135,16 @@
                         <small t-if="not track.website_published" class="label label-danger">unpublished</small>
                     </h3>
                     <ul class="list-inline mb0">
-                        <li t-if="track.partner_id" class="text-muted fa fa-user">
+                        <li t-if="track.partner_id" class="list-inline-item text-muted fa fa-user">
                             <t t-esc="track.partner_id.sudo().name"/>
                         </li>
-                        <li t-if="track.date" class="text-muted fa fa-calendar"> <span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
-                        <li class="text-muted fa fa-map-marker" t-if="track.location_id">
+                        <li t-if="track.date" class="list-inline-item text-muted fa fa-calendar"> <span t-field="track.date" t-options='{"hide_seconds":"True"}'/></li>
+                        <li class="list-inline-item text-muted fa fa-map-marker" t-if="track.location_id">
                             <span t-field="track.location_id"/>
                         </li>
                     </ul>
                     <ul class="list-inline">
-                        <li t-foreach="track.tag_ids" t-as="tag_id" class="text-muted fa fa-tags">
+                        <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item text-muted fa fa-tags">
                             <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                                 <span t-field="tag_id.name"/>
                             </a>
@@ -205,7 +205,7 @@
             <h2 t-field="track.name" class="text-center"/>
             <h3 t-field="event.name" class="text-center text-muted"/>
             <ul t-if="track.tag_ids" class="text-center text-muted list-inline">
-                <li t-foreach="track.tag_ids" t-as="tag_id">
+                <li t-foreach="track.tag_ids" t-as="tag_id" class="list-inline-item">
                     <span class="fa fa-tags"></span>
                     <a t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag_id) }">
                         <span t-field="tag_id.name"/>
