@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-     <record model="account.account.template" id="transfer_account_id">
-         <field name="name">Transfer account</field>
-         <field name="code">100</field>
-         <field name="user_type_id" ref="account.data_account_type_current_assets" />
-         <field name="reconcile" eval="True" />
-     </record>
-
      <record id="uae_chart_template_standard" model="account.chart.template">
          <field name="name">U.A.E Chart of Accounts - Standard</field>
          <field name="code_digits">6</field>
          <field name="bank_account_code_prefix">101</field>
          <field name="cash_account_code_prefix">105</field>
+         <field name="transfer_account_code_prefix">100</field>
          <field name="currency_id" ref="base.AED" />
-         <field name="transfer_account_id" ref="transfer_account_id"/>
          <field name="complete_tax_set" eval="False"/>
-     </record>
-
-     <record model="account.account.template" id="transfer_account_id">
-         <field name="chart_template_id" ref="uae_chart_template_standard"/>
      </record>
 
      <record model="account.account.template" id="uae_account_3681">

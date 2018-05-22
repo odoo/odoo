@@ -9,29 +9,18 @@
           <field name="name">Sonstige</field>
         </record>
 
-
-        <record id="transfer_account_id" model="account.account.template">
-            <field name="code">2809</field>
-            <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="name">Transfer Konto</field>
-        </record>
-
         <!-- Chart template -->
         <record id="austria_chart_template" model="account.chart.template">
             <field name="name">Austria - Chart of Accounts</field>
             <field name="code_digits">6</field>
             <field name="bank_account_code_prefix">2800</field>
             <field name="cash_account_code_prefix">2700</field>
+            <field name="transfer_account_code_prefix">2809</field>
             <field name="currency_id" ref="base.EUR"/>
-            <field name="transfer_account_id" ref="transfer_account_id"/>
         </record>
         
     <!-- Österreichischer Einheitskontenrahmen 2010 -->
     <!-- Klasse 0000 Anlagevermögen  -->
-        <record id="transfer_account_id" model="account.account.template">
-            <field name="chart_template_id" ref="austria_chart_template"/>
-        </record>
         <record id="chart0010" model="account.account.template">
             <field name="code">0010</field>
             <field name="reconcile" eval="False"/>

@@ -68,7 +68,6 @@ class ResConfigSettings(models.TransientModel):
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
-                'transfer_account_id': self.chart_template_id.transfer_account_id.id,
                 'code_digits': self.chart_template_id.code_digits,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
@@ -77,6 +76,7 @@ class ResConfigSettings(models.TransientModel):
                 'currency_id': self.currency_id.id,
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
                 'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
+                'transfer_account_code_prefix': self.chart_template_id.transfer_account_code_prefix,
             })
             wizard.onchange_chart_template_id()
             wizard.execute()
