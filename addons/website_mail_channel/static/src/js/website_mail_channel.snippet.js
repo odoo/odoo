@@ -30,7 +30,7 @@ sAnimation.registry.follow_alias = sAnimation.Class.extend({
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
             this.$('> .alert').addClass('d-none');
-            this.$('> .input-group-btn.d-none').removeClass('d-none');
+            this.$('> .input-group-append.d-none').removeClass('d-none');
             this.$('.js_follow_btn, .js_unfollow_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();

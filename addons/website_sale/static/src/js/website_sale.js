@@ -194,7 +194,7 @@ odoo.define('website_sale.website_sale', function (require) {
         $(oe_website_sale).on('click', 'a.js_add_cart_json', function (ev) {
             ev.preventDefault();
             var $link = $(ev.currentTarget);
-            var $input = $link.parent().find("input");
+            var $input = $link.closest('.input-group').find("input");
             var product_id = +$input.closest('*:has(input[name="product_id"])').find('input[name="product_id"]').val();
             var min = parseFloat($input.data("min") || 0);
             var max = parseFloat($input.data("max") || Infinity);

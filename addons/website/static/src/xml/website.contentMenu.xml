@@ -3,14 +3,16 @@
 <t t-name="website.contentMenu.dialog.submenu">
     <li t-att-data-menu-id="submenu.id">
         <div class="input-group">
-            <span class="input-group-addon fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <div class="input-group-prepend">
+                <span class="input-group-text fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            </div>
             <span class="form-control">
                 <span class="js_menu_label">
                     <t t-esc="submenu.name"/>
                 </span>
                 <i t-if="submenu.is_homepage" class="pull-right fa fa-home" style="margin-top: 3px" role="img" aria-label="Home" title="Home"/>
             </span>
-            <span class="input-group-btn">
+            <span class="input-group-append">
                 <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit menu" title="Edit menu"/>
                 <button type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete menu" title="Delete menu"/>
             </span>

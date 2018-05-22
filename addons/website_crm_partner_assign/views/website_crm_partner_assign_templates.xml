@@ -668,7 +668,9 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="input-group">
-                                                            <div class="input-group-addon"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
+                                                            </div>
                                                             <input type="text" name="planned_revenue" class="form-control planned_revenue" t-att-value="opportunity.planned_revenue" placeholder="Planned Revenue"/>
                                                         </div>
                                                     </div>
@@ -678,7 +680,9 @@
                                                     <div class="col-md-5">
                                                         <div class="input-group">
                                                             <input type="text" name="probability" class="form-control probability" t-att-value="opportunity.probability" placeholder="Probability"/>
-                                                            <div class="input-group-addon">%</div>
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text">%</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -706,7 +710,9 @@
                                                         <label>Deadline: </label>
                                                         <div class='input-group date'>
                                                             <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                            <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar"></span></span>
+                                                            <div class="input-group-append">
+                                                                <span class="input-group-text"><span class="fa fa-calendar" role="img" aria-label="Calendar"></span></span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -727,7 +733,9 @@
                                                 <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class='input-group date'>
                                                     <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                    <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span></span>
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text"><span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span></span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </main>

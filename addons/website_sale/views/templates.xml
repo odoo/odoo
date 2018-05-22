@@ -577,13 +577,17 @@
     <template id="product_quantity" inherit_id="website_sale.product" customize_show="True" name="Select Quantity">
       <xpath expr="//a[@id='add_to_cart']" position="before">
         <div class="css_quantity input-group oe_website_spinner" contenteditable="false">
-            <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" aria-label="Remove one" title="Remove one">
-                <i class="fa fa-minus"></i>
-            </a>
+            <div class="input-group-prepend">
+                <a t-attf-href="#" class="btn btn-secondary js_add_cart_json" aria-label="Remove one" title="Remove one">
+                    <i class="fa fa-minus"></i>
+                </a>
+            </div>
             <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
-            <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" aria-label="Add one" title="Add one">
-                <i class="fa fa-plus"></i>
-            </a>
+            <div class="input-group-append">
+                <a t-attf-href="#" class="btn btn-secondary float_left js_add_cart_json" aria-label="Add one" title="Add one">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
         </div>
       </xpath>
     </template>
@@ -842,13 +846,17 @@
                         </td>
                         <td class="text-center td-qty">
                             <div class="css_quantity input-group oe_website_spinner">
-                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
-                                    <i class="fa fa-minus"></i>
-                                </a>
+                                <div class="input-group-prepend">
+                                    <a t-attf-href="#" class="mb8 btn btn-link js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
+                                        <i class="fa fa-minus"></i>
+                                    </a>
+                                </div>
                                 <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
-                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
-                                    <i class="fa fa-plus"></i>
-                                </a>
+                                <div class="input-group-append">
+                                    <a t-attf-href="#" class="mb8 btn btn-link float_left js_add_cart_json d-none d-md-inline-block" aria-label="Add one" title="Add one">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
                             </div>
                         </td>
                         <td class="text-center td-price" name="price">
@@ -1007,7 +1015,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div class="input-group" style='margin-left:auto; margin-right: auto'>
                 <input name="promo" style='min-width:180px' class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
-                <div class="input-group-btn">
+                <div class="input-group-append">
                     <a role="button" class="btn btn-secondary a-submit">Apply</a>
                 </div>
             </div>
