@@ -148,6 +148,44 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('basic grouped rendering m2o with access rights check', function (assert) {
+        assert.expect(6);
+        this.data.partner.fields.product_id.can_unlink = false;
+        this.data.partner.fields.product_id.can_write = false;
+        this.data.partner.fields.product_id.can_create = false;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="product_id"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    // the lazy option is important, so the server can fill in
+                    // the empty groups
+                    assert.ok(args.kwargs.lazy, "should use lazy read_group");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'),
+                        "should have classname 'o_kanban_grouped'");
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_test'),
+                        "should have classname 'o_kanban_test'");
+        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_edit').length,
+                        "should not be able to edit the column");
+        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_delete').length,
+                        "should not be able to delete the column");
+        assert.ok(!kanban.$('.o_column_quick_create').length,
+                        "should not be able to create the column");
+        kanban.destroy();
+    });
+
     QUnit.test('basic grouped rendering with active field', function (assert) {
         assert.expect(9);
 
