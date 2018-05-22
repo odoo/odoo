@@ -690,12 +690,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         )
 
     @api.multi
-    def _export_rows(self, fields, batch_invalidate=True):
+    def _export_rows(self, fields, *, _is_toplevel_call=True):
         """ Export fields of the records in ``self``.
 
             :param fields: list of lists of fields to traverse
-            :param batch_invalidate:
-                whether to clear the cache for the top-level object every so often (avoids huge memory consumption when exporting large numbers of records)
+            :param bool _is_toplevel_call:
+                used when recursing, avoid using when calling from outside
             :return: list of lists of corresponding values
         """
         import_compatible = self.env.context.get('import_compat', True)
@@ -711,7 +711,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
-        if not batch_invalidate:
+        if not _is_toplevel_call:
             splittor = lambda rs: rs
 
         # memory stable but ends up prefetching 275 fields (???)
@@ -758,7 +758,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         # 'display_name' where no subfield is exported
                         fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
                                    for p in fields]
-                        lines2 = value._export_rows(fields2, batch_invalidate=False)
+                        lines2 = value._export_rows(fields2, _is_toplevel_call=False)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
@@ -770,7 +770,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             current[i] = False
 
         # if any xid should be exported, only do so at toplevel
-        if batch_invalidate and any(f[-1] == 'id' for f in fields):
+        if _is_toplevel_call and any(f[-1] == 'id' for f in fields):
             bymodels = collections.defaultdict(set)
             xidmap = collections.defaultdict(list)
             # collect all the tuples in "lines" (along with their coordinates)
