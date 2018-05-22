@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+import functools
 import os
 import re
 import hashlib
@@ -19,7 +20,7 @@ from odoo import fields, tools
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
-from odoo.tools import func, misc
+from odoo.tools import func, misc, lazy_property
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -351,11 +352,7 @@ class AssetsBundle(object):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
                 source = '\n'.join([asset.get_source() for asset in assets])
-                try:
-                    cmd_or_callable = assets[0].get_callable()
-                except NotImplementedError:
-                    cmd_or_callable = assets[0].get_command()
-                compiled = self.compile_css(cmd_or_callable, source)
+                compiled = self.compile_css(assets[0].get_compiler(), source)
 
                 if not self.css_errors and old_attachments:
                     old_attachments.unlink()
@@ -393,7 +390,7 @@ class AssetsBundle(object):
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
-    def compile_css(self, cmd_or_callable, source):
+    def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
         def handle_compile_error(e, source):
@@ -407,37 +404,17 @@ class AssetsBundle(object):
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
                 return line
-            if atype == ScssStylesheetAsset:
-                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.scss\" imports in your custom sass files. In Odoo you have to import all sass files in the assets, and not through the @import statement." % ref
-            else:
-                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.less\" imports in your custom less files. In Odoo you have to import all less files in the assets, and not through the @import statement." % ref
+            msg = "Local import '%s' is forbidden for security reasons. Please remove all @import {your_file} imports in your custom files. In Odoo you have to import all files in the assets, and not through the @import statement." % ref
             _logger.warning(msg)
             self.css_errors.append(msg)
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        if callable(cmd_or_callable):
-            try:
-                result = cmd_or_callable(source)
-                compiled = result.strip()
-            except Exception as e:
-                return handle_compile_error(e, source=source)
-        else:
-            try:
-                compiler = Popen(cmd_or_callable, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            except Exception:
-                msg = "Could not execute command %r" % cmd_or_callable[0]
-                _logger.error(msg)
-                self.css_errors.append(msg)
-                return ''
-            result = compiler.communicate(input=source.encode('utf-8'))
-            if compiler.returncode:
-                cmd_output = ''.join(misc.ustr(result))
-                if not cmd_output:
-                    cmd_output = "Process exited with return code %d\n" % compiler.returncode
-                return handle_compile_error(cmd_output, source=source)
-            compiled = result[0].strip().decode('utf8')
-        return compiled
+        try:
+            compiled = compiler(source)
+            return compiled.strip()
+        except Exception as e: # FIXME: custom exc
+            return handle_compile_error(e, source=source)
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
@@ -639,12 +616,27 @@ class PreprocessedCSS(StylesheetAsset):
         content = self.inline or self._fetch_content()
         return "/*! %s */\n%s" % (self.id, content)
 
-    def get_callable(self):
-        raise NotImplementedError
+    def get_compiler(self):
+        command = self.get_command()
+        return functools.partial(self._compile_file, command)
 
     def get_command(self):
         raise NotImplementedError
 
+    def _compile_file(self, command, source):
+        try:
+            compiler = Popen(command, stdin=PIPE, stdout=PIPE,
+                             stderr=PIPE)
+        except Exception:
+            raise Exception("Could not execute command %r" % command[0])
+
+        (out, err) = compiler.communicate(input=source.encode('utf-8'))
+        if compiler.returncode:
+            cmd_output = misc.ustr(out) + misc.ustr(err)
+            if not cmd_output:
+                cmd_output = u"Process exited with return code %d\n" % compiler.returncode
+            raise Exception(cmd_output)
+        return out.decode('utf8')
 
 class SassStylesheetAsset(PreprocessedCSS):
     rx_indent = re.compile(r'^( +|\t+)', re.M)
@@ -683,29 +675,37 @@ class SassStylesheetAsset(PreprocessedCSS):
 
 
 class ScssStylesheetAsset(PreprocessedCSS):
-    def get_callable(self):
-        if libsass is None:
-            raise NotImplementedError
+    @lazy_property
+    def bootstrap_path(self):
+        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+    @lazy_property
+    def bootstrap_components_path(self):
+        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+    precision = 8
+    output_style = 'expanded'
 
-        path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-        path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+    def get_compiler(self):
+        if libsass is None:
+            return super(ScssStylesheetAsset, self).get_compiler()
+
         def libsass_wrapper(source):
             return libsass.compile(
                 string=source.encode('utf-8'),
-                include_paths=[path_to_bs, path_to_bs_components],
-                output_style='expanded',
-                precision=8,
+                include_paths=[
+                    self.bootstrap_path,
+                    self.bootstrap_components_path,
+                ],
+                output_style=self.output_style,
+                precision=self.precision,
             )
         return libsass_wrapper
 
     def get_command(self):
-        path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-        path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
         try:
             sassc = misc.find_in_path('sassc')
         except IOError:
             sassc = 'sassc'
-        return [sassc, '--stdin', '--precision', '8', '--load-path', path_to_bs, '--load-path', path_to_bs_components, '-t', 'expanded']
+        return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '--load-path', self.bootstrap_components_path, '-t', self.output_style]
 
 
 class LessStylesheetAsset(PreprocessedCSS):
