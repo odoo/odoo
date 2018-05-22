@@ -74,7 +74,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize subject field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='subject']",
+            trigger:  ".col-form-label[for='subject']",
             run:      "text Name"
         },
         {
@@ -119,7 +119,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize record_name field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='record_name']",
+            trigger:  ".col-form-label[for='record_name']",
             run:      "text Awesome Label"
         },
         {
@@ -165,7 +165,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize subject field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='body_html']",
+            trigger:  ".col-form-label[for='body_html']",
             run:      "text Your Message"
         },
         {
@@ -208,7 +208,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Check the resulting field",
-            trigger:  ".form-field:has(.control-label:contains('To (Partners)'))",
+            trigger:  ".form-field:has(.col-form-label:contains('To (Partners)'))",
             run:      function () {},
         },
 
@@ -234,7 +234,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize custom multiple checkboxes field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='Custom Multiple Checkboxes']",
+            trigger:  ".col-form-label[for='Custom Multiple Checkboxes']",
             run:      "text Products"
         },
         {
@@ -267,7 +267,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on field",
-            trigger:  ".control-label:contains('Products')"
+            trigger:  ".col-form-label:contains('Products')"
         },
         {
             content:  "Click on Customize",
@@ -280,7 +280,7 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check the resulting field",
             trigger:  ".form-field.o_website_form_custom.o_website_form_required_custom" +
-                            ":has(.control-label:contains('Products'))" +
+                            ":has(.col-form-label:contains('Products'))" +
                             ":has(.checkbox label:contains('Iphone'):has(input[type='checkbox'][required]))" +
                             ":has(.checkbox label:contains('Galaxy S'):has(input[type='checkbox'][required]))" +
                             ":has(.checkbox label:contains('Xperia'):has(input[type='checkbox'][required]))" +
@@ -305,7 +305,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize custom multiple checkboxes field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='Custom Radio Buttons']",
+            trigger:  ".col-form-label[for='Custom Radio Buttons']",
             run:      "text Service"
         },
         {
@@ -338,7 +338,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on field",
-            trigger:  ".control-label:contains('Service')"
+            trigger:  ".col-form-label:contains('Service')"
         },
         {
             content:  "Click on Customize",
@@ -359,7 +359,7 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check the resulting field",
             trigger:  ".form-field.o_website_form_custom:not(.o_website_form_required_custom)" +
-                            ":has(.control-label:contains('Service'))" +
+                            ":has(.col-form-label:contains('Service'))" +
                             ":has(.radio label:contains('After-sales Service'):has(input[type='radio']:not([required])))" +
                             ":has(.radio label:contains('Invoicing Service'):has(input[type='radio']:not([required])))" +
                             ":has(.radio label:contains('Development Service'):has(input[type='radio']:not([required])))" +
@@ -389,7 +389,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize custom selection field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='Custom Selection']",
+            trigger:  ".col-form-label[for='Custom Selection']",
             run:      "text State"
         },
         {
@@ -430,7 +430,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on field",
-            trigger:  ".control-label:contains('State')"
+            trigger:  ".col-form-label:contains('State')"
         },
         {
             content:  "Click on Customize",
@@ -478,7 +478,7 @@ odoo.define('website_form_editor.tour', function(require) {
         // Customize attachment_ids field
         {
             content:  "Change the label",
-            trigger:  ".control-label[for='attachment_ids']",
+            trigger:  ".col-form-label[for='attachment_ids']",
             run:      "text Invoice Scan"
         },
         {
@@ -531,12 +531,12 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if required fields were detected and complete the Name field",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')).has-error)" +
-                            ":has(.form-field:has(label:contains('Your Message')).has-error)" +
-                            ":has(.form-field:has(label:contains('Products')).has-error)" +
-                            ":has(.form-field:has(label:contains('Service')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('State')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.has-error))",
+                            ":has(.form-field:has(label:contains('Name')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Your Message')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Products')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))",
             trigger:  "input[name=subject]",
             run:      "text Jane Smith"
         },
@@ -547,12 +547,12 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if required fields were detected and complete the Message field",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Your Message')).has-error)" +
-                            ":has(.form-field:has(label:contains('Products')).has-error)" +
-                            ":has(.form-field:has(label:contains('Service')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('State')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.has-error))",
+                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Your Message')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Products')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))",
             trigger:  "textarea[name=body_html]",
             run:      "text A useless message"
         },
@@ -563,12 +563,12 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if required fields was detected and check a product. If this fails, you probably broke the cleanForSave.",
             extra_trigger:  "form:has(#o_website_form_result.text-danger)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Your Message')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Products')).has-error)" +
-                            ":has(.form-field:has(label:contains('Service')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('State')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.has-error))",
+                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Your Message')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Products')).o_has_error)" +
+                            ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))",
             trigger:  "input[name=Products][value='Wiko Stairway']"
         },
         {
@@ -586,12 +586,12 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check form is submitted without errors",
             trigger:  "form:has(#o_website_form_result.text-success)" +
-                            ":has(.form-field:has(label:contains('Name')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Your Message')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Products')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Service')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('State')):not(.has-error))" +
-                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.has-error))"
+                            ":has(.form-field:has(label:contains('Name')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Your Message')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Products')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Service')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('State')):not(.o_has_error))" +
+                            ":has(.form-field:has(label:contains('Invoice Scan')):not(.o_has_error))"
         }
     ]);
 

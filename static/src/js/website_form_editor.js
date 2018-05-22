@@ -38,9 +38,9 @@ odoo.define('website_form_editor', function (require) {
                 } else {
                     _.each(self.$modal.find('input'), function (input) {
                         var $field = $(input).closest('.form-field');
-                        $field.removeClass('has-error');
+                        $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                         if (!input.checkValidity()) {
-                            $field.addClass('has-error');
+                            $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                         }
                     });
                 }
@@ -141,7 +141,7 @@ odoo.define('website_form_editor', function (require) {
                         }
                     );
 
-                    self.$modal.find("label.control-label[for='success_page']").css('font-weight', 'normal');
+                    self.$modal.find("label.col-form-label[for='success_page']").css('font-weight', 'normal');
                     wUtils.autocompleteWithPages(self, self.$modal.find("input[name='success_page']"));
                     self.toggle_email_to();
 
@@ -168,7 +168,7 @@ odoo.define('website_form_editor', function (require) {
                 // Make a nice array to render the select input
                 var fields_array = _.map(fields, function (v, k) { return {id: k, name: v.name, display_name: v.string}; });
                 // Filter the fields to remove the ones already in the form
-                var fields_in_form = _.map(self.$target.find('.control-label'), function (label) { return label.getAttribute('for'); });
+                var fields_in_form = _.map(self.$target.find('.col-form-label'), function (label) { return label.getAttribute('for'); });
                 var available_fields = _.filter(fields_array, function (field) { return !_.contains(fields_in_form, field.name); });
                 // Render the select input
                 var field_selection = qweb.render("website_form_editor.field_many2one", {
@@ -236,7 +236,7 @@ odoo.define('website_form_editor', function (require) {
         // Re-render the field and replace the current one
         // website_form_editor_field_reset: function(previewMode, value, $li) {
         //     var self = this;
-        //     var target_field_name = this.$target.find('.control-label').attr('for');
+        //     var target_field_name = this.$target.find('.col-form-label').attr('for');
         //     this.fields().then(function(fields){
         //         self.render_field(fields[target_field_name]).done(function(field){
         //             self.$target.replaceWith(field);
@@ -354,7 +354,7 @@ odoo.define('website_form_editor', function (require) {
             }
 
             // Prevent saving of the error colors  // TODO: would be better on Edit
-            this.$target.find('.has-error').removeClass('has-error');
+            this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
             // Prevent saving of the status message  // TODO: would be better on Edit
             this.$target.find('#o_website_form_result').empty();
@@ -416,7 +416,7 @@ odoo.define('website_form_editor', function (require) {
                 var select = this.$target.find('select');
                 var field = {
                     name: select.attr('name'),
-                    string: this.$target.find('.control-label').text().trim(),
+                    string: this.$target.find('.col-form-label').text().trim(),
                     required: self.$target.hasClass('o_website_form_required'),
                     custom: self.$target.hasClass('o_website_form_custom'),
                 };

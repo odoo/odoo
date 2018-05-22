@@ -13,7 +13,7 @@
                         <h4 class="modal-title"><t t-esc="modal_title"/></h4>
                     </header>
                     <main class="modal-body">
-                        <form class="form-horizontal" role="form">
+                        <form role="form">
                             <t t-raw="modal_body"/>
                         </form>
                     </main>
@@ -30,7 +30,7 @@
     <t t-name="website_form_editor.field">
         <div t-att-class="'form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
             <div class="col-lg-3 col-md-4 text-right-not-xs">
-                <label class="control-label" t-att-for="field.name">
+                <label class="col-form-label" t-att-for="field.name">
                     <t t-esc="field.string"/>
                 </label>
             </div>
