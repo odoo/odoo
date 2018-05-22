@@ -13,7 +13,7 @@ class ResConfigSettings(models.TransientModel):
     pos_pricelist_setting = fields.Selection([
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
-        ], string="Pricelists", config_parameter='point_of_sale.pos_pricelist_setting')
+        ], string="POS Pricelists", config_parameter='point_of_sale.pos_pricelist_setting')
 
     @api.onchange('pos_sales_price')
     def _onchange_sale_price(self):
