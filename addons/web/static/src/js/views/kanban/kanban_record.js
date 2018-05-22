@@ -10,6 +10,7 @@ var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
@@ -39,6 +40,8 @@ var KanbanRecord = Widget.extend({
         this.editable = options.editable;
         this.deletable = options.deletable;
         this.read_only_mode = options.read_only_mode;
+        this.default_action = options.default_action;
+        this.default_action_name = options.default_action_name;
         this.qweb = options.qweb;
         this.subWidgets = {};
 
@@ -164,11 +167,27 @@ var KanbanRecord = Widget.extend({
      * @private
      */
     _openRecord: function () {
-        var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
-        this.trigger_up('open_record', {
-            id: this.db_id,
-            mode: editMode ? 'edit' : 'readonly',
-        });
+        var self = this;
+        var action = this.default_action;
+        if (action) {
+            if(action === "object"){
+                rpc.query({
+                    model: this.modelName,
+                    method: this.default_action_name,
+                    args: [this.id],
+                }).then(function (result) {
+                    self.do_action(result, {additional_context: {active_id: self.id}});
+                });
+            } else {
+                self.do_action(action, {additional_context: {active_id: self.id}});
+            }
+        } else {
+            var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
+            this.trigger_up('open_record', {
+                id: this.db_id,
+                mode: editMode ? 'edit' : 'readonly',
+            });
+        }
     },
     /**
      * Processes each 'field' tag and replaces it by the specified widget, if

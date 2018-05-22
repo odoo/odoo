@@ -106,6 +106,8 @@ var KanbanRenderer = BasicRenderer.extend({
         this.recordOptions = _.extend({}, params.record_options, {
             qweb: this.qweb,
             viewType: 'kanban',
+            default_action: this.arch.attrs.default_action || null,
+            default_action_name: this.arch.attrs.default_action_name || null,
         });
         this.columnOptions = _.extend({}, params.column_options);
         if (this.columnOptions.hasProgressBar) {
