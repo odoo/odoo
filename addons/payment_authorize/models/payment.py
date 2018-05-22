@@ -13,6 +13,7 @@ from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -246,6 +247,11 @@ class TxAuthorize(models.Model):
     def authorize_s2s_do_transaction(self, **data):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
+
+        if not self.payment_token_id.authorize_profile:
+            raise UserError(_('Invalid token found: the Authorize profile is missing.'
+                              'Please make sure the token has a valid acquirer reference.'))
+
         if not self.acquirer_id.capture_manually:
             res = transaction.auth_and_capture(self.payment_token_id, self.amount, self.reference)
         else:
