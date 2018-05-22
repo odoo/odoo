@@ -166,6 +166,16 @@ class PaymentAcquirer(models.Model):
         ('s2s','Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids')
+
+    @api.onchange('payment_flow')
+    def _onchange_payment_flow(self):
+        electronic = self.env.ref('payment.account_payment_method_electronic_in')
+        if self.token_implemented and self.payment_flow == 's2s':
+            if electronic not in self.inbound_payment_method_ids:
+                self.inbound_payment_method_ids = [(4, electronic.id)]
+        elif electronic in self.inbound_payment_method_ids:
+            self.inbound_payment_method_ids = [(2, electronic.id)]
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -216,7 +226,7 @@ class PaymentAcquirer(models.Model):
         account_vals = self.env['wizard.multi.charts.accounts']._prepare_transfer_account(self.name, self.company_id)
         account = self.env['account.account'].create(account_vals)
         inbound_payment_method_ids = []
-        if self.token_implemented and self.save_token != 'none':
+        if self.token_implemented and self.payment_flow == 's2s':
             inbound_payment_method_ids.append((4, self.env.ref('payment.account_payment_method_electronic_in').id))
         return {
             'name': self.name,
