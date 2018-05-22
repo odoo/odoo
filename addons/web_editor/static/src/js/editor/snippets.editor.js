@@ -637,6 +637,8 @@ var SnippetsMenu = Widget.extend({
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.cleanForSave();
         });
+        this.$editable.find('.fa.o_icon_selected')
+            .removeClass('o_icon_selected');
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
             .removeProp('contentEditable');
