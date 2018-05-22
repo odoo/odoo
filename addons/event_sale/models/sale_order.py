@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -51,6 +52,26 @@ class SaleOrderLine(models.Model):
                 Registration.with_context(registration_force_draft=True).create(
                     Registration._prepare_attendee_values(registration))
         return True
+
+    @api.constrains('product_id', 'event_id')
+    def _check_product_event(self):
+        if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
+            raise ValidationError("The event « %s » must have at least one ticket corresponding to the product at line « %s »." % (self.event_id.display_name, self.display_name))
+
+    @api.constrains('event_id', 'event_ticket_id')
+    def _check_event_ticket(self):
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            raise ValidationError("The ticket « %s » must belong to the event at line « %s »." % (self.event_ticket_id.display_name, self.display_name))
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
+            self.event_id = None
+
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
