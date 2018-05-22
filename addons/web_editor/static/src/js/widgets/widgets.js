@@ -373,13 +373,13 @@ var ImageWidget = MediaWidget.extend({
                 .sortBy(function (r) {
                     if (_.any(self.firstFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.datas_fname.match(regex);
+                        return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
                     })) {
                         return -1;
                     }
                     if (_.any(self.lastFilters, function (filter) {
                         var regex = new RegExp(filter, 'i');
-                        return r.name.match(regex) || r.datas_fname.match(regex);
+                        return r.name.match(regex) || r.datas_fname && r.datas_fname.match(regex);
                     })) {
                         return 1;
                     }
