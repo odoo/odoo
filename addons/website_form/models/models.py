@@ -12,11 +12,6 @@ class website_form_config(models.Model):
     website_form_enable_metadata = fields.Boolean('Write metadata',help="Enable writing metadata on form submit.")
 
 
-class WebsiteConfigSettings(models.TransientModel):
-    _inherit = 'website.config.settings'
-    website_form_enable_metadata = fields.Boolean(related="website_id.website_form_enable_metadata")
-
-
 class website_form_model(models.Model):
     _name = 'ir.model'
     _inherit = 'ir.model'

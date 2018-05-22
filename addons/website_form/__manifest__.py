@@ -7,7 +7,6 @@
     'depends': ['website', 'mail'],
     'data': [
         'views/assets.xml',
-        'views/res_config_view.xml',
     ],
     'installable': True,
     'auto_install': False,
