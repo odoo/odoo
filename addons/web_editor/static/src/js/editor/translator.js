@@ -63,7 +63,7 @@ var AttributeTranslateDialog = weWidgets.Dialog.extend({
         var $group = $('<div/>', {class: 'form-group'}).appendTo(this.$el);
         _.each(this.translation, function (node, attr) {
             var $node = $(node);
-            var $label = $('<label class="control-label"></label>').text(attr);
+            var $label = $('<label class="col-form-label"></label>').text(attr);
             var $input = $('<input class="form-control"/>').val($node.html());
             $input.on('change keyup', function () {
                 var value = $input.val();

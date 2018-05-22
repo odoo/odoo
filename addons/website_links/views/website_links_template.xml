@@ -33,10 +33,10 @@
 
                     <div class="row">
                         <div class="col-md-7">
-                            <form class="form-horizontal" id="o_website_links_link_tracker_form">
+                            <form id="o_website_links_link_tracker_form">
 
-                                <div class="form-group" id="url-form-group">
-                                    <label class="col-md-3 control-label text-left">URL</label>
+                                <div class="form-group row" id="url-form-group">
+                                    <label class="col-md-3 col-form-label text-left">URL</label>
 
                                     <div class="col-md-9">
                                         <input type="text" id="url" class="form-control required-form-control"  required="True" placeholder="e.g. https://www.odoo.com/page/contactus" t-att-value="u"/>
@@ -44,24 +44,24 @@
                                 </div>
 
                                 <div class="o_website_links_utm_forms">
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">Campaign <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the context of your link. It might be an event you want to promote or a special promotion."></i></label>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Campaign <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the context of your link. It might be an event you want to promote or a special promotion."></i></label>
 
                                         <div class="col-md-9">
                                             <input type="hidden" class="form-control" id="campaign-select"/>
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">Medium <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance."></i></label>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Medium <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance."></i></label>
 
                                         <div class="col-md-9">
                                             <input type="hidden" class="form-control" id="channel-select" />
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">Source <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the source from which your traffic will come from, Facebook or Twitter for instance."></i></label>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Source <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the source from which your traffic will come from, Facebook or Twitter for instance."></i></label>
 
                                         <div class="col-md-9">
                                             <input type="hidden" class="form-control" id="source-select" />
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group row">
                                     <div class="offset-md-3 col-md-9">
                                         <button type="submit" class="btn btn-primary" id="btn_shorten_url" data-clipboard-text="">Get tracked link</button>
 

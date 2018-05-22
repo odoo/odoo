@@ -37,10 +37,10 @@ sAnimation.registry.follow = sAnimation.Class.extend({
         var $email = this.$target.find(".js_follow_email");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         var email = $email.length ? $email.val() : false;
         if (email || this.is_user) {

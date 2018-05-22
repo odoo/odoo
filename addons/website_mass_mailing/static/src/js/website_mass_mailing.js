@@ -43,10 +43,10 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
         var $email = this.$target.find(".js_subscribe_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         this._rpc({
             route: '/website_mass_mailing/subscribe',
@@ -96,10 +96,10 @@ sAnimation.registry.newsletter_popup = sAnimation.Class.extend({
         var $email = self.$target.find(".popup_subscribe_email:visible");
 
         if ($email.length && !$email.val().match(/.+@.+/)) {
-            this.$target.addClass('has-error');
+            this.$target.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             return false;
         }
-        this.$target.removeClass('has-error');
+        this.$target.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
 
         this._rpc({
             route: '/website_mass_mailing/subscribe',

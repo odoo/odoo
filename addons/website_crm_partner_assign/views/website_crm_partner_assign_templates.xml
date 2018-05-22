@@ -277,15 +277,15 @@
                         </header>
                         <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
-                                <label class="control-label hdd4" for="contact_name">Contact name</label>
+                                <label class="col-form-label hdd4" for="contact_name">Contact name</label>
                                 <input type='text' name="contact_name" class="form-control contact_name"/>
                             </div>
                             <div class="form-group">
-                                <label class="control-label h4dd" for="title">Title</label>
+                                <label class="col-form-label h4dd" for="title">Title</label>
                                 <input type='text' name="title" class="form-control title"/>
                             </div>
                             <div class="form-group">
-                                <label class="control-label hdd4" for="description">Description</label>
+                                <label class="col-form-label hdd4" for="description">Description</label>
                                 <textarea row="3" name="description" class="form-control description"></textarea>
                             </div>
                         </main>
@@ -436,11 +436,11 @@
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
-                                    <label class="control-label" for="comment">What is the next action? When? What is the expected revenue?</label>
+                                    <label class="col-form-label" for="comment">What is the next action? When? What is the expected revenue?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="customer_contacted">Do you have contacted the customer?</label>
+                                    <label class="col-form-label" for="customer_contacted">Do you have contacted the customer?</label>
                                     <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
                                 </div>
                                 <div>
@@ -465,15 +465,15 @@
                             </header>
                             <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
-                                    <label class="control-label" for="comment">Why aren't you interested by this lead?</label>
+                                    <label class="col-form-label" for="comment">Why aren't you interested by this lead?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="contacted_desinterested">Do you have contacted the customer?</label>
+                                    <label class="col-form-label" for="contacted_desinterested">Do you have contacted the customer?</label>
                                     <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
                                 </div>
                                 <div class="form-group">
-                                    <label class="control-label" for="customer_mark_spam">This lead is a spam</label>
+                                    <label class="col-form-label" for="customer_mark_spam">This lead is a spam</label>
                                     <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
                                 </div>
                                 <div>
@@ -551,30 +551,30 @@
                                         <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="partner_name">Customer Name</label>
+                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
                                                     <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.partner_name"/>
                                                 </div>
                                             </t>
                                             <t t-if="not opportunity.partner_name">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="partner_name">Customer Name</label>
+                                                    <label class="col-form-label" for="partner_name">Customer Name</label>
                                                     <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.contact_name"/>
                                                 </div>
                                             </t>
                                             <div class="form-group">
-                                                <label class="control-label" for="phone">Phone</label>
+                                                <label class="col-form-label" for="phone">Phone</label>
                                                 <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="mobile">Mobile</label>
+                                                <label class="col-form-label" for="mobile">Mobile</label>
                                                 <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="email_from">Email</label>
+                                                <label class="col-form-label" for="email_from">Email</label>
                                                 <input type="text" name="email_from" class="form-control email_from" t-att-value="opportunity.email_from"/>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="street">Address</label>
+                                                <label class="col-form-label" for="street">Address</label>
                                                 <input type="text" name="street" class="form-control street" t-att-value="opportunity.street" placeholder="Street"/>
                                             </div>
                                             <div class="form-group">
@@ -718,7 +718,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="next_activity">Next Activity</label>
+                                                <label class="col-form-label" for="next_activity">Next Activity</label>
                                                 <select class="form-control next_activity" name="next_activity">
                                                     <t t-foreach="activity_types" t-as="activity_type">
                                                         <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-days="activity_type.days" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
@@ -726,11 +726,11 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="activity_summary">Details Next Activity</label>
+                                                <label class="col-form-label" for="activity_summary">Details Next Activity</label>
                                                 <textarea row="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
+                                                <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class='input-group date'>
                                                     <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
                                                     <div class="input-group-append">

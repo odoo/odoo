@@ -192,12 +192,12 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         var url = this.$('#page_url').val();
 
         var $date_publish = this.$("#date_publish");
-        $date_publish.closest(".form-group").removeClass('has-error');
+        $date_publish.closest(".form-group").removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         var date_publish = $date_publish.val();
         if (date_publish !== "") {
             date_publish = this._parse_date(date_publish);
             if (!date_publish) {
-                $date_publish.closest(".form-group").addClass('has-error');
+                $date_publish.closest(".form-group").addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 return;
             }
         }
@@ -394,7 +394,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     save: function () {
         var $e = this.$('#o_link_dialog_label_input');
         if (!$e.val() || !$e[0].checkValidity()) {
-            $e.closest('.form-group').addClass('has-error');
+            $e.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid')
             $e.focus();
             return;
         }

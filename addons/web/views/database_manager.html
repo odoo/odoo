@@ -46,7 +46,7 @@
     {% if insecure %}
       <input type="hidden" name="master_pwd" class="form-control" value="admin"/>
     {% else %}
-      <label for="master_pwd" class="control-label">Master Password</label>
+      <label for="master_pwd" class="col-form-label">Master Password</label>
       <input id="master_pwd" type="password" name="master_pwd" class="form-control" required="required" autofocus="autofocus"/>
     {% endif %}
   </div>
@@ -59,7 +59,7 @@
   <div class="form-group">
     <div class="row">
       <div class="col-lg-12">
-        <label for="name" class="control-label">Database Name</label>
+        <label for="name" class="col-form-label">Database Name</label>
         <input id="name" type="text" name="name" class="form-control" required="required" autocomplete="off" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
       </div>
     </div>
@@ -67,20 +67,20 @@
   <div class="form-group">
     <div class="row">
       <div class="col-lg-12">
-        <label for="login" class="control-label">Email</label>
+        <label for="login" class="col-form-label">Email</label>
         <input id="login" type="text" name="login" class="form-control" required="required" autocomplete="off"/>
       </div>
     </div>
   </div>
   <div class="form-group has-feedback">
-    <label for="password" class="control-label">Password</label>
+    <label for="password" class="col-form-label">Password</label>
     <input id="password" type="password" name="password" class="form-control" required="required" autocomplete="off"/>
     <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
   </div>
   <div class="form-group">
     <div class="row">
       <div class="col-lg-6">
-        <label for="lang" class="control-label">Language</label>
+        <label for="lang" class="col-form-label">Language</label>
         <select id="lang" name="lang" class="form-control" required="required" autocomplete="off">
           {% for lang in langs %}
               <option {% if lang[0] == "en_US" %}selected="selected" {% endif %}value="{{ lang[0] }}">{{ lang[1] }}</option>
@@ -88,7 +88,7 @@
         </select>
       </div>
       <div class="col-lg-6">
-          <label for="country" class="control-label">Country</label>
+          <label for="country" class="col-form-label">Country</label>
           <select id="country" name="country_code" class="form-control" autocomplete="off">
               <option value=""></option>
             {% for country in countries %}
@@ -209,16 +209,16 @@
           <div class="modal-body">
             {{ master_input() }}
             <div class="form-group">
-              <label for="backup_file" class="control-label">File</label>
+              <label for="backup_file" class="col-form-label">File</label>
               <input id="backup_file" type="file" name="backup_file" class="required"/>
             </div>
             <div class="form-group">
-              <label for="name" class="control-label">Database Name</label>
+              <label for="name" class="col-form-label">Database Name</label>
               <input id="name" type="text" name="name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
             </div>
             <div class="form-group">
                 <label for="copy">This database might have been moved or copied.</label>
-                <p class="help-block">In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.
+                <p class="form-text">In order to avoid conflicts between databases, Odoo needs to know if this database was moved or copied.
                 If you don't know, answer "This database is a copy".</p>
               <div class="radio">
                 <label>
@@ -256,7 +256,7 @@
             <p>The master password is required to create, delete, dump or restore databases.</p>
             {{ master_input() }}
             <div class="form-group has-feedback">
-              <label for="master_pwd_new" class="control-label">New Master Password</label>
+              <label for="master_pwd_new" class="col-form-label">New Master Password</label>
               <input id="master_pwd_new" type="password" name="master_pwd_new" class="form-control" required="required" autocomplete="off"/>
               <span class="fa fa-eye o_little_eye form-control-feedback" aria-hidden="true" style="cursor: pointer; pointer-events: auto"></span>
             </div>
@@ -282,11 +282,11 @@
           <div class="modal-body">
             {{ master_input() }}
             <div class="form-group">
-              <label for="name" class="control-label">Database Name</label>
+              <label for="name" class="col-form-label">Database Name</label>
               <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
             <div class="form-group">
-              <label for="new_name" class="control-label">New Name</label>
+              <label for="new_name" class="col-form-label">New Name</label>
               <input id="new_name" type="text" name="new_name" class="form-control" required="required" pattern="{{ pattern }}" title="Only alphanumerical characters, underscore, hyphen and dot are allowed"/>
             </div>
           </div>
@@ -310,7 +310,7 @@
           <div class="modal-body">
             {{ master_input() }}
             <div class="form-group">
-              <label for="name" class="control-label">Database</label>
+              <label for="name" class="col-form-label">Database</label>
               <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
           </div>
@@ -334,11 +334,11 @@
           <div class="modal-body">
             {{ master_input() }}
             <div class="form-group">
-              <label for="name" class="control-label">Database Name</label>
+              <label for="name" class="col-form-label">Database Name</label>
               <input id="name" type="text" name="name" class="form-control" required="required" readonly="readonly"/>
             </div>
             <div class="form-group">
-              <label for="backup_format" class="control-label">Backup Format</label>
+              <label for="backup_format" class="col-form-label">Backup Format</label>
               <select id="backup_format" name="backup_format" class="form-control" required="required">
                 <option value="zip">zip (includes filestore)</option>
                 <option value="dump">pg_dump custom format (without filestore)</option>

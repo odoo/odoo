@@ -42,7 +42,7 @@
                         <p style="margin-top:32px;">
                             Would be great if you can provide more information:
                         </p>
-                        <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
+                        <form t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
                             <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
