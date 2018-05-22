@@ -1845,10 +1845,10 @@
                         <field name="parent_id" />
                         <field name="bank_account_code_prefix"/>
                         <field name="cash_account_code_prefix"/>
+                        <field name="transfer_account_code_prefix"/>
                         <field name="code_digits" />
                         <field name="visible" />
                         <field name="complete_tax_set" />
-                        <field name="transfer_account_id"/>
                     </group>
                     <separator string="Default Taxes" colspan="4"/>
                     <field name="tax_template_ids" colspan="4"  nolabel="1"/>
@@ -1872,6 +1872,7 @@
                     <field name="name" string="Account Template"/>
                     <field name="bank_account_code_prefix"/>
                     <field name="cash_account_code_prefix"/>
+                    <field name="transfer_account_code_prefix"/>
                     <group expand="0" string="Group By">
                         <filter string="Receivable Account" name="receivalbeacc" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
                         <filter string="Payable Account" name="payableacc" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
@@ -2026,12 +2027,12 @@
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%
                             </div>
-                            <field name="transfer_account_id"/>
                         </group>
                         <group groups="account.group_account_user" invisible="1">
                             <field name="code_digits"/>
                             <field name="bank_account_code_prefix"/>
                             <field name="cash_account_code_prefix"/>
+                            <field name="transfer_account_code_prefix"/>
                         </group>
                     </group>
                 </group>

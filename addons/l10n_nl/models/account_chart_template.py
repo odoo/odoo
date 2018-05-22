@@ -14,3 +14,11 @@ class WizardMultiChartsAccounts(models.TransientModel):
         if account:
             account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_12').id)]
         return res
+
+    @api.model
+    def _prepare_transfer_account(self, name, company):
+        res = super(WizardMultiChartsAccounts, self)._prepare_transfer_account(name, company)
+        xml_id = self.env.ref('l10n_nl.account_tag_25').id
+        existing_tags = [x[-1:] for x in res.get('tag_ids', [])]
+        res['tag_ids'] = [(6, 0, existing_tags + [xml_id])]
+        return res

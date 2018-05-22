@@ -13,24 +13,14 @@ http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
 
 -->
     <data noupdate="1">
-
-        <record id="l10n_cn_1012" model="account.account.template">
-            <field name="code">1012</field>
-            <field eval="False" name="reconcile"/>
-            <field name="name">在途资金</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
         <record id="l10n_chart_china_small_business" model="account.chart.template">
             <field name="name">小企业会计科目表（财会[2011]17号《小企业会计准则》）</field>
             <field name="code_digits" eval="6"/>
             <field name="currency_id" ref="base.CNY"/>
             <field name="cash_account_code_prefix">1001</field>
             <field name="bank_account_code_prefix">1002</field>
-            <field name="transfer_account_id" ref="l10n_cn_1012"/>
+            <field name="transfer_account_code_prefix">1012</field>
             <field name="spoken_languages" eval="'en_US'"/>
-        </record>
-        <record id="l10n_cn_1012" model="account.account.template">
-            <field name="chart_template_id" ref="l10n_chart_china_small_business"/>
         </record>
         <record id="l10n_cn_1012" model="account.account.template">
             <field name="name">其他貨幣資金</field>
