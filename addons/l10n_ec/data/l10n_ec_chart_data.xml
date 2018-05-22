@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record model="account.account.template" id="transfer_account_id">
-     <field name="name">Cuenta de transferencia</field>
-     <field name="code">10.01.03</field>
-     <field name="user_type_id" ref="account.data_account_type_current_assets" />
-     <field name="reconcile" eval="True" />
-    </record>
-
     <record id="ec_chart_template" model="account.chart.template">
       <field name="name">Ecuador - Chart of Accounts</field>
       <field name="currency_id" ref="base.ECS"/>
-      <field name="transfer_account_id" ref="transfer_account_id"/>
       <field name="bank_account_code_prefix">10.01.02</field>
       <field name="cash_account_code_prefix">10.01.01</field>
+      <field name="transfer_account_code_prefix">10.01.03</field>
       <field name="code_digits" eval="6"/>
-    </record>    
-
-    <record model="account.account.template" id="transfer_account_id">
-      <field name="chart_template_id" ref="ec_chart_template"/>
     </record>
 
     <!-- Account Templates -->

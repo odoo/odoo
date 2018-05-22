@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!-- Chart Template -->
-        <record id="transfer_account" model="account.account.template">
-            <field name="code">183</field>
-            <field name="name">conto di trasferimento</field>
-            <field name="reconcile" eval='True'/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
         <record id="l10n_it_chart_template_generic" model="account.chart.template">
             <field name="name">Italy - Generic Chart of Accounts</field>
             <field name="cash_account_code_prefix">180</field>
             <field name="bank_account_code_prefix">182</field>
+            <field name="transfer_account_code_prefix">183</field>
             <field name="currency_id" ref="base.EUR"/>
-            <field name="transfer_account_id" ref="transfer_account"/>
         </record>
-        <record id="transfer_account" model="account.account.template">
-            <field name="chart_template_id" ref="l10n_it_chart_template_generic"/>
-         </record>
 
          <!-- Account Tags  -->
          <record id="tax_tag_01" model="account.account.tag">

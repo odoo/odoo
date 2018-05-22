@@ -14,13 +14,6 @@
     <record model="account.account.type" id="account_type_nonbalance">
       <field name="name">Pozabilansowe</field>
     </record>
-
-        <record id="chart11090000" model="account.account.template">
-                <field name="code">11-090-000</field>
-                <field name="reconcile" eval="True"/>
-                <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-                <field name="name">Środki pieniężne w drodze</field>
-        </record>
     <!-- Chart template -->
 
         <record id="pl_chart_template" model="account.chart.template">
@@ -29,13 +22,10 @@
             <field name="currency_id" ref="base.PLN"/>
             <field name="bank_account_code_prefix">11-000-000</field>
             <field name="cash_account_code_prefix">12-000-000</field>
-            <field name="transfer_account_id" ref="chart11090000"/>
+            <field name="transfer_account_code_prefix">11-090-000</field>
         </record>
 
         <!-- Account Templates -->
-        <record id="chart11090000" model="account.account.template">
-            <field name="chart_template_id" ref="pl_chart_template"/>
-        </record>
 
         <record id="chart01010000" model="account.account.template">
                 <field name="code">01-010-000</field>

@@ -2,24 +2,13 @@
 <odoo>
     <menuitem id="account_reports_sg_statements_menu" name="Singapore" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
-        <record id="transfer_account_id" model="account.account.template">
-            <field name="name">Transfer Accounts</field>
-            <field name="code">101100</field>
-            <field name="reconcile" eval="True"/>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        </record>
-
         <record id="sg_chart_template" model="account.chart.template">
             <field name="name">Singapore Chart of Accounts - Standard</field>
             <field name="cash_account_code_prefix">10140</field>
             <field name="bank_account_code_prefix">10141</field>
+            <field name="transfer_account_code_prefix">101100</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.SGD" />
-            <field name="transfer_account_id" ref="transfer_account_id"/>
-        </record>
-
-        <record id="transfer_account_id" model="account.account.template">
-            <field name="chart_template_id" ref="sg_chart_template"/>
         </record>
 
         <record model="account.account.template" id="account_account_696">

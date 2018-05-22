@@ -4,24 +4,14 @@
         <field name="name">Comptes spéciaux</field>
     </record>
 
-
-     <record id="pcg_588" model="account.account.template">
-        <field name="name">AUTRES VIREMENTS INTERNES</field>
-        <field name="code">588</field>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-        <field name="reconcile" eval="True"/>
-    </record>
     <!-- Chart Template -->
     <record id="syscohada_chart_template" model="account.chart.template">
         <field name="name">SYSCOHADA - Plan de compte</field>
         <field name="bank_account_code_prefix">52</field>
         <field name="cash_account_code_prefix">51</field>
+        <field name="transfer_account_code_prefix">588</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.XOF"/>
-        <field name="transfer_account_id" ref="pcg_588"/>
-    </record>
-    <record id="pcg_588" model="account.account.template">
-        <field name="chart_template_id" ref="syscohada_chart_template"/>
     </record>
 
     <!-- Account Account Template -->
