@@ -28,6 +28,7 @@ _logger = logging.getLogger(__name__)
 MAX_CSS_RULES = 4095
 
 
+class CompileError(RuntimeError): pass
 def rjsmin(script):
     """ Minify js with a clever regex.
     Taken from http://opensource.perlig.de/rjsmin
@@ -413,7 +414,7 @@ class AssetsBundle(object):
         try:
             compiled = compiler(source)
             return compiled.strip()
-        except Exception as e: # FIXME: custom exc
+        except CompileError as e:
             return handle_compile_error(e, source=source)
 
     def get_preprocessor_error(self, stderr, source=None):
@@ -628,14 +629,14 @@ class PreprocessedCSS(StylesheetAsset):
             compiler = Popen(command, stdin=PIPE, stdout=PIPE,
                              stderr=PIPE)
         except Exception:
-            raise Exception("Could not execute command %r" % command[0])
+            raise CompileError("Could not execute command %r" % command[0])
 
         (out, err) = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
             cmd_output = misc.ustr(out) + misc.ustr(err)
             if not cmd_output:
                 cmd_output = u"Process exited with return code %d\n" % compiler.returncode
-            raise Exception(cmd_output)
+            raise CompileError(cmd_output)
         return out.decode('utf8')
 
 class SassStylesheetAsset(PreprocessedCSS):
@@ -689,15 +690,19 @@ class ScssStylesheetAsset(PreprocessedCSS):
             return super(ScssStylesheetAsset, self).get_compiler()
 
         def libsass_wrapper(source):
-            return libsass.compile(
-                string=source.encode('utf-8'),
-                include_paths=[
-                    self.bootstrap_path,
-                    self.bootstrap_components_path,
-                ],
-                output_style=self.output_style,
-                precision=self.precision,
-            )
+            try:
+                return libsass.compile(
+                    string=source,
+                    include_paths=[
+                        self.bootstrap_path,
+                        self.bootstrap_components_path,
+                    ],
+                    output_style=self.output_style,
+                    precision=self.precision,
+                )
+            except libsass.CompileError as e:
+                raise CompileError(e.args[0])
+
         return libsass_wrapper
 
     def get_command(self):
