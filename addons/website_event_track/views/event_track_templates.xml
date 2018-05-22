@@ -126,7 +126,7 @@
                 <div class="col-md-2">
                     <t t-if="track.image">
                         <span t-field="track.image"
-                            t-options='{"widget": "image", "class": "img-circle"}'/>
+                            t-options='{"widget": "image", "class": "rounded-circle"}'/>
                     </t>
                 </div>
                 <div class="col-md-10">
@@ -239,7 +239,7 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <span t-field="track.partner_id.sudo().image_medium"
-                                    t-options='{"widget": "image", "class": "img-circle"}'/>
+                                    t-options='{"widget": "image", "class": "rounded-circle"}'/>
                             </div><div class="col-md-10">
                                <h4 t-field="track.partner_id.name" class="mb4"/>
                                <div class="fa fa-home mb16" t-if="track.partner_id.website">

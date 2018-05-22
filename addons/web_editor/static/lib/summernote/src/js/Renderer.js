@@ -450,12 +450,12 @@ define([
         var roundedButton = tplIconButton(options.iconPrefix + options.icons.image.shapeRounded, {
           title: lang.image.shapeRounded,
           event: 'imageShape',
-          value: 'img-rounded'
+          value: 'rounded'
         });
         var circleButton = tplIconButton(options.iconPrefix + options.icons.image.shapeCircle, {
           title: lang.image.shapeCircle,
           event: 'imageShape',
-          value: 'img-circle'
+          value: 'rounded-circle'
         });
         var thumbnailButton = tplIconButton(options.iconPrefix + options.icons.image.shapeThumbnail, {
           title: lang.image.shapeThumbnail,

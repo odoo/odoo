@@ -760,7 +760,7 @@ define([
     this.imageShape = function ($editable, value, $target) {
       beforeCommand($editable);
 
-      $target.removeClass('img-rounded img-circle img-thumbnail');
+      $target.removeClass('rounded rounded-circle img-thumbnail');
 
       if (value) {
         $target.addClass(value);

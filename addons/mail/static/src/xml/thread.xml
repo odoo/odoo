@@ -183,13 +183,13 @@
                         t-att-src="message.getAvatarSource()"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                        t-attf-class="o_thread_message_avatar img-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
                 </t>
                 <t t-else="">
                     <img t-if="displayAuthorMessages[message.getID()]"
                         alt=""
                         t-att-src="message.getAvatarSource()"
-                        class="o_thread_message_avatar img-circle"/>
+                        class="o_thread_message_avatar rounded-circle"/>
                 </t>
                 <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
                     <t t-esc="message.getDate().format('hh:mm')"/>

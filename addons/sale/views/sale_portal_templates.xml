@@ -247,7 +247,7 @@
                 <div t-attf-class="row orders_vertical_align {{ 'o_is_' + line.display_type if line.display_type else '' }} pt8 pb8">
                   <t t-if="not line.display_type">
                       <div class="d-none d-xl-block col-xl-1 text-center">
-                        <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
+                        <span t-field="line.product_image" t-options="{'widget': 'image', 'class': 'rounded', 'style':'width: 48px;height:48px'}" />
                       </div>
                       <div id='product_name' t-att-class="'col-xl-3 col-md-4 col-5' if display_discount else 'col-xl-4 col-md-5 col-6'">
                         <span t-field="line.product_id.name"/>
