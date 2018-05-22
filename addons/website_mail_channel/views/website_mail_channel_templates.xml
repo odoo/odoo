@@ -60,12 +60,12 @@
                                   name="email"
                                   class="js_follow_email form-control"
                                   placeholder="your email..."/>
-                            <span t-if="'unsubscribe' not in request.params" class="input-group-btn">
+                            <div t-if="'unsubscribe' not in request.params" class="input-group-append">
                                <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
-                            </span>
-                            <span t-if="'unsubscribe' in request.params" class="input-group-btn">
+                            </div>
+                            <div t-if="'unsubscribe' in request.params" class="input-group-append">
                                <button href="#" class="btn btn-primary js_follow_btn">Unsubscribe</button>
-                            </span>
+                            </div>
                         </div>
                         <p class="js_mg_details d-none">
                             <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="fa fa-envelope-o"/> send mail</a> - </span>

@@ -31,7 +31,7 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
         // not if editable mode to allow designer to edit alert field
         if (!this.editableMode) {
             $('.js_subscribe > .alert').addClass('d-none');
-            $('.js_subscribe > .input-group-btn.d-none').removeClass('d-none');
+            $('.js_subscribe > .input-group-append.d-none').removeClass('d-none');
             this.$target.find('.js_subscribe_btn').on('click', function (event) {
                 event.preventDefault();
                 self._onClick();
@@ -55,7 +55,7 @@ sAnimation.registry.subscribe = sAnimation.Class.extend({
                 'email': $email.length ? $email.val() : false,
             },
         }).then(function (subscribe) {
-            self.$target.find(".js_subscribe_email, .input-group-btn").addClass('d-none');
+            self.$target.find(".js_subscribe_email, .input-group-append").addClass('d-none');
             self.$target.find(".alert").removeClass('d-none');
             self.$target.find('input.js_subscribe_email').attr("disabled", subscribe ? "disabled" : false);
             self.$target.attr("data-subscribe", subscribe ? 'on' : 'off');

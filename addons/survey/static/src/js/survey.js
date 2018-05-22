@@ -30,7 +30,7 @@ if(!the_form.length) {
 
     // Printing mode: will disable all the controls in the form
     if (_.isUndefined(submit_controller)) {
-        $(".js_surveyform .input-group-addon span.fa-calendar").css("pointer-events", "none");
+        $(".js_surveyform .input-group-text span.fa-calendar").css("pointer-events", "none");
         $('.js_surveyform :input').prop('disabled', true);
         print_mode = true;
     }

@@ -110,7 +110,7 @@
                     <form t-attf-action="/slides/#{slug(channel)}" role="search" method="get">
                         <div class="input-group">
                             <input type="text" class="form-control" name="search" t-attf-placeholder="Search in #{channel.name}" t-att-value="search"/>
-                            <span class="input-group-btn">
+                            <span class="input-group-append">
                                 <button class="btn btn-primary" type="submit" aria-label="Search" title="Search">
                                     <i class="fa fa-search"></i>
                                 </button>
@@ -702,7 +702,7 @@
         <form class="form-group oe_slide_js_share_email" role="form">
             <div class="input-group col-lg-6">
                 <input type="email" class="form-control" placeholder="your-friend@domain.com"/>
-                <span class="input-group-btn">
+                <span class="input-group-append">
                     <button class="btn btn-primary" type="button"
                         data-loading-text="Sending..."
                         t-attf-data-slide-id="#{slide.id}"
