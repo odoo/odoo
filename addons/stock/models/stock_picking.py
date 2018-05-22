@@ -629,6 +629,7 @@ class Picking(models.Model):
             #                                    'picking_id': pick.id
             #                                    }) # Might change first element
             # # Link existing moves or add moves when no one is related
+            pick.move_line_ids.filtered(lambda x: x.qty_done == 0 and not x.lot_id).unlink()
             for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
                 moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 
