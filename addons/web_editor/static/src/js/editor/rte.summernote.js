@@ -121,7 +121,7 @@ renderer.tplPopovers = function (lang, options) {
         title: _t('Shadow'),
         event: 'imageShape',
         value: 'shadow'
-    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-circle"]'));
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="rounded-circle"]'));
 
     // add spin for fa
     var $spin = $('<div class="btn-group d-none only_fa"/>').insertAfter($button.parent());

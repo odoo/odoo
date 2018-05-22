@@ -288,7 +288,7 @@ tour.register('rte_inline', {
             '    <tbody>\n'+
             '      <tr>\n'+
             '        <td valign="center" width="270">\n'+
-            '          <img src="/logo.png" alt="Your Logo" class="img-circle img-thumbnail">\n'+
+            '          <img src="/logo.png" alt="Your Logo" class="rounded-circle img-thumbnail">\n'+
             '        </td>\n'+
             '        <td valign="center" width="270">\n'+
             '          <a href="https://www.facebook.com/Odoo"><span class="fa fa-facebook-square fa-2x text-primary"></span></a>\n'+

@@ -21,7 +21,7 @@
 
                         <div class="o_theme_preview_top bg-white mb4">
                             <div class="o_browser_bar"/>
-                            <i states="installed" class="text-center bg-white text-success img-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
+                            <i states="installed" class="text-center bg-white text-success rounded-circle fa fa-check-circle" role="img" aria-label="Installed" title="Installed"/>
                             <div t-attf-class="bg-gray-lighter #{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
                             <div states="uninstalled" class="o_button_area">
                                 <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
