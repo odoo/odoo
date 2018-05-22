@@ -93,13 +93,13 @@
         <div class="row">
             <div class="col-lg-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded" alt=""/>
+                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="rounded" alt=""/>
                     <div class="text-center"><a href="/event">Photos of Past Events</a></div>
                 </div>
             </div>
             <div class="col-lg-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/training.jpg" class="img-rounded" alt=""/>
+                    <img src="/website_event/static/src/img/training.jpg" class="rounded" alt=""/>
                     <div class="text-center"><a href="/event">Our Trainings</a></div>
                 </div>
             </div>
@@ -641,7 +641,7 @@
                 <div class="country_events_list">
                     <div class="text-muted text-left">
                         <div>
-                            <img class="img-rounded img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
+                            <img class="rounded img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         </div>
                         <div>Events in visitor's country</div>
                     </div>
@@ -666,11 +666,11 @@
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img class="img-rounded img-fluid" t-att-src="website.image_url(country, 'image')" alt=""></img>
+                        <img class="rounded img-fluid" t-att-src="website.image_url(country, 'image')" alt=""></img>
                         <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
-                        <img class="img-rounded img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
+                        <img class="rounded img-fluid" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         <h4><b>Upcoming Events</b></h4>
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">

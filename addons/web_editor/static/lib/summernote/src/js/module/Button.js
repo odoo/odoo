@@ -43,17 +43,17 @@ define([
       if (styleInfo.image) {
         var $img = $(styleInfo.image);
 
-        btnState('button[data-event="imageShape"][data-value="img-rounded"]', function () {
-          return $img.hasClass('img-rounded');
+        btnState('button[data-event="imageShape"][data-value="rounded"]', function () {
+          return $img.hasClass('rounded');
         });
-        btnState('button[data-event="imageShape"][data-value="img-circle"]', function () {
-          return $img.hasClass('img-circle');
+        btnState('button[data-event="imageShape"][data-value="rounded-circle"]', function () {
+          return $img.hasClass('rounded-circle');
         });
         btnState('button[data-event="imageShape"][data-value="img-thumbnail"]', function () {
           return $img.hasClass('img-thumbnail');
         });
         btnState('button[data-event="imageShape"]:not([data-value])', function () {
-          return !$img.is('.img-rounded, .img-circle, .img-thumbnail');
+          return !$img.is('.rounded, .rounded-circle, .img-thumbnail');
         });
 
         var imgFloat = $img.css('float');

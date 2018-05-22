@@ -130,7 +130,7 @@
                                 <div class="media">
                                     <div class="pull-left" t-if='user.image_small'>
                                         <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
-                                            class="img-rounded" t-att-alt="user.name"/>
+                                            class="rounded" t-att-alt="user.name"/>
                                     </div>
                                     <div class="media-body">
                                         <h5><t t-esc="user.name"/></h5>

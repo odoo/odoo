@@ -6,9 +6,9 @@
                 <i class="fa fa-fw fa-caret-down"/>
                 Planned activities
                 <small class="o_chatter_planned_activities_summary ml8">
-                    <span class="label img-circle label-danger"><t t-esc="nbOverdueActivities"/></span>
-                    <span class="label img-circle label-warning"><t t-esc="nbTodayActivities"/></span>
-                    <span class="label img-circle label-success"><t t-esc="nbPlannedActivities"/></span>
+                    <span class="label rounded-circle label-danger"><t t-esc="nbOverdueActivities"/></span>
+                    <span class="label rounded-circle label-warning"><t t-esc="nbTodayActivities"/></span>
+                    <span class="label rounded-circle label-success"><t t-esc="nbPlannedActivities"/></span>
                 </small>
             </a>
         </div>
@@ -17,7 +17,7 @@
                 <div class="o_thread_message" style="margin-bottom: 10px">
                     <div class="o_thread_message_sidebar">
                         <div class="o_avatar_stack">
-                            <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" class="o_thread_message_avatar img-circle mb8" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
+                            <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" class="o_thread_message_avatar rounded-circle mb8" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
                             <i t-att-class="'o_avatar_icon fa ' + activity.icon + ' bg-' + (activity.state == 'planned'? 'success' : (activity.state == 'today'? 'warning' : 'danger')) + '-full'"
                                t-att-title="activity.activity_type_id[1]"/>
                         </div>
@@ -44,14 +44,14 @@
                                         by
                                         <img t-attf-src="/web/image#{activity.create_user_id[0] >= 0 ? ('/res.users/' + activity.create_user_id[0] + '/image_small') : ''}"
                                             height="18" width="18"
-                                            class="img-circle mr4"
+                                            class="rounded-circle mr4"
                                             t-att-title="activity.create_user_id[1]"
                                             t-att-alt="activity.create_user_id[1]"/>
                                         <b><t t-esc="activity.create_user_id[1]"/></b>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
-                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
+                                        <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="rounded-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
                                         <b><t t-esc="activity.user_id[1]"/></b>
                                         <em>, due on </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline.format(dateFormat)"/></span>
                                     </dd>
