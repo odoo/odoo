@@ -460,33 +460,33 @@
             We keep a high level of quality in showcased posts, around 20% of the submited
             posts will be featured.
         </p>
-        <form t-att-action="action_url" method="post" role="form" class="tag_text form-horizontal js_website_submit_form">
+        <form t-att-action="action_url" method="post" role="form" class="tag_text js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
             <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="content_link">URL to Share</label>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="content_link">URL to Share</label>
                 <div class="col-md-8">
                     <input type="text" name="content_link" required="True" t-attf-value="#{post_name}"
                         class="form-control mb16 o_forum_post_link" placeholder="e.g. https://www.odoo.com"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="post_name">Post Title</label>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="post_name">Post Title</label>
                 <div class="col-md-8">
                     <input type="text" name="post_name" required="True" t-attf-value="#{content}"
                         class="form-control"/>
                 </div>
             </div>
             <input type="hidden" name="karma_tag_create" t-attf-value="#{forum.karma_tag_create}" id="karma_tag_create"/>
-            <div class="form-group">
-                <label class="col-md-2 control-label" for="post_tags">Tags</label>
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="post_tags">Tags</label>
                 <div class="col-md-8">
                     <input type="hidden" name="karma_edit_retag" t-attf-value="#{forum.karma_edit_retag}" id="karma_edit_retag"/>
                     <input type="text" name="post_tags" class="form-control js_select2"/>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="offset-md-2 col-md-8">
                     <button type="submit" t-attf-class="btn btn-primary #{forum.allow_share and 'oe_social_share_call' or ''} #{(user.karma &lt; forum.karma_ask) and 'karma_required' or ''}"
                         t-att-data-karma="forum.karma_ask"
@@ -618,11 +618,11 @@
             users having a high karma can see offensive posts to moderate
             them.
         </p>
-        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="form-horizontal mt32 mb64 js_website_submit_form">
+        <form t-attf-action="/forum/#{ slug(forum) }/#{offensive and 'post' or 'question'}/#{slug(question)}/#{offensive and 'mark_as_offensive' or 'close'}" method="post" role="form" class="mt32 mb64 js_website_submit_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input name="post_id" t-att-value="question.id" type="hidden"/>
-            <div class="form-group">
-                <label class="col-lg-3 control-label" for="reason">Post:</label>
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="reason">Post:</label>
                 <div class="col-lg-8 mt8">
                     <t t-if="not question.parent_id">
                         <span t-field="question.name"/>
@@ -632,8 +632,8 @@
                     </t>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-lg-3 control-label" for="reason">Reason:</label>
+            <div class="form-group row">
+                <label class="col-lg-3 col-form-label" for="reason">Reason:</label>
                 <div class="col-lg-8">
                     <select class="form-control" name="reason_id">
                         <t t-foreach="reasons or []" t-as="reason">
@@ -642,7 +642,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
                 <div class="offset-lg-3 col-lg-8">
                     <button type="submit" class="btn btn-primary">
                         <t t-if="offensive">Mark as offensive</t>
@@ -1280,7 +1280,7 @@
     <t t-call="website_forum.header">
         <h3>Edit Profile</h3>
         <div class="row">
-            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="form-horizontal js_website_submit_form" enctype="multipart/form-data">
+            <form t-attf-action="/forum/#{slug(forum)}/user/#{slug(user)}/save" method="post" role="form" class="js_website_submit_form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <div class="col-lg-2">
@@ -1294,43 +1294,43 @@
                 </div>
                 <div class="col-lg-10">
                     <input name="user_id" t-att-value="user.id" type="hidden"/>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16" for="user_name">Real name</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16" for="user_name">Real name</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16" for="user_website_published" t-if="user.id == uid">Public profile</label>
                         <div class="col-lg-8 mb16" t-if="user.id == uid">
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                             <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16" for="user_website">Website</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16" for="user_website">Website</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required" role="alert">
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                         </div>
-                        <label class="col-lg-2 control-label mb16" for="user_email">Email</label>
+                        <label class="col-lg-2 col-form-label mb16" for="user_email">Email</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16" for="user_city">City</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16" for="user_city">City</label>
                         <div class="col-lg-8 mb16">
                             <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16">Country</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16">Country</label>
                         <div class="col-lg-8 mb16">
                             <select class="form-control" name="country">
                                 <option value="">Country...</option>
@@ -1341,14 +1341,14 @@
                         </div>
                     </div>
                     <!--Note: using website_description fiels instead of using commnt firld of partner-->
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label mb16" for="description">Biography</label>
+                    <div class="form-group row">
+                        <label class="col-lg-2 col-form-label mb16" for="description">Biography</label>
                         <div class="col-lg-8 mb16">
                             <textarea name="description" id="description" style="min-height: 120px" required="True"
                                 class="form-control load_editor"><t t-esc="user.partner_id.website_description"/></textarea>
                         </div>
                     </div>
-                    <div class="offset-md-2 col-lg-2 mb16">
+                    <div class="offset-md-2 col-lg-2 mb16"><!-- FIXME should in a row -->
                         <button type="submit" class="btn btn-primary btn-lg">Update</button>
                     </div>
                 </div>

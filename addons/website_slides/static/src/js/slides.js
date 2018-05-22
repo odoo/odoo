@@ -130,7 +130,7 @@ var page_widgets = {};
             var input = this.$('input');
             var slide_id = this.$('button').data('slide-id');
             if(input.val() && input[0].checkValidity()){
-                this.$el.removeClass('has-error');
+                this.$el.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
                 ajax.jsonRpc('/slides/slide/send_share_email', 'call', {
                     slide_id: slide_id,
                     email: input.val(),
@@ -138,7 +138,7 @@ var page_widgets = {};
                     self.$el.html($('<div class="alert alert-info" role="alert"><strong>Thank you!</strong> Mail has been sent.</div>'));
                 });
             }else{
-                this.$el.addClass('has-error');
+                this.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
                 input.focus();
             }
         },

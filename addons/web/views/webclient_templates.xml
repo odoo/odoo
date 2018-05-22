@@ -358,7 +358,7 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
-                    <label for="db" class="control-label">Database</label>
+                    <label for="db" class="col-form-label">Database</label>
                     <div class="input-group">
                         <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
                         <span class="input-group-append">
@@ -368,12 +368,12 @@
                 </div>
 
                 <div class="form-group field-login">
-                    <label for="login" class="control-label">Email</label>
+                    <label for="login" class="col-form-label">Email</label>
                     <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
                 <div class="form-group field-password">
-                    <label for="password" class="control-label">Password</label>
+                    <label for="password" class="col-form-label">Password</label>
                     <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 

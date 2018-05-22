@@ -661,7 +661,7 @@
                   <t t-set="inc" t-value="0"/>
                   <t t-foreach="variant_id.value_ids" t-as="value_id">
                       <li class="form-group js_attribute_value" style="margin: 0;">
-                          <label class="control-label" style="margin: 0 20px;">
+                          <label class="col-form-label" style="margin: 0 20px;">
                               <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                               <span t-field="value_id.name"/>
                               <span class="badge" t-if="value_id.price_extra">
@@ -751,32 +751,32 @@
                         <div class="col-xl-8 order-xl-1 col-md-12 col-12 oe_cart">
                             <div class="row">
                                 <div class='col-lg-12'>
-                                    <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
-                                        <div class="form-group form-field o_website_form_custom">
+                                    <form action="/website_form/" method="post" class="s_website_form container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
+                                        <div class="form-group row form-field o_website_form_custom">
                                             <div class="col-lg-3 col-md-4 text-right-not-xs">
-                                                <label class="control-label" for="client_order_ref">Your Reference</label>
+                                                <label class="col-form-label" for="client_order_ref">Your Reference</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
                                                 <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
                                             </div>
                                         </div>
-                                        <div class="form-group form-field o_website_form_custom">
+                                        <div class="form-group row form-field o_website_form_custom">
                                             <div class="col-lg-3 col-md-4 text-right-not-xs">
-                                                <label class="control-label" for="Give us your feedback">Give us your feedback</label>
+                                                <label class="col-form-label" for="Give us your feedback">Give us your feedback</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
                                                 <textarea class="form-control o_website_form_input" rows="8" name="Give us your feedback" />
                                             </div>
                                         </div>
-                                        <div class="form-group form-field o_website_form_custom">
+                                        <div class="form-group row form-field o_website_form_custom">
                                             <div class="col-lg-3 col-md-4 text-right-not-xs">
-                                                <label class="control-label" for="a_document">A document to provide</label>
+                                                <label class="col-form-label" for="a_document">A document to provide</label>
                                             </div>
                                             <div class="col-lg-9 col-md-8">
                                                 <input type="file" class="form-control o_website_form_input" name="a_document" />
                                             </div>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group row">
                                             <div class="col-lg-3 col-md-4">
                                             </div>
                                             <div class="col-lg-9 col-md-8">
@@ -1159,63 +1159,63 @@
                                     <h4 class="text-danger" t-esc="err" />
                                 </t>
                                 <form action="/shop/address" method="post" class="checkout_autoformat">
-                                    <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-12 div_name">
-                                        <label class="control-label" for="name">Name</label>
-                                        <input type="text" name="name" class="form-control" t-att-value="'name' in checkout and checkout['name']" />
+                                    <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                                        <label class="col-form-label" for="name">Name</label>
+                                        <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']" />
                                     </div>
                                     <div class="clearfix" />
                                     <t t-if="mode[1] == 'billing'">
-                                        <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6" id="div_email">
-                                            <label class="control-label" for="email">Email</label>
-                                            <input type="email" name="email" class="form-control" t-att-value="'email' in checkout and checkout['email']" />
+                                        <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
+                                            <label class="col-form-label" for="email">Email</label>
+                                            <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']" />
                                         </div>
                                     </t>
-                                    <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6" id="div_phone">
-                                        <label class="control-label" for="phone">Phone</label>
-                                        <input type="tel" name="phone" class="form-control" t-att-value="'phone' in checkout and checkout['phone']" />
+                                    <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-lg-6" id="div_phone">
+                                        <label class="col-form-label" for="phone">Phone</label>
+                                        <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />
                                     </div>
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
-                                        <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
-                                            <label class="control-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                                            <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                                        <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
+                                            <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
+                                            <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6 div_vat">
-                                            <label class="control-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                                            <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                                        <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
+                                            <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
+                                            <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
                                         </div>
                                     </t>
                                     <div class="clearfix" />
-                                    <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-12 div_street">
-                                        <label class="control-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
-                                        <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
+                                    <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
+                                        <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
+                                        <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="'street' in checkout and checkout['street']" />
                                     </div>
-                                    <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-12 div_street2">
-                                        <label class="control-label label-optional" for="street2">Street 2</label>
-                                        <input type="text" name="street2" class="form-control" t-att-value="'street2' in checkout and checkout['street2']" />
+                                    <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2">
+                                        <label class="col-form-label label-optional" for="street2">Street 2</label>
+                                        <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="'street2' in checkout and checkout['street2']" />
                                     </div>
                                     <div class="clearfix" />
                                     <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
-                                        <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-md-4 div_zip">
-                                            <label class="control-label label-optional" for="zip">Zip Code</label>
-                                            <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+                                        <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <label class="col-form-label label-optional" for="zip">Zip Code</label>
+                                            <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
-                                    <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-md-8 div_city">
-                                        <label class="control-label" for="city">City</label>
-                                        <input type="text" name="city" class="form-control" t-att-value="'city' in checkout and checkout['city']" />
+                                    <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                        <label class="col-form-label" for="city">City</label>
+                                        <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="'city' in checkout and checkout['city']" />
                                     </div>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
-                                        <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-md-4 div_zip">
-                                            <label class="control-label label-optional" for="zip">Zip Code</label>
-                                            <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
+                                        <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <label class="col-form-label label-optional" for="zip">Zip Code</label>
+                                            <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
                                     <div class="clearfix" />
-                                    <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6 div_country">
-                                        <label class="control-label" for="country_id">Country</label>
-                                        <select id="country_id" name="country_id" class="form-control">
+                                    <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                                        <label class="col-form-label" for="country_id">Country</label>
+                                        <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}">
                                             <option value="">Country...</option>
                                             <t t-foreach="countries" t-as="c">
                                                 <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
@@ -1224,9 +1224,9 @@
                                             </t>
                                         </select>
                                     </div>
-                                    <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
-                                        <label class="control-label" for="state_id">State / Province</label>
-                                        <select name="state_id" class="form-control" data-init="1">
+                                    <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
+                                        <label class="col-form-label" for="state_id">State / Province</label>
+                                        <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
                                             <option value="">State / Province...</option>
                                             <t t-foreach="country and country.state_ids or []" t-as="s">
                                                 <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">

@@ -340,28 +340,28 @@
                         </section>
                     </div>
                     <section id="forms" t-if="event.website_track_proposal">
-                        <form class="form-horizontal mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
+                        <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="partner_name">Your Name</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Your Name</label>
                                 <div class="col-lg-7 col-md-8">
                                     <input type="text" class="form-control" name="partner_name" required="True" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="email_from">Your Email</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Your Email</label>
                                 <div class="col-lg-7 col-md-8">
                                     <input type="email" class="form-control" name="email_from" required="True" />
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="phone">Your Phone</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Your Phone</label>
                                 <div class="col-lg-7 col-md-8">
                                     <input type="text" class="form-control" name="phone" required="True" />
                                 </div>
                             </div>
-                            <div class="form-group" t-if="len(event.allowed_track_tag_ids)">
-                                <label class="col-lg-3 col-md-4 control-label" for="phone">Tags</label>
+                            <div class="form-group row" t-if="len(event.allowed_track_tag_ids)">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Tags</label>
                                 <div class="col-lg-9 col-md-8">
                                     <div class="row">
                                         <label class="col-md-4" t-foreach="event.allowed_track_tag_ids" t-as="tag">
@@ -371,25 +371,25 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="track_name">Talk Title</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
                                 <div class="col-lg-7 col-md-8">
                                     <input type="text" class="form-control" name="track_name" required="True"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="phone">Speaker Biography</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker Biography</label>
                                 <div class="col-lg-7 col-md-8">
                                     <textarea  class="form-control" name="biography" style="min-height: 120px"/>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-lg-3 col-md-4 control-label" for="description">Talk Introduction</label>
+                            <div class="form-group row">
+                                <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
                                 <div class="col-lg-7 col-md-8">
                                     <textarea  class="form-control" name="description" style="min-height: 120px"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
                                     <button type="submit" class="btn btn-primary">Submit Proposal</button>
                                 </div>
