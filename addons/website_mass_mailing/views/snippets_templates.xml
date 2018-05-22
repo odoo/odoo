@@ -20,8 +20,8 @@
     <div class="oe_snippet_body input-group js_subscribe" data-list-id="0">
         <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
         <span class="input-group-btn">
-            <a href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
-            <a href="#" class="btn btn-success js_subscribed_btn hidden" disabled="disabled">Thanks</a>
+            <a role="button" href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
+            <a role="button" href="#" class="btn btn-success js_subscribed_btn hidden" disabled="disabled">Thanks</a>
         </span>
         <div class="alert alert-success hidden">Thanks for your subscription!</div>
     </div>
@@ -34,14 +34,14 @@
         </div>
         <div class="modal modal-dialog modal-md fade fade-custom" id="o_newsletter_popup" tabindex="-1" role="dialog">
             <div class="modal-content o_popup_modal_content">
-                <a href="#" class="o_popup_btn_close o_not_editable" data-dismiss="modal">&amp;times;</a>
+                <a role="button" href="#" class="o_popup_btn_close o_not_editable" data-dismiss="modal">&amp;times;</a>
 
                 <div class="o_popup_modal_body text-center">
                     <div class="o_popup_content_dev" data-oe-placeholder="Type Here ..."/>
                     <div class="input-group o_not_editable o_popup_animated o_popup_bounce_del500ms o_popup_bounce_small" >
                         <input type="email" name="email" class="popup_subscribe_email form-control" placeholder="your email..." autofocus="autofocus"/>
                         <span class="input-group-btn">
-                            <a href="#" class="btn btn-success popup_subscribe_btn">Subscribe</a>
+                            <a role="button" href="#" class="btn btn-success popup_subscribe_btn">Subscribe</a>
                         </span>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
 
 <template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
     <xpath expr="//td[hasclass('o_mail_footer_links')]" position="inside">
-        <t> | <a href="/contactus" class="btn btn-link">Contact</a></t>
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
     </xpath>
     <xpath expr="//tr" position="before">
         <tr>
@@ -125,7 +125,7 @@
 
 <template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
     <xpath expr="//div[hasclass('o_mail_footer_links')]" position="inside">
-        <t> | <a href="/contactus" class="btn btn-link">Contact</a></t>
+        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
     </xpath>
     <xpath expr="//td" position="after">
         <td class="o_mail_footer_social">

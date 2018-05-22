@@ -3,7 +3,7 @@
 
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
-        <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
+        <a role="button" class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
             <span class="fa fa-clock-o fa-lg fa-fw" t-att-title="widget.selection[widget.activity_state]" t-att-aria-label="widget.selection[widget.activity_state]"/>
         </a>
         <ul class="dropdown-menu o_activity" role="menu">
@@ -53,7 +53,7 @@
         </ul>
     </li>
     <li class="o_schedule_activity text-center">
-        <span class="btn btn-link btn-block">
+        <span role="button" class="btn btn-link btn-block">
             <i class="fa fa-plus fa-fw" aria-label="Add" title="Add"></i><strong>Schedule an activity</strong>
         </span>
     </li>

@@ -19,7 +19,7 @@
                     </span>
 
                     <span class="o_website_links_edit_tools" style="display:none;">
-                        <a class="o_website_links_ok_edit btn btn-xs btn-primary" href="#">ok</a> or 
+                        <a role="button" class="o_website_links_ok_edit btn btn-xs btn-primary" href="#">ok</a> or 
                         <a class="o_website_links_cancel_edit" href="#">cancel</a>
                     </span>
 
@@ -35,7 +35,7 @@
 
             <div class="col-sm-4 col-xs-2">
                 <button class="btn btn-info btn_shorten_url_clipboard mt8" t-att-data-clipboard-text="widget.link_obj.short_url">Copy</button>
-                <a t-attf-href="{{widget.link_obj.short_url}}+" class="btn btn-warning mt8">Stats</a>
+                <a role="button" t-attf-href="{{widget.link_obj.short_url}}+" class="btn btn-warning mt8">Stats</a>
             </div>
         </div>
     </t>

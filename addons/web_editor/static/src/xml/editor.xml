@@ -54,10 +54,10 @@
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
-                        <a class="btn btn-default disabled" href="#"><span class="fa fa-angle-left">&#32;Previous</span></a>
+                        <a role="button" class="btn btn-default disabled" href="#"><span class="fa fa-angle-left">&#32;Previous</span></a>
                     </li>
                     <li class="next">
-                        <a class="btn btn-default disabled" href="#"><span class="fa fa-suffix-angle-right">Next&#32;</span></a>
+                        <a role="button" class="btn btn-default disabled" href="#"><span class="fa fa-suffix-angle-right">Next&#32;</span></a>
                     </li>
                 </ul>
             </li>
@@ -266,13 +266,13 @@
                     <label class="control-label col-sm-3">Color</label>
                     <div class="col-sm-9">
                         <div class="o_link_dialog_color">
-                            <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
+                            <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
                                 <span>L</span>
                                 <input class="hidden link-style" name="link_style_color" type="radio" value=""/>
                                 <i class="fa"/>
                             </label>
                             <t t-foreach="['primary', 'default', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
-                                <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}">
+                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}">
                                     <input type="radio" name="link_style_color" class="hidden link-style" t-att-value="color"/>
                                     <i class="fa"/>
                                 </label>

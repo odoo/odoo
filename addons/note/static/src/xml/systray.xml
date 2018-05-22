@@ -3,7 +3,7 @@
     <t t-extend="mail.chat.ActivityMenuPreview">
         <t t-jquery="t[t-foreach*='activities'][t-as*='activity']" t-operation="after">
             <div class="o_note_show">
-                <a class="btn btn-block text-center">Add new note</a>
+                <a role="button" class="btn btn-block text-center">Add new note</a>
             </div>
             <div class="o_note o_mail_channel_preview hidden">
                 <div class="o_mail_channel_image o_mail_channel_app">

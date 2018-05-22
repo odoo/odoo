@@ -527,7 +527,7 @@ ListRenderer.include({
     _renderRows: function () {
         var $rows = this._super();
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add a line"));
+            var $a = $('<a href="#" role="button">').text(_t("Add a line"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_field_x2many_list_row_add')

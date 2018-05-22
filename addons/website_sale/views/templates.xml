@@ -91,7 +91,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
                 <div class="ribbon-wrapper">
-                    <div class="ribbon btn btn-danger">Sale</div>
+                    <div role="button" class="ribbon btn btn-danger">Sale</div>
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="product_href">
@@ -112,7 +112,7 @@
                         <strong>
                             <a itemprop="name" t-att-href="product_href" t-att-content="product.name" t-field="product.name" />
                         </strong>
-                        <a t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-default btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
+                        <a role="button" t-if="not show_publish and not product.website_published" t-att-href="product_href" class="btn btn-default btn-xs btn-danger" title="This product is unpublished.">Unpublished</a>
                     </h5>
                     <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="product.product_variant_ids">
                         <b>
@@ -142,12 +142,12 @@
         <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
-                <a class="btn btn-default btn-xs a-submit" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-default btn-xs a-submit" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
             <t t-if="len(product.product_variant_ids) &gt; 1">
-                <a class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
+                <a role="button" class="btn btn-default btn-xs" t-att-href="keep('/shop/product/%s' % slug(product), page=(pager['page']['num'] if pager['page']['num']&gt;1 else None))" aria-label="Shopping cart" title="Shopping cart">
                     <span class="fa fa-shopping-cart" />
                 </a>
             </t>
@@ -158,7 +158,7 @@
         <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
         <div t-attf-class="#{website_sale_pricelists and len(website_sale_pricelists)&gt;1 and 'dropdown' or 'hidden'} btn-group">
             <t t-set="curr_pl" t-value="website.get_current_pricelist()" />
-            <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+            <a role="button" href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                 <t t-esc="curr_pl and curr_pl.name or ' - '" />
                 <span class="caret"></span>
             </a>
@@ -248,7 +248,7 @@
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="dropdown btn-group dropdown_sorty_by">
-                <a href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                <a role="button" href="#" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                     <t t-if='len(website_sale_sortable_current)'>
                         <span>Sorting by : <t t-raw='website_sale_sortable_current[0][0]'/></span>
                     </t>
@@ -476,7 +476,7 @@
                                     </t>
                                     <t t-call="website_sale.product_price" />
                                     <p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger" style="padding: 15px;">This combination does not exist.</p>
-                                    <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
+                                    <a role="button" id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
                             <hr t-if="product.description_sale" />
@@ -779,8 +779,8 @@
                                             <div class="col-md-3 col-sm-4">
                                             </div>
                                             <div class="col-md-9 col-sm-8">
-                                                <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" > Previous</span></a>
-                                                <a class="fa fa-chevron-suffix-right btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next</a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" > Previous</span></a>
+                                                <a role="button" class="fa fa-chevron-suffix-right btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next</a>
                                             </div>
                                         </div>
                                     </form>
@@ -900,10 +900,10 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
-                                    <a href="/shop" class="btn btn-default mb32 hidden-xs hidden-sm hidden-md">
+                                    <a role="button" href="/shop" class="btn btn-default mb32 hidden-xs hidden-sm hidden-md">
                                         <span class="fa fa-chevron-left">Continue Shopping</span>
                                     </a>
-                                    <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
+                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
                                         <span class="fa fa-chevron-suffix-right">Process Checkout</span>
                                     </a>
                                     <div class="oe_structure" />
@@ -913,11 +913,11 @@
                         <div class="col-lg-4 col-sm-12 col-xs-12">
                             <t t-call='website_sale.short_cart_summary'/>
                             <div class='hidden-lg'>
-                                <a href="/shop" class="btn btn-default mb32">
+                                <a role="button" href="/shop" class="btn btn-default mb32">
                                     <span class="fa fa-chevron-left">
                                     Continue<span class="hidden-xs"> Shopping</span></span>
                                 </a>
-                                <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
+                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
                                     <span class="fa fa-suffix-chevron-right">Process Checkout</span>
                                 </a>
                             </div>
@@ -954,7 +954,7 @@
                         <t t-set='hide_coupon'>True</t>
                     </t>
                 </span>
-                <a class="btn btn-primary" href="/shop/cart">
+                <a role="button" class="btn btn-primary" href="/shop/cart">
                        View Cart (<t t-esc="website_sale_order.cart_quantity" /> items)
                      </a>
             </div>
@@ -988,7 +988,7 @@
                         </td>
                         <td class="col-md-2 col-sm-3 col-xs-4 text-center">
                             <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
-                            <a class="btn btn-link js_add_suggested_products">
+                            <a role="button" class="btn btn-link js_add_suggested_products">
                                 <strong>Add to Cart</strong>
                             </a>
                         </td>
@@ -1008,7 +1008,7 @@
             <div class="input-group" style='margin-left:auto; margin-right: auto'>
                 <input name="promo" style='min-width:180px' class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None" />
                 <div class="input-group-btn">
-                    <a class="btn btn-default a-submit">Apply</a>
+                    <a role="button" class="btn btn-default a-submit">Apply</a>
                 </div>
             </div>
         </form>
@@ -1055,7 +1055,7 @@
                                             <div class="col-sm-12 col-md-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                                    <a class='a-submit btn btn-default mb16 btn-block'>
+                                                    <a role="button" class='a-submit btn btn-default mb16 btn-block'>
                                                         <span class="fa fa-plus-square"> Add an address</span>
                                                     </a>
                                                 </form>
@@ -1077,9 +1077,9 @@
                             </t>
                             <div class="clearfix" />
                             <div>
-                                <a href="/shop/cart" class="btn btn-default mb32">
+                                <a role="button" href="/shop/cart" class="btn btn-default mb32">
                                     <span class="fa fa-chevron-left" > Return to Cart</span></a>
-                                <a class="btn btn-primary pull-right mb32 " href="/shop/confirm_order"><span class="fa fa-suffix-chevron-right">Confirm</span></a>
+                                <a role="button" class="btn btn-primary pull-right mb32 " href="/shop/confirm_order"><span class="fa fa-suffix-chevron-right">Confirm</span></a>
                             </div>
                         </div>
                     </div>
@@ -1097,19 +1097,19 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+            <a role="button" t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='panel-footer' t-if='not readonly'>
-                    <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
-                        <a class="btn btn-block btn-primary">
+                    <span role="button" class='btn-ship' t-att-style="'' if selected else 'display:none;'">
+                        <a role="button" class="btn btn-block btn-primary">
                             <span class='fa fa-check'> Ship to this address</span>
                         </a>
                     </span>
-                    <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
-                        <a class="btn btn-block btn-default">
+                    <span role="button" class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
+                        <a role="button" class="btn btn-block btn-default">
                             Select this address
                         </a>
                     </span>
@@ -1138,7 +1138,7 @@
                                 <t t-if="mode == ('new', 'billing')">
                                     <h2 class="page-header mt8 ml16">Your Address
                                         <small> or </small>
-                                        <a href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
+                                        <a role="button" href='/web/login?redirect=/shop/checkout' class='btn btn-primary' style="margin-top: -11px">Log In</a>
                                     </h2>
                                 </t>
                                 <t t-if="mode == ('edit', 'billing')">
@@ -1249,10 +1249,10 @@
 
                                     <div class="clearfix"/>
                                     <div style='padding: 0 15px'>
-                                        <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
+                                        <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-chevron-left">Back </span>
                                         </a>
-                                        <a class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
+                                        <a role="button" class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span class="fa fa-suffix-chevron-right">Next </span>
                                         </a>
                                     </div>
@@ -1329,7 +1329,7 @@
                             </div>
 
                             <div t-if="not (form_acquirers or s2s_acquirers)">
-                                <a class="btn-link"
+                                <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
                                     <span class="fa fa-arrow-right"> Add payment acquirers</span>
@@ -1339,7 +1339,7 @@
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                        <a class="btn btn-primary a-submit">
+                                        <a role="button" class="btn btn-primary a-submit">
                                             <span class="fa fa-suffix-chevron-right" t-if="order.amount_total &gt; 0">Pay Now </span>
                                             <span class="fa fa-suffix-chevron-right" t-if="order.amount_total == 0">Confirm Order </span>
                                         </a>
@@ -1365,7 +1365,7 @@
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 hidden visible-lg" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-default pull-right mr8 hidden visible-lg" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1451,12 +1451,12 @@
                             <div class="oe_cart">
                                 <div class="thanks_msg mb32">
                                     <h2>Thank you for your order.
-                                        <a class="btn btn-primary hidden-xs" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
+                                        <a role="button" class="btn btn-primary hidden-xs" href="/shop/print" target="_blank" aria-label="Print" title="Print"><i class="fa fa-print"></i> Print</a>
                                     </h2>
                                 </div>
                                 <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
                                     <p class='alert alert-info mt16'>
-                                        <a t-att-href='order.partner_id.signup_prepare() and order.partner_id.signup_url' class='btn btn-sm btn-primary'>Sign Up</a>
+                                        <a role="button" t-att-href='order.partner_id.signup_prepare() and order.partner_id.signup_url' class='btn btn-sm btn-primary'>Sign Up</a>
                                          to follow your order.
                                     </p>
                                 </t>
@@ -1564,7 +1564,7 @@
                     (payment_tx_id.state == 'done' and 'panel-success') or
                     (payment_tx_id.state == 'authorized' and 'panel-success') or
                     'panel-danger')">
-                <a groups="base.group_system" class="btn pull-right" target="_blank" aria-label="Edit" title="Edit"
+                <a role="button" groups="base.group_system" class="btn pull-right" target="_blank" aria-label="Edit" title="Edit"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-pencil"></i>
                 </a>

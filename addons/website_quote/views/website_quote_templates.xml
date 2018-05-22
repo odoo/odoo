@@ -202,13 +202,13 @@
                   <div class="col-md-3 hidden-print">
                       <div class="bs-sidebar">
                           <div class="text-center" t-if="quotation.state in ('draft', 'sent', 'waiting_date')" style="padding: 10px">
-                              <a t-if="order_valid and not quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                              <a role="button" t-if="order_valid and not quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <span class="fa fa-check"> Accept Order</span>
                               </a>
-                              <a t-if="order_valid and quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                              <a role="button" t-if="order_valid and quotation.require_payment" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <span class="fa fa-check"> Accept &amp; Pay</span>
                               </a>
-                              <a t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
+                              <a role="button" t-if="not order_valid" href="#discussion" class="btn btn-info btn-block o_normalwhitespace">
                                   <strong>This offer expired!</strong><br/>
                                   Contact us for new quote.
                               </a>
@@ -219,7 +219,7 @@
                               </div>
                           </div>
                           <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
-                              <a class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
+                              <a role="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
                                   <span class="fa fa-check"> Pay Now</span>
                               </a>
                           </div>
@@ -386,18 +386,18 @@
                       <t t-call="website_quote.so_quotation_content"/>
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
+                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.require_payment">
                               <span class="fa fa-check"> Accept</span>
                           </a>
-                          <a class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
+                          <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.require_payment">
                               <span class="fa fa-check"> Accept &amp; Pay</span>
                           </a>
-                          <a class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
+                          <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
                               <span class="fa fa-times"> Reject</span>
                           </a>
                       </div>
                       <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.require_payment and tx_state != 'done')" style="padding: 10px">
-                          <a class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
+                          <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
                               <span class="fa fa-check"> Pay Now</span>
                           </a>
                       </div>
@@ -423,7 +423,7 @@
           </a>
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
-          <a class="btn btn-info" type="submit" href="#discussion">
+          <a role="button" class="btn btn-info" type="submit" href="#discussion">
               <span class="fa fa-comment"> Feedback</span>
           </a>
       </xpath>
@@ -445,11 +445,11 @@
             <div t-ignore="true" class="pull-right css_editable_mode_hidden hidden-print">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman">
-                    <a t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
-                    <a t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
+                    <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>
+                    <a role="button" t-if="quotation.state in ('manual')" class=" btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Back to Sales Order</a>
                   </li>
                   <li>
-                     <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
+                     <a role="button" class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
                   </li>
                </ul>
             </div>
@@ -614,7 +614,7 @@
                     <div class="col-md-9">
                         <div class="row mb8">
                             <div t-ignore="true" class="css_editable_mode_hidden col-md-offset-11">
-                              <a class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
+                              <a role="button" class="btn btn-info hidden-print" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (template._name, template.id, request.env.ref('website_quote.action_sale_quotation_template').id)">Back</a>
                             </div>
                         </div>
                         <div class="alert alert-info alert-dismissable" t-ignore="True">
