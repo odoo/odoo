@@ -811,7 +811,7 @@
 
                 <div class="clearfix">
                     <ul class="pull-right list-inline mb0" id="options">
-                        <li t-if="question.state == 'close'">
+                        <li t-if="question.state == 'close'" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
                                 <t t-set="label">Reopen</t>
@@ -819,7 +819,7 @@
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
                         </li>
-                        <li>
+                        <li class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
                                 <t t-set="label">Edit</t>
@@ -827,7 +827,7 @@
                                 <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.state != 'close'">
+                        <li t-if="question.state != 'close'" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
                                 <t t-set="label">Close</t>
@@ -835,7 +835,7 @@
                                 <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.active">
+                        <li t-if="question.active" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
                                 <t t-set="label">Delete</t>
@@ -843,7 +843,7 @@
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
                         </li>
-                        <li t-if="not question.active and question.state != 'offensive'">
+                        <li t-if="not question.active and question.state != 'offensive'" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
                                 <t t-set="label">Reactivate</t>
@@ -851,7 +851,7 @@
                                 <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
                             </t>
                         </li>
-                        <li t-if="not question.active and question.state == 'offensive'">
+                        <li t-if="not question.active and question.state == 'offensive'" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
                                 <t t-set="label">Reactivate</t>
@@ -859,7 +859,7 @@
                                 <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
                             </t>
                         </li>
-                        <li t-if="question.active">
+                        <li t-if="question.active" class="list-inline-item">
                             <a t-attf-style="cursor: pointer;#{not question.can_flag and 'color:#999;' or ''}"
                                 t-attf-class="flag fa fa-flag #{not question.can_flag and 'karma_required' or ''}"
                                 t-attf-data-karma="#{not question.can_flag and question.forum_id.karma_flag or 0}"
@@ -875,15 +875,16 @@
                         </li>
                     </ul>
                     <ul class="list-inline mb0">
-                        <li t-if="(question.post_type in ('link','question') and not question.uid_has_answered) and question.state != 'close' and question.active != False">
+                        <li t-if="(question.post_type in ('link','question') and not question.uid_has_answered) and question.state != 'close' and question.active != False"
+                            class="list-inline-item">
                             <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or ''}"
                             t-att-data-karma="question.forum_id.karma_answer"
                             href="#post_reply"> Reply</a>
                         </li>
-                        <li t-if="question.post_type == 'discussion'">
+                        <li t-if="question.post_type == 'discussion'" class="list-inline-item">
                             <a t-attf-class="fa fa-comment-o #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" href="#post_reply"> Comment</a>
                         </li>
-                        <li t-if="question.post_type == 'question'">
+                        <li t-if="question.post_type == 'question'" class="list-inline-item">
                             <a style="cursor: pointer" t-att-data-toggle="question.can_comment and 'collapse' or None"
                                 t-attf-class="fa fa-comment-o #{not question.can_comment and 'karma_required text-muted' or ''}"
                                 t-attf-data-karma="#{not question.can_comment and question.karma_comment or 0}"
@@ -891,7 +892,7 @@
                                 Comment
                             </a>
                         </li>
-                        <li>
+                        <li class="list-inline-item">
                             <a href="javascript:void(0)" class="oe_social_share fa fa-share-square-o"
                                 t-attf-data-hashtags="#{question.post_type}"> Share</a>
                         </li>
@@ -960,14 +961,15 @@
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
                 <ul class="list-inline pull-right mb0">
-                    <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))">
+                    <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))"
+                        class="list-inline-item">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                             t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                             style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"
                             t-attf-data-target="#comment#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Comment
                         </a>
                     </li>
-                    <li>
+                    <li class="list-inline-item">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
                             <t t-set="label">Edit</t>
@@ -975,7 +977,7 @@
                             <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
                         </t>
                     </li>
-                    <li>
+                    <li class="list-inline-item">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
                             <t t-set="label">Delete</t>
@@ -983,7 +985,7 @@
                             <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
                         </t>
                     </li>
-                    <li>
+                    <li class="list-inline-item">
                         <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'color:#999;' or ''}"
                             t-attf-class="flag fa fa-flag #{not answer.can_flag and 'karma_required' or ''}"
                             t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
@@ -992,7 +994,7 @@
                             <t t-if="answer.state != 'flagged'">Flag</t>
                         </a>
                     </li>
-                    <li t-if="question.post_type == 'question'">
+                    <li t-if="question.post_type == 'question'" class="list-inline-item">
                         <t t-call="website_forum.link_button">
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
                             <t t-set="label">Convert as a comment</t>
@@ -1002,7 +1004,7 @@
                     </li>
                 </ul>
                 <ul class="list-inline mb0">
-                    <li t-if="question.post_type != 'question'">
+                    <li t-if="question.post_type != 'question'" class="list-inline-item">
                         <a t-attf-class="fa fa-reply #{not question.can_answer and 'karma_required text-muted' or None}" t-att-data-karma="question.forum_id.karma_answer" style="cursor: pointer" data-toggle="collapse"
                             t-attf-data-target="#reply#{ answer._name.replace('.','') + '-' + str(answer.id) }"> Reply
                         </a>
@@ -1028,7 +1030,7 @@
             <div class="clearfix" t-if="len(answer.website_message_ids)">
                 <div class="offset-md-2 col-md-2">
                     <ul class="list-inline mb0">
-                        <li t-if="question.post_type == 'question'">
+                        <li t-if="question.post_type == 'question'" class="list-inline-item">
                             <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
                                 t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
                                 style="cursor: pointer" t-att-data-toggle="answer.can_comment and 'collapse' or None"

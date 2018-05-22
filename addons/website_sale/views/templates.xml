@@ -681,7 +681,7 @@
             <t t-if="variant_id.attribute_id.type == 'color'">
               <ul class="list-inline">
                   <t t-set="inc" t-value="0"/>
-                  <li t-foreach="variant_id.value_ids" t-as="value_id">
+                  <li t-foreach="variant_id.value_ids" t-as="value_id" class="list-inline-item">
                       <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
                           t-attf-class="css_attribute_color #{'active' if not inc else ''}">
                         <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"

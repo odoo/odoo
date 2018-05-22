@@ -185,10 +185,10 @@
         <div class="footer o_background_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
-                    <li t-if="company.email"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
-                    <li t-if="company.website"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="not type_html" class="text-muted">
@@ -225,10 +225,10 @@
         <div class="footer o_boxed_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
-                    <li t-if="company.email">Mail: <span t-field="company.email"/></li>
-                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item">Tel: <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item">Mail: <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
                 <div t-if="not type_html">
@@ -275,7 +275,7 @@
                 </div>
                 <div class="col-1">
                     <ul t-if="not type_html" class="list-inline pagenumber pull-right text-center">
-                        <li><strong><span class="page"/></strong></li>
+                        <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
             </div>
@@ -312,10 +312,10 @@
         <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
-                    <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
-                    <li t-if="company.email">Email: <span t-field="company.email"/></li>
-                    <li t-if="company.website">Web: <span t-field="company.website"/></li>
-                    <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                    <li t-if="company.phone" class="list-inline-item">Phone: <span t-field="company.phone"/></li>
+                    <li t-if="company.email" class="list-inline-item">Email: <span t-field="company.email"/></li>
+                    <li t-if="company.website" class="list-inline-item">Web: <span t-field="company.website"/></li>
+                    <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
 
                 <div name="financial_infos">
@@ -367,9 +367,9 @@
                 </div>
                 <div class="col-2 offset-3 text-right">
                     <ul class="list-inline">
-                        <li><span class="page"/></li>
-                        <li>/</li>
-                        <li><span class="topage"/></li>
+                        <li class="list-inline-item"><span class="page"/></li>
+                        <li class="list-inline-item">/</li>
+                        <li class="list-inline-item"><span class="topage"/></li>
                     </ul>
                 </div>
             </div>
