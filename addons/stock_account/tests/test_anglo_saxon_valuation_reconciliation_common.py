@@ -3,6 +3,7 @@
 
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo import fields
 
 class ValuationReconciliationTestCase(AccountingTestCase):
     """ Base class for tests checking interim accounts reconciliation works
@@ -24,13 +25,20 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         else:
             self.assertFalse(valuation_line.full_reconcile_id, "The reconciliation should not be total at that point.")
 
-    def _process_pickings(self, pickings, quantity=False):
+    def _process_pickings(self, pickings, date=False, quantity=False):
+        if not date:
+            date = fields.Date.today()
         pickings.action_confirm()
         pickings.action_assign()
         for picking in pickings:
             for ml in picking.move_line_ids:
                 ml.qty_done = quantity or ml.product_qty
         pickings.action_done()
+        self._change_pickings_date(pickings, date)
+
+    def _change_pickings_date(self, pickings, date):
+        pickings.mapped('move_lines').write({'date': date})
+        pickings.mapped('move_lines.account_move_ids').write({'date': date})
 
     def _create_product_category(self):
         return self.env['product.category'].create({
@@ -54,6 +62,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'currency_id': self.currency_one.id,
             'company_id': self.company.id,
             'rate': 1.234343354,  # Totally arbitratry value
+            'name': '2017-01-01',
         })
 
         self.input_account = self.env['account.account'].create({
