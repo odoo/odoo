@@ -303,7 +303,7 @@ class Picking(models.Model):
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
-    immediate_transfer = fields.Boolean()
+    immediate_transfer = fields.Boolean(default=False)
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
