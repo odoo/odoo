@@ -10,7 +10,7 @@ import socket
 import threading
 import time
 
-from email.header import decode_header
+from email.header import decode_header, Header
 from email.utils import getaddresses, formataddr
 from lxml import etree
 
@@ -524,11 +524,14 @@ def decode_smtp_header(smtp_header):
     text. email.header decode_header method return a decoded string and its
     charset for each decoded par of the header. This method unicodes the
     decoded header and join them in a complete string. """
+    if isinstance(smtp_header, Header):
+        smtp_header = ustr(smtp_header)
     if smtp_header:
         text = decode_header(smtp_header.replace('\r', ''))
         # The joining space will not be needed as of Python 3.3
-        # See https://hg.python.org/cpython/rev/8c03fe231877
-        return ' '.join([ustr(x[0], x[1]) for x in text])
+        # See https://github.com/python/cpython/commit/07ea53cb218812404cdbde820647ce6e4b2d0f8e
+        sep = ' ' if pycompat.PY2 else ''
+        return sep.join([ustr(x[0], x[1]) for x in text])
     return u''
 
 # was mail_thread.decode_header()
