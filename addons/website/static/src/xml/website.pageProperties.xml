@@ -57,7 +57,9 @@
                     <label class="control-label col-md-3" for="page_url">Page URL</label>
                     <div class="col-md-9">
                         <div class="input-group">
-                            <span class="input-group-addon" t-att-title="widget.serverUrl"><small><t t-esc="widget.serverUrlTrunc"/></small></span>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" t-att-title="widget.serverUrl"><small><t t-esc="widget.serverUrlTrunc"/></small></span>
+                            </div>
                             <input type="text" class="form-control input-sm" id="page_url" t-att-value="widget.page.url" />
                         </div>
                     </div>
@@ -130,9 +132,11 @@
                     <div class="col-md-9">
                         <div class='input-group date' id='date_publish_container'>
                             <input type='text' class="form-control" name="date_publish" id="date_publish" />
-                            <span class="input-group-addon">
-                                <span class="fa fa-calendar" role="img" aria-label="Publish date" title="Publish date"></span>
-                            </span>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <span class="fa fa-calendar" role="img" aria-label="Publish date" title="Publish date"></span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

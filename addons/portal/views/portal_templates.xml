@@ -217,7 +217,7 @@
                 <div t-if='searchbar_inputs' class="collapse navbar-collapse text-right" id="o_portal_searchbar_collapse">
                     <div class="navbar-form o_portal_search_panel">
                          <div class="input-group">
-                            <div class="input-group-btn">
+                            <div class="input-group-prepend">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                                     <span id="search_label" class="d-none d-md-inline mr4">Search</span>
                                 </button>
@@ -231,7 +231,7 @@
                                 </div>
                             </div>
                             <input type="text" class="form-control" t-att-value='search' name="search"/>
-                            <span class="input-group-btn">
+                            <span class="input-group-append">
                                 <button class="btn btn-secondary search-submit" type="button"><span class="fa fa-search d-none d-md-inline-block"/><span class="fa fa-arrow-right d-inline-block d-md-none"/></button>
                             </span>
                         </div>
