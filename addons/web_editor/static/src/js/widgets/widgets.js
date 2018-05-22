@@ -450,7 +450,7 @@ var ImageWidget = MediaWidget.extend({
             .values()
             .value();
 
-        this.$('.help-block').empty();
+        this.$('.form-text').empty();
 
         this.$('.existing-attachments').replaceWith(QWeb.render('web_editor.dialog.image.existing.content', {rows: rows}));
 
@@ -538,7 +538,8 @@ var ImageWidget = MediaWidget.extend({
                     self._toggleImage(attachment, true);
                 } else {
                     $button.addClass('btn-danger');
-                    self.$el.addClass('has-error').find('.help-block').text(error);
+                    self.$el.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                    self.$el.find('.form-text').text(error);
                 }
 
                 if (!self.multiImages) {
@@ -576,7 +577,8 @@ var ImageWidget = MediaWidget.extend({
     _onImageSelection: function () {
         var $form = this.$('form');
         this.$el.addClass('nosave');
-        $form.removeClass('has-error').find('.help-block').empty();
+        $form.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+        $form.find('.form-text').empty();
         this.$('.o_upload_image_button').removeClass('btn-danger btn-success');
         this._uploadImage();
     },
@@ -585,7 +587,7 @@ var ImageWidget = MediaWidget.extend({
      */
     _onRemoveClick: function (ev) {
         var self = this;
-        var $helpBlock = this.$('.help-block').empty();
+        var $helpBlock = this.$('.form-text').empty();
         var $a = $(ev.currentTarget);
         var id = parseInt($a.data('id'), 10);
         var attachment = _.findWhere(this.records, {id: id});
@@ -987,7 +989,7 @@ var VideoWidget = MediaWidget.extend({
     _updateVideo: function () {
         // Reset the feedback
         this.$content.empty();
-        this.$('#o_video_form_group').removeClass('has-error has-success');
+        this.$('#o_video_form_group').removeClass('o_has_error o_has_success').find('.form-control, .custom-select').removeClass('is-invalid is-valid');
         this.$('.o_video_dialog_options li').addClass('d-none');
 
         // Check video code
@@ -1019,7 +1021,10 @@ var VideoWidget = MediaWidget.extend({
         // Show / Hide preview elements
         this.$el.find('.o_video_dialog_preview_text, .media_iframe_video_size').add($opt_box).toggleClass('d-none', !query.$video);
         // Toggle validation classes
-        this.$el.find('#o_video_form_group').toggleClass('has-error', !query.$video).toggleClass('has-success', !!query.$video);
+        this.$el.find('#o_video_form_group')
+            .toggleClass('o_has_error', !query.$video).find('.form-control, .custom-select').toggleClass('is-invalid', !query.$video)
+            .end()
+            .toggleClass('o_has_success', !!query.$video).find('.form-control, .custom-select').toggleClass('is-valid', !!query.$video);
 
         // Individually show / hide options base on the video provider
         $opt_box.find('li.o_' + query.type + '_option').removeClass('d-none');
@@ -1470,7 +1475,7 @@ var LinkDialog = Dialog.extend({
         var data = this._getData();
         if (data === null) {
             var $url = this.$('input[name="url"]');
-            $url.closest('.form-group').addClass('has-error');
+            $url.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $url.focus();
             return $.Deferred().reject();
         }
@@ -1554,7 +1559,7 @@ var LinkDialog = Dialog.extend({
      * @private
      */
     _onURLInput: function (ev) {
-        $(ev.currentTarget).closest('.form-group').removeClass('has-error');
+        $(ev.currentTarget).closest('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
         var isLink = $(ev.currentTarget).val().indexOf('@') < 0;
         this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
     },

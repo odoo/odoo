@@ -172,16 +172,16 @@ var GengoApiConfigDialog = Widget.extend({
        var pub_el = this.$el.find(".gengo_group_public")[0];
        var pri_el = this.$el.find(".gengo_group_private")[0];
        if (! public_key){
-           $(pub_el).addClass("has-error");
+           $(pub_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pub_el).removeClass("has-error");
+           $(pub_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (! private_key){
-           $(pri_el).addClass("has-error");
+           $(pri_el).addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
        }
        else {
-           $(pri_el).removeClass("has-error");
+           $(pri_el).removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
        }
        if (public_key && private_key){
            ajax.jsonRpc('/website/set_gengo_config', 'call', {

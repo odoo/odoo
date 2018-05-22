@@ -189,17 +189,17 @@
                 <div class="container">
                     <div class="card">
                         <div class="card-body">
-                            <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <input name="post_id" t-att-value="post.id" type="hidden"/>
-                                <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="reason">Question:</label>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label" for="reason">Question:</label>
                                     <div class="col-lg-8 mt8">
                                         <span t-field="post.name"/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-lg-3 control-label" for="reason">Publish in Chapter:</label>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-form-label" for="reason">Publish in Chapter:</label>
                                     <div class="col-lg-8">
                                         <select class="form-control" name="toc_id">
                                             <option/>
@@ -209,8 +209,8 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="offset-lg-3 col-lg-8">
+                                <div class="form-group row">
+                                    <div class="offset-lg-3 col-lg-8 col-form-label">
                                         <button class="btn btn-primary">Push to documentation</button>
                                         <span class="text-muted">or</span>
                                         <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>

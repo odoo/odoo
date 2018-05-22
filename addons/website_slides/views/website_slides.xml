@@ -691,7 +691,7 @@
     <t t-call="website_slides.slides_share"/>
     <h4 class="mt0">Share Link</h4>
     <input type="text" class="form-control" t-att-value="slide.website_url" readonly="readonly" onClick="this.select();"/>
-    <span class="help-block">Use permanent link to share in social media</span>
+    <span class="form-text">Use permanent link to share in social media</span>
 </template>
 
 
@@ -711,7 +711,7 @@
                     </button>
                 </span>
             </div>
-            <span class="help-block">Send presentation through email</span>
+            <span class="form-text">Send presentation through email</span>
         </form>
     </t>
     <t t-if="is_public_user">
@@ -727,7 +727,7 @@
             <textarea class="form-control slide_embed_code" readonly="readonly" onClick="this.select();"><t t-esc="slide.embed_code"/></textarea>
         </div>
         <div class="form-group" t-if="slide.slide_type in ('presentation', 'document')">
-            <div class="help-block col-xl-3 col-lg-3 col-md-6 col-6">Select page to start with</div>
+            <div class="form-text col-xl-3 col-lg-3 col-md-6 col-6">Select page to start with</div>
             <div class="input-group col-xl-3 col-lg-3 col-md-6 col-6">
                 <input type="number" value="1" class="form-control"/>
             </div>

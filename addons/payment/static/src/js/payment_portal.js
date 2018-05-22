@@ -15,13 +15,13 @@ $(document).ready(function () {
             $(this).parent('.form-group').children('.card_placeholder').removeClass().addClass('card_placeholder');
         }
         if (valid_value) {
-            $(this).parent('.form-group').addClass('has-success');
-            $(this).parent('.form-group').removeClass('has-error');
+            $(this).parent('.form-group').addClass('o_has_success').find('.form-control, .custom-select').addClass('is-valid');
+            $(this).parent('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
             $(this).siblings('.o_invalid_field').remove();
         }
         else {
-            $(this).parent('.form-group').addClass('has-error');
-            $(this).parent('.form-group').removeClass('has-success');
+            $(this).parent('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            $(this).parent('.form-group').removeClass('o_has_success').find('.form-control, .custom-select').removeClass('is-valid');
         }
     });
 
@@ -30,13 +30,13 @@ $(document).ready(function () {
         var card_type = $.payment.cardType(cc_nbr);
         var valid_value = $.payment.validateCardCVC(this.value, card_type);
         if (valid_value) {
-            $(this).parent('.form-group').addClass('has-success');
-            $(this).parent('.form-group').removeClass('has-error');
+            $(this).parent('.form-group').addClass('o_has_success').find('.form-control, .custom-select').addClass('is-valid');
+            $(this).parent('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
             $(this).siblings('.o_invalid_field').remove();
         }
         else {
-            $(this).parent('.form-group').addClass('has-error');
-            $(this).parent('.form-group').removeClass('has-success');
+            $(this).parent('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            $(this).parent('.form-group').removeClass('o_has_success').find('.form-control, .custom-select').removeClass('is-valid');
         }
     });
 
@@ -46,13 +46,13 @@ $(document).ready(function () {
         var year = expiry_value.year || '';
         var valid_value = $.payment.validateCardExpiry(month, year);
         if (valid_value) {
-            $(this).parent('.form-group').addClass('has-success');
-            $(this).parent('.form-group').removeClass('has-error');
+            $(this).parent('.form-group').addClass('o_has_success').find('.form-control, .custom-select').addClass('is-valid');
+            $(this).parent('.form-group').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
             $(this).siblings('.o_invalid_field').remove();
         }
         else {
-            $(this).parent('.form-group').addClass('has-error');
-            $(this).parent('.form-group').removeClass('has-success');
+            $(this).parent('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+            $(this).parent('.form-group').removeClass('o_has_success').find('.form-control, .custom-select').removeClass('is-valid');
         }
     });
 

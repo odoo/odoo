@@ -2,16 +2,16 @@
 <templates>
 <div t-name="website.facebook_page_dialog">
     <div class="row">
-        <form class="col-lg-6 form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-md-3">Page URL</label>
+        <form class="col-lg-6">
+            <div class="form-group row">
+                <label class="col-form-label col-md-3">Page URL</label>
                 <div class="col-md-9">
                     <input class="form-control o_facebook_page_url" required="required" t-att-value="widget.fbData.href"/>
                 </div>
             </div>
-            <div class="form-group o_facebook_tabs">
+            <div class="form-group row o_facebook_tabs">
                 <t t-set="fb_tabs" t-value="widget.fbData.tabs and widget.fbData.tabs.split(',') or []"/>
-                <label class="control-label col-md-3">Tabs</label>
+                <label class="col-form-label col-md-3">Tabs</label>
                 <div class="col-md-3 checkbox">
                     <label><input type="checkbox" name="timeline" t-att-checked="_.contains(fb_tabs, 'timeline') or None"/>Timeline</label>
                 </div>
@@ -22,8 +22,8 @@
                     <label><input type="checkbox" name="messages" t-att-checked="_.contains(fb_tabs, 'messages') or None"/>Messages</label>
                 </div>
              </div>
-            <div class="form-group o_facebook_options">
-                <label class="control-label col-md-3">Options</label>
+            <div class="form-group row o_facebook_options">
+                <label class="col-form-label col-md-3">Options</label>
                 <div class="col-md-9 mt8">
                 <label class="o_switch">
                     <input name="small_header" type="checkbox" t-att-checked="widget.fbData.small_header or None"/>

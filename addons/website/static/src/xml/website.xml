@@ -9,9 +9,9 @@
                         <h3 class="modal-title"><t t-esc="window_title"/></h3>
                     </header>
                     <main class="modal-body">
-                        <form class="form-horizontal" role="form" t-att-id="id">
-                            <div class="form-group mb0">
-                                <label for="page-name" class="col-md-3 control-label">
+                        <form role="form" t-att-id="id">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-3 col-form-label">
                                     <t t-esc="field_name"/>:
                                 </label>
                                 <div class="col-md-8">
@@ -64,9 +64,9 @@
     <div t-name="website.rename_page">
         <div class="card">
             <div class="card-body">
-                <form class="form-horizontal">
-                    <div class="form-group mb0">
-                        <label for="new_name" class="control-label col-md-4">Rename Page To:</label>
+                <form>
+                    <div class="form-group row mb0">
+                        <label for="new_name" class="col-form-label col-md-4">Rename Page To:</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
                         </div>
