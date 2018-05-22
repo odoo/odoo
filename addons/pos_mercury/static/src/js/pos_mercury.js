@@ -440,6 +440,7 @@ PaymentScreenWidget.include({
                     order.selected_paymentline.paid = true;
                     order.selected_paymentline.mercury_swipe_pending = false;
                     order.selected_paymentline.mercury_amount = response.authorize;
+                    order.selected_paymentline.set_amount(response.authorize);
                     order.selected_paymentline.mercury_card_number = decodedMagtek['number'];
                     order.selected_paymentline.mercury_card_brand = response.card_type;
                     order.selected_paymentline.mercury_card_owner_name = decodedMagtek['name'];
