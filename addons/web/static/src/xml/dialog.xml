@@ -6,12 +6,12 @@
 <div t-name="Dialog" t-attf-class="modal#{technical ? ' o_technical_modal' : ''}" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" t-att-id="_.uniqueId('modal_')">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <header class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1">×</button>
                 <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small"><t t-esc="subtitle"/></span></h4>
-            </div>
-            <div class="modal-body"/>
-            <div class="modal-footer"/>
+            </header>
+            <main class="modal-body"/>
+            <footer class="modal-footer"/>
         </div>
     </div>
 </div>

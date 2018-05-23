@@ -364,11 +364,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     STEPS: {
         MENU_MORE: {
             edition: "community",
-            trigger: "body > nav",
+            trigger: "body > header > nav",
+            content: _t('Click on the <i>More icon</i> to show hidden apps.'),
             position: "bottom",
             auto: true,
             run: function (actions) {
-                actions.auto("#menu_more_container > a");
+                actions.auto("#more_menu_button");
             },
         },
 
