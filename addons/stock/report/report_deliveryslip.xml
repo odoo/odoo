@@ -78,7 +78,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                            <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
+                            <t groups="base.group_portal" t-set="pack_operation_ids" t-value="o.pack_operation_ids.sudo()"/>
+                            <tr t-foreach="pack_operation_ids" t-as="pack_operation">
                                 <td>
                                     <span t-field="pack_operation.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">

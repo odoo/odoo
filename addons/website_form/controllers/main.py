@@ -111,6 +111,7 @@ class WebsiteForm(http.Controller):
             'record': {},        # Values to create record
             'attachments': [],  # Attached files
             'custom': '',        # Custom fields values
+            'meta': '',         # Add metadata if enabled
         }
 
         authorized_fields = model.sudo()._get_form_writable_fields()
