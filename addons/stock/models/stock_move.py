@@ -1067,6 +1067,9 @@ class StockMove(models.Model):
                         break
         return extra_move
 
+    def _unreserve_initial_demand(self, new_move):
+        pass
+
     def _action_done(self):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
 
@@ -1107,9 +1110,7 @@ class StockMove(models.Model):
                             move_line.write({'product_uom_qty': move_line.qty_done})
                         except UserError:
                             pass
-
-                # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
-                move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move, 'product_uom_qty': 0})
+                move._unreserve_initial_demand(new_move)
             move.move_line_ids._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.
