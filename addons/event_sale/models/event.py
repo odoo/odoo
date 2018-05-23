@@ -161,8 +161,10 @@ class EventTicket(models.Model):
     def _onchange_product_id(self):
         self.price = self.product_id.list_price or 0
 
-    def get_default_name_for_sale_order(self):
-        """ Compute a default name to be used on a sale order line referencing this event ticket.
+    def get_ticket_multiline_description_sale(self):
+        """ Compute a multiline description of this ticket, in the context of sales
+                (do not use for purchases or other display reasons that don't intend to use "description_sale").
+            It will often be used as the default description of a sale order line referencing this ticket.
 
         1. the first line is either the event name (if exists) or the product name (if exists)
         2. then the ticket name

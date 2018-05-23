@@ -83,14 +83,17 @@ class SaleOrderLine(models.Model):
         # we call this to force update the default name
         self.product_id_change()
 
-    def _get_default_name_based_on_product(self, product):
-        """ we override this method because we decided that the default sale order description must be different if it is for an event ticket
+    def _get_sale_order_line_multiline_description_sale(self, product):
+        """ We override this method because we decided that:
+                The default description of a sale order line containing a ticket must be different than the default description when no ticket is present.
+                So in that case we use the description computed from the ticket, instead of the description computed from the product.
+                We need this override to be defined here in sale order line (and not in product) because here is the only place where the event_ticket_id is referenced.
         """
         if self.event_ticket_id:
             ticket = self.event_ticket_id.with_context(
                 lang=self.order_id.partner_id.lang,
             )
 
-            return ticket.get_default_name_for_sale_order()
+            return ticket.get_ticket_multiline_description_sale()
         else:
-            return super(SaleOrderLine, self)._get_default_name_based_on_product(product)
+            return super(SaleOrderLine, self)._get_sale_order_line_multiline_description_sale(product)

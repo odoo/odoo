@@ -1134,7 +1134,11 @@ class SaleOrderLine(models.Model):
                 self.product_id = False
                 return result
 
-        vals['name'] = self._get_default_name_based_on_product(product)
+        """ Here we call a method on the sale order line (= self) instead of directly calling product.get_product_multiline_description_sale()
+            Why? -> So in other modules the description (= vals['name']) can depend on other fields of the sale order line, a feature notably used by event_sale tickets
+            which override this method (_get_sale_order_line_multiline_description_sale) and read the event_ticket_id present on the sale order line to generate the description.
+        """
+        vals['name'] = self._get_sale_order_line_multiline_description_sale(product)
 
         self._compute_tax_id()
 
@@ -1262,8 +1266,11 @@ class SaleOrderLine(models.Model):
             if discount > 0:
                 self.discount = discount
 
-    def _get_default_name_based_on_product(self, product):
-        """ compute a default name for this sale order line, based on its product
-        this method exists so it can be overridden in other modules to change how the default name is computed
+    def _get_sale_order_line_multiline_description_sale(self, product):
+        """ Compute a default multiline description for this sale order line.
+        This method exists so it can be overridden in other modules to change how the default name is computed.
+        In general only the product is used to compute the name, and this method would not be necessary (we could directly override the method in product).
+        BUT in event_sale we need to know specifically the sale order line as well as the product to generate the name:
+            the product is not sufficient because we also need to know the event_id and the event_ticket_id (both which belong to the sale order line)
         """
-        return product.get_default_name_for_sale_order()
+        return product.get_product_multiline_description_sale()
