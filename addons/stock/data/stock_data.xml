@@ -142,11 +142,6 @@
             <field name="number_increment">1</field>
         </record>
 
-        <record id="base.main_partner" model="res.partner">
-            <field name="property_stock_customer" model="stock.warehouse" 
-                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
-        </record>
-
         <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
         <function model="ir.model.data" name="_update">
             <value>stock.location</value>

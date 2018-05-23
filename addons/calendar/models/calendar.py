@@ -655,7 +655,13 @@ class Meeting(models.Model):
             }[data['rrule_type']]
 
             deadline = fields.Datetime.from_string(data['stop'])
-            return deadline + relativedelta(**{delay: count * mult})
+            computed_final_date = False
+            while not computed_final_date and count > 0:
+                try:  # may crash if year > 9999 (in case of recurring events)
+                    computed_final_date = deadline + relativedelta(**{delay: count * mult})
+                except ValueError:
+                    count -= data['interval']
+            return computed_final_date or deadline
         return final_date
 
     @api.multi

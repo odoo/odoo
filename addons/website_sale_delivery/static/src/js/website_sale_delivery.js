@@ -27,6 +27,10 @@ odoo.define('website_sale_delivery.checkout', function (require) {
         else {
             console.error(result.error_message);
             $compute_badge.text(result.error_message);
+            $amount_delivery.text(result.new_amount_delivery);
+            $amount_untaxed.text(result.new_amount_untaxed);
+            $amount_tax.text(result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
         }
     };
 
@@ -40,6 +44,12 @@ odoo.define('website_sale_delivery.checkout', function (require) {
 
     var $carriers = $("#delivery_carrier input[name='delivery_type']");
     $carriers.click(_onCarrierClick);
+    // Workaround to:
+    // - update the amount/error on the label at first rendering
+    // - prevent clicking on 'Pay Now' if the shipper rating fails
+    if ($carriers.length > 0) {
+        $carriers.filter(':checked').click();
+    }
 
     /* Handle stuff */
     $(".oe_website_sale select[name='shipping_id']").on('change', function () {

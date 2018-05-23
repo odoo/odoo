@@ -178,9 +178,10 @@ class Warehouse(models.Model):
         ResCompany = self.env['res.company']
         if company_id:
             transit_loc = ResCompany.browse(company_id).internal_transit_location_id.id
+            self.env['res.partner'].browse(partner_id).with_context(force_company=company_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
         else:
             transit_loc = ResCompany._company_default_get('stock.warehouse').internal_transit_location_id.id
-        self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
+            self.env['res.partner'].browse(partner_id).write({'property_stock_customer': transit_loc, 'property_stock_supplier': transit_loc})
 
     def create_sequences_and_picking_types(self):
         IrSequenceSudo = self.env['ir.sequence'].sudo()
