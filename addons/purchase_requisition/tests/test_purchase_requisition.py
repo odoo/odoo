@@ -49,7 +49,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         date_planned = fields.Datetime.now()
         warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
         product = self.env['product.product'].browse(self.product_13_id)
-        product.write({'route_ids': [(4, self.ref('purchase.route_warehouse0_buy'))]})
+        product.write({'route_ids': [(4, self.ref('purchase_stock.route_warehouse0_buy'))]})
         self.env['procurement.group'].run(product, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
                                           {
                                             'warehouse_id': warehouse,
@@ -132,7 +132,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         # Product creation
         unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase.route_warehouse0_buy')
+        route_buy = self.ref('purchase_stock.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({
@@ -206,7 +206,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         # Product creation
         unit = self.ref("uom.product_uom_unit")
         warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase.route_warehouse0_buy')
+        route_buy = self.ref('purchase_stock.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         supplier_info1 = self.env['product.supplierinfo'].create({

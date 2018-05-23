@@ -2,9 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_invoice
-from . import purchase
+from . import procurement
 from . import product
-from . import res_company
+from . import purchase
 from . import res_config_settings
-from . import res_partner
-from . import res_users
+from . import stock

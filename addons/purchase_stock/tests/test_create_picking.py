@@ -57,7 +57,7 @@ class TestCreatePicking(common.TestProductCommon):
             ml.qty_done = ml.product_uom_qty
         self.picking.action_done()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [7.0], 'Purchase: all products should be received')
-        
+
 
         # create new order line
         self.po.write({'order_line': [
@@ -115,7 +115,7 @@ class TestCreatePicking(common.TestProductCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase.route_warehouse0_buy'))],
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
         })
@@ -247,7 +247,7 @@ class TestCreatePicking(common.TestProductCommon):
         product = self.env['product.product'].create({
             'name': 'product',
             'type': 'product',
-            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase.route_warehouse0_buy'))],
+            'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
             'categ_id': self.env.ref('product.product_category_all').id,
         })
