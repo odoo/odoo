@@ -27,11 +27,7 @@ class AccountPayment(models.Model):
             return res
 
         partners = self.partner_id | self.partner_id.commercial_partner_id | self.partner_id.commercial_partner_id.child_ids
-        domain = [
-            ('partner_id', 'in', partners.ids),
-            ('acquirer_id.journal_id', '=', self.journal_id.id),
-            ('acquirer_id.capture_manually', '=', False)
-        ]
+        domain = [('partner_id', 'in', partners.ids), ('acquirer_id.journal_id', '=', self.journal_id.id)]
         self.payment_token_id = self.env['payment.token'].search(domain, limit=1)
 
         res['domain'] = {'payment_token_id': domain}
@@ -59,10 +55,6 @@ class AccountPayment(models.Model):
                 raise ValidationError(_('A payment transaction already exists.'))
             elif not pay.payment_token_id:
                 raise ValidationError(_('A token is required to create a new payment transaction.'))
-            elif pay.payment_token_id.acquirer_id.capture_manually:
-                raise ValidationError(_(
-                    'This feature is not available for payment acquirers set to the "Authorize" mode.\n'
-                    'Please use a token from another provider than %s.') % pay.payment_token_id.acquirer_id.name)
 
         transactions = self.env['payment.transaction']
         for pay in self:
