@@ -493,7 +493,7 @@
         <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Measures <span class="caret"/>
         </button>
-        <ul class="dropdown-menu o_graph_measures_list">
+        <ul class="dropdown-menu o_graph_measures_list" role="menu">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
                 <a href="#"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
             </li>
@@ -522,7 +522,7 @@
         <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             Measures <span class="caret"/>
         </button>
-        <ul class="dropdown-menu o_pivot_measures_list">
+        <ul class="dropdown-menu o_pivot_measures_list" role="menu">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
                 <a href="#"><t t-esc="measure[1].string"/><t t-if="measure[1].type === 'many2one'"> (count)</t></a>
             </li>
@@ -544,7 +544,7 @@
                     <a href="#" class="o_pivot_field_selection">
                         <t t-esc="field[1].string"/>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" role="menu">
                         <li t-att-data-field="field[0]"><a href="#" t-att-data-interval="'day'">Day</a></li>
                         <li t-att-data-field="field[0]"><a href="#" t-att-data-interval="'week'">Week</a></li>
                         <li t-att-data-field="field[0]"><a href="#" t-att-data-interval="'month'">Month</a></li>
@@ -616,7 +616,7 @@
             <t t-if="widget.operator === '|'">Any</t>
             <t t-if="widget.operator === '!'">None</t>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" role="menu">
             <li><a href="#" data-operator="&amp;">All</a></li>
             <li><a href="#" data-operator="|">Any</a></li>
         </ul>

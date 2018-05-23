@@ -892,7 +892,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                   <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
                   <span class="caret" aria-label="Dropdown menu" title="Dropdown menu"></span>
               </button>
-              <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+              <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
                   <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
                       <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
                           <span t-esc="searchbar_sortings[option].get('label')"/>

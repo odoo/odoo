@@ -420,7 +420,7 @@
                   <t t-if="sorting == 'vote_count desc'"> by most voted</t>
                   <b class="caret"/>
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu" role="menu">
                   <li class="dropdown-header">Filter on</li>
                   <li t-att-class="filters == 'all' and 'active' or None ">
                       <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
@@ -1222,7 +1222,7 @@
                     <t t-if="queue_type == 'offensive'"> Offensive</t>
                     <b class="caret"/>
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" role="menu">
                     <li t-att-class="queue_type == 'validation' and 'active' or None ">
                         <a data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
                     </li>

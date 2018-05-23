@@ -4,7 +4,7 @@
         <a role="button" href="#" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-paint-brush">Change Style</span>
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" role="menu">
             <li t-foreach="themes" t-as="theme">
                 <a href="#">
                     <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>

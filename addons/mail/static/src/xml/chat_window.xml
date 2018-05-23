@@ -26,7 +26,7 @@
                     <t t-if="unread_counter"><t t-esc="unread_counter"/></t>
                 </span>
             </span>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" role="menu">
                 <t t-foreach="sessions" t-as="session">
                     <li class="o_chat_header" t-att-data-session-id="session.id">
                         <t t-call="mail.ChatWindowHeaderContent">

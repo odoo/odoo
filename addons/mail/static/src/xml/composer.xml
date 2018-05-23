@@ -43,7 +43,7 @@
     </div>
 
     <t t-name="mail.AbstractMentionSuggestions">
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" role="menu">
             <t t-foreach="suggestions" t-as="suggestion">
                 <li t-if="suggestion.divider" class="divider"/>
                 <li t-if="!suggestion.divider" class="o_mention_proposition" t-att-data-id="suggestion.id">
