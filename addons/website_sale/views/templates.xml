@@ -1141,7 +1141,7 @@
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
                                 </t>
-                                <form name="/shop/checkout" method="post" class="checkout_autoformat">
+                                <form action="/shop/address" method="post" class="checkout_autoformat">
                                     <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-md-12 div_name">
                                         <label class="control-label" for="name">Name</label>
                                         <input type="text" name="name" class="form-control" t-att-value="'name' in checkout and checkout['name']" />
