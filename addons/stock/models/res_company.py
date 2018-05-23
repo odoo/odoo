@@ -28,12 +28,18 @@ class Company(models.Model):
             location.sudo().write({'company_id': company.id})
             company.write({'internal_transit_location_id': location.id})
 
+        warehouses = self.env['stock.warehouse'].search([('partner_id', '=', self.partner_id.id)])
+        warehouses.mapped('partner_id').with_context(force_company=self.id).write({
+            'property_stock_customer': location.id,
+            'property_stock_supplier': location.id,
+        })
+
     @api.model
     def create(self, vals):
         company = super(Company, self).create(vals)
 
-        # multi-company rules prevents creating warehouse and sub-locations
+        company.create_transit_location()
+        # mutli-company rules prevents creating warehouse and sub-locations
         self.env['stock.warehouse'].check_access_rights('create')
         self.env['stock.warehouse'].sudo().create({'name': company.name, 'code': company.name[:5], 'company_id': company.id, 'partner_id': company.partner_id.id})
-        company.create_transit_location()
         return company

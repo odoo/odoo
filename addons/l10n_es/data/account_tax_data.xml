@@ -1044,6 +1044,18 @@
         <field name="tax_group_id" ref="tax_group_iva_12"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_303_42')])]"/>
     </record>
+    <record id="account_tax_template_p_iva105_gan" model="account.tax.template">
+        <field name="description">P_IVA105_GAN</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="account_id" ref="l10n_es.account_common_472"/>
+        <field name="name">10,5% IVA Soportado régimen ganadero o pesca</field>
+        <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="10.5"/>
+        <field name="amount_type">percent</field>
+        <field name="include_base_amount" eval="1"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_42')])]"/>
+    </record>
     <record id="account_tax_template_s_iva0_e" model="account.tax.template">
         <field name="description">S_IVA0_E</field>
         <field name="type_tax_use">sale</field>
@@ -1330,6 +1342,7 @@
         <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="-2"/>
+        <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_retenciones_2"/>
         <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>

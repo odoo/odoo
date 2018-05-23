@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError
@@ -61,9 +62,9 @@ class AccountAnalyticAccount(models.Model):
 
     @api.multi
     def _compute_debit_credit_balance(self):
-        res_currency_obj = self.env['res.currency']
+        Curr = self.env['res.currency']
         analytic_line_obj = self.env['account.analytic.line']
-        domain = [('account_id', 'in', self.mapped('id'))]
+        domain = [('account_id', 'in', self.ids)]
         if self._context.get('from_date', False):
             domain.append(('date', '>=', self._context['from_date']))
         if self._context.get('to_date', False):
@@ -75,17 +76,23 @@ class AccountAnalyticAccount(models.Model):
             domain.append(('company_id', 'in', self._context['company_ids']))
 
         user_currency = self.env.user.company_id.currency_id
-        account_amounts = analytic_line_obj.search_read(domain, ['account_id', 'amount', 'currency_id'])
-        account_ids = set([line['account_id'][0] for line in account_amounts])
-        data_debit = {account_id: 0.0 for account_id in account_ids}
-        data_credit = {account_id: 0.0 for account_id in account_ids}
-        for account_amount in account_amounts:
-            currency_id = account_amount['currency_id'][0]
-            amount = res_currency_obj.browse(currency_id).compute(account_amount['amount'], user_currency)
-            if amount < 0.0:
-                data_debit[account_amount['account_id'][0]] += amount
-            else:
-                data_credit[account_amount['account_id'][0]] += amount
+        credit_groups = analytic_line_obj.read_group(
+            domain=domain + [('amount', '>=', 0.0)],
+            fields=['account_id', 'currency_id', 'amount'],
+            groupby=['account_id', 'currency_id'],
+        )
+        data_credit = defaultdict(float)
+        for l in credit_groups:
+            data_credit[l['account_id'][0]] += Curr.browse(l['currency_id'][0]).compute(l['amount'], user_currency)
+
+        debit_groups = analytic_line_obj.read_group(
+            domain=domain + [('amount', '<', 0.0)],
+            fields=['account_id', 'currency_id', 'amount'],
+            groupby=['account_id', 'currency_id'],
+        )
+        data_debit = defaultdict(float)
+        for l in debit_groups:
+            data_debit[l['account_id'][0]] += Curr.browse(l['currency_id'][0]).compute(l['amount'], user_currency)
 
         for account in self:
             account.debit = abs(data_debit.get(account.id, 0.0))

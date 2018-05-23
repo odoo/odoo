@@ -79,12 +79,6 @@ class StockQuant(models.Model):
             if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
                 raise ValidationError(_('A serial number should only be linked to a single product.'))
 
-    @api.constrains('in_date', 'lot_id')
-    def check_in_date(self):
-        for quant in self:
-            if quant.in_date and not quant.lot_id:
-                raise ValidationError(_('An incoming date cannot be set to an untracked product.'))
-
     @api.constrains('location_id')
     def check_location_id(self):
         for quant in self:
@@ -109,9 +103,9 @@ class StockQuant(models.Model):
     @api.model
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == 'fifo':
-            return 'in_date, id'
+            return 'in_date ASC NULLS FIRST, id'
         elif removal_strategy == 'lifo':
-            return 'in_date desc, id desc'
+            return 'in_date DESC NULLS LAST, id desc'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
@@ -134,7 +128,17 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
-        return self.search(domain, order=removal_strategy_order)
+        # Copy code of _search for special NULLS FIRST/LAST order
+        self.sudo(self._uid).check_access_rights('read')
+        query = self._where_calc(domain)
+        self._apply_ir_rules(query, 'read')
+        from_clause, where_clause, where_clause_params = query.get_sql()
+        where_str = where_clause and (" WHERE %s" % where_clause) or ''
+        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + " ORDER BY "+ removal_strategy_order
+        self._cr.execute(query_str, where_clause_params)
+        res = self._cr.fetchall()
+        # No uniquify list necessary as auto_join is not applied anyways...
+        return self.browse([x[0] for x in res])
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -196,17 +200,16 @@ class StockQuant(models.Model):
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
         rounding = product_id.uom_id.rounding
 
-        if lot_id:
-            incoming_dates = quants.mapped('in_date')  # `mapped` already filtered out falsy items
-            incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
-            if in_date:
-                incoming_dates += [in_date]
-            # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
-            # consider only the oldest one as being relevant.
-            if incoming_dates:
-                in_date = fields.Datetime.to_string(min(incoming_dates))
-            else:
-                in_date = fields.Datetime.now()
+        incoming_dates = [d for d in quants.mapped('in_date') if d]
+        incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
+        if in_date:
+            incoming_dates += [in_date]
+        # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
+        # consider only the oldest one as being relevant.
+        if incoming_dates:
+            in_date = fields.Datetime.to_string(min(incoming_dates))
+        else:
+            in_date = fields.Datetime.now()
 
         for quant in quants:
             try:
