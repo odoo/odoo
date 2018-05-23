@@ -122,7 +122,7 @@
             <div class="row" t-if="not search">
                 <!-- Navigation -->
                 <div class="col-md-8 col-sm-12 col-xs-12">
-                    <ul class="nav nav-tabs nav-tabs-border">
+                    <ul class="nav nav-tabs nav-tabs-border" role="tablist">
                         <li t-attf-class="#{not slide_type and 'active' ''}">
                             <a  t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}"> <span class="fa fa-home"> Home</span></a>
                         </li>
@@ -478,36 +478,36 @@
                         <div class="mt8 mb32">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li t-att-class="not comments and 'active' or None">
-                                    <a href="#about" role="tab" data-toggle="tab">
+                                    <a aria-controls="about" href="#about" role="tab" data-toggle="tab">
                                         <span class="fa fa-home"> About</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#share" role="tab" data-toggle="tab">
+                                    <a aria-controls="share" href="#share" role="tab" data-toggle="tab">
                                         <span class="fa fa-share-alt"> Share</span>
                                     </a>
                                 </li>
                                 <li t-att-class="comments and 'active' or None">
-                                    <a href="#discuss" role="tab" data-toggle="tab">
+                                    <a aria-controls="discuss" href="#discuss" role="tab" data-toggle="tab">
                                         <span class="fa fa-comments-o"> Comments</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#transcript" role="tab" data-toggle="tab">
+                                    <a aria-controls="transcript" href="#transcript" role="tab" data-toggle="tab">
                                         <span class="fa fa-align-justify"> Transcript</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#statistic" role="tab" data-toggle="tab">
+                                    <a aria-controls="statistic" href="#statistic" role="tab" data-toggle="tab">
                                         <span class="fa fa-bar-chart"> Statistics</span>
                                     </a>
                                 </li>
                             </ul>
                             <div class="tab-content" style="padding: 20px 5px 5px 5px; word-wrap: break-word;">
-                                <div t-att-class="not comments and 'tab-pane fade active in' or 'tab-pane fade'" id="about">
+                                <div role="tabpanel" t-att-class="not comments and 'tab-pane fade active in' or 'tab-pane fade'" id="about">
                                     <div t-field="slide.description"/>
                                 </div>
-                                <div class="tab-pane fade" t-if="slide.website_published" id="share">
+                                <div role="tabpanel" class="tab-pane fade" t-if="slide.website_published" id="share">
                                     <t t-call="website_slides.slide_social_media">
                                         <t t-set="slide" t-value="slide"/>
                                     </t>
@@ -520,24 +520,24 @@
                                         </t>
                                     </t>
                                 </div>
-                                <div class="tab-pane fade" t-if="not slide.website_published" id="share">
+                                <div role="tabpanel" class="tab-pane fade" t-if="not slide.website_published" id="share">
                                     <h4 class="fa fa-info-circle">
                                         The social sharing module will be unlocked when a moderator will allow your publication.
                                     </h4>
                                 </div>
-                                <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
+                                <div role="tabpanel" t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
                                     <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="slide"/>
                                     </t>
                                 </div>
-                                <div class="tab-pane fade oe_slides_transcript" id="transcript">
+                                <div role="tabpanel" class="tab-pane fade oe_slides_transcript" id="transcript">
                                     <t t-if="slide.index_content">
                                         <t t-foreach="slide.index_content.split('\n')" t-as="line">
                                             <p t-esc="line"></p>
                                         </t>
                                     </t>
                                 </div>
-                                <div class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
+                                <div role="tabpanel" class="tab-pane fade" id="statistic" t-att-slide-url="slide.website_url">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <h4 class="mt0 oe_slides_statistics_title">Views</h4>
@@ -623,11 +623,11 @@
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="active"><a href="#related" data-toggle="tab">Related</a></li>
-                        <li><a href="#most_viewed" data-toggle="tab">Most Viewed</a></li>
+                        <li class="active"><a aria-controls="related" href="#related" data-toggle="tab" role="tab">Related</a></li>
+                        <li><a aria-controls="most_viewed" href="#most_viewed" data-toggle="tab" role="tab">Most Viewed</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="related" class="tab-pane active mt4">
+                        <div role="tabpanel" id="related" class="tab-pane active mt4">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 panel panel-default">
                                 <ul class="media-list panel-body">
                                     <t t-set="related_slides_list" t-value="list(related_slides)"/>
@@ -640,7 +640,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div id="most_viewed" class="tab-pane  mt4">
+                        <div role="tabpanel" id="most_viewed" class="tab-pane  mt4">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 panel panel-default">
                                 <ul class="media-list panel-body">
                                     <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>

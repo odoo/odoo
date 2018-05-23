@@ -126,7 +126,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="examples" t-as="example">
                 <li t-att-class="example_index == 0 and 'active' or None">
-                    <a data-toggle="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
+                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
                 </li>
             </t>
         </ul>
@@ -134,7 +134,7 @@
     <div class="o_kanban_examples_dialog_content">
         <div class="tab-content">
             <t t-foreach="examples" t-as="example">
-                <div t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
+                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
                     <div t-if="example.description" class="o_kanban_examples_description">
                         <t t-raw="example.description"/> <!-- description is supposed to be properly escaped -->
                     </div>

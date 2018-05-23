@@ -46,11 +46,11 @@
 
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
-        <ul class="nav nav-tabs">
-            <li class="active"><a href="#editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'hidden' : ''">Image</a></li>
-            <li><a href="#editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'hidden' : ''">Document</a></li>
-            <li><a href="#editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'hidden' : ''">Pictogram</a></li>
-            <li><a href="#editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'hidden' : ''">Video</a></li>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'hidden' : ''">Image</a></li>
+            <li><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'hidden' : ''">Document</a></li>
+            <li><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'hidden' : ''">Pictogram</a></li>
+            <li><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'hidden' : ''">Video</a></li>
             <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
@@ -70,10 +70,10 @@
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="editor-media-image"/>
-            <div class="tab-pane fade" id="editor-media-document"/>
-            <div class="tab-pane fade" id="editor-media-icon"/>
-            <div class="tab-pane fade" id="editor-media-video"/>
+            <div role="tabpanel" class="tab-pane fade in active" id="editor-media-image"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
         </div>
     </div>
 

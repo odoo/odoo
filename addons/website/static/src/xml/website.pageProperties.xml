@@ -40,12 +40,12 @@
 
 <div t-name="website.pagesMenu.page_info" class="o_page_management_info">
     <form class="form-horizontal">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#basic_page_info">Name</a></li>
-            <li><a data-toggle="tab" href="#advances_page_info">Publish</a></li>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a aria-controls="basic_page_info" data-toggle="tab" href="#basic_page_info" role="tab">Name</a></li>
+            <li><a aria-controls="advances_page_info" data-toggle="tab" href="#advances_page_info" role="tab">Publish</a></li>
         </ul>
         <div class="tab-content mt16">
-            <div id="basic_page_info" class="tab-pane fade in active">
+            <div role="tabpanel" id="basic_page_info" class="tab-pane fade in active">
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="page_name">Page Name</label>
                     <div class="col-sm-9">
@@ -85,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            <div id="advances_page_info" class="tab-pane fade">
+            <div role="tabpanel" id="advances_page_info" class="tab-pane fade">
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_menu">Show in Top Menu</label>
                     <div class="col-sm-2">

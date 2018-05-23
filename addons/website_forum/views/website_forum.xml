@@ -1453,59 +1453,59 @@
             </div>
         </div>
 
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs" role="tablist">
             <li class="active">
-                <a href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
+                <a role="tab" aria-controls="questions" href="#questions" data-toggle="tab"><t t-esc="count_questions"/> Questions</a>
             </li>
             <li>
-                <a href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
+                <a role="tab" aria-controls="answers" href="#answers" data-toggle="tab"><t t-esc="count_answers"/> Answers</a>
             </li>
             <li t-if="uid == user.id">
-                <a href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
+                <a role="tab" aria-controls="favourite_question" href="#favourite_question" data-toggle="tab"><t t-esc="len(favourite)"/> Favourite Questions</a>
             </li>
             <li t-if="uid == user.id">
-                <a href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
+                <a role="tab" aria-controls="followed_question" href="#followed_question" data-toggle="tab"><t t-esc="len(followed)"/> Followed Questions</a>
             </li>
             <li t-if="uid == user.id">
-                <a href="#activity" data-toggle="tab">Activity</a>
+                <a role="tab" aria-controls="activity" href="#activity" data-toggle="tab">Activity</a>
             </li>
             <li>
-                <a href="#badges" data-toggle="tab">Badges</a>
+                <a role="tab" aria-controls="badges" href="#badges" data-toggle="tab">Badges</a>
             </li>
             <li t-if="uid == user.id">
-                <a href="#votes" data-toggle="tab">Votes</a>
+                <a role="tab" aria-controls="votes" href="#votes" data-toggle="tab">Votes</a>
             </li>
         </ul>
         <div class="tab-content mt16">
-            <div class="tab-pane active" id="questions">
+            <div role="tabpanel" class="tab-pane active" id="questions">
                 <div class="mb16" t-foreach="questions" t-as="question">
                     <t t-call="website_forum.display_post"/>
                 </div>
-            </div><div class="tab-pane" id="answers">
+            </div><div role="tabpanel" class="tab-pane" id="answers">
                 <div t-foreach="answers" t-as="answer">
                     <t t-call="website_forum.display_post_answer"/>
                 </div>
             </div>
-            <div class="tab-pane" id="karma">
+            <div role="tabpanel" class="tab-pane" id="karma">
                 <h1>Karma</h1>
             </div>
-            <div class="tab-pane" id="badges">
+            <div role="tabpanel" class="tab-pane" id="badges">
                 <t t-call="website_forum.user_badges"/>
             </div>
-            <div class="tab-pane" id="favourite_question" t-if="uid == user.id">
+            <div role="tabpanel" class="tab-pane" id="favourite_question" t-if="uid == user.id">
                 <div t-foreach="favourite" t-as="question">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="followed_question" t-if="uid == user.id">
+            <div role="tabpanel" class="tab-pane" id="followed_question" t-if="uid == user.id">
                 <div t-foreach="followed" t-as="question" class="mb16">
                     <t t-call="website_forum.display_post"/>
                 </div>
             </div>
-            <div class="tab-pane" id="votes" t-if="uid == user.id">
+            <div role="tabpanel" class="tab-pane" id="votes" t-if="uid == user.id">
                 <t t-call="website_forum.user_votes"/>
             </div>
-            <div class="tab-pane" id="activity" t-if="uid == user.id">
+            <div role="tabpanel" class="tab-pane" id="activity" t-if="uid == user.id">
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
                         <span t-field="activity.date" t-options='{"format": "short"}'/>
