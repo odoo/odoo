@@ -386,15 +386,18 @@ class TestFields(common.TransactionCase):
         self.assertFalse(record.date)
 
         # one may assign date and datetime objects
-        record.date = date(2012, 5, 1)
+        record.date = d = date(2012, 5, 1)
         self.assertEqual(record.date, '2012-05-01')
+        self.assertEqual(record.date, d)
 
-        record.date = datetime(2012, 5, 1, 10, 45, 00)
-        self.assertEqual(record.date, '2012-05-01')
+        record.date = dt = datetime(2012, 5, 1, 10, 45, 00)
+        self.assertEqual(record.date, dt.strftime('%Y-%m-%d'))
+        self.assertEqual(record.date, dt.date())
 
         # one may assign dates in the default format, and it must be checked
-        record.date = '2012-05-01'
-        self.assertEqual(record.date, '2012-05-01')
+        record.date = dstr = d.strftime('%Y-%m-%d')
+        self.assertEqual(record.date, dstr)
+        self.assertEqual(record.date, d)
 
         with self.assertRaises(ValueError):
             record.date = '12-5-1'
