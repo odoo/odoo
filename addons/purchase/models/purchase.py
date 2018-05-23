@@ -368,7 +368,7 @@ class PurchaseOrder(models.Model):
         '''
         action = self.env.ref('account.action_vendor_bill_template')
         result = action.read()[0]
-
+        create_bill = self.env.context.get('create_bill', False)
         # override the context to get rid of the default filtering
         result['context'] = {
             'type': 'in_invoice',
@@ -378,16 +378,14 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id
         }
         # choose the view_mode accordingly
-        if len(self.invoice_ids) != 1:
+        if len(self.invoice_ids) > 1 and not create_bill:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
-        elif len(self.invoice_ids) == 1:
+        else:
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = self.invoice_ids.id
-
-        # complete the help tooltip
-        new_help = self.env['account.invoice'].complete_empty_list_help()
-        result['help'] = result.get('help', '') + new_help
+            # Do not set an invoice_id if we want to create a new bill.
+            if not create_bill:
+                result['res_id'] = self.invoice_ids.id or False
         return result
 
     @api.multi
@@ -429,7 +427,7 @@ class PurchaseOrderLine(models.Model):
 
     # Replace by invoiced Qty
     qty_invoiced = fields.Float(compute='_compute_qty_invoiced', string="Billed Qty", digits=dp.get_precision('Product Unit of Measure'), store=True)
-    qty_received = fields.Float(string="Received Qty", digits=dp.get_precision('Product Unit of Measure'))
+    qty_received = fields.Float(string="Received Qty", digits=dp.get_precision('Product Unit of Measure'), copy=False)
 
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
