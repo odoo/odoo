@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import base64
-import functools
 import os
 import re
 import hashlib
@@ -353,7 +352,7 @@ class AssetsBundle(object):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
                 source = '\n'.join([asset.get_source() for asset in assets])
-                compiled = self.compile_css(assets[0].get_compiler(), source)
+                compiled = self.compile_css(assets[0].compile, source)
 
                 if not self.css_errors and old_attachments:
                     old_attachments.unlink()
@@ -617,14 +616,11 @@ class PreprocessedCSS(StylesheetAsset):
         content = self.inline or self._fetch_content()
         return "/*! %s */\n%s" % (self.id, content)
 
-    def get_compiler(self):
-        command = self.get_command()
-        return functools.partial(self._compile_file, command)
-
     def get_command(self):
         raise NotImplementedError
 
-    def _compile_file(self, command, source):
+    def compile(self, source):
+        command = self.get_command()
         try:
             compiler = Popen(command, stdin=PIPE, stdout=PIPE,
                              stderr=PIPE)
@@ -676,34 +672,31 @@ class SassStylesheetAsset(PreprocessedCSS):
 
 
 class ScssStylesheetAsset(PreprocessedCSS):
-    @lazy_property
+    @property
     def bootstrap_path(self):
         return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-    @lazy_property
+    @property
     def bootstrap_components_path(self):
         return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
     precision = 8
     output_style = 'expanded'
 
-    def get_compiler(self):
+    def compile(self, source):
         if libsass is None:
-            return super(ScssStylesheetAsset, self).get_compiler()
+            return super(ScssStylesheetAsset, self).compile(source)
 
-        def libsass_wrapper(source):
-            try:
-                return libsass.compile(
-                    string=source,
-                    include_paths=[
-                        self.bootstrap_path,
-                        self.bootstrap_components_path,
-                    ],
-                    output_style=self.output_style,
-                    precision=self.precision,
-                )
-            except libsass.CompileError as e:
-                raise CompileError(e.args[0])
-
-        return libsass_wrapper
+        try:
+            return libsass.compile(
+                string=source,
+                include_paths=[
+                    self.bootstrap_path,
+                    self.bootstrap_components_path,
+                ],
+                output_style=self.output_style,
+                precision=self.precision,
+            )
+        except libsass.CompileError as e:
+            raise CompileError(e.args[0])
 
     def get_command(self):
         try:
