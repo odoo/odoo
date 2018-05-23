@@ -59,12 +59,14 @@ class WebsiteSaleDelivery(WebsiteSale):
 
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
     def update_eshop_carrier(self, **post):
+        print('Received RPC for carrier n°', int(post['carrier_id']))
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
         currency = order.currency_id
         if order:
+            print('Calling _check_carrier_quotation for carrier n°', int(post['carrier_id']))
             order._check_carrier_quotation(force_carrier_id=carrier_id)
-            return {'status': order.delivery_rating_success,
+            vals = {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
                     'new_amount_delivery': float_repr(currency.round(order.delivery_price), currency.decimal_places),
@@ -72,3 +74,29 @@ class WebsiteSaleDelivery(WebsiteSale):
                     'new_amount_tax': order.amount_tax,
                     'new_amount_total': order.amount_total,
             }
+            if post.get('preview'):
+                request.env.cr.rollback()
+            print('Sending result for carrier n°', int(post['carrier_id']))
+            return vals
+
+    @http.route(['/shop/carrier_price_list'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def get_carrier_price_list(self, **post):
+        order = request.website.sale_get_order()
+        currency = order.currency_id
+        vals = []
+        if order:
+            carrier_ids = post.get('carrier_ids')
+            for carrier_id in carrier_ids:
+                carrier_id = int(carrier_id)
+                order._check_carrier_quotation(force_carrier_id=carrier_id)
+                vals.append({'status': order.delivery_rating_success,
+                        'error_message': order.delivery_message,
+                        'carrier_id': carrier_id,
+                        'new_amount_delivery': float_repr(currency.round(order.delivery_price), currency.decimal_places),
+                        'new_amount_untaxed': order.amount_untaxed,
+                        'new_amount_tax': order.amount_tax,
+                        'new_amount_total': order.amount_total,
+                })
+        request.env.cr.rollback()
+        return vals
+
