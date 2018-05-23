@@ -7,7 +7,12 @@ import itertools
 import json
 import textwrap
 import uuid
-import sass
+try:
+    import sass as libsass
+except ImportError:
+    # If the `sass` python library isn't found, we fallback on the
+    # `sassc` executable in the path.
+    libsass = None
 from datetime import datetime
 from subprocess import Popen, PIPE
 from odoo import fields, tools
@@ -22,6 +27,7 @@ _logger = logging.getLogger(__name__)
 MAX_CSS_RULES = 4095
 
 
+class CompileError(RuntimeError): pass
 def rjsmin(script):
     """ Minify js with a clever regex.
     Taken from http://opensource.perlig.de/rjsmin
@@ -346,8 +352,8 @@ class AssetsBundle(object):
             assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
             if assets:
                 source = '\n'.join([asset.get_source() for asset in assets])
-                cmd = assets[0].get_command()
-                compiled = self.compile_css(cmd, source, atype)
+                compiled = self.compile_css(assets[0].compile, source)
+
                 if not self.css_errors and old_attachments:
                     old_attachments.unlink()
 
@@ -384,7 +390,7 @@ class AssetsBundle(object):
 
         return '\n'.join(asset.minify() for asset in self.stylesheets)
 
-    def compile_css(self, cmd, source, atype):
+    def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""
         imports = []
         def handle_compile_error(e, source):
@@ -398,44 +404,17 @@ class AssetsBundle(object):
             if '.' not in ref and line not in imports and not ref.startswith(('.', '/', '~')):
                 imports.append(line)
                 return line
-            if atype == ScssStylesheetAsset:
-                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.scss\" imports in your custom sass files. In Odoo you have to import all sass files in the assets, and not through the @import statement." % ref
-            else:
-                msg = "Local import '%s' is forbidden for security reasons. Please remove all @import \"your_file.less\" imports in your custom less files. In Odoo you have to import all less files in the assets, and not through the @import statement." % ref
+            msg = "Local import '%s' is forbidden for security reasons. Please remove all @import {your_file} imports in your custom files. In Odoo you have to import all files in the assets, and not through the @import statement." % ref
             _logger.warning(msg)
             self.css_errors.append(msg)
             return ''
         source = re.sub(self.rx_preprocess_imports, sanitize, source)
 
-        if atype == ScssStylesheetAsset:
-            try:
-                path_to_bs = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
-                path_to_bs_components = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
-                result = sass.compile(
-                    string=source.encode('utf-8'),
-                    include_paths=[path_to_bs, path_to_bs_components],
-                    output_style='expanded',
-                    precision=8,
-                )
-                compiled = result.strip()
-            except sass.CompileError as e:
-                return handle_compile_error(e, source=source)
-        else:
-            try:
-                compiler = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
-            except Exception:
-                msg = "Could not execute command %r" % cmd[0]
-                _logger.error(msg)
-                self.css_errors.append(msg)
-                return ''
-            result = compiler.communicate(input=source.encode('utf-8'))
-            if compiler.returncode:
-                cmd_output = ''.join(misc.ustr(result))
-                if not cmd_output:
-                    cmd_output = "Process exited with return code %d\n" % compiler.returncode
-                return handle_compile_error(cmd_output, source=source)
-            compiled = result[0].strip().decode('utf8')
-        return compiled
+        try:
+            compiled = compiler(source)
+            return compiled.strip()
+        except CompileError as e:
+            return handle_compile_error(e, source=source)
 
     def get_preprocessor_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
@@ -640,6 +619,21 @@ class PreprocessedCSS(StylesheetAsset):
     def get_command(self):
         raise NotImplementedError
 
+    def compile(self, source):
+        command = self.get_command()
+        try:
+            compiler = Popen(command, stdin=PIPE, stdout=PIPE,
+                             stderr=PIPE)
+        except Exception:
+            raise CompileError("Could not execute command %r" % command[0])
+
+        (out, err) = compiler.communicate(input=source.encode('utf-8'))
+        if compiler.returncode:
+            cmd_output = misc.ustr(out) + misc.ustr(err)
+            if not cmd_output:
+                cmd_output = u"Process exited with return code %d\n" % compiler.returncode
+            raise CompileError(cmd_output)
+        return out.decode('utf8')
 
 class SassStylesheetAsset(PreprocessedCSS):
     rx_indent = re.compile(r'^( +|\t+)', re.M)
@@ -678,8 +672,39 @@ class SassStylesheetAsset(PreprocessedCSS):
 
 
 class ScssStylesheetAsset(PreprocessedCSS):
+    @property
+    def bootstrap_path(self):
+        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+    @property
+    def bootstrap_components_path(self):
+        return get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss', 'bootstrap')
+    precision = 8
+    output_style = 'expanded'
+
+    def compile(self, source):
+        if libsass is None:
+            return super(ScssStylesheetAsset, self).compile(source)
+
+        try:
+            return libsass.compile(
+                string=source,
+                include_paths=[
+                    self.bootstrap_path,
+                    self.bootstrap_components_path,
+                ],
+                output_style=self.output_style,
+                precision=self.precision,
+            )
+        except libsass.CompileError as e:
+            raise CompileError(e.args[0])
+
     def get_command(self):
-        return ''
+        try:
+            sassc = misc.find_in_path('sassc')
+        except IOError:
+            sassc = 'sassc'
+        return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '--load-path', self.bootstrap_components_path, '-t', self.output_style]
+
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
