@@ -91,7 +91,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
             <div itemscope="itemscope" itemtype="http://schema.org/Product">
                 <div class="ribbon-wrapper">
-                    <div role="button" class="ribbon btn btn-danger">Sale</div>
+                    <a href="#" role="button" class="ribbon btn btn-danger">Sale</a>
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="product_href">
@@ -1103,12 +1103,12 @@
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
                 <div class='panel-footer' t-if='not readonly'>
-                    <span role="button" class='btn-ship' t-att-style="'' if selected else 'display:none;'">
+                    <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
                         <a role="button" class="btn btn-block btn-primary">
                             <span class='fa fa-check'> Ship to this address</span>
                         </a>
                     </span>
-                    <span role="button" class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
+                    <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
                         <a role="button" class="btn btn-block btn-default">
                             Select this address
                         </a>

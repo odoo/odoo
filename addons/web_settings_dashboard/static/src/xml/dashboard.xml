@@ -52,7 +52,7 @@
             <span class="o_badge_text">
                 <t t-esc='email'/>
             </span>
-            <span class="fa fa-times o_badge_remove" title="Remove Email" aria-label="Remove Email" role="button"/>
+            <a href="#" class="fa fa-times o_badge_remove" title="Remove Email" aria-label="Remove Email" role="button"/>
         </span>
     </t>
 
@@ -75,7 +75,7 @@
             <div class="o_web_settings_dashboard_invitation_form">
                 <p><strong>Invite new users:</strong></p>
                 <input class="o_user_emails o_input mt8" type="text" placeholder="Enter e-mail addresses"/>
-                <button class="btn btn-primary btn-block o_web_settings_dashboard_invite mt16" role="button" data-loading-text="Inviting..."><strong>Invite</strong></button>
+                <button class="btn btn-primary btn-block o_web_settings_dashboard_invite mt16" data-loading-text="Inviting..."><strong>Invite</strong></button>
             </div>
             <div class="o_web_settings_dashboard_pending_users mt8">
                 <t t-if="pending_users.length">

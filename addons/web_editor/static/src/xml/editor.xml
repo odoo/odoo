@@ -272,7 +272,7 @@
                                 <i class="fa"/>
                             </label>
                             <t t-foreach="['primary', 'default', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
-                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}">
+                                <label role="button" t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}" t-attf-aria-label="Color for #{color}" t-attf-title="Color for #{color}">
                                     <input type="radio" name="link_style_color" class="hidden link-style" t-att-value="color"/>
                                     <i class="fa"/>
                                 </label>

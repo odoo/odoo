@@ -1235,7 +1235,7 @@
     </t>
 
     <t t-name="Product">
-        <span class='product' t-att-data-product-id="product.id">
+        <article class='product' t-att-data-product-id="product.id" tabindex="0" t-attf-aria-labelledby="article_product_#{product.id}">
             <div class="product-img">
                 <img t-att-src='image_url' alt="Product image"/> 
                 <t t-if="!product.to_weight">
@@ -1249,10 +1249,10 @@
                     </span>
                 </t>
             </div>
-            <div class="product-name">
+            <div class="product-name" t-attf-id="article_product_#{product.id}">
                 <t t-esc="product.display_name"/>
             </div>
-        </span>
+        </article>
     </t>
 
     <t t-name="Orderline">

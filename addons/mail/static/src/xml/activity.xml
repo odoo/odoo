@@ -2,15 +2,15 @@
 <templates xml:space="preserve">
     <t t-name="mail.activity_items">
         <div class="o_thread_date_separator o_border_dashed" data-toggle="collapse" data-target="#o_chatter_planned_activities">
-            <span role="button" class="o_thread_date btn">
-                <i class="fa fa-fw fa-caret-down" aria-label="Details" title="Details"/>
-                Planned activities
+            <a href="#" role="button" class="o_thread_date btn">
+                <span class="fa fa-fw fa-caret-down">
+                Planned activities</span>
                 <small class="o_chatter_planned_activities_summary ml8">
                     <span class="label img-circle label-danger"><t t-esc="nbOverdueActivities"/></span>
                     <span class="label img-circle label-warning"><t t-esc="nbTodayActivities"/></span>
                     <span class="label img-circle label-success"><t t-esc="nbPlannedActivities"/></span>
                 </small>
-            </span>
+            </a>
         </div>
         <div id="o_chatter_planned_activities" class="collapse in">
             <t t-foreach="activities" t-as="activity">
