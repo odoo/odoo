@@ -1412,7 +1412,6 @@ class Root(object):
                 httprequest.session.sid = self.session_store.generate_key()
                 httprequest.session.modified = True
             self.session_store.save(httprequest.session)
-
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
         # There are two reasons to this:
         # - When using one of those two means we consider that we are overriding the cookie, which means creating a new
