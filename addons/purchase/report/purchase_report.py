@@ -22,9 +22,8 @@ class PurchaseReport(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Done'),
         ('cancel', 'Cancelled')
-        ], 'Order Status', readonly=True)
+    ], 'Order Status', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    picking_type_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Date('Date Approved', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
@@ -50,17 +49,23 @@ class PurchaseReport(models.Model):
 
     @api.model_cr
     def init(self):
-        tools.drop_view_if_exists(self._cr, 'purchase_report')
-        self._cr.execute("""
-            create view purchase_report as (
-                WITH currency_rate as (%s)
-                select
+        # self._table = sale_report
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
+            %s
+            FROM ( %s )
+            %s
+            )""" % (self._table, self._select(), self._from(), self._group_by()))
+
+    def _select(self):
+        select_str = """
+            WITH currency_rate as (%s)
+                SELECT
                     min(l.id) as id,
                     s.date_order as date_order,
                     s.state,
                     s.date_approve,
                     s.dest_address_id,
-                    spt.warehouse_id as picking_type_id,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
                     s.company_id as company_id,
@@ -83,45 +88,53 @@ class PurchaseReport(models.Model):
                     analytic_account.id as account_analytic_id,
                     sum(p.weight * l.product_qty/u.factor*u2.factor) as weight,
                     sum(p.volume * l.product_qty/u.factor*u2.factor) as volume
-                from purchase_order_line l
-                    join purchase_order s on (l.order_id=s.id)
-                    join res_partner partner on s.partner_id = partner.id
-                        left join product_product p on (l.product_id=p.id)
-                            left join product_template t on (p.product_tmpl_id=t.id)
-                            LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
-                    left join uom_uom u on (u.id=l.product_uom)
-                    left join uom_uom u2 on (u2.id=t.uom_id)
-                    left join stock_picking_type spt on (spt.id=s.picking_type_id)
-                    left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
-                    left join currency_rate cr on (cr.currency_id = s.currency_id and
-                        cr.company_id = s.company_id and
-                        cr.date_start <= coalesce(s.date_order, now()) and
-                        (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
-                group by
-                    s.company_id,
-                    s.user_id,
-                    s.partner_id,
-                    u.factor,
-                    s.currency_id,
-                    l.price_unit,
-                    s.date_approve,
-                    l.date_planned,
-                    l.product_uom,
-                    s.dest_address_id,
-                    s.fiscal_position_id,
-                    l.product_id,
-                    p.product_tmpl_id,
-                    t.categ_id,
-                    s.date_order,
-                    s.state,
-                    spt.warehouse_id,
-                    u.uom_type,
-                    u.category_id,
-                    t.uom_id,
-                    u.id,
-                    u2.factor,
-                    partner.country_id,
-                    partner.commercial_partner_id,
-                    analytic_account.id
-            )
-        """ % self.env['res.currency']._select_companies_rates())
+        """ % self.env['res.currency']._select_companies_rates()
+        return select_str
+
+    def _from(self):
+        from_str = """
+            purchase_order_line l
+                join purchase_order s on (l.order_id=s.id)
+                join res_partner partner on s.partner_id = partner.id
+                    left join product_product p on (l.product_id=p.id)
+                        left join product_template t on (p.product_tmpl_id=t.id)
+                        LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
+                left join uom_uom u on (u.id=l.product_uom)
+                left join uom_uom u2 on (u2.id=t.uom_id)
+                left join account_analytic_account analytic_account on (l.account_analytic_id = analytic_account.id)
+                left join currency_rate cr on (cr.currency_id = s.currency_id and
+                    cr.company_id = s.company_id and
+                    cr.date_start <= coalesce(s.date_order, now()) and
+                    (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
+            GROUP BY
+                s.company_id,
+                s.user_id,
+                s.partner_id,
+                u.factor,
+                s.currency_id,
+                l.price_unit,
+                s.date_approve,
+                l.date_planned,
+                l.product_uom,
+                s.dest_address_id,
+                s.fiscal_position_id,
+                l.product_id,
+                p.product_tmpl_id,
+                t.categ_id,
+                s.date_order,
+                s.state,
+                u.uom_type,
+                u.category_id,
+                t.uom_id,
+                u.id,
+                u2.factor,
+                partner.country_id,
+                partner.commercial_partner_id,
+                analytic_account.id
+        """
+        return group_by_str
