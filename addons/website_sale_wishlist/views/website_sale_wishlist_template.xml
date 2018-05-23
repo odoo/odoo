@@ -52,15 +52,25 @@
                         </div>
                         <table class="table table-bordered table-striped table-hover text-center mt16 table-comparator" id="o_comparelist_table">
                             <body>
-                                <t t-foreach="wishes" t-as="wish">
+                                <t t-foreach="wishes.sudo()" t-as="wish">
                                     <tr t-att-data-wish-id='wish.id' t-att-data-product-id='wish.product_id.id'>
                                         <td class='td-img'>
-                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)">
+                                            <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)" t-if="wish.product_id.product_tmpl_id.website_published">
                                                 <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image/100x100" class="img img-responsive" style="margin:auto;"/>
                                             </a>
+                                            <t t-if="not wish.product_id.product_tmpl_id.website_published">
+                                                <img t-attf-src="/web/image/product.product/#{wish.product_id.id}/image/100x100" class="img img-responsive" style="margin:auto;"/>
+                                            </t>
                                         </td>
                                         <td class='text-left'>
-                                            <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
+                                            <strong>
+                                                <a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)" t-if="wish.product_id.product_tmpl_id.website_published">
+                                                    <t t-esc="wish.product_id.display_name"/>
+                                                </a>
+                                                <t t-if="not wish.product_id.product_tmpl_id.website_published">
+                                                    <span t-esc="wish.product_id.display_name"/>
+                                                </t>
+                                            </strong>
                                             <small class='hidden-xs'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
                                             <a class="o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></a>
                                         </td>
@@ -73,7 +83,11 @@
                                         </td>
                                         <td class='text-center td-wish-btn'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
-                                            <a class="btn btn-default btn-block o_wish_add mb4" >Add <span class='hidden-xs'>to Cart</span></a>
+                                            <a class="btn btn-default btn-block o_wish_add mb4" t-if="wish.product_id.product_tmpl_id.website_published">Add <span class='hidden-xs'>to Cart</span></a>
+                                            <t t-if="not wish.product_id.product_tmpl_id.website_published">
+                                                <span class='hidden-xs'>Product Not Available</span>
+                                                <span class='visible-xs'>N/A</span>
+                                            </t>
                                         </td>
                                     </tr>
                                 </t>
