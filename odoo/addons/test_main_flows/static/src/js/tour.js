@@ -480,13 +480,9 @@ tour.register('main_flow_tour', {
     content: _t('go back to the purchase order'),
     position: 'bottom',
  }, {
-    trigger: ".oe_button_box .oe_stat_button:has(div[name=invoice_count])",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Create Bill')",
     content: _t('go to Vendor Bills'),
     position: 'bottom',
-}, {
-    trigger: ".o_list_button_add",
-    content: _t("Let's create a new vendor bill"),
-    position: "right",
 }, {
     trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
     content: _t("Try to send it to email"),
