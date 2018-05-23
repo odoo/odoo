@@ -394,7 +394,6 @@ class WebRequest(object):
         :returns: ASCII token string
         """
         token = self.session.sid
-        self.session.modified = True    # force session save
         max_ts = '' if not time_limit else int(time.time() + time_limit)
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
@@ -1106,17 +1105,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         context['lang'] = lang or 'en_US'
 
-    @property
-    def db(self):
-        return self['db']
-
-    @db.setter
-    def db(self, value):
-        # setting only the db should not mark the session as modified.
-        modified = self.modified
-        self['db'] = value
-        self.modified = modified
-
     def save_action(self, action):
         """
         This method store an action object in the session and returns an integer
@@ -1414,14 +1402,16 @@ class Root(object):
         else:
             response = result
 
+        save_session = request.endpoint.routing.get('save_session', True)
+        if not save_session:
+            return response
+
         if httprequest.session.should_save:
             if httprequest.session.rotate:
                 self.session_store.delete(httprequest.session)
                 httprequest.session.sid = self.session_store.generate_key()
                 httprequest.session.modified = True
             self.session_store.save(httprequest.session)
-        elif httprequest.session.new and request.endpoint and request.endpoint.routing.get('auth') == 'none':
-            explicit_session = True     # avoid setting cookie
 
         # We must not set the cookie if the session id was specified using a http header or a GET parameter.
         # There are two reasons to this:
