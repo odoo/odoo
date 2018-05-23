@@ -7,26 +7,34 @@ odoo.define('website_sale_delivery.checkout', function (require) {
     /* Handle interactive carrier choice + cart update */
     var $pay_button = $('#o_payment_form_pay');
 
+    var _updateCarrierBadge = function (result) {
+        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
+        var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+        if (result.status === true) {
+            $carrier_badge.children('span').text(result.new_amount_delivery);
+            $carrier_badge.removeClass('hidden');
+            $compute_badge.addClass('hidden');
+        }
+        else {
+            console.error(result.error_message);
+            $compute_badge.text(result.error_message);
+        }
+    }
+
     var _onCarrierUpdateAnswer = function(result) {
+        _updateCarrierBadge(result);
         var $amount_delivery = $('#order_delivery span.oe_currency_value');
         var $amount_untaxed = $('#order_total_untaxed span.oe_currency_value');
         var $amount_tax = $('#order_total_taxes span.oe_currency_value');
         var $amount_total = $('#order_total span.oe_currency_value');
-        var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
-        var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
         if (result.status === true) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
             $amount_tax.text(result.new_amount_tax);
             $amount_total.text(result.new_amount_total);
-            $carrier_badge.children('span').text(result.new_amount_delivery);
-            $carrier_badge.removeClass('hidden');
-            $compute_badge.addClass('hidden');
             $pay_button.prop('disabled', false);
         }
         else {
-            console.error(result.error_message);
-            $compute_badge.text(result.error_message);
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
             $amount_tax.text(result.new_amount_tax);
@@ -66,5 +74,12 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $provider_restricted.hide().attr('disabled', true);
         }
     });
+
+      $.each($carriers, function(index, value) {
+          var carrier_id = value.value;
+          var values = {'carrier_id': carrier_id, 'preview': true};
+          ajax.jsonRpc('/shop/update_carrier', 'call', values)
+            .then(_updateCarrierBadge);
+      });
 
 });
