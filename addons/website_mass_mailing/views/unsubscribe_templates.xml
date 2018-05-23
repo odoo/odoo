@@ -13,7 +13,7 @@
                         <h1 class="page-header">Mailing Subscriptions</h1>
 
                         <t t-if="contacts">
-                            <div class="alert alert-info text-center">
+                            <div class="alert alert-info text-center" role="status">
                                 <p>Choose your mailing subscriptions.</p>
                             </div>
 
@@ -35,7 +35,7 @@
                         </t>
 
                         <t t-if="contacts == False">
-                            <div class="alert alert-info text-center">
+                            <div class="alert alert-info text-center" role="status">
                                 <p>You are not subscribed to any of our mailing list.</p>
                             </div>
                         </t>
@@ -51,7 +51,7 @@
                 <div class="col-md-6 col-md-offset-3">
                     <h1 class="page-header">Mailing Subscriptions</h1>
 
-                    <div class="alert alert-success text-center">
+                    <div class="alert alert-success text-center" role="status">
                         <p>You have been successfully <strong>unsubscribed</strong>!</p>
                     </div>
                 </div>

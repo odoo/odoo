@@ -337,7 +337,7 @@
 
     <template id="portal_order_error" name="Order error/warning display">
         <div class="row mr16">
-            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}">
+            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
@@ -348,7 +348,7 @@
 
     <template id="portal_order_success" name="Order success display">
         <div class="row mr16">
-            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success">
+            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>

@@ -303,7 +303,7 @@
 
     <!-- Crop Image Dialog (allows to crop image on the page) -->
     <div t-name="web_editor.dialog.crop_image" class="o_crop_image_dialog">
-        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center">
+        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center" role="alert">
             <i class="fa fa-exclamation-triangle fa-2x"/>
             <h4>This image is an external image</h4>
             <p>

@@ -92,7 +92,7 @@
                         </div>
                     </t>
                 </t>
-                <div t-else="" class="alert alert-danger">
+                <div t-else="" class="alert alert-danger" role="alert">
                     <b>Error: could not find corresponding employee.</b><br/>Please return to the main menu.
                 </div>
                 <a role="button" class="oe_attendance_sign_in_out" aria-label="Sign out" title="Sign out"/>
@@ -112,20 +112,20 @@
                     <t t-if="widget.attendance.check_out">
                         <h1 class="mb0">Goodbye <t t-esc="widget.employee_name"/>!</h1>
                         <h2 class="o_hr_attendance_message_message mt4 mb24"/>
-                        <div class="alert alert-info h2 mt0">
+                        <div class="alert alert-info h2 mt0" role="status">
                             Checked out at <b><t t-esc="widget.attendance.check_out_time"/></b>
                         </div>
                         <h3 class="o_hr_attendance_random_message mb24"/>
-                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none"/>
+                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
                     </t>
                     <t t-else="">
                         <h1 class="mb0">Welcome <t t-esc="widget.employee_name"/>!</h1>
                         <h2 class="o_hr_attendance_message_message mt4 mb24"/>
-                        <div class="alert alert-info h2 mt0">
+                        <div class="alert alert-info h2 mt0" role="status">
                             Checked in at <b><t t-esc="widget.attendance.check_in_time"/></b>
                         </div>
                         <h3 class="o_hr_attendance_random_message mb24"/>
-                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none"/>
+                        <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
                     </t>
                     <button class="o_hr_attendance_button_dismiss btn btn-primary btn-lg">
                         <span class="text-capitalize" t-if="widget.attendance.check_out">Goodbye</span>
@@ -133,7 +133,7 @@
                     </button>
                 </t>
                 <t t-else="">
-                    <div class="alert alert-warning">Invalid request, please return to the main menu.</div>
+                    <div class="alert alert-warning" role="alert">Invalid request, please return to the main menu.</div>
                     <button class="o_hr_attendance_button_dismiss btn btn-default btn-lg">Go back</button>
                 </t>
             </div>
