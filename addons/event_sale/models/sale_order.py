@@ -54,8 +54,10 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
+        # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
         if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
             self.event_id = None
+            # This will cascade the onchange below to also unset the ticket.
 
     @api.onchange('event_id')
     def _onchange_event_id(self):
