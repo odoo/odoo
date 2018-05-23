@@ -1,7 +1,4 @@
 -
-  !python {model: res.partner, id: base.main_partner}: |
-    main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
--
   !python {model: ir.model.data, id: False}: |
     main_warehouse = self.env['stock.warehouse'].browse(ref('warehouse0'))
 
@@ -28,7 +25,3 @@
     companies = self.search([('internal_transit_location_id', '=', False)])
     for company in companies:
         company.create_transit_location()
-        internal_transit = company.internal_transit_location_id.id
-        warehouses = self.env['stock.warehouse'].search([('partner_id', '=', company.partner_id.id)])
-        warehouses.mapped('partner_id').with_context(force_company=company.id).write({'property_stock_customer': internal_transit, 'property_stock_supplier': internal_transit})
-
