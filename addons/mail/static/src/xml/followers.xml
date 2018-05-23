@@ -33,7 +33,7 @@
         Partner or channel following the record
     -->
     <t t-name="mail.Followers.partner">
-        <li class='o_partner'>
+        <li role="menuitem" class='o_partner'>
             <img t-att-src="record.avatar_url" alt="Avatar"/>
             <a class="o_mail_redirect"
                href="#"
@@ -57,13 +57,13 @@
     -->
     <t t-name="mail.Followers.add_more">
         <t t-if="widget.isEditable">
-            <li class="o_add_follower">
+            <li role="menuitem" class="o_add_follower">
                 <a href="#"> Add Followers </a>
             </li>
-            <li class="o_add_follower_channel">
+            <li role="menuitem" class="o_add_follower_channel">
                 <a href="#"> Add Channels </a>
             </li>
-            <li t-if="widget.followers.length > 0" class="divider"/>
+            <li role="separator" t-if="widget.followers.length > 0" class="divider"/>
         </t>
     </t>
 
@@ -71,7 +71,7 @@
         Message subtypes of a follower subscription
     -->
     <t t-name="mail.Followers.subtype">
-        <li class="o_subtype">
+        <li role="menuitem" class="o_subtype">
             <div class="o_checkbox">
                 <input type="checkbox" t-att-checked="record.followed"
                        t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"
@@ -85,7 +85,7 @@
         </li>
     </t>
     <t t-name="mail.Followers.subtypes.warning">
-        <span class="text-warning">
+        <span class="text-warning" role="alert">
             <span class="fa fa-warning"> Be careful with channels following internal notifications</span>
         </span>
     </t>

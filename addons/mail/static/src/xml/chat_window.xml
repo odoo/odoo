@@ -28,7 +28,7 @@
             </span>
             <ul class="dropdown-menu" role="menu">
                 <t t-foreach="sessions" t-as="session">
-                    <li class="o_chat_header" t-att-data-session-id="session.id">
+                    <li role="menuitem" class="o_chat_header" t-att-data-session-id="session.id">
                         <t t-call="mail.ChatWindowHeaderContent">
                             <t t-set="status" t-value="session.window.status"/>
                             <t t-set="title" t-value="session.window.title"/>

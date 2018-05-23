@@ -310,9 +310,9 @@
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <li><a role="menuitem" type="delete">Delete</a></li>
                                         </t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
                                     </ul>
                                 </div>
                                 <div class="o_event_left">

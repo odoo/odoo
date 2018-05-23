@@ -444,10 +444,10 @@
                 <ul t-attf-class="blog_post_year collapse nav nav-pills nav-stacked #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="active">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                         <li t-else="1">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>

@@ -70,7 +70,7 @@
     <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
         'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
         ">
-        <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <a role="menuitem" t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
@@ -355,7 +355,7 @@
             <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
-                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
+                    <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
                     title='Edit in backend'>Edit</a>
                 </li>
             </ul>
@@ -894,7 +894,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
               </button>
               <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
                   <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                      <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                      <a role="menuitem" t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
                           <span t-esc="searchbar_sortings[option].get('label')"/>
                       </a>
                   </li>

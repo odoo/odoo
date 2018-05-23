@@ -164,7 +164,7 @@
             </a>
             <ul class="dropdown-menu" role="menu">
                 <li t-foreach="website_sale_pricelists" t-as="pl">
-                    <a t-att-href="'/shop/change_pricelist/%s' % pl.id">
+                    <a role="menuitem" t-att-href="'/shop/change_pricelist/%s' % pl.id">
                         <span class="switcher_pricelist" t-att-data-pl_id="pl.id" t-esc="pl.name" />
                     </a>
                 </li>
@@ -259,7 +259,7 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li t-foreach="website_sale_sortable" t-as="sortby">
-                        <a t-att-href="keep('/shop', order=sortby[1])">
+                        <a role="menuitem" t-att-href="keep('/shop', order=sortby[1])">
                             <span t-raw="sortby[0]"/>
                         </a>
                     </li>

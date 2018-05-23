@@ -91,8 +91,8 @@
                                         <i class="fa fa-cog" aria-label="Dropdown menu" title="Dropdown menu"/>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum">Forum Settings</a></li>
+                                        <li><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
+                                        <li><a role="menuitem" tabindex="-1" t-attf-href="/web#id=#{forum.id}&amp;view_type=form&amp;model=forum.forum">Forum Settings</a></li>
                                     </ul>
                                 </span>
                             </form>
@@ -141,9 +141,9 @@
                                 <span class="sr-only">Select Post</span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li t-if="forum.allow_question"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=question">Ask a Question</a></li>
-                                <li t-if="forum.allow_link"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=link">Submit a Link</a></li>
-                                <li t-if="forum.allow_discussion"><a t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">New Discussion</a></li>
+                                <li t-if="forum.allow_question"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=question">Ask a Question</a></li>
+                                <li t-if="forum.allow_link"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=link">Submit a Link</a></li>
+                                <li t-if="forum.allow_discussion"><a role="menuitem" t-attf-href="/forum/#{slug(forum)}/ask?post_type=discussion">New Discussion</a></li>
                             </ul>
                         </t>
                     </div>
@@ -421,35 +421,35 @@
                   <b class="caret"/>
               </a>
               <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-header">Filter on</li>
+                  <li role="separator" class="dropdown-header">Filter on</li>
                   <li t-att-class="filters == 'all' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')">All</a>
                   </li>
                   <li t-att-class="filters == 'unanswered' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='unanswered')">Unanswered</a>
                   </li>
                   <li t-if="uid" t-att-class="filters == 'followed' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='followed')">Followed</a>
                   </li>
-                  <li t-if="tag" class="dropdown-header">Tags</li>
+                  <li role="separator" t-if="tag" class="dropdown-header">Tags</li>
                   <li t-if="tag" t-att-class="tag and 'active' or None ">
-                      <a href=""><t t-esc="tag.name"/></a>
+                      <a role="menuitem" href=""><t t-esc="tag.name"/></a>
                   </li>
-                  <li class="dropdown-header">Sort by</li>
+                  <li role="separator" class="dropdown-header">Sort by</li>
                   <li t-att-class="sorting == 'relevancy desc' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='relevancy desc')">Relevance</a>
                   </li>
                   <li t-att-class="sorting == 'write_date desc' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">Last activity date</a>
                   </li>
                   <li t-att-class="sorting == 'create_date desc' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='create_date desc')">Newest</a>
                   </li>
                   <li t-att-class="sorting == 'child_count desc' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='child_count desc')">Most answered</a>
                   </li>
                   <li t-att-class="sorting == 'vote_count desc' and 'active' or None ">
-                      <a t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
+                      <a role="menuitem" t-att-href="url_for('') + '?' + keep_query( 'search', 'filters', sorting='vote_count desc')">Most voted</a>
                   </li>
               </ul>
             </small>
@@ -1224,13 +1224,13 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li t-att-class="queue_type == 'validation' and 'active' or None ">
-                        <a data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
+                        <a role="menuitem" data-type='validation' t-attf-href="/forum/#{slug(forum)}/validation_queue">Pending</a>
                     </li>
                     <li t-att-class="queue_type == 'flagged' and 'active' or None ">
-                        <a data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
+                        <a role="menuitem" data-type='flagged' t-attf-href="/forum/#{slug(forum)}/flagged_queue">Flagged</a>
                     </li>
                     <li t-if="uid" t-att-class="queue_type == 'offensive' and 'active' or None ">
-                        <a data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
+                        <a role="menuitem" data-type='offensive' t-attf-href="/forum/#{slug(forum)}/offensive_posts">Offensive</a>
                     </li>
                 </ul>
             </span>

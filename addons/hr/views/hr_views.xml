@@ -580,17 +580,17 @@
                                     </div>
                                 </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                     <div class="row">
-                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
+                                        <div role="menuitem" class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
                                             <div class="o_kanban_card_manage_title">
                                                 <span>To Do</span>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_approve">
+                                        <div role="menuitem" class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_approve">
                                             <div class="o_kanban_card_manage_title">
                                                 <span>To Approve</span>
                                             </div>
                                         </div>
-                                        <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div role="menuitem" class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
                                             <div class="o_kanban_card_manage_title">
                                                 <span>Reporting</span>
                                             </div>
@@ -598,11 +598,11 @@
                                     </div>
 
                                     <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                        <div class="col-xs-8">
-                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        <div role="menuitem" aria-haspopup="true" class="col-xs-8">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                         </div>
                                         <div class="col-xs-4 text-right">
-                                            <a type="edit">Settings</a>
+                                            <a role="menuitem" type="edit">Settings</a>
                                         </div>
                                     </div>
                                 </div>

@@ -294,9 +294,9 @@
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
+                                    <li><a role="menuitem" name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li role="menuitem" aira-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content">

@@ -318,10 +318,10 @@
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li t-if="widget.editable">
-                                                    <a type="edit">Edit</a>
+                                                    <a role="menuitem" type="edit">Edit</a>
                                                 </li>
                                                 <li t-if="widget.deletable">
-                                                    <a type="delete">Delete</a>
+                                                    <a role="menuitem" type="delete">Delete</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -570,9 +570,9 @@
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <li><a role="menuitem" type="delete">Delete</a></li>
                                         </t>
                                     </ul>
                                 </div>
@@ -925,14 +925,14 @@
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <t t-if="widget.editable">
-                                            <li><a type="edit">Settings</a></li>
+                                            <li><a role="menuitem" type="edit">Settings</a></li>
                                         </t>
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <li><a role="menuitem" type="delete">Delete</a></li>
                                         </t>
-                                        <li class="divider"/>
-                                        <li class="dropdown-header">Colour</li>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <li role="separator" class="divider"/>
+                                        <li role="separator" class="dropdown-header">Colour</li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" role="menu" data-field="color"/></li>
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">

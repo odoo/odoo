@@ -327,15 +327,15 @@
                                     </div>
                                     <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager" role="menu">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div>
+                                            <div role="menuitem">
                                                 <a type="edit">Edit</a>
                                             </div>
-                                            <div t-if="record.rating_status.raw_value != 'no'">
+                                            <div role="menuitem" t-if="record.rating_status.raw_value != 'no'">
                                                 <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
-                                        <div class="o_no_padding_kanban_colorpicker">
-                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                         </div>
                                     </div>
                                     <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" aria-label="Manage" title="Manage"/></a>
@@ -556,13 +556,13 @@
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
                                         <ul class="dropdown-menu" role="menu">
-                                            <li t-if="widget.editable"><a type="set_cover">Set Cover Image</a></li>
-                                            <li t-if="widget.editable"><a type="edit">Edit Task</a></li>
-                                            <li t-if="widget.deletable"><a type="delete">Delete</a></li>
-                                            <li class="divider"></li>
-                                            <li class="dropdown-header">Record's Colour</li>
-                                            <li>
-                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            <li t-if="widget.editable"><a role="menuitem" type="set_cover">Set Cover Image</a></li>
+                                            <li t-if="widget.editable"><a role="menuitem" type="edit">Edit Task</a></li>
+                                            <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li role="separator" class="dropdown-header">Record's Colour</li>
+                                            <li role="menuitem" aria-haspopup="true">
+                                                <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                             </li>
                                         </ul>
                                     </div>

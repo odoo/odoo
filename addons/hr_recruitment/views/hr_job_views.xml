@@ -68,14 +68,14 @@
                                 </t>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-xs-8">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    <div class="col-xs-8" role="menuitem" aria-haspopup="true">
+                                        <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                     </div>
                                     <div class="col-xs-4">
-                                        <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
-                                        <a t-if="record.state.raw_value == 'open'" name="set_recruit" type="object">Start recruitment</a>
-                                        <br/>
-                                        <a name="edit_job" type="edit">Edit</a>
+                                        <a role="menuitem" t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
+                                        <a role="menuitem" t-if="record.state.raw_value == 'open'" name="set_recruit" type="object">Start recruitment</a>
+                                        <br role="separator"/>
+                                        <a role="menuitem" name="edit_job" type="edit">Edit</a>
                                     </div>
                                 </div>
                             </div>

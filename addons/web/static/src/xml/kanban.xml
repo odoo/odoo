@@ -17,10 +17,10 @@
                 <span class="o_kanban_config dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear" aria-label="Settings" title="Settings"/></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                        <li><a role="menuitem" class="o_kanban_toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.grouped_by_m2o">
-                            <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
-                            <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                            <li t-if="widget.editable and widget.id"><a role="menuitem" class="o_column_edit" href="#">Edit Stage</a></li>
+                            <li t-if="widget.deletable and widget.id"><a role="menuitem" class="o_column_delete" href="#">Delete</a></li>
                         </t>
                         <t t-if="widget.has_active_field">
                             <li><a class="o_column_archive_records" href="#">Archive All</a></li>

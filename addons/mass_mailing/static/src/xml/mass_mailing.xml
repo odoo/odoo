@@ -6,14 +6,14 @@
         </a>
         <div class="dropdown-menu" role="menu">
             <li t-foreach="themes" t-as="theme">
-                <a href="#">
+                <a role="menuitem" href="#">
                     <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
                     <div class="o_thumb large" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
                     <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
                 </a>
             </li>
             <li t-if="themes.length === 1" class="o_mass_mailing_themes_upgrade">
-                <a href="#">
+                <a role="menuitem" href="#">
                     <div class="o_thumb"><i class="fa fa-plus" aria-label="Upgrade theme" title="Upgrade theme"/></div>
                 </a>
             </li>

@@ -7,12 +7,12 @@
                 <i class="fa fa-comments" aria-label="Messages"/> <span class="o_notification_counter badge"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
-                <li t-if="widget.isMobile">
+                <li role="menuitem" t-if="widget.isMobile">
                     <div class="o_mail_navbar_mobile_header">
                         <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
                     </div>
                 </li>
-                <li t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
+                <li role="menuitem" t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
                     <div>
                         <button type="button" class="btn btn-sm btn-link o_filter_button active"> All </button>
                         <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='chat'> Chat </button>
@@ -20,8 +20,8 @@
                     </div>
                     <button type="button" class="btn btn-sm btn-link o_new_message"> New message </button>
                 </li>
-                <li class="o_mail_navbar_dropdown_channels"/>
-                <li t-if="widget.isMobile">
+                <li role="menuitem" class="o_mail_navbar_dropdown_channels"/>
+                <li role="menuitem" t-if="widget.isMobile">
                     <div class="o_mail_mobile_tabs">
                         <div class="o_mail_mobile_tab o_filter_button active">
                             <span class="o_tab_title fa fa-envelope">All</span>
@@ -85,7 +85,7 @@
                 <i class="fa fa-clock-o" aria-label="Activities"/> <span class="o_notification_counter badge"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
-                <li class="o_mail_navbar_dropdown_channels"/>
+                <li role="menuitem" class="o_mail_navbar_dropdown_channels"/>
             </ul>
         </li>
     </t>
