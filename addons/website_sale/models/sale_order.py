@@ -30,11 +30,11 @@ class SaleOrder(models.Model):
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
 
-    @api.depends('state', 'payment_tx_id', 'payment_tx_id.state',
-                 'payment_acquirer_id', 'payment_acquirer_id.provider')
+    @api.depends('state', 'transaction_ids')
     def _compute_can_directly_mark_as_paid(self):
         for order in self:
-            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and order.payment_tx_id and order.payment_acquirer_id.provider in ['transfer', 'manual']
+            transaction = order.get_portal_last_transaction()
+            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and transaction and transaction.acquirer_id.provider in ['transfer', 'manual']
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')

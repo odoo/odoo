@@ -125,31 +125,14 @@ class PaymentTransactionPayumoney(models.Model):
     @api.multi
     def _payumoney_form_validate(self, data):
         status = data.get('status')
-        transaction_status = {
-            'success': {
-                'state': 'done',
-                'acquirer_reference': data.get('payuMoneyId'),
-                'date_validate': fields.Datetime.now(),
-            },
-            'pending': {
-                'state': 'pending',
-                'acquirer_reference': data.get('payuMoneyId'),
-                'date_validate': fields.Datetime.now(),
-            },
-            'failure': {
-                'state': 'cancel',
-                'acquirer_reference': data.get('payuMoneyId'),
-                'date_validate': fields.Datetime.now(),
-            },
-            'error': {
-                'state': 'error',
-                'state_message': data.get('error_Message') or _('PayUmoney: feedback error'),
-                'acquirer_reference': data.get('payuMoneyId'),
-                'date_validate': fields.Datetime.now(),
-            }
-        }
-        vals = transaction_status.get(status, False)
-        if not vals:
-            vals = transaction_status['error']
-            _logger.info(vals['state_message'])
-        return self.write(vals)
+        result = self.write({
+            'acquirer_reference': data.get('payuMoneyId'),
+            'date': fields.Datetime.now(),
+        })
+        if status == 'success':
+            self._set_transaction_done()
+        elif status != 'pending':
+            self._set_transaction_cancel()
+        else:
+            self._set_transaction_pending()
+        return result

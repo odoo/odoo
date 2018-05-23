@@ -13,6 +13,7 @@
         'data/payment_acquirer_data.xml',
         'views/payment_views.xml',
         'views/account_payment_views.xml',
+        'views/account_invoice_views.xml',
         'views/payment_templates.xml',
         'views/payment_portal_templates.xml',
         'views/assets.xml',
