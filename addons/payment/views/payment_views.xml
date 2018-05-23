@@ -20,6 +20,7 @@
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
+                        <field name="inbound_payment_method_ids" invisible="1"/>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
                             <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
                             <button name="toggle_environment_value"
@@ -81,7 +82,7 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
-                                    <field name="journal_id" context="{'default_type': 'bank'}" required="1"/>
+                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
                                     <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
@@ -215,16 +216,25 @@
             <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <form string="Payment Transactions">
+                <form string="Payment Transactions" create="false" edit="false">
                     <header>
                         <button type="object" name="action_capture" states="authorized" string="Capture Transaction" class="oe_highlight"/>
-                        <button type="object" name="action_void" states="authorized" string="Void Transaction"/>
-                        <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                        <button type="object" name="action_void" states="authorized" string="Void Transaction"
+                                confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_invoices" type="object"
+                                    class="oe_stat_button" icon="fa-money"
+                                    attrs="{'invisible': [('invoice_ids_nbr', '=', 0)]}">
+                                <field name="invoice_ids_nbr" widget="statinfo" string="Invoice(s)"/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="reference"/>
+                                <field name="payment_id"/>
                                 <label for="amount"/>
                                 <div class="o_row">
                                     <field name="amount"/>
@@ -250,8 +260,7 @@
                                 <field name="provider" invisible="1"/>
                                 <field name="payment_token_id" options="{'no_create': True}"/>
                                 <field name="acquirer_reference" readonly="1"/>
-                                <field name="create_date"/>
-                                <field name="date_validate"/>
+                                <field name="date"/>
                             </group>
                         </group>
                         <group string="Message">
@@ -266,7 +275,7 @@
             <field name="name">payment.transaction.list</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <tree string="Payment Transactions">
+                <tree string="Payment Transactions" create="false">
                     <field name="reference"/>
                     <field name="create_date"/>
                     <field name="acquirer_id"/>
@@ -290,9 +299,6 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <strong><field name="reference"/></strong>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right"><field name="create_date"/></span>
                                     </div>
                                     <div class="col-xs-6">
                                         <span><field name="partner_name"/></span>

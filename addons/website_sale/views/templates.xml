@@ -1471,7 +1471,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.payment_acquirer_id.name" />
+                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong>Total:</strong>
@@ -1560,34 +1560,32 @@
 
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
+            <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <div t-att-class="'panel %s' % (
-                    (order.payment_tx_id.state == 'pending' and 'panel-info') or
-                    (order.payment_tx_id.state == 'done' and 'panel-success') or
-                    (order.payment_tx_id.state == 'authorized' and 'panel-success') or
+                    (payment_tx_id.state == 'pending' and 'panel-info') or
+                    (payment_tx_id.state == 'done' and 'panel-success') or
+                    (payment_tx_id.state == 'authorized' and 'panel-success') or
                     'panel-danger')">
                 <a groups="base.group_system" class="btn pull-right" target="_blank"
-                        t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
+                        t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-pencil"></i>
                 </a>
                 <div class="panel-heading">
-                    <t t-if="order.payment_tx_id.state == 'pending'">
-                        <t t-raw="order.payment_acquirer_id.pending_msg"/>
+                    <t t-if="payment_tx_id.state == 'pending'">
+                        <t t-raw="payment_tx_id.acquirer_id.pending_msg"/>
                     </t>
-                    <t t-if="order.payment_tx_id.state == 'done'">
-                        <t t-raw="order.payment_acquirer_id.done_msg"/>
+                    <t t-if="payment_tx_id.state == 'done'">
+                        <t t-raw="payment_tx_id.acquirer_id.done_msg"/>
                     </t>
-                    <t t-if="order.payment_tx_id.state == 'cancel'">
-                        <t t-raw="order.payment_acquirer_id.cancel_msg"/>
+                    <t t-if="payment_tx_id.state == 'cancel'">
+                        <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
                     </t>
-                    <t t-if="order.payment_tx_id.state == 'error'">
-                        <t t-raw="order.payment_acquirer_id.error_msg"/>
-                    </t>
-                    <t t-if="order.payment_tx_id.state == 'authorized'">
+                    <t t-if="payment_tx_id.state == 'authorized'">
                         Your payment has been authorized.
                     </t>
                 </div>
-                <div class="panel-body" t-if="order.payment_acquirer_id.post_msg">
-                    <t t-raw="order.payment_acquirer_id.post_msg" />
+                <div class="panel-body" t-if="payment_tx_id.acquirer_id.post_msg">
+                    <t t-raw="payment_tx_id.acquirer_id.post_msg" />
                 </div>
             </div>
         </div>

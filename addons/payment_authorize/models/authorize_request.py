@@ -277,7 +277,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfile")
         etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
         order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
+        etree.SubElement(order, "invoiceNumber").text = reference[:20]
         response = self._authorize_request(root)
         res = dict()
         (has_error, error_msg) = error_check(response)
@@ -312,7 +312,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfile")
         etree.SubElement(payment_profile, "paymentProfileId").text = token.acquirer_ref
         order = etree.SubElement(tx, "order")
-        etree.SubElement(order, "invoiceNumber").text = reference
+        etree.SubElement(order, "invoiceNumber").text = reference[:20]
         response = self._authorize_request(root)
         res = dict()
         (has_error, error_msg) = error_check(response)

@@ -2,13 +2,16 @@
 import hashlib
 import hmac
 import logging
-import datetime
+from datetime import datetime
 import pprint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
 from odoo.addons.base.models import ir_module
 from odoo.exceptions import ValidationError
+from odoo import api, SUPERUSER_ID
+from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
 
@@ -19,6 +22,11 @@ def _partner_format_address(address1=False, address2=False):
 
 def _partner_split_name(partner_name):
     return [' '.join(partner_name.split()[:-1]), ' '.join(partner_name.split()[-1:])]
+
+
+def create_missing_journal_for_acquirers(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['payment.acquirer']._create_missing_journal_for_acquirers()
 
 
 class PaymentAcquirer(models.Model):
@@ -52,6 +60,9 @@ class PaymentAcquirer(models.Model):
     _description = 'Payment Acquirer'
     _order = 'website_published desc, sequence, name'
 
+    def _get_default_view_template_id(self):
+        return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
+
     name = fields.Char('Name', required=True, translate=True)
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
@@ -62,7 +73,7 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', required=True)
+        'ir.ui.view', 'Form Button Template', default=_get_default_view_template_id, required=True)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
@@ -79,7 +90,6 @@ class PaymentAcquirer(models.Model):
     # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain=[('type', 'in', ['bank', 'cash'])],
-        default=lambda self: self.env['account.journal'].search([('type', 'in', ['bank', 'cash'])], limit=1),
         help="""Payments will be registered into this journal. If you get paid straight on your bank account,
                 select your bank account. If you get paid in batch for several transactions, create a specific
                 payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
@@ -156,6 +166,16 @@ class PaymentAcquirer(models.Model):
         ('s2s','Payment from Odoo')],
         default='form', required=True, string='Payment Flow',
         help="""Note: Subscriptions does not take this field in account, it uses server to server by default.""")
+    inbound_payment_method_ids = fields.Many2many('account.payment.method', related='journal_id.inbound_payment_method_ids')
+
+    @api.onchange('payment_flow')
+    def _onchange_payment_flow(self):
+        electronic = self.env.ref('payment.account_payment_method_electronic_in')
+        if self.token_implemented and self.payment_flow == 's2s':
+            if electronic not in self.inbound_payment_method_ids:
+                self.inbound_payment_method_ids = [(4, electronic.id)]
+        elif electronic in self.inbound_payment_method_ids:
+            self.inbound_payment_method_ids = [(2, electronic.id)]
 
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
@@ -197,6 +217,58 @@ class PaymentAcquirer(models.Model):
         """
         return dict(authorize=[], tokenize=[], fees=[])
 
+    @api.multi
+    def _prepare_account_journal_vals(self):
+        '''Prepare the values to create the acquirer's journal.
+        :return: a dictionary to create a account.journal record.
+        '''
+        self.ensure_one()
+        account_vals = self.env['wizard.multi.charts.accounts']._prepare_transfer_account(self.name, self.company_id)
+        account = self.env['account.account'].create(account_vals)
+        inbound_payment_method_ids = []
+        if self.token_implemented and self.payment_flow == 's2s':
+            inbound_payment_method_ids.append((4, self.env.ref('payment.account_payment_method_electronic_in').id))
+        return {
+            'name': self.name,
+            'code': self.name.upper(),
+            'sequence': 999,
+            'type': 'bank',
+            'company_id': self.company_id.id,
+            'default_debit_account_id': account.id,
+            'default_credit_account_id': account.id,
+            # Show the journal on dashboard if the acquirer is published on the website.
+            'show_on_dashboard': self.website_published,
+            # Don't show payment methods in the backend.
+            'inbound_payment_method_ids': inbound_payment_method_ids,
+            'outbound_payment_method_ids': [],
+        }
+
+    @api.model
+    def _create_missing_journal_for_acquirers(self):
+        '''Create the journal for active acquirers.
+        We want one journal per acquirer. However, we can't create them during the 'create' of the payment.acquirer
+        because every acquirers are defined on the 'payment' module but is active only when installing their own module
+        (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
+        is already installed.
+        '''
+        # Search for installed acquirers modules.
+        # If this method is triggered by a post_init_hook, the module is 'to install'.
+        # If the trigger comes from the chart template wizard, the modules are already installed.
+        acquirer_modules = self.env['ir.module.module'].search(
+            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
+        acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
+
+        # Search for acquirers having no journal
+        company = self.env.user.company_id
+        acquirers = self.env['payment.acquirer'].search(
+            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+
+        journals = self.env['account.journal']
+        for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
+            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
+            journals += acquirer.journal_id
+        return journals
+
     @api.model
     def create(self, vals):
         image_resize_images(vals)
@@ -209,7 +281,13 @@ class PaymentAcquirer(models.Model):
 
     @api.multi
     def toggle_website_published(self):
-        self.write({'website_published': not self.website_published})
+        ''' When clicking on the website publish toggle button, the website_published is reversed and
+        the acquirer journal is set or not in favorite on the dashboard.
+        '''
+        self.ensure_one()
+        self.website_published = not self.website_published
+        if self.journal_id:
+            self.journal_id.show_on_dashboard = self.website_published
         return True
 
     @api.multi
@@ -473,39 +551,31 @@ class PaymentTransaction(models.Model):
     def _get_default_partner_country_id(self):
         return self.env['res.company']._company_default_get('payment.transaction').country_id.id
 
-    create_date = fields.Datetime('Creation Date', readonly=True)
-    date_validate = fields.Datetime('Validation Date')
-    acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer', required=True)
-    provider = fields.Selection(string='Provider', related='acquirer_id.provider')
+    date = fields.Datetime('Validation Date', readonly=True)
+    acquirer_id = fields.Many2one('payment.acquirer', string='Acquirer', readonly=True, required=True)
+    provider = fields.Selection(string='Provider', related='acquirer_id.provider', readonly=True)
     type = fields.Selection([
         ('validation', 'Validation of the bank card'),
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
         ('form_save', 'Form with tokenization')], 'Type',
-        default='form', required=True)
+        default='form', required=True, readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending'),
         ('authorized', 'Authorized'),
         ('done', 'Done'),
-        ('refunding', 'Refunding'),
-        ('refunded', 'Refunded'),
-        ('error', 'Error'),
-        ('cancel', 'Canceled')], 'Status',
-        copy=False, default='draft', required=True, track_visibility='onchange')
-    state_message = fields.Text('Message', help='Field used to store error and/or validation messages for information')
-    # payment
-    amount = fields.Float(
-        'Amount', digits=(16, 2), required=True, track_visibility='always',
-        help='Amount')
-    fees = fields.Float(
-        'Fees', digits=(16, 2), track_visibility='always',
-        help='Fees amount; set by the system because depends on the acquirer')
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True)
-    reference = fields.Char(
-        'Reference', default=lambda self: self.env['ir.sequence'].next_by_code('payment.transaction'),
-        required=True, help='Internal reference of the TX')
-    acquirer_reference = fields.Char('Acquirer Reference', help='Reference of the TX as stored in the acquirer database')
+        ('cancel', 'Canceled')],
+        string='Status', copy=False, default='draft', required=True, readonly=True)
+    state_message = fields.Text(string='Message', readonly=True,
+                                help='Field used to store error and/or validation messages for information')
+    amount = fields.Monetary(string='Amount', currency_field='currency_id', required=True, readonly=True)
+    fees = fields.Monetary(string='Fees', currency_field='currency_id', readonly=True,
+                           help='Fees amount; set by the system because depends on the acquirer')
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True)
+    reference = fields.Char(string='Reference', required=True, readonly=True,
+                            help='Internal reference of the TX')
+    acquirer_reference = fields.Char(string='Acquirer Reference', readonly=True, help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
     partner_id = fields.Many2one('res.partner', 'Customer', track_visibility='onchange')
     partner_name = fields.Char('Partner Name')
@@ -523,36 +593,225 @@ class PaymentTransaction(models.Model):
     callback_method = fields.Char('Callback Method', groups="base.group_system")
     callback_hash = fields.Char('Callback Hash', groups="base.group_system")
 
-    payment_token_id = fields.Many2one('payment.token', 'Payment Token', domain="[('acquirer_id', '=', acquirer_id)]")
+    # Fields used for payment.transaction traceability.
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        onchange_vals = self.on_change_partner_id(self.partner_id.id).get('value', {})
-        self.update(onchange_vals)
+    payment_token_id = fields.Many2one('payment.token', 'Payment Token', readonly=True,
+                                       domain="[('acquirer_id', '=', acquirer_id)]")
+
+    payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
+    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
+                                   string='Invoices', copy=False, readonly=True)
+    invoice_ids_nbr = fields.Integer(compute='_compute_invoice_ids_nbr', string='# of Invoices')
+
+    _sql_constraints = [
+        ('reference_uniq', 'unique(reference)', 'Reference must be unique!'),
+    ]
+
+    @api.depends('invoice_ids')
+    def _compute_invoice_ids_nbr(self):
+        for trans in self:
+            trans.invoice_ids_nbr = len(trans.invoice_ids)
 
     @api.multi
-    def on_change_partner_id(self, partner_id):
-        partner = None
-        if partner_id:
-            partner = self.env['res.partner'].browse(partner_id)
-            return {'value': {
-                'partner_name': partner and partner.name or False,
-                'partner_lang': partner and partner.lang or 'en_US',
-                'partner_email': partner and partner.email or False,
-                'partner_zip': partner and partner.zip or False,
-                'partner_address': _partner_format_address(partner and partner.street or '', partner and partner.street2 or ''),
-                'partner_city': partner and partner.city or False,
-                'partner_country_id': partner and partner.country_id.id or self._get_default_partner_country_id(),
-                'partner_phone': partner and partner.phone or False,
-            }}
-        return {}
+    def _prepare_account_payment_vals(self):
+        self.ensure_one()
+        return {
+            'amount': self.amount,
+            'payment_type': 'inbound' if self.amount > 0 else 'outbound',
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'partner_type': 'customer',
+            'invoice_ids': [(6, 0, self.invoice_ids.ids)],
+            'journal_id': self.acquirer_id.journal_id.id,
+            'company_id': self.acquirer_id.company_id.id,
+            'payment_method_id': self.env.ref('payment.account_payment_method_electronic_in').id,
+            'payment_token_id': self.payment_token_id and self.payment_token_id.id or None,
+            'payment_transaction_id': self.id,
+        }
 
-    @api.constrains('reference', 'state')
-    def _check_reference(self):
-        for transaction in self.filtered(lambda tx: tx.state not in ('cancel', 'error')):
-            if self.search_count([('reference', '=', transaction.reference)]) != 1:
-                raise exceptions.ValidationError(_('The payment transaction reference must be unique!'))
-        return True
+    @api.multi
+    def get_last_transaction(self):
+        transactions = self.filtered(lambda t: t.state != 'draft')
+        return transactions and transactions[0] or transactions
+
+    @api.multi
+    def _get_payment_transaction_sent_message(self):
+        self.ensure_one()
+        if self.payment_token_id:
+            message = _('A transaction %s with %s has been initiated using %s credit card.')
+            message_vals = (self.reference, self.acquirer_id.name, self.payment_token_id.name)
+        elif self.provider in ('manual', 'transfer'):
+            message = _('The customer has selected %s to pay this document.')
+            message_vals = (self.acquirer_id.name)
+        else:
+            message = _('A transaction %s with %s has been initiated.')
+            message_vals = (self.reference, self.acquirer_id.name)
+        if self.provider not in ('manual', 'transfer'):
+            message += ' ' + _('Waiting for payment confirmation...')
+        return message % message_vals
+
+    @api.multi
+    def _get_payment_transaction_received_message(self):
+        self.ensure_one()
+        amount = formatLang(self.env, self.amount, currency_obj=self.currency_id)
+        message_vals = [self.reference, self.acquirer_id.name, amount]
+        if self.state == 'pending':
+            message = _('The transaction %s with %s for %s is pending.')
+        elif self.state == 'authorized':
+            message = _('The transaction %s with %s for %s has been authorized. Waiting for capture...')
+        elif self.state == 'done':
+            message = _('The transaction %s with %s for %s has been confirmed. The related payment is posted: %s')
+            message_vals.append(self.payment_id._get_payment_chatter_link())
+        elif self.state == 'cancel' and self.state_message:
+            message = _('The transaction %s with %s for %s has been cancelled with the following message: %s')
+            message_vals.append(self.state_message)
+        else:
+            message = _('The transaction %s with %s for %s has been cancelled.')
+        return message % tuple(message_vals)
+
+    @api.multi
+    def _log_payment_transaction_sent(self):
+        '''Log the message saying the transaction has been sent to the remote server to be
+        processed by the acquirer.
+        '''
+        for trans in self:
+            post_message = trans._get_payment_transaction_sent_message()
+            for inv in trans.invoice_ids:
+                inv.message_post(body=post_message)
+
+    @api.multi
+    def _log_payment_transaction_received(self):
+        '''Log the message saying a response has been received from the remote server and some
+        additional informations like the old/new state, the reference of the payment... etc.
+        :param old_state:       The state of the transaction before the response.
+        :param add_messages:    Optional additional messages to log like the capture status.
+        '''
+        for trans in self.filtered(lambda t: t.provider not in ('manual', 'transfer')):
+            post_message = trans._get_payment_transaction_received_message()
+            for inv in trans.invoice_ids:
+                inv.message_post(body=post_message)
+
+    @api.multi
+    def _set_transaction_pending(self):
+        '''Move the transaction to the pending state(e.g. Wire Transfer).'''
+        if any(trans.state != 'draft' for trans in self):
+            raise ValidationError(_('Only draft transaction can be processed.'))
+
+        self.write({'state': 'pending', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._log_payment_transaction_received()
+
+    @api.multi
+    def _set_transaction_authorized(self):
+        '''Move the transaction to the authorized state(e.g. Authorize).'''
+        if any(trans.state != 'draft' for trans in self):
+            raise ValidationError(_('Only draft transaction can be authorized.'))
+
+        self.write({'state': 'authorized', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._log_payment_transaction_received()
+
+    @api.multi
+    def _set_transaction_done(self):
+        '''Move the transaction's payment to the done state(e.g. Paypal).'''
+        if any(trans.state not in ('draft', 'authorized') for trans in self):
+            raise ValidationError(_('Only draft/authorized transaction can be posted.'))
+
+        # Validate invoices automatically upon the transaction is posted.
+        invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
+        invoices.action_invoice_open()
+
+        # Create & Post the payments.
+        payments = self.env['account.payment']
+        for trans in self:
+            if trans.payment_id:
+                payments += trans.payment_id
+                continue
+
+            payment_vals = trans._prepare_account_payment_vals()
+            payment = payments.create(payment_vals)
+            payments += payment
+
+            # Track the payment to make a one2one.
+            trans.payment_id = payment
+        payments.post()
+
+        self.write({'state': 'done', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._log_payment_transaction_received()
+
+    @api.multi
+    def _set_transaction_cancel(self):
+        '''Move the transaction's payment to the cancel state(e.g. Paypal).'''
+        if any(trans.state not in ('draft', 'authorized') for trans in self):
+            raise ValidationError(_('Only draft/authorized transaction can be cancelled.'))
+
+        # Cancel the existing payments.
+        self.mapped('payment_id').cancel()
+
+        self.write({'state': 'cancel', 'date': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
+        self._log_payment_transaction_received()
+
+    @api.model
+    def _compute_reference_prefix(self, values):
+        if values and values.get('invoice_ids'):
+            many_list = self.resolve_2many_commands('invoice_ids', values['invoice_ids'], fields=['number'])
+            return ','.join(dic['number'] for dic in many_list)
+        return None
+
+    @api.model
+    def _compute_reference(self, values=None, prefix=None):
+        '''Compute a unique reference for the transaction.
+        If prefix:
+            prefix-\d+
+        If some invoices:
+            <inv_number_0>.number,<inv_number_1>,...,<inv_number_n>-x
+        If some sale orders:
+            <so_name_0>.number,<so_name_1>,...,<so_name_n>-x
+        Else:
+            tx-\d+
+        :param values: values used to create a new transaction.
+        :param prefix: custom transaction prefix.
+        :return: A unique reference for the transaction.
+        '''
+        if not prefix:
+            if values:
+                prefix = self._compute_reference_prefix(values)
+            else:
+                prefix = 'tx'
+
+        # Fetch the last reference
+        # E.g. If the last reference is SO42-5, this query will return '-5'
+        self._cr.execute('''
+                SELECT CAST(SUBSTRING(reference FROM '-\d+') AS INTEGER) AS suffix
+                FROM payment_transaction WHERE reference LIKE %s ORDER BY suffix
+            ''', [prefix + '%'])
+        query_res = self._cr.fetchone()
+
+        if query_res:
+            # Increment the last reference by one
+            suffix = '%s' % (-query_res[0] + 1)
+        else:
+            # Start a new indexing from 1
+            suffix = '1'
+
+        return '%s-%s' % (prefix, suffix)
+
+    @api.multi
+    def action_view_invoices(self):
+        action = {
+            'name': _('Invoices'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.invoice',
+            'target': 'current',
+        }
+        invoice_ids = self.invoice_ids.ids
+        if len(invoice_ids) == 1:
+            invoice = invoice_ids[0]
+            action['res_id'] = invoice.id
+            action['view_mode'] = 'form'
+            action['views'] = [(self.env.ref('account.invoice_form').id, 'form')]
+        else:
+            action['view_mode'] = 'tree,form'
+            action['domain'] = [('id', 'in', invoice_ids)]
+        return action
 
     @api.constrains('state', 'acquirer_id')
     def _check_authorize_state(self):
@@ -562,29 +821,38 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def create(self, values):
-        if values.get('partner_id'):  # @TDENOTE: not sure
-            values.update(self.on_change_partner_id(values['partner_id'])['value'])
-
         # call custom create method if defined (i.e. ogone_create for ogone)
-        if values.get('acquirer_id'):
-            acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+        acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+        partner = self.env['res.partner'].browse(values['partner_id'])
 
-            # compute fees
-            custom_method_name = '%s_compute_fees' % acquirer.provider
-            if hasattr(acquirer, custom_method_name):
-                fees = getattr(acquirer, custom_method_name)(
-                    values.get('amount', 0.0), values.get('currency_id'), values.get('partner_country_id'))
-                values['fees'] = float_round(fees, 2)
+        values.update({
+            'partner_name': partner.name,
+            'partner_lang': partner.lang or 'en_US',
+            'partner_email': partner.email,
+            'partner_zip': partner.zip,
+            'partner_address': _partner_format_address(partner.street or '', partner.street2 or ''),
+            'partner_city': partner.city,
+            'partner_country_id': partner.country_id.id or self._get_default_partner_country_id(),
+            'partner_phone': partner.phone,
+        })
 
-            # custom create
-            custom_method_name = '%s_create' % acquirer.provider
-            if hasattr(acquirer, custom_method_name):
-                values.update(getattr(self, custom_method_name)(values))
+        # compute fees
+        custom_method_name = '%s_compute_fees' % acquirer.provider
+        if hasattr(acquirer, custom_method_name):
+            fees = getattr(acquirer, custom_method_name)(
+                values.get('amount', 0.0), values.get('currency_id'), partner.country_id.id)
+            values['fees'] = fees
+
+        # custom create
+        custom_method_name = '%s_create' % acquirer.provider
+        if hasattr(acquirer, custom_method_name):
+            values.update(getattr(self, custom_method_name)(values))
+
+        if not values.get('reference'):
+            values['reference'] = self._compute_reference(values=values)
 
         # Default value of reference is
         tx = super(PaymentTransaction, self).create(values)
-        if not values.get('reference'):
-            tx.write({'reference': str(tx.id)})
 
         # Generate callback hash if it is configured on the tx; avoid generating unnecessary stuff
         # (limited sudo env for checking callback presence, must work for manual transactions too)
@@ -593,38 +861,6 @@ class PaymentTransaction(models.Model):
             tx.write({'callback_hash': tx._generate_callback_hash()})
 
         return tx
-
-    @api.multi
-    def write(self, values):
-        if ('acquirer_id' in values or 'amount' in values) and 'fees' not in values:
-            # The acquirer or the amount has changed, and the fees are not explicitly forced. Fees must be recomputed.
-            acquirer = None
-            if values.get('acquirer_id'):
-                acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
-            for tx in self:
-                vals = dict(values, fees=0.0)
-                if not acquirer:
-                    acquirer = tx.acquirer_id
-                custom_method_name = '%s_compute_fees' % acquirer.provider
-                # TDE FIXME: shouldn't we use fee_implemented ?
-                if hasattr(acquirer, custom_method_name):
-                    fees = getattr(acquirer, custom_method_name)(
-                        (values['amount'] if 'amount' in values else tx.amount) or 0.0,
-                        values.get('currency_id') or tx.currency_id.id,
-                        values.get('partner_country_id') or tx.partner_country_id.id)
-                    vals['fees'] = float_round(fees, 2)
-                res = super(PaymentTransaction, tx).write(vals)
-            return res
-        return super(PaymentTransaction, self).write(values)
-
-    @api.model
-    def get_next_reference(self, reference):
-        ref_suffix = 1
-        init_ref = reference
-        while self.env['payment.transaction'].sudo().search_count([('reference', '=', reference)]):
-            reference = init_ref + 'x' + str(ref_suffix)
-            ref_suffix += 1
-        return reference
 
     def _generate_callback_hash(self):
         self.ensure_one()
@@ -637,27 +873,6 @@ class PaymentTransaction(models.Model):
     # --------------------------------------------------
     # FORM RELATED METHODS
     # --------------------------------------------------
-
-    @api.multi
-    def render(self):
-        values = {
-            'reference': self.reference,
-            'amount': self.amount,
-            'currency_id': self.currency_id.id,
-            'currency': self.currency_id,
-            'partner': self.partner_id,
-            'partner_name': self.partner_name,
-            'partner_lang': self.partner_lang,
-            'partner_email': self.partner_email,
-            'partner_zip': self.partner_zip,
-            'partner_address': self.partner_address,
-            'partner_city': self.partner_city,
-            'partner_country_id': self.partner_country_id.id,
-            'partner_country': self.partner_country_id,
-            'partner_phone': self.partner_phone,
-            'partner_state': None,
-        }
-        return self.acquirer_id.render(None, None, None, values=values)
 
     @api.model
     def form_feedback(self, data, acquirer_name):
@@ -697,8 +912,10 @@ class PaymentTransaction(models.Model):
     @api.multi
     def s2s_do_transaction(self, **kwargs):
         custom_method_name = '%s_s2s_do_transaction' % self.acquirer_id.provider
-        if hasattr(self, custom_method_name):
-            return getattr(self, custom_method_name)(**kwargs)
+        for trans in self:
+            trans._log_payment_transaction_sent()
+            if hasattr(trans, custom_method_name):
+                return getattr(trans, custom_method_name)(**kwargs)
 
     @api.multi
     def s2s_do_refund(self, **kwargs):
@@ -750,15 +967,15 @@ class PaymentTransaction(models.Model):
 
     @api.multi
     def action_capture(self):
-        if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError(_('Only transactions in the Authorized status can be captured.'))
+        if any([t.state != 'authorized' for t in self]):
+            raise ValidationError(_('Only transactions having the capture status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     @api.multi
     def action_void(self):
-        if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError(_('Only transactions in the Authorized status can be voided.'))
+        if any([t.state != 'authorized' for t in self]):
+            raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()
 
@@ -838,7 +1055,7 @@ class PaymentToken(models.Model):
             _logger.error("Error 'EUR' currency not found for payment method validation!")
             return False
 
-        reference = "VALIDATION-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
+        reference = "VALIDATION-%s-%s" % (self.id, datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].sudo().create({
             'amount': amount,
             'acquirer_id': self.acquirer_id.id,

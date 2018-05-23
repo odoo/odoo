@@ -206,7 +206,19 @@
     <!-- Configuration sub-menus -->
     <menuitem id="menu_ecommerce_payment_acquirers"
         action="payment.action_payment_acquirer"
-        parent="menu_ecommerce_settings" name="Payment Acquirers" />
+        parent="menu_ecommerce_settings" name="Payment Acquirers"/>
+    <menuitem id="menu_ecommerce_payment_tokens"
+        action="payment.payment_token_action"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
+    <menuitem id="menu_ecommerce_payment_icons"
+        action="payment.action_payment_icon"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
+    <menuitem id="menu_ecommerce_payment_transactions"
+        action="payment.action_payment_transaction"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
     <menuitem id="menu_catalog_categories"
         action="product_public_category_action"
         parent="menu_product_settings" sequence="1"/>
