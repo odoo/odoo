@@ -160,7 +160,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     update: function (tour_name) {
         if (this.paused) return;
 
-        this.$modal_displayed = $('.modal:visible').last();
+        this.$modal_displayed = $('[role="dialog"]:visible').last();
 
         tour_name = this.running_tour || tour_name;
         if (tour_name) {

@@ -216,7 +216,7 @@ var ColumnQuickCreate = Widget.extend({
         }
 
         // ignore clicks in modals
-        if ($(event.target).closest('.modal').length) {
+        if ($(event.target).closest('[role="dialog"]').length) {
             return;
         }
 

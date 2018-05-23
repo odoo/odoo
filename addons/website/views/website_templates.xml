@@ -402,12 +402,12 @@
     - 'loading': on the container/modal when the new css is loading
 -->
 <template id="website.theme_customize" name="Theme Modal for Customization">
-  <div id="theme_customize_modal" class="modal fade">
+  <div role="dialog" id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header text-center">
+            <header class="modal-header text-center">
                 <h4 class="modal-title">Please install a theme in order to customize your website.</h4>
-            </div>
+            </header>
           </div>
       </div>
   </div>
@@ -739,15 +739,15 @@
             </script>
         </head>
         <body>
-            <div id="reset_template_confirmation" class="modal" tabindex="-1" role="dialog" aria-hidden="true" t-ignore="true">
+            <div role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" aria-hidden="true" t-ignore="true">
                 <div class="modal-dialog">
                     <form class="form-horizontal" role="form">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <header class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             <h3 class="modal-title">Reset templates</h3>
-                        </div>
-                        <div class="modal-body">
+                        </header>
+                        <main class="modal-body">
                             <div class="form-group mb0">
                                 <label for="page-name" class="col-sm-9">
                                     <p>The selected templates will be reset to their factory settings.</p>
@@ -757,11 +757,11 @@
                                     <input type="text" class="form-control" required="required" placeholder="yes"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <input type="submit" value="Confirm" class="btn btn-primary"/>
                             <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
-                        </div>
+                        </footer>
                     </div>
                     </form>
                 </div>

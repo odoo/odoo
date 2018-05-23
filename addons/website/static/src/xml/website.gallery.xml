@@ -43,14 +43,14 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow.lightbox">
-        <div class="modal o_technical_modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
+        <div role="dialog" class="modal o_technical_modal fade" aria-labbelledby="Image Gallery Dialog">
             <div class="modal-dialog modal-lg" role="Picture Gallery"
                 t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ; height: #{dim.height}px ;">
                 <div class="modal-content">
-                    <div class="modal-body o_slideshow">
+                    <main class="modal-body o_slideshow">
                         <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 12px; top: 10px;"><span aria-label="Close">&amp;times;</span><span class="sr-only">Close</span></button>
                         <t t-call="website.gallery.slideshow"></t>
-                    </div>
+                    </main>
 
                 </div>
             </div>

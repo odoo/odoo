@@ -1,14 +1,14 @@
 <templates id="template" xml:space="preserve">
     <t t-name="website.social_modal">
-        <div class="modal fade" id="oe_social_share_modal">
+        <div role="dialog" class="modal fade" id="oe_social_share_modal">
             <div class="modal-dialog modal-content">
-                <div class="modal-header alert alert-info mb0" role="status">
+                <header class="modal-header alert alert-info mb0" role="status">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-label="Close">x</span>
                     </button>
                     <h4 class="modal-title">Thanks for posting!</h4>
-                </div>
-                <div class="modal-body">
+                </header>
+                <main class="modal-body">
                     <t t-if="target_type == 'question'" t-call="website_forum.social_message_question"/>
                     <t t-if="target_type == 'answer'" t-call="website_forum.social_message_answer"/>
                     <t t-if="target_type == 'default'" t-call="website_forum.social_message_default"/>
@@ -20,7 +20,7 @@
                             </a>
                         </t>
                     </div>
-                </div>
+                </main>
             </div>
         </div>
     </t>

@@ -300,15 +300,15 @@
                       </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
-                      <div class="modal fade" id="modalaccept" role="dialog" aria-hidden="true">
+                      <div role="dialog" class="modal fade" id="modalaccept" aria-hidden="true">
                         <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="modal-header">
+                            <header class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Validate Order</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <p>
                                     <span>I agree that by signing this proposal, I
                                     accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
@@ -322,16 +322,16 @@
                                     <t t-set="callUrl" t-value="'/my/quotes/accept'"/>
                                     <t t-set="accessToken" t-value="quotation.access_token"/>
                                 </t>
-                            </div>
+                            </main>
                           </form>
                         </div>
 
                         <div class="modal-dialog modal-content" t-if="quotation.require_payment or need_payment">
-                          <div class="modal-header">
+                          <header class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">Validate Order</h4>
-                          </div>
-                          <div class="modal-body" id="sign-dialog">
+                          </header>
+                          <main class="modal-body" id="sign-dialog">
                             <p>
                                 <span>I agree that by paying this proposal, I
                                 accept it on the behalf of </span><b t-field="quotation.partner_id.commercial_partner_id"/><span>, for an amount of </span>
@@ -339,8 +339,8 @@
                                   t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
                                 <span>with payment terms: </span><b t-field="quotation.payment_term_id"/>.
                             </p>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
                                 <h3 class="mb24">Pay with</h3>
                                 <t t-call="payment.payment_tokens_list">
@@ -352,28 +352,28 @@
                                     <t t-set="access_token" t-value="quotation.access_token"/>
                                 </t>
                             </div>
-                          </div>
+                          </footer>
                         </div>
                       </div>
 
-                      <div class="modal fade" id="modaldecline" role="dialog" aria-hidden="true">
+                      <div role="dialog" class="modal fade" id="modaldecline" aria-hidden="true">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <div class="modal-header">
+                            <header class="modal-header">
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                               <h4 class="modal-title">Reject This Quote</h4>
-                            </div>
-                            <div class="modal-body">
+                            </header>
+                            <main class="modal-body">
                               <p>
                                   Tell us why you are refusing this quotation, this will help us improve our services.
                               </p>
                               <textarea rows="4" name="decline_message" placeholder="Your feedback....." class="form-control"/>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button type="submit" t-att-id="quotation.id" class="btn btn-primary">Reject</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                           </form>
                         </div>
                       </div>

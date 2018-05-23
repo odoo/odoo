@@ -2,15 +2,15 @@
 <odoo>
     <template id="theme_customize" inherit_id="website.theme_customize">
         <xpath expr="div" position="replace">
-            <div id="theme_customize_modal" class="modal fade bs-example-modal-sm">
+            <div role="dialog" id="theme_customize_modal" class="modal fade bs-example-modal-sm">
                 <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="loading_backdrop"></div>
-                        <div class="modal-header">
+                        <header class="modal-header">
                             <button type="button" class="close">×</button>
                             <h4 class="modal-title">Customize your theme</h4>
-                        </div>
-                        <div class="modal-body">
+                        </header>
+                        <main class="modal-body">
                             <div class="row">
                                 <div class="col-xs-4 col-xs-offset-4">
                                     <label class="checked">
@@ -79,7 +79,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
+                        </main>
                     </div>
                 </div>
             </div>

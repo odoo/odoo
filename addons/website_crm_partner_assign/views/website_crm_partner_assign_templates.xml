@@ -113,13 +113,13 @@
     <xpath expr="//ul[@id='reseller_countries']" position="after">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
-            <div class="modal fade partner_map_modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <header class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h4 class="modal-title">World Map</h4>
-                    </div>
+                    </header>
                     <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
                 </div>
@@ -269,11 +269,11 @@
                 <div class="modal-dialog">
                     <form method="POST" class="modal-content js_website_submit_form new_opp_form">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <div class="modal-header">
+                        <header class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                             <h4 class="modal-title">New Opportunity</h4>
-                        </div>
-                        <div class="modal-body" id="new-opp-dialog">
+                        </header>
+                        <main class="modal-body" id="new-opp-dialog">
                             <div class="form-group">
                                 <label class="control-label hdd4" for="contact_name">Contact name</label>
                                 <input type='text' name="contact_name" class="form-control contact_name"/>
@@ -286,11 +286,11 @@
                                 <label class="control-label hdd4" for="description">Description</label>
                                 <textarea row="3" name="description" class="form-control description"></textarea>
                             </div>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button> or
                             <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
-                        </div>
+                        </footer>
                     </form>
                 </div>
             </div>
@@ -423,16 +423,16 @@
             <div>
               <a role="button" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_interested"><span class="fa fa-file-text-o"> I'm interested</span></a>
                   <a role="button" class="btn btn-primary btn" data-toggle="modal" data-target=".modal_partner_assign_desinterested"><span class="fa fa-fw fa-times"> I'm not interested</span></a>
-                <div class="modal fade modal_partner_assign_interested" role="form" aria-hidden="true">
+                <div role="dialog" class="modal fade modal_partner_assign_interested" aria-hidden="true">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form interested_partner_assign_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <div class="modal-header">
+                            <header class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                 <h4 class="modal-title">Lead Feedback</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
                                     <label class="control-label" for="comment">What is the next action? When? What is the expected revenue?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
@@ -444,24 +444,24 @@
                                 <div>
                                     <span class="text-danger error_partner_assign_interested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                         </form>
                     </div>
                 </div>
-                <div class="modal fade modal_partner_assign_desinterested" role="form" aria-hidden="true">
+                <div role="dialog" class="modal fade modal_partner_assign_desinterested" aria-hidden="true">
                     <div class="modal-dialog">
                         <form method="POST" class="js_accept_json modal-content js_website_submit_form desinterested_partner_assign_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                             <input type="hidden" name="lead_id" class="assign_lead_id" t-att-value="lead.id"/>
-                            <div class="modal-header">
+                            <header class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                 <h4 class="modal-title">Lead Feedback</h4>
-                            </div>
-                            <div class="modal-body" id="sign-dialog">
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
                                 <div class="form-group">
                                     <label class="control-label" for="comment">Why aren't you interested by this lead?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
@@ -477,11 +477,11 @@
                                 <div>
                                     <span class="text-danger error_partner_assign_desinterested" style="display:none;">You need to fill up the next action and contact the customer before accepting the lead</span>
                                 </div>
-                            </div>
-                            <div class="modal-footer">
+                            </main>
+                            <footer class="modal-footer">
                                 <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            </div>
+                            </footer>
                         </form>
                     </div>
                 </div>
@@ -537,16 +537,16 @@
                     <div class="col-md-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_contact" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Contact</button>
-                            <div class="modal fade modal_edit_contact" role="form" aria-hidden="true">
+                            <div role="dialog" class="modal fade modal_edit_contact" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_contact_form">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <div class="modal-header">
+                                        <header class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                             <h4 class="modal-title">Edit Contact</h4>
-                                        </div>
-                                        <div class="modal-body" id="sign-dialog">
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">
                                                 <div class="form-group">
                                                     <label class="control-label" for="partner_name">Customer Name</label>
@@ -608,11 +608,11 @@
                                                     </t>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
+                                        </main>
+                                        <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        </div>
+                                        </footer>
                                     </form>
                                 </div>
                             </div>
@@ -652,16 +652,16 @@
                     <div class="col-md-6">
                         <div>
                             <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-sm btn-primary" style="margin-bottom: 10px;">Edit Opportunity</button>
-                            <div class="modal fade modal_edit_opp" role="form" aria-hidden="true">
+                            <div role="dialog" class="modal fade modal_edit_opp" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <form method="POST" class="js_accept_json modal-content js_website_submit_form edit_opp_form">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                         <input type="hidden" name="opportunity_id" class="opportunity_id" t-att-value="opportunity.id"/>
-                                        <div class="modal-header">
+                                        <header class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                                             <h4 class="modal-title">Edit Opportunity</h4>
-                                        </div>
-                                        <div class="modal-body" id="sign-dialog">
+                                        </header>
+                                        <main class="modal-body" id="sign-dialog">
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-sm-6">
@@ -728,11 +728,11 @@
                                                     <span class="input-group-addon"><span class="fa fa-calendar" aria-label="Calendar" title="Calendar"></span></span>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
+                                        </main>
+                                        <footer class="modal-footer">
                                             <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        </div>
+                                        </footer>
                                     </form>
                                 </div>
                             </div>

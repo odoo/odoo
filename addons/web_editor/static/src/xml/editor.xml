@@ -122,20 +122,20 @@
         </form>
     </t>
     <t t-name="web_editor.dialog.image.existing">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal" tabindex="-1">
             <div class="modal-dialog select-image">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <header class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h3 class="modal-title">Select a Picture</h3>
-                    </div>
-                    <div class="modal-body has-error">
+                    </header>
+                    <main class="modal-body has-error">
                         <div class="existing-attachments"/>
                         <div class="help-block"/>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <a data-dismiss="modal" href="#" aria-label="Discard">Discard</a>
-                    </div>
+                    </footer>
                 </div>
             </div>
         </div>

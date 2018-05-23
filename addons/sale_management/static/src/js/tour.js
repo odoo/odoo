@@ -48,11 +48,14 @@ tour.register('sale_tour', {
     in_modal: false,
     run: function (actions) {
         actions.auto();
-        if ($(".modal-footer .btn-primary").length) {
-            actions.auto(".modal-footer .btn-primary");
+        if ($('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').length) {
+            $('.modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary').trigger('click');
         }
     },
     id: "quotation_product_selected",
+}, {
+    trigger: ".modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary",
+    position: "right",
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_sale_order",

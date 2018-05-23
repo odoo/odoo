@@ -1921,7 +1921,7 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 return;
             }
 
-            $('<button>', {
+            $('<span>', {
                 class: 'o_tag o_tag_color_' + (m2m.data[self.colorField] || 0),
                 text: m2m.data.display_name,
             })

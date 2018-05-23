@@ -180,7 +180,7 @@ tour.register('shop_customize', {
         {
             content: "click in modal on 'Proceed to checkout' button",
             extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-            trigger: '.modal-dialog a:contains("Proceed to Checkout")',
+            trigger: 'footer.modal-footer a:contains("Proceed to Checkout")',
         },
         {
             content: "check quantity",

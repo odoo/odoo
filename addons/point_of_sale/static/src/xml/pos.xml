@@ -973,7 +973,7 @@
 
 
     <t t-name="PopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-alert">
                 <p class="title"><t t-esc=" widget.options.title || 'Alert' " /></p>
                 <p class="body"><t t-esc=" widget.options.body || '' "/></p>
@@ -987,7 +987,7 @@
     </t>
 
     <t t-name="ErrorPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
                 <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
                 <p class="body"><t t-esc=" widget.options.body || '' "/></p>
@@ -1001,11 +1001,11 @@
     </t>
 
     <t t-name="ErrorTracebackPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-error">
-                <p class="title"><t t-esc=" widget.options.title || 'Error' " /></p>
-                <p class="body traceback"><t t-esc=" widget.options.body || '' "/></p>
-                <div class="footer">
+                <header class="title"><t t-esc=" widget.options.title || 'Error' " /></header>
+                <main class="body traceback"><t t-esc=" widget.options.body || '' "/></main>
+                <footer class="footer">
                     <div class="button cancel">
                         Ok
                     </div>
@@ -1018,52 +1018,52 @@
                     <div class="button icon email">
                         <i class="fa fa-paper-plane" aria-label="Send by email" title="Send by email"></i>
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="ErrorBarcodePopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-barcode">
-                <p class="title">Unknown Barcode
+                <header class="title">Unknown Barcode
                     <br />
                     <span class='barcode'><t t-esc="widget.options.barcode" /></span>
-                </p>
-                <p class="body">
+                </header>
+                <main class="body">
                     The Point of Sale could not find any product, client, employee
                     or action associated with the scanned barcode.
-                </p>
-                <div class="footer">
+                </main>
+                <footer class="footer">
                     <div class="button cancel">
                         Ok
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="ConfirmPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-confirm">
-                <p class="title"><t t-esc=" widget.options.title || 'Confirm ?' " /></p>
-                <p class="body"><t t-esc="  widget.options.body || '' "/></p>
-                <div class="footer">
+                <header class="title"><t t-esc=" widget.options.title || 'Confirm ?' " /></header>
+                <main class="body"><t t-esc="  widget.options.body || '' "/></main>
+                <footer class="footer">
                     <div class="button confirm">
                         Confirm 
                     </div>
                     <div class="button cancel">
                         Cancel 
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="TextInputPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
-                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
                 <input type='text' t-att-value="widget.options.value || ''"></input>
                 <div class="footer">
                     <div class="button confirm">
@@ -1078,10 +1078,10 @@
     </t>
 
     <t t-name="PackLotLinePopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-text">
-                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
-                <div class='packlot-lines'>
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
+                <main class='packlot-lines'>
                     <t t-if="widget.options.pack_lot_lines">
                         <t t-set="focus_lot_line" t-value="widget.focus_model || widget.options.pack_lot_lines.get_empty_model()"/>
                         <t t-foreach='widget.options.pack_lot_lines.models' t-as='lot_line'>
@@ -1093,40 +1093,40 @@
                             <i class="oe_link_icon remove-lot fa fa-trash-o" aria-label="Remove" title="Remove"></i>
                         </t>
                     </t>
-                </div>
-                <div class="footer">
+                </main>
+                <footer class="footer">
                     <div class="button confirm">
                         Ok
                     </div>
                     <div class="button cancel">
                         Cancel
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="TextAreaPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-textinput">
-                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <title class="title"><t t-esc=" widget.options.title || '' " /></title>
                 <textarea rows="10" cols="40"><t t-esc="widget.options.value" /></textarea>
-                <div class="footer">
+                <footer class="footer">
                     <div class="button confirm">
                         Ok 
                     </div>
                     <div class="button cancel">
                         Cancel 
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="SelectionPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-selection">
-                <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
+                <header class="title"><t t-esc=" widget.options.title || 'Select' " /></header>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
                         <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index'>
@@ -1134,19 +1134,19 @@
                         </div>
                     </t>
                 </div>
-                <div class="footer">
+                <footer class="footer">
                     <div class="button cancel">
                         Cancel 
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="NumberPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-number">
-                <p class="title"><t t-esc=" widget.options.title || '' " /></p>
+                <header class="title"><t t-esc=" widget.options.title || '' " /></header>
                 <div class='popup-input value active'>
                     <t t-esc='widget.inputbuffer' />
                 </div>
@@ -1186,22 +1186,22 @@
                     </button>
                     <br />
                 </div>
-                <div class="footer centered">
+                <footer class="footer centered">
                     <div class="button cancel">
                         Cancel 
                     </div>
                     <div class="button confirm">
                         Ok
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
 
     <t t-name="OrderImportPopupWidget">
-        <div class="modal-dialog">
+        <div role="dialog" class="modal-dialog">
             <div class="popup popup-import">
-                <p class="title">Finished Importing Orders</p>
+                <header class="title">Finished Importing Orders</header>
                 <t t-if="widget.options and widget.options.report">
                     <t t-set="report" t-value="widget.options.report" />
                     <t t-set="unpaid_skipped" t-value="(report.unpaid_skipped_existing || 0) + (report.unpaid_skipped_session || 0)" />
@@ -1225,11 +1225,11 @@
                         </t>
                     </ul>
                 </t>
-                <div class="footer">
+                <footer class="footer">
                     <div class="button cancel">
                         Ok
                     </div>
-                </div>
+                </footer>
             </div>
         </div>
     </t>
@@ -1262,7 +1262,7 @@
                 <t t-if="line.get_product().tracking!=='none'">
                     <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green" t-if="line.has_valid_product_lot()"
                        aria-label="Valid product lot" title="Valid product lot"/>
-                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="not line.has_valid_product_lot()"
+                    <i class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_red" t-if="not(line.has_valid_product_lot())"
                        aria-label="Invalid product lot" title="Invalid product lot"/>
                 </t>
             </span>

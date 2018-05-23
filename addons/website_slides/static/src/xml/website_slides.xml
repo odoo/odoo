@@ -1,17 +1,17 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="website.slide.upload">
-        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <header class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                         <h3 class="modal-title">Upload Presentation</h3>
-                    </div>
-                    <div class="oe_slides_upload_loading text-center" style="display:none">
+                    </header>
+                    <div class="oe_slides_upload_loading text-center" style="display:none" aria-hidden="true" role="status">
                         <h4><span class='fa fa-spinner fa-spin'> Uploading presentation...  </span></h4>
                     </div>
-                    <div class="modal-body">
+                    <main class="modal-body">
                         <form class="clearfix form-horizontal">
                             <div class="form-group">
                                 <div class="col-sm-4">
@@ -64,12 +64,12 @@
                             </div>
                             <canvas id="data_canvas" style="display: none;"></canvas>
                         </form>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <button type="button" data-loading-text="Loading..." class="btn btn-primary save">Save as Draft</button>
                         <button type="button" data-loading-text="Loading..." data-published="true" class="btn btn-primary save">Save and Publish</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
-                    </div>
+                    </footer>
                 </div>
             </div>
         </div>
