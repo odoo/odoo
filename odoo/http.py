@@ -1402,7 +1402,7 @@ class Root(object):
         else:
             response = result
 
-        save_session = request.endpoint.routing.get('save_session', True)
+        save_session = (not request.endpoint) or request.endpoint.routing.get('save_session', True)
         if not save_session:
             return response
 
