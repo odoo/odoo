@@ -70,6 +70,12 @@ class Location(models.Model):
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
+    @api.constrains('usage', 'scrap_location')
+    def _check_usage_scrap_location(self):
+        for location in self:
+            if self.env['stock.move.line'].search([('location_id', '=', location.id), ('state', 'in', ['waiting', 'confirmed', 'partially_available', 'assigned'])]):
+                raise UserError('You cannot change usage or scrap on a location having move lines not done.')
+
     @api.one
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
