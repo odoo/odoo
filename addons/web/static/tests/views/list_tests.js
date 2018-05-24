@@ -3235,7 +3235,7 @@ QUnit.module('Views', {
         });
 
         assert.verifySteps(['bar', 'res_currency'], "should have done 1 name_get by model in reference values");
-        assert.strictEqual(list.$('tbody td').text(), "Value 1USDEUREUR",
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').text(), "Value 1USDEUREUR",
             "should have the display_name of the reference");
         list.destroy();
     });

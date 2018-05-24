@@ -165,7 +165,7 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('div.o_field_one2many table').length, 1,
                         "should render a one2many relation");
 
-        assert.strictEqual(form.$('tbody td:not(.o_list_record_selector) .o_checkbox input:checked').length, 1,
+        assert.strictEqual(form.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 1,
                         "1 checkboxes should be checked");
 
         assert.strictEqual(form.get('title'), "second record",
@@ -2102,10 +2102,10 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$("label").length, 2, "should have rendered only two label");
-        assert.strictEqual(form.$("label").first().text(), "Product",
+        assert.strictEqual(form.$("label.o_form_label").length, 2, "should have rendered only two label");
+        assert.strictEqual(form.$("label.o_form_label").first().text(), "Product",
             "one should be the one for the product field");
-        assert.strictEqual(form.$("label").eq(1).text(), "Bar",
+        assert.strictEqual(form.$("label.o_form_label").eq(1).text(), "Bar",
             "one should be the one for the bar field");
 
         assert.strictEqual(form.$('.firstgroup td').first().attr('colspan'), undefined,
@@ -4265,9 +4265,9 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.$('.oe_button_box').children().length, 2,
             "button box should contain two children");
-        assert.strictEqual(form.$('.oe_button_box .oe_stat_button').length, 1,
+        assert.strictEqual(form.$('.oe_button_box > .oe_stat_button').length, 1,
             "button box should only contain one button");
-        assert.strictEqual(form.$('.oe_button_box label').length, 1,
+        assert.strictEqual(form.$('.oe_button_box > label').length, 1,
             "button box should only contain one label");
 
         form.destroy();
@@ -6547,7 +6547,7 @@ QUnit.module('Views', {
                 '</form>',
         });
 
-        assert.strictEqual(form.$el.text(), '{"foo":"My little Foo Value","bar":false}',
+        assert.strictEqual(form.$('.o_widget').text(), '{"foo":"My little Foo Value","bar":false}',
             "widget should have been instantiated");
 
         form.destroy();

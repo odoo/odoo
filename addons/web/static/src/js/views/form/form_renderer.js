@@ -902,7 +902,7 @@ var FormRenderer = BasicRenderer.extend({
             // enterprise label will be displayed as many times as the field
             // exists on settings.
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
-            var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
+            var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
             if (config.debug || widget.attrs.help || widget.field.help) {
                 self._addFieldTooltip(widget, $label);
@@ -922,7 +922,7 @@ var FormRenderer = BasicRenderer.extend({
      * @param {idForLabel} string
      */
     _setIDForLabel: function (widget, idForLabel) {
-        widget.getFocusableElement().attr('id', idForLabel);
+        widget.setIDForLabel(idForLabel);
     },
 
     //--------------------------------------------------------------------------

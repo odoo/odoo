@@ -29,7 +29,7 @@ tour.register('hr_expense_tour' ,
     content: _t('<p>Click on <b> Create Report </b> to create the report.</p>'),
     position: 'right',
 }, {
-    trigger: '.o_expense_tree .o_checkbox > input[type=checkbox]',
+    trigger: '.o_expense_tree input[type=checkbox]',
     content: _t('<p>Select expenses to submit them to your manager</p>'),
     position: 'bottom'
 }, {

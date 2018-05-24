@@ -857,7 +857,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
             $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
 
             // untick recipient as follower (prompts a res.partner form otherwise)
-            form.$('.o_checkbox input').prop('checked', false);
+            form.$('input[type="checkbox"]').prop('checked', false);
 
             // send message
             form.$('.oe_chatter .o_composer_button_send').click();
