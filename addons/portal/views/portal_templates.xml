@@ -255,12 +255,12 @@
             <t t-foreach="archive_groups" t-as="group">
                 <t t-if="group['date_begin'] == date">
                     <li class="nav-item">
-                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
                 <t t-if="group['date_begin'] != date">
                     <li class="nav-item">
-                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="pull-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>

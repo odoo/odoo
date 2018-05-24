@@ -48,7 +48,7 @@
     </t>
 
     <t t-name="EmailBadge">
-        <span t-foreach="emails" t-as="email" class="badge">
+        <span t-foreach="emails" t-as="email" class="badge badge-pill">
             <span class="o_badge_text">
                 <t t-esc='email'/>
             </span>
@@ -81,7 +81,7 @@
                 <t t-if="pending_users.length">
                     <p><strong>Pending invitations:</strong></p>
                     <span t-foreach="pending_users" t-as="pending">
-                        <a href="#" class="badge o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
+                        <a href="#" class="badge badge-pill o_web_settings_dashboard_user" t-att-data-user-id="pending[0]"> <t t-esc="pending[1]"/> </a>
                     </span>
                     <t t-if="pending_users.length &lt; widget.data.pending_count">
                         <br/>
