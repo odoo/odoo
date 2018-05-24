@@ -20,7 +20,7 @@
 
     <t t-name="mail.ChatWindowsDropdown">
         <div t-attf-class="o_chat_window o_in_home_menu o_chat_window_dropdown dropup #{open ? 'open' : ''}">
-            <span class="o_chat_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown" title="Unread messages">
+            <span role="alert" class="o_chat_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown" title="Unread messages">
                 <i class="fa fa-comments-o" aria-label="Messages"/> <t t-esc="sessions.length"/>
                 <span class="o_total_unread_counter">
                     <t t-if="unread_counter"><t t-esc="unread_counter"/></t>
