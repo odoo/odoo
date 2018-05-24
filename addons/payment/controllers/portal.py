@@ -92,7 +92,7 @@ class WebsitePayment(http.Controller):
                 'type': 'form_save' if acquirer.save_token != 'none' and partner_id else 'form',
             }
 
-            tx = request.env['payment.transaction'].sudo().create(values)
+            tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
             request.session['website_payment_tx_id'] = tx.id
 
         render_values = {
@@ -122,7 +122,7 @@ class WebsitePayment(http.Controller):
             'type': 'form_save' if token.acquirer_id.save_token != 'none' and partner_id else 'form',
         }
 
-        tx = request.env['payment.transaction'].sudo().create(values)
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         request.session['website_payment_tx_id'] = tx.id
 
         try:
