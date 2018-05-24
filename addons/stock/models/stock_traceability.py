@@ -20,28 +20,7 @@ class MrpStockReport(models.TransientModel):
     _name = 'stock.traceability.report'
 
     @api.model
-    def _get_move_lines(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
-            # if MTO
-            if move_line.move_id.move_orig_ids:
-                res |= move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
-            # if MTS
-            else:
-                if move_line:
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '<', move_line.date),
-                    ])
-        if res:
-            res |= self._get_move_lines(res)
-        return res
-
-    @api.model
-    def get_lines(self, line_id=None, **kw):
+    def get_lines(self, **kw):
         context = dict(self.env.context)
         model = kw and kw['model_name'] or context.get('model')
         rec_id = kw and kw['model_id'] or context.get('active_id')
@@ -66,7 +45,7 @@ class MrpStockReport(models.TransientModel):
                 lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
             else:
                 lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
-        move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
+        move_line_vals = self._lines(model_id=rec_id, model=model, level=level, move_lines=lines)
         final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
         lines = self._final_vals_to_lines(final_vals, level)
         return lines
@@ -163,23 +142,12 @@ class MrpStockReport(models.TransientModel):
         return False, False
 
     @api.model
-    def _lines(self, line_id=None, model_id=False, model=False, level=0, move_lines=[], **kw):
+    def _lines(self, model_id=False, model=False, level=0, move_lines=[], **kw):
         final_vals = []
         lines = move_lines or []
-        if model and line_id:
-            move_line = self.env[model].browse(model_id)
-            move_lines, is_used = self._get_linked_move_lines(move_line)
-            if move_lines:
-                lines = move_lines
-            else:
-                if is_used:
-                    # Traceability in case of consumed in.
-                    move_line |= self._get_move_lines(move_line)
-                for line in move_line:
-                    final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line)
         for line in lines:
             unfoldable = bool(line.produce_line_ids or line.consume_line_ids)
-            final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line, unfoldable=unfoldable)
+            final_vals += self._make_dict_move(level, move_line=line, unfoldable=unfoldable)
         return final_vals
 
     def get_pdf_lines(self, line_data=[]):
