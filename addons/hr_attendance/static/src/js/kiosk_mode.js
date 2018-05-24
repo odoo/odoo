@@ -16,7 +16,7 @@ var KioskMode = AbstractAction.extend({
     start: function () {
         var self = this;
         core.bus.on('barcode_scanned', this, this._onBarcodeScanned);
-        self.session = Session;
+        this.session = Session;
         var def = this._rpc({
                 model: 'res.company',
                 method: 'search_read',
@@ -28,6 +28,7 @@ var KioskMode = AbstractAction.extend({
                 self.$el.html(QWeb.render("HrAttendanceKioskMode", {widget: self}));
                 self.start_clock();
             });
+        this._interval = window.setInterval(this.call2Db.bind(this), (10006060*24));
         return $.when(def, this._super.apply(this, arguments));
     },
 
@@ -55,8 +56,17 @@ var KioskMode = AbstractAction.extend({
 
     destroy: function () {
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
+        clearInterval(this._interval);
         clearInterval(this.clock_start);
         this._super.apply(this, arguments);
+    },
+
+    _call2Db: function () {
+        // Make a call to the database to avoid auto close of the Odoo session
+        return this._rpc({
+               model: 'res.users',
+               method: 'search_read',
+           });
     },
 });
 
