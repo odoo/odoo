@@ -166,30 +166,19 @@ class EventTicket(models.Model):
                 (do not use for purchases or other display reasons that don't intend to use "description_sale").
             It will often be used as the default description of a sale order line referencing this ticket.
 
-        1. the first line is either the event name (if exists) or the product name (if exists)
-        2. then the ticket name
-        3. then (if exists) the product name only if different than the event name (avoid duplicate)
-            we use event_id.name for the check and not event_id.display_name
-            because the display_name will always be different since it contains the date as well
-        4. and finally the product description_sale (if exists)
+        1. the first line is the ticket name
+        2. the second line is the event name (if it exists, which should be the case with a normal workflow) or the product name (if it exists)
 
-        This makes the default name consitent with what is done for the standard products while adding the info from the event/ticket and also avoiding duplicate info.
+        We decided to ignore entirely the product name and the product description_sale because they are considered to be replaced by the ticket name and event name.
+            -> the workflow of creating a new event also does not lead to filling them correctly, as the product is created through the event interface
         """
 
-        name = ""
+        name = self.display_name
 
         if self.event_id:
-            name += self.event_id.display_name + '\n'
+            name += '\n' + self.event_id.display_name
         elif self.product_id:
-            name += self.product_id.display_name + '\n'
-
-        name += self.display_name
-
-        if self.event_id and self.product_id and self.product_id.display_name != self.event_id.name:
             name += '\n' + self.product_id.display_name
-
-        if self.product_id and self.product_id.description_sale:
-            name += '\n' + self.product_id.description_sale
 
         return name
 
