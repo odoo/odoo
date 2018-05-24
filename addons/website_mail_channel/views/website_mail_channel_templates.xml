@@ -115,7 +115,7 @@
                                     <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
                                         t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
-                                        <span class="pull-right badge" t-esc="month_archive['date_count']"/>
+                                        <span class="pull-right badge badge-pill" t-esc="month_archive['date_count']"/>
                                     </a>
                                 </li>
                                 </t>
@@ -177,7 +177,7 @@
                                     <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
                                         t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
-                                        <span class="pull-right badge" t-esc="month_archive['date_count']"/>
+                                        <span class="pull-right badge badge-pill" t-esc="month_archive['date_count']"/>
                                     </a>
                                 </li>
                                 </t>

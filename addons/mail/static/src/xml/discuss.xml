@@ -84,7 +84,7 @@
         @param {integer} counter
     -->
     <t t-name="mail.discuss.SidebarCounter">
-        <span t-attf-class="o_mail_sidebar_needaction badge #{(!counter ? 'd-none' : '')}">
+        <span t-attf-class="o_mail_sidebar_needaction badge badge-pill #{(!counter ? 'd-none' : '')}">
             <t t-esc="counter"/>
         </span>
     </t>

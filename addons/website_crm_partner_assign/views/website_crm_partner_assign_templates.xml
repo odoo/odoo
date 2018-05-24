@@ -36,7 +36,7 @@
                         <li class="nav-item">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }"
                                t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
-                                <span class="badge pull-right" t-esc="grade['grade_id_count'] or ''"/>
+                                <span class="badge badge-pill pull-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/>
                             </a>
                         </li>
@@ -49,7 +49,7 @@
                         <li t-if="country['country_id']" class="nav-item">
                             <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                                t-attf-class="nav-link#{country['active'] and ' active' or ''}">
-                                <span class="badge pull-right" t-esc="country['country_id_count'] or ''"/>
+                                <span class="badge badge-pill pull-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/>
                             </a>
                         </li>
@@ -217,11 +217,11 @@
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="lead_count" class="list-group-item">
-                <span class="badge" t-esc="lead_count"/>
+                <span class="badge badge-pill" t-esc="lead_count"/>
                 <a href="/my/leads">My Leads</a>
             </li>
             <li class="list-group-item">
-                <span class="badge" t-esc="opp_count"/>
+                <span class="badge badge-pill" t-esc="opp_count"/>
                 <a href="/my/opportunities">My Opportunities</a>
             </li>
         </xpath>

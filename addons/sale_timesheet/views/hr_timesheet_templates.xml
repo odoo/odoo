@@ -160,16 +160,16 @@
                             </t>
                             <t t-if="repartition_employee">
                                 <div class="pull-right o_timesheet_plan_badge">
-                                    <span class="badge o_progress_billable_fixed">
+                                    <span class="badge badge-pill o_progress_billable_fixed">
                                         <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])">Billable fixed</a>
                                     </span>
-                                    <span class="badge o_progress_billable_time">
+                                    <span class="badge badge-pill o_progress_billable_time">
                                         <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])">Billable time</a>
                                     </span>
-                                    <span class="badge o_progress_non_billable_project">
+                                    <span class="badge badge-pill o_progress_non_billable_project">
                                         <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])">No task found</a>
                                     </span>
-                                    <span class="badge o_progress_non_billable">
+                                    <span class="badge badge-pill o_progress_non_billable">
                                         <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])">Non billable</a>
                                     </span>
                                 </div>

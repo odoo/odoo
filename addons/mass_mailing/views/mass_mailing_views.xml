@@ -83,7 +83,7 @@
                                             <t t-esc="record.name.value"/>
                                         </strong>
                                     </div>
-                                    <span class="badge" title="Number of bounced email.">
+                                    <span class="badge badge-pill" title="Number of bounced email.">
                                         <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
                                     </span>
                                 </div>
@@ -326,7 +326,7 @@
                                 <div class="o_mailing_list_kanban_boxes">
                                     <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
                                         <div>
-                                            <span class="badge">
+                                            <span class="badge badge-pill">
                                                 <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
                                                 <t t-esc="record.contact_nbr.value"/>
                                             </span>

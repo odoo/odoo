@@ -61,7 +61,7 @@
                     <t t-if="not ticket.price and not editable">
                         <span>Free</span>
                     </t>
-                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge" itemprop="availability" content="http://schema.org/LimitedAvailability">
+                    <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="badge badge-pill" itemprop="availability" content="http://schema.org/LimitedAvailability">
                         <t t-esc="ticket.seats_max - ticket.seats_reserved"/>
                         <span>left</span>
                     </span>
