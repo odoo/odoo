@@ -581,7 +581,8 @@ class StockMove(models.Model):
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        quantity = self.env.context.get('forced_quantity', self.product_qty if self._is_in() else -1 * self.product_qty)
+        quantity = self.env.context.get('forced_quantity', self.product_qty)
+        quantity = quantity if self._is_in() else -1 * quantity
 
         # Make an informative `ref` on the created account move to differentiate between classic
         # movements, vacuum and edition of past moves.
