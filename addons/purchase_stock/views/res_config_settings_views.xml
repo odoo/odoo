@@ -24,22 +24,6 @@
 					</div>
 				</div>
 			</xpath>
-			<xpath expr="//div[@name='purchase_setting_container']" position="inside">
-				<div class="col-xs-12 col-md-6 o_setting_box" title="Calls for tenders are used when you want to generate requests for quotations to several vendors for a given set of products. You can configure per product if you directly do a Request for Quotation to one vendor or if you want a Call for Tenders to compare offers from several vendors.">
-					<div class="o_setting_left_pane">
-						<field name="module_purchase_requisition"/>
-					</div>
-					<div class="o_setting_right_pane">
-						<label for="module_purchase_requisition"/>
-						<div class="text-muted">
-							Manage your purchase agreements (call for tenders, blanket orders)
-						</div>
-						<div class="content-group" attrs="{'invisible': [('module_purchase_requisition', '=', False)]}">
-							<div id="use_purchase_requisition"/>
-						</div>
-					</div>
-				</div>
-			</xpath>
 		</field>
 	</record>
 
