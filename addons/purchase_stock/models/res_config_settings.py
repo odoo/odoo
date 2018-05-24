@@ -7,7 +7,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    module_purchase_requisition = fields.Boolean("Purchase Agreements")
     module_stock_dropshipping = fields.Boolean("Dropshipping")
 
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
