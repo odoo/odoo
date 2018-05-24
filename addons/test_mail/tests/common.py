@@ -180,8 +180,12 @@ class MockEmails(common.SingleTransactionCase):
         """ Tools method to ease the check of send emails """
         expected_email_values = []
         for partners in recipients:
+            if partner_from:
+                email_from = formataddr((partner_from.name, partner_from.email))
+            else:
+                email_from = values['email_from']
             expected = {
-                'email_from': formataddr((partner_from.name, partner_from.email)),
+                'email_from': email_from,
                 'email_to': [formataddr((partner.name, partner.email)) for partner in partners]
             }
             if 'reply_to' in values:
