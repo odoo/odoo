@@ -10698,23 +10698,23 @@ QUnit.module('relational_fields', {
             }
         });
 
-        assert.notOk(form.$('.o_checkbox input').eq(0).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should not be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
-        assert.ok(form.$('.o_checkbox input').eq(2).prop('checked'),
+        assert.ok(form.$('.custom-checkbox input').eq(2).prop('checked'),
             "third checkbox should be checked");
 
-        form.$('.o_checkbox input:checked').click();  // Uncheck default record
-        form.$('.o_checkbox input').first().click();  // Check first record
-        form.$('.o_checkbox input').first().click();  // Uncheck first record
-        form.$('.o_checkbox input').first().click();  // Recheck first record
+        form.$('.custom-checkbox input:checked').click();  // Uncheck default record
+        form.$('.custom-checkbox input').first().click();  // Check first record
+        form.$('.custom-checkbox input').first().click();  // Uncheck first record
+        form.$('.custom-checkbox input').first().click();  // Recheck first record
 
-        assert.ok(form.$('.o_checkbox input').eq(0).prop('checked'),
+        assert.ok(form.$('.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(2).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(2).prop('checked'),
             "third checkbox should not be checked");
 
         form.$buttons.find('.o_form_button_save').click();
@@ -10745,23 +10745,23 @@ QUnit.module('relational_fields', {
             }
         });
 
-        assert.notOk(form.$('.o_checkbox input').eq(0).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should not be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
-        assert.ok(form.$('.o_checkbox input').eq(2).prop('checked'),
+        assert.ok(form.$('.custom-checkbox input').eq(2).prop('checked'),
             "third checkbox should be checked");
 
-        form.$('.o_checkbox input:checked').click();  // Uncheck default record
-        form.$('.o_checkbox input').first().click();  // Check first record
-        form.$('.o_checkbox input').first().click();  // Uncheck first record
-        form.$('.o_checkbox input').first().click();  // Recheck first record
+        form.$('.custom-checkbox input:checked').click();  // Uncheck default record
+        form.$('.custom-checkbox input').first().click();  // Check first record
+        form.$('.custom-checkbox input').first().click();  // Uncheck first record
+        form.$('.custom-checkbox input').first().click();  // Recheck first record
 
-        assert.ok(form.$('.o_checkbox input').eq(0).prop('checked'),
+        assert.ok(form.$('.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
-        assert.notOk(form.$('.o_checkbox input').eq(2).prop('checked'),
+        assert.notOk(form.$('.custom-checkbox input').eq(2).prop('checked'),
             "third checkbox should not be checked");
 
         form.$buttons.find('.o_form_button_save').click();
@@ -11649,10 +11649,10 @@ QUnit.module('relational_fields', {
         // checkbox 'Hide in Kanban'
         $input = form.$('.o_field_many2manytags button[data-id=13]'); // selects 'red' tag
         $input.click(); // opens the colorpicker dropdown
-        assert.ok(form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox'), "should have a checkbox in the colorpicker dropdown menu");
+        assert.ok(form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .custom-checkbox'), "should have a checkbox in the colorpicker dropdown menu");
 
         $input.click();
-        var $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input');
+        var $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .custom-checkbox input');
         assert.notOk($checkBox.is(':checked'), "should have unticked checkbox in colorpicker dropdown menu");
 
         $checkBox.mousedown();
@@ -11660,7 +11660,7 @@ QUnit.module('relational_fields', {
         assert.equal($input.data('color'), "0", "should become transparent when toggling on checkbox");
 
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .custom-checkbox input'); // refresh
         assert.ok($checkBox.is(':checked'), "should have a ticked checkbox in colorpicker dropdown menu after mousedown");
 
         $checkBox.mousedown();
@@ -11668,7 +11668,7 @@ QUnit.module('relational_fields', {
         assert.equal($input.data('color'), "8", "should revert to old color when toggling off checkbox");
 
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .custom-checkbox input'); // refresh
         assert.notOk($checkBox.is(':checked'), "should have an unticked checkbox in colorpicker dropdown menu after 2nd click");
 
         // TODO: it would be nice to test the behaviors of the autocomplete dropdown
@@ -12285,24 +12285,24 @@ QUnit.module('relational_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('div.o_field_widget div.o_checkbox').length, 2,
+        assert.strictEqual(form.$('div.o_field_widget div.custom-checkbox').length, 2,
             "should have fetched and displayed the 2 values of the many2many");
 
-        assert.ok(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
-        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
-        assert.ok(form.$('div.o_field_widget div.o_checkbox input').prop('disabled'),
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
             "the checkboxes should be disabled");
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').prop('disabled'),
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
             "the checkboxes should not be disabled");
 
         // add a m2m value by clicking on input
-        form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
+        form.$('div.o_field_widget div.custom-checkbox input').eq(1).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [12, 14],
             "should have added the second element to the many2many");
@@ -12311,13 +12311,13 @@ QUnit.module('relational_fields', {
 
         // remove a m2m value by clinking on label
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('div.o_field_widget div.o_checkbox + label').eq(0).click();
+        form.$('div.o_field_widget div.custom-checkbox > label').eq(0).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [14],
             "should have removed the first element to the many2many");
-        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
-        assert.ok(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
         form.destroy();
@@ -12338,12 +12338,12 @@ QUnit.module('relational_fields', {
             viewOptions: {mode: 'edit'},
         });
 
-        form.$('div.o_field_widget div.o_checkbox input').eq(0).click();
-        form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
+        form.$('div.o_field_widget div.custom-checkbox input').eq(0).click();
+        form.$('div.o_field_widget div.custom-checkbox input').eq(1).click();
         form.$buttons.find('.o_form_button_save').click();
-        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(0).prop('checked'),
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should not be checked");
-        assert.notOk(form.$('div.o_field_widget div.o_checkbox input').eq(1).prop('checked'),
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
         form.destroy();
