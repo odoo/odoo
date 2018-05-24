@@ -322,6 +322,50 @@
             </field>
         </record>
 
+      <!-- Special restricted view for private address, with limited "named" info that
+           can be traced back to the employee -->
+        <record id="res_partner_view_form_private" model="ir.ui.view">
+            <field name="name">res.partner.view.form.private</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="300"/>
+            <field name="arch" type="xml">
+                <form string="Private Address Form">
+                    <sheet>
+                        <field name="type" invisible="1"/>
+                        <label for="name" class="oe_editonly"/>
+                        <field name="name" required="0"/>
+                        <group>
+                            <group>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <div class="o_address_format" name="div_address">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' context="{'country_id': country_id, 'zip': zip}"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="phone" widget="phone"/>
+                                <field name="mobile" widget="phone"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <group string="Bank Accounts">
+                            <field name="bank_ids">
+                                <tree editable="bottom">
+                                    <field name="acc_number"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
        <record id="view_res_partner_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
