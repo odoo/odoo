@@ -309,11 +309,6 @@ class account_payment(models.Model):
     _description = "Payments"
     _order = "payment_date desc, name desc"
 
-    @api.one
-    @api.depends('invoice_ids')
-    def _get_has_invoices(self):
-        self.has_invoices = bool(self.invoice_ids)
-
     @api.multi
     @api.depends('move_line_ids.reconciled')
     def _get_move_reconciled(self):
@@ -339,8 +334,11 @@ class account_payment(models.Model):
     # For money transfer, money goes from journal_id to a transfer account, then from the transfer account to destination_journal_id
     destination_journal_id = fields.Many2one('account.journal', string='Transfer To', domain=[('type', 'in', ('bank', 'cash'))])
 
-    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
-    has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usability purposes")
+    invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True, help="""Technical field containing the invoices for which the payment has been generated.
+                                                                                                                                                                       This does not especially correspond to the invoices reconciled with the payment,
+                                                                                                                                                                       as it can have been generated first, and reconciled later""")
+    reconciled_invoice_ids = fields.Many2many('account.invoice', string='Reconciled Invoices', compute='_compute_reconciled_invoice_ids', help="Invoices whose journal items have been reconciled with this payment's.")
+    has_invoices = fields.Boolean(compute="_compute_reconciled_invoice_ids", help="Technical field used for usability purposes")
 
     # FIXME: ondelete='restrict' not working (eg. cancel a bank statement reconciliation with a payment)
     move_line_ids = fields.One2many('account.move.line', 'payment_id', readonly=True, copy=False, ondelete='restrict')
@@ -387,8 +385,16 @@ class account_payment(models.Model):
             default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
             self.destination_account_id = default_account.id
 
+    @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
+    def _compute_reconciled_invoice_ids(self):
+        for record in self:
+            record.reconciled_invoice_ids = (record.move_line_ids.mapped('matched_debit_ids.debit_move_id.invoice_id') |
+                                            record.move_line_ids.mapped('matched_credit_ids.credit_move_id.invoice_id'))
+            record.has_invoices = bool(record.reconciled_invoice_ids)
+
     @api.onchange('partner_type')
     def _onchange_partner_type(self):
+        self.ensure_one()
         # Set partner_id domain
         if self.partner_type:
             return {'domain': {'partner_id': [(self.partner_type, '=', True)]}}
@@ -448,7 +454,7 @@ class account_payment(models.Model):
             'res_model': 'account.invoice',
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', [x.id for x in self.invoice_ids])],
+            'domain': [('id', 'in', [x.id for x in self.reconciled_invoice_ids])],
         }
 
     @api.multi
