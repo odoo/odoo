@@ -309,6 +309,7 @@ var KanbanRecord = Widget.extend({
     _render: function () {
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex",0);
+        this.$el.attr('role', 'article');
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
