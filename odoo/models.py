@@ -1508,9 +1508,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         result = []
         name = self._rec_name
-        if name in self._fields:
-            convert = self._fields[name].convert_to_display_name
-            for record in self:
+        name_field = self._fields.get(name)
+        if name_field:
+            convert = name_field.convert_to_display_name
+            prefetched = not set(self.ids) - self.env.prefetch[self._name]
+            records = self if prefetched else self.with_context(prefetch_fields=False)
+            for record in records:
                 result.append((record.id, convert(record[name], record)))
         else:
             for record in self:
