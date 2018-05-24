@@ -1166,7 +1166,7 @@
         <table class="table mt32 mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td>
-                    <span class="badge pull-left">
+                    <span class="badge badge-pill pull-left">
                         <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
                         <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
                         <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
@@ -1498,7 +1498,7 @@
     <table class="table mt32 mb64">
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
-                <span class="badge pull-left">
+                <span class="badge badge-pill pull-left">
                     <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver" role="img" aria-label="Silver badge" title="Silver badge"/>
                     <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze" role="img" aria-label="Bronze badge" title="Bronze badge"/>

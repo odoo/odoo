@@ -96,7 +96,7 @@
                     <li class="nav-item">
                         <a t-attf-href="/customers/#{ industry_dict['industry_id'][0] and 'industry/%s/' % slug(industry_dict['industry_id']) or '' }#{ current_country_id and 'country/%s' % current_country_id or '' }#{ search_path }"
                            t-attf-class="nav-link#{industry_dict['industry_id'][0] == current_industry_id and ' active' or ''}">
-                            <span class="badge pull-right" t-esc="industry_dict['industry_id_count'] or '0'"/>
+                            <span class="badge badge-pill pull-right" t-esc="industry_dict['industry_id_count'] or '0'"/>
                             <t t-esc="industry_dict['industry_id'][1]"/>
                         </a>
                     </li>
@@ -115,7 +115,7 @@
                     <li class="nav-item">
                         <a t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ country_dict['country_id'][0] and 'country/%s' % slug(country_dict['country_id']) or '' }#{ search_path }"
                            t-attf-class="nav-link#{country_dict['country_id'][0] == current_country_id and ' active' or ''}">
-                            <span class="badge pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
+                            <span class="badge badge-pill pull-right" t-esc="country_dict['country_id_count'] or '0'"/>
                             <t t-esc="country_dict['country_id'][1]"/>
                         </a>
                     </li>

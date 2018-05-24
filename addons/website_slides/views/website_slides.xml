@@ -130,25 +130,25 @@
                         <li t-if="header_object.nbr_presentations" class="nav-item">
                             <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/presentation"
                                 t-attf-class="nav-link#{slide_type == 'presentation' and ' active' or ''}">
-                                <span class="badge" t-esc="header_object.nbr_presentations"/> Presentations
+                                <span class="badge badge-pill" t-esc="header_object.nbr_presentations"/> Presentations
                             </a>
                         </li>
                         <li t-if="header_object.nbr_videos" class="nav-item">
                             <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/video"
                                 t-attf-class="nav-link#{slide_type == 'video' and ' active' or ''}">
-                                <span class="badge" t-esc="header_object.nbr_videos"/> Videos
+                                <span class="badge badge-pill" t-esc="header_object.nbr_videos"/> Videos
                             </a>
                         </li>
                         <li t-if="header_object.nbr_documents" class="li nav-item">
                             <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/document"
                                 t-attf-class="nav-link#{slide_type == 'document' and ' active' or ''}">
-                                <span class="badge" t-esc="header_object.nbr_documents"/> Documents
+                                <span class="badge badge-pill" t-esc="header_object.nbr_documents"/> Documents
                             </a>
                         </li>
                         <li t-if="header_object.nbr_infographics" class="nav-item">
                             <a t-attf-href="/slides/#{slug(channel)}#{category and '/category/' + slug(category) or ''}/infographic"
                                 t-attf-class="nav-link#{slide_type == 'infographic' and ' active' or ''}">
-                                <span class="badge" t-esc="header_object.nbr_infographics"/> Infographics
+                                <span class="badge badge-pill" t-esc="header_object.nbr_infographics"/> Infographics
                             </a>
                         </li>
                     </ul>
@@ -548,15 +548,15 @@
                                             <h4 class="mt0 oe_slides_statistics_title">Views</h4>
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <span class="badge"><t t-esc="slide.total_views"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="slide.total_views"/></span>
                                                     <i class="fa fa-play"></i> Total Views
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge"><t t-esc="slide.slide_views"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="slide.slide_views"/></span>
                                                     <i class="fa fa-circle-o"></i> Website Views
                                                 </li>
                                                 <li class="list-group-item" t-if="not slide.document_id">
-                                                    <span class="badge"><t t-esc="slide.embed_views"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="slide.embed_views"/></span>
                                                     <i class="fa fa-code"></i> Embedded Views
                                                 </li>
                                             </ul>
@@ -566,19 +566,19 @@
                                             <h4 class="mt0 oe_slides_statistics_title">Actions</h4>
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <span class="badge" id="total-share">0</span>
+                                                    <span class="badge badge-pill" id="total-share">0</span>
                                                     <i class="fa fa-share-alt"></i> Social Shares
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge"><t t-esc="slide.likes"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="slide.likes"/></span>
                                                     <i class="fa fa-thumbs-up"></i> Likes
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge"><t t-esc="slide.dislikes"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="slide.dislikes"/></span>
                                                     <i class="fa fa-thumbs-down"></i> Dislikes
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge"><t t-esc="len(slide.website_message_ids)"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="len(slide.website_message_ids)"/></span>
                                                     <i class="fa fa-comments-o"></i> Comments
                                                 </li>
                                             </ul>
@@ -588,19 +588,19 @@
                                             <h4 class="mt0 oe_slides_statistics_title">Share count</h4>
                                             <ul class="list-group">
                                                 <li class="list-group-item">
-                                                    <span class="badge" id="facebook-badge">0</span>
+                                                    <span class="badge badge-pill" id="facebook-badge">0</span>
                                                     <i class="fa fa-facebook-square"></i> Facebook
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge" id="twitter-badge">0</span>
+                                                    <span class="badge badge-pill" id="twitter-badge">0</span>
                                                     <i class="fa fa-twitter-square"></i> Twitter
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge" id="linkedin-badge">0</span>
+                                                    <span class="badge badge-pill" id="linkedin-badge">0</span>
                                                     <i class="fa fa-linkedin-square"></i> LinkedIn
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <span class="badge" id="google-badge">0</span>
+                                                    <span class="badge badge-pill" id="google-badge">0</span>
                                                     <i class="fa fa-google-plus-square"></i> Google+
                                                 </li>
                                             </ul>
@@ -609,13 +609,13 @@
                                     <div class="row" t-if="not slide.document_id and slide.embedcount_ids">
                                         <div class="col-lg-12">
                                             <h4 class="mt0"> Embeds
-                                                <span class="badge pull-right">
+                                                <span class="badge badge-pill pull-right">
                                                     <t t-esc="len(slide.embedcount_ids)"/>
                                                 </span>
                                             </h4>
                                             <ul class="list-group" style="height: 150px;overflow: auto;">
                                                 <li class="list-group-item" t-foreach="slide.embedcount_ids" t-as="count">
-                                                    <span class="badge"><t t-esc="count.count_views"/></span>
+                                                    <span class="badge badge-pill"><t t-esc="count.count_views"/></span>
                                                     <t t-esc="count.url"/>
                                                 </li>
                                             </ul>

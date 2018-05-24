@@ -86,7 +86,7 @@
                 <li t-if="country['country_id']" class="nav-item">
                     <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
                         t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
-                        <span class="badge pull-right"><t t-esc="country['country_id_count'] or '0'"/></span>
+                        <span class="badge badge-pill pull-right"><t t-esc="country['country_id_count'] or '0'"/></span>
                     </a>
                 </li>
             </t>
