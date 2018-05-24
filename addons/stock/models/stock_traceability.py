@@ -43,9 +43,6 @@ class MrpStockReport(models.TransientModel):
             lines_todo += list(lines)
             lines_seen |= lines
         return lines_seen - move_lines
-            lines_todo += list(lines)
-            lines_seen |= lines
-        return lines_seen - move_lines
 
     @api.model
     def get_lines(self, line_id=None, **kw):
