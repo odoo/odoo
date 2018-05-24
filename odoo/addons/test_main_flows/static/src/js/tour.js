@@ -45,15 +45,15 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Manufacture")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Manufacture")',
     content: _t('Check Manufacture'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Buy")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Buy")',
     content: _t('Uncheck Buy'),
     position: 'right',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
     content: _t('Uncheck  Make To Order'),
     position: 'right',
 }, {
@@ -109,7 +109,7 @@ tour.register('main_flow_tour', {
     content: _t('Go to inventory tab'),
     position: 'top',
 }, {
-    trigger: '.o_field_widget[name=route_ids] .o_checkbox + label:contains("Make To Order")',
+    trigger: '.o_field_widget[name=route_ids] .custom-checkbox > label:contains("Make To Order")',
     content: _t('Check Make To Order'),
     position: 'right',
 }, {

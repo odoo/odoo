@@ -1887,7 +1887,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
             this.$color_picker.dropdown('toggle');
             this.$color_picker.attr("tabindex", 1).focus();
             if (!tagColor) {
-                this.$('.o_checkbox input').prop('checked', true);
+                this.$('.custom-checkbox input').prop('checked', true);
             }
         }
     },
@@ -1909,7 +1909,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var changes = {};
 
         if ($target.is('.o_hide_in_kanban')) {
-            var $checkbox = $('.o_hide_in_kanban .o_checkbox input');
+            var $checkbox = $('.o_hide_in_kanban .custom-checkbox input');
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {

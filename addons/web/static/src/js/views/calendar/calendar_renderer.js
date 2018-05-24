@@ -98,7 +98,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
             this.many2one.filter_ids = _.without(_.pluck(this.filters, 'value'), 'all');
         }
         this.$el.on('click', '.o_remove', this._onFilterRemove.bind(this));
-        this.$el.on('click', '.o_checkbox input', this._onFilterActive.bind(this));
+        this.$el.on('click', '.custom-checkbox input', this._onFilterActive.bind(this));
     },
 
     //--------------------------------------------------------------------------

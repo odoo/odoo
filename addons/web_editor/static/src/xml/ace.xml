@@ -14,16 +14,22 @@
             <select id="ace-view-list" class="o_res_list"/>
             <select id="ace-scss-list" class="o_res_list d-none"/>
             <label class="o_include_option oe_include_bundles">
-                <div class="o_checkbox">
-                    <input type="checkbox" class="js_include_bundles" t-att-checked="widget.options.includeBundles ? 'checked' : undefined"/><span/>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="o_ace_view_editor_include_bundle"
+                        class="custom-control-input js_include_bundles"
+                        t-att-checked="widget.options.includeBundles ? 'checked' : undefined"/>
+                    <label for="o_ace_view_editor_include_bundle"
+                        class="custom-control-label">Include Asset Bundles</label>
                 </div>
-                Include Asset Bundles
             </label>
             <label class="o_include_option o_include_all_scss d-none">
-                <div class="o_checkbox">
-                    <input type="checkbox" class="js_include_all_scss" t-att-checked="widget.options.includeAllSCSS ? 'checked' : undefined"/><span/>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="o_ace_view_editor_include_all_scss"
+                        class="custom-control-input js_include_all_scss"
+                        t-att-checked="widget.options.includeAllSCSS ? 'checked' : undefined"/>
+                    <label for="o_ace_view_editor_include_all_scss"
+                        class="custom-control-label">Include All SCSS Files</label>
                 </div>
-                Include All SCSS Files
             </label>
             <div class="o_button_section">
                 <button data-action="save" type="submit" class="btn btn-primary">Save</button>

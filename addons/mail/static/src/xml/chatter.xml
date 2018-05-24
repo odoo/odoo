@@ -28,14 +28,17 @@
                 <div class="o_composer_suggestedPartners">
                     <t t-foreach='widget.suggestedPartners' t-as='recipient'>
                         <div t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                            <div class="o_checkbox">
+                            <div class="custom-control custom-checkbox">
                                 <input type="checkbox"
+                                       class="custom-control-input"
+                                       t-attf-id="o_composer_suggested_partners_p#{recipient_index}"
                                        t-att-checked="recipient.checked ? 'checked' : undefined"
                                        t-att-data-fullname="recipient.full_name"/>
-                                <span/>
+                                <label t-attf-for="o_composer_suggested_partners_p#{recipient_index}" class="custom-control-label">
+                                    <t t-esc="recipient.name"/>
+                                    <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
+                                </label>
                             </div>
-                            <t t-esc="recipient.name"/>
-                            <t t-if="recipient.email_address">(<t t-esc="recipient.email_address"/>)</t>
                         </div>
                     </t>
                 </div>
