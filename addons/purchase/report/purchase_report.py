@@ -88,7 +88,7 @@ class PurchaseReport(models.Model):
                     join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
-                            LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',t.id) AND ip.company_id=s.company_id)
+                            LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.product,',p.id) AND ip.company_id=s.company_id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
                     left join stock_picking_type spt on (spt.id=s.picking_type_id)
