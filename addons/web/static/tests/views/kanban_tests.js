@@ -1501,6 +1501,35 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('default_action attribute to open kanban record', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" default_action="some_view_for_action_ref">' +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div class="oe_kanban_global_click"><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            archs: {
+                'partner,some_view_for_action_ref,kanban': '<kanban>' +
+                    '<field name="int_field"/>' +
+                '</kanban>',
+            },
+            intercepts: {
+                do_action: function (event) {
+                    assert.strictEqual(event.data.action, "some_view_for_action_ref", "action should be some_view_for_action_ref");
+                },
+            },
+        });
+
+        kanban.$('.o_kanban_record:first').click();
+        kanban.destroy();
+    });
+
     QUnit.test('open kanban record in new tab on middle click of mouse', function (assert) {
         assert.expect(2);
 
