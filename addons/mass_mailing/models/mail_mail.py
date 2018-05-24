@@ -99,9 +99,9 @@ class MailMail(osv.Model):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
             unsubscribe_url= self._get_unsubscribe_url(cr, uid, mail, email_to, context=context)
-            link_to_replace =  base_url+'/unsubscribe_from_list'
+            regex_link_to_replace = re.escape(base_url) + '(/[a-z]{2}_[A-Z]{2})?' + '/unsubscribe_from_list'
             if link_to_replace in res['body']:
-                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
+                res['body'] = res['body'].replace(regex_link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None, mail_sent=True):
