@@ -197,7 +197,7 @@ class IrActionsReport(models.Model):
             paperformat_id,
             landscape,
             specific_paperformat_args=None,
-            set_viewport_size=False):
+            set_viewport_size=True):
         '''Build arguments understandable by wkhtmltopdf bin.
 
         :param paperformat_id: A report.paperformat record.
