@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from contextlib import contextmanager
 from email.utils import formataddr
 
 from odoo import api
+from odoo.addons.bus.models.bus import json_dump
 from odoo.tests import common
 
 
@@ -77,6 +80,39 @@ class BaseFunctionalTest(common.SavepointCase):
             # for simplification, limitate to single message asserts
             if hasattr(self, 'assertEmails') and len(new_messages) == 1:
                 self.assertEmails(new_messages.author_id, new_notifications.filtered(lambda n: n.is_email).mapped('res_partner_id'))
+
+    def assertBusNotification(self, channels, message_dicts=None, init=True):
+        """ Check for bus notifications. Basic check is about used channels.
+        Verifying content is optional.
+
+        :param channels: list of channel
+        :param messages: if given, list of message making a valid pair (channel,
+          message) to be found in bus.bus
+        """
+        if init:
+            self.assertEqual(len(self.env['bus.bus'].search([])), len(channels))
+        notifications = self.env['bus.bus'].search([('channel', 'in', [json_dump(channel) for channel in channels])])
+        self.assertEqual(len(notifications), len(channels))
+        if message_dicts:
+            notif_messages = [json.loads(n.message) for n in notifications]
+            for expected in message_dicts:
+                found = False
+                for returned in notif_messages:
+                    for key, val in expected.items():
+                        if key not in returned:
+                            continue
+                        if isinstance(returned[key], list):
+                            if set(returned[key]) != set(val):
+                                continue
+                        else:
+                            if returned[key] != val:
+                                continue
+                            found = True
+                            break
+                    if found:
+                        break
+                if not found:
+                    raise AssertionError("Bus notification content %s not found" % (repr(expected)))
 
     @contextmanager
     def sudoAs(self, login):
