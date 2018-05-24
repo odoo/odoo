@@ -26,5 +26,18 @@
             <field eval="False" name="doall" />
             <field name="priority">1000</field>
         </record>
+		
+        <record id="ir_cron_mail_notify_channel_moderators" model="ir.cron">
+            <field name="name">Mail: Notify channel moderators</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="state">code</field>
+            <field name="code">model._notify_moderators</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="priority">1000</field>
+        </record>
     </data>
 </odoo>

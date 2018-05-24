@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from email.utils import formataddr
 
+from odoo.tests import tagged
 from odoo.addons.test_mail.tests import common
-from odoo.exceptions import AccessError, except_orm
+from odoo.exceptions import AccessError, except_orm, ValidationError, UserError
 from odoo.tools import mute_logger
 
 
@@ -195,3 +195,103 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
             self.assertIn(
                 email['email_to'][0],
                 [formataddr((self.user_employee.name, self.user_employee.email)), formataddr((self.test_partner.name, self.test_partner.email))])
+
+
+@tagged('moderation')
+class TestChannelModeration(common.Moderation):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestChannelModeration, cls).setUpClass()
+
+    def test_moderator_consistency(self):
+        with self.assertRaises(ValidationError):
+            self.channel_1.write({'moderator_ids': [(4, self.user_employee_2.id)]})
+
+        self.channel_1.write({'channel_partner_ids': [(4, self.partner_employee_2.id)]})
+        with self.assertRaises(ValidationError):
+            self.user_employee_2.write({'email': False})
+            self.channel_1.write({'moderator_ids': [(4, self.user_employee_2.id)]})
+
+    def test_channel_moderation_parameters(self):
+        with self.assertRaises(ValidationError):
+            self.channel_1.write({'email_send': False})
+
+        with self.assertRaises(ValidationError):
+            self.channel_1.write({'moderator_ids': [(5, 0)]})
+
+    def test_moderation_count(self):
+        self.assertEqual(self.channel_1.moderation_count, 0)
+        self.channel_1.write({'moderation_ids': [
+            (0, 0, {'email': 'test0@example.com', 'status': 'allow'}),
+            (0, 0, {'email': 'test1@example.com', 'status': 'ban'})
+        ]})
+        self.assertEqual(self.channel_1.moderation_count, 2)
+
+    @mute_logger('odoo.addons.mail.models.mail_channel', 'odoo.models.unlink')
+    def test_send_guidelines(self):
+        self.channel_1.write({'channel_partner_ids': [(4, self.partner_employee_2.id), (4, self.partner_admin.id)]})
+        self.channel_1._update_moderation_email([self.partner_admin.email], 'ban')
+        self._init_mock_build_email()
+        self.channel_1.sudo(self.user_employee).send_guidelines()
+        self.env['mail.mail'].process_email_queue()
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, email_from=self.env.user.company_id.catchall or self.env.user.company_id.email)
+
+    def test_send_guidelines_crash(self):
+        with self.assertRaises(UserError):
+            self.channel_1.sudo(self.user_employee_2).send_guidelines()
+
+    def test_update_moderation_email(self):
+        self.channel_1.write({'moderation_ids': [
+            (0, 0, {'email': 'test0@example.com', 'status': 'allow'}),
+            (0, 0, {'email': 'test1@example.com', 'status': 'ban'})
+        ]})
+        self.channel_1._update_moderation_email(['test0@example.com', 'test3@example.com'], 'ban')
+        self.assertEqual(len(self.channel_1.moderation_ids), 3)
+        self.assertTrue(all(status == 'ban' for status in self.channel_1.moderation_ids.mapped('status')))
+
+    def test_moderation_reset(self):
+        self._create_new_message(self.channel_1.id)
+        self._create_new_message(self.channel_1.id, status='accepted')
+        self._create_new_message(self.channel_2.id)
+        self.channel_1.write({'moderation': False})
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('moderation_status', '=', 'pending_moderation'),
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', self.channel_1.id)
+        ]), 0)
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('moderation_status', '=', 'pending_moderation'),
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', self.channel_2.id)
+        ]), 1)
+        self.channel_2.write({'moderation': False})
+        self.assertEqual(self.env['mail.message'].search_count([
+            ('moderation_status', '=', 'pending_moderation'),
+            ('model', '=', 'mail.channel'),
+            ('res_id', '=', self.channel_2.id)
+        ]), 0)
+
+    @mute_logger('odoo.models.unlink')
+    def test_message_post(self):
+        email1 = 'test0@example.com'
+        email2 = 'test1@example.com'
+
+        self.channel_1._update_moderation_email([email1], 'ban')
+        self.channel_1._update_moderation_email([email2], 'allow')
+
+        msg_admin = self.channel_1.message_post(message_type='email', subtype='mt_comment', author_id=self.partner_admin.id)
+        msg_moderator = self.channel_1.message_post(message_type='comment', subtype='mt_comment', author_id=self.partner_employee.id)
+        msg_email1 = self.channel_1.message_post(message_type='comment', subtype='mt_comment', email_from=formataddr(("MyName", email1)))
+        msg_email2 = self.channel_1.message_post(message_type='email', subtype='mt_comment', email_from=email2)
+        msg_notif = self.channel_1.message_post()
+
+        messages = self.env['mail.message'].search([('model', '=', 'mail.channel'), ('res_id', '=', self.channel_1.id)])
+        pending_messages = messages.filtered(lambda m: m.moderation_status == 'pending_moderation')
+        accepted_messages = messages.filtered(lambda m: m.moderation_status == 'accepted')
+
+        self.assertFalse(msg_email1)
+        self.assertEqual(msg_admin, pending_messages)
+        self.assertEqual(accepted_messages, msg_moderator | msg_email2 | msg_notif)
+        self.assertFalse(msg_admin.channel_ids)
+        self.assertEqual(msg_email2.channel_ids, self.channel_1)

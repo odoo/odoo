@@ -1294,7 +1294,7 @@ class MailThread(models.AbstractModel):
                 post_params['model'] = model
             new_msg = thread.message_post(**post_params)
 
-            if original_partner_ids:
+            if new_msg and original_partner_ids:
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
                 new_msg.write({'partner_ids': original_partner_ids})
@@ -1869,7 +1869,7 @@ class MailThread(models.AbstractModel):
         return m2m_attachment_ids
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
                      parent_id=False, attachments=None,
@@ -1891,6 +1891,7 @@ class MailThread(models.AbstractModel):
                     to the related document. Should only be set by Chatter.
             :return int: ID of newly created mail.message
         """
+
         if attachments is None:
             attachments = {}
         if self.ids and not self.ensure_one():
@@ -1998,15 +1999,18 @@ class MailThread(models.AbstractModel):
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
-        message._notify(
-            layout=notif_layout,
-            force_send=self.env.context.get('mail_notify_force_send', True),
-            values=notif_values,
-        )
+        if values.get('moderation_status') != 'pending_moderation':
+            message._notify(
+                layout=notif_layout,
+                force_send=self.env.context.get('mail_notify_force_send', True),
+                values=notif_values,
+            )
 
-        # Post-process: subscribe author
-        if values['author_id'] and values['model'] and self.ids and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            self._message_subscribe([values['author_id']])
+            # Post-process: subscribe author
+            if values['author_id'] and values['model'] and self.ids and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
+                self._message_subscribe([values['author_id']])
+        else:
+            message._notify_pending_by_chat()
 
     @api.multi
     def message_post_with_view(self, views_or_xmlid, **kwargs):

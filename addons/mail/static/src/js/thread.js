@@ -38,6 +38,8 @@ var Thread = Widget.extend({
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
         },
+        "click .o_thread_message_moderation": "_onClickMessageModeration",
+        "change .moderation_checkbox": "_onChangeModerationCheckbox",
         "click .o_thread_message_star": function (event) {
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("toggle_star_status", message_id);
@@ -141,7 +143,6 @@ var Thread = Widget.extend({
             }
             prev_msg = msg;
         });
-
         this.$el.html(QWeb.render('mail.ChatThread', {
             messages: msgs,
             options: options,
@@ -313,6 +314,15 @@ var Thread = Widget.extend({
     destroy: function () {
         clearInterval(this.update_timestamps_interval);
     },
+    /**
+     * Toggle all the moderation checkboxes in the thread
+     *
+     * @param {boolean} checked if true, check the boxes,
+     *      otherwise uncheck them.
+     */
+    toggleModerationCheckboxes: function (checked) {
+        this.$('.moderation_checkbox').prop('checked', checked);
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -386,6 +396,23 @@ var Thread = Widget.extend({
             var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
             attachmentViewer.appendTo($('body'));
         }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onChangeModerationCheckbox: function (ev) {
+        this.trigger_up('update_moderation_buttons');
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+     _onClickMessageModeration: function (ev) {
+        var $button = $(ev.currentTarget);
+        var messageID = $button.data('message-id');
+        var decision = $button.data('decision');
+        this.trigger_up('message_moderation', { messageID: messageID, decision: decision });
     },
 });
 

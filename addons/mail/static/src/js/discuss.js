@@ -106,10 +106,73 @@ var PartnerInviteDialog = Dialog.extend({
     },
 });
 
+/**
+ * Widget : Moderator reject message dialog
+ *
+ * Popup containing message title and reject message body.
+ * This let the moderator provide a reason for rejecting the messages.
+ */
+var ModeratorRejectMessageDialog = Dialog.extend({
+    template: "mail.ModeratorRejectMessageDialog",
+
+    /**
+     * @override
+     * @param {web.Widget} parent
+     * @param {Object} params
+     * @param {integer[]} params.messageIDs list of message IDs to send
+     *   'reject' decision reason
+     * @param {function} params.proceedReject a function to call when the
+     *   moderator confirms the reason for rejecting the messages. This
+     *   function passes an object as the reason for reject, which is
+     *   structured as follow:
+     *
+     *          {
+     *              title: <string>,
+     *              comment: <string>,
+     *          }
+     */
+    init: function (parent, params) {
+        this._messageIDs = params.messageIDs;
+        this._proceedReject = params.proceedReject;
+        this._super(parent, {
+            title: _t('Send explanation to author'),
+            size: "medium",
+            buttons: [{
+                text: _t("Send"),
+                close: true,
+                classes: "btn-primary",
+                click: _.bind(this._onSendClicked, this),
+            }],
+        });
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the moderator would like to submit reason for rejecting the
+     * messages.
+     *
+     * @private
+     */
+    _onSendClicked: function () {
+        var title = this.$('#message_title').val();
+        var comment = this.$('#reject_message').val();
+        if (title && comment) {
+            this._proceedReject({
+                title: title,
+                comment: comment
+            });
+        }
+    },
+});
+
 var Discuss = AbstractAction.extend(ControlPanelMixin, {
     template: 'mail.discuss',
     custom_events: {
+        message_moderation: '_onMessageModeration',
         search: '_onSearch',
+        update_moderation_buttons: '_onUpdateModerationButtons',
     },
     events: {
         'blur .o_mail_add_channel input': '_onAddChannelBlur',
@@ -240,6 +303,49 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * Ban the authors of the messages with ID in `messageIDs`
+     * Show a confirmation dialog to the moderator.
+     *
+     * @private
+     * @param {integer[]} messageIDs IDs of messages for which we should ban authors
+     */
+    _banAuthorsFromMessageIDs: function (messageIDs) {
+        var self = this;
+        var emailList = _.map(messageIDs, function (messageID) {
+            return self.call('chat_manager', 'getMessage', messageID).email_from;
+        }).join(", ");
+        var text = _.str.sprintf(_t("You are going to ban: %s. Do you confirm the action?"), emailList);
+        var options = {
+            confirm_callback: function () {
+                self._moderateMessages(messageIDs, 'ban');
+            }
+        };
+        Dialog.confirm(this, text, options);
+    },
+    /**
+     * Discard the messages with ID in `messageIDs`
+     * Show a confirmation dialog to the moderator.
+     *
+     * @private
+     * @param {integer[]]} messageIDs list of message IDs to discard
+     */
+    _discardMessages: function (messageIDs) {
+        var self = this;
+        var num = messageIDs.length;
+        var text;
+        if (num > 1) {
+            text = _.str.sprintf(_t("You are going to discard %s messages. Do you confirm the action?"), num);
+        } else if (num === 1) {
+            text = _t("You are going to discard 1 message. Do you confirm the action?");
+        }
+        var options = {
+            confirm_callback: function () {
+                self._moderateMessages(messageIDs, 'discard');
+            }
+        };
+        Dialog.confirm(this, text, options);
+    },
+    /**
      * @private
      * @returns {$.Promise}
      */
@@ -278,11 +384,35 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
             display_empty_channel: !messages.length && !this.domain.length,
             display_no_match: !messages.length && this.domain.length,
-            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox",
+            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox" || this.channel.id === "channel_moderation",
             display_email_icon: false,
             display_reply_icon: true,
         };
     },
+    /**
+     * Determine the action to apply on messages with ID in `messageIDs`
+     * based on the moderation decision `decision`.
+     *
+     * @private
+     * @param {number[]} messageIDs list of message ids that are moderated
+     * @param {string} decision of the moderator, could be either 'reject',
+     *   'discard', 'ban', 'accept', 'allow'.
+     */
+     _handleModerationDecision: function (messageIDs, decision) {
+        if (messageIDs) {
+            if (decision === 'reject') {
+                this._rejectMessages(messageIDs);
+            } else if (decision === 'discard') {
+                this._discardMessages(messageIDs);
+            } else if (decision === 'ban') {
+                this._banAuthorsFromMessageIDs(messageIDs);
+            } else {
+                // other decisions do not need more information,
+                // confirmation dialog, etc.
+                this._moderateMessages(messageIDs, decision);
+            }
+        }
+     },
     /**
      * Ensures that enough messages have been loaded to fill the entire screen
      * (this is particularily important because remaining messages can only be
@@ -324,6 +454,33 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 offset += dom.getPosition(document.querySelector(oldestMsgSelector)).top;
                 self.thread.scroll_to({offset: offset});
             });
+    },
+    /**
+     * Apply the moderation decision `decision` on the messages with ID in
+     * `messageIDs`.
+     *
+     * @private
+     * @param {integer[]} messageIDs list of message IDs to apply the
+     *   moderation decision.
+     * @param {string} decision the moderation decision to apply on the
+     *   messages. Could be either 'reject', 'discard', 'ban', 'accept',
+     *   or 'allow'.
+     * @param {Object|undefined} [kwargs] optional data to pass on
+     *   message moderation. This is provided when rejecting the messages
+     *   for which title and comment give reason(s) for reject.
+     * @param {string} [kwargs.title]
+     * @param {string} [kwargs.comment]
+     * @return {undefined|$.Promise}
+     */
+    _moderateMessages: function (messageIDs, decision, kwargs) {
+        if (messageIDs.length && decision) {
+            return this._rpc({
+                model: 'mail.message',
+                method: 'moderate',
+                args: [messageIDs, decision],
+                kwargs: kwargs
+            });
+        }
     },
     /**
      * Binds handlers on the given $input to make them autocomplete and/or
@@ -394,6 +551,24 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }
     },
     /**
+     * Reject the messages
+     *
+     * The moderator must provide a reason for reject, and may also
+     * cancel his action.
+     *
+     * @private
+     * @param {number[]]} messageIDs list of message IDs to reject
+     */
+    _rejectMessages: function (messageIDs) {
+        var self = this;
+        new ModeratorRejectMessageDialog(this, {
+            messageIDs: messageIDs,
+            proceedReject: function (reason) {
+                self._moderateMessages(messageIDs, 'reject', reason);
+            }
+        }).open();
+    },
+    /**
      * @private
      */
     _renderButtons: function () {
@@ -402,6 +577,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_chat_button_invite', this._onInviteButtonClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_moderate_all', this._onModerateAllClicked.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_select_all', this._onSelectAllClicked.bind(this));
+        this.$buttons.on('click', '.o_mail_chat_button_unselect_all', this._onUnselectAllClicked.bind(this));
     },
     /**
      * @private
@@ -454,25 +632,23 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @returns {Deferred}
      */
     _renderThread: function () {
-        var self = this;
         this.thread = new ChatThread(this, {display_help: true, loadMoreOnScroll: true});
 
         this.thread.on('redirect', this, function (resModel, resID) {
-            self.call('chat_manager', 'redirect', resModel, resID, self._setChannel.bind(self));
+            this.call('chat_manager', 'redirect', resModel, resID, this._setChannel.bind(this));
         });
         this.thread.on('redirect_to_channel', this, function (channelID) {
-            self.call('chat_manager', 'joinChannel', channelID).then(this._setChannel.bind(this));
+            this.call('chat_manager', 'joinChannel', channelID).then(this._setChannel.bind(this));
         });
         this.thread.on('load_more_messages', this, this._loadMoreMessages);
         this.thread.on('mark_as_read', this, function (messageID) {
-            self.call('chat_manager', 'markAsRead', [messageID]);
+            this.call('chat_manager', 'markAsRead', [messageID]);
         });
         this.thread.on('toggle_star_status', this, function (messageID) {
-            self.call('chat_manager', 'toggleStarStatus', messageID);
+            this.call('chat_manager', 'toggleStarStatus', messageID);
         });
         this.thread.on('select_message', this, this._selectMessage);
         this.thread.on('unselect_message', this, this._unselectMessage);
-
         return this.thread.appendTo(this.$('.o_mail_chat_content'));
     },
     /**
@@ -612,6 +788,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         chatBus.on('update_channel_unread_counter', this, this.throttledUpdateChannels);
         chatBus.on('update_dm_presence', this, this.throttledUpdateChannels);
         chatBus.on('activity_updated', this, this.throttledUpdateChannels);
+        chatBus.on('update_moderation_counter', this, this.throttledUpdateChannels);
     },
     /**
      * Stores the scroll position and composer state of the current channel
@@ -663,6 +840,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             channels: this.call('chat_manager', 'getChannels'),
             needaction_counter: this.call('chat_manager', 'getNeedactionCounter'),
             starred_counter: this.call('chat_manager', 'getStarredCounter'),
+            moderationCounter: this.call('chat_manager', 'getModerationCounter'),
+            isModerator: this.call('chat_manager', 'isModerator'),
         });
         this.$(".o_mail_chat_sidebar").html($sidebar.contents());
         _.each(['dm', 'public', 'private'], function (type) {
@@ -693,6 +872,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             this.$buttons
                 .find('.o_mail_chat_button_unstar_all')
                 .toggleClass('disabled', disabled);
+        }
+        if ((this.channel.isModerated && this.channel.isModerator) || this.channel.id === "channel_moderation") {
+            this._updateModerationButtons();
         }
     },
     /**
@@ -727,12 +909,68 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .find('.o_mail_chat_button_unstar_all')
             .toggle(channel.id === "channel_starred")
             .removeClass("o_hidden");
-
+        this.$buttons
+            .find('.o_mail_chat_button_select_all')
+            .toggle((channel.isModerated && channel.isModerator) || channel.id === "channel_moderation")
+            .removeClass("o_hidden");
+        this.$buttons
+            .find('.o_mail_chat_button_unselect_all')
+            .toggle((channel.isModerated && channel.isModerator) || channel.id === "channel_moderation")
+            .removeClass("o_hidden");
+        this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
         this.$('.o_mail_chat_channel_item')
             .removeClass('o_active')
             .filter('[data-channel-id=' + channel.id + ']')
             .removeClass('o_unread_message')
             .addClass('o_active');
+    },
+    /**
+     * Update the moderation buttons.
+     *
+     * @private
+     */
+    _updateModerationButtons: function () {
+        this._updateSelectUnselectAllButtons();
+        this._updateModerationDecisionButton();
+    },
+    /**
+     * Display/hide the "moderate all" button based on whether
+     * some moderation checkboxes are checked or not.
+     * If some checkboxes are checked, display this button,
+     * otherwise hide it.
+     *
+     * @private
+     */
+    _updateModerationDecisionButton: function () {
+        if (this.thread.$('.moderation_checkbox:checked').length) {
+            this.$buttons.find('.o_mail_chat_button_moderate_all').show();
+        } else {
+            this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
+        }
+    },
+    /**
+     * @private
+     */
+    _updateSelectUnselectAllButtons: function () {
+        var buttonSelect = this.$buttons.find('.o_mail_chat_button_select_all');
+        var buttonUnselect = this.$buttons.find('.o_mail_chat_button_unselect_all');
+        var numCheckboxes = this.thread.$('.moderation_checkbox').length;
+        var numCheckboxesChecked = this.thread.$('.moderation_checkbox:checked').length;
+        if (numCheckboxes) {
+            if (numCheckboxesChecked === numCheckboxes) {
+                buttonSelect.toggleClass('disabled', true);
+                buttonUnselect.toggleClass('disabled', false);
+            } else if (numCheckboxesChecked === 0) {
+                buttonSelect.toggleClass('disabled', false);
+                buttonUnselect.toggleClass('disabled', true);
+            } else {
+                buttonSelect.toggleClass('disabled', false);
+                buttonUnselect.toggleClass('disabled', false);
+            }
+        } else {
+            buttonSelect.toggleClass('disabled', true);
+            buttonUnselect.toggleClass('disabled', true);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -781,12 +1019,34 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     /**
      * @private
      */
+    _onCloseNotificationBar: function () {
+        this.$(".o_mail_annoying_notification_bar").slideUp();
+    },
+    /**
+     * @private
+     */
     _onComposerFocused: function () {
         var composer = this.channel.mass_mailing ? this.extendedComposer : this.basicComposer;
         var commands = this.call('chat_manager', 'getCommands', this.channel);
         var partners = this.call('chat_manager', 'getMentionPartnerSuggestions', this.channel);
         composer.mention_set_enabled_commands(commands);
         composer.mention_set_prefetched_partners(partners);
+    },
+    /**
+     * @private
+     */
+    _onInviteButtonClicked: function () {
+        var title = _.str.sprintf(_t('Invite people to #%s'), this.channel.name);
+        new PartnerInviteDialog(this, title, this.channel.id).open();
+    },
+    /**
+     * @private
+     * @param {KeyEvent} event
+     */
+    _onKeydown: function (event) {
+        if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
+            this._unselectMessage();
+        }
     },
     /**
      * @private
@@ -803,6 +1063,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var currentChannelID = this.channel.id;
         if ((currentChannelID === "channel_starred" && !message.is_starred) ||
+            (currentChannelID === "channel_moderation" && !message.needsModeration) ||
             (currentChannelID === "channel_inbox" && !message.is_needaction)) {
                 this.call('chat_manager', 'getMessages', {
                         channelID: this.channel.id,
@@ -814,9 +1075,33 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                             self._updateButtonStatus(messages.length === 0, type);
                         });
                 });
-        } else if (_.contains(message.channel_ids, currentChannelID)) {
+        } else if (_.contains(message.channel_ids, currentChannelID) || (message.res_id === currentChannelID)) {
             this._fetchAndRenderThread();
         }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onModerateAllClicked: function (ev) {
+        var decision = $(ev.target).data('decision');
+        var messageIDs = this.thread.$('.moderation_checkbox:checked')
+                            .map(function () {
+                                return $(this).data('message-id');
+                            })
+                            .get();
+        this._handleModerationDecision(messageIDs, decision);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {integer} ev.data.messageID ID of the moderated message
+     * @param {string} ev.data.decision can be 'reject', 'discard', 'ban', 'accept', 'allow'.
+     */
+    _onMessageModeration: function (ev) {
+        var messageIDs = [ev.data.messageID];
+        var decision = ev.data.decision;
+        this._handleModerationDecision(messageIDs, decision);
     },
     /**
      * @private
@@ -872,7 +1157,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
                 }
             })
             .fail(function () {
-                // todo: display notification
+                // todo: display notifications
             });
     },
     /**
@@ -888,28 +1173,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }, {
             on_reverse_breadcrumb: this.on_reverse_breadcrumb,
         });
-    },
-    /**
-     * @private
-     */
-    _onCloseNotificationBar: function () {
-        this.$(".o_mail_annoying_notification_bar").slideUp();
-    },
-    /**
-     * @private
-     */
-    _onInviteButtonClicked: function () {
-        var title = _.str.sprintf(_t('Invite people to #%s'), this.channel.name);
-        new PartnerInviteDialog(this, title, this.channel.id).open();
-    },
-    /**
-     * @private
-     * @param {KeyEvent} event
-     */
-    _onKeydown: function (event) {
-        if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
-            this._unselectMessage();
-        }
     },
     /**
      * @private
@@ -951,6 +1214,17 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             this._fetchAndRenderThread();
         }
     },
+     /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onSelectAllClicked: function (ev) {
+        var $button = $(ev.target);
+        if (!$button.hasClass('disabled')) {
+            this.thread.toggleModerationCheckboxes(true);
+            this._updateModerationButtons();
+        }
+    },
     /**
      * @private
      * @param {MouseEvent} event
@@ -977,9 +1251,30 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} ev
+     */
+    _onUnselectAllClicked: function (ev) {
+        var $button = $(ev.target);
+        if (!$button.hasClass('disabled')) {
+            this.thread.toggleModerationCheckboxes(false);
+            this._updateModerationButtons();
+        }
+    },
+    /**
+     * @private
      */
     _onUnstarAllClicked: function () {
         this.call('chat_manager', 'unstarAll');
+    },
+    /**
+     * Update the moderation buttons.
+     * This is triggered when a moderation checkbox
+     * has its checked property changed.
+     *
+     * @private
+     */
+    _onUpdateModerationButtons: function () {
+        this._updateModerationButtons();
     },
 });
 

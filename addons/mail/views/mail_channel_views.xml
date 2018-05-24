@@ -83,7 +83,16 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
+                    <header>
+                        <button name="send_guidelines" type="object" string="Send guidelines" confirm="You are going to send the guidelines to all the subscribers. Do you confirm the action?" attrs="{'invisible':['|',('moderation_guidelines','=',False), ('is_moderator', '=', False)]}"/>
+                    </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <field name="is_moderator" invisible="1"/>
+                            <button class="btn btn-sm oe_stat_button" name="mail.mail_moderation_action" type="action" attrs="{'invisible':[('is_moderator', '=', False)]}" icon="fa-bars" context="{'search_default_channel_id': active_id}">
+                            <field string="Ban List" name="moderation_count" widget="statinfo"/>
+                            </button>
+                        </div>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image_medium', 'size': [90, 90]}"/>
                         <div class="oe_title">
@@ -96,6 +105,7 @@
                         </div>
                         <group class="o_label_nowrap">
                             <field name="email_send"/>
+                            <field name="moderation" attrs="{'invisible': [('email_send', '=', False)]}"/>
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </group>
                         <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -123,9 +133,18 @@
                                 <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id"/>
-                                        <field name="partner_email"/>
+                                        <field name="partner_email" readonly="1"/>
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Moderation" attrs="{'invisible': [('moderation', '=', False)]}">
+                                <group>
+                                    <field name="moderator_ids" widget="many2many_tags"/>
+                                    <field name="moderation_notify"/>
+                                    <field name="moderation_notify_msg" attrs="{'invisible': [('moderation_notify', '=', False)]}"/>
+                                    <field name="moderation_guidelines"/>
+                                    <field name="moderation_guidelines_msg" attrs="{'invisible':[('moderation_guidelines', '=', False)]}"/>
+                                </group>
                             </page>
                             <page string="Integrations" invisible="0" name="mail_channel_integrations"></page>
                         </notebook>
@@ -136,7 +155,7 @@
                 </form>
             </field>
         </record>
-
+        
         <record id="mail_channel_view_tree" model="ir.ui.view">
             <field name="name">mail.channel.tree</field>
             <field name="model">mail.channel</field>

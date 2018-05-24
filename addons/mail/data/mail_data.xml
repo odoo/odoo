@@ -226,5 +226,37 @@
 </td></tr>
 </table>
         </template>
+
+        <!-- Channel and moderation related data -->
+        <template id="mail_channel_notify_moderation">
+<div>
+    <p>Hello <t t-esc='record.name'/></p>
+    <p>You have messages to moderate, please go for the proceedings.</p><br/><br/>
+    <div style="text-align: center;">
+        <a href="/web#action=mail.mail_channel_action_client_chat&amp;active_id=channel_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
+        <br/><br/><br/>
+    </div>
+    <p>Thank you!</p>
+</div>
+        </template>
+
+        <record id="mail_template_channel_send_guidelines" model="mail.template">
+            <field name="name">Partner: Send channel guidelines</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="email_from">${object.company_id.catchall or object.company_id.email|safe}</field>
+            <field name="partner_to">${object.id}</field>
+            <field name="subject">Guidelines of channel ${ctx['channel'].name}</field>
+            <field name="body_html" type="xml">
+<div>
+<p>Hello ${object.name or ''},</p>
+<p>Please find below the guidelines of the ${ctx['channel'].name} channel.</p>
+<p>
+${ctx['channel'].moderation_guidelines_msg}
+</p>
+<p></p>
+</div>
+</field>
+            <field name="user_signature" eval="False"/>
+        </record>
     </data>
 </odoo>

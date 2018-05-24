@@ -32,6 +32,7 @@
         'views/mail_templates.xml',
         'wizard/email_template_preview_view.xml',
         'views/mail_template_views.xml',
+        'views/mail_moderation_views.xml',
         'views/ir_actions_views.xml',
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',

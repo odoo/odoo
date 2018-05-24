@@ -44,13 +44,21 @@ QUnit.module('Discuss client action', {
                         type: 'boolean',
                     },
                     needaction: {
-                      string: "Need Action",
-                      type: 'boolean',
-                  },
-                  starred_partner_ids: {
-                      string: "partner ids",
-                      type: 'integer',
-                  }
+                        string: "Need Action",
+                        type: 'boolean',
+                    },
+                    starred_partner_ids: {
+                        string: "partner ids",
+                        type: 'integer',
+                    },
+                    model: {
+                        string: "Related Document model",
+                        type: 'char',
+                    },
+                    res_id: {
+                        string: "Related Document ID",
+                        type: 'integer',
+                    },
                 },
             },
         };

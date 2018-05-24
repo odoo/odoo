@@ -5,6 +5,7 @@ import base64
 from odoo.addons.test_mail.tests import common
 from odoo.exceptions import AccessError, except_orm
 from odoo.tools import mute_logger
+from odoo.tests import tagged
 
 
 class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
@@ -213,6 +214,10 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         messages = self.env['mail.message'].sudo(self.user_portal).search([('subject', 'like', '_ZTest')])
         self.assertEqual(messages, msg4 | msg5)
 
+    # --------------------------------------------------
+    # READ
+    # --------------------------------------------------
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
         # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
@@ -251,6 +256,16 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         # Test: Bert reads the message, ok because linked to a doc he is allowed to read
         self.message.sudo(self.user_employee).read()
 
+    def test_mail_message_access_read_crash_moderation(self):
+        # with self.assertRaises(AccessError):
+        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
+        # Test: Bert reads the message, ok because linked to a doc he is allowed to read
+        self.message.sudo(self.user_employee).read()
+
+    # --------------------------------------------------
+    # CREATE
+    # --------------------------------------------------
+
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_mail_message_access_create_crash_public(self):
         # Do: Bert creates a message on Pigs -> ko, no creation rights
@@ -284,6 +299,25 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
+    # --------------------------------------------------
+    # WRITE
+    # --------------------------------------------------
+
+    def test_mail_message_access_write_moderation(self):
+        """ Only moderators can modify pending messages """
+        self.group_public.write({
+            'email_send': True,
+            'moderation': True,
+            'channel_partner_ids': [(4, self.partner_employee.id)],
+            'moderator_ids': [(4, self.user_employee.id)],
+        })
+        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
+        self.message.sudo(self.user_employee).write({'moderation_status': 'accepted'})
+
+    def test_mail_message_access_write_crash_moderation(self):
+        self.message.write({'model': 'mail.channel', 'res_id': self.group_public.id, 'moderation_status': 'pending_moderation'})
+        with self.assertRaises(AccessError):
+            self.message.sudo(self.user_employee).write({'moderation_status': 'accepted'})
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
@@ -351,3 +385,72 @@ class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
         portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
+
+
+@tagged('moderation')
+class TestMessageModeration(common.Moderation):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMessageModeration, cls).setUpClass()
+
+        cls.msg_admin_pending_c1 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_admin)
+        cls.msg_admin_pending_c1_2 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_admin)
+        cls.msg_emp2_pending_c1 = cls._create_new_message(cls, cls.channel_1.id, status='pending_moderation', author=cls.partner_employee_2)
+
+    @mute_logger('odoo.models.unlink')
+    def test_moderate_accept(self):
+        self._clear_bus()
+        # A pending moderation message needs to have field channel_ids empty. Moderators
+        # need to be able to notify a pending moderation message (in a channel they moderate).
+        self.assertFalse(self.msg_admin_pending_c1.channel_ids)
+        self.msg_admin_pending_c1.sudo(self.user_employee)._moderate('accept')
+        self.assertEqual(self.msg_admin_pending_c1.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_admin_pending_c1.moderation_status, 'accepted')
+        self.assertEqual(self.msg_admin_pending_c1_2.moderation_status, 'pending_moderation')
+        self.assertBusNotification([(self.cr.dbname, 'mail.channel', self.channel_1.id)])
+
+    @mute_logger('odoo.models.unlink')
+    def test_moderate_allow(self):
+        self._clear_bus()
+        # A pending moderation message needs to have field channel_ids empty. Moderators
+        # need to be able to notify a pending moderation message (in a channel they moderate).
+        self.assertFalse(self.msg_admin_pending_c1.channel_ids)
+        self.assertFalse(self.msg_admin_pending_c1_2.channel_ids)
+        self.msg_admin_pending_c1.sudo(self.user_employee)._moderate('allow')
+        self.assertEqual(self.msg_admin_pending_c1.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_admin_pending_c1_2.channel_ids, self.channel_1)
+        self.assertEqual(self.msg_admin_pending_c1.moderation_status, 'accepted')
+        self.assertEqual(self.msg_admin_pending_c1_2.moderation_status, 'accepted')
+        self.assertBusNotification([
+            (self.cr.dbname, 'mail.channel', self.channel_1.id),
+            (self.cr.dbname, 'mail.channel', self.channel_1.id)])
+
+    @mute_logger('odoo.models.unlink')
+    def test_moderate_reject(self):
+        self._init_mock_build_email()
+        (self.msg_admin_pending_c1 | self.msg_emp2_pending_c1).sudo(self.user_employee)._moderate_send_reject_email('Title', 'Message to author')
+        self.env['mail.mail'].process_email_queue()
+        self.assertEmails(self.partner_employee, self.partner_employee_2 | self.partner_admin, subject='Title', body_content='Message to author')
+
+    def test_moderate_discard(self):
+        self._clear_bus()
+        id1, id2 = self.msg_admin_pending_c1.id, self.msg_emp2_pending_c1.id  # save ids because unlink will discard them
+        (self.msg_admin_pending_c1 | self.msg_emp2_pending_c1).sudo(self.user_employee)._moderate_discard()
+
+        self.assertBusNotification(
+            [(self.cr.dbname, 'res.partner', self.partner_admin.id),
+             (self.cr.dbname, 'res.partner', self.partner_employee_2.id),
+             (self.cr.dbname, 'res.partner', self.partner_employee.id)],
+            [{'type': 'deletion', 'message_ids': [id1]},  # admin: one message deleted because discarded
+             {'type': 'deletion', 'message_ids': [id2]},  # employee_2: one message delete because discarded
+             {'type': 'deletion', 'message_ids': [id1, id2]}]  # employee: two messages deleted because moderation done
+        )
+
+    @mute_logger('odoo.models.unlink')
+    def test_notify_moderators(self):
+        # create pending messages in another channel to have two notification to push
+        msg_emp_pending_c2 = self._create_new_message(self.channel_2.id, status='pending_moderation', author=self.partner_employee)
+
+        self.env['mail.message']._notify_moderators()
+        self.assertEmails(False, self.partner_employee | self.partner_employee_2, subject='Message are pending moderation', email_from=self.env.user.company_id.catchall or self.env.user.company_id.email)
