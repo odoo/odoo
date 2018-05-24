@@ -4174,6 +4174,37 @@ QUnit.module('Views', {
             '/web/dataset/search_read'], "shouldn't called '/web/dataset/call_kw/foo/write'");
         list.destroy();
     });
+
+    QUnit.test('grouped list view, with all selector bar', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.records.push({id:5, foo: "blip"});
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasSidebar: true},
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            groupBy: ['foo'],
+        });
+        // open groups
+        list.$('.o_group_header:eq(0)').click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 0,
+            "Don't display selection bar if no records in other page");
+        // select all records of current page
+        list.$('thead .o_list_record_selector input').click();
+        list.$('.o_group_header:eq(1)').click();
+        list.$('thead .o_list_record_selector input').click();
+        assert.strictEqual(list.$('.o_list_view_select_all').length, 1,
+            "Display selection bar if there is records in other page of any group");
+        // select all records of active domain
+        list.$('.o_list_view_select_action[data-action-type="select_all"]').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+        assert.strictEqual(list.model.get(list.handle).count, 1,
+            "All records of opened groups are deleted except one group that is not open");
+        list.destroy();
+    });
 });
 
 });
