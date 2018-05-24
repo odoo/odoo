@@ -40,7 +40,7 @@ class AccountingTestTemplConsistency(HttpCase):
         '''Test fields consistency for ('account.tax', 'account.tax.template')
         '''
         self.check_fields_consistency('account.tax.template', 'account.tax', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.tax', 'account.tax.template')
+        self.check_fields_consistency('account.tax', 'account.tax.template', exceptions=['company_id'])
 
     def test_fiscal_position_fields(self):
         '''Test fields consistency for ('account.fiscal.position', 'account.fiscal.position.template')
