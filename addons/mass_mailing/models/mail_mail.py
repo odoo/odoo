@@ -92,9 +92,9 @@ class MailMail(models.Model):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
             unsubscribe_url = self._get_unsubscribe_url(email_to)
-            regex_link_to_replace = re.escape(base_url) + '(/[a-z]{2}_[A-Z]{2})?' + '/unsubscribe_from_list'
+            link_to_replace =  base_url+'/unsubscribe_from_list'
             if link_to_replace in res['body']:
-                res['body'] = res['body'].replace(regex_link_to_replace, unsubscribe_url if unsubscribe_url else '#')
+                res['body'] = res['body'].replace(link_to_replace, unsubscribe_url if unsubscribe_url else '#')
         return res
 
     @api.multi
