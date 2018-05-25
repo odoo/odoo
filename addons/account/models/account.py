@@ -91,8 +91,7 @@ class AccountAccount(models.Model):
             rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
             if not rec:
                 return new_code
-        else:
-            raise UserError(_('Cannot generate an unused account code.'))
+        raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
         for record in self:
