@@ -198,7 +198,7 @@
         </h4>
         <div><a t-attf-href="/partners/#{slug(partner.assigned_partner_id)}"
                 t-field="partner.assigned_partner_id.image_medium"
-                t-options='{"widget": "image", "class": "center-block"}'
+                t-options='{"widget": "image", "class": "d-block mx-auto"}'
              />
         </div>
         <address class="text-left">
@@ -218,7 +218,7 @@
             <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
               <t t-if="reference.website_published">
                 <a class="float-left" t-attf-href="/customers/#{slug(reference)}">
-                    <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
+                    <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
                     <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
