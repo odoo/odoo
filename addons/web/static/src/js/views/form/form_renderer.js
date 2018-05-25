@@ -708,22 +708,35 @@ var FormRenderer = BasicRenderer.extend({
      */
     _renderTagLabel: function (node) {
         var self = this;
-        var text;
         var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
-        if ('string' in node.attrs) { // allow empty string
-            text = node.attrs.string;
+        var $label = $('<label>', { class: 'o_form_label', for: this._getIDForLabel(fieldName)});
+        // field inside label for dynamic labeling
+        if (node.tag === 'label' && node.children.length) {
+            // Iterate on all children recursively and forcefully set readonly mode on field widget if available as a child
+            var setFieldReadonly = function (nd) {
+                _.map(nd.children, function (child) {
+                    if (child.tag === 'field') {
+                        child.attrs.modifiers.readonly = true;
+                    } else if (child.children) {
+                        setFieldReadonly(child);
+                    }
+                });
+            };
+            setFieldReadonly(node);
+
+            $label.append(_.map(node.children, function (child) {
+                return self._renderNode(child);
+            }));
+        } else if ('string' in node.attrs) { // allow empty string
+            $label.text(node.attrs.string);
         } else if (fieldName) {
-            text = this.state.fields[fieldName].string;
+            var text = this.state.fields[fieldName].string;
+            $label.text(text);
         } else  {
             return this._renderGenericTag(node);
         }
-        var $result = $('<label>', {
-            class: 'o_form_label',
-            for: this._getIDForLabel(fieldName),
-            text: text,
-        });
         if (node.tag === 'label') {
-            this._handleAttributes($result, node);
+            this._handleAttributes($label, node);
         }
         var modifiersOptions;
         if (fieldName) {
@@ -750,8 +763,8 @@ var FormRenderer = BasicRenderer.extend({
         // would be to merge them with associated field node if any... note:
         // this worked in 10.0 for "o_form_label_empty" reevaluation but not for
         // "o_invisible_modifier" reevaluation on labels...
-        this._registerModifiers(node, this.state, $result, modifiersOptions);
-        return $result;
+        this._registerModifiers(node, this.state, $label, modifiersOptions);
+        return $label;
     },
     /**
      * @private

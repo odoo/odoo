@@ -232,6 +232,8 @@ class Partner(models.Model):
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
 
+    vat_label = fields.Char(string="Vat Label", compute='_compute_vat_label')
+
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
@@ -282,6 +284,11 @@ class Partner(models.Model):
         for partner in self:
             p = partner.commercial_partner_id
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
+
+    @api.depends('company_id')
+    def _compute_vat_label(self):
+        for partner in self:
+            partner.vat_label = partner.company_id.country_id.vat_label
 
     @api.model
     def _get_default_image(self, partner_type, is_company, parent_id):

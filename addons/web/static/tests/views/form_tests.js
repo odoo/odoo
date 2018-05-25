@@ -636,6 +636,35 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('label with field generates dynamic label', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<label for="bar">' +
+                                '<field name="foo"/>' +
+                            '</label>' +
+                            '<div><field name="bar"/></div>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('label.o_form_label:contains(blip)').length, 1,
+                        "should have 1 field value of foo as label");
+        assert.strictEqual(form.$('label.o_form_label > .o_field_widget').length, 1,
+                        "field should be rendered inside label");
+        form.destroy();
+    });
+
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
         assert.expect(4);
 
