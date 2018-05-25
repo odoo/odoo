@@ -66,6 +66,8 @@ class Company(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
+    base_onboarding_company_done = fields.Boolean("Onboarding company step done",
+        compute="_compute_base_onboarding_company_done")
 
     @api.model_cr
     def init(self):
@@ -263,3 +265,16 @@ class Company(models.Model):
                         .report_action(docids))
         else:
             return res
+
+    @api.depends('street')
+    def _compute_base_onboarding_company_done(self):
+        """ The company onboarding step is marked as done if street1 is filled. """
+        for record in self:
+            record.base_onboarding_company_done = bool(record.street)
+
+    @api.model
+    def action_open_base_onboarding_company(self):
+        """ Onboarding step for company basic information. """
+        action = self.env.ref('base.action_open_base_onboarding_company').read()[0]
+        action['res_id'] = self.env.user.company_id.id
+        return action
