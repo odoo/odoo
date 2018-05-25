@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 
 class TestUom(TransactionCase):
@@ -47,3 +48,10 @@ class TestUom(TransactionCase):
 
         qty = self.uom_unit._compute_quantity(2, product_uom)
         self.assertEquals(qty, 1, "Converted quantity should be rounded up.")
+
+    def test_30_rounding_precision(self):
+        digits = self.env['decimal.precision'].precision_get(
+            'Product Unit of Measure'
+        )
+        with self.assertRaises(UserError):
+            self.uom_dozen.rounding = 10**(-digits-1)
