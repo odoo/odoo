@@ -519,6 +519,15 @@ class Import(models.TransientModel):
                     if match:
                         matches[index] = match.split('/')
 
+            if options.get('keep_matches'):
+                advanced_mode = options.get('advanced')
+            else:
+                # Check is label contain relational field
+                has_relational_header = any([len(models.fix_import_export_id_paths(col)) > 1 for col in headers or []])
+                # Check is matches fields have relational field
+                has_relational_match = any([len(matches[field]) > 1 for field in matches or [] if matches[field]])
+                advanced_mode = has_relational_header or has_relational_match
+
             return {
                 'fields': fields,
                 'matches': matches or False,
@@ -526,6 +535,7 @@ class Import(models.TransientModel):
                 'headers_type': header_types or False,
                 'preview': preview,
                 'options': options,
+                'advanced_mode': advanced_mode,
                 'debug': self.user_has_groups('base.group_no_one'),
             }
         except Exception as error:

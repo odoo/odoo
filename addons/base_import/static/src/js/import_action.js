@@ -304,6 +304,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         this.$el.find('.oe_import_box, .oe_import_with_file').removeClass('hidden');
         this.$el.find('.o_view_nocontent').addClass('hidden');
         this.$el.addClass('oe_import_preview');
+        this.$('input.oe_import_advanced_mode').prop('checked', result.advanced_mode);
         this.$('.oe_import_grid').html(QWeb.render('ImportView.preview', result));
 
         if (result.headers.length === 1) {
