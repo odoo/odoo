@@ -44,7 +44,7 @@
             <li id="my_cart" t-attf-class="nav-item#{'' if website_sale_order and website_sale_order.cart_quantity else ' d-none'}">
                 <a href="/shop/cart" class="nav-link">
                     <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
                 </a>
             </li>
         </xpath>
@@ -1600,7 +1600,7 @@
     <template id="website_sale.brand_promotion" inherit_id="website.brand_promotion">
         <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
             <div class="o_brand_promotion">
-                Powered by <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
+                Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>,
                 the #1 <a target="_blank" href="http://www.odoo.com/page/e-commerce">Open Source eCommerce</a>.
             </div>
         </xpath>

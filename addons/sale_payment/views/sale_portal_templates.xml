@@ -57,10 +57,10 @@
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
                         <t t-if="tx.state == 'done'">
-                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
+                            <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
                         </t>
                         <t t-if="tx.state != 'done'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>

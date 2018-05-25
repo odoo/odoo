@@ -45,8 +45,8 @@ QUnit.module('mrp', {
 
         assert.strictEqual(form.$('.o_field_widget').text(), "Waiting Materials",
             "the widget should be correctly named");
-        assert.strictEqual(form.$('.o_field_widget .label-danger').length, 1,
-            "the label should be danger");
+        assert.strictEqual(form.$('.o_field_widget .badge-danger').length, 1,
+            "the badge should be danger");
 
         form.destroy();
     });

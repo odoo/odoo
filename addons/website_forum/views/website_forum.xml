@@ -233,7 +233,7 @@
         <div><t t-raw="post_content"/></div>
         <t t-foreach="question.tag_ids" t-as="question_tag">
             <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
-                <span t-attf-class="float-right label #{tag and tag.name == question_tag.name and 'label-primary' or 'label-default'}" t-field="question_tag.name"
+                <span t-attf-class="float-right badge #{tag and tag.name == question_tag.name and 'badge-primary' or 'badge-secondary'}" t-field="question_tag.name"
                     style="margin-right: 4px;"/>
             </a>
         </t>
@@ -769,7 +769,7 @@
                 <div class="float-right">
                     <div class="text-right">
                         <t t-foreach="question.tag_ids" t-as="tag">
-                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label label-default" t-field="tag.name"/>
+                            <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="badge badge-secondary" t-field="tag.name"/>
                         </t>
                     </div>
                 </div>
@@ -1135,7 +1135,7 @@
             <div class="col-md-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
                 <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" role="img" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
-                        t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
+                        t-attf-class="badge #{'badge-primary' if tag.message_is_follower else 'badge-secondary'}">
                     <span t-field="tag.name"/>
                 </a>
                 <div t-attf-class="o_forum_tag_follow_box">
@@ -1475,7 +1475,7 @@
                 <ul class="list-unstyled">
                     <li t-foreach="activities" t-as="activity">
                         <span t-field="activity.date" t-options='{"format": "short"}'/>
-                        <span t-esc="activity.subtype_id.name" class="label label-info"/>
+                        <span t-esc="activity.subtype_id.name" class="badge badge-info"/>
                         <t t-set="post" t-value="posts[activity.res_id]"/>
                         <span t-if="post[1]">
                             <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">

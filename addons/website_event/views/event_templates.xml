@@ -49,9 +49,9 @@
                             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
-                                    <small t-if="event.is_participating" class="label label-info">Participating</small>
-                                    <small t-if="event.is_online" class="label label-info">Online</small>
-                                    <small t-if="not event.website_published" class="label label-danger">unpublished</small>
+                                    <small t-if="event.is_participating" class="badge badge-info">Participating</small>
+                                    <small t-if="event.is_online" class="badge badge-info">Online</small>
+                                    <small t-if="not event.website_published" class="badge badge-danger">unpublished</small>
                                 </h4>
                                 <div>
                                     <t t-if="event.organizer_id">
@@ -269,7 +269,7 @@
         <div itemscope="itemscope" itemtype="http://schema.org/Event" class="container">
             <h1 itemprop="name" class="text-center" t-field="event.name"></h1>
             <div class="text-center">
-                <small t-if="event.is_participating" class="label label-info">Participating</small>
+                <small t-if="event.is_participating" class="badge badge-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
                 <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
@@ -378,7 +378,7 @@
                         </p>
                         <p>
                             <strong>Use this tag:</strong>
-                            <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                            <a t-att-href="'http://twitter.com/search?q=%23'+event.twitter_hashtag" target="_blank" class="badge badge-primary">#<span t-field="event.twitter_hashtag"/></a>
                         </p>
                     </div>
                 </div>
@@ -675,7 +675,7 @@
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
                         <t t-if="not event_dict['event'].website_published">
-                            <span class="label label-danger" role="img" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
+                            <span class="badge badge-danger" role="img" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
                         </t>
                         <t t-if="event_dict['event'].address_id">
                             <i class="fa fa-map-marker" title="It is a physical event" role="img" aria-label="It is a physical event"></i>
@@ -702,7 +702,7 @@
 <template id="website_event.brand_promotion" inherit_id="website.brand_promotion">
     <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">
         <div class="o_brand_promotion">
-            Powered by <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
+            Powered by <a target="_blank" class="badge badge-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>.
             Try the <a target="_blank" href="http://www.odoo.com/page/website-builder">open source website builder</a>.
         </div>
     </xpath>

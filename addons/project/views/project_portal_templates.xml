@@ -143,7 +143,7 @@
                                             <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
                                         </td>
                                         <td>
-                                            <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                            <span class="badge badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
                                         </td>
                                         <td>
                                             <span t-esc="task.id"/>
@@ -169,7 +169,7 @@
                         <div class="col-lg-12">
                             <h4>
                                 Task - <span t-field="task.name"/> (#<span t-esc="task.id"/>)
-                                <span t-field="task.stage_id.name" class="float-right label label-info" title="Current stage of this task"/>
+                                <span t-field="task.stage_id.name" class="float-right badge badge-info" title="Current stage of this task"/>
                                 <a role="button" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>
                             </h4>
                         </div>

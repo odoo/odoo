@@ -49,7 +49,7 @@
                                 <h3 class="mt4 mb4 lead" t-att-title="channel.name" style="width:55%">
                                     <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
                                 </h3>
-                                <span class="label label-warning" t-if="not channel.can_see_full">Private channel</span>
+                                <span class="badge badge-warning" t-if="not channel.can_see_full">Private channel</span>
                             </div>
                             <div>
                                 <p class="text-muted oe_no_empty" t-field="channel.description"/>
@@ -221,7 +221,7 @@
                             </h3>
                             <div class="row mt8 mb8" t-if="channel.promoted_slide_id.tag_ids">
                                 <t t-foreach="channel.promoted_slide_id.tag_ids" t-as="slide_tag">
-                                    <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(slide_tag)}" t-attf-class="label label-default #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
+                                    <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(slide_tag)}" t-attf-class="badge badge-secondary #{tag and tag.id == slide_tag.id and 'badge-primary' ''}" t-field="slide_tag.name"/>
                                 </t>
                             </div>
                             <div class="row oe_no_empty" t-esc="channel.promoted_slide_id.description"/>
@@ -328,7 +328,7 @@
             <a t-attf-href="/slides/slide/#{slug(slide)}">
                 <img t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" class="img-fluid img-thumbnail oe_slides_grid_thumbnail" alt="slide.name"/>
             </a>
-            <span t-if="not slide.website_published" class="label label-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
+            <span t-if="not slide.website_published" class="badge badge-danger" style="position: absolute;right: 20px;top: 7px;">Unpublished</span>
             <a t-if="not is_public_user and slide.website_published and slide.channel_id.promote_strategy == 'custom' and slide.channel_id.promoted_slide_id.id != slide.id"
                 groups="base.group_user"
                 t-attf-href="/slides/slide/#{slide.id}/promote"
@@ -351,7 +351,7 @@
                 </div>
                 <p t-if="slide.tag_ids" style="padding-top: 5px;">
                     <t t-foreach="slide.tag_ids" t-as="att_tag">
-                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="label label-default #{tag and tag.name == att_tag.name and 'label-primary' ''} text-muted" t-field="att_tag.name"/>
+                        <a t-attf-href="/slides/#{slug(channel)}/tag/#{slug(att_tag)}" t-attf-class="badge badge-secondary #{tag and tag.name == att_tag.name and 'badge-primary' ''} text-muted" t-field="att_tag.name"/>
                     </t>
                 </p>
             </div>
@@ -405,7 +405,7 @@
                                 <div clas="row">
                                     <div class="col-lg-8" t-if="slide.tag_ids">
                                         <t t-foreach="slide.tag_ids" t-as="slide_tag">
-                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 float-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
+                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="badge badge-secondary ml4 mb4 float-right #{tag and tag.id == slide_tag.id and 'badge-primary' ''}" t-field="slide_tag.name"/>
                                         </t>
                                     </div>
                                 </div>

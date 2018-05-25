@@ -65,7 +65,7 @@
                         </div>
                         <div class="text-muted fa fa-tags">
                             <span t-field="post.website_meta_keywords"/>
-                            <span t-if="editable and not post.website_meta_keywords" class="label label-danger">
+                            <span t-if="editable and not post.website_meta_keywords" class="badge badge-danger">
                                 No keywords defined!
                             </span>
                         </div>
@@ -149,7 +149,7 @@
                                 <t t-if="blog_post.visits &lt;= 1" >view</t>
                                 <t t-if="blog_post.visits &gt; 1">views</t>
                             </span>
-                            <span t-if="not blog_post.website_published" class="label label-danger">unpublished</span>
+                            <span t-if="not blog_post.website_published" class="badge badge-danger">unpublished</span>
                             <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
 
                             <!-- To display tags //no options -->
@@ -236,7 +236,7 @@
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
                         <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                            <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                            <a class="badge badge-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
                         </t>
                     </p>
                     <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
