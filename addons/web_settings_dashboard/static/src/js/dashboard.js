@@ -141,7 +141,7 @@ var DashboardInvitations = Widget.extend({
      * @returns {boolean} true iff the given email address is valid
      */
     _validateEmail: function (email) {
-        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
+        var re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
         return re.test(email);
     },
     on_access_rights_clicked: function (e) {
