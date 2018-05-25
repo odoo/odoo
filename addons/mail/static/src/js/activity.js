@@ -32,6 +32,7 @@ function _readActivities(self, ids) {
         model: 'mail.activity',
         method: 'read',
         args: [ids],
+        context: (self.record && self.record.getContext()) || self.getSession().user_context,
     }).then(function (activities) {
         // convert create_date and date_deadline to moments
         _.each(activities, function (activity) {
@@ -108,6 +109,7 @@ var AbstractActivityField = AbstractField.extend({
                 method: 'action_feedback',
                 args: [[id]],
                 kwargs: {feedback: feedback},
+                context: this.record.getContext(),
             });
     },
     _scheduleActivity: function (id, previous_activity_type_id, callback) {
