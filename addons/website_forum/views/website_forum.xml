@@ -1125,9 +1125,9 @@
         </p>
         <nav t-if="pager_tag_chars">
             <ul class="pagination mt0 mb0">
-                <li class="disabled"><a aria-label="Filter" title="Filter"><i class="fa fa-filter"></i></a></li>
+                <li class="page-item disabled"><a class="page-link" aria-label="Filter" title="Filter"><i class="fa fa-filter"></i></a></li>
                 <t t-foreach="pager_tag_chars" t-as="tuple_char">
-                    <li t-attf-class="#{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}"><t t-esc="tuple_char[0]"/></a></li>
+                    <li t-attf-class="page-item #{'active' if active_char_tag == tuple_char[1] else ''}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" class="page-link"><t t-esc="tuple_char[0]"/></a></li>
                 </t>
             </ul>
         </nav>
