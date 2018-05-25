@@ -27,7 +27,7 @@
             <t t-foreach="website_sale_order.applied_coupon_ids" t-as="coupon">
                 <div class="card bg-success text-white mt16">
                     <div class="card-header clearfix">
-                    <span class="pull-left">You have successfully applied following promo code: <b t-esc="coupon.code"/></span>
+                    <span class="float-left">You have successfully applied following promo code: <b t-esc="coupon.code"/></span>
                     </div>
                 </div>
             </t>
@@ -35,7 +35,7 @@
         <t t-if="website_sale_order and website_sale_order.promo_code">
             <div class="card bg-success text-white mt16">
                 <div class="card-header clearfix">
-                <span class="pull-left">You have successfully applied following promo code: <b t-esc="website_sale_order.promo_code"/></span>
+                <span class="float-left">You have successfully applied following promo code: <b t-esc="website_sale_order.promo_code"/></span>
                 </div>
             </div>
         </t>
@@ -43,7 +43,7 @@
             <t t-foreach="website_sale_order.generated_coupon_ids" t-as="coupon">
                 <div class="card bg-success text-white mt16">
                     <div class="card-header clearfix">
-                        <span class="pull-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <b t-esc="coupon.code"/></span>
+                        <span class="float-left">Your reward <b t-esc="coupon.discount_line_product_id.name"/> is available on a next order with this promo code: <b t-esc="coupon.code"/></span>
                     </div>
                 </div>
             </t>
@@ -51,14 +51,14 @@
         <t t-if="request.params.get('code_not_available')">
             <div class="card bg-danger text-white mt16">
                 <div class="card-header clearfix">
-                    <span class="pull-left">Invalid or expired promo code</span>
+                    <span class="float-left">Invalid or expired promo code</span>
                 </div>
             </div>
         </t>
         <t t-if="website_sale_order.get_promo_code_error(delete=False)">
             <div class="card bg-danger text-white mt16">
                 <div class="card-header clearfix">
-                    <span class="pull-left"><t t-esc="website_sale_order.get_promo_code_error()" /></span>
+                    <span class="float-left"><t t-esc="website_sale_order.get_promo_code_error()" /></span>
                 </div>
             </div>
         </t>
