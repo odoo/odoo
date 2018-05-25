@@ -168,7 +168,7 @@
         <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
           <t t-if="reference.website_published">
             <a class="float-left" t-attf-href="/customers/#{slug(reference)}">
-                <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
+                <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
             </a>
             <div class="media-body" style="min-height: 64px;">
                 <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
