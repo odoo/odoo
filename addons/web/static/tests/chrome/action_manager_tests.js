@@ -1447,6 +1447,66 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('open a record while reloading the list view', function (assert) {
+        assert.expect(12);
+
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should display the list view");
+        assert.strictEqual(actionManager.$('.o_list_view .o_data_row').length, 5,
+            "list view should contain 5 records");
+        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 1,
+            "list view buttons should be displayed in control panel");
+
+        // reload (the search_read RPC will be blocked)
+        def = $.Deferred();
+        $('.o_control_panel .o_cp_switch_list').click(); // click on the switch button
+
+        assert.strictEqual(actionManager.$('.o_list_view .o_data_row').length, 5,
+            "list view should still contain 5 records");
+        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 1,
+            "list view buttons should still be displayed in control panel");
+
+        // open a record in form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+
+        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
+            "should display the form view");
+        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 0,
+            "list view buttons should no longer be displayed in control panel");
+        assert.strictEqual($('.o_control_panel .o_form_buttons_view').length, 1,
+            "form view buttons should be displayed instead");
+
+        // unblock the search_read RPC
+        def.resolve();
+
+        assert.strictEqual(actionManager.$('.o_form_view').length, 1,
+            "should display the form view");
+        assert.strictEqual(actionManager.$('.o_list_view').length, 0,
+            "should not display the list view");
+        assert.strictEqual($('.o_control_panel .o_list_buttons').length, 0,
+            "list view buttons should still not be displayed in control panel");
+        assert.strictEqual($('.o_control_panel .o_form_buttons_view').length, 1,
+            "form view buttons should still be displayed instead");
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Client Actions');
 
     QUnit.test('can execute client actions from tag name', function (assert) {
