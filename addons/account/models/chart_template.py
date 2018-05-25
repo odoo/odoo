@@ -94,7 +94,6 @@ class AccountChartTemplate(models.Model):
     _description = "Templates for Account Chart"
 
     name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company')
     parent_id = fields.Many2one('account.chart.template', string='Parent Chart Template')
     code_digits = fields.Integer(string='# of Digits', required=True, default=6, help="No. of Digits to use for account code")
     visible = fields.Boolean(string='Can be Visible?', default=True,
