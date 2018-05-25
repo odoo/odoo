@@ -105,7 +105,10 @@ class AccountInvoice(models.Model):
         residual_company_signed = 0.0
         sign = self.type in ['in_refund', 'out_refund'] and -1 or 1
         for line in self.sudo().move_id.line_ids:
-            if line.account_id == self.account_id:
+            if (
+                line.account_id == self.account_id
+                and line.partner_id == self.commercial_partner_id
+            ):
                 residual_company_signed += line.amount_residual
                 if line.currency_id == self.currency_id:
                     residual += line.amount_residual_currency if line.currency_id else line.amount_residual
@@ -903,7 +906,13 @@ class AccountInvoice(models.Model):
         """ Reconcile payable/receivable lines from the invoice with payment_line """
         line_to_reconcile = self.env['account.move.line']
         for inv in self:
-            line_to_reconcile += inv.move_id.line_ids.filtered(lambda r: not r.reconciled and r.account_id.internal_type in ('payable', 'receivable'))
+            line_to_reconcile += inv.move_id.line_ids.filtered(
+                lambda r: (
+                        not r.reconciled and
+                        r.account_id.internal_type in ('payable', 'receivable')
+                        and r.partner_id == inv.commercial_partner_id
+                )
+            )
         return (line_to_reconcile + payment_line).reconcile(writeoff_acc_id, writeoff_journal_id)
 
     @api.multi
