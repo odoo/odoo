@@ -233,7 +233,7 @@
         <div><t t-raw="post_content"/></div>
         <t t-foreach="question.tag_ids" t-as="question_tag">
             <a t-attf-href="/forum/#{ slug(forum) }/tag/#{slug(question_tag)}/questions">
-                <span t-attf-class="pull-right label #{tag and tag.name == question_tag.name and 'label-primary' or 'label-default'}" t-field="question_tag.name"
+                <span t-attf-class="float-right label #{tag and tag.name == question_tag.name and 'label-primary' or 'label-default'}" t-field="question_tag.name"
                     style="margin-right: 4px;"/>
             </a>
         </t>
@@ -266,7 +266,7 @@
 
 <template id="display_post">
     <div class="question">
-        <div class="pull-left">
+        <div class="float-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="question"/>
             </t>
@@ -278,7 +278,7 @@
 <!-- Display a post as an answer -->
 <template id="display_post_answer">
     <div class="clearfix">
-        <div t-attf-class="pull-left text-center mb16 #{len(answer.vote_ids) and 'oe_green' or 'oe_grey'}">
+        <div t-attf-class="float-left text-center mb16 #{len(answer.vote_ids) and 'oe_green' or 'oe_grey'}">
             <div t-esc="len(answer.vote_ids)"/>
         </div>
         <div class="question-name" style="margin-left: 32px;">
@@ -741,7 +741,7 @@
             Waiting for validation
         </div>
         <div t-attf-class="question #{can_bump and 'oe_js_bump' or ''}" t-att-data-type="question.post_type" t-att-data-last-update="question.write_date" t-att-data-id="question.id">
-            <div class="pull-left">
+            <div class="float-left">
                 <t t-call="website_forum.vote">
                     <t t-set="post" t-value="question"/>
                     <div class="mt4">
@@ -766,7 +766,7 @@
                     <span t-if="not question.active and question.state=='offensive'"><b> [Offensive]</b></span>
                     <span t-if="question.state == 'close'"><b> [Closed]</b></span>
                 </h1>
-                <div class="pull-right">
+                <div class="float-right">
                     <div class="text-right">
                         <t t-foreach="question.tag_ids" t-as="tag">
                             <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ tag.id }/questions" class="label label-default" t-field="tag.name"/>
@@ -810,7 +810,7 @@
                 <div t-if="question.post_type != 'link'"><span t-field="question.content" class="oe_no_empty"/></div>
 
                 <div class="clearfix">
-                    <ul class="pull-right list-inline mb0" id="options">
+                    <ul class="float-right list-inline mb0" id="options">
                         <li t-if="question.state == 'close'" class="list-inline-item">
                             <t t-call="website_forum.link_button">
                                 <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
@@ -926,7 +926,7 @@
 <template id="post_answers">
     <a t-attf-id="answer-#{str(answer.id)}"/>
     <div t-attf-class="forum_answer" t-attf-id="answer_#{answer.id}" >
-        <div class="pull-left">
+        <div class="float-left">
             <t t-call="website_forum.vote">
                 <t t-set="post" t-value="answer"/>
                 <div t-if="question.post_type == 'question'" class="mt4">
@@ -938,7 +938,7 @@
             </t>
         </div>
         <div class="question-block">
-            <div class="pull-right author-box">
+            <div class="float-right author-box">
                 <t t-set="user_profile_url" t-attf-value="#"/>
                 <t t-if="answer.create_uid.id == request.session.uid or answer.create_uid.sudo().website_published">
                     <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), answer.create_uid.id)"/>
@@ -947,7 +947,7 @@
                     <t t-call="website_forum.forum_user_tooltip"/>
                 </div>
                 <a t-att-href="user_profile_url" class="o_forum_user_info">
-                    <img class="pull-left img rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
+                    <img class="float-left img rounded o_forum_avatar" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
                 </a>
                 <a t-att-href="user_profile_url"
                     t-field="answer.create_uid"
@@ -960,7 +960,7 @@
             </div>
             <div class="clearfix"><span t-field="answer.content" class="oe_no_empty"/></div>
             <div class="clearfix">
-                <ul class="list-inline pull-right mb0">
+                <ul class="list-inline float-right mb0">
                     <li t-if="question.post_type == 'question' and not (len(answer.website_message_ids))"
                         class="list-inline-item">
                         <a t-attf-class="fa fa-comment-o #{not answer.can_comment and 'karma_required text-muted' or ''}"
@@ -1049,7 +1049,7 @@
     <div class="o_forum_user_bio text-left card">
         <div class="card-body">
             <a t-att-href="user_profile_url">
-                <img class="pull-left img rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
+                <img class="float-left img rounded o_forum_avatar_big" t-attf-src="/forum/user/#{answer.create_uid.id}/avatar" alt="Avatar"/>
             </a>
             <div class="o_forum_tooltip_header">
                 <h4 class="o_forum_tooltip_heading"><a t-att-href="user_profile_url"
@@ -1078,7 +1078,7 @@
                         <t t-set="title">Delete</t>
                         <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
                         <t t-set="classes" t-value="'close comment_delete fa-times'"/>
-                        <t t-set="form_classes" t-value="'pull-right'"/>
+                        <t t-set="form_classes" t-value="'float-right'"/>
                     </t>
                     <div><span t-field="message.body" class="oe_no_empty"/></div>
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
@@ -1091,7 +1091,7 @@
                             <t t-set="label">Convert as an answer</t>
                             <t t-set="karma" t-value="user.karma&lt;required_karma and required_karma or 0"/>
                             <t t-set="classes" t-value="'fa-magic'"/>
-                            <t t-set="form_classes" t-value="'pull-right'"/>
+                            <t t-set="form_classes" t-value="'float-right'"/>
                         </t>
                     </t>
                     <a t-attf-href="/forum/#{slug(forum)}/partner/#{message.author_id.id}"
@@ -1166,7 +1166,7 @@
         <table class="table mt32 mb64">
             <tr t-foreach="badges" t-as="badge">
                 <td>
-                    <span class="badge badge-pill pull-left">
+                    <span class="badge badge-pill float-left">
                         <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
                         <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
                         <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
@@ -1233,7 +1233,7 @@
     <t t-call="website_forum.header">
         <div t-foreach="users" t-as="row_users" class="row mt16">
             <div t-foreach="row_users" t-as="user" class="col-md-4">
-                <img class="pull-left img rounded-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
+                <img class="float-left img rounded-circle o_forum_avatar" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 <div>
                     <a t-attf-href="/forum/#{slug(forum)}/user/#{user.id}" t-field="user.name"/>
                     <t t-if="user.country_id">
@@ -1256,7 +1256,7 @@
                 </div>
             </div>
         </div>
-        <div class="pull-left">
+        <div class="float-left">
             <t t-call="website.pager"/>
         </div>
     </t>
@@ -1285,10 +1285,10 @@
                 <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <div class="col-lg-2">
                     <a href="#" class="o_forum_profile_pic_edit" aria-label="Edit">
-                        <i class="fa fa-pencil fa-1g pull-left" title="Edit"></i>
+                        <i class="fa fa-pencil fa-1g float-left" title="Edit"></i>
                     </a>
                     <a href="#" title="Clear" aria-label="Clear">
-                        <i class="fa fa-trash-o fa-1g pull-right o_forum_profile_pic_clear"></i>
+                        <i class="fa fa-trash-o fa-1g float-right o_forum_profile_pic_clear"></i>
                     </a>
                     <img class="img img-fluid rounded-circle o_forum_avatar_img" t-attf-src="/forum/user/#{user.id}/avatar" alt="Avatar"/>
                 </div>
@@ -1498,7 +1498,7 @@
     <table class="table mt32 mb64">
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
-                <span class="badge badge-pill pull-left">
+                <span class="badge badge-pill float-left">
                     <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
                     <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver" role="img" aria-label="Silver badge" title="Silver badge"/>
                     <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze" role="img" aria-label="Bronze badge" title="Bronze badge"/>

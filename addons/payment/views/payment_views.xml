@@ -153,9 +153,9 @@
                                     <t t-if="installed">
                                         <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
                                     </t>
-                                    <button t-if="!installed" type="object" class="btn btn-secondary pull-right" name="button_immediate_install">Install</button>
-                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary pull-right">Activate</button>
-                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary pull-right">Configure</button>
+                                    <button t-if="!installed" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Activate</button>
+                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary float-right">Configure</button>
                                 </div>
                             </div>
                         </t>
@@ -304,7 +304,7 @@
                                         <span><field name="partner_name"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="pull-right">
+                                        <span class="float-right">
                                             <field name="amount" widget="monetary"/>
                                         </span>
                                     </div>

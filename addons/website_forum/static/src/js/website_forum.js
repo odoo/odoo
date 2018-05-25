@@ -13,8 +13,8 @@ odoo.define('website_forum.website_forum', function (require) {
         return $.Deferred().reject("DOM doesn't contain '.website_forum'");
     }
 
-    // pull-left class messes up the post layout OPW 769721
-    $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.pull-left').removeClass('pull-left');
+    // float-left class messes up the post layout OPW 769721
+    $('span[data-oe-model="forum.post"][data-oe-field="content"]').find('img.float-left').removeClass('float-left');
 
     $("[data-toggle='popover']").popover();
     $('.karma_required').on('click', function (ev) {
@@ -415,8 +415,8 @@ odoo.define('website_forum.website_forum', function (require) {
                 styleWithSpan: false
             });
 
-        // pull-left class messes up the post layout OPW 769721
-        $form.find('.note-editable').find('img.pull-left').removeClass('pull-left');
+        // float-left class messes up the post layout OPW 769721
+        $form.find('.note-editable').find('img.float-left').removeClass('float-left');
         $form.on('click', 'button, .a-submit', function () {
             $textarea.html($form.find('.note-editable').code());
         });

@@ -36,7 +36,7 @@
                         <li class="nav-item">
                             <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }"
                                t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
-                                <span class="badge badge-pill pull-right" t-esc="grade['grade_id_count'] or ''"/>
+                                <span class="badge badge-pill float-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/>
                             </a>
                         </li>
@@ -49,7 +49,7 @@
                         <li t-if="country['country_id']" class="nav-item">
                             <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
                                t-attf-class="nav-link#{country['active'] and ' active' or ''}">
-                                <span class="badge badge-pill pull-right" t-esc="country['country_id_count'] or ''"/>
+                                <span class="badge badge-pill float-right" t-esc="country['country_id_count'] or ''"/>
                                 <t t-esc="country['country_id'][1]"/>
                             </a>
                         </li>
@@ -62,8 +62,8 @@
                 <div class='navbar'>
                     <div>
                         <t t-call="website.pager"/>
-                        <form action="" method="get" class="navbar-search pull-right pagination form-inline"><!-- FIXME -->
-                            <div class="form-group pull-right">
+                        <form action="" method="get" class="navbar-search float-right pagination form-inline"><!-- FIXME -->
+                            <div class="form-group float-right">
                                 <input type="text" name="search" class="search-query col-lg-2 mt4 form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                             </div>
                         </form>
@@ -83,7 +83,7 @@
                             <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
                         <div class="media">
-                            <a class="pull-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
+                            <a class="float-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image_medium"
                                t-options='{"widget": "image", "class": "media-object"}'
                             ></a>
@@ -103,7 +103,7 @@
                 </div>
                 <div class='navbar'>
                     <t t-call="website.pager">
-                       <t t-set="classname">pull-left</t>
+                       <t t-set="classname">float-left</t>
                     </t>
                 </div>
             </div>
@@ -167,7 +167,7 @@
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
           <t t-if="reference.website_published">
-            <a class="pull-left" t-attf-href="/customers/#{slug(reference)}">
+            <a class="float-left" t-attf-href="/customers/#{slug(reference)}">
                 <span t-field="reference.image_small" t-options='{"widget": "image", "class": "center-block"}'/>
             </a>
             <div class="media-body" style="min-height: 64px;">
@@ -265,7 +265,7 @@
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">My Opportunities</t>
-                <li class="pull-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-secondary navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
+                <li class="float-left"><button t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id" name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-secondary navbar-btn ml16" title="Add an opportunity" aria-label="Add an opportunity"><i class="fa fa-plus"/></button></li>
             </t>
             <div class="modal fade modal_new_opp" role="form">
                 <div class="modal-dialog">
@@ -341,7 +341,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-lg-12">
-                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
+                            <span class="float-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
                                 </t>
@@ -510,9 +510,9 @@
                             <h4 style="display:inline-block">
                                 Opportunity - <span t-field="opportunity.name"/>
                             </h4>
-                            <span class="btn-group pull-right" role="group">
+                            <span class="btn-group float-right" role="group">
                                 <t t-foreach="stages" t-as="stage">
-                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="pull-right btn opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
+                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="float-right btn opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'disabled btn-primary'}">
                                         <span t-field="stage.name"/>
                                     </button>
                                 </t>
@@ -527,7 +527,7 @@
                                 <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>
                         </div>
                         <div class="col-lg-4">
-                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
+                            <span class="float-right" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
                                 </t>

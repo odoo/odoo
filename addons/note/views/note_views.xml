@@ -122,7 +122,7 @@
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar pull-right" t-att-data-member_id="follower" alt="Follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar float-right" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>

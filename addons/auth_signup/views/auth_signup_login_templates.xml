@@ -2,8 +2,8 @@
 <odoo>
         <template id="auth_signup.login" inherit_id="web.login" name="Sign up - Reset Password">
             <xpath expr="//button[@type='submit']" position="before">
-                <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}" class="btn btn-link pull-right" role="button">Don't have an account?</a>
-                <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}" class="btn btn-link pull-right" role="button">Reset Password</a>
+                <a t-if="signup_enabled" t-attf-href="/web/signup?{{ keep_query() }}" class="btn btn-link float-right" role="button">Don't have an account?</a>
+                <a t-if="reset_password_enabled" t-attf-href="/web/reset_password?{{ keep_query() }}" class="btn btn-link float-right" role="button">Reset Password</a>
             </xpath>
         </template>
 
@@ -49,8 +49,8 @@
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right" role="button">Already have an account?</a>
-                        <button type="submit" class="btn btn-primary pull-left o_signup_btn"> Sign up</button>
+                        <a t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link float-right" role="button">Already have an account?</a>
+                        <button type="submit" class="btn btn-primary float-left o_signup_btn"> Sign up</button>
                     </div>
 
                 </form>
@@ -63,7 +63,7 @@
                     <p class="alert alert-success" t-if="message" role="status">
                         <t t-esc="message"/>
                     </p>
-                    <a href="/web/login" class="btn btn-link pull-right" role="button">Back to Login</a>
+                    <a href="/web/login" class="btn btn-link float-right" role="button">Back to Login</a>
                 </div>
 
                 <form class="oe_reset_password_form" role="form" method="post" t-if="not message">
@@ -89,9 +89,9 @@
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <input type="hidden" name="token" t-att-value="token"/>
                     <div class="clearfix oe_login_buttons">
-                        <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link pull-right" role="button">Back to Login</a>
-                        <a t-if="invalid_token" href="/web/login" class="btn btn-link pull-right" role="button">Back to Login</a>
-                        <button type="submit" class="btn btn-primary pull-left">Confirm</button>
+                        <a t-if="not token" t-attf-href="/web/login?{{ keep_query() }}" class="btn btn-link float-right" role="button">Back to Login</a>
+                        <a t-if="invalid_token" href="/web/login" class="btn btn-link float-right" role="button">Back to Login</a>
+                        <button type="submit" class="btn btn-primary float-left">Confirm</button>
                     </div>
 
                 </form>

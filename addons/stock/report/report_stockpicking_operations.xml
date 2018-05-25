@@ -8,7 +8,7 @@
                     <t t-call="web.external_layout">
                         <div class="page">
                             <div class="row mb16">
-                                <div class="col-4 pull-right" name="right_box">
+                                <div class="col-4 float-right" name="right_box">
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
                                 </div>
                             </div>
@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <br/>
-                            <h1 t-field="o.name" class="mt0 pull-left"/>
+                            <h1 t-field="o.name" class="mt0 float-left"/>
                             <div class="clearfix"/>
                             <table class="table table-sm">
                             <thead>

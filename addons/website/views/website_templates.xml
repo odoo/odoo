@@ -344,7 +344,7 @@
 
 <!-- Util template -->
 <template id="publish_management">
-    <div groups="website.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
+    <div groups="website.group_website_publisher" t-ignore="true" class="float-right css_editable_mode_hidden" t-att-style="style or None">
         <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
@@ -360,7 +360,7 @@
 
 <template id="publish_short">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="pull-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="float-right js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
         </div>
@@ -855,7 +855,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="index_management">
     <t groups="website.group_website_publisher" t-ignore="true">
-        <div t-attf-class="pull-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
+        <div t-attf-class="float-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
             <button class="btn btn-danger js_index_btn">Unindexed</button>
             <button class="btn btn-success js_index_btn">Indexed</button>
         </div>
@@ -866,10 +866,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
   <t t-call="website.layout">
     <div id="wrap">
       <div class="container" id="edit_website_pages">
-          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages" method="get">
+          <form class="mt8 float-right" role="search" t-attf-action="/website/pages" method="get">
               <t t-call="website.website_search_box"/>
           </form>
-          <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
+          <div t-if="searchbar_sortings" class="dropdown float-right mt8 mr8">
               <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
                   <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
                   <span class="d-none d-xl-inline" t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>

@@ -39,7 +39,7 @@
                                 </a>
                             </div>
                             <div>
-                                <div class="mt4 pull-right">
+                                <div class="mt4 float-right">
                                     <t t-call="website.publish_management">
                                         <t t-set="object" t-value="channel"/>
                                         <t t-set="publish_edit" t-value="True"/>
@@ -91,7 +91,7 @@
         <div class="container">
             <div class="row">
                 <!-- Name and breadcrumb -->
-                <div class="pull-left col-lg-8 col-md-12 col-12 mt16 mb8">
+                <div class="float-left col-lg-8 col-md-12 col-12 mt16 mb8">
                     <h3 class="mt0">
                         <a t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
                         <t t-if="category">
@@ -155,7 +155,7 @@
                 </div>
                 <!-- Sort options -->
                 <div class="col-lg-4 col-md-12 col-12">
-                    <span class="pull-right">
+                    <span class="float-right">
                         <span class="text-muted">Sort by:</span>
                         <a href="?sorting=date">
                             <span t-attf-style="#{sorting and sorting == 'date' and 'font-weight:bold;' ''}">Newest</span>
@@ -276,7 +276,7 @@
                                         <span t-if="not category['id']" title="Uncategorized presentation" class="h3 mt0 mb0">
                                             <t t-esc="category['name']"/>
                                         </span>
-                                        <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="pull-right" t-if="category['total'] - 4 > 0 and category['id']">
+                                        <a t-attf-href="/slides/#{slug(channel)}/category/#{category['id']}" class="float-right" t-if="category['total'] - 4 > 0 and category['id']">
                                             <i class="fa fa-arrow-right"/> See all
                                         </a>
                                     </div>
@@ -346,8 +346,8 @@
                     <a t-att-title="slide.name" t-attf-href="/slides/slide/#{slug(slide)}" t-esc="slide.name"/>
                 </h4>
                 <div class="text-muted clearfix">
-                    <small class="pull-left"><t t-esc="slide.total_views"/> Views</small>
-                    <small class="pull-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
+                    <small class="float-left"><t t-esc="slide.total_views"/> Views</small>
+                    <small class="float-right"><timeago class="timeago" t-att-datetime="slide.create_date"></timeago></small>
                 </div>
                 <p t-if="slide.tag_ids" style="padding-top: 5px;">
                     <t t-foreach="slide.tag_ids" t-as="att_tag">
@@ -405,7 +405,7 @@
                                 <div clas="row">
                                     <div class="col-lg-8" t-if="slide.tag_ids">
                                         <t t-foreach="slide.tag_ids" t-as="slide_tag">
-                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 pull-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
+                                            <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 float-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
                                         </t>
                                     </div>
                                 </div>
@@ -413,7 +413,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-8 col-12">
-                                <div class="pull-left">
+                                <div class="float-left">
                                     <a t-attf-href="/slides/#{slug(slide.channel_id)}" t-attf-title="Channel #{slide.channel_id.name}" t-attf-aria-label="Channel #{slide.channel_id.name}">
                                         <i class="fa fa-circle-o fa-5x" style="color: #875A7B;font-weight: bold;"></i>
                                     </a>
@@ -453,7 +453,7 @@
                                 </div>
                                 <!-- LikeButton widget -->
                                 <div class="text-muted mt4">
-                                    <div class="pull-right mb16 text-right">
+                                    <div class="float-right mb16 text-right">
                                         <span
                                             class="oe_slide_js_like"
                                             data-href="/slides/slide/like"
@@ -609,7 +609,7 @@
                                     <div class="row" t-if="not slide.document_id and slide.embedcount_ids">
                                         <div class="col-lg-12">
                                             <h4 class="mt0"> Embeds
-                                                <span class="badge badge-pill pull-right">
+                                                <span class="badge badge-pill float-right">
                                                     <t t-esc="len(slide.embedcount_ids)"/>
                                                 </span>
                                             </h4>
@@ -672,7 +672,7 @@
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="related_slides" name="Related Slide">
     <li class="media">
-        <a class="media-left pull-left" t-attf-href="/slides/slide/#{slug(slide)}">
+        <a class="media-left float-left" t-attf-href="/slides/slide/#{slug(slide)}">
                 <img class="media-object oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
         </a>
         <div class="media-body">

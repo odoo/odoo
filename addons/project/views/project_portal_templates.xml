@@ -100,7 +100,7 @@
                             </t>
                         </div>
                         <div class="col-lg-6">
-                            <div class="pull-right">
+                            <div class="float-right">
                                 <a role="button" t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-secondary btn-lg">
                                     <span class="fa fa-tasks" role="img" aria-label="Tasks" title="Tasks"/>
                                     <span t-esc="project.task_count" />
@@ -169,7 +169,7 @@
                         <div class="col-lg-12">
                             <h4>
                                 Task - <span t-field="task.name"/> (#<span t-esc="task.id"/>)
-                                <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
+                                <span t-field="task.stage_id.name" class="float-right label label-info" title="Current stage of this task"/>
                                 <a role="button" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>
                             </h4>
                         </div>

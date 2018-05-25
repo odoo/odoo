@@ -10,7 +10,7 @@
                 <span class="js_menu_label">
                     <t t-esc="submenu.name"/>
                 </span>
-                <i t-if="submenu.is_homepage" class="pull-right fa fa-home" style="margin-top: 3px" role="img" aria-label="Home" title="Home"/>
+                <i t-if="submenu.is_homepage" class="float-right fa fa-home" style="margin-top: 3px" role="img" aria-label="Home" title="Home"/>
             </span>
             <span class="input-group-append">
                 <button type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit menu" title="Edit menu"/>
@@ -44,7 +44,7 @@
         </t>
     </ul>
     <div class="mt32">
-        <small class="pull-right text-muted">
+        <small class="float-right text-muted">
             Drag a menu to the right to create a sub-menu
         </small>
         <a href="#" class="js_add_menu">

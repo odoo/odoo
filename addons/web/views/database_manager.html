@@ -101,7 +101,7 @@
   <div class="form-group">
     <div class="checkbox">
       <label>
-        <input name="demo" type="checkbox" class="pull-right" value="1">
+        <input name="demo" type="checkbox" class="float-right" value="1">
         <span>Load demonstration data</span>
         <span class="text-muted"> (Check this box to evaluate Odoo)</span>
       </label>
@@ -135,11 +135,11 @@
           {% for db in databases %}
           <a href="/web?db={{ db }}" class="list-group-item" >
             {% if db in incompatible_databases %}
-              <i class="icon fa fa-warning pull-right text-warning" title="This database may not be compatible"></i>
+              <i class="icon fa fa-warning float-right text-warning" title="This database may not be compatible"></i>
             {% endif %}
             {{ db }}
             {% if manage %}
-            <div class="text-right pull-right">
+            <div class="text-right float-right">
             <span data-db="{{ db }}" data-target=".o_database_backup" class="o_database_action btn-link"><i class="fa fa-floppy-o fa-fw"></i> Backup</span>
             <span data-db="{{ db }}" data-target=".o_database_duplicate" class="o_database_action btn-link"><i class="fa fa-files-o fa-fw"></i> Duplicate</span>
             <span data-db="{{ db }}" data-target=".o_database_delete" class="o_database_action btn-link"><i class="fa fa-trash-o fa-fw"></i> Delete</span>
@@ -168,7 +168,7 @@
       {% elif list_db %}
         <form role="form" action="/web/database/create" method="post">
           {{ create_form() }}
-          <input type="submit" value="Create database" class="btn btn-primary pull-left"/>
+          <input type="submit" value="Create database" class="btn btn-primary float-left"/>
         </form>
         <a role="button" data-toggle="modal" data-target=".o_database_restore" class="btn btn-link">
           or restore a database
@@ -190,7 +190,7 @@
             {{ create_form() }}
           </div>
           <div class="modal-footer">
-            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>
@@ -222,20 +222,20 @@
                 If you don't know, answer "This database is a copy".</p>
               <div class="radio">
                 <label>
-                  <input name="copy" type="radio" class="pull-right" value="true" checked="1">
+                  <input name="copy" type="radio" class="float-right" value="true" checked="1">
                   This database is a copy
                 </label>
               </div>
               <div class="radio">
                 <label>
-                  <input name="copy" type="radio" class="pull-right" value="false">
+                  <input name="copy" type="radio" class="float-right" value="false">
                   This database was moved
                 </label>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>
@@ -262,7 +262,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+            <input type="submit" value="Continue" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>
@@ -291,7 +291,7 @@
             </div>
           </div>
           <div class="modal-footer">
-          <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+          <input type="submit" value="Continue" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>
@@ -315,7 +315,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <input type="submit" value="Delete" class="btn btn-primary pull-right"/>
+            <input type="submit" value="Delete" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>
@@ -346,7 +346,7 @@
             </div>
           </div>
           <div class="modal-footer">
-          <input type="submit" value="Backup" class="btn btn-primary pull-right"/>
+          <input type="submit" value="Backup" class="btn btn-primary float-right"/>
           </div>
         </form>
       </div>

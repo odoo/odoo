@@ -34,7 +34,7 @@
                    </p>
                 </div>
                 <t t-call="website.pager" >
-                    <t t-set="classname">pull-right</t>
+                    <t t-set="classname">float-right</t>
                 </t>
             </section>
             <section class="container">
@@ -99,7 +99,7 @@
         <div class="oe_structure"/>
         <div class="container">
             <t t-call="website.pager" >
-                <t t-set="classname">pull-right</t>
+                <t t-set="classname">float-right</t>
             </t>
         </div>
         <div class="oe_structure">
@@ -444,10 +444,10 @@
                 <ul t-attf-class="blog_post_year collapse nav nav-pills flex-column #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="pull-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}" class="nav-link active"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                         <li t-else="1" class="nav-item">
-                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="pull-right badge badge-pill" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}" class="nav-link"><t t-esc="months['month']"/><span class="float-right badge badge-pill" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -517,10 +517,10 @@
         <ul class="nav nav-pills flex-column">
             <t t-set="state" t-value="state_info['state']"/>
             <li class="nav-item">
-                <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}" t-attf-class="nav-link#{state == 'published' and ' active' or ''}">Published <span class="pull-right badge badge-pill" t-esc="state_info['published']" /></a>
+                <a t-attf-href="#{state == 'published' and blog_url(state='') or blog_url(state='published')}" t-attf-class="nav-link#{state == 'published' and ' active' or ''}">Published <span class="float-right badge badge-pill" t-esc="state_info['published']" /></a>
             </li>
             <li class="nav-item">
-                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}" t-attf-class="nav-link#{state == 'unpublished' and ' active' or ''}">Unpublished <span class="pull-right badge badge-pill" t-esc="state_info['unpublished']" /></a>
+                <a t-attf-href="#{state == 'unpublished' and blog_url(state='') or blog_url(state='unpublished')}" t-attf-class="nav-link#{state == 'unpublished' and ' active' or ''}">Unpublished <span class="float-right badge badge-pill" t-esc="state_info['unpublished']" /></a>
             </li>
         </ul>
         </section>

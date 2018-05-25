@@ -65,7 +65,7 @@
                             </t>
                             <span class="payment_option_name" t-esc="acq.name"/>
                         </label>
-                        <ul class="pull-right list-inline payment_icon_list">
+                        <ul class="float-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
                                 <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
@@ -73,7 +73,7 @@
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
                                 <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
-                                    <span class="pull-right more_option text-info">
+                                    <span class="float-right more_option text-info">
                                         <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>
                                 </li>
@@ -102,7 +102,7 @@
                                 name="pm_id" t-attf-value="form_{{acq.id}}"/>
                             <span class="payment_icon_name" t-esc="acq.name"/>
                         </label>
-                        <ul class="pull-right list-inline payment_icon_list">
+                        <ul class="float-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
                                 <li t-attf-class="list-inline-item#{'' if (i &lt; MAX_BRAND_LINE) else ' d-none'}">
@@ -110,7 +110,7 @@
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
                                 <li t-if="i==MAX_BRAND_LINE" style="display:block;" class="list-inline-item">
-                                    <span class="pull-right more_option text-info">
+                                    <span class="float-right more_option text-info">
                                         <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>
                                 </li>
@@ -134,19 +134,19 @@
                                 <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
                             </t>
                         </label>
-                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-xs pull-right">
+                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-xs float-right">
                             <i class="fa fa-trash"></i> Delete
                         </button>
                     </div>
                 </t>
             </div>
-            <div t-if='back_button_txt' class="pull-left">
+            <div t-if='back_button_txt' class="float-left">
                 <a role="button" t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-secondary'">
                     <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
                     <t t-esc="back_button_txt"/>
                 </a>
             </div>
-            <div class="pull-right">
+            <div class="float-right">
                 <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
                     <t t-if="submit_txt">
                         <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>

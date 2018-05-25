@@ -106,7 +106,7 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div>
-                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right" aria-label="Delete" title="Delete"/>
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times float-right" aria-label="Delete" title="Delete"/>
                                                 <div class="o_kanban_image">
                                                     <img t-att-src="kanban_image('res.users', 'image', record.id.raw_value)" alt="User"/>
                                                 </div>

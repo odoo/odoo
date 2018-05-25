@@ -29,11 +29,11 @@
         </div>
         <div class="container mt32">
             <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
-               <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down pull-right" role="img" aria-label="" title="Read this !"></span></h3>
+               <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down float-right" role="img" aria-label="" title="Read this !"></span></h3>
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">
                 <div class="col-lg-3">
-                    <img t-att-src="website.image_url(group, 'image_small')" class="pull-left" alt="Group"/>
+                    <img t-att-src="website.image_url(group, 'image_small')" class="float-left" alt="Group"/>
                     <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong><br />
                     <t t-if="group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain">
                         <i class='fa fa-envelope-o' role="img" aria-label="Alias" title="Alias"/>
@@ -85,7 +85,7 @@
     <t t-call="website.layout">
         <section class="container">
             <div class="mt8">
-                <ol class="breadcrumb pull-left">
+                <ol class="breadcrumb float-left">
                     <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
                     <li class="breadcrumb-item">
                         <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
@@ -115,7 +115,7 @@
                                     <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
                                         t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
-                                        <span class="pull-right badge badge-pill" t-esc="month_archive['date_count']"/>
+                                        <span class="float-right badge badge-pill" t-esc="month_archive['date_count']"/>
                                     </a>
                                 </li>
                                 </t>
@@ -146,7 +146,7 @@
         <t t-set="additional_title"><t t-esc="message.description"/></t>
         <section class="container">
             <div class="row mt8">
-                <ol class="breadcrumb pull-left">
+                <ol class="breadcrumb float-left">
                     <li class="breadcrumb-item"><a href="/groups">Mailing Lists</a></li>
                     <li class="breadcrumb-item">
                         <a t-attf-href="/groups/#{slug(group)}?#{mode and 'mode=%s' % mode or ''}#{date_begin and '&amp;date_begin=%s' % date_begin or ''}#{date_end and '&amp;date_end=%s' % date_end or ''}"><t t-esc="group.name"/></a>
@@ -177,7 +177,7 @@
                                     <a t-ignore="True" t-attf-href="/groups/#{ slug(group) }?mode=date&amp;date_begin=#{ month_archive['date_begin'] }&amp;date_end=#{month_archive['date_end']}"
                                         t-attf-class="nav-link#{month_archive['date_begin'] == date_begin and ' active' or ''}">
                                         <t t-esc="month_archive['date']"/>
-                                        <span class="pull-right badge badge-pill" t-esc="month_archive['date_count']"/>
+                                        <span class="float-right badge badge-pill" t-esc="month_archive['date_count']"/>
                                     </a>
                                 </li>
                                 </t>
@@ -193,13 +193,13 @@
                             </a></t>
                         </h4>
                         <h4 class="col-lg-6">
-                            <t t-if="next_message"><a class="pull-right" t-attf-href='/groups/#{slug(group)}/#{slug(next_message)}?#{mode and "mode=%s" % mode or ""}'>
+                            <t t-if="next_message"><a class="float-right" t-attf-href='/groups/#{slug(group)}/#{slug(next_message)}?#{mode and "mode=%s" % mode or ""}'>
                                 <t t-esc="next_message.description"/> <i class="fa fa-arrow-right" role="img" aria-label="Next message" title="Next message"/>
                             </a></t>
                         </h4>
                     </div>
                     <div class="media">
-                        <img class="rounded pull-left mt0 media-object o_mg_avatar" alt="Avatar"
+                        <img class="rounded float-left mt0 media-object o_mg_avatar" alt="Avatar"
                             t-att-src="website.image_url(message, 'author_avatar')"/>
                         <div class="media-body">
                             <h4 class="media-heading" t-esc="message.description"/>
@@ -260,7 +260,7 @@
     <div>
         <ul class="media-list">
             <li t-foreach="messages" t-as="thread" class="media">
-                <img class="rounded pull-left mt0 media-object o_mg_avatar" alt="Avatar"
+                <img class="rounded float-left mt0 media-object o_mg_avatar" alt="Avatar"
                     t-att-src="website.image_url(thread, 'author_avatar')"/>
                 <div class="media-body">
                     <h4 class="media-heading">

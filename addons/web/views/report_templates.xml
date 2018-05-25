@@ -163,11 +163,11 @@
 
     <template id="external_layout_background">
         <div class="header o_background_header">
-            <div class="pull-right">
+            <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
             </div>
-            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="pull-left" alt="Logo"/>
-            <div class="pull-left company_address">
+            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)" class="float-left" alt="Logo"/>
+            <div class="float-left company_address">
                 <div>
                     <strong t-field="company.partner_id.name"/>
                 </div>
@@ -274,7 +274,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-1">
-                    <ul t-if="not type_html" class="list-inline pagenumber pull-right text-center">
+                    <ul t-if="not type_html" class="list-inline pagenumber float-right text-center">
                         <li class="list-inline-item"><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
