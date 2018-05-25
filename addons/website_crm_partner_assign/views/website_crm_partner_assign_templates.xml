@@ -323,7 +323,7 @@
                             </td>
                             <td><span t-field="opp.contact_name" /></td>
                             <td>
-                                <span class="label label-primary" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
+                                <span class="badge badge-primary" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
                             </td>
                         </tr>
                     </tbody>
@@ -403,7 +403,7 @@
                             <label class="col-4">Tags</label>
                             <span class="col-8">
                                 <t t-foreach="lead.tag_ids" t-as="tag">
-                                    <span class="label label-info" t-esc="tag.name" />
+                                    <span class="badge badge-info" t-esc="tag.name" />
                                 </t>
                             </span>
                         </div>

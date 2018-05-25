@@ -357,7 +357,7 @@ odoo.define('website_forum.website_forum', function (require) {
         },
         formatResult: function(term) {
             if (term.isNew) {
-                return '<span class="label label-primary">New</span> ' + _.escape(term.text);
+                return '<span class="badge badge-primary">New</span> ' + _.escape(term.text);
             }
             else {
                 return _.escape(term.text);

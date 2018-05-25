@@ -16,7 +16,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "go to wishlist",
-            extra_trigger: ".label:contains(1)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(1)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
@@ -71,7 +71,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "check that wishlist contains 2 items and go to wishlist",
-            extra_trigger: ".label:contains(2)",
+            extra_trigger: 'a[href="/shop/wishlist"] .badge:contains(2)',
             trigger: 'a[href="/shop/wishlist"]',
         },
         {

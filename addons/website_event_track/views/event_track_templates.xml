@@ -81,7 +81,7 @@
                                     <t t-if="track">
                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                                             <span t-esc="track and track.name"/>
-                                            <span t-if="not track.website_published" class="label label-warning">unpublished</span>
+                                            <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
                                         </a>
                                         <div class="text-muted">
                                             <small t-if="track.partner_id" t-esc="track.partner_id.sudo().name"/>
@@ -132,7 +132,7 @@
                 <div class="col-md-10">
                     <h3 class="mt0 mb0">
                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }"><span t-field="track.name"> </span></a>
-                        <small t-if="not track.website_published" class="label label-danger">unpublished</small>
+                        <small t-if="not track.website_published" class="badge badge-danger">unpublished</small>
                     </h3>
                     <ul class="list-inline mb0">
                         <li t-if="track.partner_id" class="list-inline-item text-muted fa fa-user">
@@ -292,7 +292,7 @@
                         and join the conversation.
                     </p>
                     <p><strong>Use this tag:
-                        <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="label label-primary">#<span t-field="event.twitter_hashtag"/></a>
+                        <a t-att-href="'http://twitter.com/search?q=#'+event.twitter_hashtag" class="badge badge-primary">#<span t-field="event.twitter_hashtag"/></a>
                     </strong></p>
                 </div>
             </div>

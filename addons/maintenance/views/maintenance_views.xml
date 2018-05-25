@@ -62,7 +62,7 @@
                 </header>
                 <sheet>
                     <div attrs="{'invisible': [('archive', '=', False)]}">
-                        <span class="label label-warning float-right">Canceled</span>
+                        <span class="badge badge-warning float-right">Canceled</span>
                     </div>
                     <div class="oe_right">
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
@@ -451,10 +451,10 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <div class="label label-danger" t-if="record.maintenance_open_count.raw_value" >
+                                        <div class="badge badge-danger" t-if="record.maintenance_open_count.raw_value" >
                                             <t t-raw="record.maintenance_open_count.raw_value"/> Request
                                         </div>
-                                        <div class="label label-default" t-if="record.next_action_date.raw_value" >
+                                        <div class="badge badge-secondary" t-if="record.next_action_date.raw_value" >
                                             <t t-raw="moment(record.next_action_date.raw_value).format('MMMM Do')"/>
                                         </div>
                                     </div>

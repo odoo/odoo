@@ -426,7 +426,7 @@
                                 </div>
                                 <div>
                                     <span>Vacancies : <field name="expected_employees"/></span>
-                                    <span t-att-class="'float-right label label-success' if record.state.raw_value == 'recruit' else 'float-right label label-danger'">
+                                    <span t-att-class="'float-right badge badge-success' if record.state.raw_value == 'recruit' else 'float-right badge badge-danger'">
                                         <field name="state"/>
                                     </span>
                                 </div>
