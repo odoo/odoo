@@ -84,13 +84,40 @@
     </xpath>
 </template>
 
-<template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
-    <xpath expr="//td[hasclass('td-product_name')]/div/a" position="attributes">
+<!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
+<template id="event_cart_line_product_link" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
+    <xpath expr="//a" position="attributes">
         <attribute name="t-attf-href"/>
         <attribute name="t-att-href">
             line.event_id and ('/event/%s/register' % slug(line.event_id)) or ('/shop/product/%s' % slug(line.product_id.product_tmpl_id))
         </attribute>
     </xpath>
+</template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
+<template id="event_cart_lines" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
+    <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']/t[@t-set='div_class']" position="after">
+        <t t-if="line.event_id">
+            <t t-set="div_class" t-value="''"/>
+        </t>
+    </xpath>
+</template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+<template id="event_cart_popover" inherit_id="website_sale.cart_popover" name="Event Cart Popover">
+    <xpath expr="//t[@t-call='website_sale.cart_line_product_link']" position="after">
+        <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+    </xpath>
+</template>
+
+<!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+<template id="event_cart_summary" inherit_id="website_sale.cart_summary" name="Event Cart right column">
+    <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+        <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+    </xpath>
+</template>
+
+<template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
     <xpath expr="//del" position="attributes">
         <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
     </xpath>
