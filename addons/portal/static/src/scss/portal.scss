@@ -50,7 +50,7 @@ header {
             visibility: hidden;
         }
     }
-    .nav.navbar-nav.pull-right {
+    .nav.navbar-nav.float-right {
         @include media-breakpoint-down(sm) {
             float: none!important;
         }
@@ -130,10 +130,10 @@ hr {
 
 // Images spacing
 img, .media_iframe_video, .o_image {
-    &.pull-right {
+    &.float-right {
         margin-left: $grid-gutter-width / 2;
     }
-    &.pull-left {
+    &.float-left {
         margin-right: $grid-gutter-width / 2;
     }
 }

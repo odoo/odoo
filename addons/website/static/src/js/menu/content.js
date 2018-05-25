@@ -49,7 +49,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             buttons.push({
                 text: _t("Go To Page"),
                 icon: 'fa-globe',
-                classes: 'btn-link pull-right',
+                classes: 'btn-link float-right',
                 click: function (e) {
                     window.location.href = '/' + self.page.url;
                 },
@@ -58,7 +58,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         buttons.push({
             text: _t("Delete Page"),
             icon: 'fa-trash',
-            classes: 'btn-link pull-right',
+            classes: 'btn-link float-right',
             click: function (e) {
                 _deletePage.call(this, self.page_id, options.fromPageManagement);
             },

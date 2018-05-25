@@ -780,8 +780,8 @@
                                             <div class="col-lg-3 col-md-4">
                                             </div>
                                             <div class="col-lg-9 col-md-8">
-                                                <a role="button" href="/shop/checkout" class="btn btn-secondary mb32 pull-left"><span class="fa fa-chevron-left" /> Previous</a>
-                                                <a role="button" class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-secondary mb32 float-left"><span class="fa fa-chevron-left" /> Previous</a>
+                                                <a role="button" class="btn btn-primary float-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
                                             </div>
                                         </div>
                                     </form>
@@ -909,7 +909,7 @@
                                         <span class="fa fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
-                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right mb32 mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
                                         <span class="">Process Checkout</span>
                                         <span class="fa fa-chevron-right" />
                                     </a>
@@ -924,7 +924,7 @@
                                     <span class="fa fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
-                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
+                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right mb32 mr8" href="/shop/checkout?express=1">
                                     <span class="">Process Checkout</span>
                                     <span class="fa fa-chevron-right" />
                                 </a>
@@ -1087,7 +1087,7 @@
                             <div>
                                 <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
                                     <span class="fa fa-chevron-left" /> Return to Cart</a>
-                                <a role="button" class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-chevron-right" /></a>
+                                <a role="button" class="btn btn-primary float-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-chevron-right" /></a>
                             </div>
                         </div>
                     </div>
@@ -1105,7 +1105,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link float-right js_edit_address no-decoration' role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
             <div t-attf-class="card #{selected and 'border_primary' or 'js_change_shipping'}">
                 <div class='card-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
@@ -1260,7 +1260,7 @@
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
                                             <span class="fa fa-chevron-left" /> Back
                                         </a>
-                                        <a role="button" class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
+                                        <a role="button" class="btn btn-primary float-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-chevron-right" />
                                         </a>
                                     </div>
@@ -1306,7 +1306,7 @@
                                 <div class="card">
                                   <div class="card-header"></div>
                                   <div class="card-body">
-                                    <a class='pull-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
+                                    <a class='float-right no-decoration' href='/shop/checkout'><i class="fa fa-edit"/> Edit</a>
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
                                     <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
@@ -1345,7 +1345,7 @@
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
                                 <div class="col-md-12">
-                                    <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
+                                    <form target="_self" action="/shop/payment/validate" method="post" class="float-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <a role="button" class="btn btn-primary a-submit">
                                             <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
@@ -1373,7 +1373,7 @@
                     <t t-call="website_sale.total">
                         <t t-set='no_rowspan'>1</t>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary pull-right mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right mr8 d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>
@@ -1386,7 +1386,7 @@
             <div class="card-body row">
                 <div class='toggle_summary col-lg-12 d-xl-none'>
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border pull-right' role="img" aria-label="Details" title="Details"></span>
+                    <span class='fa fa-chevron-down fa-border float-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
 
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
@@ -1572,7 +1572,7 @@
                     (payment_tx_id.state == 'done' and 'bg-success text-white') or
                     (payment_tx_id.state == 'authorized' and 'bg-success text-white') or
                     'bg-danger text-white')">
-                <a role="button" groups="base.group_system" class="btn pull-right" target="_blank" aria-label="Edit" title="Edit"
+                <a role="button" groups="base.group_system" class="btn float-right" target="_blank" aria-label="Edit" title="Edit"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-pencil"></i>
                 </a>
@@ -1648,7 +1648,7 @@
                                     <li>If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content.</li>
                                     <li>A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses.</li>
                                </ul>
-                               <small class="text-muted pull-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
+                               <small class="text-muted float-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
                            </div>
                         </div>
                       </div>

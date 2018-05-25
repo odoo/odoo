@@ -292,7 +292,7 @@
                                         <t t-name="kanban-box">
                                             <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
-                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right" title="Delete" aria-label="Delete"/>
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times float-right" title="Delete" aria-label="Delete"/>
                                                 <div class="o_kanban_image">
                                                     <img alt="" t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
                                                     <t t-if="!record.image_small.raw_value">

@@ -266,9 +266,9 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('.note-color').addClass('d-none');
         }
 
-        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
+        $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("float-left"));
         $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
-        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("pull-right"));
+        $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
     }
@@ -360,9 +360,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('center-block').removeClass('pull-right pull-left'); break;
-        case 'left': $target.toggleClass('pull-left').removeClass('pull-right center-block'); break;
-        case 'right': $target.toggleClass('pull-right').removeClass('pull-left center-block'); break;
+        case 'center': $target.toggleClass('center-block').removeClass('float-right float-left'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right center-block'); break;
+        case 'right': $target.toggleClass('float-right').removeClass('float-left center-block'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {

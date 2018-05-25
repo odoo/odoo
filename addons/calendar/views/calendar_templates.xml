@@ -35,7 +35,7 @@
                     </div>
                     <div class="card-body">
                         <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
-                            <span class="pull-right label label-info">
+                            <span class="float-right label label-info">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
                             </span>

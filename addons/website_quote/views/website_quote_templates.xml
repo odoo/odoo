@@ -128,7 +128,7 @@
 
           <div class="clearfix">
             <div id="total" class="row" name="total">
-              <div t-attf-class="col-md-4 pull-right #{'col-4' if not type_html else ''}">
+              <div t-attf-class="col-md-4 float-right #{'col-4' if not type_html else ''}">
                 <table class="table table-sm" style="min-width: 250px;max-width: 400px;">
                   <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                     <td><strong>Subtotal</strong></td>
@@ -495,7 +495,7 @@
             <t t-if="quotation.state not in ('draft','sent','cancel')">Your Order</t>
             <em t-esc="quotation.name"/>
             <small t-field="quotation.state"/>
-            <div t-ignore="true" class="pull-right css_editable_mode_hidden d-print-none">
+            <div t-ignore="true" class="float-right css_editable_mode_hidden d-print-none">
                <ul class="list-inline">
                   <li groups="sales_team.group_sale_salesman" class="list-inline-item">
                     <a role="button" t-if="quotation.state not in ('manual')" class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (quotation._name, quotation.id, action)">Edit Quote</a>

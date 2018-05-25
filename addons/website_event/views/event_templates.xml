@@ -150,7 +150,7 @@
                 <t t-foreach="dates" t-as="date">
                     <li class="nav-item" t-if="date[3] or (date[0] in ('old','all'))">
                         <a t-attf-href="/event?{{ keep_query('country', 'type', date=date[0]) }}" t-attf-class="nav-link#{searches.get('date') == date[0] and ' active' or ''}"><t t-esc="date[1]"/>
-                            <span t-if="date[3]" class="badge badge-pill pull-right"><t t-esc="date[3]"/></span>
+                            <span t-if="date[3]" class="badge badge-pill float-right"><t t-esc="date[3]"/></span>
                         </a>
                     </li>
                 </t>
@@ -166,7 +166,7 @@
                 <li t-if="type['event_type_id']"
                     class="nav-item">
                     <a t-attf-href="/event?{{ keep_query('country', 'date', type=type['event_type_id'][0]) }}" t-attf-class="nav-link#{searches.get('type') == str(type['event_type_id'] and type['event_type_id'][0]) and ' active' or ''}"><t t-esc="type['event_type_id'][1]"/>
-                        <span class="badge badge-pill pull-right"><t t-esc="type['event_type_id_count']"/></span>
+                        <span class="badge badge-pill float-right"><t t-esc="type['event_type_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -180,13 +180,13 @@
             <t t-foreach="countries" t-as="country">
                 <li t-if="country['country_id']" class="nav-item">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country=country['country_id'][0]) }}" t-attf-class="nav-link#{searches.get('country') == str(country['country_id'] and country['country_id'][0]) and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
-                        <span class="badge badge-pill pull-right"><t t-esc="country['country_id_count']"/></span>
+                        <span class="badge badge-pill float-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
                 <li t-if="not country['country_id']" class="nav-item">
                     <a t-attf-href="/event?{{ keep_query('type', 'date', country='online') }}" t-attf-class="nav-link#{searches.get('country') == 'online' and ' active' or ''}">
                         <span>Online Events</span>
-                        <span class="badge badge-pill pull-right"><t t-esc="country['country_id_count']"/></span>
+                        <span class="badge badge-pill float-right"><t t-esc="country['country_id_count']"/></span>
                     </a>
                 </li>
             </t>
@@ -319,7 +319,7 @@
                             <t t-set="publish_edit" t-value="True"/>
                         </t>
                         <t t-raw="comment.body"/>
-                        <small class="pull-right muted text-right">
+                        <small class="float-right muted text-right">
                             <div t-field="comment.author_id"/>
                             <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
                         </small>
@@ -558,7 +558,7 @@
                         </div>
                     </main>
                     <footer class="modal-footer">
-                        <div class="pull-left">
+                        <div class="float-left">
                             <button type="submit" class="btn btn-primary">Continue</button>
                             <button type="button" class="btn btn-secondary js_goto_event" data-dismiss="modal">Cancel Registration</button>
                         </div>

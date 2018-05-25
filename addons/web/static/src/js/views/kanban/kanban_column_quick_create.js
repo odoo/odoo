@@ -184,7 +184,7 @@ var ColumnQuickCreate = Widget.extend({
                 examples: this.examples,
             })),
             buttons: [{
-                classes: 'btn-primary pull-right',
+                classes: 'btn-primary float-right',
                 close: true,
                 text: _t('Got it'),
             }],

@@ -56,7 +56,7 @@
                 </main>
                 <footer >
                     <div class="container mt16 mb16" id="footer">
-                        <div class="pull-right" t-ignore="true" t-if="not editable">
+                        <div class="float-right" t-ignore="true" t-if="not editable">
                             Powered by <a target="_blank" href="http://www.odoo.com">Odoo</a>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
         :param boolean o_portal_search_panel : set to True to active the input search
-        :param html $0 : content of the t-call, <li class="pull-left">Link</li>
+        :param html $0 : content of the t-call, <li class="float-left">Link</li>
         :param title : bavbar title
         :param classes : navbar classes
     -->
@@ -157,16 +157,16 @@
         <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}}">
             <div class="container-fluid">
                 <!--  Navbar title only -->
-                <div class="navbar-header pull-left">
+                <div class="navbar-header float-left">
                     <t t-set="no_title">No title</t>
                     <h3 class="navbar-brand"><t t-esc="title or no_title"/></h3>
                 </div>
 
                 <!-- Non-collapsing menu item(s) -->
-                <div class="navbar-header navbar-right pull-right">
-                    <ul class="nav pull-left">
+                <div class="navbar-header navbar-right float-right">
+                    <ul class="nav float-left">
                         <t t-raw="0"/>
-                        <li t-if="searchbar_sortings" class="dropdown pull-left ml16">
+                        <li t-if="searchbar_sortings" class="dropdown float-left ml16">
                             <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-sort"/>
                                 <span class="d-none d-lg-inline"><t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/></span>
@@ -180,7 +180,7 @@
                                 </t>
                             </div>
                         </li>
-                        <li t-if="searchbar_filters" class="dropdown pull-left ml4">
+                        <li t-if="searchbar_filters" class="dropdown float-left ml4">
                             <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-filter"/>
                                 <span class="d-none d-lg-inline"><t t-esc="searchbar_filters[filterby].get('label', 'All')"/></span>
@@ -194,7 +194,7 @@
                                 </t>
                             </div>
                         </li>
-                        <li t-if="searchbar_groupby" class="dropdown pull-left ml4">
+                        <li t-if="searchbar_groupby" class="dropdown float-left ml4">
                             <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle navbar-btn">
                                 <span class="fa fa-object-group"/>
                                 <span class="d-none d-lg-inline"><t t-esc="searchbar_groupby[groupby].get('label', 'None')"/></span>
@@ -255,12 +255,12 @@
             <t t-foreach="archive_groups" t-as="group">
                 <t t-if="group['date_begin'] == date">
                     <li class="nav-item">
-                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge badge-pill" t-esc="group['item_count']"/></a>
+                        <a t-att-href="default_url" class="nav-link active" t-ignore="True"><t t-esc="group['name']"/><span class="float-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
                 <t t-if="group['date_begin'] != date">
                     <li class="nav-item">
-                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="pull-right badge badge-pill" t-esc="group['item_count']"/></a>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}" class="nav-link"><t t-esc="group['name']"/><span class="float-right badge badge-pill" t-esc="group['item_count']"/></a>
                     </li>
                 </t>
             </t>
@@ -343,7 +343,7 @@
                             <input type="hidden" name="redirect" t-att-value="redirect"/>
                         </div>
                         <div class="clearfix">
-                            <button type="submit" class="btn btn-primary pull-right mb32 ">
+                            <button type="submit" class="btn btn-primary float-right mb32 ">
                                 Confirm
                                 <span class="fa fa-long-arrow-right" />
                             </button>
@@ -356,7 +356,7 @@
 
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
-          <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
+          <div class="ml8 record_pager btn-group btn-group-xs float-right" role="group">
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
             <a role="button" t-att-class="'btn btn-secondary %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>

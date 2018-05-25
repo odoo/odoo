@@ -75,7 +75,7 @@
                                 <td class='td-top-left'></td>
                                 <td t-foreach="products" t-as="product">
                                     <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
-                                        <strong class='pull-right'>x</strong>
+                                        <strong class='float-right'>x</strong>
                                     </a>
                                     <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">
                                         <img t-attf-src="/web/image/product.product/#{product.id}/image/200x150" class="img img-fluid" style="margin:auto;" alt="Product image"/>

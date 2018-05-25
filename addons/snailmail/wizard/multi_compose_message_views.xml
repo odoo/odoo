@@ -8,11 +8,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='option_email']" position='before'>
                     <div name="option_letter" class="col-md-12 mb16">
-                        <div name="option" class="pull-left">
+                        <div name="option" class="float-left">
                             <field name="snailmail_send_by_letter" widget="boolean_toggle"/>
                             <b><label for="snailmail_send_by_letter"/></b>
                         </div>
-                        <div class="pull-right" name='cost' attrs="{'invisible': [('snailmail_send_by_letter','=',False)]}">
+                        <div class="float-right" name='cost' attrs="{'invisible': [('snailmail_send_by_letter','=',False)]}">
                             <field name="currency_id" invisible="1"/>
                             <b><field name="snailmail_cost" widget='monetary' options="{'currency_field': 'currency_id'}"/></b>
                         </div>  

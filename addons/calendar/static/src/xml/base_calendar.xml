@@ -32,7 +32,7 @@
                             </span>
                             <span><t t-esc="meeting.name"/></span>
                         </span>
-                        <span t-if="meeting.start" class="pull-right">
+                        <span t-if="meeting.start" class="float-right">
                             <t t-if="meeting.allday">All Day</t>
                             <t t-else=''>
                                 <t t-set="is_next_meeting" t-value="false"/>

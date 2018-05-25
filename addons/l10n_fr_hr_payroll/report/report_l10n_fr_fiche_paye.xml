@@ -11,7 +11,7 @@
                             <h2>Bulletin de paie</h2>
                             <h4>Paie du <span t-field="o.date_from"/> au <span t-field="o.date_to"/></h4>
                         </div>
-                        <div class="col-4 pull-right">
+                        <div class="col-4 float-right">
                             <table class="table table-bordered" stype="border: 2px solid black;">
                                 <tr>
                                     <td>
@@ -111,7 +111,7 @@
                             <table class="table  table-round-border">
                                 <tr>
                                     <td>
-                                        <div class="pull-right">         
+                                        <div class="float-right">         
                                         <strong>Net à payer </strong>: <span t-esc="get_total_by_rule_category(o, 'NET')"/>
                                         <strong>Total Charges Patronales</strong> : <span t-esc="get_total_by_rule_category(o, 'COMP')"/>
                                         </div>

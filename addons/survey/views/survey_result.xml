@@ -7,11 +7,11 @@
             <div class="container js_surveyresult">
                 <t t-call="survey.back" />
                 <div class="jumbotron mt32">
-                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right " role="img" aria-label="Chart" title="Chart"/></h1>
+                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o float-right " role="img" aria-label="Chart" title="Chart"/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
                 <div class="card d-print-none">
-                    <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
+                    <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
                     <div class="card-body">
                         <span t-if="filter_finish == True">
                             <span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>
@@ -43,7 +43,7 @@
                             <t t-if="question.type in ['simple_choice', 'multiple_choice']">
                                 <small><span t-field='question.type' class="label label-default"></span></small>
                             </t>
-                            <span class="pull-right">
+                            <span class="float-right">
                                 <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span>
                                 <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
@@ -255,7 +255,7 @@
     <template id="result_number" name="Number Result">
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
-        <span class="pull-right mt8">
+        <span class="float-right mt8">
             <span class="label label-default only_left_radius">Sum </span> <span class="label label-info only_right_radius" t-esc="number_result['sum']"></span>
             <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
             <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
@@ -323,7 +323,7 @@
                 <div class="jumbotron mt32">
                     <h2 class="text-muted">
                         <span>
-                            <i style="font-size:1.8em" class="fa fa-users pull-right" role="img" aria-label="No answer" title="No answer"></i>
+                            <i style="font-size:1.8em" class="fa fa-users float-right" role="img" aria-label="No answer" title="No answer"></i>
                         </span>
                         Sorry, No one answered this survey yet
                     </h2>

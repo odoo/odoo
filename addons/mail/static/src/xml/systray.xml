@@ -84,8 +84,8 @@
                         <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
                         <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>
                         <span t-if="!activity.today_count" class="o_no_activity mr16">0 Today </span>
-                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button pull-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
-                        <span t-if="!activity.planned_count" class="o_no_activity pull-right">0 Future</span>
+                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button float-right" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
+                        <span t-if="!activity.planned_count" class="o_no_activity float-right">0 Future</span>
                     </div>
                 </div>
             </div>

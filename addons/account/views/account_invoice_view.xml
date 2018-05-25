@@ -204,7 +204,7 @@
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date_invoice.value"/></span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span class="pull-right text-right">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'open': 'warning',
                                             'paid': 'success'}}"/>
                                         </span>
@@ -519,7 +519,7 @@
                                                         </div>
                                                         <div class="col-4">
                                                             <strong>
-                                                                <span class="pull-right text-right">
+                                                                <span class="float-right text-right">
                                                                     <t t-esc="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
                                                                     <t t-esc="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
                                                                 </span>

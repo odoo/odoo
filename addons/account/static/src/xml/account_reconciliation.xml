@@ -26,14 +26,14 @@
                 </div>
                 <div aria-valuemin="0" t-att-aria-valuenow="widget._initialState.valuenow" class="progress-bar" role="progressbar" style="width: 0%;" t-att-aria-valuemax="widget._initialState.valuemax"></div>
             </div>
-            <button class="btn btn-secondary o_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
+            <button class="btn btn-secondary o_automatic_reconciliation float-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
             <div class="notification_area"/>
         </div>
         <div class="o_reconciliation_lines"/>
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-secondary js_load_more">Load more</button>
         </div>
-        <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
+        <div class="float-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_noreconciliation">
         <p>Nothing to do!</p>
@@ -73,7 +73,7 @@
     <div class="o_reconciliation_line" t-att-data-mode="state.mode">
         <table class="accounting_view">
             <caption>
-                <div class="pull-right o_buttons">
+                <div class="float-right o_buttons">
                     <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Validate</button>
                     <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
                     <span t-attf-class="o_no_valid text-danger #{state.balance.type &lt; 0 ? '' : 'd-none'}">Select a partner or choose a counterpart</span>
@@ -106,7 +106,7 @@
 
 <t t-name="reconciliation.manual.line" t-extend="reconciliation.line">
     <t t-jquery=".o_buttons" t-operation="replace">
-        <div class="pull-right o_buttons">
+        <div class="float-right o_buttons">
             <button t-attf-class="o_validate btn btn-secondary #{!state.balance.type ? '' : 'd-none'}">Reconcile</button>
             <button t-attf-class="o_reconcile btn btn-primary #{state.balance.type &gt; 0 ? '' : 'd-none'}">Reconcile</button>
             <button t-attf-class="o_no_valid btn btn-secondary #{state.balance.type &lt; 0 ? '' : 'd-none'}">Skip</button>
@@ -144,8 +144,8 @@
 <div t-name="reconciliation.line.match">
     <div class="match_controls">
         <input class="filter" placeholder="Filter..." type="text" value=""/>
-        <span class="pull-right fa fa-chevron-right disabled" role="img" aria-label="Previous" title="Previous"></span>
-        <span class="pull-right fa fa-chevron-left disabled" role="img" aria-label="Next" title="Next"></span>
+        <span class="float-right fa fa-chevron-right disabled" role="img" aria-label="Previous" title="Previous"></span>
+        <span class="float-right fa fa-chevron-left disabled" role="img" aria-label="Next" title="Next"></span>
     </div>
     <table>
         <tbody>
@@ -162,7 +162,7 @@
             </t>
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
-        <div class="dropdown pull-right">
+        <div class="dropdown float-right">
             <a data-toggle="dropdown" href="#"><span class="fa fa-cog" role="img" aria-label="Settings"/></a>
             <div class="dropdown-menu dropdown-menu-right" role="menu" aria-label="Presets config">
                 <a role="menuitem" class="dropdown-item reconcile_model_create" href="#">Create model</a>
@@ -170,7 +170,7 @@
             </div>
         </div>
     </div>
-    <table class="pull-left">
+    <table class="float-left">
         <tr class="create_account_id">
             <td class="o_td_label">Account</td>
             <td class="o_td_field"></td>
@@ -188,7 +188,7 @@
             <td class="o_td_field"></td>
         </tr>
     </table>
-    <table class="pull-right">
+    <table class="float-right">
         <tbody>
             <tr class="create_journal_id" style="display: none;">
                 <td class="o_td_label">Journal</td>

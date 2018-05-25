@@ -147,17 +147,17 @@
                 </div>
                 <div class="col-lg-6 col-md-3 col-3 d-print-none" id="o_portal_order_actions">
                     <t t-if="order.state == 'sent' and portal_confirmation == 'sign'" name="portal_confirmation_sign">
-                        <a role="button" class="btn btn-primary ml8 pull-right" href="#portal_sign">
+                        <a role="button" class="btn btn-primary ml8 float-right" href="#portal_sign">
                             <i class="fa fa-arrow-circle-right"/> Accept &amp; Sign
                         </a>
                     </t>
                     <t t-if="order.state == 'sale' and portal_confirmation == 'sign'">
-                        <a role="button" class="btn btn-success ml8 pull-right" disabled="disabled"
+                        <a role="button" class="btn btn-success ml8 float-right" disabled="disabled"
                             t-attf-title="Order signed on #{order.confirmation_date} by #{order.partner_id.name}">
                             <i class="fa fa-check-circle"/> Signed
                         </a>
                     </t>
-                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
+                    <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 float-right mt4 mr8" title="Download">
                         <i class="fa fa-download fa-2x" role="img" aria-label="Download"/>
                     </a>
                 </div>
