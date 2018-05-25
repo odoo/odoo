@@ -336,8 +336,8 @@
         <t t-set="record_limit" t-value="10"/><!-- Change This record_limit to change number of record  per page-->
         <ul t-att-id="'pagination_%d' % question.id" class="pagination" t-att-data-question_id="question.id" t-att-data-record_limit="record_limit">
             <t t-if="len(text_result) > record_limit">
-                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num">
-                    <a href="#" t-esc="num"></a>
+                <li t-foreach="page_range(len(text_result), record_limit)" t-as="num" class="page-item">
+                    <a href="#" class="page-link" t-esc="num"></a>
                 </li>
             </t>
         </ul>

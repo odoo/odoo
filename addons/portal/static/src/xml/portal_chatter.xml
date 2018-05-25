@@ -84,16 +84,16 @@
         <div class="o_portal_chatter_pager">
             <t t-if="!_.isEmpty(widget.get('pager'))">
                 <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
-                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="o_portal_chatter_pager_btn">
-                        <a href="#"><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>
                     </li>
                     <t t-foreach="widget.get('pager')['pages']" t-as="page">
-                        <li t-att-data-page="page" t-att-class="page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'">
-                            <a href="#"><t t-esc="page"/></a>
+                        <li t-att-data-page="page" t-attf-class="page-item #{page == widget.get('pager')['page'] ? 'o_portal_chatter_pager_btn active' : 'o_portal_chatter_pager_btn'}">
+                            <a href="#" class="page-link"><t t-esc="page"/></a>
                         </li>
                     </t>
-                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="o_portal_chatter_pager_btn">
-                        <a href="#"><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
+                    <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_next']" t-att-data-page="widget.get('pager')['page_next']" class="page-item o_portal_chatter_pager_btn">
+                        <a href="#" class="page-link"><i class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/></a>
                     </li>
                 </ul>
             </t>

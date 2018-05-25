@@ -440,7 +440,7 @@
                             <t t-call="#{ template }"></t>
                         </t>
                         <!-- pager -->
-                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered">
+                        <div t-if="1 != obj['page_end']" class="pagination pagination-centered"><!-- FIXME -->
                             <ul>
                                 <li t-attf-class="prev #{'active' if obj['page'] == 1 else '' }">
                                     <a t-att-href=" '%s,%s-%s' % (obj['kanban_url'], obj['column_id'].id, (obj['page'] &gt; 1 and obj['page']-1 or 1)) ">Prev</a></li>
