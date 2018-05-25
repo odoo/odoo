@@ -267,7 +267,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         }
 
         $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("float-left"));
-        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("center-block"));
+        $container.find('button[data-event="floatMe"][data-value="center"]').toggleClass("active", $(oStyle.image).hasClass("d-block mx-auto"));
         $container.find('button[data-event="floatMe"][data-value="right"]').toggleClass("active", $(oStyle.image).hasClass("float-right"));
 
         $(oStyle.image).trigger('attributes_change');
@@ -360,9 +360,9 @@ eventHandler.modules.editor.floatMe = function ($editable, sValue) {
     var $target = $(getImgTarget($editable));
     $editable.data('NoteHistory').recordUndo();
     switch (sValue) {
-        case 'center': $target.toggleClass('center-block').removeClass('float-right float-left'); break;
-        case 'left': $target.toggleClass('float-left').removeClass('float-right center-block'); break;
-        case 'right': $target.toggleClass('float-right').removeClass('float-left center-block'); break;
+        case 'center': $target.toggleClass('d-block mx-auto').removeClass('float-right float-left'); break;
+        case 'left': $target.toggleClass('float-left').removeClass('float-right d-block mx-auto'); break;
+        case 'right': $target.toggleClass('float-right').removeClass('float-left d-block mx-auto'); break;
     }
 };
 eventHandler.modules.editor.imageShape = function ($editable, sValue) {
