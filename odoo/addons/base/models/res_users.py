@@ -545,25 +545,26 @@ class Users(models.Model):
     @classmethod
     def _login(cls, db, login, password):
         if not password:
-            return False
-        user_id = False
+            raise AccessDenied()
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
                 with self._assert_can_auth():
                     user = self.search([('login', '=', login)])
-                    if user:
-                        user_id = user.id
-                        user.sudo(user_id)._check_credentials(password)
-                        user.sudo(user_id)._update_last_login()
+                    if not user:
+                        raise AccessDenied()
+
+                    user = user.sudo(user.id)
+                    user._check_credentials(password)
+                    user._update_last_login()
         except AccessDenied:
-            user_id = False
+            _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
+            raise
 
-        status = "successful" if user_id else "failed"
-        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
-        _logger.info("Login %s for db:%s login:%s from %s", status, db, login, ip)
+        _logger.info("Login successful for db:%s login:%s from %s", db, login, ip)
 
-        return user_id
+        return user.id
 
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
@@ -874,8 +875,6 @@ class Users(models.Model):
         source = request.httprequest.remote_addr
         (failures, previous) = failures_map[source]
         if self._on_login_cooldown(failures, previous):
-            request.session['login_error'] = _("Too many login failures, please wait a bit before trying again.")
-
             _logger.warn(
                 "Login attempt ignored for %s on %s: "
                 "%d failures since last success, last failure at %s. "
@@ -893,7 +892,7 @@ class Users(models.Model):
                     "https://www.odoo.com/documentation/11.0/setup/deploy.html#https for details.",
                     source
                 )
-            raise AccessDenied()
+            raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
 
         try:
             yield
