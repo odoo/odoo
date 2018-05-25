@@ -106,10 +106,6 @@ class CustomerPortal(CustomerPortal):
         # Note: portal users can't view projects they don't follow
         projects = request.env['project.project'].sudo().search([('privacy_visibility', '=', 'portal')])
         domain = [('project_id', 'in', projects.ids)]
-        for proj in projects:
-            searchbar_filters.update({
-                str(proj.id): {'label': proj.name, 'domain': [('project_id', '=', proj.id)]}
-            })
 
         # default sort by value
         if not sortby:
@@ -139,7 +135,15 @@ class CustomerPortal(CustomerPortal):
             domain += search_domain
 
         # task count
-        task_count = request.env['project.task'].search_count(domain)
+        task_grouped = request.env['project.task'].read_group(domain, ['project_id'], ['project_id'])
+        task_count = 0
+        for proj in task_grouped:
+            project_id, project_name = proj['project_id']
+            task_count += proj['project_id_count']
+            searchbar_filters.update({
+                str(project_id): {'label': project_name, 'domain': [('project_id', '=', project_id)]}
+            })
+
         # pager
         pager = portal_pager(
             url="/my/tasks",
