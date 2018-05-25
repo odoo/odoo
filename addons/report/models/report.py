@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 from odoo.sql_db import TestCursor
 from odoo.tools import config
 from odoo.tools.misc import find_in_path
-from odoo.http import request
+from odoo.http import Root, request
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
@@ -41,6 +41,8 @@ except Exception:
 # Helpers
 #--------------------------------------------------------------------------
 _logger = logging.getLogger(__name__)
+
+root = Root()
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -355,6 +357,29 @@ class Report(models.Model):
 
     def _check_wkhtmltopdf(self):
         return wkhtmltopdf_state
+    
+    def _create_wkhtmltopdf_session(self):
+        session = root.session_store.new()
+        session.uid = self.env.user.id
+        session.login = self.env.user.login
+        session.db = self._cr.dbname
+        session.wkhtmltopdf = True
+        session.context = {
+            'lang': self.env.user.lang,
+            'tz': self.env.user.tz,
+            'uid': self.env.user.id
+        }
+        session.session_token = security.compute_session_token(session)
+        root.session_store.save(session)
+        self.env.user.current_session = session.sid
+        _logger.debug('Session Store: %s', session)
+        return session
+
+    def _check_delete_wkhtmltopdf_session(self):
+        if hasattr(self.env.user, 'current_session'):
+            session = root.session_store.get(self.env.user.current_session)
+            if session.wkhtmltopdf:
+                root.session_store.delete(session)
 
     @api.model
     def _run_wkhtmltopdf(self, headers, footers, bodies, landscape, paperformat, spec_paperformat_args=None, save_in_attachment=None, set_viewport_size=False):
@@ -383,6 +408,11 @@ class Report(models.Model):
                 command_args.extend(['--cookie', 'session_id', request.session.sid])
         except AttributeError:
             pass
+        
+        # In case cronjob is triggering a report generation we need to fake a session for the user
+        if repr(request) == '<LocalProxy unbound>':
+            session = self._create_wkhtmltopdf_session()
+            command_args.extend(['--cookie', 'session_id', session.sid])
 
         # Wkhtmltopdf arguments
         command_args.extend(['--quiet'])  # Less verbose error messages
@@ -491,6 +521,7 @@ class Report(models.Model):
             except (OSError, IOError):
                 _logger.error('Error when trying to remove file %s' % temporary_file)
 
+        self._check_delete_wkhtmltopdf_session()
         return content
 
     @api.model
