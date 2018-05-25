@@ -638,12 +638,19 @@ class MassMailing(models.Model):
         }
 
     @api.multi
+    def action_schedule_date(self):
+        self.ensure_one()
+        action = self.env.ref('mass_mailing.mass_mailing_schedule_date_action').read()[0]
+        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
+        return action
+
+    @api.multi
     def put_in_queue(self):
-        self.write({'sent_date': fields.Datetime.now(), 'state': 'in_queue'})
+        self.write({'state': 'in_queue'})
 
     @api.multi
     def cancel_mass_mailing(self):
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'schedule_date': False})
 
     @api.multi
     def retry_failed_mail(self):
@@ -784,7 +791,7 @@ class MassMailing(models.Model):
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
             composer.send_mail(auto_commit=auto_commit)
-            mailing.state = 'done'
+            mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
         return True
 
     def convert_links(self):
@@ -818,4 +825,4 @@ class MassMailing(models.Model):
                 mass_mailing.state = 'sending'
                 mass_mailing.send_mail()
             else:
-                mass_mailing.state = 'done'
+                mass_mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
