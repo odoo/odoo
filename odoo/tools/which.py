@@ -38,29 +38,34 @@
        or raise IOError(errno.ENOENT).
 
 """
-__docformat__ = 'restructuredtext en'
-__all__ = 'which which_files pathsep defpath defpathext F_OK R_OK W_OK X_OK'.split()
+__docformat__ = "restructuredtext en"
+__all__ = "which which_files pathsep defpath defpathext F_OK R_OK W_OK X_OK".split()
 
 import sys
 from os import access, defpath, pathsep, environ, F_OK, R_OK, W_OK, X_OK
 from os.path import exists, dirname, split, join
+
 ENOENT = 2
 
-windows = sys.platform.startswith('win')
+windows = sys.platform.startswith("win")
 
-defpath = environ.get('PATH', defpath).split(pathsep)
+defpath = environ.get("PATH", defpath).split(pathsep)
 
 if windows:
-    defpath.insert(0, '.') # can insert without checking, when duplicates are removed
+    defpath.insert(0, ".")  # can insert without checking, when duplicates are removed
     # given the quite usual mess in PATH on Windows, let's rather remove duplicates
     seen = set()
-    defpath = [dir for dir in defpath if dir.lower() not in seen and not seen.add(dir.lower())]
+    defpath = [
+        dir for dir in defpath if dir.lower() not in seen and not seen.add(dir.lower())
+    ]
     del seen
 
-    defpathext = [''] + environ.get('PATHEXT',
-        '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC').lower().split(pathsep)
+    defpathext = [""] + environ.get(
+        "PATHEXT", ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC"
+    ).lower().split(pathsep)
 else:
-    defpathext = ['']
+    defpathext = [""]
+
 
 def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
     """ Locate a file in a path supplied as a part of the file name,
@@ -120,8 +125,10 @@ def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
     elif isinstance(pathext, str):
         pathext = pathext.split(pathsep)
 
-    if not '' in pathext:
-        pathext.insert(0, '') # always check command without extension, even for custom pathext
+    if not "" in pathext:
+        pathext.insert(
+            0, ""
+        )  # always check command without extension, even for custom pathext
 
     for dir in path:
         basepath = join(dir, file)
@@ -129,6 +136,7 @@ def which_files(file, mode=F_OK | X_OK, path=None, pathext=None):
             fullpath = basepath + ext
             if exists(fullpath) and access(fullpath, mode):
                 yield fullpath
+
 
 def which(file, mode=F_OK | X_OK, path=None, pathext=None):
     """ Locate a file in a path supplied as a part of the file name,
@@ -141,9 +149,13 @@ def which(file, mode=F_OK | X_OK, path=None, pathext=None):
     """
     path = next(which_files(file, mode, path, pathext), None)
     if path is None:
-        raise IOError(ENOENT, '%s not found' % (mode & X_OK and 'command' or 'file'), file)
+        raise IOError(
+            ENOENT, "%s not found" % (mode & X_OK and "command" or "file"), file
+        )
     return path
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     import doctest
+
     doctest.testmod()

@@ -22,146 +22,146 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(value, model)
         self.assertFalse(value)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_00_query(self):
         """ Build a recordset, and check its contents. """
-        domain = [('name', 'ilike', 'j')]
-        partners = self.env['res.partner'].search(domain)
+        domain = [("name", "ilike", "j")]
+        partners = self.env["res.partner"].search(domain)
 
         # partners is a collection of browse records
         self.assertTrue(partners)
 
         # partners and its contents are instance of the model
-        self.assertIsRecordset(partners, 'res.partner')
+        self.assertIsRecordset(partners, "res.partner")
         for p in partners:
-            self.assertIsRecord(p, 'res.partner')
+            self.assertIsRecord(p, "res.partner")
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_01_query_offset(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([], offset=10)
-        partners2 = self.env['res.partner'].search([])[10:]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env["res.partner"].search([], offset=10)
+        partners2 = self.env["res.partner"].search([])[10:]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_02_query_limit(self):
         """ Build a recordset with offset, and check equivalence. """
-        partners1 = self.env['res.partner'].search([], limit=10)
-        partners2 = self.env['res.partner'].search([])[:10]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env["res.partner"].search([], limit=10)
+        partners2 = self.env["res.partner"].search([])[:10]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_03_query_offset_limit(self):
         """ Build a recordset with offset and limit, and check equivalence. """
-        partners1 = self.env['res.partner'].search([], offset=3, limit=7)
-        partners2 = self.env['res.partner'].search([])[3:10]
-        self.assertIsRecordset(partners1, 'res.partner')
-        self.assertIsRecordset(partners2, 'res.partner')
+        partners1 = self.env["res.partner"].search([], offset=3, limit=7)
+        partners2 = self.env["res.partner"].search([])[3:10]
+        self.assertIsRecordset(partners1, "res.partner")
+        self.assertIsRecordset(partners2, "res.partner")
         self.assertEqual(list(partners1), list(partners2))
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_04_query_count(self):
         """ Test the search method with count=True. """
         self.cr.execute("SELECT COUNT(*) FROM res_partner WHERE active")
         count1 = self.cr.fetchone()[0]
-        count2 = self.env['res.partner'].search([], count=True)
+        count2 = self.env["res.partner"].search([], count=True)
         self.assertIsInstance(count1, pycompat.integer_types)
         self.assertIsInstance(count2, pycompat.integer_types)
         self.assertEqual(count1, count2)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_05_immutable(self):
         """ Check that a recordset remains the same, even after updates. """
-        domain = [('name', 'ilike', 'j')]
-        partners = self.env['res.partner'].search(domain)
+        domain = [("name", "ilike", "j")]
+        partners = self.env["res.partner"].search(domain)
         self.assertTrue(partners)
         ids = partners.ids
 
         # modify those partners, and check that partners has not changed
-        partners.write({'active': False})
+        partners.write({"active": False})
         self.assertEqual(ids, partners.ids)
 
         # redo the search, and check that the result is now empty
-        partners2 = self.env['res.partner'].search(domain)
+        partners2 = self.env["res.partner"].search(domain)
         self.assertFalse(partners2)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
         user = self.env.user
-        self.assertIsRecord(user, 'res.users')
-        self.assertIsRecord(user.partner_id, 'res.partner')
-        self.assertIsRecordset(user.groups_id, 'res.groups')
+        self.assertIsRecord(user, "res.users")
+        self.assertIsRecord(user.partner_id, "res.partner")
+        self.assertIsRecordset(user.groups_id, "res.groups")
 
-        partners = self.env['res.partner'].search([])
+        partners = self.env["res.partner"].search([])
         for name, field in partners._fields.items():
-            if field.type == 'many2one':
+            if field.type == "many2one":
                 for p in partners:
                     self.assertIsRecord(p[name], field.comodel_name)
-            elif field.type == 'reference':
+            elif field.type == "reference":
                 for p in partners:
                     if p[name]:
                         self.assertIsRecord(p[name], field.comodel_name)
-            elif field.type in ('one2many', 'many2many'):
+            elif field.type in ("one2many", "many2many"):
                 for p in partners:
                     self.assertIsRecordset(p[name], field.comodel_name)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_07_null(self):
         """ Check behavior of null instances. """
         # select a partner without a parent
-        partner = self.env['res.partner'].search([('parent_id', '=', False)])[0]
+        partner = self.env["res.partner"].search([("parent_id", "=", False)])[0]
 
         # check partner and related null instances
         self.assertTrue(partner)
-        self.assertIsRecord(partner, 'res.partner')
+        self.assertIsRecord(partner, "res.partner")
 
         self.assertFalse(partner.parent_id)
-        self.assertIsNull(partner.parent_id, 'res.partner')
+        self.assertIsNull(partner.parent_id, "res.partner")
 
         self.assertIs(partner.parent_id.id, False)
 
         self.assertFalse(partner.parent_id.user_id)
-        self.assertIsNull(partner.parent_id.user_id, 'res.users')
+        self.assertIsNull(partner.parent_id.user_id, "res.users")
 
         self.assertIs(partner.parent_id.user_id.name, False)
 
         self.assertFalse(partner.parent_id.user_id.groups_id)
-        self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')
+        self.assertIsRecordset(partner.parent_id.user_id.groups_id, "res.groups")
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_40_new_new(self):
         """ Call new-style methods in the new API style. """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env["res.partner"].search([("name", "ilike", "j")])
         self.assertTrue(partners)
 
         # call method write on partners itself, and check its effect
-        partners.write({'active': False})
+        partners.write({"active": False})
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_45_new_new(self):
         """ Call new-style methods on records (new API style). """
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env["res.partner"].search([("name", "ilike", "j")])
         self.assertTrue(partners)
 
         # call method write on partner records, and check its effects
         for p in partners:
-            p.write({'active': False})
+            p.write({"active": False})
         for p in partners:
             self.assertFalse(p.active)
 
-    @mute_logger('odoo.models')
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger("odoo.models")
+    @mute_logger("odoo.addons.base.models.ir_model")
     def test_50_environment(self):
         """ Test environment on records. """
         # partners and reachable records are attached to self.env
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j')])
+        partners = self.env["res.partner"].search([("name", "ilike", "j")])
         self.assertEqual(partners.env, self.env)
         for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.env, self.env)
@@ -170,10 +170,10 @@ class TestAPI(common.TransactionCase):
 
         # check that the current user can read and modify company data
         partners[0].company_id.name
-        partners[0].company_id.write({'name': 'Fools'})
+        partners[0].company_id.write({"name": "Fools"})
 
         # create an environment with the demo user
-        demo = self.env['res.users'].search([('login', '=', 'demo')])[0]
+        demo = self.env["res.users"].search([("login", "=", "demo")])[0]
         demo_env = self.env(user=demo)
         self.assertNotEqual(demo_env, self.env)
 
@@ -195,16 +195,16 @@ class TestAPI(common.TransactionCase):
         # demo user can read but not modify company data
         demo_partners[0].company_id.name
         with self.assertRaises(AccessError):
-            demo_partners[0].company_id.write({'name': 'Pricks'})
+            demo_partners[0].company_id.write({"name": "Pricks"})
 
         # remove demo user from all groups
-        demo.write({'groups_id': [(5,)]})
+        demo.write({"groups_id": [(5,)]})
 
         # demo user can no longer access partner data
         with self.assertRaises(AccessError):
             demo_partners[0].company_id.name
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_55_draft(self):
         """ Test draft mode nesting. """
         env = self.env
@@ -219,23 +219,24 @@ class TestAPI(common.TransactionCase):
             self.assertTrue(env.in_draft)
         self.assertFalse(env.in_draft)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_cache(self):
         """ Check the record cache behavior """
-        Partners = self.env['res.partner']
+        Partners = self.env["res.partner"]
         pids = []
         data = {
-            'partner One': ['Partner One - One', 'Partner One - Two'],
-            'Partner Two': ['Partner Two - One'],
-            'Partner Three': ['Partner Three - One'],
+            "partner One": ["Partner One - One", "Partner One - Two"],
+            "Partner Two": ["Partner Two - One"],
+            "Partner Three": ["Partner Three - One"],
         }
         for p in data:
-            pids.append(Partners.create({
-                'name': p,
-                'child_ids': [(0, 0, {'name': c}) for c in data[p]],
-            }).id)
+            pids.append(
+                Partners.create(
+                    {"name": p, "child_ids": [(0, 0, {"name": c}) for c in data[p]]}
+                ).id
+            )
 
-        partners = Partners.search([('id', 'in', pids)])
+        partners = Partners.search([("id", "in", pids)])
         partner1, partner2 = partners[0], partners[1]
         children1, children2 = partner1.child_ids, partner2.child_ids
         self.assertTrue(children1)
@@ -253,7 +254,7 @@ class TestAPI(common.TransactionCase):
         self.env.cache.check(self.env)
 
         # change its parent
-        child.write({'parent_id': partner2.id})
+        child.write({"parent_id": partner2.id})
         self.env.cache.check(self.env)
 
         # check recordsets
@@ -277,52 +278,55 @@ class TestAPI(common.TransactionCase):
         partner = partner1
         partner.country_id, partner.child_ids
         data = partner._convert_to_write(partner._cache)
-        self.assertEqual(data['country_id'], partner.country_id.id)
-        self.assertEqual(data['child_ids'], [(6, 0, partner.child_ids.ids)])
+        self.assertEqual(data["country_id"], partner.country_id.id)
+        self.assertEqual(data["child_ids"], [(6, 0, partner.child_ids.ids)])
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_prefetch(self):
         """ Check the record cache prefetching """
-        partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
+        partners = self.env["res.partner"].search([], limit=models.PREFETCH_MAX)
         self.assertTrue(len(partners) > 1)
 
         # all the records in partners are ready for prefetching
-        self.assertItemsEqual(partners.ids, partners._prefetch['res.partner'])
+        self.assertItemsEqual(partners.ids, partners._prefetch["res.partner"])
 
         # reading ONE partner should fetch them ALL
         for partner in partners:
             partner.country_id
             break
-        partner_ids_with_field = [partner.id
-                                  for partner in partners
-                                  if 'country_id' in partner._cache]
+        partner_ids_with_field = [
+            partner.id for partner in partners if "country_id" in partner._cache
+        ]
         self.assertItemsEqual(partner_ids_with_field, partners.ids)
 
         # partners' countries are ready for prefetching
-        country_ids = {cid
-                       for partner in partners
-                       for cid in partner._cache['country_id']}
+        country_ids = {
+            cid for partner in partners for cid in partner._cache["country_id"]
+        }
         self.assertTrue(len(country_ids) > 1)
-        self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
+        self.assertItemsEqual(country_ids, partners._prefetch["res.country"])
 
         # reading ONE partner country should fetch ALL partners' countries
         for partner in partners:
             if partner.country_id:
                 partner.country_id.name
                 break
-        country_ids_with_field = [country.id
-                                  for country in partners.mapped('country_id')
-                                  if 'name' in country._cache]
+        country_ids_with_field = [
+            country.id
+            for country in partners.mapped("country_id")
+            if "name" in country._cache
+        ]
         self.assertItemsEqual(country_ids_with_field, country_ids)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_60_prefetch_object(self):
         """ Check the prefetching model. """
-        partners = self.env['res.partner'].search([], limit=models.PREFETCH_MAX)
+        partners = self.env["res.partner"].search([], limit=models.PREFETCH_MAX)
         self.assertTrue(partners)
 
         def same_prefetch(a, b):
             self.assertIs(a._prefetch, b._prefetch)
+
         def diff_prefetch(a, b):
             self.assertIsNot(a._prefetch, b._prefetch)
 
@@ -333,26 +337,26 @@ class TestAPI(common.TransactionCase):
         diff_prefetch(partners, partners[:10])
 
         # the recordset operations below should pass the prefetch object
-        same_prefetch(partners, partners.sudo(self.env.ref('base.user_demo')))
+        same_prefetch(partners, partners.sudo(self.env.ref("base.user_demo")))
         same_prefetch(partners, partners.with_context(active_test=False))
         same_prefetch(partners, partners[:10].with_prefetch(partners._prefetch))
 
         # iterating and reading relational fields should pass the prefetch object
-        self.assertEqual(type(partners).country_id.type, 'many2one')
-        self.assertEqual(type(partners).bank_ids.type, 'one2many')
-        self.assertEqual(type(partners).category_id.type, 'many2many')
+        self.assertEqual(type(partners).country_id.type, "many2one")
+        self.assertEqual(type(partners).bank_ids.type, "one2many")
+        self.assertEqual(type(partners).category_id.type, "many2many")
 
         vals0 = {
-            'name': 'Empty relational fields',
-            'country_id': False,
-            'bank_ids': [],
-            'category_id': [],
+            "name": "Empty relational fields",
+            "country_id": False,
+            "bank_ids": [],
+            "category_id": [],
         }
         vals1 = {
-            'name': 'Non-empty relational fields',
-            'country_id': self.ref('base.be'),
-            'bank_ids': [(0, 0, {'acc_number': 'FOO42'})],
-            'category_id': [(4, self.ref('base.res_partner_category_0'))],
+            "name": "Non-empty relational fields",
+            "country_id": self.ref("base.be"),
+            "bank_ids": [(0, 0, {"acc_number": "FOO42"})],
+            "category_id": [(4, self.ref("base.res_partner_category_0"))],
         }
         partners = partners.create(vals0) + partners.create(vals1)
         for partner in partners:
@@ -367,11 +371,11 @@ class TestAPI(common.TransactionCase):
         same_prefetch(empty, empty.bank_ids)
         same_prefetch(empty, empty.category_id)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_70_one(self):
         """ Check method one(). """
         # check with many records
-        ps = self.env['res.partner'].search([('name', 'ilike', 'a')])
+        ps = self.env["res.partner"].search([("name", "ilike", "a")])
         self.assertTrue(len(ps) > 1)
         with self.assertRaises(ValueError):
             ps.ensure_one()
@@ -380,23 +384,27 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(len(p1), 1)
         self.assertEqual(p1.ensure_one(), p1)
 
-        p0 = self.env['res.partner'].browse()
+        p0 = self.env["res.partner"].browse()
         self.assertEqual(len(p0), 0)
         with self.assertRaises(ValueError):
             p0.ensure_one()
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_contains(self):
         """ Test membership on recordset. """
-        p1 = self.env['res.partner'].search([('name', 'ilike', 'a')], limit=1).ensure_one()
-        ps = self.env['res.partner'].search([('name', 'ilike', 'a')])
+        p1 = (
+            self.env["res.partner"]
+            .search([("name", "ilike", "a")], limit=1)
+            .ensure_one()
+        )
+        ps = self.env["res.partner"].search([("name", "ilike", "a")])
         self.assertTrue(p1 in ps)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_set_operations(self):
         """ Check set operations on recordsets. """
-        pa = self.env['res.partner'].search([('name', 'ilike', 'a')])
-        pb = self.env['res.partner'].search([('name', 'ilike', 'b')])
+        pa = self.env["res.partner"].search([("name", "ilike", "a")])
+        pb = self.env["res.partner"].search([("name", "ilike", "b")])
         self.assertTrue(pa)
         self.assertTrue(pb)
         self.assertTrue(set(pa) & set(pb))
@@ -424,7 +432,7 @@ class TestAPI(common.TransactionCase):
 
         # one cannot mix different models with set operations
         ps = pa
-        ms = self.env['ir.ui.menu'].search([])
+        ms = self.env["ir.ui.menu"].search([])
         self.assertNotEqual(ps._name, ms._name)
         self.assertNotEqual(ps, ms)
 
@@ -445,60 +453,57 @@ class TestAPI(common.TransactionCase):
         with self.assertRaises(TypeError):
             res = ps >= ms
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_filter(self):
         """ Check filter on recordsets. """
-        ps = self.env['res.partner'].search([])
+        ps = self.env["res.partner"].search([])
         customers = ps.browse([p.id for p in ps if p.customer])
 
         # filter on a single field
         self.assertEqual(ps.filtered(lambda p: p.customer), customers)
-        self.assertEqual(ps.filtered('customer'), customers)
+        self.assertEqual(ps.filtered("customer"), customers)
 
         # filter on a sequence of fields
         self.assertEqual(
             ps.filtered(lambda p: p.parent_id.customer),
-            ps.filtered('parent_id.customer')
+            ps.filtered("parent_id.customer"),
         )
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_map(self):
         """ Check map on recordsets. """
-        ps = self.env['res.partner'].search([])
+        ps = self.env["res.partner"].search([])
         parents = ps.browse()
-        for p in ps: parents |= p.parent_id
+        for p in ps:
+            parents |= p.parent_id
 
         # map a single field
         self.assertEqual(ps.mapped(lambda p: p.parent_id), parents)
-        self.assertEqual(ps.mapped('parent_id'), parents)
+        self.assertEqual(ps.mapped("parent_id"), parents)
 
         # map a sequence of fields
         self.assertEqual(
-            ps.mapped(lambda p: p.parent_id.name),
-            [p.parent_id.name for p in ps]
+            ps.mapped(lambda p: p.parent_id.name), [p.parent_id.name for p in ps]
         )
-        self.assertEqual(
-            ps.mapped('parent_id.name'),
-            [p.name for p in parents]
-        )
+        self.assertEqual(ps.mapped("parent_id.name"), [p.name for p in parents])
 
         # map an empty sequence of fields
-        self.assertEqual(ps.mapped(''), ps)
+        self.assertEqual(ps.mapped(""), ps)
 
-    @mute_logger('odoo.models')
+    @mute_logger("odoo.models")
     def test_80_sorted(self):
         """ Check sorted on recordsets. """
-        ps = self.env['res.partner'].search([])
+        ps = self.env["res.partner"].search([])
 
         # sort by model order
-        qs = ps[:len(ps) // 2] + ps[len(ps) // 2:]
+        qs = ps[: len(ps) // 2] + ps[len(ps) // 2 :]
         self.assertEqual(qs.sorted().ids, ps.ids)
 
         # sort by name, with a function or a field name
         by_name_ids = [p.id for p in sorted(ps, key=lambda p: p.name)]
         self.assertEqual(ps.sorted(lambda p: p.name).ids, by_name_ids)
-        self.assertEqual(ps.sorted('name').ids, by_name_ids)
+        self.assertEqual(ps.sorted("name").ids, by_name_ids)
 
         # sort by inverse name, with a field name
         by_name_ids.reverse()
-        self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+        self.assertEqual(ps.sorted("name", reverse=True).ids, by_name_ids)

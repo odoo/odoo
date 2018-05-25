@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-__all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
-           'classproperty', 'conditional']
+__all__ = [
+    "synchronized",
+    "lazy_classproperty",
+    "lazy_property",
+    "classproperty",
+    "conditional",
+]
 
 from functools import wraps
 from inspect import getsourcefile
@@ -14,6 +19,7 @@ class lazy_property(object):
         reevaluate the property, simply delete the attribute on the object, and
         get it again.
     """
+
     def __init__(self, fget):
         self.fget = fget
 
@@ -37,12 +43,15 @@ class lazy_property(object):
             if isinstance(getattr(cls, name, None), lazy_property):
                 obj_dict.pop(name)
 
+
 class lazy_classproperty(lazy_property):
     """ Similar to :class:`lazy_property`, but for classes. """
+
     def __get__(self, obj, cls):
         val = self.fget(cls)
         setattr(cls, self.fget.__name__, val)
         return val
+
 
 def conditional(condition, decorator):
     """ Decorator for a conditionally applied decorator.
@@ -58,8 +67,11 @@ def conditional(condition, decorator):
     else:
         return lambda fn: fn
 
-def synchronized(lock_attr='_lock'):
+
+def synchronized(lock_attr="_lock"):
+
     def decorator(func):
+
         @wraps(func)
         def wrapper(self, *args, **kwargs):
             lock = getattr(self, lock_attr)
@@ -68,27 +80,31 @@ def synchronized(lock_attr='_lock'):
                 return func(self, *args, **kwargs)
             finally:
                 lock.release()
+
         return wrapper
+
     return decorator
+
 
 def frame_codeinfo(fframe, back=0):
     """ Return a (filename, line) pair for a previous frame .
         @return (filename, lineno) where lineno is either int or string==''
     """
-    
+
     try:
         if not fframe:
-            return "<unknown>", ''
+            return "<unknown>", ""
         for i in range(back):
             fframe = fframe.f_back
         try:
             fname = getsourcefile(fframe)
         except TypeError:
-            fname = '<builtin>'
-        lineno = fframe.f_lineno or ''
+            fname = "<builtin>"
+        lineno = fframe.f_lineno or ""
         return fname, lineno
     except Exception:
-        return "<unknown>", ''
+        return "<unknown>", ""
+
 
 def compose(a, b):
     """ Composes the callables ``a`` and ``b``. ``compose(a, b)(*args)`` is
@@ -100,15 +116,19 @@ def compose(a, b):
          def b():
             ...
     """
+
     @wraps(b)
     def wrapper(*args, **kwargs):
         return a(b(*args, **kwargs))
+
     return wrapper
 
 
 class _ClassProperty(property):
+
     def __get__(self, cls, owner):
         return self.fget.__get__(None, owner)()
+
 
 def classproperty(func):
     return _ClassProperty(classmethod(func))

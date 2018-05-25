@@ -14,35 +14,55 @@ _logger = logging.getLogger(__name__)
 try:
     from num2words import num2words
 except ImportError:
-    _logger.warning("The num2words python library is not installed, l10n_mx_edi features won't be fully available.")
+    _logger.warning(
+        "The num2words python library is not installed, l10n_mx_edi features won't be fully available."
+    )
     num2words = None
 
-CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
+CURRENCY_DISPLAY_PATTERN = re.compile(r"(\w+)\s*(?:\((.*)\))?")
 
 
 class Currency(models.Model):
     _name = "res.currency"
     _description = "Currency"
-    _order = 'active desc, name'
+    _order = "active desc, name"
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
-    name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
-    symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
-    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 6),
-                        help='The rate of the currency to the currency of rate 1.')
-    rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
-    rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01)
-    decimal_places = fields.Integer(compute='_compute_decimal_places')
+    name = fields.Char(
+        string="Currency", size=3, required=True, help="Currency Code (ISO 4217)"
+    )
+    symbol = fields.Char(
+        help="Currency sign, to be used when printing amounts.", required=True
+    )
+    rate = fields.Float(
+        compute="_compute_current_rate",
+        string="Current Rate",
+        digits=(12, 6),
+        help="The rate of the currency to the currency of rate 1.",
+    )
+    rate_ids = fields.One2many("res.currency.rate", "currency_id", string="Rates")
+    rounding = fields.Float(string="Rounding Factor", digits=(12, 6), default=0.01)
+    decimal_places = fields.Integer(compute="_compute_decimal_places")
     active = fields.Boolean(default=True)
-    position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
-        string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
-    date = fields.Date(compute='_compute_date')
+    position = fields.Selection(
+        [("after", "After Amount"), ("before", "Before Amount")],
+        default="after",
+        string="Symbol Position",
+        help="Determines where the currency symbol should be placed after or before the amount.",
+    )
+    date = fields.Date(compute="_compute_date")
     currency_unit_label = fields.Char(string="Currency Unit", help="Currency Unit Name")
-    currency_subunit_label = fields.Char(string="Currency Subunit", help="Currency Subunit Name")
+    currency_subunit_label = fields.Char(
+        string="Currency Subunit", help="Currency Subunit Name"
+    )
 
     _sql_constraints = [
-        ('unique_name', 'unique (name)', 'The currency code must be unique!'),
-        ('rounding_gt_zero', 'CHECK (rounding>0)', 'The rounding factor must be greater than 0!')
+        ("unique_name", "unique (name)", "The currency code must be unique!"),
+        (
+            "rounding_gt_zero",
+            "CHECK (rounding>0)",
+            "The rounding factor must be greater than 0!",
+        ),
     ]
 
     def _get_rates(self, company, date):
@@ -59,35 +79,49 @@ class Currency(models.Model):
 
     @api.multi
     def _compute_current_rate(self):
-        date = self._context.get('date') or fields.Date.today()
-        company = self._context.get('company_id') or self.env['res.users']._get_company()
+        date = self._context.get("date") or fields.Date.today()
+        company = (
+            self._context.get("company_id") or self.env["res.users"]._get_company()
+        )
         # the subquery selects the last rate before 'date' for the given currency/company
         currency_rates = self._get_rates(company, date)
         for currency in self:
             currency.rate = currency_rates.get(currency.id) or 1.0
 
     @api.multi
-    @api.depends('rounding')
+    @api.depends("rounding")
     def _compute_decimal_places(self):
         for currency in self:
             if 0 < currency.rounding < 1:
-                currency.decimal_places = int(math.ceil(math.log10(1/currency.rounding)))
+                currency.decimal_places = int(
+                    math.ceil(math.log10(1 / currency.rounding))
+                )
             else:
                 currency.decimal_places = 0
 
     @api.multi
-    @api.depends('rate_ids.name')
+    @api.depends("rate_ids.name")
     def _compute_date(self):
         for currency in self:
             currency.date = currency.rate_ids[:1].name
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        results = super(Currency, self)._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+    def _name_search(
+        self, name, args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        results = super(Currency, self)._name_search(
+            name, args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )
         if not results:
             name_match = CURRENCY_DISPLAY_PATTERN.match(name)
             if name_match:
-                results = super(Currency, self)._name_search(name_match.group(1), args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+                results = super(Currency, self)._name_search(
+                    name_match.group(1),
+                    args,
+                    operator=operator,
+                    limit=limit,
+                    name_get_uid=name_get_uid,
+                )
         return results
 
     @api.multi
@@ -97,32 +131,39 @@ class Currency(models.Model):
     @api.multi
     def amount_to_text(self, amount):
         self.ensure_one()
+
         def _num2words(number, lang):
             try:
                 return num2words(number, lang=lang).title()
             except NotImplementedError:
-                return num2words(number, lang='en').title()
+                return num2words(number, lang="en").title()
 
         if num2words is None:
-            logging.getLogger(__name__).warning("The library 'num2words' is missing, cannot render textual amounts.")
+            logging.getLogger(__name__).warning(
+                "The library 'num2words' is missing, cannot render textual amounts."
+            )
             return ""
 
         formatted = "%.{0}f".format(self.decimal_places) % amount
-        parts = formatted.partition('.')
+        parts = formatted.partition(".")
         integer_value = int(parts[0])
         fractional_value = int(parts[2] or 0)
 
-        lang_code = self.env.context.get('lang') or self.env.user.lang
-        lang = self.env['res.lang'].search([('code', '=', lang_code)])
-        amount_words = tools.ustr('{amt_value} {amt_word}').format(
-                        amt_value=_num2words(integer_value, lang=lang.iso_code),
-                        amt_word=self.currency_unit_label,
-                        )
+        lang_code = self.env.context.get("lang") or self.env.user.lang
+        lang = self.env["res.lang"].search([("code", "=", lang_code)])
+        amount_words = tools.ustr("{amt_value} {amt_word}").format(
+            amt_value=_num2words(integer_value, lang=lang.iso_code),
+            amt_word=self.currency_unit_label,
+        )
         if not self.is_zero(amount - integer_value):
-            amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
-                        amt_value=_num2words(fractional_value, lang=lang.iso_code),
-                        amt_word=self.currency_subunit_label,
-                        )
+            amount_words += (
+                " "
+                + _("and")
+                + tools.ustr(" {amt_value} {amt_word}").format(
+                    amt_value=_num2words(fractional_value, lang=lang.iso_code),
+                    amt_word=self.currency_subunit_label,
+                )
+            )
         return amount_words
 
     @api.multi
@@ -136,7 +177,7 @@ class Currency(models.Model):
         # https://github.com/odoo/odoo/commit/36ee1ad813204dcb91e9f5f20d746dff6f080ac2
         # https://github.com/odoo/odoo/commit/0b6058c585d7d9a57bd7581b8211f20fca3ec3f7
         # Removing self.ensure_one() will make few test cases to break of modules event_sale, sale_mrp and stock_dropshipping.
-        #self.ensure_one()
+        # self.ensure_one()
         return tools.float_round(amount, precision_rounding=self.rounding)
 
     @api.multi
@@ -201,22 +242,30 @@ class Currency(models.Model):
         if self == to_currency:
             to_amount = from_amount
         else:
-            to_amount = from_amount * self._get_conversion_rate(self, to_currency, company, date)
+            to_amount = from_amount * self._get_conversion_rate(
+                self, to_currency, company, date
+            )
         # apply rounding
         return to_currency.round(to_amount) if round else to_amount
 
     @api.model
     def _compute(self, from_currency, to_currency, from_amount, round=True):
-        _logger.warning('The `_compute` method is deprecated. Use `_convert` instead')
-        date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        _logger.warning("The `_compute` method is deprecated. Use `_convert` instead")
+        date = self._context.get("date") or fields.Date.today()
+        company = (
+            self.env["res.company"].browse(self._context.get("company_id"))
+            or self.env["res.users"]._get_company()
+        )
         return from_currency._convert(from_amount, to_currency, company, date)
 
     @api.multi
     def compute(self, from_amount, to_currency, round=True):
-        _logger.warning('The `compute` method is deprecated. Use `_convert` instead')
-        date = self._context.get('date') or fields.Date.today()
-        company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
+        _logger.warning("The `compute` method is deprecated. Use `_convert` instead")
+        date = self._context.get("date") or fields.Date.today()
+        company = (
+            self.env["res.company"].browse(self._context.get("company_id"))
+            or self.env["res.users"]._get_company()
+        )
         return self._convert(from_amount, to_currency, company, date)
 
     def _select_companies_rates(self):
@@ -242,33 +291,57 @@ class CurrencyRate(models.Model):
     _description = "Currency Rate"
     _order = "name desc"
 
-    name = fields.Date(string='Date', required=True, index=True,
-                           default=lambda self: fields.Date.today())
-    rate = fields.Float(digits=(12, 6), default=1.0, help='The rate of the currency to the currency of rate 1')
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
-    company_id = fields.Many2one('res.company', string='Company',
-                                 default=lambda self: self.env.user.company_id)
+    name = fields.Date(
+        string="Date",
+        required=True,
+        index=True,
+        default=lambda self: fields.Date.today(),
+    )
+    rate = fields.Float(
+        digits=(12, 6),
+        default=1.0,
+        help="The rate of the currency to the currency of rate 1",
+    )
+    currency_id = fields.Many2one("res.currency", string="Currency", readonly=True)
+    company_id = fields.Many2one(
+        "res.company", string="Company", default=lambda self: self.env.user.company_id
+    )
 
     _sql_constraints = [
-        ('unique_name_per_day', 'unique (name,currency_id,company_id)', 'Only one currency rate per day allowed!'),
-        ('currency_rate_check', 'CHECK (rate>0)', 'The currency rate must be strictly positive.'),
+        (
+            "unique_name_per_day",
+            "unique (name,currency_id,company_id)",
+            "Only one currency rate per day allowed!",
+        ),
+        (
+            "currency_rate_check",
+            "CHECK (rate>0)",
+            "The currency rate must be strictly positive.",
+        ),
     ]
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if operator in ['=', '!=']:
+    def _name_search(
+        self, name, args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        if operator in ["=", "!="]:
             try:
-                date_format = '%Y-%m-%d'
-                if self._context.get('lang'):
-                    lang_id = self.env['res.lang']._search([('code', '=', self._context['lang'])], access_rights_uid=name_get_uid)
+                date_format = "%Y-%m-%d"
+                if self._context.get("lang"):
+                    lang_id = self.env["res.lang"]._search(
+                        [("code", "=", self._context["lang"])],
+                        access_rights_uid=name_get_uid,
+                    )
                     if lang_id:
                         date_format = self.browse(lang_id).date_format
-                name = time.strftime('%Y-%m-%d', time.strptime(name, date_format))
+                name = time.strftime("%Y-%m-%d", time.strptime(name, date_format))
             except ValueError:
                 try:
-                    args.append(('rate', operator, float(name)))
+                    args.append(("rate", operator, float(name)))
                 except ValueError:
                     return []
-                name = ''
-                operator = 'ilike'
-        return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+                name = ""
+                operator = "ilike"
+        return super(CurrencyRate, self)._name_search(
+            name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid
+        )

@@ -21,11 +21,11 @@ def environment():
         yield api.Environment(cr, SUPERUSER_ID, {})
 
 
-MODULE = 'test_uninstall'
-MODEL = 'test_uninstall.model'
+MODULE = "test_uninstall"
+MODEL = "test_uninstall.model"
 
 
-@common.tagged('standard', 'at_install')
+@common.tagged("standard", "at_install")
 class TestUninstall(unittest.TestCase):
     """
     Test the install/uninstall of a test module. The module is available in
@@ -35,29 +35,29 @@ class TestUninstall(unittest.TestCase):
     def test_01_install(self):
         """ Check a few things showing the module is installed. """
         with environment() as env:
-            module = env['ir.module.module'].search([('name', '=', MODULE)])
+            module = env["ir.module.module"].search([("name", "=", MODULE)])
             assert len(module) == 1
             module.button_install()
         Registry.new(common.get_db_name(), update_module=True)
 
         with environment() as env:
-            self.assertIn('test_uninstall.model', env.registry)
-            self.assertTrue(env['ir.model.data'].search([('module', '=', MODULE)]))
-            self.assertTrue(env['ir.model.fields'].search([('model', '=', MODEL)]))
+            self.assertIn("test_uninstall.model", env.registry)
+            self.assertTrue(env["ir.model.data"].search([("module", "=", MODULE)]))
+            self.assertTrue(env["ir.model.fields"].search([("model", "=", MODEL)]))
 
     def test_02_uninstall(self):
         """ Check a few things showing the module is uninstalled. """
         with environment() as env:
-            module = env['ir.module.module'].search([('name', '=', MODULE)])
+            module = env["ir.module.module"].search([("name", "=", MODULE)])
             assert len(module) == 1
             module.button_uninstall()
         Registry.new(common.get_db_name(), update_module=True)
 
         with environment() as env:
-            self.assertNotIn('test_uninstall.model', env.registry)
-            self.assertFalse(env['ir.model.data'].search([('module', '=', MODULE)]))
-            self.assertFalse(env['ir.model.fields'].search([('model', '=', MODEL)]))
+            self.assertNotIn("test_uninstall.model", env.registry)
+            self.assertFalse(env["ir.model.data"].search([("module", "=", MODULE)]))
+            self.assertFalse(env["ir.model.fields"].search([("model", "=", MODEL)]))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

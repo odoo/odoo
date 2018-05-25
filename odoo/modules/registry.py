@@ -16,9 +16,16 @@ import threading
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables,
-                        lazy_classproperty, lazy_property, table_exists,
-                        topological_sort, OrderedSet)
+from odoo.tools import (
+    assertion_report,
+    config,
+    existing_tables,
+    lazy_classproperty,
+    lazy_property,
+    table_exists,
+    topological_sort,
+    OrderedSet,
+)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -40,17 +47,17 @@ class Registry(Mapping):
     @lazy_classproperty
     def registries(cls):
         """ A mapping from database names to registries. """
-        size = config.get('registry_lru_size', None)
+        size = config.get("registry_lru_size", None)
         if not size:
             # Size the LRU depending of the memory limits
-            if os.name != 'posix':
+            if os.name != "posix":
                 # cannot specify the memory limit soft on windows...
                 size = 42
             else:
                 # A registry takes 10MB of memory on average, so we reserve
                 # 10Mb (registry) + 5Mb (working memory) per registry
                 avgsz = 15 * 1024 * 1024
-                size = int(config['limit_memory_soft'] / avgsz)
+                size = int(config["limit_memory_soft"] / avgsz)
         return LRU(size)
 
     def __new__(cls, db_name):
@@ -83,12 +90,14 @@ class Registry(Mapping):
                     registry.setup_signaling()
                     # This should be a method on Registry
                     try:
-                        odoo.modules.load_modules(registry._db, force_demo, status, update_module)
+                        odoo.modules.load_modules(
+                            registry._db, force_demo, status, update_module
+                        )
                     except Exception:
                         odoo.modules.reset_modules_state(db_name)
                         raise
                 except Exception:
-                    _logger.exception('Failed to load registry')
+                    _logger.exception("Failed to load registry")
                     del cls.registries[db_name]
                     raise
 
@@ -104,7 +113,7 @@ class Registry(Mapping):
         return registry
 
     def init(self, db_name):
-        self.models = {}    # model name/model instance mapping
+        self.models = {}  # model name/model instance mapping
         self._sql_error = {}
         self._init = True
         self._assertion_report = assertion_report.assertion_report()
@@ -113,7 +122,7 @@ class Registry(Mapping):
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
-        self.updated_modules = []       # installed/updated modules
+        self.updated_modules = []  # installed/updated modules
 
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name)
@@ -123,8 +132,8 @@ class Registry(Mapping):
         self.test_lock = None
 
         # Indicates that the registry is
-        self.loaded = False             # whether all modules are loaded
-        self.ready = False              # whether everything is set up
+        self.loaded = False  # whether all modules are loaded
+        self.ready = False  # whether everything is set up
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -140,9 +149,11 @@ class Registry(Mapping):
 
         with closing(self.cursor()) as cr:
             has_unaccent = odoo.modules.db.has_unaccent(cr)
-            if odoo.tools.config['unaccent'] and not has_unaccent:
-                _logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
-            self.has_unaccent = odoo.tools.config['unaccent'] and has_unaccent
+            if odoo.tools.config["unaccent"] and not has_unaccent:
+                _logger.warning(
+                    "The option --unaccent was given but no unaccent() function was found in database."
+                )
+            self.has_unaccent = odoo.tools.config["unaccent"] and has_unaccent
 
     @classmethod
     def delete(cls, db_name):
@@ -207,8 +218,8 @@ class Registry(Mapping):
         """ Return the models corresponding to ``model_names`` and all those
         that inherit/inherits from them.
         """
-        assert all(kind in ('_inherit', '_inherits') for kind in kinds)
-        funcs = [attrgetter(kind + '_children') for kind in kinds]
+        assert all(kind in ("_inherit", "_inherits") for kind in kinds)
+        funcs = [attrgetter(kind + "_children") for kind in kinds]
 
         models = OrderedSet()
         queue = deque(model_names)
@@ -241,7 +252,7 @@ class Registry(Mapping):
             model = cls._build_model(self, cr)
             model_names.append(model._name)
 
-        return self.descendants(model_names, '_inherit', '_inherits')
+        return self.descendants(model_names, "_inherit", "_inherits")
 
     def setup_models(self, cr):
         """ Complete the setup of models.
@@ -252,7 +263,7 @@ class Registry(Mapping):
 
         # add manual models
         if self._init_modules:
-            env['ir.model']._add_manual_models()
+            env["ir.model"]._add_manual_models()
 
         # prepare the setup on all models
         models = list(env.values())
@@ -285,8 +296,10 @@ class Registry(Mapping):
              - ``module``: the name of the module being installed/updated, if any;
              - ``update_custom_fields``: whether custom fields should be updated.
         """
-        if 'module' in context:
-            _logger.info('module %s: creating or updating database tables', context['module'])
+        if "module" in context:
+            _logger.info(
+                "module %s: creating or updating database tables", context["module"]
+            )
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
@@ -310,7 +323,9 @@ class Registry(Mapping):
         Verify that all tables are present and try to initialize those that are missing.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
-        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        table2model = {
+            model._table: name for name, model in env.items() if not model._abstract
+        }
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 
         if missing_tables:
@@ -323,7 +338,9 @@ class Registry(Mapping):
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
             # check again, and log errors if tables are still missing
-            missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+            missing_tables = set(table2model).difference(
+                existing_tables(cr, table2model)
+            )
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
@@ -355,19 +372,30 @@ class Registry(Mapping):
             # must be reloaded.
             # The `base_cache_signaling` sequence indicates when all caches must
             # be invalidated (i.e. cleared).
-            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_registry_signaling'")
+            cr.execute(
+                "SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_registry_signaling'"
+            )
             if not cr.fetchall():
-                cr.execute("CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1")
+                cr.execute(
+                    "CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1"
+                )
                 cr.execute("SELECT nextval('base_registry_signaling')")
-                cr.execute("CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1")
+                cr.execute(
+                    "CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1"
+                )
                 cr.execute("SELECT nextval('base_cache_signaling')")
 
-            cr.execute(""" SELECT base_registry_signaling.last_value,
+            cr.execute(
+                """ SELECT base_registry_signaling.last_value,
                                   base_cache_signaling.last_value
-                           FROM base_registry_signaling, base_cache_signaling""")
+                           FROM base_registry_signaling, base_cache_signaling"""
+            )
             self.registry_sequence, self.cache_sequence = cr.fetchone()
-            _logger.debug("Multiprocess load registry signaling: [Registry: %s] [Cache: %s]",
-                          self.registry_sequence, self.cache_sequence)
+            _logger.debug(
+                "Multiprocess load registry signaling: [Registry: %s] [Cache: %s]",
+                self.registry_sequence,
+                self.cache_sequence,
+            )
 
     def check_signaling(self):
         """ Check whether the registry has changed, and performs all necessary
@@ -377,12 +405,19 @@ class Registry(Mapping):
             return self
 
         with closing(self.cursor()) as cr:
-            cr.execute(""" SELECT base_registry_signaling.last_value,
+            cr.execute(
+                """ SELECT base_registry_signaling.last_value,
                                   base_cache_signaling.last_value
-                           FROM base_registry_signaling, base_cache_signaling""")
+                           FROM base_registry_signaling, base_cache_signaling"""
+            )
             r, c = cr.fetchone()
-            _logger.debug("Multiprocess signaling check: [Registry - %s -> %s] [Cache - %s -> %s]",
-                          self.registry_sequence, r, self.cache_sequence, c)
+            _logger.debug(
+                "Multiprocess signaling check: [Registry - %s -> %s] [Cache - %s -> %s]",
+                self.registry_sequence,
+                r,
+                self.cache_sequence,
+                c,
+            )
             # Check if the model registry must be reloaded
             if self.registry_sequence != r:
                 _logger.info("Reloading the model registry after database signaling.")
@@ -408,7 +443,9 @@ class Registry(Mapping):
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
         elif self.cache_invalidated and not self.in_test_mode():
-            _logger.info("At least one model cache has been invalidated, signaling through the database.")
+            _logger.info(
+                "At least one model cache has been invalidated, signaling through the database."
+            )
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_cache_signaling')")
                 self.cache_sequence = cr.fetchone()[0]
@@ -471,11 +508,15 @@ class Registry(Mapping):
 
 class DummyRLock(object):
     """ Dummy reentrant lock, to be used while running rpc and js tests """
+
     def acquire(self):
         pass
+
     def release(self):
         pass
+
     def __enter__(self):
         self.acquire()
+
     def __exit__(self, type, value, traceback):
         self.release()

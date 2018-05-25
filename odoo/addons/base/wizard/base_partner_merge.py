@@ -12,16 +12,17 @@ from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import mute_logger
 
-_logger = logging.getLogger('base.partner.merge')
+_logger = logging.getLogger("base.partner.merge")
+
 
 class MergePartnerLine(models.TransientModel):
 
-    _name = 'base.partner.merge.line'
-    _order = 'min_id asc'
+    _name = "base.partner.merge.line"
+    _order = "min_id asc"
 
-    wizard_id = fields.Many2one('base.partner.merge.automatic.wizard', 'Wizard')
-    min_id = fields.Integer('MinID')
-    aggr_ids = fields.Char('Ids', required=True)
+    wizard_id = fields.Many2one("base.partner.merge.automatic.wizard", "Wizard")
+    min_id = fields.Integer("MinID")
+    aggr_ids = fields.Char("Ids", required=True)
 
 
 class MergePartnerAutomatic(models.TransientModel):
@@ -31,40 +32,42 @@ class MergePartnerAutomatic(models.TransientModel):
         And the second will contain the partner list to merge.
     """
 
-    _name = 'base.partner.merge.automatic.wizard'
+    _name = "base.partner.merge.automatic.wizard"
 
     @api.model
     def default_get(self, fields):
         res = super(MergePartnerAutomatic, self).default_get(fields)
-        active_ids = self.env.context.get('active_ids')
-        if self.env.context.get('active_model') == 'res.partner' and active_ids:
-            res['state'] = 'selection'
-            res['partner_ids'] = active_ids
-            res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
+        active_ids = self.env.context.get("active_ids")
+        if self.env.context.get("active_model") == "res.partner" and active_ids:
+            res["state"] = "selection"
+            res["partner_ids"] = active_ids
+            res["dst_partner_id"] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
     # Group by
-    group_by_email = fields.Boolean('Email')
-    group_by_name = fields.Boolean('Name')
-    group_by_is_company = fields.Boolean('Is Company')
-    group_by_vat = fields.Boolean('VAT')
-    group_by_parent_id = fields.Boolean('Parent Company')
+    group_by_email = fields.Boolean("Email")
+    group_by_name = fields.Boolean("Name")
+    group_by_is_company = fields.Boolean("Is Company")
+    group_by_vat = fields.Boolean("VAT")
+    group_by_parent_id = fields.Boolean("Parent Company")
 
-    state = fields.Selection([
-        ('option', 'Option'),
-        ('selection', 'Selection'),
-        ('finished', 'Finished')
-    ], readonly=True, required=True, string='State', default='option')
+    state = fields.Selection(
+        [("option", "Option"), ("selection", "Selection"), ("finished", "Finished")],
+        readonly=True,
+        required=True,
+        string="State",
+        default="option",
+    )
 
-    number_group = fields.Integer('Group of Contacts', readonly=True)
-    current_line_id = fields.Many2one('base.partner.merge.line', string='Current Line')
-    line_ids = fields.One2many('base.partner.merge.line', 'wizard_id', string='Lines')
-    partner_ids = fields.Many2many('res.partner', string='Contacts')
-    dst_partner_id = fields.Many2one('res.partner', string='Destination Contact')
+    number_group = fields.Integer("Group of Contacts", readonly=True)
+    current_line_id = fields.Many2one("base.partner.merge.line", string="Current Line")
+    line_ids = fields.One2many("base.partner.merge.line", "wizard_id", string="Lines")
+    partner_ids = fields.Many2many("res.partner", string="Contacts")
+    dst_partner_id = fields.Many2one("res.partner", string="Destination Contact")
 
-    exclude_contact = fields.Boolean('A user associated to the contact')
-    exclude_journal_item = fields.Boolean('Journal Items associated to the contact')
-    maximum_group = fields.Integer('Maximum of Group of Contacts')
+    exclude_contact = fields.Boolean("A user associated to the contact")
+    exclude_journal_item = fields.Boolean("Journal Items associated to the contact")
+    maximum_group = fields.Integer("Maximum of Group of Contacts")
 
     # ----------------------------------------
     # Update method. Core methods to merge steps
@@ -99,18 +102,25 @@ class MergePartnerAutomatic(models.TransientModel):
             :param src_partners : merge source res.partner recordset (does not include destination one)
             :param dst_partner : record of destination res.partner
         """
-        _logger.debug('_update_foreign_keys for dst_partner: %s for src_partners: %s', dst_partner.id, str(src_partners.ids))
+        _logger.debug(
+            "_update_foreign_keys for dst_partner: %s for src_partners: %s",
+            dst_partner.id,
+            str(src_partners.ids),
+        )
 
         # find the many2one relation to a partner
-        Partner = self.env['res.partner']
-        relations = self._get_fk_on('res_partner')
+        Partner = self.env["res.partner"]
+        relations = self._get_fk_on("res_partner")
 
         for table, column in relations:
-            if 'base_partner_merge_' in table:  # ignore two tables
+            if "base_partner_merge_" in table:  # ignore two tables
                 continue
 
             # get list of columns of current table (exept the current fk column)
-            query = "SELECT column_name FROM information_schema.columns WHERE table_name LIKE '%s'" % (table)
+            query = (
+                "SELECT column_name FROM information_schema.columns WHERE table_name LIKE '%s'"
+                % (table)
+            )
             self._cr.execute(query, ())
             columns = []
             for data in self._cr.fetchall():
@@ -118,14 +128,11 @@ class MergePartnerAutomatic(models.TransientModel):
                     columns.append(data[0])
 
             # do the update for the current table/column in SQL
-            query_dic = {
-                'table': table,
-                'column': column,
-                'value': columns[0],
-            }
+            query_dic = {"table": table, "column": column, "value": columns[0]}
             if len(columns) <= 1:
                 # unique key treated
-                query = """
+                query = (
+                    """
                     UPDATE "%(table)s" as ___tu
                     SET %(column)s = %%s
                     WHERE
@@ -136,17 +143,26 @@ class MergePartnerAutomatic(models.TransientModel):
                             WHERE
                                 %(column)s = %%s AND
                                 ___tu.%(value)s = ___tw.%(value)s
-                        )""" % query_dic
+                        )"""
+                    % query_dic
+                )
                 for partner in src_partners:
-                    self._cr.execute(query, (dst_partner.id, partner.id, dst_partner.id))
+                    self._cr.execute(
+                        query, (dst_partner.id, partner.id, dst_partner.id)
+                    )
             else:
                 try:
-                    with mute_logger('odoo.sql_db'), self._cr.savepoint():
-                        query = 'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s' % query_dic
-                        self._cr.execute(query, (dst_partner.id, tuple(src_partners.ids),))
+                    with mute_logger("odoo.sql_db"), self._cr.savepoint():
+                        query = (
+                            'UPDATE "%(table)s" SET %(column)s = %%s WHERE %(column)s IN %%s'
+                            % query_dic
+                        )
+                        self._cr.execute(
+                            query, (dst_partner.id, tuple(src_partners.ids))
+                        )
 
                         # handle the recursivity with parent relation
-                        if column == Partner._parent_name and table == 'res_partner':
+                        if column == Partner._parent_name and table == "res_partner":
                             query = """
                                 WITH RECURSIVE cycle(id, parent_id) AS (
                                         SELECT id, parent_id FROM res_partner
@@ -163,7 +179,9 @@ class MergePartnerAutomatic(models.TransientModel):
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
-                    query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
+                    query = (
+                        'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
+                    )
                     self._cr.execute(query, (tuple(src_partners.ids),))
 
     @api.model
@@ -172,15 +190,21 @@ class MergePartnerAutomatic(models.TransientModel):
             :param src_partners : merge source res.partner recordset (does not include destination one)
             :param dst_partner : record of destination res.partner
         """
-        _logger.debug('_update_reference_fields for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
+        _logger.debug(
+            "_update_reference_fields for dst_partner: %s for src_partners: %r",
+            dst_partner.id,
+            src_partners.ids,
+        )
 
-        def update_records(model, src, field_model='model', field_id='res_id'):
+        def update_records(model, src, field_model="model", field_id="res_id"):
             Model = self.env[model] if model in self.env else None
             if Model is None:
                 return
-            records = Model.sudo().search([(field_model, '=', 'res.partner'), (field_id, '=', src.id)])
+            records = Model.sudo().search(
+                [(field_model, "=", "res.partner"), (field_id, "=", src.id)]
+            )
             try:
-                with mute_logger('odoo.sql_db'), self._cr.savepoint():
+                with mute_logger("odoo.sql_db"), self._cr.savepoint():
                     return records.sudo().write({field_id: dst_partner.id})
             except psycopg2.Error:
                 # updating fails, most likely due to a violated unique constraint
@@ -190,13 +214,13 @@ class MergePartnerAutomatic(models.TransientModel):
         update_records = functools.partial(update_records)
 
         for partner in src_partners:
-            update_records('calendar', src=partner, field_model='model_id.model')
-            update_records('ir.attachment', src=partner, field_model='res_model')
-            update_records('mail.followers', src=partner, field_model='res_model')
-            update_records('mail.message', src=partner)
-            update_records('ir.model.data', src=partner)
+            update_records("calendar", src=partner, field_model="model_id.model")
+            update_records("ir.attachment", src=partner, field_model="res_model")
+            update_records("mail.followers", src=partner, field_model="res_model")
+            update_records("mail.message", src=partner)
+            update_records("ir.model.data", src=partner)
 
-        records = self.env['ir.model.fields'].search([('ttype', '=', 'reference')])
+        records = self.env["ir.model.fields"].search([("ttype", "=", "reference")])
         for record in records.sudo():
             try:
                 Model = self.env[record.model]
@@ -209,10 +233,10 @@ class MergePartnerAutomatic(models.TransientModel):
                 continue
 
             for partner in src_partners:
-                records_ref = Model.sudo().search([(record.name, '=', 'res.partner,%d' % partner.id)])
-                values = {
-                    record.name: 'res.partner,%d' % dst_partner.id,
-                }
+                records_ref = Model.sudo().search(
+                    [(record.name, "=", "res.partner,%d" % partner.id)]
+                )
+                values = {record.name: "res.partner,%d" % dst_partner.id}
                 records_ref.sudo().write(values)
 
     @api.model
@@ -221,7 +245,11 @@ class MergePartnerAutomatic(models.TransientModel):
             :param src_partners : recordset of source res.partner
             :param dst_partner : record of destination res.partner
         """
-        _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, src_partners.ids)
+        _logger.debug(
+            "_update_values for dst_partner: %s for src_partners: %r",
+            dst_partner.id,
+            src_partners.ids,
+        )
 
         model_fields = dst_partner._fields
 
@@ -230,47 +258,65 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item.id
             else:
                 return item
+
         # get all fields that are not computed or x2many
         values = dict()
         for column, field in model_fields.items():
-            if field.type not in ('many2many', 'one2many') and field.compute is None:
+            if field.type not in ("many2many", "one2many") and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
                         values[column] = write_serializer(item[column])
         # remove fields that can not be updated (id and parent_id)
-        values.pop('id', None)
-        parent_id = values.pop('parent_id', None)
+        values.pop("id", None)
+        parent_id = values.pop("parent_id", None)
         dst_partner.write(values)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
             try:
-                dst_partner.write({'parent_id': parent_id})
+                dst_partner.write({"parent_id": parent_id})
             except ValidationError:
-                _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
+                _logger.info(
+                    "Skip recursive partner hierarchies for parent_id %s of partner: %s",
+                    parent_id,
+                    dst_partner.id,
+                )
 
     def _merge(self, partner_ids, dst_partner=None):
         """ private implementation of merge partner
             :param partner_ids : ids of partner to merge
             :param dst_partner : record of destination res.partner
         """
-        Partner = self.env['res.partner']
+        Partner = self.env["res.partner"]
         partner_ids = Partner.browse(partner_ids).exists()
         if len(partner_ids) < 2:
             return
 
         if len(partner_ids) > 3:
-            raise UserError(_("For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."))
+            raise UserError(
+                _(
+                    "For safety reasons, you cannot merge more than 3 contacts together. You can re-open the wizard several times if needed."
+                )
+            )
 
         # check if the list of partners to merge contains child/parent relation
-        child_ids = self.env['res.partner']
+        child_ids = self.env["res.partner"]
         for partner_id in partner_ids:
-            child_ids |= Partner.search([('id', 'child_of', [partner_id.id])]) - partner_id
+            child_ids |= (
+                Partner.search([("id", "child_of", [partner_id.id])]) - partner_id
+            )
         if partner_ids & child_ids:
             raise UserError(_("You cannot merge a contact with one of his parent."))
 
         # check only admin can merge partners with different emails
-        if SUPERUSER_ID != self.env.uid and len(set(partner.email for partner in partner_ids)) > 1:
-            raise UserError(_("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
+        if (
+            SUPERUSER_ID != self.env.uid
+            and len(set(partner.email for partner in partner_ids)) > 1
+        ):
+            raise UserError(
+                _(
+                    "All contacts must have the same email. Only the Administrator can merge contacts with different emails."
+                )
+            )
 
         # remove dst_partner from partners to merge
         if dst_partner and dst_partner in partner_ids:
@@ -282,8 +328,18 @@ class MergePartnerAutomatic(models.TransientModel):
         _logger.info("dst_partner: %s", dst_partner.id)
 
         # FIXME: is it still required to make and exception for account.move.line since accounting v9.0 ?
-        if SUPERUSER_ID != self.env.uid and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
-            raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
+        if (
+            SUPERUSER_ID != self.env.uid
+            and "account.move.line" in self.env
+            and self.env["account.move.line"]
+            .sudo()
+            .search([("partner_id", "in", [partner.id for partner in src_partners])])
+        ):
+            raise UserError(
+                _(
+                    "Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."
+                )
+            )
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)
@@ -297,7 +353,12 @@ class MergePartnerAutomatic(models.TransientModel):
 
     @api.multi
     def _log_merge_operation(self, src_partners, dst_partner):
-        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
+        _logger.info(
+            "(uid = %s) merged the partners %r with %s",
+            self._uid,
+            src_partners.ids,
+            dst_partner.id,
+        )
 
     # ----------------------------------------
     # Helpers
@@ -312,40 +373,37 @@ class MergePartnerAutomatic(models.TransientModel):
         # make the list of column to group by in sql query
         sql_fields = []
         for field in fields:
-            if field in ['email', 'name']:
-                sql_fields.append('lower(%s)' % field)
-            elif field in ['vat']:
+            if field in ["email", "name"]:
+                sql_fields.append("lower(%s)" % field)
+            elif field in ["vat"]:
                 sql_fields.append("replace(%s, ' ', '')" % field)
             else:
                 sql_fields.append(field)
-        group_fields = ', '.join(sql_fields)
+        group_fields = ", ".join(sql_fields)
 
         # where clause : for given group by columns, only keep the 'not null' record
         filters = []
         for field in fields:
-            if field in ['email', 'name', 'vat']:
-                filters.append((field, 'IS NOT', 'NULL'))
-        criteria = ' AND '.join('%s %s %s' % (field, operator, value) for field, operator, value in filters)
+            if field in ["email", "name", "vat"]:
+                filters.append((field, "IS NOT", "NULL"))
+        criteria = " AND ".join(
+            "%s %s %s" % (field, operator, value) for field, operator, value in filters
+        )
 
         # build the query
-        text = [
-            "SELECT min(id), array_agg(id)",
-            "FROM res_partner",
-        ]
+        text = ["SELECT min(id), array_agg(id)", "FROM res_partner"]
 
         if criteria:
-            text.append('WHERE %s' % criteria)
+            text.append("WHERE %s" % criteria)
 
-        text.extend([
-            "GROUP BY %s" % group_fields,
-            "HAVING COUNT(*) >= 2",
-            "ORDER BY min(id)",
-        ])
+        text.extend(
+            ["GROUP BY %s" % group_fields, "HAVING COUNT(*) >= 2", "ORDER BY min(id)"]
+        )
 
         if maximum_group:
-            text.append("LIMIT %s" % maximum_group,)
+            text.append("LIMIT %s" % maximum_group)
 
-        return ' '.join(text)
+        return " ".join(text)
 
     @api.model
     def _compute_selected_groupby(self):
@@ -353,12 +411,12 @@ class MergePartnerAutomatic(models.TransientModel):
             criteria) according to the option checked on the wizard
         """
         groups = []
-        group_by_prefix = 'group_by_'
+        group_by_prefix = "group_by_"
 
         for field_name in self._fields:
             if field_name.startswith(group_by_prefix):
                 if getattr(self, field_name, False):
-                    groups.append(field_name[len(group_by_prefix):])
+                    groups.append(field_name[len(group_by_prefix) :])
 
         if not groups:
             raise UserError(_("You have to specify a filter for your selection"))
@@ -372,7 +430,7 @@ class MergePartnerAutomatic(models.TransientModel):
             :param models : dict mapping a model name with its foreign key with res_partner table
         """
         return any(
-            self.env[model].search_count([(field, 'in', aggr_ids)])
+            self.env[model].search_count([(field, "in", aggr_ids)])
             for model, field in models.items()
         )
 
@@ -381,9 +439,10 @@ class MergePartnerAutomatic(models.TransientModel):
         """ Helper : returns a `res.partner` recordset ordered by create_date/active fields
             :param partner_ids : list of partner ids to sort
         """
-        return self.env['res.partner'].browse(partner_ids).sorted(
-            key=lambda p: (p.active, (p.create_date or '')),
-            reverse=True,
+        return (
+            self.env["res.partner"]
+            .browse(partner_ids)
+            .sorted(key=lambda p: (p.active, (p.create_date or "")), reverse=True)
         )
 
     @api.multi
@@ -391,9 +450,9 @@ class MergePartnerAutomatic(models.TransientModel):
         """ Compute the different models needed by the system if you want to exclude some partners. """
         model_mapping = {}
         if self.exclude_contact:
-            model_mapping['res.users'] = 'partner_id'
-        if 'account.move.line' in self.env and self.exclude_journal_item:
-            model_mapping['account.move.line'] = 'partner_id'
+            model_mapping["res.users"] = "partner_id"
+        if "account.move.line" in self.env and self.exclude_journal_item:
+            model_mapping["account.move.line"] = "partner_id"
         return model_mapping
 
     # ----------------------------------------
@@ -413,33 +472,35 @@ class MergePartnerAutomatic(models.TransientModel):
             next wizard line. Each line is a subset of partner that can be merged together.
             If no line left, the end screen will be displayed (but an action is still returned).
         """
-        self.invalidate_cache() # FIXME: is this still necessary?
+        self.invalidate_cache()  # FIXME: is this still necessary?
         values = {}
         if self.line_ids:
             # in this case, we try to find the next record.
             current_line = self.line_ids[0]
             current_partner_ids = literal_eval(current_line.aggr_ids)
-            values.update({
-                'current_line_id': current_line.id,
-                'partner_ids': [(6, 0, current_partner_ids)],
-                'dst_partner_id': self._get_ordered_partner(current_partner_ids)[-1].id,
-                'state': 'selection',
-            })
+            values.update(
+                {
+                    "current_line_id": current_line.id,
+                    "partner_ids": [(6, 0, current_partner_ids)],
+                    "dst_partner_id": self._get_ordered_partner(current_partner_ids)[
+                        -1
+                    ].id,
+                    "state": "selection",
+                }
+            )
         else:
-            values.update({
-                'current_line_id': False,
-                'partner_ids': [],
-                'state': 'finished',
-            })
+            values.update(
+                {"current_line_id": False, "partner_ids": [], "state": "finished"}
+            )
 
         self.write(values)
 
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
         }
 
     @api.multi
@@ -456,7 +517,7 @@ class MergePartnerAutomatic(models.TransientModel):
         counter = 0
         for min_id, aggr_ids in self._cr.fetchall():
             # To ensure that the used partners are accessible by the user
-            partners = self.env['res.partner'].search([('id', 'in', aggr_ids)])
+            partners = self.env["res.partner"].search([("id", "in", aggr_ids)])
             if len(partners) < 2:
                 continue
 
@@ -464,17 +525,12 @@ class MergePartnerAutomatic(models.TransientModel):
             if model_mapping and self._partner_use_in(partners.ids, model_mapping):
                 continue
 
-            self.env['base.partner.merge.line'].create({
-                'wizard_id': self.id,
-                'min_id': min_id,
-                'aggr_ids': partners.ids,
-            })
+            self.env["base.partner.merge.line"].create(
+                {"wizard_id": self.id, "min_id": min_id, "aggr_ids": partners.ids}
+            )
             counter += 1
 
-        self.write({
-            'state': 'selection',
-            'number_group': counter,
-        })
+        self.write({"state": "selection", "number_group": counter})
 
         _logger.info("counter: %s", counter)
 
@@ -500,7 +556,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         self.ensure_one()
         self.action_start_manual_process()  # here we don't redirect to the next screen, since it is automatic process
-        self.invalidate_cache() # FIXME: is this still necessary?
+        self.invalidate_cache()  # FIXME: is this still necessary?
 
         for line in self.line_ids:
             partner_ids = literal_eval(line.aggr_ids)
@@ -508,13 +564,13 @@ class MergePartnerAutomatic(models.TransientModel):
             line.unlink()
             self._cr.commit()  # TODO JEM : explain why
 
-        self.write({'state': 'finished'})
+        self.write({"state": "finished"})
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
         }
 
     @api.multi
@@ -554,9 +610,10 @@ class MergePartnerAutomatic(models.TransientModel):
             line.unlink()
             self._cr.commit()
 
-        self.write({'state': 'finished'})
+        self.write({"state": "finished"})
 
-        self._cr.execute("""
+        self._cr.execute(
+            """
             UPDATE
                 res_partner
             SET
@@ -564,14 +621,15 @@ class MergePartnerAutomatic(models.TransientModel):
                 parent_id = NULL
             WHERE
                 parent_id = id
-        """)
+        """
+        )
 
         return {
-            'type': 'ir.actions.act_window',
-            'res_model': self._name,
-            'res_id': self.id,
-            'view_mode': 'form',
-            'target': 'new',
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
         }
 
     @api.multi
@@ -581,11 +639,14 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # NOTE JEM : seems louche to create a new wizard instead of reuse the current one with updated options.
         # since it is like this from the initial commit of this wizard, I don't change it. yet ...
-        wizard = self.create({'group_by_vat': True, 'group_by_email': True, 'group_by_name': True})
+        wizard = self.create(
+            {"group_by_vat": True, "group_by_email": True, "group_by_name": True}
+        )
         wizard.action_start_automatic_process()
 
         # NOTE JEM : no idea if this query is usefull
-        self._cr.execute("""
+        self._cr.execute(
+            """
             UPDATE
                 res_partner
             SET
@@ -593,7 +654,8 @@ class MergePartnerAutomatic(models.TransientModel):
             WHERE
                 parent_id IS NOT NULL AND
                 is_company IS NOT NULL
-        """)
+        """
+        )
 
         return self._action_next_screen()
 
@@ -603,13 +665,13 @@ class MergePartnerAutomatic(models.TransientModel):
             the end screen (since there is no other wizard line to process.
         """
         if not self.partner_ids:
-            self.write({'state': 'finished'})
+            self.write({"state": "finished"})
             return {
-                'type': 'ir.actions.act_window',
-                'res_model': self._name,
-                'res_id': self.id,
-                'view_mode': 'form',
-                'target': 'new',
+                "type": "ir.actions.act_window",
+                "res_model": self._name,
+                "res_id": self.id,
+                "view_mode": "form",
+                "target": "new",
             }
 
         self._merge(self.partner_ids.ids, self.dst_partner_id)

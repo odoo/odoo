@@ -5,10 +5,10 @@ from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
 def merge_pdf(pdf_data):
-    ''' Merge a collection of PDF documents in one
+    """ Merge a collection of PDF documents in one
     :param list pdf_data: a list of PDF datastrings
     :return: a unique merged PDF datastring
-    '''
+    """
     writer = PdfFileWriter()
     for document in pdf_data:
         reader = PdfFileReader(io.BytesIO(document), strict=False)

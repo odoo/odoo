@@ -103,11 +103,15 @@ web: <a class="moz-txt-link-freetext" href="https://opener.am">https://opener.am
   </body>
 </html>"""
 
-QUOTE_BLOCKQUOTE_IN = [u"""<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
-QUOTE_BLOCKQUOTE_OUT = [u"""-- 
+QUOTE_BLOCKQUOTE_IN = [
+    u"""<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""
+]
+QUOTE_BLOCKQUOTE_OUT = [
+    u"""-- 
 Opener B.V. - Business solutions driven by open source collaboration
 
-Stefan Rijnhart - Consultant/developer"""]
+Stefan Rijnhart - Consultant/developer"""
+]
 
 
 QUOTE_THUNDERBIRD_HTML = u"""<html>
@@ -137,10 +141,14 @@ Raoul Poilvache
 </html>"""
 
 
-QUOTE_THUNDERBIRD_HTML_IN = [u"""<blockquote cite="mid:CAP76m_WWFH2KVrbjOxbaozvkmbzZYLWJnQ0n0sy9XpGaCWRf1g@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
-QUOTE_THUNDERBIRD_HTML_OUT = [u"""<pre class="moz-signature" cols="72"><span data-o-mail-quote="1">-- 
+QUOTE_THUNDERBIRD_HTML_IN = [
+    u"""<blockquote cite="mid:CAP76m_WWFH2KVrbjOxbaozvkmbzZYLWJnQ0n0sy9XpGaCWRf1g@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""
+]
+QUOTE_THUNDERBIRD_HTML_OUT = [
+    u"""<pre class="moz-signature" cols="72"><span data-o-mail-quote="1">-- 
 Raoul Poilvache
-</span></pre>"""]
+</span></pre>"""
+]
 
 
 QUOTE_HOTMAIL_HTML = u"""
@@ -173,7 +181,8 @@ Raoul Poilvache</div>
 QUOTE_HOTMAIL_HTML_IN = [u"""I don't like that.<br><br>"""]
 QUOTE_HOTMAIL_HTML_OUT = [
     u"""<hr id="stopSpelling" data-o-mail-quote="1">""",
-    u"""<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>"""]
+    u"""<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>""",
+]
 
 QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
       <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
@@ -205,10 +214,13 @@ Raoul Grosbedonn&#233;e
 QUOTE_THUNDERBIRD_1_IN = [
     u'<a href="mailto:dummy@example.com">dummy@example.com</a> ',
     u'<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">',
-    u'Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.']
-QUOTE_THUNDERBIRD_1_OUT = [u"""-- 
+    u"Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.",
+]
+QUOTE_THUNDERBIRD_1_OUT = [
+    u"""-- 
 Raoul Grosbedonnée
-"""]
+"""
+]
 
 
 TEXT_1 = u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
@@ -219,14 +231,18 @@ Is everything ok for you ?
 --
 MySignature"""
 
-TEXT_1_IN = [u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
+TEXT_1_IN = [
+    u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
-Is everything ok for you ?"""]
-TEXT_1_OUT = [u"""
+Is everything ok for you ?"""
+]
+TEXT_1_OUT = [
+    u"""
 --
-MySignature"""]
+MySignature"""
+]
 
 TEXT_2 = u"""Salut Raoul!
 Le 28 oct. 2012 à 00:02, Raoul Grosbedon a écrit :
@@ -254,9 +270,10 @@ bert.tartopoils@miam.miam
 """
 
 TEXT_2_IN = [u"Salut Raoul!", "Of course. This seems viable."]
-TEXT_2_OUT = [u"""
+TEXT_2_OUT = [
+    u"""
 > I contact you about our meeting tomorrow. Here is the schedule I propose: (quote)""",
-"""
+    """
 > 2012/10/27 Bert Tartopoils :
 >> blahblahblah (quote)?
 >> 
@@ -268,7 +285,8 @@ TEXT_2_OUT = [u"""
 > 
 > 
 > -- 
-> RaoulSignature"""]
+> RaoulSignature""",
+]
 
 # MISC
 
@@ -279,7 +297,10 @@ GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gma
 <div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
 </blockquote></div><br></div>"""
 
-GMAIL_1_IN = [u'Ok for me. I am replying directly in gmail, without signature.', '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">']
+GMAIL_1_IN = [
+    u"Ok for me. I am replying directly in gmail, without signature.",
+    '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">',
+]
 GMAIL_1_OUT = []
 
 HOTMAIL_1 = u"""<div>
@@ -309,9 +330,11 @@ HOTMAIL_1 = u"""<div>
         </div>
     </div>
 </div>"""
-HOTMAIL_1_IN = [u"""<div dir="ltr"><br>
+HOTMAIL_1_IN = [
+    u"""<div dir="ltr"><br>
         I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly.
-        <br><br>Kindest regards,<br>xxx<br>"""]
+        <br><br>Kindest regards,<br>xxx<br>"""
+]
 HOTMAIL_1_OUT = [
     u"""<hr id="stopSpelling" data-o-mail-quote="1">""",
     u"""<pre data-o-mail-quote="1">
@@ -319,7 +342,8 @@ HOTMAIL_1_OUT = [
                 Belgium: +32.81.81.37.00
                 U.S.: +1 (650) 307-6736
                 India: +91 (79) 40 500 100
-            </pre>"""]
+            </pre>""",
+]
 
 MSOFFICE_1 = u"""
 <div>
@@ -423,8 +447,14 @@ MSOFFICE_1 = u"""
     </div>
 </div>"""
 
-MSOFFICE_1_IN = [u'Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module.']
-MSOFFICE_1_OUT = [u'I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.', 'Belgium: +32.81.81.37.00']
+MSOFFICE_1_IN = [
+    u"Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module."
+]
+MSOFFICE_1_OUT = [
+    u"I noticed you recently downloaded OpenERP.",
+    "Uou mentioned you wish to use OpenERP in your own company.",
+    "Belgium: +32.81.81.37.00",
+]
 
 
 # ------------------------------------------------------------
@@ -471,11 +501,9 @@ B-1367 Gérompont
 Tel: +32.81.81.37.00
 Web: http://www.openerp.com</pre>"""
 
-BUG_1_IN = [
-    u'Hi Migration Team',
-    u'Paragraph 1'
-]
-BUG_1_OUT = [u"""
+BUG_1_IN = [u"Hi Migration Team", u"Paragraph 1"]
+BUG_1_OUT = [
+    u"""
 -- 
 Olivier Laurent
 Migration Manager
@@ -483,7 +511,8 @@ OpenERP SA
 Chaussée de Namur, 40
 B-1367 Gérompont
 Tel: +32.81.81.37.00
-Web: http://www.openerp.com"""]
+Web: http://www.openerp.com"""
+]
 
 
 REMOVE_CLASS = u"""
@@ -510,9 +539,11 @@ REMOVE_CLASS = u"""
 </div>
 """
 REMOVE_CLASS_IN = [
-    u'<div style="font-size: 12pt; font-family: \'Times New Roman\'; color: #000000">',
-    u'An error occured in a modal and I will send you back the html to try opening one on your end']
+    u"<div style=\"font-size: 12pt; font-family: 'Times New Roman'; color: #000000\">",
+    u"An error occured in a modal and I will send you back the html to try opening one on your end",
+]
 REMOVE_CLASS_OUT = [
     u'<div class="modal-backdrop in">',
     u'<div class="modal-content openerp">',
-    u'<div class="modal-header">']
+    u'<div class="modal-header">',
+]

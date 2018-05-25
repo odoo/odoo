@@ -10,24 +10,33 @@ from odoo.tools.safe_eval import safe_eval
 
 
 class IrRule(models.Model):
-    _name = 'ir.rule'
-    _order = 'model_id DESC'
-    _MODES = ['read', 'write', 'create', 'unlink']
+    _name = "ir.rule"
+    _order = "model_id DESC"
+    _MODES = ["read", "write", "create", "unlink"]
 
     name = fields.Char(index=True)
-    active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
-    model_id = fields.Many2one('ir.model', string='Object', index=True, required=True, ondelete="cascade")
-    groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id')
-    domain_force = fields.Text(string='Domain')
-    perm_read = fields.Boolean(string='Apply for Read', default=True)
-    perm_write = fields.Boolean(string='Apply for Write', default=True)
-    perm_create = fields.Boolean(string='Apply for Create', default=True)
-    perm_unlink = fields.Boolean(string='Apply for Delete', default=True)
+    active = fields.Boolean(
+        default=True,
+        help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).",
+    )
+    model_id = fields.Many2one(
+        "ir.model", string="Object", index=True, required=True, ondelete="cascade"
+    )
+    groups = fields.Many2many(
+        "res.groups", "rule_group_rel", "rule_group_id", "group_id"
+    )
+    domain_force = fields.Text(string="Domain")
+    perm_read = fields.Boolean(string="Apply for Read", default=True)
+    perm_write = fields.Boolean(string="Apply for Write", default=True)
+    perm_create = fields.Boolean(string="Apply for Create", default=True)
+    perm_unlink = fields.Boolean(string="Apply for Delete", default=True)
 
     _sql_constraints = [
-        ('no_access_rights',
-         'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)',
-         'Rule must have at least one checked access right !'),
+        (
+            "no_access_rights",
+            "CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)",
+            "Rule must have at least one checked access right !",
+        )
     ]
 
     def _eval_context_for_combinations(self):
@@ -35,36 +44,37 @@ class IrRule(models.Model):
            ir.rule domains, when the goal is to obtain python lists
            that are easier to parse and combine, but not to
            actually execute them."""
-        return {'user': tools.unquote('user'),
-                'time': tools.unquote('time')}
+        return {"user": tools.unquote("user"), "time": tools.unquote("time")}
 
     @api.model
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
-        return {'user': self.env.user, 'time': time}
+        return {"user": self.env.user, "time": time}
 
-    @api.depends('groups')
+    @api.depends("groups")
     def _compute_global(self):
         for rule in self:
-            rule['global'] = not rule.groups
+            rule["global"] = not rule.groups
 
-    @api.constrains('model_id')
+    @api.constrains("model_id")
     def _check_model_transience(self):
         if any(self.env[rule.model_id.model].is_transient() for rule in self):
-            raise ValidationError(_('Rules can not be applied on Transient models.'))
+            raise ValidationError(_("Rules can not be applied on Transient models."))
 
-    @api.constrains('model_id')
+    @api.constrains("model_id")
     def _check_model_name(self):
         # Don't allow rules on rules records (this model).
         if any(rule.model_id.model == self._name for rule in self):
-            raise ValidationError(_('Rules can not be applied on the Record Rules model.'))
+            raise ValidationError(
+                _("Rules can not be applied on the Record Rules model.")
+            )
 
     @api.model
-    @tools.ormcache('self._uid', 'model_name', 'mode')
+    @tools.ormcache("self._uid", "model_name", "mode")
     def _compute_domain(self, model_name, mode="read"):
         if mode not in self._MODES:
-            raise ValueError('Invalid mode: %r' % (mode,))
+            raise ValueError("Invalid mode: %r" % (mode,))
 
         if self._uid == SUPERUSER_ID:
             return None
@@ -75,7 +85,9 @@ class IrRule(models.Model):
                                   JOIN res_groups_users_rel gu ON (rg.group_id=gu.gid)
                                   WHERE gu.uid=%s)
                          OR r.global)
-                """.format(mode=mode)
+                """.format(
+            mode=mode
+        )
         self._cr.execute(query, (model_name, self._uid))
         rule_ids = [row[0] for row in self._cr.fetchall()]
         if not rule_ids:
@@ -84,11 +96,13 @@ class IrRule(models.Model):
         # browse user and rules as SUPERUSER_ID to avoid access errors!
         eval_context = self._eval_context()
         user_groups = self.env.user.groups_id
-        global_domains = []                     # list of domains
-        group_domains = []                      # list of domains
+        global_domains = []  # list of domains
+        group_domains = []  # list of domains
         for rule in self.browse(rule_ids).sudo():
             # evaluate the domain for the current user
-            dom = safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
+            dom = (
+                safe_eval(rule.domain_force, eval_context) if rule.domain_force else []
+            )
             dom = expression.normalize_domain(dom)
             if not rule.groups:
                 global_domains.append(dom)
@@ -104,7 +118,7 @@ class IrRule(models.Model):
         self.clear_caches()
 
     @api.model
-    def domain_get(self, model_name, mode='read'):
+    def domain_get(self, model_name, mode="read"):
         dom = self._compute_domain(model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
@@ -133,11 +147,19 @@ class IrRule(models.Model):
         self.clear_caches()
         return res
 
+
 #
 # Hack for field 'global': this field cannot be defined like others, because
 # 'global' is a Python keyword. Therefore, we add it to the class by assignment.
 # Note that the attribute '_module' is normally added by the class' metaclass.
 #
-setattr(IrRule, 'global',
-        fields.Boolean(compute='_compute_global', store=True, _module=IrRule._module,
-                       help="If no group is specified the rule is global and applied to everyone"))
+setattr(
+    IrRule,
+    "global",
+    fields.Boolean(
+        compute="_compute_global",
+        store=True,
+        _module=IrRule._module,
+        help="If no group is specified the rule is global and applied to everyone",
+    ),
+)

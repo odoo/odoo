@@ -3,23 +3,25 @@
 
 """ OpenERP core library."""
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # odoo must be a namespace package for odoo.addons to become one too
 # https://packaging.python.org/guides/packaging-namespace-packages/
-#----------------------------------------------------------
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+# ----------------------------------------------------------
+__path__ = __import__("pkgutil").extend_path(__path__, __name__)
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Running mode flags (gevent, prefork)
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Is the server running with gevent.
 import sys
+
 evented = False
-if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
-    sys.argv.remove('gevent')
+if len(sys.argv) > 1 and sys.argv[1] == "gevent":
+    sys.argv.remove("gevent")
     import gevent.monkey
     import psycopg2
     from gevent.socket import wait_read, wait_write
+
     gevent.monkey.patch_all()
 
     def gevent_wait_callback(conn, timeout=None):
@@ -36,8 +38,8 @@ if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
             elif state == psycopg2.extensions.POLL_WRITE:
                 wait_write(conn.fileno(), timeout=timeout)
             else:
-                raise psycopg2.OperationalError(
-                    "Bad result from poll: %r" % state)
+                raise psycopg2.OperationalError("Bad result from poll: %r" % state)
+
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
     evented = True
 
@@ -48,21 +50,24 @@ if len(sys.argv) > 1 and sys.argv[1] == 'gevent':
 # locks between threads.
 multi_process = False
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # libc UTC hack
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Make sure the OpenERP server runs in UTC.
 import os
-os.environ['TZ'] = 'UTC' # Set the timezone
+
+os.environ["TZ"] = "UTC"  # Set the timezone
 import time
-if hasattr(time, 'tzset'):
+
+if hasattr(time, "tzset"):
     time.tzset()
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Shortcuts
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
+
 
 def registry(database_name=None):
     """
@@ -72,12 +77,14 @@ def registry(database_name=None):
     """
     if database_name is None:
         import threading
+
         database_name = threading.currentThread().dbname
     return modules.registry.Registry(database_name)
 
-#----------------------------------------------------------
+
+# ----------------------------------------------------------
 # Imports
-#----------------------------------------------------------
+# ----------------------------------------------------------
 from . import addons
 from . import conf
 from . import loglevels
@@ -89,16 +96,16 @@ from . import service
 from . import sql_db
 from . import tools
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Model classes, fields, api decorators, and translations
-#----------------------------------------------------------
+# ----------------------------------------------------------
 from . import models
 from . import fields
 from . import api
 from odoo.tools.translate import _
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Other imports, which may require stuff from above
-#----------------------------------------------------------
+# ----------------------------------------------------------
 from . import cli
 from . import http

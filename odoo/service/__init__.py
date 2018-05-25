@@ -7,7 +7,7 @@ from . import model
 from . import wsgi_server
 from . import server
 
-#.apidoc title: RPC Services
+# .apidoc title: RPC Services
 
 """ Classes of this module implement the network protocols that the
     OpenERP server uses to communicate with remote clients.

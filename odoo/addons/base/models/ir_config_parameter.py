@@ -19,25 +19,23 @@ _default_parameters = {
     "database.secret": lambda: pycompat.text_type(uuid.uuid4()),
     "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
-    "web.base.url": lambda: "http://localhost:%s" % config.get('http_port'),
+    "web.base.url": lambda: "http://localhost:%s" % config.get("http_port"),
 }
 
 
 class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
-    _name = 'ir.config_parameter'
-    _rec_name = 'key'
-    _order = 'key'
+    _name = "ir.config_parameter"
+    _rec_name = "key"
+    _order = "key"
 
     key = fields.Char(required=True, index=True)
     value = fields.Text(required=True)
 
-    _sql_constraints = [
-        ('key_uniq', 'unique (key)', 'Key must be unique.')
-    ]
+    _sql_constraints = [("key_uniq", "unique (key)", "Key must be unique.")]
 
     @api.model_cr
-    @mute_logger('odoo.addons.base.models.ir_config_parameter')
+    @mute_logger("odoo.addons.base.models.ir_config_parameter")
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
@@ -45,7 +43,7 @@ class IrConfigParameter(models.Model):
         """
         for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
-            params = self.sudo().search([('key', '=', key)])
+            params = self.sudo().search([("key", "=", key)])
             if force or not params:
                 params.set_param(key, func())
 
@@ -61,10 +59,10 @@ class IrConfigParameter(models.Model):
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('self._uid', 'key')
+    @ormcache("self._uid", "key")
     def _get_param(self, key):
-        params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
-        return params[0]['value'] if params else None
+        params = self.search_read([("key", "=", key)], fields=["value"], limit=1)
+        return params[0]["value"] if params else None
 
     @api.model
     def set_param(self, key, value):
@@ -76,17 +74,17 @@ class IrConfigParameter(models.Model):
                  not exist.
         :rtype: string
         """
-        param = self.search([('key', '=', key)])
+        param = self.search([("key", "=", key)])
         if param:
             old = param.value
             if value is not False and value is not None:
-                param.write({'value': value})
+                param.write({"value": value})
             else:
                 param.unlink()
             return old
         else:
             if value is not False and value is not None:
-                self.create({'key': key, 'value': value})
+                self.create({"key": key, "value": value})
             return False
 
     @api.model

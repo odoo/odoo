@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-
 def _quote(to_quote):
     if '"' not in to_quote:
         return '"%s"' % to_quote
@@ -21,7 +20,14 @@ class Query(object):
       - etc.
     """
 
-    def __init__(self, tables=None, where_clause=None, where_clause_params=None, joins=None, extras=None):
+    def __init__(
+        self,
+        tables=None,
+        where_clause=None,
+        where_clause_params=None,
+        joins=None,
+        extras=None,
+    ):
 
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
@@ -66,17 +72,23 @@ class Query(object):
 
     def _get_table_aliases(self):
         from odoo.osv.expression import get_alias_from_query
-        return [get_alias_from_query(from_statement)[1] for from_statement in self.tables]
+
+        return [
+            get_alias_from_query(from_statement)[1] for from_statement in self.tables
+        ]
 
     def _get_alias_mapping(self):
         from odoo.osv.expression import get_alias_from_query
+
         mapping = {}
         for table in self.tables:
             alias, statement = get_alias_from_query(table)
             mapping[statement] = table
         return mapping
 
-    def add_join(self, connection, implicit=True, outer=False, extra=None, extra_params=[]):
+    def add_join(
+        self, connection, implicit=True, outer=False, extra=None, extra_params=[]
+    ):
         """ Join a destination table to the current table.
 
             :param implicit: False if the join is an explicit join. This allows
@@ -109,6 +121,7 @@ class Query(object):
             :param extra_params: a list of parameters for the `extra` condition.
         """
         from odoo.osv.expression import generate_table_alias
+
         (lhs, table, lhs_col, col, link) = connection
         alias, alias_statement = generate_table_alias(lhs, [(table, link)])
 
@@ -123,23 +136,27 @@ class Query(object):
             return alias, alias_statement
         else:
             aliases = self._get_table_aliases()
-            assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
+            assert lhs in aliases, (
+                "Left-hand-side table %s must already be part of the query tables %s!"
+                % (lhs, str(self.tables))
+            )
             if alias_statement in self.tables:
                 # already joined, must ignore (promotion to outer and multiple joins not supported yet)
                 pass
             else:
                 # add JOIN
                 self.tables.append(alias_statement)
-                join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
+                join_tuple = (alias, lhs_col, col, outer and "LEFT JOIN" or "JOIN")
                 self.joins.setdefault(lhs, []).append(join_tuple)
                 if extra or extra_params:
-                    extra = (extra or '').format(lhs=lhs, rhs=alias)
+                    extra = (extra or "").format(lhs=lhs, rhs=alias)
                     self.extras[(lhs, join_tuple)] = (extra, extra_params)
             return alias, alias_statement
 
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
         from odoo.osv.expression import get_alias_from_query
+
         tables_to_process = list(self.tables)
         alias_mapping = self._get_alias_mapping()
         from_clause = []
@@ -148,27 +165,36 @@ class Query(object):
         def add_joins_for_table(lhs):
             for (rhs, lhs_col, rhs_col, join) in self.joins.get(lhs, []):
                 tables_to_process.remove(alias_mapping[rhs])
-                from_clause.append(' %s %s ON ("%s"."%s" = "%s"."%s"' % \
-                    (join, alias_mapping[rhs], lhs, lhs_col, rhs, rhs_col))
+                from_clause.append(
+                    ' %s %s ON ("%s"."%s" = "%s"."%s"'
+                    % (join, alias_mapping[rhs], lhs, lhs_col, rhs, rhs_col)
+                )
                 extra = self.extras.get((lhs, (rhs, lhs_col, rhs_col, join)))
                 if extra:
                     if extra[0]:
-                        from_clause.append(' AND ')
+                        from_clause.append(" AND ")
                         from_clause.append(extra[0])
                     if extra[1]:
                         from_params.extend(extra[1])
-                from_clause.append(')')
+                from_clause.append(")")
                 add_joins_for_table(rhs)
 
         for pos, table in enumerate(tables_to_process):
             if pos > 0:
-                from_clause.append(',')
+                from_clause.append(",")
             from_clause.append(table)
             table_alias = get_alias_from_query(table)[1]
             if table_alias in self.joins:
                 add_joins_for_table(table_alias)
 
-        return "".join(from_clause), " AND ".join(self.where_clause), from_params + self.where_clause_params
+        return (
+            "".join(from_clause),
+            " AND ".join(self.where_clause),
+            from_params + self.where_clause_params,
+        )
 
     def __str__(self):
-        return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()
+        return (
+            '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>'
+            % self.get_sql()
+        )
