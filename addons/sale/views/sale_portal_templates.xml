@@ -58,10 +58,10 @@
                         <td><span t-field="quotation.validity_date"/></td>
                         <td>
                           <t t-if="quotation.state == 'cancel'">
-                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                           </t>
                           <t t-if="quotation.is_expired">
-                            <span class="label label-default"><i class="fa fa-fw fa-clock-o"/> Expired</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-clock-o"/> Expired</span>
                           </t>
                         </td>
                         <td><span t-field="quotation.amount_total" t-options='{"widget": "monetary", "display_currency": quotation.pricelist_id.currency_id}'/>
@@ -108,7 +108,7 @@
                         </td>
                         <td>
                             <t t-if="order.state == 'done'">
-                                <span class="label label-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
+                                <span class="badge badge-success d-none d-md-inline-block"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="d-none d-md-inline"> Done</span></span>
                             </t>
                         </td>
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
@@ -138,10 +138,10 @@
                         <t t-else="">Order</t>
                         <span t-esc="order.name"/>
                         <t t-if="order.state == 'cancel'">
-                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                            <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                         </t>
                         <t t-if="order.state == 'done'">
-                            <span class="label label-success"><i class="fa fa-fw fa-check" /> Done</span>
+                            <span class="badge badge-success"><i class="fa fa-fw fa-check" /> Done</span>
                         </t>
                     </h4>
                 </div>
@@ -192,10 +192,10 @@
                           <a t-att-href="report_url"><span t-esc="i.number"/></a>
                           <span class="text-muted" t-field="i.date_invoice"/>
                           <t t-if="i.state == 'paid'">
-                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
+                            <span class="badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Paid</span>
                           </t>
                           <t t-if="i.state != 'paid'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
                           </t>
                         </div>
                       </t>

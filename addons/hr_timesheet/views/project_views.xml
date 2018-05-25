@@ -151,7 +151,7 @@
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
                    <t t-if="record.progress.raw_value &gt; 80 and record.progress.raw_value &lt; 100">
-                       <div t-att-class="'oe_kanban_align label label-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')" title="Remaining hours">
+                       <div t-att-class="'oe_kanban_align badge badge-' + (record.progress.raw_value &gt;= 99 ? 'danger': 'warning')" title="Remaining hours">
                             <field name="remaining_hours" widget="float_time" />
                        </div>
                    </t>

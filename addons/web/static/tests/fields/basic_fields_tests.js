@@ -4004,42 +4004,42 @@ QUnit.module('basic_fields', {
                     '<sheet>' +
                         '<group>' +
                             '<field name="selection" widget="label_selection" ' +
-                            ' options="{\'classes\': {\'normal\': \'default\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
+                            ' options="{\'classes\': {\'normal\': \'secondary\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have a warning status label since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-default').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-secondary').length, 0,
             "should not have a default status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-success').length, 0,
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-success').length, 0,
             "should not have a success status since selection is the second, blocked state");
-        assert.strictEqual(form.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(form.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the label should say 'Blocked' since this is the label value for that state");
 
         form.destroy();
@@ -4055,57 +4055,57 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
                     '<field name="selection" widget="label_selection"' +
-                    ' options="{\'classes\': {\'normal\': \'default\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
+                    ' options="{\'classes\': {\'normal\': \'secondary\', \'blocked\': \'warning\',\'done\': \'success\'}}"/>' +
                   '</tree>',
         });
 
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // switch to edit mode and check the result
         list.$('tbody td:not(.o_list_record_selector)').first().click();
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         // save and check the result
         list.$buttons.find('.o_list_button_save').click();
-        assert.strictEqual(list.$('.o_field_widget.label:not(:empty)').length, 3,
+        assert.strictEqual(list.$('.o_field_widget.badge:not(:empty)').length, 3,
             "should have three visible status labels");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').length, 1,
             "should have one warning status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-warning').text(), 'Blocked',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-warning').text(), 'Blocked',
             "the warning label should read 'Blocked'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').length, 1,
             "should have one default status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-default').text(), 'Normal',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-secondary').text(), 'Normal',
             "the default label should read 'Normal'");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').length, 1,
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').length, 1,
             "should have one success status label");
-        assert.strictEqual(list.$('.o_field_widget.label.label-success').text(), 'Done',
+        assert.strictEqual(list.$('.o_field_widget.badge.badge-success').text(), 'Done',
             "the success label should read 'Done'");
 
         list.destroy();

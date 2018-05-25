@@ -44,7 +44,7 @@
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <t t-if="partner.industry_id">
-                                    <a class="label label-default" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-esc="partner.industry_id.name"/>
+                                    <a class="badge badge-secondary" t-attf-href="/customers/#{ 'industry/%s/' % slug(partner.industry_id) }#{ current_country_id and 'country/%s' % slug(current_country) or '' }" t-esc="partner.industry_id.name"/>
                                 </t>
                                 <div t-field="partner.website_short_description"/>
                             </div>
@@ -134,7 +134,7 @@
             <li class="nav-item"><a class="nav-link mr8" t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }">
                 <span class="fa fa-1x fa-tags"/> All </a></li>
             <li t-foreach="tags" t-as="o_tag" class="nav-item">
-                <a t-attf-class="nav-link label label-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
+                <a t-attf-class="nav-link badge badge-#{o_tag.classname}" t-esc="o_tag.name" t-att-style="tag and tag.id==o_tag.id and 'text-decoration: underline'"
                     t-attf-href="/customers/#{ current_industry_id and 'industry/%s/' % slug(current_industry) or '' }#{ current_country_id and 'country/%s' % slug(current_country) or '' }?tag_id=#{slug(o_tag)}"/>
             </li>
         </ul>
@@ -178,7 +178,7 @@
 <template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
     <xpath expr="//address" position="inside">
         <t t-if="partner.industry_id">
-            <span class="label label-default"><t t-esc="partner.industry_id.name"/></span>
+            <span class="badge badge-secondary"><t t-esc="partner.industry_id.name"/></span>
         </t>
     </xpath>
 </template>
@@ -225,7 +225,7 @@
                         <span t-field="reference.self"/>
                     </a>
                     <t t-if="reference.industry_id">
-                        <span class="label label-default"><t t-esc="reference.industry_id.name"/></span>
+                        <span class="badge badge-secondary"><t t-esc="reference.industry_id.name"/></span>
                     </t>
                     <div t-field='reference.website_short_description'/>
                 </div>

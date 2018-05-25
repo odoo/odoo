@@ -14,13 +14,13 @@
                     <div class="card-header"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="float-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
                     <div class="card-body">
                         <span t-if="filter_finish == True">
-                            <span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>
+                            <span class="badge badge-secondary only_left_radius filter-all">All surveys</span><span class="badge badge-primary only_right_radius filter-finished">Finished surveys</span>
                         </span>
                         <span t-if="filter_finish == False">
-                            <span class="label label-primary only_left_radius filter-all">All surveys</span><span class="label label-default only_right_radius filter-finished">Finished surveys</span>
+                            <span class="badge badge-primary only_left_radius filter-all">All surveys</span><span class="badge badge-secondary only_right_radius filter-finished">Finished surveys</span>
                         </span>
                         <span t-foreach="filter_display_data" t-as="filter_data">
-                            <span class="label label-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                            <span class="badge badge-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="badge badge-primary no_radius" t-esc="filter_data['question_text']"></span><span class="badge badge-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
                         </span>
                     </div>
                 </div>
@@ -38,14 +38,14 @@
                             <b>Question </b>
                             <span t-field='question.question'></span>
                             <t t-if="question.type == 'matrix'">
-                                <small><span class="label label-default">Matrix: <span t-field='question.matrix_subtype'/></span></small>
+                                <small><span class="badge badge-secondary">Matrix: <span t-field='question.matrix_subtype'/></span></small>
                             </t>
                             <t t-if="question.type in ['simple_choice', 'multiple_choice']">
-                                <small><span t-field='question.type' class="label label-default"></span></small>
+                                <small><span t-field='question.type' class="badge badge-secondary"></span></small>
                             </t>
                             <span class="float-right">
-                                <span class="label label-success"><span t-esc="input_summary['answered']"></span> Answered</span>
-                                <span class="label label-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
+                                <span class="badge badge-success"><span t-esc="input_summary['answered']"></span> Answered</span>
+                                <span class="badge badge-danger"><span t-esc="input_summary['skipped']"></span> Skipped</span>
                             </span>
                         </h4>
                         <t t-if="input_summary['answered'] != 0">
@@ -176,7 +176,7 @@
                                 </td>
                                 <td class="survey_answer">
                                     <span t-esc="round(user_input['count']*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                    <span t-esc="user_input['count']" class="label label-primary">Vote</span>
+                                    <span t-esc="user_input['count']" class="badge badge-primary">Vote</span>
                                     <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']" role="img" aria-label="Filter question" title="Filter question"/>
                                 </td>
                             </tr>
@@ -235,7 +235,7 @@
                             </td>
                             <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
+                                <span class="badge badge-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -256,10 +256,10 @@
         <t t-set="number_result" t-value="prepare_result"/>
         <t t-set="text_result" t-value="number_result['input_lines']" />
         <span class="float-right mt8">
-            <span class="label label-default only_left_radius">Sum </span> <span class="label label-info only_right_radius" t-esc="number_result['sum']"></span>
-            <span class="label label-default only_left_radius">Maximum </span> <span class="label label-success only_right_radius" t-esc="number_result['max']"></span>
-            <span class="label label-default only_left_radius">Minimum </span> <span class="label label-danger only_right_radius" t-esc="number_result['min']"></span>
-            <span class="label label-default only_left_radius">Average </span> <span class="label label-warning only_right_radius" t-esc="number_result['average']"></span>
+            <span class="badge badge-secondary only_left_radius">Sum </span> <span class="badge badge-info only_right_radius" t-esc="number_result['sum']"></span>
+            <span class="badge badge-secondary only_left_radius">Maximum </span> <span class="badge badge-success only_right_radius" t-esc="number_result['max']"></span>
+            <span class="badge badge-secondary only_left_radius">Minimum </span> <span class="badge badge-danger only_right_radius" t-esc="number_result['min']"></span>
+            <span class="badge badge-secondary only_left_radius">Average </span> <span class="badge badge-warning only_right_radius" t-esc="number_result['average']"></span>
         </span>
         <ul class="nav nav-tabs d-print-none" role="tablist">
             <li class="nav-item">

@@ -48,13 +48,13 @@
                         <td class='d-none d-md-table-cell'><span t-field="invoice.date_due"/></td>
                         <td class="tx_status">
                             <t t-if="invoice.state == 'open'">
-                                <span class="label label-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                                <span class="badge badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
                             <t t-if="invoice.state == 'paid'">
-                                <span class="label label-default"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
+                                <span class="badge badge-secondary"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
                             <t t-if="invoice.state == 'cancel'">
-                                <span class="label label-default"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                                <span class="badge badge-secondary"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
                             </t>
                         </td>
                         <td><span t-esc="-invoice.residual if invoice.type == 'out_refund' else invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
