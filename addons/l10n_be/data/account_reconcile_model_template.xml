@@ -27,8 +27,8 @@
     </record>
     <record id="virements_internes_template" model="account.reconcile.model.template">
         <field name="chart_template_id" ref="l10nbe_chart_template"/>
+        <field name="account_id" search="[('code', '=like', obj().env.ref('l10n_be.l10nbe_chart_template').transfer_account_code_prefix + '%')]"/>
         <field name="name">Virements internes</field>
-        <field name="account_id" ref="trans"/>
         <field name="amount_type">percentage</field>
         <field name="amount">100</field>
         <field name="label">Virements internes</field>

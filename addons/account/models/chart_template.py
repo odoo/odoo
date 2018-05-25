@@ -124,6 +124,34 @@ class AccountChartTemplate(models.Model):
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
 
+    @api.model
+    def _prepare_transfer_account_template(self):
+        ''' Prepare values to create the transfer account that is an intermediary account used when moving money
+        from a liquidity account to another.
+
+        :param name:        The transfer account name.
+        :param company:     The company owning this account.
+        :return:            A dictionary of values to create a new account.account.
+        '''
+        digits = self.code_digits
+        prefix = self.transfer_account_code_prefix or ''
+        new_code = ''
+        for num in range(1, 100):
+            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
+            rec = self.env['account.account.template'].search([('code', '=', new_code), ('chart_template_id', '=', self.id)], limit=1)
+            if not rec:
+                break
+        else:
+            raise UserError(_('Cannot generate an unused account code.'))
+        current_assets_type = self.env.ref('account.data_account_type_current_assets', raise_if_not_found=False)
+        return {
+            'name': _('Liquidity Transfer'),
+            'code': new_code,
+            'user_type_id': current_assets_type and current_assets_type.id or False,
+            'reconcile': True,
+            'chart_template_id': self.id,
+        }
+
     @api.one
     def try_loading_for_current_company(self):
         self.ensure_one()
@@ -909,9 +937,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits)
 
-        # Create Transfer account
-        transfer_account_vals = self._prepare_transfer_account(_('Liquidity Transfers'), company)
-        company.transfer_account_id = self.env['account.account'].create(transfer_account_vals)
+        # Set the transfer account on the company
+        company.transfer_account_id = self.env['account.account'].search([('code', '=like', self.transfer_account_code_prefix + '%')])[0]
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
@@ -926,27 +953,24 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
     @api.model
     def _prepare_transfer_account(self, name, company):
-        ''' Prepare values to create the transfer account that is ani ntermediary account used when moving money
-        from a liquidity account to another.
+        ''' Prepare values to create a transfer account directly, based on the method _prepare_transfer_account_template().
+            This is needed when dealing with installation of payment modules that requires the creation of their own transfer
+            account.
 
-        :param name:        The transfer account name.
-        :param company:     The company owning this account.
-        :return:            A dictionary of values to create a new account.account.
+            :param name:        The transfer account name.
+            :param company:     The company owning this account.
+            :return:            A dictionary of values to create a new account.account.
         '''
-        digits = 6
-        acc = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
-        if acc:
-            digits = len(acc.code)
-
-        account_code_prefix = company.transfer_account_code_prefix or ''
-        current_assets_type = self.env.ref('account.data_account_type_current_assets', raise_if_not_found=False)
-        return {
+        vals = self.chart_template_id._prepare_transfer_account_template()
+        digits = self.chart_template_id.code_digits or 6
+        prefix = self.chart_template_id.transfer_account_code_prefix or ''
+        vals.update({
+            'code': self.env['account.account']._search_new_account_code(company, digits, prefix),
             'name': name,
-            'code': self.env['account.account']._search_new_account_code(company, digits, account_code_prefix),
-            'user_type_id': current_assets_type and current_assets_type.id or False,
-            'reconcile': True,
             'company_id': company.id,
-        }
+        })
+        del(vals['chart_template_id'])
+        return vals
 
     @api.multi
     def _create_bank_journals_from_o2m(self, company, acc_template_ref):
@@ -1005,3 +1029,22 @@ class AccountReconcileModelTemplate(models.Model):
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
+
+
+class IrModelData(models.Model):
+    _inherit = 'ir.model.data'
+
+    @api.model
+    def _update(self, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
+        record_id = super(IrModelData, self)._update(model, module, values, xml_id=xml_id, store=store, noupdate=noupdate, mode=mode, res_id=res_id)
+        # When creating a chart template create, for the liquidity transfer account
+        #  - an account.account.template: this allow to define account.reconcile.model.template objects refering that liquidity transfer
+        #    account although it's not existing in any xml file
+        #  - an entry in ir_model_data: this allow to still use the method create_record_with_xmlid() and don't make any difference between
+        #    regular accounts created and that liquidity transfer account
+        if model == 'account.chart.template' and xml_id and module:
+            new_xml_id = xml_id + '_liquidity_transfer'
+            if not self.search([('model', '=', 'account.account.template'), ('module', '=', module), ('name', '=', new_xml_id)]):
+                vals = self.env[model].browse(record_id)._prepare_transfer_account_template()
+                self._update('account.account.template', module, vals, xml_id=new_xml_id, store=True, noupdate=noupdate, mode=mode, res_id=False)
+        return record_id
