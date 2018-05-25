@@ -650,7 +650,7 @@ class MassMailing(models.Model):
 
     @api.multi
     def cancel_mass_mailing(self):
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'schedule_date': False})
 
     @api.multi
     def retry_failed_mail(self):
