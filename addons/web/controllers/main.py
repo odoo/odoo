@@ -42,7 +42,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, AccessDenied
 from odoo.models import check_method_name
 from odoo.service import db
 
@@ -482,18 +482,17 @@ class Home(http.Controller):
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
-            # ensure there's no leftover in the session from non-web auth
-            request.session.pop('login_error', None)
             old_uid = request.uid
-            uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
-            if uid is not False:
+            try:
+                uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
-            request.uid = old_uid
-            values['error'] = request.session.pop(
-                'login_error',
-                _("Wrong login/password")
-            )
+            except odoo.exceptions.AccessDenied as e:
+                request.uid = old_uid
+                if e.args == odoo.exceptions.AccessDenied().args:
+                    values['error'] = _("Wrong login/password")
+                else:
+                    values['error'] = e.args[0]
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')
