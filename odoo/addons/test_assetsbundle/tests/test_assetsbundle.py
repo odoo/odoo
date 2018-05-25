@@ -30,23 +30,24 @@ def _touch(filepath, asset, t=None):
 
 
 class TestJavascriptAssetsBundle(TransactionCase):
+
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
-        self.jsbundle_xmlid = 'test_assetsbundle.bundle1'
-        self.cssbundle_xmlid = 'test_assetsbundle.bundle2'
+        self.jsbundle_xmlid = "test_assetsbundle.bundle1"
+        self.cssbundle_xmlid = "test_assetsbundle.bundle2"
 
     def _get_asset(self, xmlid, env=None):
-        env = (env or self.env)
-        files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
+        env = env or self.env
+        files, remains = env["ir.qweb"]._get_asset_content(xmlid, env.context)
         return AssetsBundle(xmlid, files, remains, env=env)
 
     def _any_ira_for_bundle(self, type):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
-        bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        return self.env['ir.attachment'].search([
-            ('url', '=like', '/web/content/%-%/{0}%.{1}'.format(bundle, type))
-        ])
+        bundle = self.jsbundle_xmlid if type == "js" else self.cssbundle_xmlid
+        return self.env["ir.attachment"].search(
+            [("url", "=like", "/web/content/%-%/{0}%.{1}".format(bundle, type))]
+        )
 
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
@@ -55,15 +56,15 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.bundle = self._get_asset(self.jsbundle_xmlid, env=self.env)
 
         # there shouldn't be any attachment associated to this bundle
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 0)
-        self.assertEquals(len(self.bundle.get_attachments('js')), 0)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 0)
+        self.assertEquals(len(self.bundle.get_attachments("js")), 0)
 
         # trigger the first generation and, thus, the first save in database
         self.bundle.js()
 
         # there should be one attachment associated to this bundle
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
-        self.assertEquals(len(self.bundle.get_attachments('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
+        self.assertEquals(len(self.bundle.get_attachments("js")), 1)
 
     def test_02_access(self):
         """ Checks that the bundle's cache is working, i.e. that the bundle creates only one
@@ -72,19 +73,19 @@ class TestJavascriptAssetsBundle(TransactionCase):
         bundle0 = self._get_asset(self.jsbundle_xmlid)
         bundle0.js()
 
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
 
         version0 = bundle0.version
-        ira0 = self._any_ira_for_bundle('js')
+        ira0 = self._any_ira_for_bundle("js")
         date0 = ira0.create_date
 
         bundle1 = self._get_asset(self.jsbundle_xmlid)
         bundle1.js()
 
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
 
         version1 = bundle1.version
-        ira1 = self._any_ira_for_bundle('js')
+        ira1 = self._any_ira_for_bundle("js")
         date1 = ira1.create_date
 
         self.assertEquals(version0, version1)
@@ -98,7 +99,9 @@ class TestJavascriptAssetsBundle(TransactionCase):
         last_modified0 = bundle0.last_modified
         version0 = bundle0.version
 
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
+        path = get_resource_path(
+            "test_assetsbundle", "static", "src", "js", "test_jsfile1.js"
+        )
         bundle1 = self._get_asset(self.jsbundle_xmlid)
         _touch(path, bundle1)
 
@@ -109,7 +112,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment is correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
 
     def test_04_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
@@ -121,7 +124,7 @@ class TestJavascriptAssetsBundle(TransactionCase):
         remains0 = bundle0.remains
         version0 = bundle0.version
 
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
 
         view_arch = """
         <data>
@@ -131,14 +134,18 @@ class TestJavascriptAssetsBundle(TransactionCase):
         </data>
         """
         bundle = self.browse_ref(self.jsbundle_xmlid)
-        view = self.env['ir.ui.view'].create({
-            'name': 'test bundle inheritance',
-            'type': 'qweb',
-            'arch': view_arch,
-            'inherit_id': bundle.id,
-        })
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "test bundle inheritance",
+                "type": "qweb",
+                "arch": view_arch,
+                "inherit_id": bundle.id,
+            }
+        )
 
-        bundle1 = self._get_asset(self.jsbundle_xmlid, env=self.env(context={'check_view_ids': view.ids}))
+        bundle1 = self._get_asset(
+            self.jsbundle_xmlid, env=self.env(context={"check_view_ids": view.ids})
+        )
         bundle1.js()
         files1 = bundle1.files
         remains1 = bundle1.remains
@@ -149,18 +156,18 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 1)
 
     def test_05_debug(self):
         """ Checks that a bundle rendered in debug mode outputs non-minified assets.
         """
         debug_bundle = self._get_asset(self.jsbundle_xmlid)
-        content = debug_bundle.to_html(debug='assets')
+        content = debug_bundle.to_html(debug="assets")
         # find back one of the original asset file
-        self.assertIn('/test_assetsbundle/static/src/js/test_jsfile1.js', content)
+        self.assertIn("/test_assetsbundle/static/src/js/test_jsfile1.js", content)
 
         # there shouldn't be any assets created in debug mode
-        self.assertEquals(len(self._any_ira_for_bundle('js')), 0)
+        self.assertEquals(len(self._any_ira_for_bundle("js")), 0)
 
     def test_06_paginated_css_generation1(self):
         """ Checks that a bundle creates enough ir.attachment records when its `css` method is called
@@ -168,47 +175,57 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """
         # note: changing the max_css_rules of a bundle does not invalidate its attachments
         # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        self.bundle = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         self.bundle.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
-        self.assertEquals(len(self.bundle.get_attachments('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 3)
+        self.assertEquals(len(self.bundle.get_attachments("css")), 3)
 
     def test_07_paginated_css_generation2(self):
         # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 2}))
+        self.bundle = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 2})
+        )
         self.bundle.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 2)
-        self.assertEquals(len(self.bundle.get_attachments('css')), 2)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 2)
+        self.assertEquals(len(self.bundle.get_attachments("css")), 2)
 
     def test_08_paginated_css_generation3(self):
         # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 3}))
+        self.bundle = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 3})
+        )
         self.bundle.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
-        self.assertEquals(len(self.bundle.get_attachments('css')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 1)
+        self.assertEquals(len(self.bundle.get_attachments("css")), 1)
 
     def test_09_paginated_css_access(self):
         """ Checks that the bundle's cache is working, i.e. that a bundle creates only enough
         ir.attachment records when rendered multiple times.
         """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle0 = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         bundle0.css()
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 3)
 
         version0 = bundle0.version
-        ira0, ira1, ira2 = self._any_ira_for_bundle('css')
+        ira0, ira1, ira2 = self._any_ira_for_bundle("css")
         date0 = ira0.create_date
         date1 = ira1.create_date
         date2 = ira2.create_date
 
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle1 = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         bundle1.css()
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 3)
 
         version1 = bundle1.version
-        ira3, ira4, ira5 = self._any_ira_for_bundle('css')
+        ira3, ira4, ira5 = self._any_ira_for_bundle("css")
         date3 = ira1.create_date
         date4 = ira1.create_date
         date5 = ira1.create_date
@@ -221,13 +238,19 @@ class TestJavascriptAssetsBundle(TransactionCase):
     def test_10_paginated_css_date_invalidation(self):
         """ Checks that a bundle is invalidated when one of its assets' modification date is changed.
         """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle0 = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         bundle0.css()
         last_modified0 = bundle0.last_modified
         version0 = bundle0.version
 
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        path = get_resource_path(
+            "test_assetsbundle", "static", "src", "css", "test_cssfile1.css"
+        )
+        bundle1 = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         _touch(path, bundle1)
 
         bundle1.css()
@@ -238,19 +261,21 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment is correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 3)
 
     def test_11_paginated_css_content_invalidation(self):
         """ Checks that a bundle is invalidated when its content is modified by adding a file to
         source.
         """
-        bundle0 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        bundle0 = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         bundle0.css()
         files0 = bundle0.files
         remains0 = bundle0.remains
         version0 = bundle0.version
 
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 3)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 3)
 
         view_arch = """
         <data>
@@ -260,14 +285,19 @@ class TestJavascriptAssetsBundle(TransactionCase):
         </data>
         """
         bundle = self.browse_ref(self.cssbundle_xmlid)
-        view = self.env['ir.ui.view'].create({
-            'name': 'test bundle inheritance',
-            'type': 'qweb',
-            'arch': view_arch,
-            'inherit_id': bundle.id,
-        })
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "test bundle inheritance",
+                "type": "qweb",
+                "arch": view_arch,
+                "inherit_id": bundle.id,
+            }
+        )
 
-        bundle1 = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'check_view_ids': view.ids, 'max_css_rules': 1}))
+        bundle1 = self._get_asset(
+            self.cssbundle_xmlid,
+            env=self.env(context={"check_view_ids": view.ids, "max_css_rules": 1}),
+        )
         bundle1.css()
         files1 = bundle1.files
         remains1 = bundle1.remains
@@ -278,27 +308,31 @@ class TestJavascriptAssetsBundle(TransactionCase):
         self.assertNotEquals(version0, version1)
 
         # check if the previous attachment are correctly cleaned
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 4)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 4)
 
     def test_12_paginated_css_debug(self):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
-        debug_bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
-        content = debug_bundle.to_html(debug='assets')
+        debug_bundle = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
+        content = debug_bundle.to_html(debug="assets")
         # find back one of the original asset file
-        self.assertIn('/test_assetsbundle/static/src/css/test_cssfile1.css', content)
+        self.assertIn("/test_assetsbundle/static/src/css/test_cssfile1.css", content)
 
         # there shouldn't be any assets created in debug mode
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 0)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 0)
 
     def test_13_paginated_css_order(self):
         # self.cssbundle_xlmid contains 3 rules
-        self.bundle = self._get_asset(self.cssbundle_xmlid, env=self.env(context={'max_css_rules': 1}))
+        self.bundle = self._get_asset(
+            self.cssbundle_xmlid, env=self.env(context={"max_css_rules": 1})
+        )
         stylesheets = self.bundle.css()
 
-        self.assertTrue(stylesheets[0].url.endswith('.0.css'))
-        self.assertTrue(stylesheets[1].url.endswith('.1.css'))
-        self.assertTrue(stylesheets[2].url.endswith('.2.css'))
+        self.assertTrue(stylesheets[0].url.endswith(".0.css"))
+        self.assertTrue(stylesheets[1].url.endswith(".1.css"))
+        self.assertTrue(stylesheets[2].url.endswith(".2.css"))
 
     def test_14_duplicated_css_assets(self):
         """ Checks that if the bundle's ir.attachment record is duplicated, the bundle is only sourced once. This could
@@ -306,27 +340,28 @@ class TestJavascriptAssetsBundle(TransactionCase):
         """
         bundle0 = self._get_asset(self.cssbundle_xmlid)
         bundle0.css()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 1)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 1)
 
         # duplicate the asset bundle
-        ira0 = self._any_ira_for_bundle('css')
+        ira0 = self._any_ira_for_bundle("css")
         ira1 = ira0.copy()
-        self.assertEquals(len(self._any_ira_for_bundle('css')), 2)
+        self.assertEquals(len(self._any_ira_for_bundle("css")), 2)
         self.assertEquals(ira0.store_fname, ira1.store_fname)
 
         # the ir.attachment records should be deduplicated in the bundle's content
         content = bundle0.to_html()
-        self.assertEqual(content.count('test_assetsbundle.bundle2.0.css'), 1)
+        self.assertEqual(content.count("test_assetsbundle.bundle2.0.css"), 1)
 
 
 class TestAssetsBundleInBrowser(HttpCase):
+
     def test_01_js_interpretation(self):
         """ Checks that the javascript of a bundle is correctly interpreted.
         """
         self.phantom_js(
             "/test_assetsbundle/js",
             "a + b + c === 6 ? console.log('ok') : console.log('error')",
-            login="admin"
+            login="admin",
         )
 
     def test_02_js_interpretation_inline(self):
@@ -341,12 +376,14 @@ class TestAssetsBundleInBrowser(HttpCase):
             </xpath>
         </data>
         """
-        self.env['ir.ui.view'].create({
-            'name': 'test bundle inheritance inline js',
-            'type': 'qweb',
-            'arch': view_arch,
-            'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
-        })
+        self.env["ir.ui.view"].create(
+            {
+                "name": "test bundle inheritance inline js",
+                "type": "qweb",
+                "arch": view_arch,
+                "inherit_id": self.browse_ref("test_assetsbundle.bundle1").id,
+            }
+        )
 
         self.phantom_js(
             "/test_assetsbundle/js",
@@ -356,37 +393,40 @@ class TestAssetsBundleInBrowser(HttpCase):
 
 
 class TestAssetsBundleWithIRAMock(TransactionCase):
+
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
-        self.stylebundle_xmlid = 'test_assetsbundle.bundle3'
+        self.stylebundle_xmlid = "test_assetsbundle.bundle3"
         self.counter = counter = Counter()
 
         # patch methods 'create' and 'unlink' of model 'ir.attachment'
         @api.model
         def create(self, vals):
-            counter.update(['create'])
+            counter.update(["create"])
             return create.origin(self, vals)
 
         @api.multi
         def unlink(self):
-            counter.update(['unlink'])
+            counter.update(["unlink"])
             return unlink.origin(self)
 
-        self.env['ir.attachment']._patch_method('create', create)
-        self.addCleanup(self.env['ir.attachment']._revert_method, 'create')
+        self.env["ir.attachment"]._patch_method("create", create)
+        self.addCleanup(self.env["ir.attachment"]._revert_method, "create")
 
-        self.env['ir.attachment']._patch_method('unlink', unlink)
-        self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
+        self.env["ir.attachment"]._patch_method("unlink", unlink)
+        self.addCleanup(self.env["ir.attachment"]._revert_method, "unlink")
 
     def _get_asset(self):
-        files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
+        files, remains = self.env["ir.qweb"]._get_asset_content(
+            self.stylebundle_xmlid, {}
+        )
         return AssetsBundle(self.stylebundle_xmlid, files, remains, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
         self.counter.clear()
-        asset.to_html(debug='assets')
-        self.assertEquals(self.counter['create'], int(should_create))
-        self.assertEquals(self.counter['unlink'], int(should_unlink))
+        asset.to_html(debug="assets")
+        self.assertEquals(self.counter["create"], int(should_create))
+        self.assertEquals(self.counter["unlink"], int(should_unlink))
 
     def test_01_debug_mode_assets(self):
         """ Checks that the ir.attachments records created for compiled assets in debug mode
@@ -399,7 +439,9 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
+        path = get_resource_path(
+            "test_assetsbundle", "static", "src", "scss", "test_file1.scss"
+        )
         t = time.time() + 5
         asset = self._get_asset()
         _touch(path, asset, t=t)
@@ -410,7 +452,9 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         # has really been modified. If we do not update the write_date to a posterior date, we are
         # not able to reproduce the case where we compile this bundle again without changing
         # anything.
-        self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
+        self.cr.execute(
+            "update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)"
+        )
 
         # Compile a fourth time, without changes
         self._bundle(self._get_asset(), False, False)

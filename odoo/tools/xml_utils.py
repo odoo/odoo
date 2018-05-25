@@ -3,6 +3,7 @@ from lxml import etree
 from odoo.tools.misc import file_open
 from odoo.exceptions import UserError
 
+
 def check_with_xsd(tree_or_str, stream):
     raise UserError("Method 'check_with_xsd' deprecated ")
 
@@ -15,9 +16,10 @@ def _check_with_xsd(tree_or_str, stream):
     try:
         xsd_schema.assertValid(tree_or_str)
     except etree.DocumentInvalid as xml_errors:
-        #import UserError only here to avoid circular import statements with tools.func being imported in exceptions.py
+        # import UserError only here to avoid circular import statements with tools.func being imported in exceptions.py
         from odoo.exceptions import UserError
-        raise UserError('\n'.join(str(e) for e in xml_errors.error_log))
+
+        raise UserError("\n".join(str(e) for e in xml_errors.error_log))
 
 
 def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
@@ -36,6 +38,7 @@ def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
     if last_node_value is not None:
         current_node.text = last_node_value
     return res
+
 
 def create_xml_node(parent_node, node_name, node_value=None):
     """ Utility function for managing XML. It creates a new node with the specified

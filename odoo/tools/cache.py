@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class ormcache_counter(object):
     """ Statistic counters for cache entries. """
-    __slots__ = ['hit', 'miss', 'err']
+    __slots__ = ["hit", "miss", "err"]
 
     def __init__(self):
         self.hit = 0
@@ -27,6 +27,7 @@ class ormcache_counter(object):
     @property
     def ratio(self):
         return 100.0 * self.hit / (self.hit + self.miss or 1)
+
 
 # statistic counters dictionary, maps (dbname, modelname, method) to counter
 STAT = defaultdict(ormcache_counter)
@@ -52,9 +53,10 @@ class ormcache(object):
     because the underlying cursor will eventually be closed and raise a
     `psycopg2.OperationalError`.
     """
+
     def __init__(self, *args, **kwargs):
         self.args = args
-        self.skiparg = kwargs.get('skiparg')
+        self.skiparg = kwargs.get("skiparg")
 
     def __call__(self, method):
         self.method = method
@@ -75,7 +77,7 @@ class ormcache(object):
             self.key = unsafe_eval(code)
         else:
             # backward-compatible function that uses self.skiparg
-            self.key = lambda *args, **kwargs: args[self.skiparg:]
+            self.key = lambda *args, **kwargs: args[self.skiparg :]
 
     def lru(self, model):
         counter = STAT[(model.pool.db_name, model._name, self.method)]
@@ -107,9 +109,10 @@ class ormcache_context(ormcache):
     keys are looked up in the ``context`` parameter and combined to the cache
     key made by :class:`ormcache`.
     """
+
     def __init__(self, *args, **kwargs):
         super(ormcache_context, self).__init__(*args, **kwargs)
-        self.keys = kwargs['keys']
+        self.keys = kwargs["keys"]
 
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
@@ -117,7 +120,7 @@ class ormcache_context(ormcache):
         # build a string that represents function code and evaluate it
         spec = getargspec(self.method)
         args = formatargspec(*spec)[1:-1]
-        cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
+        cont_expr = "(context or {})" if "context" in spec.args else "self._context"
         keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
@@ -132,14 +135,17 @@ class ormcache_multi(ormcache):
     corresponding argument is iterated on, and every value leads to a cache
     entry under its own key.
     """
+
     def __init__(self, *args, **kwargs):
         super(ormcache_multi, self).__init__(*args, **kwargs)
-        self.multi = kwargs['multi']
+        self.multi = kwargs["multi"]
 
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, pycompat.string_types), "ormcache_multi() parameter multi must be an argument name"
+        assert isinstance(
+            self.multi, pycompat.string_types
+        ), "ormcache_multi() parameter multi must be an argument name"
 
         super(ormcache_multi, self).determine_key()
 
@@ -187,6 +193,7 @@ class ormcache_multi(ormcache):
 
 class dummy_cache(object):
     """ Cache decorator replacement to actually do no caching. """
+
     def __init__(self, *l, **kw):
         pass
 
@@ -204,7 +211,7 @@ def log_ormcache_stats(sig=None, frame=None):
     import threading
 
     me = threading.currentThread()
-    me_dbname = getattr(me, 'dbname', 'n/a')
+    me_dbname = getattr(me, "dbname", "n/a")
     entries = defaultdict(int)
     for dbname, reg in Registry.registries.items():
         for key in reg.cache:
@@ -213,8 +220,16 @@ def log_ormcache_stats(sig=None, frame=None):
         dbname, model_name, method = key
         me.dbname = dbname
         stat = STAT[key]
-        _logger.info("%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                     count, stat.hit, stat.miss, stat.err, stat.ratio, model_name, method.__name__)
+        _logger.info(
+            "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+            count,
+            stat.hit,
+            stat.miss,
+            stat.err,
+            stat.ratio,
+            model_name,
+            method.__name__,
+        )
 
     me.dbname = me_dbname
 
@@ -226,6 +241,7 @@ def get_cache_key_counter(bound_method, *args, **kwargs):
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter
+
 
 # For backward compatibility
 cache = ormcache

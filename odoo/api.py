@@ -32,17 +32,30 @@
 """
 
 __all__ = [
-    'Environment',
-    'Meta', 'guess', 'noguess',
-    'model', 'multi', 'one',
-    'model_cr', 'model_cr_context',
-    'cr', 'cr_context',
-    'cr_uid', 'cr_uid_context',
-    'cr_uid_id', 'cr_uid_id_context',
-    'cr_uid_ids', 'cr_uid_ids_context',
-    'cr_uid_records', 'cr_uid_records_context',
-    'constrains', 'depends', 'onchange', 'returns',
-    'call_kw',
+    "Environment",
+    "Meta",
+    "guess",
+    "noguess",
+    "model",
+    "multi",
+    "one",
+    "model_cr",
+    "model_cr_context",
+    "cr",
+    "cr_context",
+    "cr_uid",
+    "cr_uid_context",
+    "cr_uid_id",
+    "cr_uid_id_context",
+    "cr_uid_ids",
+    "cr_uid_ids_context",
+    "cr_uid_records",
+    "cr_uid_records_context",
+    "constrains",
+    "depends",
+    "onchange",
+    "returns",
+    "call_kw",
 ]
 
 import logging
@@ -71,23 +84,33 @@ _logger = logging.getLogger(__name__)
 #  - method._orig: original method
 #
 
-WRAPPED_ATTRS = ('__module__', '__name__', '__doc__', '_constrains',
-                 '_depends', '_onchange', '_returns', 'clear_cache')
+WRAPPED_ATTRS = (
+    "__module__",
+    "__name__",
+    "__doc__",
+    "_constrains",
+    "_depends",
+    "_onchange",
+    "_returns",
+    "clear_cache",
+)
 
-INHERITED_ATTRS = ('_returns',)
+INHERITED_ATTRS = ("_returns",)
 
 
 class Params(object):
+
     def __init__(self, args, kwargs):
         self.args = args
         self.kwargs = kwargs
+
     def __str__(self):
         params = []
         for arg in self.args:
             params.append(repr(arg))
         for item in sorted(self.kwargs.items()):
             params.append("%s=%r" % item)
-        return ', '.join(params)
+        return ", ".join(params)
 
 
 class Meta(type):
@@ -101,19 +124,24 @@ class Meta(type):
         parent = type.__new__(meta, name, bases, {})
 
         for key, value in list(attrs.items()):
-            if not key.startswith('__') and callable(value):
+            if not key.startswith("__") and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
 
                 # guess calling convention if none is given
-                if not hasattr(value, '_api'):
+                if not hasattr(value, "_api"):
                     try:
                         value = guess(value)
                     except TypeError:
                         pass
 
-                if (getattr(value, '_api', None) or '').startswith('cr'):
-                    _logger.warning("Deprecated method %s.%s in module %s", name, key, attrs.get('__module__'))
+                if (getattr(value, "_api", None) or "").startswith("cr"):
+                    _logger.warning(
+                        "Deprecated method %s.%s in module %s",
+                        name,
+                        key,
+                        attrs.get("__module__"),
+                    )
 
                 attrs[key] = value
 
@@ -123,6 +151,7 @@ class Meta(type):
 def attrsetter(attr, value):
     """ Return a function that sets ``attr`` on its argument and returns it. """
     return lambda method: setattr(method, attr, value) or method
+
 
 def propagate(method1, method2):
     """ Propagate decorators from ``method1`` to ``method2``, and return the
@@ -164,7 +193,7 @@ def constrains(*args):
         value).
 
     """
-    return attrsetter('_constrains', args)
+    return attrsetter("_constrains", args)
 
 
 def onchange(*args):
@@ -195,7 +224,7 @@ def onchange(*args):
             (fields of relational fields e.g. ``partner_id.tz``) are not
             supported and will be ignored
     """
-    return attrsetter('_onchange', args)
+    return attrsetter("_onchange", args)
 
 
 def depends(*args):
@@ -218,9 +247,9 @@ def depends(*args):
     """
     if args and callable(args[0]):
         args = args[0]
-    elif any('id' in arg.split('.') for arg in args):
+    elif any("id" in arg.split(".") for arg in args):
         raise NotImplementedError("Compute method cannot depend on field 'id'.")
-    return attrsetter('_depends', args)
+    return attrsetter("_depends", args)
 
 
 def returns(model, downgrade=None, upgrade=None):
@@ -257,12 +286,12 @@ def returns(model, downgrade=None, upgrade=None):
         a decorated existing method will be decorated with the same
         ``@returns(model)``.
     """
-    return attrsetter('_returns', (model, downgrade, upgrade))
+    return attrsetter("_returns", (model, downgrade, upgrade))
 
 
 def downgrade(method, value, self, args, kwargs):
     """ Convert ``value`` returned by ``method`` on ``self`` to traditional style. """
-    spec = getattr(method, '_returns', None)
+    spec = getattr(method, "_returns", None)
     if not spec:
         return value
     _, convert, _ = spec
@@ -276,11 +305,11 @@ def downgrade(method, value, self, args, kwargs):
 
 def aggregate(method, value, self):
     """ Aggregate record-style ``value`` for a method decorated with ``@one``. """
-    spec = getattr(method, '_returns', None)
+    spec = getattr(method, "_returns", None)
     if spec:
         # value is a list of instances, concatenate them
         model, _, _ = spec
-        if model == 'self':
+        if model == "self":
             return sum(value, self.browse())
         elif model:
             return sum(value, self.env[model])
@@ -295,7 +324,7 @@ def split_context(method, args, kwargs):
     if pos < len(args):
         return args[pos], args[:pos], kwargs
     else:
-        return kwargs.pop('context', None), args, kwargs
+        return kwargs.pop("context", None), args, kwargs
 
 
 def model(method):
@@ -315,7 +344,7 @@ def model(method):
 
         Notice that no ``ids`` are passed to the method in the traditional style.
     """
-    method._api = 'model'
+    method._api = "model"
     return method
 
 
@@ -334,7 +363,7 @@ def multi(method):
 
             model.method(cr, uid, ids, args, context=context)
     """
-    method._api = 'multi'
+    method._api = "multi"
     return method
 
 
@@ -365,12 +394,13 @@ def one(method):
             iterate on the ``self`` recordset or ensure that the recordset
             is a single record with :meth:`~odoo.models.Model.ensure_one`.
     """
+
     def loop(method, self, *args, **kwargs):
         result = [method(rec, *args, **kwargs) for rec in self]
         return aggregate(method, result, self)
 
     wrapper = decorator(loop, method)
-    wrapper._api = 'one'
+    wrapper._api = "one"
     return wrapper
 
 
@@ -392,7 +422,7 @@ def model_cr(method):
         Notice that no ``uid``, ``ids``, ``context`` are passed to the method in
         the traditional style.
     """
-    method._api = 'model_cr'
+    method._api = "model_cr"
     return method
 
 
@@ -414,7 +444,7 @@ def model_cr_context(method):
         Notice that no ``uid``, ``ids`` are passed to the method in the
         traditional style.
     """
-    method._api = 'model_cr_context'
+    method._api = "model_cr_context"
     return method
 
 
@@ -427,19 +457,19 @@ def cr(method):
 
             model.method(cr, args)
     """
-    method._api = 'cr'
+    method._api = "cr"
     return method
 
 
 def cr_context(method):
     """ Decorate a traditional-style method that takes ``cr``, ``context`` as parameters. """
-    method._api = 'cr_context'
+    method._api = "cr_context"
     return method
 
 
 def cr_uid(method):
     """ Decorate a traditional-style method that takes ``cr``, ``uid`` as parameters. """
-    method._api = 'cr_uid'
+    method._api = "cr_uid"
     return method
 
 
@@ -453,7 +483,7 @@ def cr_uid_context(method):
 
             model.method(cr, uid, args, context=context)
     """
-    method._api = 'cr_uid_context'
+    method._api = "cr_uid_context"
     return method
 
 
@@ -462,7 +492,7 @@ def cr_uid_id(method):
         parameters. Such a method may be called in both record and traditional
         styles. In the record style, the method automatically loops on records.
     """
-    method._api = 'cr_uid_id'
+    method._api = "cr_uid_id"
     return method
 
 
@@ -481,7 +511,7 @@ def cr_uid_id_context(method):
 
             model.method(cr, uid, id, args, context=context)
     """
-    method._api = 'cr_uid_id_context'
+    method._api = "cr_uid_id_context"
     return method
 
 
@@ -490,7 +520,7 @@ def cr_uid_ids(method):
         parameters. Such a method may be called in both record and traditional
         styles.
     """
-    method._api = 'cr_uid_ids'
+    method._api = "cr_uid_ids"
     return method
 
 
@@ -511,7 +541,7 @@ def cr_uid_ids_context(method):
 
         It is generally not necessary, see :func:`guess`.
     """
-    method._api = 'cr_uid_ids_context'
+    method._api = "cr_uid_ids_context"
     return method
 
 
@@ -530,7 +560,7 @@ def cr_uid_records(method):
 
             model.method(cr, uid, records, args)
     """
-    method._api = 'cr_uid_records'
+    method._api = "cr_uid_records"
     return method
 
 
@@ -549,7 +579,7 @@ def cr_uid_records_context(method):
 
             model.method(cr, uid, records, args, context=context)
     """
-    method._api = 'cr_uid_records_context'
+    method._api = "cr_uid_records_context"
     return method
 
 
@@ -598,9 +628,9 @@ def v8(method_v8):
 
         Note that the wrapper method uses the docstring of the first method.
     """
-    if method_v8.__name__ == 'read':
+    if method_v8.__name__ == "read":
         return multi(method_v8)
-    method_v8._api = 'v8'
+    method_v8._api = "v8"
     return method_v8
 
 
@@ -626,31 +656,31 @@ def guess(method):
         Method calls are considered traditional style when their first parameter
         is a database cursor.
     """
-    if hasattr(method, '_api'):
+    if hasattr(method, "_api"):
         return method
 
     # introspection on argument names to determine api style
     args, vname, kwname, defaults = getargspec(method)
     names = tuple(args) + (None,) * 4
 
-    if names[0] == 'self':
-        if names[1] in ('cr', 'cursor'):
-            if names[2] in ('uid', 'user'):
-                if names[3] == 'ids':
-                    if 'context' in names or kwname:
+    if names[0] == "self":
+        if names[1] in ("cr", "cursor"):
+            if names[2] in ("uid", "user"):
+                if names[3] == "ids":
+                    if "context" in names or kwname:
                         return cr_uid_ids_context(method)
                     else:
                         return cr_uid_ids(method)
-                elif names[3] == 'id' or names[3] == 'res_id':
-                    if 'context' in names or kwname:
+                elif names[3] == "id" or names[3] == "res_id":
+                    if "context" in names or kwname:
                         return cr_uid_id_context(method)
                     else:
                         return cr_uid_id(method)
-                elif 'context' in names or kwname:
+                elif "context" in names or kwname:
                     return cr_uid_context(method)
                 else:
                     return cr_uid(method)
-            elif 'context' in names:
+            elif "context" in names:
                 return cr_context(method)
             else:
                 return cr(method)
@@ -661,8 +691,7 @@ def guess(method):
 
 def expected(decorator, func):
     """ Decorate ``func`` with ``decorator`` if ``func`` is not wrapped yet. """
-    return decorator(func) if not hasattr(func, '_api') else func
-
+    return decorator(func) if not hasattr(func, "_api") else func
 
 
 def call_kw_model(method, self, args, kwargs):
@@ -672,6 +701,7 @@ def call_kw_model(method, self, args, kwargs):
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
 
+
 def call_kw_multi(method, self, args, kwargs):
     ids, args = args[0], args[1:]
     context, args, kwargs = split_context(method, args, kwargs)
@@ -680,10 +710,11 @@ def call_kw_multi(method, self, args, kwargs):
     result = method(recs, *args, **kwargs)
     return downgrade(method, result, recs, args, kwargs)
 
+
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
     method = getattr(type(model), name)
-    if getattr(method, '_api', None) == 'model':
+    if getattr(method, "_api", None) == "model":
         return call_kw_model(method, model, args, kwargs)
     else:
         return call_kw_multi(method, model, args, kwargs)
@@ -710,7 +741,7 @@ class Environment(Mapping):
     @contextmanager
     def manage(cls):
         """ Context manager for a set of environments. """
-        if hasattr(cls._local, 'environments'):
+        if hasattr(cls._local, "environments"):
             yield
         else:
             try:
@@ -741,8 +772,8 @@ class Environment(Mapping):
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._protected = StackMap()                # {field: ids, ...}
-        self.dirty = defaultdict(set)               # {record: set(field_name), ...}
+        self._protected = StackMap()  # {field: ids, ...}
+        self.dirty = defaultdict(set)  # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
         return self
@@ -790,17 +821,19 @@ class Environment(Mapping):
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ return the record corresponding to the given ``xml_id`` """
-        return self['ir.model.data'].xmlid_to_object(xml_id, raise_if_not_found=raise_if_not_found)
+        return self["ir.model.data"].xmlid_to_object(
+            xml_id, raise_if_not_found=raise_if_not_found
+        )
 
     @property
     def user(self):
         """ return the current user (as an instance) """
-        return self(user=SUPERUSER_ID)['res.users'].browse(self.uid)
+        return self(user=SUPERUSER_ID)["res.users"].browse(self.uid)
 
     @property
     def lang(self):
         """ return the current language code """
-        return self.context.get('lang')
+        return self.context.get("lang")
 
     @contextmanager
     def _do_in_mode(self, mode):
@@ -829,12 +862,12 @@ class Environment(Mapping):
         """ Context-switch to 'onchange' draft mode, which is a specialized
             draft mode used during execution of onchange methods.
         """
-        return self._do_in_mode('onchange')
+        return self._do_in_mode("onchange")
 
     @property
     def in_onchange(self):
         """ Return whether we are in 'onchange' draft mode. """
-        return self.all.mode == 'onchange'
+        return self.all.mode == "onchange"
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
@@ -928,11 +961,12 @@ class Environment(Mapping):
 
 class Environments(object):
     """ A common object for all environments in a request. """
+
     def __init__(self):
-        self.envs = WeakSet()           # weak set of environments
-        self.cache = Cache()            # cache for all records
-        self.todo = {}                  # recomputations {field: [records]}
-        self.mode = False               # flag for draft/onchange
+        self.envs = WeakSet()  # weak set of environments
+        self.cache = Cache()  # cache for all records
+        self.todo = {}  # recomputations {field: [records]}
+        self.mode = False  # flag for draft/onchange
         self.recompute = True
 
     def add(self, env):
@@ -946,6 +980,7 @@ class Environments(object):
 
 class Cache(object):
     """ Implementation of the cache of records. """
+
     def __init__(self):
         # {field: {record_id: {key: value}}}
         self._data = defaultdict(lambda: defaultdict(dict))
@@ -990,8 +1025,10 @@ class Cache(object):
 
     def set_failed(self, records, fields, exception):
         """ Mark ``fields`` on ``records`` with the given exception. """
+
         def getter():
             raise exception
+
         for field in fields:
             for record in records:
                 self.set_special(record, field, getter)
@@ -1000,7 +1037,7 @@ class Cache(object):
         """ Return the fields with a value for ``record``. """
         for name, field in record._fields.items():
             key = field.cache_key(record)
-            if name != 'id' and key in self._data[field].get(record.id, ()):
+            if name != "id" and key in self._data[field].get(record.id, ()):
                 yield field
 
     def get_records(self, model, field):
@@ -1022,7 +1059,9 @@ class Cache(object):
             src_key = field.cache_key(src)
             dst_key = field.cache_key(dst)
             for record_cache in field_cache.values():
-                if src_key in record_cache and not isinstance(record_cache[src_key], SpecialValue):
+                if src_key in record_cache and not isinstance(
+                    record_cache[src_key], SpecialValue
+                ):
                     # But not if it's a SpecialValue, which often is an access error
                     # because the other environment (eg. sudo()) is well expected to have access.
                     record_cache[dst_key] = record_cache[src_key]
@@ -1062,22 +1101,24 @@ class Cache(object):
             for record in records:
                 try:
                     cached = field_dump[record.id]
-                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    cached = (
+                        cached.get() if isinstance(cached, SpecialValue) else cached
+                    )
                     value = field.convert_to_record(cached, record)
                     fetched = record[field.name]
                     if fetched != value:
-                        info = {'cached': value, 'fetched': fetched}
+                        info = {"cached": value, "fetched": fetched}
                         invalids.append((record, field, info))
                 except (AccessError, MissingError):
                     pass
 
         if invalids:
-            raise UserError('Invalid cache for fields\n' + pformat(invalids))
+            raise UserError("Invalid cache for fields\n" + pformat(invalids))
 
 
 class SpecialValue(object):
     """ Wrapper for a function to get the cached value of a field. """
-    __slots__ = ['get']
+    __slots__ = ["get"]
 
     def __init__(self, getter):
         self.get = getter

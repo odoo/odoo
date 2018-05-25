@@ -4,14 +4,17 @@ import threading
 
 from .func import synchronized
 
-__all__ = ['LRU']
+__all__ = ["LRU"]
+
 
 class LRUNode(object):
-    __slots__ = ['prev', 'next', 'me']
+    __slots__ = ["prev", "next", "me"]
+
     def __init__(self, prev, me):
         self.prev = prev
         self.me = me
         self.next = None
+
 
 class LRU(object):
     """
@@ -20,6 +23,7 @@ class LRU(object):
     http://pype.sourceforge.net
     Copyright 2003 Josiah Carlson.
     """
+
     def __init__(self, count, pairs=[]):
         self._lock = threading.RLock()
         self.count = max(count, 1)
@@ -101,6 +105,7 @@ class LRU(object):
             cur2 = cur.next
             yield cur.me
             cur = cur2
+
     items = iteritems
 
     @synchronized()
@@ -116,8 +121,8 @@ class LRU(object):
         return list(self.d)
 
     @synchronized()
-    def pop(self,key):
-        v=self[key]
+    def pop(self, key):
+        v = self[key]
         del self[key]
         return v
 

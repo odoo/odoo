@@ -39,13 +39,14 @@ def raise_keyboard_interrupt(*a):
 
 
 class Console(code.InteractiveConsole):
+
     def __init__(self, locals=None, filename="<console>"):
         code.InteractiveConsole.__init__(self, locals, filename)
         try:
             import readline
             import rlcompleter
         except ImportError:
-            print('readline or rlcompleter not available, autocomplete disabled.')
+            print("readline or rlcompleter not available, autocomplete disabled.")
         else:
             readline.set_completer(rlcompleter.Completer(locals).complete)
             readline.parse_and_bind("tab: complete")
@@ -53,7 +54,7 @@ class Console(code.InteractiveConsole):
 
 class Shell(Command):
     """Start odoo in an interactive shell"""
-    supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
+    supported_shells = ["ipython", "ptpython", "bpython", "python"]
 
     def init(self, args):
         config.parse_config(args)
@@ -63,17 +64,20 @@ class Shell(Command):
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
-            local_vars['__name__'] = '__main__'
+            local_vars["__name__"] = "__main__"
             exec(sys.stdin.read(), local_vars)
         else:
-            if 'env' not in local_vars:
-                print('No environment set, use `%s shell -d dbname` to get one.' % sys.argv[0])
+            if "env" not in local_vars:
+                print(
+                    "No environment set, use `%s shell -d dbname` to get one."
+                    % sys.argv[0]
+                )
             for i in sorted(local_vars):
-                print('%s: %s' % (i, local_vars[i]))
+                print("%s: %s" % (i, local_vars[i]))
 
-            preferred_interface = config.options.get('shell_interface')
+            preferred_interface = config.options.get("shell_interface")
             if preferred_interface:
-                shells_to_try = [preferred_interface, 'python']
+                shells_to_try = [preferred_interface, "python"]
             else:
                 shells_to_try = self.supported_shells
 
@@ -88,33 +92,33 @@ class Shell(Command):
 
     def ipython(self, local_vars):
         from IPython import start_ipython
+
         start_ipython(argv=[], user_ns=local_vars)
 
     def ptpython(self, local_vars):
         from ptpython.repl import embed
+
         embed({}, local_vars)
 
     def bpython(self, local_vars):
         from bpython import embed
+
         embed(local_vars)
 
     def python(self, local_vars):
         Console(locals=local_vars).interact()
 
     def shell(self, dbname):
-        local_vars = {
-            'openerp': odoo,
-            'odoo': odoo,
-        }
+        local_vars = {"openerp": odoo, "odoo": odoo}
         with odoo.api.Environment.manage():
             if dbname:
                 registry = odoo.registry(dbname)
                 with registry.cursor() as cr:
                     uid = odoo.SUPERUSER_ID
-                    ctx = odoo.api.Environment(cr, uid, {})['res.users'].context_get()
+                    ctx = odoo.api.Environment(cr, uid, {})["res.users"].context_get()
                     env = odoo.api.Environment(cr, uid, ctx)
-                    local_vars['env'] = env
-                    local_vars['self'] = env.user
+                    local_vars["env"] = env
+                    local_vars["self"] = env.user
                     self.console(local_vars)
                     cr.rollback()
             else:
@@ -122,5 +126,5 @@ class Shell(Command):
 
     def run(self, args):
         self.init(args)
-        self.shell(config['db_name'])
+        self.shell(config["db_name"])
         return 0

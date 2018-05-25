@@ -27,7 +27,7 @@ class RPC(Controller):
             response = self._xmlrpc(service)
         except Exception as error:
             response = wsgi_server.xmlrpc_handle_exception_string(error)
-        return Response(response=response, mimetype='text/xml')
+        return Response(response=response, mimetype="text/xml")
 
     @route("/xmlrpc/2/<service>", auth="none", method="POST", csrf=False)
     def xmlrpc_2(self, service):
@@ -36,9 +36,9 @@ class RPC(Controller):
             response = self._xmlrpc(service)
         except Exception as error:
             response = wsgi_server.xmlrpc_handle_exception_int(error)
-        return Response(response=response, mimetype='text/xml')
+        return Response(response=response, mimetype="text/xml")
 
-    @route('/jsonrpc', type='json', auth="none")
+    @route("/jsonrpc", type="json", auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
