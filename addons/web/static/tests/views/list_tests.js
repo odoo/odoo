@@ -3418,6 +3418,47 @@ QUnit.module('Views', {
         testUtils.unpatch(mixins.ParentedMixin);
     });
 
+    QUnit.test('concurrent reloads finishing in inverse order', function (assert) {
+        assert.expect(3);
+
+        var blockSearchRead = false;
+        var def = $.Deferred();
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read' && blockSearchRead) {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should contain 4 records");
+
+        // reload with a domain (this request is blocked)
+        blockSearchRead = true;
+        list.reload({domain: [['foo', '=', 'yop']]});
+
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should still contain 4 records (search_read being blocked)");
+
+        // reload without the domain
+        blockSearchRead = false;
+        list.reload({domain: []});
+
+        // unblock the RPC
+        def.resolve();
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should still contain 4 records");
+
+        list.destroy();
+    });
+
     QUnit.test('list view on a "noCache" model', function (assert) {
         assert.expect(8);
 
