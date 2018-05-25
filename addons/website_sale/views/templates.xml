@@ -1649,11 +1649,12 @@
 
     <template id="portal_order_page_products_links" name="Orders Followup Products Links" inherit_id="sale.portal_order_page">
         <xpath expr="//div[@id='product_name']/*" position="replace">
+            <!-- for the 2 fields below, we are using t-field instead of t-esc so that new lines in the description will be displayed correctly -->
             <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
-                <span t-esc="ol.name" />
+                <span t-field="ol.name" />
             </a>
             <t t-if="not ol.product_id.website_published">
-                <span t-esc="ol.name" />
+                <span t-field="ol.name" />
             </t>
         </xpath>
     </template>
