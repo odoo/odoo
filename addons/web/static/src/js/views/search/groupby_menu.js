@@ -85,7 +85,7 @@ var GroupByMenu = DropdownMenu.extend({
             category: 'groupByCategory',
             title: 'Group By',
             icon: 'fa fa-bars',
-            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : false,
+            symbol: this.isMobile ? 'fa fa-chevron-right float-right mt4' : false,
             style: style,
         };
         this._super(parent, dropdownHeader, groupbys, options);

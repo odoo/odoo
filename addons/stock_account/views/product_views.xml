@@ -41,7 +41,7 @@
                         <field name="standard_price"
                             attrs="{'readonly':[('valuation','=','real_time')]}"
                             widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"
-                            class="pull-left"/>
+                            class="float-left"/>
                         <div name="update_cost_price" class="col-lg-2">
                             <button string="Update Cost" type="action"
                             name="%(action_view_change_standard_price)d"
@@ -77,7 +77,7 @@
                             <label for="standard_price"/>
                             <field name="standard_price"
                                 attrs="{'readonly':[('valuation','=','real_time')]}"
-                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="pull-left"/>
+                                widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" class="float-left"/>
                             <div name="update_cost_price" class="col-lg-2">
                                 <button string="Update Cost" type="action"
                                 name="%(action_view_change_standard_price)d"

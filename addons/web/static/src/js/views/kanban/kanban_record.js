@@ -349,7 +349,7 @@ var KanbanRecord = Widget.extend({
     _setFieldDisplay: function ($el, fieldName) {
         // attribute display
         if (this.fieldsInfo[fieldName].display === 'right') {
-            $el.addClass('pull-right');
+            $el.addClass('float-right');
         } else if (this.fieldsInfo[fieldName].display === 'full') {
             $el.addClass('o_text_block');
         }

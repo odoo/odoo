@@ -128,7 +128,7 @@
                             <h3>The Team</h3>
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
-                                    <div class="pull-left" t-if='user.image_small'>
+                                    <div class="float-left" t-if='user.image_small'>
                                         <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
                                             class="rounded" t-att-alt="user.name"/>
                                     </div>
@@ -161,7 +161,7 @@
                                 <div class="col-lg-6 offset-lg-3">
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
-                                            <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
+                                            <a class="float-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
                                                 <img t-att-src="channel.image_small and ('data:image/png;base64,' + to_text(channel.image_small)) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">

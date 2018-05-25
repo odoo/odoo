@@ -229,7 +229,7 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="col-6">
-                                        <span class="pull-right"><field name="type"/></span>
+                                        <span class="float-right"><field name="type"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -1030,7 +1030,7 @@
                                     <div class="col-6">
                                         <strong><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
-                                    <div class="col-6 pull-right text-right">
+                                    <div class="col-6 float-right text-right">
                                         <span class="badge badge-pill"><t t-esc="record.type_tax_use.value"/></span>
                                     </div>
                                 </div>
@@ -1474,7 +1474,7 @@
                                         <span><field name="currency_id" invisible="1"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="pull-right">
+                                        <span class="float-right">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'posted': 'success'}}"/>
                                         </span>
                                     </div>

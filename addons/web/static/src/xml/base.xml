@@ -143,7 +143,7 @@
 </div>
 <div t-name="CrashManager.error" class="o_dialog_error">
     <div class="alert alert-warning clearfix" role="alert">
-        <button class="btn btn-primary pull-right ml8 o_clipboard_button">
+        <button class="btn btn-primary float-right ml8 o_clipboard_button">
             <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
         </button>
         <p><b>An error occurred</b></p>
@@ -926,8 +926,8 @@
     <div class="o_field_image" aria-atomic="true">
         <t t-if="widget.mode !== 'readonly'">
             <div class="o_form_image_controls">
-                <button class="fa fa-pencil fa-lg pull-left o_select_file_button" title="Edit" aria-label="Edit"/>
-                <button class="fa fa-trash-o fa-lg pull-right o_clear_file_button" title="Clear" aria-label="Clear"/>
+                <button class="fa fa-pencil fa-lg float-left o_select_file_button" title="Edit" aria-label="Edit"/>
+                <button class="fa fa-trash-o fa-lg float-right o_clear_file_button" title="Clear" aria-label="Clear"/>
 
                 <span class="o_form_binary_progress">Uploading...</span>
                 <t t-call="HiddenInputFile">
@@ -1040,7 +1040,7 @@
         <div t-foreach="widget.value.data" t-as="file" class="oe_attachment">
             <t t-if="!file.data.upload">
                 <div>
-                    <a href="#" class="fa fa-times pull-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
+                    <a href="#" class="fa fa-times float-right oe_delete" title="Delete this file" aria-label="Delete this file" t-att-data-id="file.data.id"/>
                     <t t-raw="file.data.name || file.data.filename"/>
                 </div>
                 <a class="o_image" target="_blank" t-att-href="widget.metadata[file.id] ? widget.metadata[file.id].url : false"
@@ -1138,11 +1138,11 @@
         <button class="o_enable_searchview btn fa fa-search"/>
         <div class="o_mobile_search o_hidden">
             <div class="o_mobile_search_header">
-                <span class="o_mobile_search_close pull-left mt16 mb16 mr8 ml16">
+                <span class="o_mobile_search_close float-left mt16 mb16 mr8 ml16">
                     <i class="fa fa-arrow-left"/>
-                    <strong class="pull-right ml8">FILTER</strong>
+                    <strong class="float-right ml8">FILTER</strong>
                 </span>
-                <span class="pull-right o_mobile_search_clear_facets mt16 mr16">CLEAR</span>
+                <span class="float-right o_mobile_search_clear_facets mt16 mr16">CLEAR</span>
             </div>
             <div class="o_searchview_input_container"/>
             <div class="o_mobile_search_filter o_search_options mb8 mt8 ml16 mr16"/>
@@ -1273,7 +1273,7 @@
 
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
     <button t-attf-class="o_dropdown_toggler_btn btn btn-secondary dropdown-toggle#{widget.isMobile ? ' o-no-caret' : ''}" data-toggle="dropdown" aria-expanded="false" tabindex="-1" aria-label="Favorites" title="Favorites">
-        <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right pull-right mt4"/>
+        <span class="fa fa-star"/> Favorites <span t-if="widget.isMobile" class="fa fa-chevron-right float-right mt4"/>
     </button>
     <div class="dropdown-menu o_favorites_menu" role="menu">
         <div class="dropdown-divider user_filter"/>
@@ -1339,7 +1339,7 @@
         </div>
         <div class="o_right_panel">
             <h4>
-                <a href="#" class="pull-right o_toggle_save_list">Save fields list</a>
+                <a href="#" class="float-right o_toggle_save_list">Save fields list</a>
                 Fields to export
             </h4>
             <div class="o_save_list"/>

@@ -76,7 +76,7 @@ var FiltersMenu = DropdownMenu.extend({
             category: 'filterCategory',
             title: 'Filters',
             icon: 'fa fa-filter',
-            symbol: this.isMobile ? 'fa fa-chevron-right pull-right mt4' : false,
+            symbol: this.isMobile ? 'fa fa-chevron-right float-right mt4' : false,
         };
         this._super(parent, dropdownHeader, filters, this.fields);
     },

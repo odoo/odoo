@@ -231,15 +231,15 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12 o_kanban_primary_left" style="position:absolute; bottom:10px;" name="wc_stages">
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status pull-right"
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-right"
                                                 title="No workorder currently in progress. Click to mark work center as blocked."
                                                 aria-label="No workorder currently in progress. Click to mark work center as blocked."
                                                 attrs="{'invisible': [('working_state','in',('blocked','done'))]}"/>
-                                            <a name="unblock" type="object" class=" o_status o_status_red pull-right"
+                                            <a name="unblock" type="object" class=" o_status o_status_red float-right"
                                                 title="Workcenter blocked, click to unblock."
                                                 aria-label="Workcenter blocked, click to unblock."
                                                 attrs="{'invisible': [('working_state','in',('normal','done'))]}"/>
-                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green pull-right"
+                                            <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_green float-right"
                                                 title="Work orders in progress. Click to block work center."
                                                 aria-label="Work orders in progress. Click to block work center."
                                                 attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
@@ -491,7 +491,7 @@
                             </div>
                             <div>
                                 <strong>Is a Blocking Reason? </strong>
-                                <span class="pull-right" title="Is a Blocking Reason?">
+                                <span class="float-right" title="Is a Blocking Reason?">
                                     <field name="manual" widget="boolean"/>
                                 </span>
                             </div>

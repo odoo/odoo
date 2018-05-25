@@ -165,7 +165,7 @@
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
                                     <div class="col-2">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="40" height="40" class="oe_kanban_avatar pull-left"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="40" height="40" class="oe_kanban_avatar float-left"/>
                                     </div>
                                     <div class="col-10">
                                         <div>
@@ -183,7 +183,7 @@
                                     <i class="fa fa-calendar" role="img" aria-label="Date" title="Date"></i>
                                     <t t-esc="record.date.value"/>
                                 </span>
-                                <span class="pull-right">
+                                <span class="float-right">
                                     <strong>Duration: </strong><field name="unit_amount" widget="float_time"/>
                                 </span>
                             </div>

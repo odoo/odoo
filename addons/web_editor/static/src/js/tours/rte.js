@@ -169,7 +169,7 @@ tour.register('rte', {
 }, {
     content: "click on create link",
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
-    extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
+    extra_trigger: '#editable_area > section .row > div:first span.fa.float-right',
 }, {
     content: "insert a link url",
     trigger: 'input[name="url"]',
@@ -177,19 +177,19 @@ tour.register('rte', {
 }, {
     content: "click on color style",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
-    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
+    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.float-right',
 }, {
     content: "save link",
     trigger: '.modal-footer > .btn-primary',
-    extra_trigger: 'a#link-preview.btn.btn-success span.fa.fa-3x.pull-right',
+    extra_trigger: 'a#link-preview.btn.btn-success span.fa.fa-3x.float-right',
 }, {
     content: "click on other picture",
     trigger: '#editable_area > section .row > div:last img',
-    extra_trigger: 'body:not(:has(#link-preview)) a.btn[href^="http://"]:has(span.fa.fa-3x.pull-right)',
+    extra_trigger: 'body:not(:has(#link-preview)) a.btn[href^="http://"]:has(span.fa.fa-3x.float-right)',
 }, {
     content: "click on create link again",
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
-    extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
+    extra_trigger: '#editable_area > section .row > div:first span.fa.float-right',
 }, {
     content: "insert an email",
     trigger: 'input[name="url"]',
@@ -292,7 +292,7 @@ tour.register('rte_inline', {
             '        </td>\n'+
             '        <td valign="center" width="270">\n'+
             '          <a href="https://www.facebook.com/Odoo"><span class="fa fa-facebook-square fa-2x text-primary"></span></a>\n'+
-            '          <span style="color: rgb(255, 0, 0);" class="fa fa-4x fa-google-plus-square pull-right"></span>\n'+
+            '          <span style="color: rgb(255, 0, 0);" class="fa fa-4x fa-google-plus-square float-right"></span>\n'+
             '        </td>\n'+
             '      </tr>\n'+
             '    </tbody>\n'+

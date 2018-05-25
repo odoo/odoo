@@ -49,7 +49,7 @@
                                         <strong><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <div class="col-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.amount.value"/></span></strong>
+                                        <strong><span class="float-right text-right"><t t-esc="record.amount.value"/></span></strong>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -57,7 +57,7 @@
                                         <span><t t-esc="record.number.value"/> <t t-esc="record.date.value"/></span>
                                     </div>
                                     <div class="col-6">
-                                        <span class="pull-right text-right">
+                                        <span class="float-right text-right">
                                             <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'proforma': 'warning',
                                             'posted': 'success'}}"/>
                                         </span>

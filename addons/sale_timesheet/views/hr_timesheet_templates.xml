@@ -159,7 +159,7 @@
                                 <p>There is no timesheet for now.</p>
                             </t>
                             <t t-if="repartition_employee">
-                                <div class="pull-right o_timesheet_plan_badge">
+                                <div class="float-right o_timesheet_plan_badge">
                                     <span class="badge badge-pill o_progress_billable_fixed">
                                         <a type="action" t-att-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])">Billable fixed</a>
                                     </span>

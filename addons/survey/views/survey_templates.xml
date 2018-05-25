@@ -98,7 +98,7 @@
 
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
-        <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
+        <div groups="website.group_website_publisher" t-ignore="true" class="float-right">
             <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-secondary">Back to Survey</a>
         </div>
     </template>
@@ -124,11 +124,11 @@
             </body>
             <xpath expr="//footer" position="replace">
                 <div class="container mt16 mb8">
-                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                    <div class="float-right" t-ignore="true" t-if="not editable">
                         Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
                         <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
                     </div>
-                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                    <div class="float-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
                         Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
     <!-- A page -->
     <template id="page" name="Page">
         <div class="page-header">
-            <p class="pull-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
+            <p class="float-right">Page <span t-raw='page_nr + 1'/> of <span t-raw="len(survey.page_ids)"/></p>
             <h1 t-field='page.title' />
             <div t-field='page.description' class="oe_no_empty"/>
         </div>

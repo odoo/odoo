@@ -3,12 +3,12 @@
         <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <t t-if="order.amount_total and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and payment_tx_id.state != 'done'" name="portal_confirmation_pay">
-                <a class="btn btn-primary ml8 pull-right" href="#portal_pay" role="button">
+                <a class="btn btn-primary ml8 float-right" href="#portal_pay" role="button">
                     <i class="fa fa-arrow-circle-right"/> Pay Now
                 </a>
             </t>
             <t t-if="invoices and order.state in ('sale', 'done') and portal_confirmation == 'pay'">
-                <a role="button" class="btn btn-primary ml8 pull-right" disabled="disabled">
+                <a role="button" class="btn btn-primary ml8 float-right" disabled="disabled">
                     <i class="fa fa-check-circle"/> Done
                 </a>
             </t>

@@ -40,8 +40,8 @@
                 <a class="btn btn-primary btn-block o_browse_apps" role="button"><strong>Browse Apps</strong></a>
             </div>
             <div class="o_web_settings_dashboard_pills">
-                <a href="https://www.odoo.com/apps/modules" target="_blank" class="pull-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
-                <a href="https://www.odoo.com/apps/themes" target="_blank" class="pull-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
+                <a href="https://www.odoo.com/apps/modules" target="_blank" class="float-left"><i class="fa fa-rocket fa-2x text-muted"/> App store</a>
+                <a href="https://www.odoo.com/apps/themes" target="_blank" class="float-right"><i class="fa fa-picture-o fa-2x text-muted"/> Theme store</a>
             </div>
             <div class="clearfix"/>
         </div>
@@ -130,13 +130,13 @@
             <hr/>
             <div class="row">
                 <div class="col-lg-12">
-                    <a t-if="debug != true" class="oe_activate_debug_mode pull-right" href="?debug" >Activate the developer mode</a>
+                    <a t-if="debug != true" class="oe_activate_debug_mode float-right" href="?debug" >Activate the developer mode</a>
                     <br t-if="debug != true"/>
-                    <a t-if="debug != 'assets'" class="oe_activate_debug_mode pull-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
+                    <a t-if="debug != 'assets'" class="oe_activate_debug_mode float-right" href="?debug=assets" >Activate the developer mode (with assets)</a>
                     <br t-if="debug != 'assets'"/>
-                    <a t-if="debug != false" class="oe_activate_debug_mode pull-right" href="/web" >Deactivate the developer mode</a>
+                    <a t-if="debug != false" class="oe_activate_debug_mode float-right" href="/web" >Deactivate the developer mode</a>
                     <br t-if="debug != false"/>
-                    <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode pull-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
+                    <a t-if="(debug) and !(demo_active)" class="oe_activate_debug_mode float-right o_web_settings_dashboard_force_demo" href="#">Load demo data</a>
                 </div>
             </div>
         </div>
