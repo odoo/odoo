@@ -166,7 +166,7 @@ def redirect_with_hash(url, code=303):
     # FIXME: decide whether urls should be bytes or text, apparently
     # addons/website/controllers/main.py:91 calls this with a bytes url
     # but addons/web/controllers/main.py:481 uses text... (blows up on login)
-    url = pycompat.to_text(url)
+    url = pycompat.to_text(url).strip()
     if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
         url = u'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
@@ -1318,6 +1318,15 @@ class Root(object):
     def load_addons(self):
         """ Load all addons from addons path containing static files and
         controllers and configure them.  """
+        # The ODOO_PRELOAD_ADDONS environment variable is available for version 11.0 only.
+        # Due to two implementation changes in Python 3's GIL and import system, early
+        # requests have some chances to trigger an invalid RegistryManager if they are
+        # accepted just after the server listen on the socket. This bug is only reproducible
+        # in threaded mode and the odds to happen are pretty low except when using socket
+        # activation in such case ` ODOO_PRELOAD_ADDONS=no ` should be used.
+        # Note: Odoo versions > 11.0 does not preload addons anymore.
+        preload_addons = os.environ.get('ODOO_PRELOAD_ADDONS', 'yes') == 'yes'
+
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
         for addons_path in odoo.modules.module.ad_paths:
@@ -1333,10 +1342,9 @@ class Root(object):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if 'odoo.addons' in sys.modules:
+                        m = None
+                        if 'odoo.addons' in sys.modules and preload_addons:
                             m = __import__('odoo.addons.' + module)
-                        else:
-                            m = None
                         addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static

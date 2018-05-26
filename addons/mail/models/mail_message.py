@@ -421,8 +421,18 @@ class Message(models.Model):
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
         subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
+
+        # fetch notification status
+        notif_dict = {}
+        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('is_read', '=', False)])
+        for notif in notifs:
+            mid = notif.mail_message_id.id
+            if not notif_dict.get(mid):
+                notif_dict[mid] = {'partner_id': list()}
+            notif_dict[mid]['partner_id'].append(notif.res_partner_id.id)
+
         for message in message_values:
-            message['needaction_partner_ids'] = self.env['mail.notification'].sudo().search([('mail_message_id', '=', message['id']), ('is_read', '=', False)]).mapped('res_partner_id').ids
+            message['needaction_partner_ids'] = notif_dict.get(message['id'], dict()).get('partner_id', [])
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
