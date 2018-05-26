@@ -2673,6 +2673,20 @@ msgid ""
 "\n"
 "A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a leave request is accepted by setting up a type of meeting in Leave Type.\n"
 msgstr ""
+"\n"
+"İzin isteklerini ve tahsisleri yönetin\n"
+"\n"
+"Bu uygulama, işletmenizin izin takvimini kontrol eder. Uygulama, personelin izin taleplerine izin verir. Daha sonra yöneticiler  talebi gözden geçirir ve izni onaylar yada reddederler. Bu yolla işletmenizdeki yada departmanınızdaki  tüm izin planlamalarını kontrol edebilirsiniz.\n"
+"\n"
+"İzinleri türlerine göre yapılandırabilirsiniz (hastalık, ücretli,..) ve izin tahsisini kullanarak hızlıca personele yada departmana izin tahsis edebilirsiniz. Bir personel, yeni izin ataması için birden fazla talepte bulunabilir. Bu talep, bu izin tipi için müsait günlerin toplamını artıracaktır (eğer talep kabul edilirse).\n"
+"\n"
+"İzleme raporun tarafından farklı yollarla izinler takip edebilirsin:\n"
+"\n"
+"* İzin Özeti\n"
+"* Departmana Göre İzinler\n"
+"* İzin Analizleri\n"
+"\n"
+"İzin tipi bir toplantı türünü kurarak izin isteği kabul edildiğinde bir toplantıyı otomatik olarak oluşturmak için dahili bir ajandayla (CRM modülünün toplantıları) senkronizasyon da mümkündür.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock
@@ -2909,6 +2923,18 @@ msgid ""
 "of recall defined. You can define different policies for different companies. \n"
 "\n"
 msgstr ""
+"\n"
+"Çok seviyeli geri çağrılar ile ödenmemiş faturalar için mektupları otomatikleştiren modül.\n"
+"\n"
+"Menü için çok seviyeli geri çağrıları tanımlayabilirsiniz:\n"
+"\n"
+"Yapılandırma / Takip Et / Takip Seviyeleri \n"
+"\n"
+"Bunu tanımladıktan sonra, menüden basitçe tıklayarak geri çağrıları her gün otomatik olarak yazdırabilirsiniz.\n"
+"\n"
+"Ödeme Takip Et / Email ve mektup gönder \n"
+"\n"
+" Farklı seviyelere göre bir PDF oluşturacak / email gönderecek / eylemleri manuel olarak ayarlayabilecektir. Farklı işletmeler için farklı şartlar tanımlayabilirsiniz.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_camt
@@ -2975,6 +3001,37 @@ msgid ""
 "V2.2 specifications.\n"
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 msgstr ""
+"\n"
+"CODA banka hesaplarını içe aktarmak için modül.\n"
+"\n"
+"Desteklenenler, Belçika banka hesaplarından V2 formatında CODA düz dosyalarıdır.\n"
+"\n"
+"* CODA v1 desteği\n"
+"* CODA v2.2 desteği\n"
+"* Yabancı para birimi desteği\n"
+"* Tüm veri kayıt türleri için destek (0,1,2,3,4,8,9).\n"
+"* Tüm İşlem Kodlarının ve Yapılandırılmış Format İletişiminin ayrıştırılması ve günlüğe kaydedilmesi\n"
+"* CODA konfigürasyon parametreleri ile Otomatik Finans Yevmiye ataması\n"
+"* Banka Hesap Numarası başına çoklu yevmiye desteği.\n"
+"* Tek bir CODA dosyasında farklı banka hesaplarından çoklu hesap için destek.\n"
+"* CODA Banka Hesaplarını '' sadece ayrıştırma '' desteği (CODA Banka Hesabı konfigürasyon kayıtlarında type = 'info' olarak tanımlanmıştır).\n"
+"* Çoklu dil CODA ayrıştırma, EN, NL, FR için ayrışmış yapılandırma verileri sağlanır.\n"
+"\n"
+"Makine tarafından okunabilir CODA Dosyaları, CODA Bankası Tablolarında insan tarafından okunabilir formatta ayrıştırılır ve depolanır. Ayrıca, CODA bilgilerinin bir alt kümesini (sadece Finansal Muhasebe kayıtlarının oluşturulması için gereken işlem satırlarını) içeren Banka Hesapları oluşturulmaktadır. CODA Bankası Beyanı 'salt okunur' bir nesnedir, bu nedenle orijinal CODA dosyasının güvenilir bir temsilini korurken Banka Beyanı muhasebe iş süreçlerinin gerektirdiği şekilde değiştirilir.\n"
+"\n"
+"\"Bilgi\" türü olarak yapılandırılan CODA Banka Hesapları sadece CODA Banka Beyanları oluşturacaktır.\n"
+"\n"
+"CODA işleminde bir nesnenin kaldırılması, ilişkili nesnelerin kaldırılmasıyla sonuçlanır.\n"
+"\n"
+"Birden fazla Banka Hesabı içeren bir CODA Dosyasının kaldırılması, ilgili ilişkili ifadeleri de kaldıracaktır.\n"
+"\n"
+"Oluşturulan BankaHesaplarının manuel olarak ayarlanması yerine, OpenERP veritabanını otomatik mutabakat sağlamak için eksik olan bilgilerle güncelledikten sonra CODA'yı yeniden içe aktarabilirsiniz.\n"
+"\n"
+"CODA V1 desteği hakkında açıklama:\n"
+"\n"
+"Bazı durumlarda bir işlem kodu, işlem kategorisi veya yapılandırılmış iletişim kodu, CODA V2'de yeni veya daha açık bir tanım verilmiştir.\n"
+"CODA yapılandırma tabloları tarafından sağlanan açıklama, CODA V2.2 özelliklerine dayanmaktadır.\n"
+"Gerekirse, açıklamaları CODA yapılandırma menüsü üzerinden elle ayarlayabilirsiniz.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_csv
@@ -2991,6 +3048,14 @@ msgid ""
 "Because of the CSV format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"CSV hesap özetlerini içe aktarım modülü\n"
+"\n"
+"Bu modül, CSV dosyalarını Odoo'ya atmanıza izin verir: Muhasebe ve Banka / Kasa ve Hesap özetleri insan tarafından okunabilir formatta ayrıştırılır ve depolanır.\n"
+"\n"
+"Önemli Not\n"
+"\n"
+"CSV formatının sınırlılığından dolayı aynı işlemlerin birkaç defa içe aktarılmadığından yada çoklu para birimi ileişlemediğinden emin olamıyoruz.. Mümkün olunca, OFX gibi daha uygun bir format kullanmalısınız.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -3006,6 +3071,12 @@ msgid ""
 "creation of the Financial Accounting records).\n"
 "    "
 msgstr ""
+"\n"
+"OFX banka hesapları içe aktarım modülü.\n"
+"\n"
+"Bu modül makinede okunan OFX dosyalarının Odoo'ya aktarılmasına izin verir: Muhasebe ve Banka / Kasa ve Hesap özetleri insan tarafından okunabilir formatta ayrıştırılır ve depolanır.\n"
+"\n"
+"OFX bilgilerinin bir alt kümesini içeren Banka Hesap Özetleri oluşturulabilir (sadece Mali Muhasebe kayıtlarının oluşturulması için gereken işlem satırları)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_qif
@@ -3022,6 +3093,14 @@ msgid ""
 "Because of the QIF format limitation, we cannot ensure the same transactions aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"QIF hesap özetlerini içe aktarım modülü\n"
+"\n"
+"Bu modül, QIF dosyalarını Odoo'ya atmanıza izin verir: Muhasebe ve Banka / Kasa ve Hesap özetleri insan tarafından okunabilir formatta ayrıştırılır ve depolanır.\n"
+"\n"
+"Önemli Not\n"
+"\n"
+"QIF formatının sınırlılığından dolayı aynı işlemlerin birkaç defa içe aktarılmadığından yada çoklu para birimi ileişlemediğinden emin olamıyoruz.. Mümkün olunca, OFX gibi daha uygun bir format kullanmalısınız.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_expense
@@ -3049,6 +3128,12 @@ msgid ""
 "    - sets up New Zealand taxes.\n"
 "    "
 msgstr ""
+"\n"
+"Yeni Zelanda Muhasebe Modülü\n"
+"Yeni Zelanda muhasebesi temel grafikler ve yerelleştirmeler.\n"
+"Ayrıca:\n"
+"- bir dizi bölgesel para birimini etkinleştirir.\n"
+"- Yeni Zelanda vergilerini ayarla."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -3085,6 +3170,12 @@ msgid ""
 "\n"
 "In future this module will include some payroll rules for ME .\n"
 msgstr ""
+"\n"
+"Birçok Arap ülkesi ve Suudi Arabistan için Odoo Arap yerelleştirmesi.\n"
+"\n"
+"Bu başlangıç olarak Amerikan hesap planından Arapçaya çeviriyi içerir.\n"
+"\n"
+"Gelecekte bu modül ME için bazı ödeme kuralları içerecektir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_blog
@@ -3115,6 +3206,8 @@ msgid ""
 "Odoo Customer References\n"
 "===========================\n"
 msgstr ""
+"\n"
+"Odoo Müşteri Referansları\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
@@ -3126,6 +3219,8 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo E-Ticaret"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -3137,6 +3232,10 @@ msgid ""
 "This module modifies the web addon to provide Enterprise design and responsiveness.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Kurumsal Web Müşteri.\n"
+"\n"
+"Bu modül bu modül, Kurumsal tasarım ve hızlı yanıt üretebilmek için web eklentisini değiştirir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_form_editor
@@ -3148,6 +3247,10 @@ msgid ""
 "Allows you to build web forms on the website using the website builder.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Form Editörü\n"
+"\n"
+"Website oluşturucuyu kullanarak website üzerinde form oluşturmanıza izin verir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mail_channel
@@ -3158,6 +3261,8 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Mail Grubu: Mail Listesi Arşivleri"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_quote
@@ -3186,6 +3291,8 @@ msgid ""
 "==========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web Editör widgetı.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web
@@ -3197,6 +3304,10 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Web çekirdek modül.\n"
+"\n"
+"Bu modül Odoo Web Kullanıcı' nın çekirdeğini sağlar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -3215,6 +3326,8 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web turları\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
@@ -3235,6 +3348,8 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Websitesi Google Haritalar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -3246,6 +3361,10 @@ msgid ""
 "It also will include the feedback tool for the livechat, and web pages to display your channel and its ratings on the website.\n"
 "        "
 msgstr ""
+"\n"
+"Odoo Website Canlı Sohbet\n"
+"Odoo CMS ile website oluşturmak için, bu modül Websitenizde bir konuşma butonu içerir ve ziyaretçilerinizin, iş ortaklarınız ile konuşmasına izin verir. \n"
+"Ayrıca, bu modül canlı sohbet için geri bildirim aracı ve kanalınız ve onun puanlamasının gösterileceği web sayfasını içerir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_settings_dashboard
@@ -3260,6 +3379,13 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Odoo panel\n"
+"\n"
+"* Uygulama yüklemeye hızlı erişim\n"
+"* Hızlı kullanıcı ekleme\n"
+"* Tek bir yerden tüm planlayıcılara erişim\n"
+"* 'App Store' ve 'Theme Store'a hızlı erişim"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track
@@ -3357,6 +3483,15 @@ msgid ""
 "* Manage your Events and Registrations\n"
 "* Use emails to automatically confirm and send acknowledgments for any event registration\n"
 msgstr ""
+"\n"
+"Etkinliklerin organizasyonu ve yönetimi\n"
+"======================================\n"
+"Etkinlik modülü etkinliklerinizi ve tüm ilişkili görevleri verimli bir şekilde organize etmenizi sağlar: planlama, kayıt izleme, katılımcılar vs.\n"
+"\n"
+"Anahtar Özellikler\n"
+"\n"
+"* Etkinliklerinizi ve Kayıtlarınızı yönetin\n"
+"* Otomatik onay ve herhangi bir etkinlik kaydı bilgilendirmesi için mailleri kullanın. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr
@@ -3380,6 +3515,8 @@ msgid ""
 "Override community website features\n"
 "    "
 msgstr ""
+"\n"
+"Topluluk web sitesi özelliklerini geçersiz kıl"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -3394,6 +3531,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Panama hesap planı ve yerel vergi.\n"
+"==============================================\n"
+"Plan contable panameño  e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"  Con la Colaboración de\n"
+"- AHMNET CORP http://www.ahmnet.com"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_geolocalize
@@ -3403,6 +3547,8 @@ msgid ""
 "========================\n"
 "    "
 msgstr ""
+"\n"
+"İş Ortakları Coğrafi Konumları"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal
@@ -3437,6 +3583,12 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Peru hesap planı ve yerel vergi.\n"
+"==============================================\n"
+"Plan contable peruano e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"SUNAT 2011 (PCGE 2010)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -3448,6 +3600,12 @@ msgid ""
 "Italian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Piano dei conti italiano di un'impresa generica.\n"
+"================================================\n"
+"\n"
+"Italyan muhasebe bilgileri ve yerelleştirme.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_homepage
@@ -3489,6 +3647,11 @@ msgid ""
 "* Different approval flows possible depending on the type of change order\n"
 "\n"
 msgstr ""
+"\n"
+"Ürün Ömrü Yönetimi\n"
+"\n"
+"* Malzeme listesi ve güzergah versiyonu\n"
+"* Değişiklik sırasının türüne bağlı olarak farklı onay akışları mümkündür.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_extended
@@ -3498,6 +3661,9 @@ msgid ""
 "  * Computes standard price from the BoM of the product with a button on the product variant based\n"
 "    on the materials in the BoM and the work centers.  It can create the necessary accounting entries when necessary.\n"
 msgstr ""
+"\n"
+"Ürün genişletme. Bu modül ekler:\n"
+"* Ürün ağaçları ve iş merkezlerindeki malzemelere dayalı olarak, ürün fiyatının üzerindeki bir düğmeyle standart fiyatı hesaplar. Gerektiğinde gerekli muhasebe girdilerini oluşturabilir. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -3545,6 +3711,13 @@ msgid ""
 "* Define your stages for the quality alerts\n"
 "\n"
 msgstr ""
+"\n"
+"Kalite Kontrol\n"
+"\n"
+"* Toplamalarda, imalat siparişlerinde veya iş emirlerinde kalite kontrolleri oluşturacak kalite noktalarını tanımlayın (quality_mrp)\n"
+"* Kalite kontrolleri için bağımsız yada ilgili olarak  kalite uyarıları oluşturulabilir.\n"
+"* Min / maks toleransı ile kalite kontrolüne bir ölçü ekleme imkanı\n"
+"* Kalite uyarılarınız için aşamalarınızı tanımlayın.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -3637,6 +3810,23 @@ msgid ""
 "(technically: Server Actions) to be triggered for each incoming mail.\n"
 "    "
 msgstr ""
+"\n"
+"POP / IMAP sunucularına gelen e-postaları alın.\n"
+"\n"
+"POP / IMAP hesabınızın parametrelerini girin ve bu hesaplardaki tüm e-postalar otomatik olarak Odoo sisteminize yüklenecektir.\n"
+"Tüm POP3 / IMAP uyumlu sunucular desteklenir, şifreli bir SSL / TLS bağlantısı gerektirenleri içerir.\n"
+"\n"
+"Bu, e-posta tabanlı Odoo belgeleri için e-posta tabanlı iş akışlarını kolayca oluşturmak için kullanılabilir, örneğin:\n"
+"\n"
+"* CRM Potansiyel Müşteri/Fırsatlar\n"
+"* CRM Talepler\n"
+"* Proje Sorunları\n"
+"* İnsan Kaynakları İşe Alımları (Başvuranlar)\n"
+"\n"
+"Sadece ilgili uygulamayı yükleyin ve bu belge türlerinden (Potansiyel Müşteri , Proje Sorunları) herhangi birini gelen e-posta hesaplarınıza atayın.Yeni e-postalar otomatik olarak seçilen türdeki yeni dokümanları oluşturur, böylece bir posta kutusu ile Odoo entegrasyonu oluşturmak çok kolaydır. Daha da iyisi: Bu belgeler e-posta ile senkronize edilen mini konuşmalar olarak doğrudan hareket eder. \n"
+"Odoo'dan cevap yazabilir ve cevaplar geri döndüklerinde otomatik olarak toplanır ve aynı * konuşma * belgesine eklenir.\n"
+"\n"
+"Daha özel gereksinimler için, gelen her posta için tetiklenecek özel tanımlı eylemler de atayabilirsiniz (teknik olarak: Sunucu Eylemleri)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_screen
@@ -3649,6 +3839,11 @@ msgid ""
 "installed screen. This module then displays this HTML using a web\n"
 "browser.\n"
 msgstr ""
+"\n"
+"Ekran Sürücüsü\n"
+"\n"
+"Bu modül, POS istemcisinin oluşturulmuş HTML'yi uzaktan yüklenen bir ekrana göndermesine izin verir.\n"
+"Bu modül daha sonra bu HTML'yi bir web tarayıcısı kullanarak görüntüler.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_digital
@@ -3656,6 +3851,8 @@ msgid ""
 "\n"
 "Sell digital product using attachments to virtual products\n"
 msgstr ""
+"\n"
+"Görsel ürün ekleri kullanarak dijital ürün satın.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_analytic_default
@@ -3700,6 +3897,15 @@ msgid ""
 " * Channel Subscription\n"
 " * Supported document types : PDF, images, YouTube videos and Google Drive documents)\n"
 msgstr ""
+"\n"
+"Videoları, Sunumları ve Belgeleri Paylaş ve Yayınla\n"
+"\n"
+"* Website Uygulamaları\n"
+"* Kanal Yönetimi\n"
+"* Filtreler ve Etiketleme\n"
+"* Sunum İstatistikleri\n"
+"* Kanal Abonelikleri\n"
+"* Desteklenen belge türleri: PDF, resimler, YouTube videoları ve Google Drive belgeleri)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sign
@@ -3710,6 +3916,10 @@ msgid ""
 "Let your customers follow the signature process easily.\n"
 "    "
 msgstr ""
+"\n"
+"Belgelerinizi kolayca imzalayın ve tamamlayın. Metin ve imza alanı ile belgenizi özelleştirin ve alıcınıza gönderin.\n"
+"\n"
+"Müşterilerinizin imza sürecini kolayca takip etmesine izin verin."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -3732,6 +3942,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Singapur hesap planı ve yerelleştirmesi.\n"
+"\n"
+"Bu modülü yükledikten sonra, muhasebe için yapılandırma sihirbazı da çalıştırılacaktır.\n"
+"* Hesap Planı, Singapur'un işlemlerini sürdürmek için gerekli olan tüm muhasebe defteri hesaplarının listesini içerir. \n"
+"* Bu özel sihirbazda, şirketin adını, takip edilecek grafik şablonunu, oluşturulacak rakamların herbirini, hesabınızın ve banka hesabınızın kodunu, yevmiyeleri oluşturmak için para birimini girmeniz istenecektir.\n"
+"* Vergiler Şeması; Standart Oranlar, Sıfırlanan, Muafiyet, MES ve Kapsam dışı gibi farklı tür / vergi gruplarını gösterecektir.\n"
+"* Vergi kanunları, Vergi Grubu dikkate alınarak ve GST Vergi Raporunun sunulmasına kolay erişim için belirlenir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -3764,6 +3982,15 @@ msgid ""
 "\n"
 "Note: Only the admin user is allowed to make those customizations.\n"
 msgstr ""
+"\n"
+"Stüdio - Odoo'yu Özelleştir\n"
+"\n"
+"Bu eklenti, kullanıcının kullanıcı arayüzünün çoğu elemanını basit ve grafiksel olarak özelleştirmesine izin verir. İki ana özelliği vardır:\n"
+"\n"
+"* Yeni bir uygulama oluşturur ( modül ekleyin, üst seviye menü öğesi ve varsayılan eylemler)\n"
+"* Varolan bir uygulamayı özelleştirir (menü düzenlemeleri, eylemler, görünümler, çeviriler,...)\n"
+"\n"
+"Not: Bu özelleştirmeler sadece yönetici kullanıcıya yapması için izin verilir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -3773,6 +4000,10 @@ msgid ""
 "=================================================================================\n"
 "This module adds a Survey mass mailing button inside the more option of lead/customers views\n"
 msgstr ""
+"\n"
+"Anket- CRM (köprü modülü)\n"
+"\n"
+"Bu modül, daha fazla müşteri / müşteri görüşü seçeneği için bir anket toplu e-posta butonu ekler.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch
@@ -3818,6 +4049,10 @@ msgid ""
 "\n"
 "Yodlee interface.\n"
 msgstr ""
+"\n"
+"Banka özet akışlarınızı Yodlee ile senkronize edin.\n"
+"\n"
+"Yodlee arayüzü. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro
@@ -3852,6 +4087,25 @@ msgid ""
 "* Voucher Payment [Customer & Vendors]\n"
 "    "
 msgstr ""
+"\n"
+"Yapılacak\n"
+"\n"
+"Eski tanım:\n"
+"Faturalama & Muhasebe Fişi Ödemesi & Alıcılar\n"
+"\n"
+"Odoo'daki özel ve kullanımı kolay Faturalama sistemi, muhasebeciniz olmasa bile, muhasebenizi takip etmenizi sağlar. Satıcılarınızı ve müşterilerinizi takip etmenin kolay bir yolunu sunar.\n"
+"\n"
+"Defterlerinizi saklamak için bir (harici) hesapla çalışmanız ve hala ödemelerinizi takip etmek istiyorsanız, bu basitleştirilmiş muhasebe yöntemini kullanabilirsiniz.\n"
+"\n"
+"Faturalama sistemi makbuzları ve kuponları içerir (satış ve alımları takip etmenin kolay bir yolu)\n"
+"\n"
+"Bu sistem, aynı zamanda, tüm hesap özetlerini kodlamak zorunda kalmadan ödemeleri kaydetmenin kolay bir yöntemini sunar.\n"
+"\n"
+"Bu modül şunları yönetir:\n"
+"\n"
+"* Fiş Girişlerini\n"
+"* Fiş Alıcılarını (Satış & Satın Alma)\n"
+"* Fiş Ödemeleri (Müşteri &Tedarikçi)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_repair
@@ -3869,6 +4123,17 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"Hedef, tüm ürün tamirlerini yönetmek için bütün bir modüle sahip olmaktır. \n"
+"\n"
+"Takip eden konuları bu modül kapsamaktadır:\n"
+"\n"
+"* Tamiratta ürün ekle / kaldır\n"
+"* Stoklara etkisi\n"
+"* Faturalandırma (ürün ve/veya servisler)\n"
+"* Garanti konsepti\n"
+"* Tamir talep raporu\n"
+"* Tekniker ve son müşteri için notlar\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -3888,6 +4153,18 @@ msgid ""
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+"Öğle yemeği yönetimi için temel modül.\n"
+"\n"
+"Birçok şirket çalışanlarına daha fazla olanak sunmak için her zamanki tedarikçilerden sandviç, pizza ve diğer yiyecekleri sipariş ediyor.\n"
+"\n"
+"Ancak, şirket içindeki öğle yemeği yönetimi, özellikle çalışanların veya satıcıların sayısının önemli olduğu durumlarda, uygun yönetim gerektirmektedir.\n"
+"\n"
+"Bu yönetimin daha kolay hale getirilmesi için çalışanlara daha fazla araç ve kullanılabilirlik sunmak için “Öğle Yemeği Siparişi” modülü geliştirilmiştir.\n"
+"\n"
+"Bir tam yemek ve tedarikçi yönetimine ek olarak, bu modül uyarının görüntülenmesi ve çalışanın tercihlerine göre hızlı sipariş seçimi olanağı sunar.\n"
+"\n"
+"Çalışanlarınızın zamanını korumak ve ceplerinde her zaman bozuk paralar olmasını önlemek istiyorsanız, bu modül gereklidir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm
@@ -3920,6 +4197,8 @@ msgid ""
 "The kernel of Odoo, needed for all installation.\n"
 "===================================================\n"
 msgstr ""
+"\n"
+"Tüm kurulum için gerekli olan Odoo çekirdeği.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -3939,6 +4218,8 @@ msgid ""
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
 msgstr ""
+"\n"
+"Modül, Google E-Tablolar'daki Odoo'dan gerçek zamanlı olarak veri görüntüleme olanağı ekler.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_calendar
@@ -3956,6 +4237,9 @@ msgid ""
 "time it takes to load a POS session with a lot of products.\n"
 "    "
 msgstr ""
+"\n"
+"Bu, POS yapılandırması başına bir ürün önbelleği oluşturur. \n"
+"Çok fazla ürünle bir POS oturumu yüklemek için gereken süreyi önemli ölçüde düşürür."
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -4008,6 +4292,22 @@ msgid ""
 "Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"Bu, ürünlerin yönetimi ve Odoo'daki fiyat listesi için temel modüldür.\n"
+"\n"
+"Ürün destek varyantı, farklı fiyatlandırma yöntemleri, tedarikçi bilgileri, stok/sipariş yapma, farklı ölçü birimleri, paketleme ve düzenleme.\n"
+"\n"
+"Fiyat listesi desteği:\n"
+"* Çoklu seviyede inidirim ( ürüne, kategoriye, miktara göre)\n"
+"* Farklı kriterlere göre fiyat hesaplama:\n"
+"* Diğer fiyat listesi\n"
+"* Maliyet bedeli\n"
+"* Liste fiyatı\n"
+"* Tedarikçi bedeli\n"
+"\n"
+"Ürün ve / veya ortaklara göre fiyat listeleri tercihleri.\n"
+"\n"
+"Ürün etiketlerini barkod ile yazdırın."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -4042,6 +4342,26 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Bu, Odoo içindeki Belçika hesap planlarını yönetmek için temel modüldür.\n"
+"\n"
+"Bu modülü yükledikten sonra, muhasebe için yapılandırma sihirbazı da başlamış olur.\n"
+"* Hesap Bilgilerini oluşturmamıza yardımcı olabilen muhasebe şablonlarına sahibiz.\n"
+"* Bu belirli sihirbazda, şirketin adını, takip edilecek çizelge şablonunu, oluşturulacak basamak sayısını, hesabınızın ve banka hesabınızın kodunu ve yevmiyeleri oluşturmak için para birimini girmeniz istenecektir.\n"
+"\n"
+"Böylece, Çizelge Şablonunun saf kopyası oluşturulur.\n"
+"\n"
+"Bu modül tarafından sağlanan sihirbazlar:\n"
+"\n"
+"* İş Ortağı KDV'si : Ortakların, ilgili KDV ve fatura tutarları ile kaydedin. Bir XML dosya formatında hazırlar.\n"
+"\n"
+"Erişim yolu: Faturalama / Raporlama / Yasal Raporlar / Belçika Hesapları / İş Ortağı Veri No\n"
+"* Periyodik KDV Beyanı: Şu anda Giriş Yapan Kullanıcının Ana Şirketinin KDV Beyanı için bir XML dosyası hazırlar.\n"
+"\n"
+"Erişim yolu: Faturalama / Raporlama / Yasal Raporlar / Belçika Hesapları / Periyodik KDV Beyanı\n"
+"* KDV Tabanlı Müşterilerin Yıllık Listesi: Mali yıl itibariyle geçerli olarak oturum açmış olan kullanıcının ana şirketi KDV beyannamesi için bir XML dosyası hazırlar.\n"
+"\n"
+"Erişim yolu: Faturalama / Raporlama / Yasal Raporlar / Belçika Hesapları / KDV Tabanlı Müşterilerin Yıllık Listesi"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do_reports
@@ -4055,6 +4375,13 @@ msgid ""
 "* The main taxes used in Domincan Republic\n"
 "* Fiscal position for local "
 msgstr ""
+"\n"
+"Dominik Cumhuriyeti hesap planını yönetmek için temel modüldür.\n"
+"\n"
+"* Hesap Planı\n"
+"* Dominik Cumhuriyeti için Vergi Kodu Çizelgesi\n"
+"* Dominik Cumhuriyeti'nde kullanılan ana vergiler\n"
+"* Yerel bölgeler için mali pozisyon"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -4066,6 +4393,10 @@ msgid ""
 "Accounting chart and localization for Ecuador.\n"
 "    "
 msgstr ""
+"\n"
+"Odoo'da Ekvador hesap planını yönetmek için temel modül.\n"
+"\n"
+"Ekvador için hesap planı ve yerelleştirme."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -4077,6 +4408,10 @@ msgid ""
 "Greek accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Yunanistan hesap planını yönetmek için temel modül.\n"
+"\n"
+"Yunan hesap bilgileri ve yerelleştirmesi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt
@@ -4089,6 +4424,11 @@ msgid ""
 "la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes\n"
 "taxes and the Quetzal currency."
 msgstr ""
+"\n"
+"Guatemala hesap bilgilerini yönetmek için temel modül.\n"
+"\n"
+"Agrega una nomenclatura contable para Guatemala. También icluye impuestos y\n"
+"la moneda del Quetzal. -- Guatemalan için hesap planı ekler. Ayrıca vergileri ve Quetzal para birimini içerir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hn
@@ -4101,6 +4441,11 @@ msgid ""
 "moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes\n"
 "and the Lempira currency."
 msgstr ""
+"\n"
+"Honduras hesap planını yönetmek için temel modül.\n"
+"\n"
+"Agrega una nomenclatura contable para Honduras. También incluye impuestos y la\n"
+"moneda Lempira. -- Honduras için hesap planı ekler. Ayrıca vergileri ve Lempira para birimini içerir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -4119,6 +4464,14 @@ msgid ""
 "      see the first sheet of tax.xls for details of coverage\n"
 "    * to update the chart of tax template, update tax.xls and run tax2csv.py\n"
 msgstr ""
+"\n"
+"Lüksemburg hesap planı yönetmek için temel modül.\n"
+"\n"
+"*Lüksemburg Resmi Hesap Planı (Haziran 2009 + 2015 çizelgesi ve Vergiler kanunu),\n"
+"* Lüksemburg'da kullanılan ana vergiler\n"
+"* Yerel, intracom, extracom için varsayılan mali pozisyon\n"
+"\n"
+"Not: *2015 vergisi grafiği büyük ölçüde uygulanmaktadır, vergi şablonunun grafiğini güncellemek, tax.xls dosyasını güncellemek ve tax2csv.py'yi çalıştırmak için kapsam bilgilerinin detayları için tax.xls ilk sayfasına bakınız.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma
@@ -4133,6 +4486,15 @@ msgid ""
 "L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
 "Seddik au cours du troisième trimestre 2010."
 msgstr ""
+"\n"
+"Fas hesap planını yönetmek için temel modül.\n"
+"=================================================================\n"
+"\n"
+"Ce Module charge le modèle du plan de comptes standard Marocain et permet de\n"
+"générer les états comptables aux normes marocaines (Bilan, CPC (comptes de\n"
+"produits et charges), balance générale à 6 colonnes, Grand livre cumulatif...).\n"
+"L'intégration comptable a été validé avec l'aide du Cabinet d'expertise comptable\n"
+"Seddik au cours du troisième trimestre 2010."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_generic_coa
@@ -4144,6 +4506,8 @@ msgid ""
 "Install some generic chart of accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Bu, Odoo'daki genel hesap bilgilerini yönetmek için kullanılan temel modüldür."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk
@@ -4156,6 +4520,12 @@ msgid ""
 "    - InfoLogic UK counties listing\n"
 "    - a few other adaptations"
 msgstr ""
+"\n"
+"Bu Birleşik Krallık KOBİ'leri için Odoo muhasebesini yürütmek için gerekli en son Birleşik Krallık Odoo lokalizasyonu:\n"
+"- Bir CT600- hazır hesap bilgileri\n"
+"- VAT100- hazır vergi yapısı\n"
+"- InfoLogic UK ülkeler listesi\n"
+"- diğer bazı uyumluluklar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement
@@ -4194,6 +4564,11 @@ msgid ""
 "Romanian accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"Hesap Planı, KDV yapısı, Mali Pozisyon ve Vergi Haritalamaları yönetmek için modül.\n"
+"Ayrıca Odoo'da, Romanya için kayıt numarası da ekler.\n"
+"\n"
+"Romanya hesap bilgileri ve yerelleştirme."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -4226,6 +4601,26 @@ msgid ""
 "position.\n"
 "    "
 msgstr ""
+"\n"
+"Kanada hesap planını Odoo'da yönetmeniz için modül.\n"
+"\n"
+"Kanada hesap bilgileri ve yerelleştirmeler. \n"
+"\n"
+"Mali koşullar\n"
+"\n"
+"Uygulanacak vergileri dikkate alırsak, teslimatın gerçekleştiği yer burasıdır.\n"
+"Bu nedenle, mali pozisyonlarda en yaygın durumu uygulamaya karar verdik:\n"
+"Teslimat, satıcının sorumluluğu ve müşteri konumunda yapılır.\n"
+"\n"
+"Bazı örnekler: \n"
+"\n"
+"1) Başka bir eyaletten müşteriniz var ve onun bulunduğu yere teslimat gerçekleştiriyorsunuz. Mali koşulu müşteri üzerinde onun şehri ayarlayın.\n"
+"\n"
+"2) Başka bir eyaletten müşteriniz var. Ancak bu müşteri ürünleri almak için kamyonuyla bulunduğunuz yere gelir. Müşteri üzerinde herhangi bir mali koşulu belirlemeyin.\n"
+"\n"
+"3) Uluslararası bir tedarikçi sizden herhangi bir vergi almaz. Vergiler gümrük komisyoncusu tarafından gümrükte tahsil edilir. Tedarikçi mali durumunu uluslararası olarak ayarlayın.\n"
+"\n"
+"4) Uluslararası bir satıcı bölge vergisi size aittir. Onlar sizin pozisyonunuza kayıtlılar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -4242,6 +4637,8 @@ msgid ""
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 "    "
 msgstr ""
+"\n"
+"Polonya için vergileri ve hesap bilgilerini yönetmek için modül."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -4268,6 +4665,20 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Fransa hesap bilgilerini Odoo'da yönetmek için modül.\n"
+"\n"
+"Bu modül, Fransa sınırlarında bulunan şirketler için geçerlidir. Deniz aşırı bölgelerde (Guadeloupe, Martinik, Guyane, Réunion, Mayotte) bulunan şirketlere uygulanmaz.\n"
+"\n"
+"Bu yerelleştirme modülü, satın alımlar için 'vergi dahil' türündeki KDV vergilerini oluşturur ('hr_expense' modülünü kullandığınızda özellikle gereklidir).\n"
+"\n"
+"Bu 'vergi dahil' KDV vergilerinin bu modül tarafından sağlanan mali pozisyonlar tarafından yönetilmediğinden emin olun (çünkü hem vergi hariç tutulan hem de vergi dahil edilen senaryoların mali şartlarda yönetilmesi karmaşıktır).\n"
+"Bu yerelleştirme modülü, bir Fransa-ana sınırlardaki şirketi Deniz aşırı bölgelerde bulunan Fransa'ya bağlı ülkelerde bulunan bir şirkete hizmet satarken, senaryoyu düzgün bir şekilde ele almaz.\n"
+"Bunu mali şartlarda yönetebiliriz, ancak 'ürün' KDV vergileri ve 'hizmet' KDV vergilerini birbirinden ayırmak gerekir.\n"
+"\n"
+"Bunu varsayılan olarak l10n_fr içinde yapmak için çok 'ağır' olduğunu düşünüyoruz; Fransaya bağlı deniz aşırı ülkeler tabanlı şirketlere hizmet satan şirketler, vergi ve mali durumlarının konfigürasyonunu manuel olarak güncellemelidir.\n"
+"\n"
+"** Kredi: ** Sistheo, Zeekom, CrysaLEAD, Akretion ve Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -4283,6 +4694,14 @@ msgid ""
 "    - General Solutions.\n"
 "    - Trobz\n"
 msgstr ""
+"\n"
+"Vietnam hesap bilgilerini Odoo'da yönetmek için modül.\n"
+"\n"
+"Bu modül Bu modül, 200/2014 / TT-BTC Genelgesine göre Hesap Planı ile Vietnam Muhasebe Standardı'na (VAS) dayalı şirketler için geçerlidir.\n"
+"\n"
+"Kredi:\n"
+" -General Solutions\n"
+"- Trobz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn_reports
@@ -4295,6 +4714,12 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"Vietnam hesap bilgilerini Odoo'da yönetmek için modül.\n"
+"\n"
+"Bu modül ,  Vietnam Muhasebe Standardı'na (VAS) dayalı şirketler için uygulanır.\n"
+"\n"
+"Kredi: -General Solutions\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project
@@ -4302,6 +4727,8 @@ msgid ""
 "\n"
 "This module Allows a customer to give rating on Project.\n"
 msgstr ""
+"\n"
+"Bu modül, bir müşteriye, proje üzerinde puanlama yapmasını sağlar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad_project
@@ -4311,6 +4738,8 @@ msgid ""
 "=================================================\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, tüm proje form görüntülerine bir PAD ekler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal_sale
@@ -4411,6 +4840,25 @@ msgid ""
 "- Definition of barcode aliases that allow to identify the same product with different barcodes\n"
 "- Support for encodings EAN-13, EAN-8 and UPC-A\n"
 msgstr ""
+"\n"
+"Bu modül barkod tarama ve ayrıştırma için destek ekler.\n"
+"\n"
+"Tarama\n"
+"\n"
+" Odoo'da barkodlarla çalışmak için bir USB tarayıcı (klavye girişlerini taklit eder) kullanın.\n"
+"Tarayıcı, ön ek kullanmadan ve bir satır başı olarak veya sekme olarak son ek kullanacak şekilde yapılandırılmalıdır.\n"
+"Her karakter girişi arasındaki gecikme 50 milisaniyeden küçük veya ona eşit olmalıdır.\n"
+"Çoğu barkod tarayıcı kutunun dışında çalışır\n"
+"Ancak, tarayıcının takılı olduğu cihazla aynı klavye düzenini kullandığından emin olun. \n"
+"Aygıtın klavye düzenini ABD QWERTY (çoğu okuyucu için varsayılan değer) olarak ayarlayarak veya tarayıcının klavye düzenini değiştirerek (kılavuza bakın).\n"
+"\n"
+"Ayrıştırma\n"
+"\n"
+"Barkodlar, bir isimlendirme ile tanımlanan kuralları kullanarak yorumlanır.\n"
+"Bu aşağıdaki özellikleri sağlar:\n"
+"- Sayısal bir değer içeren barkodları tanımlayan kalıplar (ör., Ağırlık, fiyat)\n"
+"- Aynı ürünü farklı barkodlarla tanımlamaya izin veren barkod takma adlarının tanımı\n"
+"- - EAN-13, EAN-8 ve UPC-A kodlamaları desteği\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -4421,6 +4869,10 @@ msgid ""
 "the registration is confirmed.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, Etkinlik yönetim sistemine barkod taraması için destek ekler.\n"
+"Her katılımcı için bir barkod oluşturulur ve rozet üzerine basılır. \n"
+"Tarandığı zaman kayıt onaylanmış olur."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -4433,6 +4885,10 @@ msgid ""
 "Price and Cost Price.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül satış siparişlerine bir 'Kâr' ekler.\n"
+"\n"
+"Bu, Birim Fiyat ile Maliyet Fiyatı arasındaki farkı hesaplayarak kârlılığı verir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue_sheet
@@ -4465,6 +4921,10 @@ msgid ""
 "actions(Check in/Check out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"Bu modül personelin katılımlarını yönetmeyi hedefler.\n"
+"\n"
+"Çalışanların katılımlarını, kendileri tarafından gerçekleştirilen eylemler (Giriş / Çıkış) temelinde tutar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating_project_issue
@@ -4486,6 +4946,8 @@ msgid ""
 "\n"
 "This module allows a customer to give rating.\n"
 msgstr ""
+"\n"
+"Bu modül, bir müşterinin puan vermesine izin verir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_budget
@@ -4513,6 +4975,20 @@ msgid ""
 "    3. The last one is available from the Analytic Chart of Accounts. It gives\n"
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
 msgstr ""
+"\n"
+"Bu modül, muhasebecilerin analitik ve çaprazlanmış bütçeleri yönetmelerine izin verir.\n"
+"\n"
+"Bütçeler tanımlandıktan sonra (Faturalama / Bütçeler / Bütçeler), Proje Yöneticileri her bir Analitik Hesapta planlanan miktarı ayarlayabilir.\n"
+"\n"
+"Muhasebecinin, planlanan toplamın bu Bütçe için planladığından daha büyük / düşük olmamasını sağlamak için her bir Bütçe için planlanan toplam tutarı görme olasılığı vardır. Her bir kayıt listesi ayrıca grafiksel görünümüne de geçebilir.\n"
+"\n"
+"Üç rapor erişilebilir durumda: \n"
+"\n"
+"1.  İlki Bütçe listesinden kullanılabilir. Analitik Hesapların bu Bütçeler için yayılmasını verir.\n"
+"\n"
+"2. İkincisi, öncekinin bir özeti, sadece Analitik Hesapların seçilen Bütçeler için yayılmasını verir.\n"
+"\n"
+"3. Sonuncusu Analitik Hesap Planlarından elde edilebilir. Bütçelerin seçilen Analitik Hesapları için yayılmasını verir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -4544,6 +5020,15 @@ msgid ""
 "- Check on bottom: ADP standard\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, ödemelerinizi önceden yazdırılmış kontrol kağıdına yazdırmanızı sağlar.\n"
+"Çıktıyı (düzen, kılavuz bilgileri, vb.) şirket ayarlarında yapılandırabilir ve yevmiye ayarlarında (numaralar olmadan önceden yazdırılmış kontroller kullanıyorsanız) kontrol numaralarını yönetebilirsiniz.\n"
+"\n"
+"Desteklenen formatlar\n"
+"\n"
+"- Üstte kontrol edin: Quicken / QuickBooks standardı\n"
+"- Ortada kontrol edin: Peachtree standardı\n"
+"- Altta kontrol edin: ADP standardı"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note
@@ -4577,6 +5062,14 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül bir veritabanını anonimleştirmenize izin verir.\n"
+"\n"
+"Bu modül, verilerinizi belirli bir veritabanı için gizli tutmanıza izin verir.\n"
+"Bu işlem, taşıma işlemini kullanmak ve kendi veya müşterinizin gizli verilerini korumak istiyorsanız kullanışlıdır.\n"
+"İlke, gizli verilerinizi gizleyecek bir anonimleştirme aracı çalıştırmanızdır (bunlar ‘XXX karakteriyle değiştirilir).\n"
+"Ardından, anonimleştirilmiş veritabanını taşıma yapan ekibe gönderebilirsiniz.\n"
+"Taşınan veritabanınızı geri aldıktan sonra, geri yükler ve önceki verilerinizi kurtarmak için anonimleştirme işlemini tersine çevirirsiniz."
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -4596,6 +5089,17 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül üyelikleri yönetimi için tüm işlemleri yönetmenize izin verir.\n"
+"\n"
+"Bu farklı üye türlerini destekler:\n"
+"\n"
+"* Ücretsiz üye \n"
+"* İlişkilendirilmiş üye (ör. Bir grup tüm iştirakler için bir üyeliğe üye olur)\n"
+"* Ücretli üyeler\n"
+"* Özel üye ücretleri\n"
+"\n"
+"Üyelik yenileme için, teklifleri otomatik olarak faturalandırmanıza ve göndermenize izin vermek için satış ve muhasebe ile entegre edilmiştir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract
@@ -4661,6 +5165,8 @@ msgid ""
 "======================================================================================\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, Docsaway sayesinde belgelerinizi posta yoluyla göndermenizi sağlar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_contract_asset
@@ -4685,6 +5191,9 @@ msgid ""
 "This module gives you a quick view of your contacts directory, accessible from your home page.\n"
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
+"\n"
+"Bu modül, ana sayfanızdan erişilebilen rehber dizininizi hızlı bir şekilde görüntülemenizi sağlar.\n"
+"Tedarikçilerinizi, müşterilerinizi ve diğer bağlantılarınızı izleyebilirsiniz.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -4720,6 +5229,14 @@ msgid ""
 "up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, bir zaman çizelgesi sistemi sistemi uygular.\n"
+"\n"
+"Her personel çalıştığı projelerde harcadığı zamanları girebilir ve takip edebilir.\n"
+"\n"
+"Zamanında raporlama ve personel takibi sağlanmıştır.\n"
+"\n"
+"Bu tamamıyla maliyet muhasebesi modülü ile entegre olmuştur. Olaya bağlı bir yönetim ayarlamanızı sağlar."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada
@@ -4739,6 +5256,14 @@ msgid ""
 "    Replica of Democratic Congo, Senegal, Chad, Togo.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül OHADA bölgesi için hesap planı uygular.\n"
+"\n"
+"Herhangi bir şirket veya kuruluşun finansal muhasebesini yönetmesine izin verir.\n"
+"\n"
+"OHADA kullanan ülkeler şunlardır:\n"
+"\n"
+"Benin, Burkina Faso, Kamerun, Orta Afrika Cumhuriyeti, Komorlar, Kongo, Fil Dişi Sahilleri, Gabon, Gine, Gine-Bissau, Ekvatoral Gine, Mali, Nijer, Demokratik Kongo Cumhuriyeti, Senegal, Çad, Togo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_iban
@@ -4751,6 +5276,10 @@ msgid ""
 "with a single statement.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül IBAN (Uluslararası Banka Hesap Numarası) banka hesaplarının temelini yükler ve geçerliliğini kontrol eder.\n"
+"\n"
+"IBAN hesaplarından doğru şekilde temsil edilen yerel hesapların tek bir hesap ile çıkarılması."
 
 #. module: base
 #: model:ir.module.module,description:base.module_association
@@ -4763,6 +5292,10 @@ msgid ""
 "membership products (schemes).\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül bir ilişkilendirme ile ilgili modülleri yapılandırır.\n"
+"\n"
+"Olayları, kayıtları, üyelikleri, üyelik ürünlerini (şemaları) yönetmek için derneklerin profilini yükler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -4773,6 +5306,10 @@ msgid ""
 "The check settings are located in the accounting journals configuration page.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül baskı çekleri ile ödeme yapmak için temel işlevleri sunmaktadır.\n"
+"Ülkeye özgü çek şablonları sağlayan modüller için bir bağımlılık olarak kullanılmalıdır.\n"
+"Kontrol ayarları, muhasebe yevmiyeleri yapılandırma sayfasında bulunur."
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp
@@ -4797,6 +5334,11 @@ msgid ""
 "from sales order. It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, kullanıcıya bir seferde mrp ve satış modüllerini kurması için olanak sağlar.\n"
+"\n"
+"Satış siparişinden oluşturulan üretim siparişlerini takip etmek istediğimizde temel olarak kullanılır. \n"
+"Üretim siparişi için satış adı ve satış referansı ekler."
 
 #. module: base
 #: model:ir.module.module,description:base.module_marketing_campaign
@@ -4836,6 +5378,10 @@ msgid ""
 "============================================================================================================= \n"
 "Please keep in mind that you should review and adapt it with your Accountant, before using it in a live Environment.\n"
 msgstr ""
+"\n"
+"Bu modül, BMF.gv.at adresindeki şablona dayanan Avusturya için standart Hesap Plamlarını sunmaktadır.\n"
+"\n"
+"Canlı bir ortamda kullanmadan önce, muhasebecinizle birlikte gözden geçirip uyarlamanız gerektiğini lütfen unutmayın.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_note_pad
@@ -4847,6 +5393,10 @@ msgid ""
 "Use for update your text memo in real time with the following user that you invite.\n"
 "\n"
 msgstr ""
+"\n"
+"Bu modül harici bir ped kullanmak için Odoo içindeki notları günceller\n"
+"\n"
+"Davet ettiğiniz şu kullanıcıyla metin notunuzu gerçek zamanlı olarak güncellemek için kullanın.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_procurement_jit
@@ -4874,6 +5424,8 @@ msgid ""
 "\n"
 "This widget allows to display gauges using d3 library.\n"
 msgstr ""
+"\n"
+"Bu widget d3 kütüphanesini kullanarak göstergelerin görüntülenmesini sağlar.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_issue
@@ -4903,6 +5455,16 @@ msgid ""
 "\n"
 "Also implements the removal strategy First Expiry First Out (FEFO) widely used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Ürünler ve üretim lotlarında farklı tarihler izleyin.\n"
+"\n"
+"Şu tarihler izlenebilir:\n"
+"\n"
+"- ömür sonu\n"
+"- en iyi önceki tarih\n"
+"- uyarı günü\n"
+"\n"
+"Ayrıca, gıda endüstrisinde yaygın olarak kullanılan First Expiry First Out (FEFO) temizleme stratejisini de uygular.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project
@@ -4936,6 +5498,14 @@ msgid ""
 "      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
 "    "
 msgstr ""
+"\n"
+"Türkiye için tek düzen hesap planı şablonu Odoo Modülü.\n"
+"==========================================================\n"
+"\n"
+"Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır\n"
+"    * Sihirbaz sizden hesap planı şablonu, planın kurulacağı şirket, banka hesap\n"
+"      bilgileriniz, ilgili para birimi gibi bilgiler isteyecek.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
@@ -4946,6 +5516,8 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Birleşik Arap Emirlikleri hesap bilgileri ve yerelleştirmesi."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us
@@ -5014,6 +5586,20 @@ msgid ""
 "only the country code will be validated.\n"
 "    "
 msgstr ""
+"\n"
+"İş Ortağının vergileri için vergi numarasıdoğrulaması.\n"
+"\n"
+"Bu modülü kurduktan sonra, Ortakların KDV alanına girilen değerler, desteklenen tüm ülkeler için geçerli kılınacaktır.\n"
+"Ülke, KDV numarasının ön ekini yapan 2 harfli ülke kodundan çıkar, örn. \"BE0477472701\", Belçika kurallarını kullanarak doğrulanacaktır.\n"
+"\n"
+"İki farklı vergi numarası doğrulaması vardır:\n"
+"\n"
+"* Varsayılan olarak, ülke için bilinen doğrulama kuralları, genellikle basit bir kontrol basamağı kullanılarak basit bir çevrimdışı kontrol yapılır. Bu hızlı ve her zaman kullanılabilir, ancak belki de gerçekten tahsis edilmemiş veya artık geçerli olmayan numaralara izin verir.\n"
+"\n"
+"* \"Vergi VIES Kontrolü\" seçeneği etkinleştirildiğinde (kullanıcının Şirketinin konfigürasyonunda), Vergi numaraları çevrimiçi AB VIES veritabanına gönderilecektir, bu sayının geçerli olduğunu ve şu anda bir AB şirketine tahsis edildiğini doğrulayacaktır. Bu, basit çevrimdışı kontrolden biraz daha yavaştır, İnternet bağlantısı gerektirir ve her zaman mevcut olmayabilir.\n"
+"Hizmet mevcut değilse veya istenen ülkeyi desteklemiyorsa (ör. AB üyesi olmayan ülkeler için), bunun yerine basit bir kontrol yapılacaktır.\n"
+"\n"
+"Desteklenen ülkeler şu anda AB ülkeleri ve Şili, Kolombiya, Meksika, Norveç veya Rusya gibi AB üyesi olmayan birkaç ülkeyi içermektedir. Desteklenmeyen ülkeler için yalnızca ülke kodu doğrulanacaktır."
 
 #. module: base
 #: model:ir.module.module,description:base.module_fleet
@@ -5035,6 +5621,18 @@ msgid ""
 "* Show all costs associated to a vehicle or to a type of service\n"
 "* Analysis graph for costs\n"
 msgstr ""
+"\n"
+"Araç, leasing, sigorta, maliyet\n"
+"\n"
+"Bu modül ile Odoo, tüm araçlarınızı, o araçla ilgili sözleşmeleri, hizmetleri, yakıt kayıt girişlerini, maliyetleri ve araç filonuzun yönetimi için gerekli diğer birçok özelliği yönetmenize yardımcı olur.\n"
+"\n"
+"Ana Özellikler\n"
+"* Filonuza araçlar ekleyin\n"
+"* Araç sözleşmelerinizi yönetin\n"
+"* Bir sözleşme son kullanma tarihine ulaştığında hatırlatıcı\n"
+"* Tüm araçlar için servis, yakıt kaydı girişi, kilometre sayacı değerleri ekle\n"
+"* Bir taşıtla veya bir hizmet türü ile ilişkili tüm maliyetleri göster\n"
+"* Maliyetler için analiz grafiği\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -5054,6 +5652,19 @@ msgid ""
 "* Stock Inventory Value at given date (support dates in the past)\n"
 "    "
 msgstr ""
+"\n"
+"WMS (Depo Yönetim Sistemi) Muhasebe modülü \n"
+"\n"
+"Bu modül 'stok' ve 'hesap' modülleri arasındaki bağlantıyı yapar ve stok hareketlerine değer vermek için muhasebe girişleri oluşturmanızı sağlar.\n"
+"\n"
+"Anahtar Özellikler\n"
+"\n"
+"* Stok Değerleme (periyodik yada otomatik)\n"
+"* Toplama işleminden fatura\n"
+"\n"
+"Depo Yönetimi için Panel / Raporlar şunları içerir:\n"
+"\n"
+"Belirli bir tarihte Stok Envanter Değeri (geçmişte destek tarihleri)"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_forum
@@ -5077,6 +5688,10 @@ msgid ""
 "\n"
 "Translate you website in one click\n"
 msgstr ""
+"\n"
+"Website Gengo Çevirici \n"
+"\n"
+"Tek tıkla websitenizin dilini çevirin\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_livechat
@@ -5127,6 +5742,8 @@ msgid ""
 "Website for browsing Associations, Groups and Memberships\n"
 "=========================================================\n"
 msgstr ""
+"\n"
+"Dernekleri, Grupları ve Üyelikleri taramak için web sitesi\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk_form
@@ -5149,6 +5766,8 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Kısa ve izlenebilir URL'ler oluşturmak için Websitesi arayüzü."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_project
@@ -5170,6 +5789,10 @@ msgid ""
 "such as the Mettler Toledo Ariva.\n"
 "\n"
 msgstr ""
+"\n"
+"Ölçekleme Donanım Sürücüsü\n"
+"\n"
+"Bu modül satış noktasının Mettler Toledo Ariva gibi bir USB HSM Seri Ölçek Arabirimi kullanarak bir ölçeğe bağlanmasına izin verir.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -5180,6 +5803,10 @@ msgid ""
 "Works with Worldline keys version 2.0, contains implementation of\n"
 "payments acquirer using Worldline SIPS."
 msgstr ""
+"\n"
+"Online ödemeler için Worldline SIPS Ödeme Toplayıcısı\n"
+"\n"
+"Worldline anahtarları sürüm 2.0 ile birlikte çalışır, Worldline SIPS kullanan ödeme alıcılarının uygulamasını içerir."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_score
@@ -5210,17 +5837,17 @@ msgstr "%A - Tam gün adı."
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%B - Full month name.\""
-msgstr ""
+msgstr "%B - Tam ay adı.*"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%H - Hour (24-hour clock) [00,23].\""
-msgstr ""
+msgstr "%H - Saat (24-Saat) [00,23].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%I - Hour (12-hour clock) [01,12].\""
-msgstr ""
+msgstr "%I - Saat (12-Saat) [01,12].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5235,7 +5862,7 @@ msgstr "%S - Saniye [00,61].\""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%Y - Year with century.\""
-msgstr ""
+msgstr "%Y - Yüzyıl ile birlikte yıl.\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5255,12 +5882,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%j - Day of the year [001,366].\""
-msgstr ""
+msgstr "%j - Yıldaki gün sayısı [001,366].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%m - Month number [01,12].\""
-msgstr ""
+msgstr "%m - Ay numarası [01,12].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5289,12 +5916,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Weekday number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - Hafta günü numarası [0(Pazar),6].\""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
 msgid "%y - Year without century [00,99].\""
-msgstr ""
+msgstr "%y - Yüzyıl olmadan Yıl [00,99].\""
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:1114
@@ -5344,12 +5971,12 @@ msgstr ", ya da tercih ettiğiniz yazı editörü"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr ""
+msgstr "salt okunur"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", required"
-msgstr ""
+msgstr "gerekli"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key
@@ -5363,37 +5990,37 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr ""
+msgstr "- domain ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- field ="
-msgstr ""
+msgstr "- alan ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr ""
+msgstr "- gruplar ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- silindiğinde ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr ""
+msgstr "- ilişki ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection ="
-msgstr ""
+msgstr "- seçim ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- beden ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -5439,6 +6066,7 @@ msgstr ""
 msgid ""
 "2. Group-specific rules are combined together with a logical OR operator"
 msgstr ""
+"2. Gruba özgü kurallar, mantıksal OR operatörü ile birlikte birleştirilir."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_lang_form
@@ -5671,7 +6299,7 @@ msgstr "İş akışları ile oynamak için bir modül."
 #. module: base
 #: model:ir.module.module,description:base.module_test_pylint
 msgid "A module to test Odoo with pylint."
-msgstr ""
+msgstr "Odoo'yu pylint ile test etmek için bir modül."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_impex
@@ -5691,7 +6319,7 @@ msgstr "Kaldırma özelliği test etmek için bir modül."
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr ""
+msgstr "Varlıklar Paketi mekanizmasını doğrulayan bir modül."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -5812,12 +6440,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extension
 msgid "Account Extension"
-msgstr ""
+msgstr "Hesap Uzantısı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_partner_id
 msgid "Account Holder"
-msgstr ""
+msgstr "Hesap Saklayıcı"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_portal
@@ -5837,7 +6465,7 @@ msgstr "Hesap Numarası"
 #. module: base
 #: sql_constraint:res.partner.bank:0
 msgid "Account Number must be unique"
-msgstr ""
+msgstr "Hesap Numarası eşsiz olmalıdır."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_cash_basis
@@ -5852,12 +6480,12 @@ msgstr "Vergi Bulut Hesabı"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Hesap TaxCloud - Eticaret"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr ""
+msgstr "Hesap TaxCloud - Satış"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -5877,7 +6505,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
-msgstr ""
+msgstr "Muhasebe - MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
@@ -5918,6 +6546,21 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"Hollanda için hesap planı\n"
+"\n"
+"Bu modül, Hollanda'nın en iyi adetlerine göre muhasebe fonksiyonlarını yönetmek için özel olarak hazırlanmıştır.\n"
+"\n"
+"Bu modül, Hollanda Hesapları Planını ve vergi şemasını içerir.\n"
+"Bu şema en yaygın şirketler için üretilmiştir ve bu nedenle hemen hemen her şirket için kullanılmaya uygundur.\n"
+"\n"
+"Gerekli raporları çabucak oluşturmak için vergi hesapları bağlantılıdır. Bu raporların örnekleri, ilişkili işlemleri içerir.\n"
+"\n"
+"Bu modülün kurulumundan sonra yapılandırma aktif hale getirilecektir.\n"
+"\"Hollanda - Muhasebe\" adlı Hesap Planı'nı seçin.\n"
+"\n"
+"Bundan sonra, şirketin adını, hesap planının toplam rakamını, banka hesap numarasını ve varsayılan para birimini girin.\n"
+"\n"
+"Not: Varsayılan olarak yapılandırılan toplam rakam 6'dır.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_act_window_id
@@ -6093,7 +6736,7 @@ msgstr "Ekle RML Üstbilgisi"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode
 msgid "Add barcode scanning facilities to Warehouse Management."
-msgstr ""
+msgstr "Depo Yönetimine barkod tarama özelliği ekle."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_barcode
@@ -6103,7 +6746,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
 msgid "Add barcode scanning feature to event management."
-msgstr ""
+msgstr "Etkinlik yönetimi için barkod tarama özelliği ekle."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -6113,7 +6756,7 @@ msgstr "'Daha' menüsüne ekle"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Add in the 'Print' menu"
-msgstr ""
+msgstr "'Yazdır' menüsünde ekle"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_header
@@ -6255,7 +6898,7 @@ msgstr "Gelişmiş Etkinlikler"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr ""
+msgstr "Gelişmiş Özellikler"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -6318,11 +6961,15 @@ msgid ""
 "Allow to save all the versions of your website and allow to perform AB "
 "testing."
 msgstr ""
+"Web sitenizin tüm sürümlerini kaydetmeye ve AB testini gerçekleştirmeye izin"
+" verin."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_form
 msgid "Allow website visitors to submit tickets through a form"
 msgstr ""
+"Web sitesi ziyaretçilerinin bir form aracılığıyla bilet göndermesine izin "
+"ver"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -6393,7 +7040,7 @@ msgstr "Analitik Muhasebe"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Üretimde analitik muhasebe"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
@@ -6430,12 +7077,12 @@ msgstr "Antigua ve Barbuda"
 #: model:ir.actions.client,name:base.modules_act_cl
 #: model:ir.ui.menu,name:base.module_mi
 msgid "App Store"
-msgstr ""
+msgstr "App Store"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_open_website
 msgid "App Switcher"
-msgstr ""
+msgstr "App Switcher"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_rml_header1
@@ -6542,7 +7189,7 @@ msgstr "Damlayı kavislendir"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch Filename"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -6613,7 +7260,7 @@ msgstr "Dernekler: Üye"
 #: code:addons/base/res/res_lang.py:52
 #, python-format
 msgid "At least one language must be active."
-msgstr ""
+msgstr "En az bir dil etkin olmalıdır."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_link_new_record
@@ -6623,7 +7270,7 @@ msgstr "Yeni kayıt Ekle"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
-msgstr ""
+msgstr "Eklenmiş Belge Adı"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -6677,7 +7324,7 @@ msgstr "Avustralya - Muhasebe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
 msgid "Australian - Accounting Reports"
-msgstr ""
+msgstr "Avustralya - Muhasebe Raporları"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -6704,7 +7351,7 @@ msgstr "Yazan"
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
 msgid "Author Name"
-msgstr ""
+msgstr "Yazar Adı"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_authorize
@@ -6737,6 +7384,7 @@ msgstr "Otomatik Yükleme"
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
 msgstr ""
+"İndirilen Uygulamalar'ın otomatik olarak yüklenmesi şu anda devre dışı."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
