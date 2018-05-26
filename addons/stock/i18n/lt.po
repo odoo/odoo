@@ -419,6 +419,9 @@ msgid ""
 "quantity does not include items already allocated to other orders or items "
 "that are in transit from a supplier"
 msgstr ""
+"<strong>Pasiekiami produktai</strong> yra šiuo metu galimi naudoti užpildant"
+" naują užsakymą gaminimo ar platinimo tikslais. Šis kiekis neapima daiktų, "
+"priskirtų kitiems užsakymams ar daiktų, kurie yra perkeliami iš tiekėjo"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -445,6 +448,8 @@ msgid ""
 "<strong>Consumable products</strong> are always assumed to be in sufficient "
 "quantity in your stock, therefore their available quantities are not tracked"
 msgstr ""
+"<strong>Vartojami produktai</strong> visada yra laikomi turinčiais pakankamą"
+" kiekį jūsų atsargose, todėl jų pasiekiami kiekiai nėra sekami"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -536,6 +541,9 @@ msgid ""
 "<strong>No quantity available in stock:</strong> you have to create a "
 "reordering rule and put it in the order, or manually procure it."
 msgstr ""
+"<strong>Atsargose nėra norimo kiekio:</strong> jums reikia sukurti "
+"pakartotinio užsakymo taisyklę ir įdėti ją į užsakymą arba apdoroti jį "
+"rankiniu būdu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -543,6 +551,8 @@ msgid ""
 "<strong>No supplier available for a purchase:</strong> you have to define a "
 "supplier in the Procurements tab of the product form."
 msgstr ""
+"<strong>Nėra pirkimui galimų tiekėjų:</strong> turite nustatyti tiekėją "
+"įsigijimo skiltyje produkto formoje."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -551,6 +561,9 @@ msgid ""
 "location at the current time. This includes items that are already allocated"
 " to fulfilling production needs or sales orders"
 msgstr ""
+"<strong>Turimi produktai</strong> fiziškai yra sandėlio vietoje šiuo metu. Į"
+" tai įeina produktai, kurie jau yra priskirti gaminimo poreikių išpildymui "
+"ar pardavimų užsakymams"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -597,6 +610,8 @@ msgid ""
 "<strong>Service products</strong> are non-material products provided by a "
 "company or an individual"
 msgstr ""
+"<strong>Paslaugų produktai</strong> yra ne materialūs produktai, teikiami "
+"kompanijos arba asmens"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -632,6 +647,9 @@ msgid ""
 "delivery</strong>, assign a lot number or different lot numbers or serial "
 "numbers to a product by clicking on the <span class=\"fa fa-list\"/> icon"
 msgstr ""
+"<strong>Kai apdorojate įeinantį pristatymą, vidinį perkėlimą arbą "
+"pristatymą</strong>, priskirkite aikštelės numerį, skirtingus numerius ar "
+"serijinius numerius produktui paspausdami<span class=\"fa fa-list\"/> ikoną"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:102
@@ -656,6 +674,9 @@ msgid ""
 "                        you may find yourself out of stock) and not too high (your products occupy\n"
 "                        space and may lose value)."
 msgstr ""
+"Geras inventoriaus valdymas siekia optimizuoti atsargų lygius: ne per mažai (gali \n"
+"pritrūkti atsargų) ir ne per daug (jūsų produktai\n"
+"užima vietą ir gali prarasti vertę)."
 
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
@@ -1064,6 +1085,8 @@ msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
 "Odoo will not automatically generate a back order."
 msgstr ""
+"Čia pakeisdami šį kiekį jūs priimate naują kiekį kaip baigtą: Odoo "
+"automatiškai nesugeneruos grąžinimo užsakymo."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1071,6 +1094,8 @@ msgid ""
 "By default, Odoo measures products by 'units', which are generic and "
 "represent just about anything"
 msgstr ""
+"Standartiškai Odoo matuoja produktus vienetais, kurie yra bendri ir atspindi"
+" praktiškai bet ką"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
@@ -1174,7 +1199,7 @@ msgstr "Kategorijos maršrutai"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_move_dest_exists
 msgid "Chained Move Exists"
-msgstr ""
+msgstr "Egzistuoja jungtinis perkėlimas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
@@ -1811,7 +1836,7 @@ msgstr "Numatytas savininkas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Default Resupply Warehouse"
-msgstr ""
+msgstr "Numatytas papildomo tiekimo sandėlis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_default_location_src_id
@@ -1828,12 +1853,12 @@ msgstr "Numatytasis matavimo vienetas naudojamas operacijose su atsargom."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_reception_steps
 msgid "Default incoming route to follow"
-msgstr ""
+msgstr "Numatytasis sekamas įeinantis maršrutas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_delivery_steps
 msgid "Default outgoing route to follow"
-msgstr ""
+msgstr "Numatytasis sekamas išeinantis maršrutas"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -1843,7 +1868,7 @@ msgstr "Numatyta: Paimti iš atsargų"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_route_ids
 msgid "Defaults routes through the warehouse"
-msgstr ""
+msgstr "Numatytieji maršrutai sandėlyje"
 
 #. module: stock
 #: selection:stock.config.settings,module_product_expiry:0
@@ -1856,6 +1881,8 @@ msgid ""
 "Define routes within your warehouse according to business needs, such as "
 "Quality Control, After Sales Services or Supplier Returns"
 msgstr ""
+"Nustatykite maršrutus savo sandėlyje pagal jūsų verslo poreikius, tokius "
+"kaip kokybės kontrolė, popardaviminės paslaugos ar tiekėjo grąžinimai"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_form
@@ -1867,6 +1894,11 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
+"Nustatykite savo vietas, kad būtų atspindėta jūsų sandėlio struktūra ir organizavimas. Odoo gali valdyti fizines vietas\n"
+"(sandėlius, lentynas, dėžes ir kt.), partnerių vietas (klientai,\n"
+"pardavėjai) ir virtualias vietas, kurios yra papildančios\n"
+"atsargų operacijas, tokias kaip gaminimo\n"
+"užsakymo sąnaudos, inventoriai ir kt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_putaway_strategy_id
@@ -1876,6 +1908,10 @@ msgid ""
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
 msgstr ""
+"Nustato numatytąjį metodą, naudojamą tikslios vietos (lentynos), kur bus "
+"laikomi produktai, pasiūlymui. Šis metodas gali būti forsuojamas produkto "
+"kategorijos lygmenyje, o jei čia nėra nustatyta nieko, naudojamos aukščiau "
+"esančios vietos."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_removal_strategy_id
@@ -1885,6 +1921,10 @@ msgid ""
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
 msgstr ""
+"Nustato numatytąjį metodą, naudojamą tikslios vietos (lentynos) pasiūlymui, "
+"iš kur bus paimami produktai, iš kurios partijos ar pan.. Šis metodas gali "
+"būti forsuojamas produkto kategorijos lygmenyje, o jei čia nėra nustatyta "
+"nieko, naudojamos tėvinės vietos."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2011,7 +2051,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_route_ids
 msgid "Destination route"
-msgstr ""
+msgstr "Pristatymo maršrutas"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
@@ -2025,6 +2065,9 @@ msgid ""
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
 msgstr ""
+"Nustato įsigijimo metodą atsargų perkėlimui, kuris bus sugeneruotas: ar "
+"reikės \"paimti iš galimų atsargų\" savo šaltinio vietoje ar reikės "
+"ignoruoti atsargas ir sukurti įsigijimą ten."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -2035,7 +2078,7 @@ msgstr "Atmesti"
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Išsiuntimo zona"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement_display_name
@@ -2089,6 +2132,8 @@ msgid ""
 "Do not hesitate to send us an email to describe your experience or to "
 "suggest improvements!"
 msgstr ""
+"Nedvejokite ir atsiųskite mums el. laišką ir apibūdinkite savo patirtį ar "
+"pasiūlykite patobulinimų!"
 
 #. module: stock
 #: selection:stock.config.settings,group_stock_packaging:0
@@ -2158,7 +2203,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
-msgstr ""
+msgstr "Redaguoti informaciją arba pridėti naują"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2179,12 +2224,17 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
+"Kiekviena atsargų operacija Odoo perkelia produktus iš vienos\n"
+" vietos į kitą. Pavyzdžiui, jei gaunate produktus iš pardavėjo, Odoo perkels produktus\n"
+" iš pardavėjo vietos\n"
+" į atsargų vietą. Kiekviena ataskaita gali būti vykdoma\n"
+"fizinėje, partnerio ar virtualioje vietoje."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:647
 #, python-format
 msgid "Everything inside a package should be in the same location"
-msgstr ""
+msgstr "Viskas, kas yra pakuotės viduje, turėtų būti toje pačioje vietoje"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2366,6 +2416,8 @@ msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
 msgstr ""
+"Duoti labiau specializuotai kategorijai, aukštesnis prioritetas pakels į "
+"sąrašo viršų."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2385,7 +2437,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_default_resupply_wh_id
 msgid "Goods will always be resupplied from this warehouse"
-msgstr ""
+msgstr "Prekės visada bus papildomai pateikiamos iš šio sandėlio"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -2587,6 +2639,8 @@ msgid ""
 "If checked, this shows the packs to be moved as a whole in the Operations "
 "tab all the time, even if there was no entire pack reserved."
 msgstr ""
+"Jei pažymėta, tai operacijų skiltyje parodo visada perkelti pakuotes kartu, "
+"net jei visa pakuotė nebuvo rezervuota."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_propagate
@@ -2594,6 +2648,8 @@ msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
 msgstr ""
+"Jei pažymėta, kai ankstesnis perkėlimas yra atšaukiamas arba padalijamas, "
+"taip pat bus ir su šio perkėlimo sugeneruotu perkėlimu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate
@@ -2607,6 +2663,8 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_propagate
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Jei pažymėta, kai šis perkėlimas atšaukiamas, susietas perkėlimas yra irgi "
+"atšaukiamas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_route_id
@@ -2616,7 +2674,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_result_package_id
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "Jei nustatyta, operacijos yra įtraukiamos į šį rinkinį"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_active
@@ -2633,6 +2691,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
+"Jei aktyvus laukas yra nustatytas kaip \"Neteisingas\", tai leis jums "
+"paslėpti maršrutą jo nepašalinant."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_filter
@@ -2652,6 +2712,9 @@ msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
 msgstr ""
+"Jei pažymėta tik tai, bus manoma, kad norite sukurti naujus "
+"partijos/serijinius numerius, kad juos galėtumėte nurodyti tekstiniame "
+"laukelyje."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_use_existing_lots
@@ -2677,6 +2740,8 @@ msgid ""
 "                        API</strong> to load data automatically through\n"
 "                        scripts: take a look at our"
 msgstr ""
+"Jei esate programuotojas <strong>galite naudoti mūsų API</strong> "
+"automatiniams duomenų užkrovimui per skriptus: žiūrėkite mūsų"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2686,6 +2751,8 @@ msgid ""
 "                        sometimes the system can remain blocked without generating a\n"
 "                        corresponding document, usually due to a configuration problem."
 msgstr ""
+"Jei nustatėte automatinį įsigijimą, Odoo automatiškai sugeneruoja įsigijimo užsakymus. Dažniausiai nereikia dėl jų rūpintis, bet\n"
+"kartais sistema gali užstrigti nesugeneravusi atitinkamo dokumento, dažniausiai dėl nustatymų bėdų."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_filter
@@ -2730,7 +2797,7 @@ msgstr "Skubus pervedimas?"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
+msgstr "Importuoti naudojant mygtuką, esantį viršutiniame kairiame kampe"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2739,6 +2806,9 @@ msgid ""
 "                        Odoo will automatically propose a procurement to buy new products if you are\n"
 "                        running out of stock."
 msgstr ""
+"Odoo naudojamos <strong>Pakartotinio užsakymo taisyklės</strong> yra "
+"naudojamos jūsų produktų papildymui. Odoo automatiškai pasiūlys įsigyjimą, "
+"kad nusipirktumėte naujų produktų, jei senka jų atsargos."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2764,6 +2834,9 @@ msgid ""
 "                        to exactly one piece.  In case of lots, you need to supply the quantity\n"
 "                        for each lot when you move that product."
 msgstr ""
+"Jei serijiniai numeriai unikalūs, kiekvienas serijinis numeris\n"
+"parodo vieną vienetą. Jei naudojamos linijos, jums reikia nurodyti kiekį\n"
+"kiekvienai linijai, kai perkeliate tą produktą."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2905,6 +2978,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr ""
+"Vidinis numeris naudojamas atveju, kai gamintojo serijos numeris skiriasi "
+"nuo gamintojo partijos/serijinio numerio."
 
 #. module: stock
 #: code:addons/stock/models/product.py:257
@@ -3104,6 +3179,8 @@ msgid ""
 "It is also possible to import your initial inventory from an Excel or CSV file.\n"
 "                        If you want to do that, contact your Odoo project manager."
 msgstr ""
+"Taip pat galima jūsų pradinį inventorių importuoti iš Excel ar CSV failo.\n"
+"Jei norite tai padaryti, susisiekite su savo Odoo projektų vadovu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3122,7 +3199,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "Tai nurodo pakuotės detales: tipą, kieki ir kt."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_move_type
@@ -3283,6 +3360,7 @@ msgstr "Pristatymo tipas"
 #: model:ir.model.fields,help:stock.field_stock_location_route_company_id
 msgid "Leave this field empty if this route is shared between all companies"
 msgstr ""
+"Palikite šį laukelį tuščią, jei šia vieta yra dalijamasi visų kompanijų"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_parent_left
@@ -3301,6 +3379,8 @@ msgid ""
 "Like with the sales flow, Odoo inventory management is\n"
 "                        fully integrated with the purchase app."
 msgstr ""
+"Kaip ir pardavimų srautas, Odoo inventoriaus valdymas yra\n"
+"pilnai intergruotas su pirkimo programėle."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_linked_move_operation_ids
@@ -3330,7 +3410,7 @@ msgstr "Lokalizavimas"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Locate"
-msgstr ""
+msgstr "Surasti"
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:12
@@ -3372,7 +3452,7 @@ msgstr "Vietos pavadinimas"
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
 #: model:ir.ui.view,arch_db:stock.stock_location_path_tree
 msgid "Location Paths"
-msgstr ""
+msgstr "Vietos keliai"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_lot_stock_id
@@ -3561,7 +3641,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Manage default locations per product"
-msgstr ""
+msgstr "Valdyti numatytąsias produktų vietas"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
@@ -3954,7 +4034,7 @@ msgstr "Pastabos"
 #: code:addons/stock/models/stock_picking.py:461
 #, python-format
 msgid "Nothing to check the availability for."
-msgstr ""
+msgstr "Nėra kieno pasiekiamumą tikrinti."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3994,7 +4074,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Odoo has preconfigured <strong>one Warehouse</strong> for you."
-msgstr ""
+msgstr "Odoo jums nustatė <strong>viena sandėlį</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4003,6 +4083,9 @@ msgid ""
 "                        invoicing process. Everything is automated from the initial\n"
 "                        quotation to the delivery and the final invoice."
 msgstr ""
+"Odoo inventoriaus valdymas yra pilna integruotas su pardavimų\n"
+"ir sąskaitų procesu. Viskas yra automatizuota nuo pirminio\n"
+"komercinio pasiūlymo iki pristatymo ir galutinės sąskaitos."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4010,6 +4093,8 @@ msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
 msgstr ""
+"Odoo gali pasiūlyti papildomą sekamumą naudojant produktų partijų ir serijinius\n"
+"numerius, dažniausiai identifikuojamus brūkšniniais kodais, esančiais ant produktų."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4018,6 +4103,9 @@ msgid ""
 "convert units within the same category, for example, liters to gallons in "
 "the volume category"
 msgstr ""
+"Žinoma, galite pridėti ir savo. Atkreipkite dėmesį, kad Odoo gali "
+"konvertuoti vienetus toje pačioje kategorijoje, pavyzdžiui, litrus į galonus"
+" tūrio kategorijoje"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -4042,6 +4130,9 @@ msgid ""
 "customer. It would be great if you could send us a photo of your warehouse "
 "to"
 msgstr ""
+"Kaip tai pilnai veiks, suteikite mums atgalinio ryšio: mums malonu girdėti, "
+"kaip sekasi mūsų klientui. Būtų puiku jei atsiųstumėte savo sandėlio "
+"nuotrauką"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:100
@@ -4137,17 +4228,17 @@ msgstr "Papildomi lokalizacijos duomenys, naudojami tik informaciniai tikslai"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr ""
+msgstr "Papildoma: visi sugrįžimo perkėlimai sukurti iš šio perkėlimo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_dest_id
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Papildoma: kitas atsargų perkėlimas, kai jie sujungiami"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_move_orig_ids
 msgid "Optional: previous stock move when chaining them"
-msgstr ""
+msgstr "Papildoma: buvęs atsargų perkėlimas, kai jie sujungiami"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -4454,7 +4545,7 @@ msgstr "Periodinės užduotys"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Physical Inventories by Month"
-msgstr ""
+msgstr "Fiziniai inventoriai pagal mėnesį"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -4886,19 +4977,19 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Purchase Flow"
-msgstr ""
+msgstr "Pirkimo ciklas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_push_rule_id
 msgid "Push Rule"
-msgstr ""
+msgstr "Pastūmimo taisyklė"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stolocpath
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_push_ids
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Push Rules"
-msgstr ""
+msgstr "Pastūmimo taisyklės"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
@@ -5057,7 +5148,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr ""
+msgstr "Kiekis, kuris jau buvo rezervuotas šiam perkėlimui"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.lot_open_quants
@@ -5110,19 +5201,19 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Receipt in 1 step"
-msgstr ""
+msgstr "Kvitas 1 žingsnyje"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Receipt in 2 steps"
-msgstr ""
+msgstr "Kvitas 2 žingsniuose"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:401
 #, python-format
 msgid "Receipt in 3 steps"
-msgstr ""
+msgstr "Kvitas 3 žingsniuose"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:199
@@ -5137,7 +5228,7 @@ msgstr "Kvitai"
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "Gauti prekes tiesiai į atsargas (1 žingsnis)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:337
@@ -5330,7 +5421,7 @@ msgstr "Atnaujinti operacijas"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Resolve Procurement Exceptions"
-msgstr ""
+msgstr "Išspręsti įsigijimo išimtis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_route_ids
@@ -5475,6 +5566,8 @@ msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
 msgstr ""
+"Apdorojamas suplanuotas pirmos pristatymo dalies laikas. Rankiniu būdu čia "
+"nustatant reikšmę, būtų nustatyta numatoma data visiems atsargų perkėlimams."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_max_date
@@ -5548,7 +5641,7 @@ msgstr "Pasirinkti produktus rankiniu būdu"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Select the places where this route can be selected"
-msgstr ""
+msgstr "Pasirinkite vietas, kur šis maršrutas gali būti pasirinktas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_picking_warn
@@ -5558,6 +5651,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Pasirinkus \"įspėjimo\" opciją, vartotojas gaus perspėjimą su žinute, "
+"pasirinkus \"blokuojanti žinutė\", su žinute bus išsiunčiama išimtis ir "
+"blokuojami tolimesni žingsniai. Žinutė turi būti parašyta kitame laukelyje."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
@@ -5606,7 +5702,7 @@ msgstr "Partijos pavadinimas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_warehouse_id
 msgid "Served Warehouse"
-msgstr ""
+msgstr "Aptarnaujamas sandėlis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category_removal_strategy_id
@@ -5614,6 +5710,8 @@ msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
 msgstr ""
+"Nustatyti tam tikrą pašalinimo strategiją, kuri šiai produktų kategorijai "
+"bus naudojama nepaisant šaltinio vietos"
 
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
@@ -5626,6 +5724,8 @@ msgid ""
 "Set the <i>Real Quantity</i> for each Product and <i>Validate the "
 "Inventory</i>"
 msgstr ""
+"Kiekvienam produktui nustatykite <i>Tikrąjį kiekį</i> ir <i>Patvirtinkite "
+"inventorių</i>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5633,6 +5733,8 @@ msgid ""
 "Set the products you want to track with lots or serial numbers by setting "
 "the Tracking field on the product form"
 msgstr ""
+"Nustatykite produktus, kuriuos norite sekti per serijinius numerius "
+"nustatydami sekimo lauką produkto formoje"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5760,6 +5862,8 @@ msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
 msgstr ""
+"Nurodykite partijos/serijinį numerį, kad sukoncentruotumėte savo inventorių "
+"į tam tikrą partijos/serijinį numerį. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
@@ -6020,13 +6124,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
 msgid "Technical: used in views"
-msgstr ""
+msgstr "Techninis: naudojamas peržiūrose"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,help:stock.field_product_product_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Techninis: naudojamas kiekių skaičiavimui."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_temando
@@ -6081,7 +6185,7 @@ msgstr "Serijnio numerio ir produkto derinys turi būti unikalūs!"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_company_id
 msgid "The company is automatically set from your user preferences."
-msgstr ""
+msgstr "Kompanija yra automatiškai parenkama iš jūsų vartotojo nustatymų."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_company_id
@@ -6094,6 +6198,8 @@ msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
 msgstr ""
+"Data, kuri bus naudojama produktų atsargų lygio patikrinimui ir atsargų "
+"perkėlimų, susijusių su šiuo inventoriumi, patvirtinimui."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:140
@@ -6102,6 +6208,7 @@ msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
 msgstr ""
+"Numatytasis papildomo tiekimo sandėlis turėtų būti kitoks nei pats sandėlis!"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:517
@@ -6116,6 +6223,8 @@ msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
 msgstr ""
+"Sekantys maršrutai bus pritaikyti šios kategorijos produktams, atsižvelgiant"
+" į tėvines kategorijas:"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reservation_id
@@ -6153,6 +6262,8 @@ msgid ""
 "The parent location that includes this location. Example : The 'Dispatch "
 "Zone' is the 'Gate 1' parent location."
 msgstr ""
+"Tėvinė vieta, kuri apima šią vietą. Pavydžiui: \"išsiuntimo zona\" yra "
+"\"vartai 1\" tėvinė vieta."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:795
@@ -6180,16 +6291,18 @@ msgid ""
 "The procurement quantity will be rounded up to this multiple.  If it is 0, "
 "the exact quantity will be used."
 msgstr ""
+"Įsigijimo kiekis bus suapvalinamas tokiu tikslumu. Jei jis yra 0, bus "
+"naudojamas tikslus kiekis."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_rule_id
 msgid "The procurement rule that created this stock move"
-msgstr ""
+msgstr "Įsigijimo taisyklė, kuri sukūrė šį atsargų perkėlimą"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_push_rule_id
 msgid "The push rule that created this stock move"
-msgstr ""
+msgstr "Pastūmimo taisyklė, kuri sukūrė šį atsargų perkėlimą"
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:170
@@ -6243,12 +6356,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
 msgid "The stock operation where the packing has been made"
-msgstr ""
+msgstr "Atsargų operacija, kurioje buvo atliktas pakavimas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_warehouse_id
 msgid "The warehouse this rule is for"
-msgstr ""
+msgstr "Sandėlis, kuriam skirta ši taisyklė"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_propagate_warehouse_id
@@ -6292,6 +6405,8 @@ msgid ""
 "This analysis gives you a fast overview on the current stock level of your "
 "products and their current inventory value."
 msgstr ""
+"Ši analizė leidžia jums greitai peržiūrėti esamą produktų atsargų lygį ir "
+"esamą jų inventoriaus vertę."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_packaging_id
@@ -6300,6 +6415,8 @@ msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
 msgstr ""
+"Šis laukas turėtų būt pildomas tik tada, kai pakuotėje yra tik tas pats "
+"produktas, kitu atveju, jo naudoti neverta."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6307,6 +6424,8 @@ msgid ""
 "This guide helps getting started with Odoo Inventory.\n"
 "                        Once you are done, you will benefit from:"
 msgstr ""
+"Šis gidas padeda pradėti naudotis Odoo inventoriumi.\n"
+"Kai baigsite, jūs gausite šias naudas:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6314,6 +6433,8 @@ msgid ""
 "This is quite complex to set up, so <strong>contact your Project "
 "Manager</strong> to address this."
 msgstr ""
+"Tai nustatyti gana sudėtinga, tad <strong>susisiekite su savo projekto "
+"vadovu</strong> šiuo klausimu."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_dest_id
@@ -6339,6 +6460,8 @@ msgid ""
 "This is the list of all the production lots you recorded. When\n"
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
+"Tai yra sąrašas visų gamybos partijų, kurias sekėte. Kai\n"
+"pasirenkate partiją, galite sekti produktus, esančius joje."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
@@ -6407,6 +6530,8 @@ msgid ""
 "This rule can be applied when a move is confirmed that has this location as "
 "destination location"
 msgstr ""
+"Ši taisyklė gali būti taikoma, kai patvirtinta, kad perkėlimas turi "
+"nustatytą šią vietą kaip galutinę"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6518,6 +6643,9 @@ msgid ""
 "products may be sold/purchased in different unit of measures (advanced)</i> "
 "in the"
 msgstr ""
+"Tikslesnių matavimo vienetų (kilogramai, svarai) naudojimui aktyvuokite "
+"<i>Kai kurie produktai gali būti parduodami/perkami skirtingais matavimo "
+"vienetais (išplėstinės nuostatos)</i>, esantį"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6710,6 +6838,8 @@ msgid ""
 "Unless you are starting a new business, you probably have a list of vendors "
 "you would like to import."
 msgstr ""
+"Išskyrus atvejus, kai pradedate naują verslą, tikriausiai turite sąrašą "
+"pardavėjų, kurį norėtumėte importuoti."
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -7000,7 +7130,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "We hope this guide helped you implement Odoo Inventory."
-msgstr ""
+msgstr "Tikimės, kad šis gidas padėjo jums pritaikyti Odoo inventorių."
 
 #. module: stock
 #: code:addons/stock/models/barcode.py:11
@@ -7035,6 +7165,8 @@ msgid ""
 "When checked, the route will be selectable on the Product Category.  It will"
 " take priority over the Warehouse route. "
 msgstr ""
+"Kai pažymėta, maršrutas bus pasirenkamas produkto kategorijoje. Tai turės "
+"aukštesnį prioritetą nei Sandėlio maršrutas."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7045,7 +7177,7 @@ msgstr "Kai viskas nustatyta, paspauskite ant<i>Pradėti inventorizaciją</i>"
 #: model:ir.model.fields,help:stock.field_product_putaway_fixed_location_ids
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "Kai metodas yra fiksuotas, ši vieta bus naudojama produktų laikymui."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint_product_min_qty
@@ -7069,6 +7201,8 @@ msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
 msgstr ""
+"Kai pasirenkate serijinį numerį (partiją), kiekis yra patikslinamas su\n"
+"kiekiu, kurį turi tas serijinis numeris (partija), o ne su bendru produkto kiekiu."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_wizard_id
@@ -7145,6 +7279,9 @@ msgid ""
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
 msgstr ""
+"Negalite pakeisti matavimo vieneto produktui, kuris jau buvo panaudotas "
+"atsargų perkėlimui. Jei jums reikia pakeisti matavimo vienetą, deaktyvuokite"
+" produktą."
 
 #. module: stock
 #: code:addons/stock/models/stock_pack_operation.py:160
@@ -7167,7 +7304,7 @@ msgstr "Jūs galite ištrinti tik juodraščio būsenos įrašus"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "You can review and edit the predefined units via the"
-msgstr ""
+msgstr "Galite peržiūrėti ir redaguoti iš anksto nustatytus vienetus per"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:652
@@ -7267,7 +7404,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr ""
+msgstr "Apdorojote mažiau produktų nei buvo pradiniame reikalavime."
 
 #. module: stock
 #: code:addons/stock/models/product.py:320
@@ -7276,6 +7413,8 @@ msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
 "numbers by doing an inventory.  "
 msgstr ""
+"Atsargose turite produktų, kurie neturi partijos numerio. Galite priskirti "
+"serijinį numerį įvykdydami inventorizaciją."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:768
@@ -7436,7 +7575,7 @@ msgstr "feedback@mail.odoo.com"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "for a customer and add products"
-msgstr ""
+msgstr "vartotojui ir pridėti produktus"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
