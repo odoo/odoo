@@ -65,6 +65,17 @@ msgid ""
 " - Hungarian Bank information\n"
 " "
 msgstr ""
+"\n"
+"\n"
+"Базовий модуль для Угорщини\n"
+"==========================================\n"
+"\n"
+"Цей модуль складається з :\n"
+"\n"
+" - Загальний угорський план рахунків\n"
+" - Угорські податки\n"
+" - Угорська банківська інформація\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -137,6 +148,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Домініканської Республіки\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -158,6 +236,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Загальний огляд:\n"
+"---------\n"
+"\n"
+"* План рахунків та податків для компаній в Японії.\n"
+"* Це, ймовірно, не охоплює всіх необхідних рахунків для компанії. Ви повинні додати/видалити/змінити рахунки на основі цього шаблону.\n"
+"\n"
+"Примітка:\n"
+"-----\n"
+"\n"
+"* Фіскальні позиції '内税' and '外税' були додані для виконання спеціальних вимог, які можуть виникнути в результаті реалізації точки продажу. [1]  Можливо, вам не обов'язково використовувати їх у звичайних умовах.\n"
+"\n"
+"[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -262,6 +356,27 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    \n"
+"Belgian localization for in- and outgoing invoices (prereq to account_coda):\n"
+"============================================================================\n"
+"    - Rename 'reference' field labels to 'Communication'\n"
+"    - Add support for Belgian Structured Communication\n"
+"\n"
+"A Structured Communication can be generated automatically on outgoing invoices according to the following algorithms:\n"
+"---------------------------------------------------------------------------------------------------------------------\n"
+"    1) Random : +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** Random Digits, **DD =** Check Digits\n"
+"    2) Date : +++DOY/YEAR/SSSDD+++\n"
+"        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n"
+"    3) Customer Reference +++RRR/RRRR/SSSDDD+++\n"
+"        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  \n"
+"        \n"
+"The preferred type of Structured Communication and associated Algorithm can be\n"
+"specified on the Partner records. A 'random' Structured Communication will\n"
+"generated if no algorithm is specified on the Partner record. \n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_timesheet
@@ -283,6 +398,13 @@ msgid ""
 "        \"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"       Податок, визначений як код python, складається з двох фрагментів коду python, які виконуються в локальному середовищі та містять такі дані, як ціна одиниці товару, товар або партнер.\n"
+"\n"
+"        \"Застосований код\" визначає, чи застосовувати податок.\n"
+"\n"
+"        \"Код Python\" визначає суму податку.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -534,6 +656,12 @@ msgid ""
 "        For more informations about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+"        Створіть платіжні доручення, як це рекомендовано стандартом SEPA, завдяки повідомленням від pain. 001. Підтримувані варіанти pain. (країни): pain.001.001.03 (загальний), pain.001.001.03.ch.02 (Швейцарія) та pain.001.003.03 (Німеччина). Згенерований XML-файл може бути завантажений у ваш банк.\n"
+"\n"
+"        Цей модуль відповідає інструкціям щодо впровадження, викладеним Європейською Радою з оплати.\n"
+"        Для отримання додаткової інформації про стандарти SEPA: http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -692,6 +820,10 @@ msgid ""
 "        to allow you to define interviews for different jobs.\n"
 "    "
 msgstr ""
+"\n"
+"Використовуйте форми інтерв'ю під час набору персоналу.\n"
+"         Цей модуль інтегровано з модулем обстеження\n"
+"         щоби ви могли визначити інтерв'ю для різних робочих місць."
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_sale
@@ -701,6 +833,9 @@ msgid ""
 "        linked to an SO, or only the validated timesheets\n"
 "    "
 msgstr ""
+"\n"
+"Під час виставлення рахунків-фактур, дозволяє здійснювати виставлення рахунків у будь-який часовий рядок\n"
+"         пов'язаний з SO, або лише перевірені табелі"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_multilang
@@ -784,6 +919,11 @@ msgid ""
 "    PayUmoney payment gateway supports only INR currency.\n"
 "    "
 msgstr ""
+"\n"
+"PayuMoney одержувач платежу для Індії.\n"
+"\n"
+"     Платіжний шлюз PayUmoney підтримує тільки валюту INR.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_forecast
@@ -849,6 +989,12 @@ msgid ""
 "\n"
 "It assigns manager and user access rights to the Administrator for the accounting application and only user rights to the Demo user.\n"
 msgstr ""
+"\n"
+"Права доступу до бухгалтерії\n"
+"========================\n"
+"Він надає користувачеві-адміністратору доступ до всіх функцій бухобліку, таких як елементи журналу та плани рахунків.\n"
+"\n"
+"Він призначає права адміністратора та користувача для доступу до Адміністратора для програми бухобліку та лише права користувачів Demo-користувача.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -1096,6 +1242,15 @@ msgid ""
 "    * Commitment Date\n"
 "    * Effective Date\n"
 msgstr ""
+"\n"
+"Додайте додаткову інформацію про дату до замовлення клієнта.\n"
+"================================================== =\n"
+"\n"
+"Ви можете додати наступні додаткові дати до замовлення клієнта:\n"
+"------------------------------------------------------------\n"
+"     * Запитувана дата (буде використана як очікувана дата збирання)\n"
+"     * Дата зобов'язання\n"
+"     * Дата набрання чинності\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -1134,6 +1289,13 @@ msgid ""
 "For instance when invoicing a training, the training agenda and materials will automatically be sent to your customers.'\n"
 "    "
 msgstr ""
+"\n"
+"Додайте шаблони електронних листів до товарів, які надсилатимуться на підтвердження рахунку-фактури\n"
+"================================================== ================\n"
+"\n"
+"За допомогою цього модуля зв'яжіть ваші товари з шаблоном, щоби надіслати повну інформацію та інструменти своїм клієнтам.\n"
+"Наприклад, під час виставлення рахунків на тренінг, тренінг та матеріали будуть автоматично направлені вашим клієнтам \".\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_margin
@@ -1144,6 +1306,11 @@ msgid ""
 "\n"
 "The wizard to launch the report has several options to help you get the data you need.\n"
 msgstr ""
+"\n"
+"Додає меню звітування в товари, які обчислюють обсяги продажів, покупок, маржі та інші цікаві показники на основі рахунків-фактур.\n"
+"================================================== ================================================== =========================\n"
+"\n"
+"Майстер для запуску звіту має кілька варіантів, які допоможуть вам отримати необхідні дані.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pad
@@ -1156,6 +1323,12 @@ msgid ""
 "pads (by default, http://etherpad.com/).\n"
 "    "
 msgstr ""
+"\n"
+"Додає розширеної підтримки вкладень (Ether) Pad у веб-клієнті.\n"
+"================================================== =================\n"
+"\n"
+"Дозволяє компанії налаштовувати, які установки Pad потрібно використовувати для посилання на нові\n"
+"планшети (за замовчуванням, http://etherpad.com/)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_calendar
@@ -1184,6 +1357,20 @@ msgid ""
 "* Supported cards: Visa, MasterCard, American Express, Discover\n"
 "    "
 msgstr ""
+"\n"
+"Дозволити кредитні картки POS\n"
+"==============================\n"
+"\n"
+"Цей модуль дозволяє клієнтам платити за свої замовлення за допомогою кредиту\n"
+"картки Транзакції обробляються компанією Mercury (розроблено компанією Wells\n"
+"Fargo Bank). Обліковий запис продавця потрібен. Це дозволяє\n"
+"наступне:\n"
+"\n"
+"* Швидкий платіж за допомогою простого переміщення кредитної картки на екрані платежу\n"
+"* Поєднання грошових розрахунків та платежів за кредитними картками\n"
+"* Відшкодування\n"
+"* Підтримувані картки: Visa, MasterCard, American Express, Discover\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -1240,6 +1427,13 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Дозволяє продавати табелі у своєму замовленні на продаж\n"
+"=============================================\n"
+"\n"
+"Цей модуль встановлює правильний товар на всі рядки табелю\n"
+"відповідно до замовлення/контракту, на якому ви працюєте. Це дозволяє\n"
+"мати реальні доставлені кількості в замовленнях на продаж.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -1266,6 +1460,11 @@ msgid ""
 "\n"
 "* Cost structure report\n"
 msgstr ""
+"\n"
+"Аналітични бухоблік в MRP\n"
+"==========================\n"
+"\n"
+"* Звіт про структуру витрат\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -1278,6 +1477,13 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Аргентинський план рахунків та податкова локалізація.\n"
+"==================================================\n"
+"\n"
+"Plan contable argentino e impuestos de acuerdo a disposiciones vigentes\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -1301,6 +1507,14 @@ msgid ""
 "in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test \n"
 "and print the report from Print button in header area.\n"
 msgstr ""
+"\n"
+"Заявлення бухгалтерського обліку.\n"
+"======================\n"
+"За допомогою цього модуля ви можете вручну перевірити послідовності та невідповідності модуля бухгалтерського обліку в меню Звіти/ Бухгалтерія/Бухгалтерські тести.\n"
+"\n"
+"Ви можете написати запит, щоб створити Test Consistency, і ви отримаєте результат тесту\n"
+"у форматі PDF, до якого можна отримати доступ з Меню звітів-> Тестування бухгалтерського обліку, після чого виберіть тест\n"
+"і надрукуйте звіт з кнопки «Друк» у області заголовка.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_asset
@@ -1348,6 +1562,16 @@ msgid ""
 "    - sets up Australian taxes.\n"
 "    "
 msgstr ""
+"\n"
+"Австралійський модуль бухгалтерського обліку\n"
+"============================\n"
+"\n"
+"Австралійські базові плани рахунків та локалізації.\n"
+"\n"
+"Також:\n"
+"     - активує низку регіональних валют.\n"
+"     - встановлює австралійські податки.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_reports
@@ -1359,6 +1583,12 @@ msgid ""
 "GST Reporting for Australian Accounting.\n"
 "    "
 msgstr ""
+"\n"
+"Австралійські бухгалтерські звіти\n"
+"=============================\n"
+"\n"
+"Звітність GST для австралійського бухгалтерського обліку.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat_autocomplete
@@ -1386,6 +1616,16 @@ msgid ""
 "This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.\n"
 "    "
 msgstr ""
+"\n"
+"Автоматизовані переклади через API Gengo\n"
+"==============================\n"
+"\n"
+"Цей модуль встановить пасивну роботу планувальника для автоматизованих перекладів\n"
+"використовуючи API Gengo. Щоб його активувати, потрібно\n"
+"1) Налаштувати параметри автентифікації Gengo в розділі «Налаштування> Компанії> Параметри Gengo»\n"
+"2) Запустити майстер у розділі «Налаштування> Умови застосування> Gengo: Ручний запит на переклад» та дотримуватися підказок.\n"
+"\n"
+"Цей майстер активізує роботу CRON та планувальник, і почне автоматичний переклад за допомогою служб Gengo Services для всіх умов, де ви зазначили."
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_scanner
@@ -1421,6 +1661,16 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
+"\n"
+"Базовий модуль для ефіопської локалізації\n"
+"============================\n"
+"\n"
+"Це остання ефіопська локалізація Odoo і складається з:\n"
+"     - Графіку рахунків\n"
+"     - Структури податку з ПДВ\n"
+"     - Структури податку на утримання\n"
+"     - Регіональні державні лістинги\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -1462,6 +1712,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"Базовий модуль для бразильської локалізації\n"
+"===========================================\n"
+"\n"
+"Цей модуль складається із:\n"
+"\n"
+" - Загального бразильського графіку рахунків\n"
+" - бразильських податків, такі як:\n"
+"\n"
+"        - ІПІ\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - МКС\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"Поле tax_discount також було додано в account.tax.template і\n"
+"account.tax об'єктів, щоб дозволити правильне обчислення деяких бразильських ПДВ\n"
+"таких як ICMS. Мастер створення облікового запису було розширено до\n"
+"правильно поширюйте ці нові дані.\n"
+"\n"
+"Однак важливо зазначити, що для цього модуля немало реалізації\n"
+"використовувати Odoo правильно в Бразилії. Ці реалізації (такі як електронна\n"
+"фіскальний рахунок-фактура, який вже працює) приносять понад 15\n"
+"додаткові модулі бразильського проекту локалізації Launchpad\n"
+"https://launchpad.net/openerp.pt-br-localiz і їх залежності в\n"
+"додаткові аддони гілки. Ці модулі спрямовані не на розрив з чудовим\n"
+"Odoo модульність, тому вони численні, але малі. Один з\n"
+"Причини для підтримки цих модулів - це бразильська локалізація\n"
+"лідери потребують жорсткості, щоб завершити локалізацію як компанії\n"
+"Оподатковувані залишкові юридичні вимоги (такі, як скоро фінансові лічильники,\n"
+"облік SPED, фіскальна SPED та PAF ECF, які як і раніше відсутні, як вересень\n"
+"2011) Ці модулі також строго ліцензовані в AGPL V3, і сьогодні цього немає\n"
+"прийти з будь-яким додатковим оплачуваним дозволом для онлайн-використання \"приватних модулів\".\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_deposit
@@ -1474,6 +1760,13 @@ msgid ""
 "When you proceed with the reconciliation, simply select the corresponding batch deposit to reconcile the payments.\n"
 "    "
 msgstr ""
+"\n"
+"Пакетний депозит\n"
+"=============\n"
+"Пакетні депозити дозволяють групувати отримані чеки, перш ніж депонувати їх в банк.\n"
+"Сума, що надійде до вашого банку, відображатиметься як одна транзакція у виписці з вашої банківської системи.\n"
+"Коли ви приступаєте до узгодження, просто виберіть відповідний депозит для поповнення платежів.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -1516,6 +1809,24 @@ msgid ""
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
+"\n"
+"Бельгійський зареєстрований касовий реєстр\n"
+"================================\n"
+"\n"
+"Цей модуль перетворює модуль Point Of Sale в сертифікований бельгійський касовий апарат.\n"
+"\n"
+"Більше інформації:\n"
+"   * http://www.systemedecaisseenregistreuse.be/\n"
+"   * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Юридичний\n"
+"-----\n"
+"** Використання джерел pos_blackbox_be сертифікується лише на платформі SaaS odoo.com\n"
+"для версії 9.0 **\n"
+"Захоплена та засвідчена версія pos_blackbox_be може бути надана\n"
+"запити на вбудовані приміщення.\n"
+"Ніяка модифікована версія сертифікована та не підтримується Odoo SA.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -1527,6 +1838,12 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Болівійська план рахунків та локалізація податків.\n"
+"\n"
+"Плануйте вживати контакти із зацікавленими особами\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_rating
@@ -1599,6 +1916,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"План рахунків для Венесуели.\n"
+"===============================\n"
+"\n"
+"У Венесуелі немає законів схеми обліку, але за умовчанням\n"
+"запропонований в Odoo, повинен відповідати визнаним кращим практикам у Венесуелі,\n"
+"цей план відповідає цій практиці.\n"
+"\n"
+"Цей модуль був протестований як база для більш ніж 1000 компаній, тому що\n"
+"він заснований у суміші найпоширенішого програмного забезпечення у венесуельській\n"
+"що дозволить напевно бухгалтерам почувати себе з першими кроками\n"
+"Odoo більше комфортно.\n"
+"\n"
+"Цей модуль не претендує на загальну локалізацію для Венесуели,\n"
+"але це допоможе вам дуже швидко розпочати роботу з Odoo у цій країні.\n"
+"\n"
+"Цей модуль дає вам.\n"
+"--------------------\n"
+"\n"
+"- Основні податки для Венесуели.\n"
+"- У вас є основні дані для запуску тестів з локалізацією спільноти.\n"
+"- Почніть компанію з 0, якщо ваші потреби є базовими з обліку PoV.\n"
+"\n"
+"Ми рекомендуємо використовувати account_anglo_saxon, якщо ви хочете оцінити ваш\n"
+"акції, як Венесуела робить без рахунків-фактур.\n"
+"\n"
+"Якщо ви встановите цей модуль і виберете спеціальну діаграму, буде запропоновано базову діаграму,\n"
+"але вам доведеться встановити дефолт за податками вручну.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -1610,6 +1955,12 @@ msgid ""
 "Thai accounting chart and localization.\n"
 "    "
 msgstr ""
+"\n"
+"План рахунків для Тайланду.\n"
+"===============================\n"
+"\n"
+"Тайландський план рахунків та локалізація.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -5273,23 +5624,23 @@ msgstr "A module to verify the Assets Bundle mechanism."
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
 msgid "A module to verify the inheritance using _inherits."
-msgstr ""
+msgstr "Модуль для перевірки наслідування using _inherits."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit
 msgid "A module to verify the inheritance."
-msgstr ""
+msgstr "Модуль для перевірки наслідування."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_limits
 msgid "A module with dummy methods."
-msgstr ""
+msgstr "Модуль з фіктивними методами."
 
 #. module: base
 #: code:addons/base/ir/ir_qweb/fields.py:385
 #, python-format
 msgid "A unit must be provided to duration widgets"
-msgstr ""
+msgstr "Пристрій повинен бути забезпечений для віджетів тривалості"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -5419,7 +5770,7 @@ msgstr "Доступ до знак"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
-msgstr ""
+msgstr "Аналітичний рахунок за замовчуванням"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -5459,17 +5810,17 @@ msgstr "Номер рахунку повинен бути унікальним"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "TaxCloud рахунку"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
 msgid "Account TaxCloud - Ecommerce"
-msgstr ""
+msgstr "Рахунок TaxCloud - Електронна комерція"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr ""
+msgstr "Бухоблік TaxCloud - Продажі"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_payment
@@ -5489,12 +5840,12 @@ msgstr "Бухгалтерський облік та фінанси"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
-msgstr ""
+msgstr "Бухоблік - MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
 msgid "Accounting Consistency Tests"
-msgstr ""
+msgstr "Тестування послідовності обліку"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports
@@ -5560,7 +5911,7 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:base.field_ir_actions_help_273
 #: model:ir.model.fields,field_description:base.field_ir_cron_help
 msgid "Action Description"
-msgstr ""
+msgstr "Опис дії"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_name
@@ -5673,7 +6024,7 @@ msgstr "Додайте устаткування для сканування шт
 #. module: base
 #: model:ir.module.module,summary:base.module_event_barcode
 msgid "Add barcode scanning feature to event management."
-msgstr ""
+msgstr "Додайте функцію сканування штрихкодів для керування події."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_address_extended
@@ -5795,7 +6146,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_country_state_name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
-msgstr ""
+msgstr "Адміністративні підрозділи країни. Наприклад, ФРС Штат, кантон"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:907 code:addons/base/ir/ir_model.py:1019
@@ -5812,25 +6163,25 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Розширені події"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "Advanced Properties"
-msgstr ""
+msgstr "Розширені властивості"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
 #: model:ir.module.module,shortdesc:base.module_payment_adyen
 msgid "Adyen Payment Acquirer"
-msgstr ""
+msgstr "Одержувач платежу Adyen"
 
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -5845,7 +6196,7 @@ msgstr ""
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr ""
+msgstr "Після суми"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -5883,7 +6234,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_form
 msgid "Allow website visitors to submit tickets through a form"
-msgstr ""
+msgstr "озволити відвідувачам веб-сайту подавати квитки через форму"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -5931,6 +6282,8 @@ msgid ""
 "Ambiguous specification for field '%(field)s', only provide one of name, "
 "external id or database id"
 msgstr ""
+"Неоднозначна специфікація для поля '%(field)s', надавати лише ім'я, "
+"зовнішній ідентифікатор або ідентифікатор бази даних"
 
 #. module: base
 #: model:res.country,name:base.as
@@ -5943,6 +6296,8 @@ msgid ""
 "An arbitrary string, interpreted by the client according to its own needs "
 "and wishes. There is no central tag repository across clients."
 msgstr ""
+"Довільний рядок, інтерпретований клієнтом відповідно до власних потреб та "
+"побажань. Не існує центрального сховища тегів серед клієнтів."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_auto_install
@@ -5951,6 +6306,9 @@ msgid ""
 " its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
+"Автоматично встановлюваний модуль автоматично встановлюється системою, коли "
+"всі її залежності задовольняються. Якщо модуль не має залежності, він завжди"
+" встановлюється."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_analytic
@@ -5960,7 +6318,7 @@ msgstr "Аналітичний облік"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Аналітичний облік на виробництві"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -5985,18 +6343,18 @@ msgstr "Антарктика"
 #. module: base
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
-msgstr ""
+msgstr "Антигуа і Барбуда"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_act_cl
 #: model:ir.ui.menu,name:base.module_mi
 msgid "App Store"
-msgstr ""
+msgstr "App Store"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_open_website
 msgid "App Switcher"
-msgstr ""
+msgstr "Перемикач програм"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_report_header
@@ -6004,6 +6362,8 @@ msgid ""
 "Appears by default on the top right corner of your printed documents (report"
 " header)."
 msgstr ""
+"З'являється за замовчуванням у верхньому правому кутку друкованих документів"
+" (заголовок звіту)."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -6022,7 +6382,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_web_planner
 msgid "Application Planner"
-msgstr ""
+msgstr "Планувальник додатків"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -6050,7 +6410,7 @@ msgstr "Застосувати заплановані оновлення"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_create
 msgid "Apply for Create"
-msgstr ""
+msgstr "Застосувати для створення"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_unlink
@@ -6065,7 +6425,7 @@ msgstr "Прийняти для читання"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule_perm_write
 msgid "Apply for Write"
-msgstr ""
+msgstr "Застосувати для написання"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_calendar
@@ -6089,7 +6449,7 @@ msgstr "Додатки"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_modules
 msgid "Apps To Export"
-msgstr ""
+msgstr "Додатки на експорт"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
@@ -6104,12 +6464,12 @@ msgstr "Додатки:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Назва файлуArch "
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
@@ -6134,7 +6494,7 @@ msgstr "Аргентина - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ar_reports
 msgid "Argentina - Accounting Reports"
-msgstr ""
+msgstr "Аргентина - Бухгалтерські звіти"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
@@ -6169,18 +6529,18 @@ msgstr "Керування асоціаціями"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_membership
 msgid "Associations: Members"
-msgstr ""
+msgstr "Асоціації: члени"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:53
 #, python-format
 msgid "At least one language must be active."
-msgstr ""
+msgstr "В кінці кінців одна мова повинна бути активна."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Attached Document Name"
-msgstr ""
+msgstr "Прикрипіть назву документа"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
@@ -6209,7 +6569,7 @@ msgstr "Долучення"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_document
 msgid "Attachments List and Document Indexation"
-msgstr ""
+msgstr "Список вкладень та індексування документів"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hr_attendance
@@ -6234,7 +6594,7 @@ msgstr "Австралія - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
 msgid "Australian - Accounting Reports"
-msgstr ""
+msgstr "Австралія - Бухгалтерські звіти"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -6267,7 +6627,7 @@ msgstr "Ім'я автора"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr ""
+msgstr "Одержувач платежу Authorize.Net "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_auto_search
@@ -6308,7 +6668,7 @@ msgstr "Початок встановлення"
 #: code:addons/base/module/module.py:719
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
-msgstr ""
+msgstr "Автоматичне встановлення завантажених програм наразі вимкнено."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -6450,12 +6810,12 @@ msgstr "Банківський рахунок"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank_acc_type
 msgid "Bank account type, inferred from account number"
-msgstr ""
+msgstr "Тип банківського рахунку, що випливає з номера рахунку"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_bank_ids
 msgid "Bank accounts related to this company"
-msgstr ""
+msgstr "Банківські рахунки, пов'язані з цією компанією"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -6508,7 +6868,7 @@ msgstr "Базове поле"
 #: code:addons/base/res/res_lang.py:233
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
-msgstr ""
+msgstr "Базова мова 'en_US' не може бути видалена!"
 
 #. module: base
 #: selection:ir.model,state:0
@@ -6529,17 +6889,18 @@ msgstr "Імпорт"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import_module
 msgid "Base import module"
-msgstr ""
+msgstr "Базовий модуль імпорту"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
 msgid "Base module holding website-related stuff for partner model"
 msgstr ""
+"Базовий модуль утримує матеріали, пов'язані з веб-сайтом для моделі партнера"
 
 #. module: base
 #: selection:ir.ui.view,mode:0
 msgid "Base view"
-msgstr ""
+msgstr "Базовий перегляд"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -6556,7 +6917,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_grid
 msgid "Basic 2D Grid view for odoo"
-msgstr ""
+msgstr "Базовий перегляд 2D Grid для odoo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
@@ -6576,7 +6937,7 @@ msgstr ""
 #. module: base
 #: selection:res.currency,position:0
 msgid "Before Amount"
-msgstr ""
+msgstr "Перед сумою"
 
 #. module: base
 #: code:addons/base/res/res_users.py:954
@@ -6593,12 +6954,12 @@ msgstr "Білорусь"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
-msgstr ""
+msgstr "Бельгійська декларація Intrastat "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
-msgstr ""
+msgstr "Бельгійський зареєстрований грошовий реєстр"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -6613,17 +6974,17 @@ msgstr "Бельгія - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports
 msgid "Belgium - Accounting Reports"
-msgstr ""
+msgstr "Бельгія - Бухгалтерські звіти"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr ""
+msgstr "Бельгія - Імпорт банківських виписок CODA "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr ""
+msgstr "Belgium - Зарплата"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
@@ -6633,12 +6994,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr ""
+msgstr "Бельгія - Зарплата з бухобліком"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_invoice_bba
 msgid "Belgium - Structured Communication"
-msgstr ""
+msgstr "Бельгія - Структурована Комунікація"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -6663,7 +7024,7 @@ msgstr "Бутан"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Bill of Materials, Routings, Versions, Engineering Change Orders"
-msgstr ""
+msgstr "Специфікації, Маршрутизації, Версії, Замовлення інженерних змін"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -6698,7 +7059,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
 msgid "Blackbox Hardware Driver"
-msgstr ""
+msgstr "Апаратний драйвер Blackbox "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -6718,12 +7079,12 @@ msgstr "Болівія - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo_reports
 msgid "Bolivia - Accounting Reports"
-msgstr ""
+msgstr "Болівія - Бухгалтерські звіти"
 
 #. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
-msgstr ""
+msgstr "Бонайре, Синт Евстатіус і Саба"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -6733,7 +7094,7 @@ msgstr "Бульовий"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bootswatch
 msgid "Bootswatch Theme"
-msgstr ""
+msgstr "Тема Bootswatch"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -6773,18 +7134,18 @@ msgstr "Бразилія - Бухгалтерський облік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_reports
 msgid "Brazilian - Accounting Reports"
-msgstr ""
+msgstr "Бразилія - Бухгалтерський звіт"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
 msgid "Bridge module for acquirers and website."
-msgstr ""
+msgstr "Мостовий модуль для покупців та веб-сайту."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk
 #: model:ir.module.module,summary:base.module_website_helpdesk
 msgid "Bridge module for helpdesk modules using the website."
-msgstr ""
+msgstr "Мостовий модуль для довідки модулей, використовуючи веб-сайт."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -6805,7 +7166,7 @@ msgstr "Бруней Даруссалам"
 #: model:ir.module.module,description:base.module_payment_buckaroo
 #: model:ir.module.module,shortdesc:base.module_payment_buckaroo
 msgid "Buckaroo Payment Acquirer"
-msgstr ""
+msgstr "Одержувач платежу Buckaroo "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
@@ -6815,7 +7176,7 @@ msgstr "Керування бюджетами"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Build Your Enterprise Website"
-msgstr ""
+msgstr "Побудуйте ваш веб-сайт Enterprise "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_form_editor
@@ -6860,7 +7221,7 @@ msgstr "CRM"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gamification_sale_crm
 msgid "CRM Gamification"
-msgstr ""
+msgstr "Геміфікація CRM "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_livechat
@@ -6878,6 +7239,8 @@ msgid ""
 "CSV format: you may edit it directly with your favorite spreadsheet software,\n"
 "                                the rightmost column (value) contains the translations"
 msgstr ""
+"Формат CSV: ви можете редагувати його безпосередньо з улюбленим програмним забезпеченням електронної таблиці.\n"
+"                                 праве коло стовпці (значення) містить переклади"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -6907,6 +7270,8 @@ msgstr "Камерун"
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
 msgstr ""
+"Не може створити записи Many-To-One опосередковано, імпортувати поле "
+"опосередковано"
 
 #. module: base
 #: code:addons/base/module/module.py:605
@@ -6918,7 +7283,7 @@ msgstr "Неможливо оновити модуль '%s'. Він не вст�
 #: code:addons/base/ir/ir_model.py:668
 #, python-format
 msgid "Can only rename one field at a time!"
-msgstr ""
+msgstr "Може лише перейменувати одне поле зараз!"
 
 #. module: base
 #: model:res.country,name:base.ca
@@ -6977,13 +7342,14 @@ msgstr "Почати налаштування"
 #: code:addons/base/ir/ir_model.py:568
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
-msgstr ""
+msgstr "Не може перейменувати/видалити поля, які досі переглядаються:"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:221
 #, python-format
 msgid "Cannot unactivate a language that is currently used by users."
 msgstr ""
+"Не може деактивувати мову, яку на даний момент використовує користувач."
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -7056,6 +7422,10 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
+"Зміна компанії контакту повинна бути зроблена лише тоді, коли її правильно "
+"не встановлено. Якщо існуючий контакт починає працювати для нової компанії, "
+"то під новою компанією слід створити новий контакт. Ви можете "
+"використовувати кнопку \"Відхилити\", щоб відмовитися від цієї зміни."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:655
@@ -7070,6 +7440,8 @@ msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr ""
+"Зміна типу поля досі не підтримується. Будь ласка, опустіть його і створіть "
+"його ще раз!"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -7084,18 +7456,18 @@ msgstr "Спілкуйтеся з відвідувачами Вашого сай
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr ""
+msgstr "Перевірте друк бази"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr ""
+msgstr "Перевірте друк у витратах"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
 #: model:ir.model.fields,help:base.field_res_users_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr ""
+msgstr "Перевірте, чи контакт є компанією, інакше це людина"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
@@ -7115,6 +7487,8 @@ msgid ""
 "Check this box if this contact is a vendor. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Перевірте чи цей контакт є постачальником. Якщо не перевіряється, придбання "
+"людина не побачить при кодуванні замовлення на придбання."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_employee
@@ -7125,13 +7499,13 @@ msgstr "Позначте цей бокс, якщо цей контакт є Сп
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_child_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron_child_ids
 msgid "Child Actions"
-msgstr ""
+msgstr "Дочірні дії"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_child_ids
@@ -7151,12 +7525,12 @@ msgstr "Підлегле поле"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_child_id
 msgid "Child IDs"
-msgstr ""
+msgstr "Дочірні ID"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_child_ids
 msgid "Child Tags"
-msgstr ""
+msgstr "Дочірні теги"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_child_ids
@@ -7165,6 +7539,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Дочірні серверні дії, які буде виконано. Занотуйте, що останнє повернене "
+"значення буде використано як глобальне повернене значення."
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -7179,7 +7555,7 @@ msgstr "Чілі - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cl_reports
 msgid "Chile - Accounting Reports"
-msgstr ""
+msgstr "Чилі - Бухгалтерські звіти"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -7207,6 +7583,10 @@ msgid ""
 "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
 "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)"
 msgstr ""
+"Виберіть схему шифрування з'єднання:\n"
+"- Немає: сесії SMTP виконуються у вигляді текстового тексту.\n"
+"- TLS (STARTTLS): шифрування TLS запитується на початку сеансу SMTP (рекомендується)\n"
+"- SSL / TLS: сесії SMTP шифруються за допомогою SSL / TLS через спеціальний порт (за замовчуванням: 465)"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -7317,11 +7697,18 @@ msgid ""
 "\n"
 "Modules time, datetime, dateutil are available."
 msgstr ""
+"Код для обчислення значення поля.\n"
+"Ітерація на наборі записів \"self\" та присвоєння значення поля:\n"
+"\n"
+"     для запису в себе:\n"
+"         запис ['size'] = len (record.name)\n"
+"\n"
+"Модулі мають доступ до часу, дати часу, використання часу."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr ""
+msgstr "Колаборативні планшети"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -7341,12 +7728,12 @@ msgstr "Колумбія - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_reports
 msgid "Colombian - Accounting Reports"
-msgstr ""
+msgstr "Коламбія - Бухгалтерські звіти"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
 msgid "Colombian Accounting and Tax Preconfiguration"
-msgstr ""
+msgstr "Колумбійська бухгалтерська та податкова конфігурація"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_color
@@ -7369,12 +7756,12 @@ msgstr "Колонка 2"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column2
 msgid "Column referring to the record in the comodel table"
-msgstr ""
+msgstr "Колонка, що відноситься до запису в комодельній таблиці"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields_column1
 msgid "Column referring to the record in the model table"
-msgstr ""
+msgstr "Колонка з посиланням на запис у таблицю зразків"
 
 #. module: base
 #: selection:report.paperformat,format:0
@@ -7387,6 +7774,8 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
+"Список дозволених режимів перегляду, розділений комами, наприклад \"форма\","
+" \"дерево\", \"календар\" тощо (за замовчуванням: дерево, форма)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_comment
@@ -7407,7 +7796,7 @@ msgstr "Перспективний"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr "Загальна інформація про напої для торгових точок"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -7433,7 +7822,7 @@ msgstr "Компанії"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
 msgid "Companies count"
-msgstr ""
+msgstr "Кількість компаній"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_company_id
@@ -7477,7 +7866,7 @@ msgstr "Назва компанії"
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_company_name
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_company_name
 msgid "Company Name Entity"
-msgstr ""
+msgstr "Назва підприємства"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_property_form
@@ -7525,7 +7914,7 @@ msgstr "Повна назва"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
 msgid "Components Buyer"
-msgstr ""
+msgstr "Покупець компонентів"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_compute
@@ -7538,6 +7927,8 @@ msgid ""
 "Computed fields are defined with the fields\n"
 "                                                <strong>Dependencies</strong> and <strong>Compute</strong>."
 msgstr ""
+"Комп'ютерні поля визначаються полями\n"
+"                                                <strong>Залежності</strong> та <strong>Обчислення</strong>."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -7545,6 +7936,8 @@ msgid ""
 "Computed fields are defined with the fields\n"
 "                                    <strong>Dependencies</strong> and <strong>Compute</strong>."
 msgstr ""
+"Комп'ютерні поля визначаються полями\n"
+"                                                <strong>Залежності</strong> та <strong>Обчислення</strong>."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default_condition
@@ -7583,7 +7976,7 @@ msgstr "Майстри налаштування"
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_sale
 msgid "Configure timesheet invoicing"
-msgstr ""
+msgstr "Налаштування рахунків-фактур на часові рамки"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -7599,7 +7992,7 @@ msgstr "Конго"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_proxy
 msgid "Connect the Web Client to Hardware Peripherals"
-msgstr ""
+msgstr "Підключіть веб-клієнт до апаратної периферії"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_mail_server_form
@@ -7641,7 +8034,7 @@ msgstr "Обмеження"
 #. module: base
 #: sql_constraint:ir.model.constraint:0
 msgid "Constraints with the same name are unique per module."
-msgstr ""
+msgstr "м"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_F
@@ -7716,12 +8109,12 @@ msgstr "Контакти та адреси"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts
 msgid "Contacts Directory"
-msgstr ""
+msgstr "Каталог контактів"
 
 #. module: base
 #: sql_constraint:res.partner:0
 msgid "Contacts require a name."
-msgstr ""
+msgstr "Контакти вимагають назви."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_context
@@ -19435,7 +19828,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_server_fields_lines
 #: model:ir.model.fields,field_description:base.field_ir_cron_fields_lines
 msgid "Value Mapping"
-msgstr ""
+msgstr "Картографічне значення"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_reference
@@ -19458,6 +19851,8 @@ msgid ""
 "Various fields may use Python code or Python expressions. The following "
 "variables can be used:"
 msgstr ""
+"Різні поля можуть використовувати код Python або вирази Python. Можна "
+"використовувати наступні змінні:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_vat_label
@@ -19513,7 +19908,7 @@ msgstr "В'єтнам - Бухоблік"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn_reports
 msgid "Vietnam - Accounting Reports"
-msgstr ""
+msgstr "В'єтнам - Бухгалтерські звіти"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_view_id
@@ -19562,12 +19957,12 @@ msgstr "Тип виду"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
 msgid "View and create reports"
-msgstr ""
+msgstr "Переглянути та створити звіти"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Переглянути режим успадкування"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_window_view_type
@@ -19575,6 +19970,9 @@ msgid ""
 "View type: Tree type to use for the tree view, set to 'tree' for a "
 "hierarchical tree view, or 'form' for a regular list view"
 msgstr ""
+"Тип перегляду: тип дерева, який використовується для перегляду дерева, "
+"встановлено на \"дерево\" для ієрархічного дерева або \"форма\" для "
+"звичайного перегляду списку"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:570
@@ -19605,11 +20003,14 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
+"Перегляди дозволяють персоналізувати кожен вид Odoo. Ви можете додати нові "
+"поля, переміщати поля, перейменовувати їх або видаляти ті, які вам не "
+"потрібні."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Перегляди, які успадковують від цього"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -19629,7 +20030,7 @@ msgstr "Видимий"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Бухоблік WMS "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
@@ -19649,7 +20050,7 @@ msgstr "Склад"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Warehouse Management Barcode Scanning"
-msgstr ""
+msgstr "Сканування штрих-кодів управління складом"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
@@ -19706,22 +20107,22 @@ msgstr "Web редактор"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
-msgstr ""
+msgstr "Web Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
 msgid "Web Gantt"
-msgstr ""
+msgstr "Web Gantt"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_web_icon
 msgid "Web Icon File"
-msgstr ""
+msgstr "Веб-піктограма"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_web_icon_data
 msgid "Web Icon Image"
-msgstr ""
+msgstr "Веб-піктограма зображення"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_http_routing
@@ -19751,7 +20152,7 @@ msgstr "Конструктор сайтів"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_enterprise
 msgid "Website Enterprise"
-msgstr ""
+msgstr "Website Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form_project
@@ -19766,57 +20167,57 @@ msgstr "Конструктор форм сайтів"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_form
 msgid "Website Form Helpdesk"
-msgstr ""
+msgstr "Довідка форми вебсайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_gengo
 msgid "Website Gengo Translator"
-msgstr ""
+msgstr "Перекладач веб-сайту Gengo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_google_map
 msgid "Website Google Map"
-msgstr ""
+msgstr "Веб-сайт Google Map"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk
 msgid "Website Helpdesk"
-msgstr ""
+msgstr "Довідник веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr ""
+msgstr "Довідка Живого чату IM веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Website Link Tracker"
-msgstr ""
+msgstr "Відстежувач посилання веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_livechat
 msgid "Website Live Support"
-msgstr ""
+msgstr "Жива підтримка веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail
 msgid "Website Mail"
-msgstr ""
+msgstr "Пошта веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mass_mailing
 msgid "Website Mass Mailing Campaigns"
-msgstr ""
+msgstr "Кампанії масової розсилки веб-сайту"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail
 msgid "Website Module for Mail"
-msgstr ""
+msgstr "Модуль веб-сайту для пошти"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_partner
 msgid "Website Partner"
-msgstr ""
+msgstr "Партнер веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_rating
@@ -19841,12 +20242,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
 msgid "Website Sale Digital - Sell digital products"
-msgstr ""
+msgstr "Веб-сайт цифрового продажу -продає цифрові товари"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Website Sale Stock - Website Delivery Information"
-msgstr ""
+msgstr "Веб-сайт складу продажу - інформація веб-сайту доставки"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock_options
@@ -19856,7 +20257,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr ""
+msgstr "Довідник слайдів веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
@@ -19866,12 +20267,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_theme_install
 msgid "Website Theme Install"
-msgstr ""
+msgstr "Встановлення теми веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_version
 msgid "Website Versioning"
-msgstr ""
+msgstr "Версія веб-сайту"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -19898,7 +20299,7 @@ msgstr "Тижні"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
 msgid "Weighing Scale Hardware Driver"
-msgstr ""
+msgstr "Масштабний апаратний драйвер"
 
 #. module: base
 #: model:res.country,name:base.eh
