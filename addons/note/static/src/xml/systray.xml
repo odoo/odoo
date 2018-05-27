@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-extend="mail.chat.ActivityMenuPreview">
+    <t t-extend="mail.systray.ActivityMenuPreview">
         <t t-jquery="t[t-foreach*='activities'][t-as*='activity']" t-operation="after">
             <div class="o_note_show">
                 <a class="btn btn-block text-center">Add new note</a>
             </div>
-            <div class="o_note o_mail_channel_preview hidden">
-                <div class="o_mail_channel_image o_mail_channel_app">
+            <div class="o_note o_mail_conversation_preview hidden">
+                <div class="o_mail_conversation_image o_mail_conversation_app">
                     <img src="/note/static/description/icon.png"/>
                 </div>
-                <div class="o_channel_info">
-                    <div class="o_channel_title">
-                        <span class="o_channel_name"><strong>Add a note</strong></span>
+                <div class="o_conversation_info">
+                    <div class="o_conversation_title">
+                        <span class="o_conversation_name"><strong>Add a note</strong></span>
                         <div class="o_note_datetime"/>
                         <span class="ml4">
                             <a class="o_note_set_datetime text-muted">

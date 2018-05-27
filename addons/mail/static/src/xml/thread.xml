@@ -3,16 +3,16 @@
 
     <t t-name="mail.ChatThread">
         <t t-if="messages.length">
-            <t t-if="options.display_load_more and options.display_order == ORDER.ASC"
+            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.ASC"
                t-call="mail.ChatThread.LoadMore"/>
             <t t-call="mail.ChatThread.Content"/>
-            <t t-if="options.display_load_more and options.display_order == ORDER.DESC"
+            <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
                t-call="mail.ChatThread.LoadMore"/>
         </t>
-        <t t-if="options.display_empty_channel">
+        <t t-if="options.displayEmptyChannel">
             <t t-call="mail.EmptyChannel" />
         </t>
-        <div t-if="options.display_no_match" class="o_mail_no_content">
+        <div t-if="options.displayNoMatchFound" class="o_mail_no_content">
             <div class="o_thread_title">No matches found</div>
             <div>No message matches your search. Try to change your search filters.</div>
         </div>
@@ -64,7 +64,7 @@
         <div class="modal o_modal_fullscreen" tabindex="-1" role="dialog" aria-hidden="true">
             <t t-call="DocumentViewer.Content"/>
 
-            <t t-if="widget.attachment.length != 1">
+            <t t-if="widget.attachment.length !== 1">
                 <a class="arrow arrow-left move_previous" href="#">
                     <span class="fa fa-chevron-left"/>
                 </a>
@@ -95,126 +95,128 @@
 
     <!-- When a channel is empty-->
     <div t-name="mail.EmptyChannel" class="o_mail_no_content">
-        <t t-if="options.channel_id==='channel_inbox'">
+        <t t-if="options.threadID === 'mailbox_inbox'">
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>
         </t>
-        <t t-if="options.channel_id==='channel_starred'">
+        <t t-if="options.threadID === 'mailbox_starred'">
             <div class="o_thread_title">No starred message</div>
-            <div>You can mark any message as 'starred', and it shows up in this channel.</div>
+            <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
         </t>
     </div>
 
+    <!-- @param {mail.model.Message[]} messages -->
     <t t-name="mail.ChatThread.Content">
-        <t t-if="options.messages_separator_position == 'top'" t-call="mail.MessagesSeparator"/>
+        <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
         <t t-foreach="messages" t-as="message">
-            <div t-if="current_day != message.day" class="o_thread_date_separator">
+            <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
                 <span class="o_thread_date">
-                    <t t-esc="message.day"/>
+                    <t t-esc="message.getDateDay()"/>
                 </span>
-                <t t-set="current_day" t-value="message.day"/>
+                <t t-set="current_day" t-value="message.getDateDay()"/>
             </div>
 
             <t t-call="mail.ChatThread.Message"/>
         </t>
     </t>
 
+    <!-- @param {mail.model.Message} message -->
     <t t-name="mail.ChatThread.Message">
-        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '') + (message.is_discussion or message.is_notification ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.id">
-            <div t-if="options.display_avatar" class="o_thread_message_sidebar">
-                <t t-if="!message.mailto and message.author_id[0]">
-                    <img t-if="message.avatar_src and message.display_author"
-                        t-att-src="message.avatar_src"
+        <div t-att-class="'o_thread_message' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.getID()">
+            <div t-if="options.displayAvatar" class="o_thread_message_sidebar">
+                <t t-if="message.hasAuthor()">
+                    <img t-if="message.shouldDisplayAuthor()"
+                        t-att-src="message.getAvatarSource()"
                         data-oe-model="res.partner"
-                        t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
-                        t-attf-class="o_thread_message_avatar img-circle #{message.author_redirect ? 'o_mail_redirect' : ''}"/>
+                        t-att-data-oe-id="message.shouldRedirectToAuthorPage() ? message.getAuthorID() : ''"
+                        t-attf-class="o_thread_message_avatar img-circle #{message.shouldRedirectToAuthorPage() ? 'o_mail_redirect' : ''}"/>
                 </t>
-                <t t-if="message.mailto || !message.author_id[0]">
-                    <img t-if="message.avatar_src and message.display_author"
-                        t-att-src="message.avatar_src"
+                <t t-else="">
+                    <img t-if="message.shouldDisplayAuthor()"
+                        t-att-src="message.getAvatarSource()"
                         class="o_thread_message_avatar img-circle"/>
                 </t>
-                <span t-if="!message.display_author" t-att-title="message.date.format(date_format)" class="o_thread_message_side_date">
-                    <t t-esc="message.date.format('hh:mm')"/>
+                <span t-if="!message.shouldDisplayAuthor()" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
+                    <t t-esc="message.getDate().format('hh:mm')"/>
                 </span>
-                <i t-if="!message.display_author and options.display_stars and message.message_type != 'notification'"
-                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                    t-att-data-message-id="message.id" title="Mark as Todo"/>
+                <i t-if="!message.shouldDisplayAuthor() and options.displayStar and message.getType() !== 'notification'"
+                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                    t-att-data-message-id="message.getID()" title="Mark as Todo"/>
             </div>
             <div class="o_thread_message_core">
-                <p t-if="message.display_author" class="o_mail_info text-muted">
-                    <t t-if="message.is_note">
+                <p t-if="message.shouldDisplayAuthor()" class="o_mail_info text-muted">
+                    <t t-if="message.isNote()">
                         Note by
                     </t>
 
-                    <strong t-if="message.mailto">
-                        <a class="text-muted" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
-                            <t t-esc="message.mailto"/>
+                    <strong t-if="message.hasAuthor()"
+                            data-oe-model="res.partner" t-att-data-oe-id="message.shouldRedirectToAuthorPage() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_author #{message.shouldRedirectToAuthorPage() ? 'o_mail_redirect' : ''}">
+                        <t t-esc="message.getDisplayedAuthor()"/>
+                    </strong>
+                    <strong t-elif="message.hasEmailFrom()">
+                        <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.getSubject()}">
+                            <t t-esc="message.getEmailFrom()"/>
                         </a>
                     </strong>
-                    <strong t-if="!message.mailto and message.author_id[0]"
-                            data-oe-model="res.partner" t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
-                            t-attf-class="o_thread_author #{message.author_redirect ? 'o_mail_redirect' : ''}">
-                        <t t-esc="message.displayed_author"/>
-                    </strong>
-                    <strong t-if="!message.mailto and !message.author_id[0]" class="o_thread_author">
-                        <t t-esc="message.displayed_author"/>
+                    <strong t-else="" class="o_thread_author">
+                        <t t-esc="message.getDisplayedAuthor()"/>
                     </strong>
 
-                    - <small class="o_mail_timestamp" t-att-title="message.date.format(date_format)"><t t-esc="message.hour"/></small>
-                    <t t-if="message.model and (message.model != 'mail.channel') and options.display_document_link">
-                        on <a t-att-href="message.url" t-att-data-oe-model="message.model" t-att-data-oe-id="message.res_id" class="o_document_link"><t t-esc="message.record_name"/></a>
+                    - <small class="o_mail_timestamp" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
+                    <t t-if="message.isLinkedToDocument() and (message.getDocumentModel() !== 'mail.channel') and options.displayDocumentLink">
+                        on <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentResID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
-                    <t t-if="message.origin_id and (message.origin_id !== options.channel_id)">
-                        (from <a t-att-data-oe-id="message.origin_id" href="#">#<t t-esc="message.origin_name"/></a>)
+                    <t t-if="message.hasOriginChannel() and (message.getOriginChannelID() !== options.threadID)">
+                        (from <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
                     </t>
-                    <span t-if="options.display_email_icon and message.customer_email_data and message.customer_email_data.length" class="o_thread_tooltip_container">
-                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.customer_email_status + ' fa fa-envelope-o'"/>
+                    <span t-if="options.displayEmailIcon and message.hasCustomerEmailData()" class="o_thread_tooltip_container">
+                        <i t-att-class="'o_thread_tooltip o_thread_message_email o_thread_message_email_' + message.getCustomerEmailStatus() + ' fa fa-envelope-o'"/>
                         <span class="o_thread_tooltip_content">
-                            <t t-foreach="message.customer_email_data" t-as="customer">
+                            <t t-foreach="message.getCustomerEmailData()" t-as="customerEmailData">
                                 <span>
-                                    <t t-if="customer[2] == 'sent'"><i class='fa fa-check'/></t>
-                                    <t t-if="customer[2] == 'bounce'"><i class='fa fa-exclamation'/></t>
-                                    <t t-if="customer[2] == 'exception'"><i class='fa fa-exclamation'/></t>
-                                    <t t-if="customer[2] == 'ready'"><i class='fa fa-send-o'/></t>
-                                    <t t-esc="customer[1]"/>
+                                    <t t-if="customerEmailData[2] === 'sent'"><i class='fa fa-check'/></t>
+                                    <t t-if="customerEmailData[2] === 'bounce'"><i class='fa fa-exclamation'/></t>
+                                    <t t-if="customerEmailData[2] === 'exception'"><i class='fa fa-exclamation'/></t>
+                                    <t t-if="customerEmailData[2] === 'ready'"><i class='fa fa-send-o'/></t>
+                                    <t t-esc="customerEmailData[1]"/>
                                 </span>
                                 <br />
                             </t>
                         </span>
                     </span>
                     <span t-attf-class="o_thread_icons">
-                        <i t-if="options.display_stars &amp;&amp; !message.is_system_notification"
-                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
-                            t-att-data-message-id="message.id" title="Mark as Todo"/>
-                       <i t-if="message.record_name &amp;&amp; message.model != 'mail.channel' &amp;&amp; options.display_reply_icon"
+                        <i t-if="options.displayStar &amp;&amp; !message.isSystemNotification()"
+                            t-att-class="'fa fa-lg o_thread_icon o_thread_message_star ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                            t-att-data-message-id="message.getID()" title="Mark as Todo"/>
+                       <i t-if="message.isLinkedToDocument() &amp;&amp; message.getDocumentModel() !== 'mail.channel' &amp;&amp; options.displayReplyIcon"
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
-                           t-att-data-message-id="message.id" title="Reply"/>
-                        <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
+                           t-att-data-message-id="message.getID()" title="Reply"/>
+                        <i t-if="message.isNeedaction() &amp;&amp; options.displayMarkAsRead"
                            class="fa fa-check o_thread_icon o_thread_message_needaction"
-                           t-att-data-message-id="message.id" title="Mark as Read"/>
+                           t-att-data-message-id="message.getID()" title="Mark as Read"/>
                     </span>
                 </p>
                 <div class="o_thread_message_content">
-                    <t t-if="message.tracking_value_ids and message.tracking_value_ids.length &gt; 0">
-                        <t t-if="message.subtype_description">
-                            <p><t t-esc="message.subtype_description"/></p>
+                    <t t-if="message.hasTrackingValues()">
+                        <t t-if="message.hasSubtypeDescription()">
+                            <p><t t-esc="message.getSubtypeDescription()"/></p>
                         </t>
                         <t t-call="mail.ChatThread.MessageTracking"/>
                     </t>
-                    <p t-if="options.display_subject and message.display_subject" class="o_mail_subject">Subject: <t t-esc="message.subject"/></p>
-                    <t t-if="!(message.tracking_value_ids and message.tracking_value_ids.length &gt; 0)">
-                        <t t-raw="message.body"/>
+                    <p t-if="options.displaySubjectOnMessages and message.shouldDisplaySubject()" class="o_mail_subject">Subject: <t t-esc="message.getSubject()"/></p>
+                    <t t-if="!(message.hasTrackingValues())">
+                        <t t-raw="message.getBody()"/>
                     </t>
-                    <t t-if="message.attachment_ids.length > 0">
-                        <div t-if="message.images.length > 0" class="o_attachments_previews">
-                            <t t-foreach="message.images" t-as="attachment">
+                    <t t-if="message.hasAttachments()">
+                        <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
+                            <t t-foreach="message.getImageAttachments()" t-as="attachment">
                                 <t t-call="mail.AttachmentPreview"/>
                             </t>
                         </div>
-                        <div t-if="message.others.length > 0" class="o_attachments_list">
-                            <t t-foreach="message.others" t-as="attachment">
+                        <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
+                            <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
                                 <t t-call="mail.Attachment"/>
                             </t>
                         </div>
@@ -222,7 +224,7 @@
                 </div>
             </div>
         </div>
-        <t t-if="options.messages_separator_position == message.id">
+        <t t-if="options.messagesSeparatorPosition == message.getID()">
             <t t-call="mail.MessagesSeparator"/>
         </t>
     </t>
@@ -235,14 +237,14 @@
 
     <t t-name="mail.ChatThread.MessageTracking">
         <ul class="o_mail_thread_message_tracking">
-            <t t-foreach='message.tracking_value_ids' t-as='value'>
+            <t t-foreach='message.getTrackingValues()' t-as='value'>
                 <li>
                     <t t-esc="value.changed_field"/>:
                     <t t-if="value.old_value">
                         <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value != value.new_value" class="fa fa-long-arrow-right"/>
+                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right"/>
                     </t>
-                    <span t-if="value.old_value != value.new_value">
+                    <span t-if="value.old_value !== value.new_value">
                         <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
                     </span>
                 </li>

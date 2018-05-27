@@ -1,7 +1,7 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
-var Discuss = require('mail.chat_discuss');
+var Discuss = require('mail.Discuss');
 
 var AbstractService = require('web.AbstractService');
 var Bus = require('web.Bus');
@@ -58,7 +58,6 @@ function createBusService(bus) {
 
 /**
  * Create asynchronously a discuss widget.
- * This is async due to chat_manager service that needs to be ready.
  *
  * @param {Object} params
  * @return {$.Promise} resolved with the discuss widget

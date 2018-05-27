@@ -1,7 +1,7 @@
 odoo.define('mail.systray_tests', function (require) {
 "use strict";
 
-var ChatManager = require('mail.ChatManager');
+var ChatService = require('mail.ChatService');
 var systray = require('mail.systray');
 var mailTestUtils = require('mail.testUtils');
 
@@ -14,7 +14,7 @@ QUnit.module('mail', {}, function () {
 
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
-        this.services = [ChatManager, createBusService()];
+        this.services = [ChatService, createBusService()];
         this.data = {
             'mail.activity.menu': {
                 fields: {
@@ -87,7 +87,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     });
     activityMenu.appendTo($('#qunit-fixture'));
     assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
-    assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
+    assert.ok(activityMenu.$('.o_mail_conversation_preview').hasClass('o_mail_conversation_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
     assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
 
@@ -206,7 +206,7 @@ QUnit.module('MessagingMenu', {
                 },
             },
         };
-        this.services = [ChatManager, createBusService()];
+        this.services = [ChatService, createBusService()];
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
@@ -245,9 +245,9 @@ QUnit.test('messaging menu widget: messaging menu with 1 record', function (asse
 
     messagingMenu.$('.dropdown-toggle').click();
 
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview').length, 1,
+    assert.strictEqual(messagingMenu.$('.o_mail_conversation_preview').length, 1,
         "should display a channel preview");
-    assert.strictEqual(messagingMenu.$('.o_channel_name').text().trim(), "general",
+    assert.strictEqual(messagingMenu.$('.o_conversation_name').text().trim(), "general",
         "should display correct name of channel in channel preview");
 
     // remove any space-character inside text
@@ -267,7 +267,7 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
 
     var messagingMenu = new systray.MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
-        services: [ChatManager, createBusService(bus)],
+        services: [ChatService, createBusService(bus)],
         data: this.data,
         session: {
             partner_id: 1,
@@ -305,12 +305,12 @@ QUnit.test('messaging menu widget: no crash when clicking on inbox notification 
     messagingMenu.$('.dropdown-toggle').click();
 
     var $firstChannelPreview =
-        messagingMenu.$('.o_mail_channel_preview').first();
+        messagingMenu.$('.o_mail_conversation_preview').first();
 
     assert.strictEqual($firstChannelPreview.length, 1,
         "should have at least one channel preview");
-    assert.strictEqual($firstChannelPreview.data('channel_id'),
-        'channel_inbox',
+    assert.strictEqual($firstChannelPreview.data('conversation_id'),
+        'mailbox_inbox',
         "should be a preview from channel inbox");
     try {
         $firstChannelPreview.click();

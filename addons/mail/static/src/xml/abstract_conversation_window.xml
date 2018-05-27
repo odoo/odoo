@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AbstractConversationWindow">
+        <div class="o_conversation_window o_in_home_menu">
+            <div class="o_conversation_window_header">
+                <t t-call="mail.AbstractConversationWindowHeaderContent">
+                    <t t-set="status" t-value="widget.getStatus()"/>
+                    <t t-set="title" t-value="widget.getTitle()"/>
+                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                </t>
+            </div>
+            <div class="o_chat_content">
+            </div>
+            <div t-if='widget.hasConversation()' class="o_conversation_composer o_chat_mini_composer">
+                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="mail.AbstractConversationsDropdown">
+        <div t-attf-class="o_conversation_window o_in_home_menu o_conversation_window_dropdown dropup #{open ? 'open' : ''}">
+            <span class="o_conversation_window_dropdown_toggler dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-comments-o"/> <t t-esc="sessions.length"/>
+                <span class="o_total_unread_counter">
+                    <t t-if="unreadCounter"><t t-esc="unreadCounter"/></t>
+                </span>
+            </span>
+            <ul class="dropdown-menu">
+                <t t-foreach="sessions" t-as="session">
+                    <li class="o_conversation_window_header" t-att-data-session-id="session.getID()">
+                        <t t-call="mail.AbstractConversationWindowHeaderContent">
+                            <t t-set="status" t-value="session.window.getStatus()"/>
+                            <t t-set="title" t-value="session.window.getTitle()"/>
+                            <t t-set="unreadCounter" t-value="session.window.getUnreadCounter()"/>
+                        </t>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="mail.AbstractConversationWindowHeaderContent">
+        <span t-if="widget.isMobile()">
+            <a href="#" class="o_conversation_window_close fa fa-1x fa-arrow-left mr4"/>
+        </span>
+        <span class="o_conversation_window_title">
+            <t t-if="status" t-call="mail.conversation.UserStatus"/>
+            <t t-esc="title"/>
+            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+        </span>
+        <span t-if="!widget.isMobile()" class="o_conversation_window_buttons">
+            <a href="#" class="o_conversation_window_close fa fa-close"/>
+        </span>
+    </t>
+
+</templates>

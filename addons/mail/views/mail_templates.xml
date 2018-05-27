@@ -11,14 +11,29 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
 
-                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+                <!-- Service -->
+                <script type="text/javascript" src="/mail/static/src/js/services/chat_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/chat_service.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/chat_window_manager.js"></script>
+                <!-- Models -->
+                <script type="text/javascript" src="/mail/static/src/js/models/channel.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/channel_preview.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/chat_session.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/conversation.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/conversation_preview.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/document_chat.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/mailbox.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/message.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/message_preview.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/thread.js"></script>
+                <!-- Widgets -->
+                    <!-- conversation windows -->
+                    <script type="text/javascript" src="/mail/static/src/js/conversation_windows/abstract_conversation_window.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/conversation_windows/conversation_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/extended_chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/services/chat_manager.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/services/chat_window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
@@ -32,6 +47,8 @@
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <!-- Others -->
+                <script type="text/javascript" src="/mail/static/src/js/emoji_unicodes.js"></script>
 
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/announcement.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/discuss.scss"/>
@@ -48,11 +65,12 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/chat_window_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/conversation_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
+                <!-- Helpers -->
                 <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>

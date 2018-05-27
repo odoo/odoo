@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-     <div t-name="mail.ChatComposer" t-attf-class="o_chat_composer #{widget.extended ? 'o_chat_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
+     <div t-name="mail.ChatComposer" t-attf-class="o_conversation_composer #{widget.extended ? 'o_conversation_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
          <div class="o_composer_container">
              <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar img-circle" t-att-src="widget.avatarURL"/>
              <div t-if="widget.extended" class="o_composer_subject">
@@ -18,11 +18,11 @@
              <div class="o_composer_attachments_list"/>
          </div>
          <div class="o_composer_send">
-             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.send_text"/></button>
+             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.sendText"/></button>
          </div>
          <span class="hide">
             <t t-call="HiddenInputFile">
-                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                 <t t-set="multi_upload" t-value="true"/>
                 <input type="hidden" name="model" value="mail.compose.message"/>

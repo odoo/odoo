@@ -1,7 +1,7 @@
-odoo.define('mail.chat_discuss_mobile', function (require) {
+odoo.define('mail.DiscussMobile', function (require) {
 "use strict";
 
-var Discuss = require('mail.chat_discuss');
+var Discuss = require('mail.Discuss');
 
 var config = require('web.config');
 var core = require('web.core');
@@ -16,8 +16,8 @@ Discuss.include({
     template: 'mail.discuss_mobile',
     events: _.extend(Discuss.prototype.events, {
         'click .o_mail_mobile_tab': '_onMobileTabClicked',
-        'click .o_channel_inbox_item': '_onMobileInboxButtonClicked',
-        'click .o_mail_channel_preview': '_onMobileChannelClicked',
+        'click .o_mailbox_inbox_item': '_onMobileInboxButtonClicked',
+        'click .o_mail_conversation_preview': '_onMobileConversationClicked',
     }),
 
     /**
@@ -25,13 +25,13 @@ Discuss.include({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.currentState = this.defaultChannelID;
+        this.currentState = this._defaultConversationID;
     },
     /**
      * @override
      */
     start: function () {
-        this.$mainContent = this.$('.o_mail_chat_content');
+        this._$mainContent = this.$('.o_mail_conversation_content');
         return this._super.apply(this, arguments)
             .then(this._updateControlPanel.bind(this));
     },
@@ -39,8 +39,8 @@ Discuss.include({
      * @override
      */
     on_attach_callback: function () {
-        if (this.channel && this._isInInboxTab()) {
-            this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
+        if (this._conversation && this._isInInboxTab()) {
+            this._threadWidget.scrollToPosition(this._conversationsScrolltop[this._conversation.getID()]);
         }
     },
     /**
@@ -48,7 +48,7 @@ Discuss.include({
      */
     on_detach_callback: function () {
         if (this._isInInboxTab()) {
-            this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
+            this._conversationsScrolltop[this._conversation.getID()] = this._threadWidget.getScrolltop();
         }
     },
 
@@ -61,7 +61,7 @@ Discuss.include({
      * @returns {Boolean} true iff we currently are in the Inbox tab
      */
     _isInInboxTab: function () {
-        return _.contains(['channel_inbox', 'channel_starred'], this.currentState);
+        return _.contains(['mailbox_inbox', 'mailbox_starred'], this.currentState);
     },
     /**
      * @override
@@ -71,18 +71,18 @@ Discuss.include({
         var self = this;
         this._super.apply(this, arguments);
         _.each(['dm', 'public', 'private'], function (type) {
-            var selector = '.o_mail_chat_button_' + type;
+            var selector = '.o_mail_conversation_button_' + type;
             self.$buttons.on('click', selector, self._onAddChannel.bind(self));
         });
     },
     /**
-     * Overrides to only store the channel state if we are in the Inbox tab, as
-     * this is the only tab in which we actually have a displayed channel
+     * Overrides to only store the conversation state if we are in the Inbox tab, as
+     * this is the only tab in which we actually have a displayed conversation
      *
      * @override
      * @private
      */
-    _restoreChannelState: function () {
+    _restoreConversationState: function () {
         if (this._isInInboxTab()) {
             this._super.apply(this, arguments);
         }
@@ -100,11 +100,11 @@ Discuss.include({
     /**
      * @override
      * @private
-     * @param {Object} channel
+     * @param {mail.model.Conversation} conversation
      */
-    _setChannel: function (channel) {
-        if (channel.type !== 'static') {
-            return this.call('chat_manager', 'detachChannel', channel.id);
+    _setConversation: function (conversation) {
+        if (conversation.getType() !== 'mailbox') {
+            conversation.detach();
         } else {
             return this._super.apply(this, arguments);
         }
@@ -116,8 +116,8 @@ Discuss.include({
      * @override
      * @private
      */
-    _storeChannelState: function () {
-        if (this.channel && this._isInInboxTab()) {
+    _storeConversationState: function () {
+        if (this._conversation && this._isInInboxTab()) {
             this._super.apply(this, arguments);
         }
     },
@@ -135,74 +135,76 @@ Discuss.include({
      * @override
      * @private
      */
-    _updateChannels: function () {
+    _updateConversations: function () {
         return this._updateContent(this.currentState);
     },
     /**
      * Redraws the content of the client action according to its current state.
      *
      * @private
-     * @param {string} type the channel's type to display (e.g. 'channel_inbox',
-     *   'channel_starred', 'dm'...).
+     * @param {string} type the channel's type to display (e.g. 'mailbox_inbox',
+     *   'mailbox_starred', 'dm'...).
      */
     _updateContent: function (type) {
         var self = this;
-        var inInbox = type === 'channel_inbox' || type === 'channel_starred';
-        if (!inInbox && this._isInInboxTab()) {
-            // we're leaving the inbox, so store the thread scrolltop
-            this._storeChannelState();
+        var inMailbox = type === 'mailbox_inbox' || type === 'mailbox_starred';
+        if (!inMailbox && this._isInInboxTab()) {
+            // we're leaving the inbox, so store the conversation scrolltop
+            this._storeConversationState();
         }
         var previouslyInInbox = this._isInInboxTab();
         this.currentState = type;
 
         // fetch content to display
         var def;
-        if (inInbox) {
+        if (inMailbox) {
             def = this._fetchAndRenderThread();
         } else {
-            var allChannels = this.call('chat_manager', 'getChannels');
-            var channels = _.where(allChannels, {type: type});
-            def = this.call('chat_manager', 'getChannelsPreview', channels);
+            var allChannels = this.call('chat_service', 'getChannels');
+            var channels = _.filter(allChannels, function (channel) {
+                return channel.getType() === type;
+            });
+            def = this.call('chat_service', 'getChannelPreviews', channels);
         }
-        return $.when(def).then(function (channelsPreview) {
+        return $.when(def).then(function (channelPreviews) {
             // update content
-            if (inInbox) {
+            if (inMailbox) {
                 if (!previouslyInInbox) {
                     self.$('.o_mail_chat_tab_pane').remove();
-                    self.$mainContent.append(self.thread.$el);
-                    self.$mainContent.append(self.extendedComposer.$el);
+                    self._$mainContent.append(self._threadWidget.$el);
+                    self._$mainContent.append(self._extendedComposer.$el);
                 }
-                self._restoreChannelState();
+                self._restoreConversationState();
             } else {
-                self.thread.$el.detach();
-                self.extendedComposer.$el.detach();
-                var $content = $(QWeb.render("mail.chat.MobileTabPane", {
-                    channels: channelsPreview,
+                self._threadWidget.$el.detach();
+                self._extendedComposer.$el.detach();
+                var $content = $(QWeb.render('mail.conversation.MobileTabPane', {
+                    conversationPreviews: channelPreviews,
                     type: type,
                 }));
                 self._prepareAddChannelInput($content.find('.o_mail_add_channel input'), type);
-                self.$mainContent.html($content);
+                self._$mainContent.html($content);
             }
 
             // update control panel
             self.$buttons.find('button').addClass('o_hidden');
-            self.$buttons.find('.o_mail_chat_button_' + type).removeClass('o_hidden');
-            self.$buttons.find('.o_mail_chat_button_mark_read').toggleClass('o_hidden', type !== 'channel_inbox');
-            self.$buttons.find('.o_mail_chat_button_unstar_all').toggleClass('o_hidden', type !== 'channel_starred');
+            self.$buttons.find('.o_mail_conversation_button_' + type).removeClass('o_hidden');
+            self.$buttons.find('.o_mail_conversation_button_mark_read').toggleClass('o_hidden', type !== 'mailbox_inbox');
+            self.$buttons.find('.o_mail_conversation_button_unstar_all').toggleClass('o_hidden', type !== 'mailbox_starred');
 
-            // update Inbox page buttons
-            if (inInbox) {
-                self.$('.o_mail_chat_mobile_inbox_buttons').removeClass('o_hidden');
-                self.$('.o_channel_inbox_item').removeClass('btn-primary').addClass('btn-default');
-                self.$('.o_channel_inbox_item[data-type=' + type + ']').removeClass('btn-default').addClass('btn-primary');
+            // update Mailbox page buttons
+            if (inMailbox) {
+                self.$('.o_mail_chat_mobile_mailboxes_buttons').removeClass('o_hidden');
+                self.$('.o_mailbox_inbox_item').removeClass('btn-primary').addClass('btn-default');
+                self.$('.o_mailbox_inbox_item[data-type=' + type + ']').removeClass('btn-default').addClass('btn-primary');
             } else {
-                self.$('.o_mail_chat_mobile_inbox_buttons').addClass('o_hidden');
+                self.$('.o_mail_chat_mobile_mailboxes_buttons').addClass('o_hidden');
             }
 
             // update bottom buttons
             self.$('.o_mail_mobile_tab').removeClass('active');
-            // channel_inbox and channel_starred share the same tab
-            type = type === 'channel_starred' ? 'channel_inbox' : type;
+            // mailbox_inbox and mailbox_starred share the same tab
+            type = type === 'mailbox_starred' ? 'mailbox_inbox' : type;
             self.$('.o_mail_mobile_tab[data-type=' + type + ']').addClass('active');
         });
     },
@@ -221,36 +223,37 @@ Discuss.include({
      * Switches to the clicked channel in the Inbox page (Inbox or Starred).
      *
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} ev
      */
-    _onMobileInboxButtonClicked: function (event) {
-        var channel = this.call('chat_manager', 'getChannel', $(event.currentTarget).data('type'));
-        this._setChannel(channel);
-        this._updateContent(this.channel.id);
+    _onMobileInboxButtonClicked: function (ev) {
+        var inbox = this.call('chat_service', 'getMailbox', $(ev.currentTarget).data('type'));
+        this._setConversation(inbox);
+        this._updateContent(this._conversation.getID());
     },
     /**
      * Switches to another tab.
      *
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} ev
      */
-    _onMobileTabClicked: function (event) {
-        var type = $(event.currentTarget).data('type');
-        if (type === 'channel_inbox') {
-            var channel = this.call('chat_manager', 'getChannel', 'channel_inbox');
-            this._setChannel(channel);
+    _onMobileTabClicked: function (ev) {
+        var type = $(ev.currentTarget).data('type');
+        if (type === 'mailbox') {
+            var inbox = this.call('chat_service', 'getMailbox', 'inbox');
+            this._setConversation(inbox);
         }
         this._updateContent(type);
     },
     /**
-     * Opens a channel in a chat windown (full screen in mobile).
+     * Opens a conversation in a chat windown (full screen in mobile).
      *
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} ev
      */
-    _onMobileChannelClicked: function (event) {
-        var channelID = $(event.currentTarget).data("channel_id");
-        this.call('chat_manager', 'detachChannel', channelID);
+    _onMobileConversationClicked: function (ev) {
+        var conversationID = $(ev.currentTarget).data('conversation_id');
+        var conversation = this.call('chat_service', 'getConversation', conversationID);
+        conversation.detach();
     },
 });
 

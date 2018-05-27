@@ -14,120 +14,162 @@ var QWeb = core.qweb;
  *
  * The menu item indicates the counter of needactions + unread messages in chat channels. When
  * clicking on it, it toggles a dropdown containing a preview of each pinned channels (except
- * static and mass mailing channels) with a quick link to open them in chat windows. It also
+ * mailbox and mass mailing channels) with a quick link to open them in chat windows. It also
  * contains a direct link to the Inbox in Discuss.
  **/
 var MessagingMenu = Widget.extend({
-    template:'mail.chat.MessagingMenu',
+    template:'mail.systray.MessagingMenu',
     events: {
-        "click": "on_click",
-        "click .o_filter_button": "on_click_filter_button",
-        "click .o_new_message": "on_click_new_message",
-        "click .o_mail_channel_preview": "_onClickChannel",
+        'click': '_onClick',
+        'click .o_mail_conversation_preview': '_onClickConversationPreview',
+        'click .o_filter_button': '_onClickFilterButton',
+        'click .o_new_message': '_onClickNewMessage',
     },
     init: function () {
         this._super.apply(this, arguments);
         this.isMobile = config.device.isMobile; // used by the template
     },
+    willStart: function () {
+        return $.when(this.call('chat_service', 'isReady'));
+    },
     start: function () {
-        this.$filter_buttons = this.$('.o_filter_button');
-        this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
-        this.filter = false;
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.on("update_needaction", this, this.update_counter);
-        chatBus.on("update_channel_unread_counter", this, this.update_counter);
-        this.call('chat_manager', 'isReady').then(this.update_counter.bind(this));
+        this._$filterButtons = this.$('.o_filter_button');
+        this._$conversationPreviews = this.$('.o_mail_navbar_dropdown_channels');
+        this._filter = false;
+        var chatBus = this.call('chat_service', 'getChatBus');
+        chatBus.on('update_needaction', this, this._updateCounter);
+        chatBus.on('update_conversation_unread_counter', this, this._updateCounter);
+        this._updateCounter();
         return this._super();
     },
-    is_open: function () {
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @return {boolean} whether the messaging menu is open or not.
+     */
+    _isOpen: function () {
         return this.$el.hasClass('open');
     },
-    update_counter: function () {
-        var needactionCounter = this.call('chat_manager', 'getNeedactionCounter');
-        var unreadConversationCounter = this.call('chat_manager', 'getUnreadConversationCounter');
-        var counter =  needactionCounter + unreadConversationCounter;
-        this.$('.o_notification_counter').text(counter);
-        this.$el.toggleClass('o_no_notification', !counter);
-        if (this.is_open()) {
-            this.update_channels_preview();
-        }
+    /**
+     * Render the list of conversation previews
+     *
+     * @private
+     * @param {<mail.model.ConversationPreview[]>} previews (from channels and messages)
+     */
+    _renderConversationPreviews: function (previews) {
+        this._$conversationPreviews.html(QWeb.render('mail.conversation.Previews', {
+            conversationPreviews: previews,
+        }));
     },
-    update_channels_preview: function () {
+    /**
+     * Get and render list of conversations preview, based on the selected filter
+     *
+     * Conversation preview shows the last message of a channel with inline format.
+     * There is a hack where filter "All" also shows preview of chatter
+     * messages (which are not channels).
+     *
+     * List of filters:
+     *
+     *  1. All
+     *      - filter:   undefined
+     *      - previews: last messages of all non-mailbox channels, in addition
+     *                  to last messages of chatter (get from inbox)
+     *
+     *  2. Channel
+     *      - filter:   "Channels"
+     *      - previews: last messages of all non-mailbox and non-DM channels
+     *
+     *  3. Chat
+     *      - filter:   "Chat"
+     *      - previews: last messages of all DM channels
+     *
+     * @private
+     */
+    _updateConversationsPreview: function () {
         var self = this;
 
-        // Display spinner while waiting for channels preview
-        this.$channels_preview.html(QWeb.render('Spinner'));
-        this.call('chat_manager', 'isReady').then(function () {
-            var allChannels = self.call('chat_manager', 'getChannels');
-            var channels = _.filter(allChannels, function (channel) {
-                if (self.filter === 'chat') {
-                    return channel.is_chat;
-                } else if (self.filter === 'channels') {
-                    return !channel.is_chat && channel.type !== 'static';
+        // Display spinner while waiting for conversations preview
+        this._$conversationPreviews.html(QWeb.render('Spinner'));
+        this.call('chat_service', 'isReady').then(function () {
+            // Select channels based on filter
+            var allConversations = self.call('chat_service', 'getConversations');
+            var channels = _.filter(allConversations, function (conversation) {
+                if (self._filter === 'chat') {
+                    return conversation.isChat();
+                } else if (self._filter === 'channels') {
+                    return !conversation.isChat() && conversation.getType() !== 'mailbox';
                 } else {
-                    return channel.type !== 'static';
+                    return conversation.getType() !== 'mailbox';
                 }
             });
-            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'})
-                .then(function (messages) {
-                    var res = [];
-                    _.each(messages, function (message) {
-                        message.unread_counter = 1;
-                        var duplicatedMessage = _.findWhere(res, {
-                            model: message.model,
-                            'res_id': message.res_id
-                        });
-                        if (message.model && message.res_id && duplicatedMessage) {
-                            message.unread_counter = duplicatedMessage.unread_counter + 1;
-                            res[_.findIndex(res, duplicatedMessage)] = message;
-                        } else {
-                            res.push(message);
-                        }
-                    });
-                    if (self.filter === 'channel_inbox' || !self.filter) {
-                        channels = _.union(channels, res);
-                    }
-                    self.call('chat_manager', 'getChannelsPreview', channels)
-                        .then(self._render_channels_preview.bind(self));
+            var channelPreviewsDef = self.call('chat_service', 'getChannelPreviews', channels);
+
+            // 'All' filter, show messages preview from inbox
+            var inboxPreviewsDef;
+            if (self._filter === 'mailbox_inbox' || !self._filter) {
+                var inbox = self.call('chat_service', 'getMailbox', 'inbox');
+                inboxPreviewsDef = inbox.getMessagePreviews();
+            } else {
+                inboxPreviewsDef = $.when([]);
+            }
+
+            $.when(channelPreviewsDef, inboxPreviewsDef)
+                .then(function (channelPreviews, messagePreviews) {
+                    // message previews before channel previews
+                    var allPreviews = _.union(messagePreviews, channelPreviews);
+                    self._renderConversationPreviews(allPreviews);
                 });
         });
     },
-    _render_channels_preview: function (channels_preview) {
-        this.$channels_preview.html(QWeb.render('mail.chat.ChannelsPreview', {
-            channels: channels_preview,
-        }));
-    },
-    on_click: function () {
-        if (!this.is_open()) {
-            this.update_channels_preview();  // we are opening the dropdown so update its content
-        }
-    },
-    on_click_filter_button: function (event) {
-        event.stopPropagation();
-        this.$filter_buttons.removeClass('active');
-        var $target = $(event.currentTarget);
-        $target.addClass('active');
-        this.filter = $target.data('filter');
-        this.update_channels_preview();
-    },
-    on_click_new_message: function () {
-        this.call('chat_window_manager', 'openChat');
-    },
-
-    // Handlers
-
     /**
-     * When a channel is clicked on, we want to open chat/channel window
+     * Update the counter on the messaging menu icon
+     *
+     * The counter is updated from data in chat_service.
+     * Also updates channels preview if the messaging menu is open.
      *
      * @private
-     * @param {MouseEvent} event
      */
-    _onClickChannel: function (event) {
+    _updateCounter: function () {
+        var inbox = this.call('chat_service', 'getMailbox', 'inbox');
+        var starred = this.call('chat_service', 'getMailbox', 'starred');
+        var needactionCounter = inbox.getMailboxCounter();
+        var unreadConversationCounter = starred.getMailboxCounter();
+        var counter =  needactionCounter + unreadConversationCounter;
+        this.$('.o_notification_counter').text(counter);
+        this.$el.toggleClass('o_no_notification', !counter);
+        if (this._isOpen()) {
+            this._updateConversationsPreview();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onClick: function () {
+        if (!this._isOpen()) {
+            this._updateConversationsPreview();  // we are opening the dropdown so update its content
+        }
+    },
+    /**
+     * When a conversation preview is clicked on, we want to open chat/channel window
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickConversationPreview: function (ev) {
         var self = this;
-        var channelID = $(event.currentTarget).data('channel_id');
-        if (channelID === 'channel_inbox') {
-            var resID = $(event.currentTarget).data('res_id');
-            var resModel = $(event.currentTarget).data('res_model');
+        var conversationID = $(ev.currentTarget).data('conversation_id');
+        if (conversationID === 'mailbox_inbox') {
+            var resID = $(ev.currentTarget).data('res_id');
+            var resModel = $(ev.currentTarget).data('res_model');
             if (resModel && resID) {
                 this.do_action({
                     type: 'ir.actions.act_window',
@@ -139,15 +181,33 @@ var MessagingMenu = Widget.extend({
                 this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
                     .then(function () {
                         self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
-                        core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID'));
+                        core.bus.trigger('change_menu_section', self.call('chat_service', 'getDiscussMenuID'));
                     });
             }
         } else {
-            var channel = this.call('chat_manager', 'getChannel', channelID);
-            if (channel) {
-                this.call('chat_manager', 'openChannel', channel);
+            var conversation = this.call('chat_service', 'getConversation', conversationID);
+            if (conversation) {
+                conversation.open();
             }
         }
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickFilterButton: function (ev) {
+        ev.stopPropagation();
+        this._$filterButtons.removeClass('active');
+        var $target = $(ev.currentTarget);
+        $target.addClass('active');
+        this._filter = $target.data('filter');
+        this._updateConversationsPreview();
+    },
+    /**
+     * @private
+     */
+    _onClickNewMessage: function () {
+        this.call('chat_service', 'openChatWithoutSession');
     },
 });
 
@@ -155,15 +215,18 @@ var MessagingMenu = Widget.extend({
  * Menu item appended in the systray part of the navbar, redirects to the next activities of all app
  */
 var ActivityMenu = Widget.extend({
-    template:'mail.chat.ActivityMenu',
+    template:'mail.systray.ActivityMenu',
     events: {
-        "click": "_onActivityMenuClick",
-        "click .o_mail_channel_preview": "_onActivityFilterClick",
+        'click': '_onActivityMenuClick',
+        'click .o_mail_conversation_preview': '_onActivityFilterClick',
+    },
+    willStart: function () {
+        return $.when(this.call('chat_service', 'isReady'));
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
-        this.call('chat_manager', 'getChatBus').on("activity_updated", this, this._updateCounter);
-        this.call('chat_manager', 'isReady').then(this._updateCounter.bind(this));
+        this.call('chat_service', 'getChatBus').on('activity_updated', this, this._updateCounter);
+        this._updateCounter();
         this._updateActivityPreview();
         return this._super();
     },
@@ -184,7 +247,7 @@ var ActivityMenu = Widget.extend({
                 context: session.user_context,
             },
         }).then(function (data) {
-            self.activities = data;
+            self._activities = data;
             self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
@@ -216,8 +279,8 @@ var ActivityMenu = Widget.extend({
     _updateActivityPreview: function () {
         var self = this;
         self._getActivityData().then(function (){
-            self.$activities_preview.html(QWeb.render('mail.chat.ActivityMenuPreview', {
-                activities : self.activities
+            self.$activities_preview.html(QWeb.render('mail.systray.ActivityMenuPreview', {
+                activities : self._activities
             }));
         });
     },
@@ -241,16 +304,18 @@ var ActivityMenu = Widget.extend({
             this.$el.toggleClass('o_no_notification', !this.activityCounter);
         }
     },
+
     //------------------------------------------------------------
     // Handlers
-    //-----------------------------------------------------------
+    //------------------------------------------------------------
+
     /**
      * Redirect to particular model view
      * @private
      * @param {MouseEvent} event
      */
     _onActivityFilterClick: function (event) {
-        // fetch the data from the button otherwise fetch the ones from the parent (.o_mail_channel_preview).
+        // fetch the data from the button otherwise fetch the ones from the parent (.o_mail_conversation_preview).
         var data = _.extend({}, $(event.currentTarget).data(), $(event.target).data());
         var context = {};
         if (data.filter === 'my') {

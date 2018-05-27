@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ConversationWindow" t-extend="mail.AbstractConversationWindow">
+        <t t-jquery=".o_conversation_window_header" t-operation="after">
+            <div t-if="!widget.hasConversation()" class="o_chat_search_input">
+                <span> To: </span>
+                <input type="text" placeholder="User name"/>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="mail.AbstractConversationWindowHeaderContent">
+        <t t-jquery=".o_conversation_window_buttons" t-operation="prepend">
+            <a href="#" class="o_conversation_window_expand fa fa-expand" title="Open in Discuss"/>
+        </t>
+    </t>
+
+</templates>

@@ -1,16 +1,19 @@
 odoo.define('note.systray_tests', function (require) {
 "use strict";
 
-var ChatManager = require('mail.ChatManager');
+var ChatService = require('mail.ChatService');
 var systray = require('mail.systray');
+var mailTestUtils = require('mail.testUtils');
+
 var testUtils = require('web.test_utils');
-var createBusService = require('mail.testUtils').createBusService;
+
+var createBusService = mailTestUtils.createBusService;
 
 QUnit.module('note', {}, function () {
 
 QUnit.module("ActivityMenu", {
     beforeEach: function () {
-        this.services = [ChatManager, createBusService()];
+        this.services = [ChatService, createBusService()];
         this.data = {
             'mail.activity.menu': {
                 records: [],

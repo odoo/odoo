@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="mail.chat.MessagingMenu">
+    <t t-name="mail.systray.MessagingMenu">
         <li class="o_mail_navbar_item">
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
                 <i class="fa fa-comments"/> <span class="o_notification_counter badge"/>
@@ -41,31 +41,31 @@
         </li>
     </t>
 
-    <t t-name="mail.chat.ChannelsPreview">
-         <t t-if="_.isEmpty(channels)">
+    <t t-name="mail.conversation.Previews">
+         <t t-if="_.isEmpty(conversationPreviews)">
             <li class="text-center o_no_activity mt16">
-                <span>No discussion yet...</span>
+                <span>No conversation yet...</span>
             </li>
         </t>
-        <t t-foreach="channels" t-as="channel">
-            <t t-call="mail.chat.ChannelPreview"/>
+        <t t-foreach="conversationPreviews" t-as="conversationPreview">
+            <t t-call="mail.conversation.Preview"/>
         </t>
     </t>
 
-    <t t-name="mail.chat.ActivityMenuPreview">
+    <t t-name="mail.systray.ActivityMenuPreview">
         <t t-if="_.isEmpty(activities)">
             <li class="text-center o_no_activity">
                 <span>No activities planned.</span>
             </li>
         </t>
         <t t-foreach="activities" t-as="activity">
-            <div class="o_mail_channel_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
-                <div class="o_mail_channel_image o_mail_channel_app">
+            <div class="o_mail_conversation_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+                <div class="o_mail_conversation_image o_mail_conversation_app">
                     <img t-att-src="activity.icon"/>
                 </div>
-                <div class="o_channel_info">
-                    <div class="o_channel_title">
-                        <span class="o_channel_name">
+                <div class="o_conversation_info">
+                    <div class="o_conversation_title">
+                        <span class="o_conversation_name">
                             <t t-esc="activity.name"/>
                         </span>
                     </div>
@@ -82,7 +82,7 @@
         </t>
     </t>
 
-    <t t-name="mail.chat.ActivityMenu">
+    <t t-name="mail.systray.ActivityMenu">
         <li class="o_mail_navbar_item">
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
                 <i class="fa fa-clock-o"/> <span class="o_notification_counter badge"/>

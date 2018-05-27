@@ -26,7 +26,7 @@ MockServer.include({
      * Simulate the '/mail.channel/channel_fetch_preview' route
      *
      * @private
-     * @return {$.Promise<Object[]>} resolved with list of channels previews
+     * @return {Object[]} list of channels previews
      */
     _mockChannelFetchPreview: function (args) {
         var self = this;
@@ -39,7 +39,7 @@ MockServer.include({
             channel.last_message = lastMessage;
             return channel;
         });
-        return $.when(previews);
+        return previews;
     },
     /**
      * Simulate the '/mail/init_messaging' route
@@ -58,11 +58,11 @@ MockServer.include({
             'menu_id': false,
         });
     },
-
     /**
      * Simulate the 'message_fetch' Python method
      *
-     * @return {Object}
+     * @private
+     * @return {Object[]}
      */
     _mockMessageFetch: function (args) {
         var domain = args.args[0];
@@ -73,27 +73,50 @@ MockServer.include({
             return m1.id < m2.id ? 1 : -1;
         });
         // pick at most 'limit' messages
-        return $.when(messages.slice(0, args.kwargs.limit));
+        return messages.slice(0, args.kwargs.limit);
     },
-
+    /**
+     * Simulate the 'message_format' Python method
+     *
+     * @return {Object[]}
+     */
+    _mockMessageFormat: function (args) {
+        var msgIDs = args.args[0];
+        var domain = [['id', 'in', msgIDs]];
+        var model = args.model;
+        var messages = this._getRecords(model, domain);
+        // sorted from highest ID to lowest ID (i.e. from youngest to oldest)
+        messages.sort(function (m1, m2) {
+            return m1.id < m2.id ? 1 : -1;
+        });
+        return messages;
+    },
     /**
      * @override
      */
     _performRpc: function (route, args) {
+        // routes
         if (route === '/mail/init_messaging') {
             return $.when(this._mockInitMessaging(args));
         }
-        if (args.method === 'message_fetch') {
-            return $.when(this._mockMessageFetch(args));
-        }
+        // methods
         if (args.method === 'channel_fetch_listeners') {
             return $.when([]);
+        }
+        if (args.method === 'channel_fetch_preview') {
+            return $.when(this._mockChannelFetchPreview(args));
         }
         if (args.method === 'channel_seen') {
             return $.when();
         }
-        if (args.method === 'channel_fetch_preview') {
-            return this._mockChannelFetchPreview(args);
+        if (args.method === 'message_fetch') {
+            return $.when(this._mockMessageFetch(args));
+        }
+        if (args.method === 'message_format') {
+            return $.when(this._mockMessageFormat(args));
+        }
+        if (args.method === 'set_message_done') {
+            return $.when();
         }
         return this._super(route, args);
     },

@@ -1,7 +1,8 @@
 odoo.define('mail.ThreadField', function (require) {
 "use strict";
 
-var ChatThread = require('mail.ChatThread');
+var Message = require('mail.model.Message');
+var ThreadWidget = require('mail.widget.Thread');
 
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
@@ -11,63 +12,51 @@ var session = require('web.session');
 
 var _t = core._t;
 
-// -----------------------------------------------------------------------------
-// 'mail_thread' widget: displays the thread of messages
-// -----------------------------------------------------------------------------
+/**
+ * 'mail_thread' widget: displays the thread of messages
+ */
 var ThreadField = AbstractField.extend({
-    // inherited
     init: function () {
         this._super.apply(this, arguments);
-        this.msgIDs = this.value.res_ids;
+        this._messageIDs = this.value.res_ids; // used for updating the record's datapoint on received msgs
     },
     willStart: function () {
-        return this.alive(this.call('chat_manager', 'isReady'));
+        return this.alive(this.call('chat_service', 'isReady'));
     },
     start: function () {
         var self = this;
 
         this.dp = new concurrency.DropPrevious();
 
-        this.thread = new ChatThread(this, {
-            display_order: ChatThread.ORDER.DESC,
-            display_document_link: false,
-            display_needactions: false,
-            squash_close_messages: false,
+        this._threadWidget = new ThreadWidget(this, {
+            displayOrder: ThreadWidget.ORDER.DESC,
+            displayDocumentLink: false,
+            displayMarkAsRead: false,
+            squashCloseMessages: false,
         });
 
-        this.thread.on('load_more_messages', this, this._onLoadMoreMessages);
-        this.thread.on('redirect', this, this._onRedirect);
-        this.thread.on('redirect_to_channel', this, this._onRedirectToChannel);
-        this.thread.on('toggle_star_status', this, function (messageID) {
-            self.call('chat_manager', 'toggleStarStatus', messageID);
+        this._threadWidget.on('load_more_messages', this, this._onLoadMoreMessages);
+        this._threadWidget.on('redirect', this, this._onRedirect);
+        this._threadWidget.on('redirect_to_channel', this, this._onRedirectToChannel);
+        this._threadWidget.on('toggle_star_status', this, function (messageID) {
+            var message = self.call('chat_service', 'getMessage', messageID);
+            message.toggleStarStatus();
         });
 
-        var def1 = this.thread.appendTo(this.$el);
+        var def1 = this._threadWidget.appendTo(this.$el);
         var def2 = this._super.apply(this, arguments);
 
         return this.alive($.when(def1, def2)).then(function () {
             // unwrap the thread to remove an unnecessary level on div
-            self.setElement(self.thread.$el);
-            var chatBus = self.call('chat_manager', 'getChatBus');
+            self.setElement(self._threadWidget.$el);
+            var chatBus = self.call('chat_service', 'getChatBus');
             chatBus.on('new_message', self, self._onNewMessage);
             chatBus.on('update_message', self, self._onUpdateMessage);
         });
     },
-    _render: function () {
-        return this._fetchAndRenderThread(this.msgIDs);
-    },
-    isSet: function () {
-        return true;
-    },
     destroy: function () {
-        this.call('chat_manager', 'removeChatterMessages', this.model);
+        this.call('chat_service', 'removeChatterMessages', this.model);
         this._super.apply(this, arguments);
-    },
-    _reset: function (record) {
-        this._super.apply(this, arguments);
-        this.msgIDs = this.value.res_ids;
-        // the mail widgets being persistent, one need to update the res_id on reset
-        this.res_id = record.res_id;
     },
 
     //--------------------------------------------------------------------------
@@ -75,21 +64,28 @@ var ThreadField = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     * @return {boolean}
+     */
+    isSet: function () {
+        return true;
+    },
+    /**
      * @param  {Object} message
      * @param  {integer[]} message.partner_ids
      * @return {$.Promise}
      */
     postMessage: function (message) {
         var self = this;
-        var options = {model: this.model, res_id: this.res_id};
-        return this.call('chat_manager', 'postMessage', message, options)
+        var options = { model: this.model, resID: this.res_id };
+        return this.call('chat_service', 'postMessage', message, options)
             .then(function () {
                 if (message.partner_ids.length) {
-                    self.trigger_up('reload_mail_fields', {followers: true});
+                    self.trigger_up('reload_mail_fields', { followers: true });
                 }
             })
             .fail(function () {
-                self.do_notify(_t('Sending Error'), _t('Your message has not been sent.'));
+                self.do_notify(_t("Sending Error"), _t("Your message has not been sent."));
             });
     },
 
@@ -99,42 +95,71 @@ var ThreadField = AbstractField.extend({
 
     /**
      * @private
-     * @returns {Object[]} an array containing a single message 'Creating a new record...'
-     */
-    _forgeCreationModeMessages: function () {
-        return [{
-            id: 0,
-            body: "<p>Creating a new record...</p>",
-            date: moment(),
-            author_id: [session.partner_id, session.partner_display_name],
-            displayed_author: session.partner_display_name,
-            avatar_src: "/web/image/res.partner/" + session.partner_id + "/image_small",
-            attachment_ids: [],
-            customer_email_data: [],
-            tracking_value_ids: [],
-        }];
-    },
-    /**
-     * @private
-     * @param {integer[]} ids
      * @param {Object} [options]
+     * @param {boolean} [options.forceFetch]
+     * @return {$.Deferred}
      */
-    _fetchAndRenderThread: function (ids, options) {
+    _fetchAndRenderThread: function (options) {
         var self = this;
         options = options || {};
-        options.ids = ids;
-        var fetch_def = this.dp.add(this.call('chat_manager', 'getMessages', options));
-        return fetch_def.then(function (raw_messages) {
+        options.ids = this._messageIDs;
+        // var fetchDef = this.dp.add(this.call('chat_service', 'getMessages', options));
+        var documentChat = this.call('chat_service', 'getDocumentChat', this.model, this.res_id);
+        if (!documentChat) {
+            documentChat = this.call('chat_service', 'addDocumentChat', this.model, this.res_id);
+        }
+        documentChat.setMessageIDs(this._messageIDs);
+        var fetchDef = this.dp.add(documentChat.getMessages(options));
+        return fetchDef.then(function (rawMessages) {
             var isCreateMode = false;
             if (!self.res_id) {
-                raw_messages = self._forgeCreationModeMessages();
+                rawMessages = self._forgeCreateMessages();
                 isCreateMode = true;
             }
-            self.thread.render(raw_messages, {
-                display_load_more: raw_messages.length < ids.length,
+            self._threadWidget.render(rawMessages, {
+                displayLoadMore: rawMessages.length < self._messageIDs.length,
                 isCreateMode: isCreateMode,
             });
         });
+    },
+    /**
+     * Make a fake list of messages to render in create mode.
+     * Instead of rendering no messages at all, it displays a single message
+     * with body content "Creating a new record".
+     *
+     * @private
+     * @returns {mail.model.Message[]} an array containing a single message 'Creating a new record...'
+     */
+    _forgeCreateMessages: function () {
+        var createMessage = new Message(this, {
+            id: 0,
+            body: _t("<p>Creating a new record...</p>"),
+            author_id: [session.partner_id, session.partner_display_name],
+        });
+        return [createMessage];
+    },
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        return this._fetchAndRenderThread();
+    },
+    /**
+     * @override
+     * @private
+     * @param {any} record
+     */
+    _reset: function (record) {
+        this._super.apply(this, arguments);
+        this._messageIDs = this.value.res_ids;
+        // the mail widgets being persistent, one need to update the res_id on reset
+        this.res_id = record.res_id;
+        // update msgIDs of the document chat
+        var documentChat = this.call('chat_service', 'getDocumentChat', this.model, this.res_id);
+        if (documentChat) {
+            documentChat.setMessageIDs(this._messageIDs);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -143,38 +168,55 @@ var ThreadField = AbstractField.extend({
 
     /**
      * When a new message arrives, fetch its data to render it
-     * @param {Number} message_id : the identifier of the new message
-     * @returns {Deferred}
+     *
+     * @private
      */
     _onLoadMoreMessages: function () {
-        this._fetchAndRenderThread(this.msgIDs, {forceFetch: true});
+        this._fetchAndRenderThread({ forceFetch: true });
     },
+    /**
+     * @private
+     * @param {mail.model.Message}
+     */
     _onNewMessage: function (message) {
-        if (message.model === this.model && message.res_id === this.res_id) {
-            this.msgIDs.unshift(message.id);
+        if (message.getDocumentModel() === this.model && message.getDocumentResID() === this.res_id) {
+            this._messageIDs.unshift(message.getID());
             this.trigger_up('new_message', {
                 id: this.value.id,
-                msgIDs: this.msgIDs,
+                messageIDs: this._messageIDs,
             });
-            this._fetchAndRenderThread(this.msgIDs);
+            this._fetchAndRenderThread();
         }
     },
+    /**
+     * @private
+     * @param {integer} channelID
+     */
     _onRedirectToChannel: function (channelID) {
         var self = this;
-        this.call('chat_manager', 'joinChannel', channelID).then(function () {
+        this.call('chat_service', 'joinChannel', channelID).then(function () {
             // Execute Discuss client action with 'channel' as default channel
-            self.do_action('mail.mail_channel_action_client_chat', {active_id: channelID});
+            self.do_action('mail.mail_channel_action_client_chat', { active_id: channelID });
         });
     },
-    _onRedirect: function (res_model, res_id) {
+    /**
+     * @private
+     * @param {string} resModel
+     * @param {integer} resID
+     */
+    _onRedirect: function (resModel, resID) {
         this.trigger_up('redirect', {
-            res_id: res_id,
-            res_model: res_model,
+            res_id: resID,
+            res_model: resModel,
         });
     },
+    /**
+     * @private
+     * @param {mail.model.Message}
+     */
     _onUpdateMessage: function (message) {
-        if (message.model === this.model && message.res_id === this.res_id) {
-            this._fetchAndRenderThread(this.msgIDs);
+        if (message.getDocumentModel() === this.model && message.getDocumentResID() === this.res_id) {
+            this._fetchAndRenderThread();
         }
     },
 });
