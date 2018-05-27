@@ -17,13 +17,14 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
+# Carlos Vásquez <carlos.vasquez@clearcorp.co.cr>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 14:10+0000\n"
 "PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"Last-Translator: Carlos Vásquez <carlos.vasquez@clearcorp.co.cr>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,7 +155,7 @@ msgstr "Separador de decimales:"
 #: code:addons/base_import/static/src/xml/base_import.xml:76
 #, python-format
 msgid "Defer parent/child computation"
-msgstr ""
+msgstr "Diferir cálculo de padres e hijos"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -331,6 +332,9 @@ msgid ""
 "                      parent / child relation occurs on every line, and lead"
 " to a slower import.                     Defering it can speed up import."
 msgstr ""
+"Si el modelo utiliza relaciones padre/hijo, se calcula la relación hija en "
+"cada línea, lo que lleva a una importación lenta. Diferir el proceso de "
+"cálculo puede acelerar la importación."
 
 #. module: base_import
 #. openerp-web
