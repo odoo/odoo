@@ -6,14 +6,14 @@
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
 # Michal Veselý <michal@veselyberanek.net>, 2018
-# trendspotter, 2018
+# Jiří P., 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: trendspotter, 2018\n"
+"Last-Translator: Jiří P., 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +49,7 @@ msgstr "(%srezervováno)"
 #: code:addons/stock/models/stock_move.py:311
 #, python-format
 msgid " (reserved)"
-msgstr ""
+msgstr "(Rezervováno)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_state
@@ -65,7 +65,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr ""
+msgstr "Počet produktů"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:481
@@ -330,7 +330,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -585,12 +585,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic purchase flow looks like the following:"
-msgstr ""
+msgstr "Klasický nákupní postup vypadá takto:"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "A classic sales flow looks like the following:"
-msgstr ""
+msgstr "Klasický obchodní postup vypadá takto:"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:86
@@ -610,7 +610,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:76
 #, python-format
 msgid "A serial number should only be linked to a single product."
-msgstr ""
+msgstr "Sériové číslo by mělo být spojeno pouze s jedním produktem."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_type
@@ -629,12 +629,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "API Documentation"
-msgstr ""
+msgstr "Dokumentace rozhraní API"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Accurate visibility on all your operations"
-msgstr ""
+msgstr "Přesná viditelnost všech operací"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_action
@@ -669,17 +669,22 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
+"Přidání a přizpůsobení operací trasy při zpracování přesunů produktů ve "
+"vašem skladu (skladech): např. vykládka > kontrola kvality > zásoba pro "
+"příchozí produkty, výběr > balení > přeprava pro odchozí produkty. Můžete "
+"také nastavit strategie umístění na skladech, abyste mohli okamžitě odeslat "
+"příchozí produkty do konkrétních míst  (například konkrétní koše, regály)."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Additional Info"
-msgstr ""
+msgstr "Doplňující informace"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_comment
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Additional Information"
-msgstr ""
+msgstr "dodatečné informace"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_partner_id
@@ -689,17 +694,17 @@ msgstr "Adresa"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Advanced"
-msgstr ""
+msgstr "Pokročilý"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Advanced Scheduling"
-msgstr ""
+msgstr "Pokročilé plánování"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
 msgid "Advanced: Apply Procurement Rules"
-msgstr ""
+msgstr "Pokročilé: Použijte pravidla pro veřejné zakázky"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -727,6 +732,8 @@ msgid ""
 "All items couldn't be shipped, the remaining ones will be shipped as soon as"
 " they become available."
 msgstr ""
+"Všechny položky nebyly odeslány, zbývající položky budou odeslány, jakmile "
+"budou k dispozici."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:105
@@ -920,7 +927,7 @@ msgstr "Čárový kód"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Nomenklatura čárového kódu"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_wms_barcode_nomenclature_all
@@ -930,7 +937,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_barcode
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Čtečka čárových kódů"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_stock_picking_batch
@@ -1283,27 +1290,27 @@ msgstr "Vypočítat"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Spočítej dopravní náklady a odešli DHL"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Spočítej dopravní náklady a odešli přes FedEx"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Spočítej dopravní náklady a odešli přes UPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Spočítej dopravní náklady a odešli přes USPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Spočítej dopravní náklady a odešli přes bpost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1335,7 +1342,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Congratulations!"
-msgstr ""
+msgstr "Gratulace!"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_stock_tracking_owner
@@ -1355,7 +1362,7 @@ msgstr "Kontakt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_child_ids
 msgid "Contains"
-msgstr ""
+msgstr "Obsahuje"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -1374,6 +1381,8 @@ msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
 msgstr ""
+"Nelze rezervovat všechny požadované produkty. Pro ruční zpracování rezervace"
+" použijte tlačítko \"Označit ke zpracování\"."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
@@ -2299,7 +2308,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Budoucí aktivity"
 
 #. module: stock
 #: code:addons/stock/models/product.py:330
@@ -3574,7 +3583,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manažer"
 
 #. module: stock
 #: selection:stock.location.path,auto:0
@@ -3594,7 +3603,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Manufacturing"
-msgstr ""
+msgstr "Výrobní"
 
 #. module: stock
 #: selection:stock.picking.type,code:0
@@ -3651,7 +3660,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Misc"
-msgstr ""
+msgstr "Různé"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree
@@ -4167,7 +4176,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Owner"
-msgstr ""
+msgstr "Majitel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_restrict_partner_id
@@ -4328,7 +4337,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Parameters"
-msgstr ""
+msgstr "Parametry"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_location_id
@@ -4484,7 +4493,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Plánovač"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:649
@@ -4534,7 +4543,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_priority
 #: model:ir.model.fields,field_description:stock.field_stock_picking_priority
 msgid "Priority"
-msgstr ""
+msgstr "Přednost"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_priority
@@ -4874,7 +4883,7 @@ msgstr ""
 #: code:addons/stock/models/stock_warehouse.py:98
 #, python-format
 msgid "Quality Control"
-msgstr ""
+msgstr "Kontrola kvality"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_wh_qc_stock_loc_id
@@ -5102,7 +5111,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
 msgid "Reference"
-msgstr ""
+msgstr "Reference"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence_id
@@ -5341,7 +5350,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Rules"
-msgstr ""
+msgstr "Pravidla"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_procurement_compute
@@ -5694,6 +5703,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
@@ -6420,7 +6430,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "To Do"
-msgstr ""
+msgstr "K udělání"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_to_loc
@@ -6764,7 +6774,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
-msgstr ""
+msgstr "Prodejce"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
@@ -6948,7 +6958,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Vítejte"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_push_ids
