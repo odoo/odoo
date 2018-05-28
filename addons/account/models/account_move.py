@@ -9,6 +9,7 @@ from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
 from odoo.addons import decimal_precision as dp
+from odoo.osv import expression
 from lxml import etree
 
 #----------------------------------------------------------
@@ -1134,15 +1135,32 @@ class AccountMoveLine(models.Model):
         date_field = 'date'
         if context.get('aged_balance'):
             date_field = 'date_maturity'
-        if context.get('date_to'):
-            domain += [(date_field, '<=', context['date_to'])]
-        if context.get('date_from'):
-            if not context.get('strict_range'):
-                domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
-            elif context.get('initial_bal'):
-                domain += [(date_field, '<', context['date_from'])]
-            else:
-                domain += [(date_field, '>=', context['date_from'])]
+
+        if context.get('companies_fiscalyears'):
+            sub_domains = []
+            for v in context['companies_fiscalyears']['companies']:
+                date_from = v.get('date_from')
+                date_to = v['date_to']
+                sub_domain = [('company_id', '=', v['company_id']), (date_field, '<=', date_to)]
+                if date_from:
+                    if not context.get('strict_range'):
+                        sub_domain += ['|', (date_field, '>=', date_from), ('account_id.user_type_id.include_initial_balance', '=', True)]
+                    elif context.get('initial_bal'):
+                        sub_domain += [(date_field, '<', date_from)]
+                    else:
+                        sub_domain += [(date_field, '>=', date_from)]
+                sub_domains.append(sub_domain)
+            domain += expression.OR(sub_domains)
+        else:
+            if context.get('date_to'):
+                domain += [(date_field, '<=', context['date_to'])]
+            if context.get('date_from'):
+                if not context.get('strict_range'):
+                    domain += ['|', (date_field, '>=', context['date_from']), ('account_id.user_type_id.include_initial_balance', '=', True)]
+                elif context.get('initial_bal'):
+                    domain += [(date_field, '<', context['date_from'])]
+                else:
+                    domain += [(date_field, '>=', context['date_from'])]
 
         if context.get('journal_ids'):
             domain += [('journal_id', 'in', context['journal_ids'])]
