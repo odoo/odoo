@@ -53,6 +53,7 @@
                 <field name="last_session_closing_date"/>
                 <field name="pos_session_username"/>
                 <field name="pos_session_state"/>
+                <field name="pos_session_duration"/>
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -70,6 +71,12 @@
                                     </t>
                                     <t t-if="record.pos_session_state.raw_value == 'closing_control'">
                                         <div class="label label-info o_kanban_inline_block">Closing Control</div>
+                                    </t>
+                                    <t t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1">
+                                        <div t-attf-class="label label-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} o_kanban_inline_block"
+                                             title="The session has been opened for an unusually long period. Please consider closing.">
+                                             To Close
+                                        </div>
                                     </t>
                                     <t t-set="unused_message">Unused</t>
                                     <div class="o_secondary mt16"><t t-esc="record.pos_session_username.value || unused_message"/></div>
@@ -111,7 +118,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><div class="container o_kanban_card_manage_pane">
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div class="o_kanban_card_manage_title">
@@ -134,8 +141,8 @@
                                     </div>
                                 </div>
 
-                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-xs-12 text-right">
+                                <div t-if="widget.editable" class="o_kanban_card_manage_settings row" groups="point_of_sale.group_pos_manager">
+                                    <div class="col-xs-12">
                                         <a type="edit">Settings</a>
                                     </div>
                                 </div>

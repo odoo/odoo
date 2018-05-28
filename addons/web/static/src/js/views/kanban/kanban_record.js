@@ -6,6 +6,7 @@ odoo.define('web.KanbanRecord', function (require) {
  * a Kanban view.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
@@ -22,6 +23,7 @@ var KanbanRecord = Widget.extend({
     events: {
         'click .oe_kanban_action': '_onKanbanActionClicked',
         'click .o_kanban_manage_toggle_button': '_onManageTogglerClicked',
+        'keydown' : '_onKanbanKeyDown',
     },
     /**
      * @override
@@ -192,7 +194,7 @@ var KanbanRecord = Widget.extend({
                     if (Widget) {
                         widget = self._processWidget($field, field_name, Widget);
                         self.subWidgets[field_name] = widget;
-                    } else if (core.debug) {
+                    } else if (config.debug) {
                         // the widget is not implemented
                         $field.replaceWith($('<span>', {
                             text: _.str.sprintf(_t('[No widget %s]'), field_widget),
@@ -269,7 +271,7 @@ var KanbanRecord = Widget.extend({
             var Widget = widgetRegistry.get($field.attr('name'));
             var widget = new Widget(self, self.state);
 
-            var def = widget.__widgetRenderAndInsert(function () {});
+            var def = widget._widgetRenderAndInsert(function () {});
             if (def.state() === 'pending') {
                 self.defs.push(def);
             }
@@ -281,8 +283,8 @@ var KanbanRecord = Widget.extend({
      * Renders the record
      */
     _render: function () {
-        this.replaceElement(this.qweb.render('kanban-box', this.qweb_context));
-        this.$el.addClass('o_kanban_record');
+        this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        this.$el.addClass('o_kanban_record').attr("tabindex",0);
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
@@ -501,6 +503,14 @@ var KanbanRecord = Widget.extend({
                 break;
             default:
                 this.do_warn("Kanban: no action for type : " + type);
+        }
+    },
+    _onKanbanKeyDown: function (event) {
+        switch (event.keyCode) {
+            case $.ui.keyCode.ENTER:
+                event.preventDefault();
+                this._openRecord();
+                break;
         }
     },
     /**

@@ -25,6 +25,9 @@ def _auto_install_l10n(cr, registry):
         elif country_code == 'DE':
             module_list.append('l10n_de_skr03')
             module_list.append('l10n_de_skr04')
+        elif country_code == 'CN':
+            module_list.append('l10n_cn_small_business')
+            module_list.append('l10n_cn_standard')
         else:
             if env['ir.module.module'].search([('name', '=', 'l10n_' + country_code.lower())]):
                 module_list.append('l10n_' + country_code.lower())
@@ -32,7 +35,9 @@ def _auto_install_l10n(cr, registry):
                 module_list.append('l10n_generic_coa')
         if country_code == 'US':
             module_list.append('account_plaid')
-            module_list.append('account_check_printing')
+            module_list.append('l10n_us_check_printing')
+        if country_code == 'CA':
+            module_list.append('l10n_ca_check_printing')
         if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [
@@ -41,7 +46,7 @@ def _auto_install_l10n(cr, registry):
             ]:
             module_list.append('base_vat')
 
-        #european countries will be using SEPA
+        # European countries will be using SEPA
         europe = env.ref('base.europe', raise_if_not_found=False)
         if europe:
             europe_country_codes = [x.code for x in europe.country_ids]

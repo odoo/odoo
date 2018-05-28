@@ -110,8 +110,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new warehouse.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new warehouse
               </p>
             </field>
         </record>
@@ -162,7 +162,7 @@
                     <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -175,14 +175,14 @@
             <field name="arch" type="xml">
                 <search string="Reordering Rules Search">
                     <field name="name" string="Reordering Rules"/>
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="product_id"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Warehouse" domain="[]"  context="{'group_by':'warehouse_id'}"/>
-                        <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Warehouse" name="warehouse" domain="[]"  context="{'group_by':'warehouse_id'}" groups="stock.group_stock_multi_warehouses"/>
+                        <filter string="Location" name="location" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
                     </group>
                 </search>
             </field>
@@ -206,7 +206,7 @@
                             </group>
                             <group>
                                 <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="group_id" groups="stock.group_adv_location"/>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -240,9 +240,11 @@
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a reordering rule.
-              </p><p>You can define your minimum stock rules, so that Odoo will automatically create draft manufacturing orders or request for quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, Odoo will generate a procurement request to increase the stock up to the maximum quantity.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a reordering rule
+              </p><p>
+                Define a minimum stock rule so that Odoo creates automatically requests for quotations or draft manufacturing orders to resupply your stock.
+              </p>
             </field>
         </record>
         <menuitem

@@ -13,7 +13,7 @@ class ReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits=dp.get_precision('Product Unit of Measure'), required=True)
-    uom_id = fields.Many2one('product.uom', string='Unit of Measure', related='move_id.product_uom')
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', related='move_id.product_uom')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
@@ -29,12 +29,12 @@ class ReturnPicking(models.TransientModel):
     parent_location_id = fields.Many2one('stock.location')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
+        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
 
     @api.model
     def default_get(self, fields):
         if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError("You may only return one picking at a time!")
+            raise UserError(_("You may only return one picking at a time!"))
         res = super(ReturnPicking, self).default_get(fields)
 
         move_dest_exists = False
@@ -78,6 +78,7 @@ class ReturnPicking(models.TransientModel):
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
+            'date_expected': fields.Datetime.now(),
             'location_id': return_line.move_id.location_dest_id.id,
             'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
             'picking_type_id': new_picking.picking_type_id.id,

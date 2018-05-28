@@ -29,12 +29,12 @@ var _t = core._t;
 
 /**
  * Convert binary to bin_size
- * 
+ *
  * @param {string} [value] base64 representation of the binary (might be already a bin_size!)
  * @param {Object} [field]
- *        a description of the field (note: this parameter is ignored) 
+ *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options (note: this parameter is ignored)
- * 
+ *
  * @returns {string} bin_size (which is human-readable)
  */
 function formatBinary(value, field, options) {
@@ -320,7 +320,19 @@ function formatMonetary(value, field, options) {
         return currency.symbol + '&nbsp;' + formatted_value;
     }
 }
-
+/**
+ * Returns a string representing the given value (multiplied by 100)
+ * concatenated with '%'.
+ *
+ * @param {number | false} value
+ * @param {Object} [field]
+ * @param {Object} [options]
+ * @returns {string}
+ */
+function formatPercentage(value, field, options) {
+    value = formatFloat(value * 100, field, options) || '0';
+    return parseFloat(value) + "%";
+}
 /**
  * Returns a string representing the value of the selection.
  *
@@ -591,6 +603,7 @@ return {
         many2one: formatMany2one,
         monetary: formatMonetary,
         one2many: formatX2Many,
+        percentage: formatPercentage,
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,

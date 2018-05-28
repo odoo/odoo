@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from collections import OrderedDict
 from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
+import unicodedata
 
 
 import odoo
@@ -585,7 +586,7 @@ class WebClient(http.Controller):
         if langs:
             lang_params = langs.read([
                 "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep"])[0]
+                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
@@ -961,14 +962,17 @@ class DataSet(http.Controller):
 
 class View(http.Controller):
 
-    @http.route('/web/view/add_custom', type='json', auth="user")
-    def add_custom(self, view_id, arch):
-        CustomView = request.env['ir.ui.view.custom']
-        CustomView.create({
-            'user_id': request.session.uid,
-            'ref_id': view_id,
-            'arch': arch
-        })
+    @http.route('/web/view/edit_custom', type='json', auth="user")
+    def edit_custom(self, custom_id, arch):
+        """
+        Edit a custom view
+
+        :param int custom_id: the id of the edited custom view
+        :param str arch: the edited arch of the custom view
+        :returns: dict with acknowledged operation (result set to True)
+        """
+        custom_view = request.env['ir.ui.view.custom'].browse(custom_id)
+        custom_view.write({ 'arch': arch })
         return {'result': True}
 
 class Binary(http.Controller):
@@ -1031,7 +1035,7 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                       filename_field='datas_fname', unique=None, filename=None, mimetype=None,
-                      download=None, width=0, height=0, crop=False, access_token=None):
+                      download=None, width=0, height=0, crop=False, access_token=None, avoid_if_small=False):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1055,7 +1059,7 @@ class Binary(http.Controller):
                 width = 500
             if height > 500:
                 height = 500
-            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG')
+            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None), encoding='base64', filetype='PNG', avoid_if_small=avoid_if_small)
             # resize force png as filetype
             headers = self.force_contenttype(headers, contenttype='image/png')
 
@@ -1107,20 +1111,27 @@ class Binary(http.Controller):
                 </script>"""
         args = []
         for ufile in files:
+
+            filename = ufile.filename
+            if request.httprequest.user_agent.browser == 'safari':
+                # Safari sends NFD UTF-8 (where é is composed by 'e' and [accent])
+                # we need to send it the same stuff, otherwise it'll fail
+                filename = unicodedata.normalize('NFD', ufile.filename).encode('UTF-8')
+
             try:
                 attachment = Model.create({
-                    'name': ufile.filename,
+                    'name': filename,
                     'datas': base64.encodestring(ufile.read()),
-                    'datas_fname': ufile.filename,
+                    'datas_fname': filename,
                     'res_model': model,
                     'res_id': int(id)
                 })
             except Exception:
-                args = args.append({'error': _("Something horrible happened")})
+                args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
             else:
                 args.append({
-                    'filename': ufile.filename,
+                    'filename': filename,
                     'mimetype': ufile.content_type,
                     'id': attachment.id
                 })
@@ -1578,7 +1589,7 @@ class ReportController(http.Controller):
 
     @http.route(['/report/download'], type='http', auth="user")
     def report_download(self, data, token):
-        """This function is used by 'qwebactionmanager.js' in order to trigger the download of
+        """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
         :param data: a javascript array JSON.stringified containg report internal url ([0]) and

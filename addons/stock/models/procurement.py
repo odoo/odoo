@@ -183,7 +183,10 @@ class ProcurementGroup(models.Model):
         if not rule:
             raise UserError(_('No procurement rule found. Please verify the configuration of your routes'))
 
-        getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
+        if hasattr(rule, '_run_%s' % rule.action):
+            getattr(rule, '_run_%s' % rule.action)(product_id, product_qty, product_uom, location_id, name, origin, values)
+        else:
+            _logger.error("The method _run_%s doesn't exist on the procument rules" % rule.action)
         return True
 
     @api.model
@@ -228,10 +231,6 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
-    def _get_exceptions_domain(self):
-        return [('procure_method', '=', 'make_to_order'), ('move_orig_ids', '=', False), ('state', 'not in', ('cancel', 'done', 'draft'))]
-
-    @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
@@ -243,15 +242,6 @@ class ProcurementGroup(models.Model):
             if use_new_cursor:
                 self._cr.commit()
 
-        exception_moves = self.env['stock.move'].search(self._get_exceptions_domain())
-        for move in exception_moves:
-            values = move._prepare_procurement_values()
-            try:
-                with self._cr.savepoint():
-                    origin = (move.group_id and (move.group_id.name + ":") or "") + (move.rule_id and move.rule_id.name or move.origin or move.picking_id.name or "/")
-                    self.run(move.product_id, move.product_uom_qty, move.product_uom, move.location_id, move.rule_id and move.rule_id.name or "/", origin, values)
-            except UserError as error:
-                self.env['procurement.rule']._log_next_activity(move.product_id, error.name)
         if use_new_cursor:
             self._cr.commit()
 

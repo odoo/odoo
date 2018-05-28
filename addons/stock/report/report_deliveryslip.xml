@@ -27,7 +27,7 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th t-if="o.origin"><strong>Order (Origin)</strong></th>
+                                <th t-if="o.origin"><strong>Order</strong></th>
                                 <th name="td_sched_date_h">
                                     <strong>Date</strong>
                                 </th>
@@ -49,7 +49,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="not o.move_line_ids">
+                    <table class="table table-condensed mt48" t-if="o.state!='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
@@ -57,23 +57,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_lines" t-as="move">
+                            <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                            <tr t-foreach="lines" t-as="move">
                                 <td><span t-field="move.product_id"/></td>
                                 <td>
-                                    <span t-field="move.quantity_done"/>
+                                    <span t-field="move.product_uom_qty"/>
                                     <span t-field="move.product_uom"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="table table-condensed mt48" t-if="o.move_line_ids">
-                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_production_lot"/>
+                    <table class="table table-condensed mt48" t-if="o.move_line_ids and o.state=='done'">
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
-                                <th name="lot_serial" t-if="has_serial_number">
-                                    Lot/Serial Number
-                                </th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -88,25 +85,6 @@
                                         <span t-field="move_line.product_id.sudo().description_pickingin"/>
                                     </p>
                                 </td>
-                                <t t-if="has_serial_number">
-                                   <td>
-                                        <table width="100%">
-                                            <tr>
-                                                <td>
-                                                     <span t-field="move_line.lot_id"/>
-                                                     <t t-if="not move_line.lot_id">
-                                                         <span t-field="move_line.lot_name"/>
-                                                     </t>
-                                                 </td>
-                                                 <td name="lot_qty">
-                                                     <t t-if="move_line.product_qty"> 
-                                                        <span t-field="move_line.product_qty"/>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                  </td>
-                                </t>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
@@ -114,11 +92,8 @@
                             </tr>
                         </tbody>
                     </table>
-                    <p t-if="o.backorder_id">
-                        This shipment is a backorder of <t t-esc="o.backorder_id.name"/>.
-                    </p>
                     <p>
-                        <t t-if="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])">
+                        <t t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
                         </t>
                     </p>

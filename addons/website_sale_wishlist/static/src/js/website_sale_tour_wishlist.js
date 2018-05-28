@@ -111,7 +111,7 @@ tour.register('shop_wishlist', {
         },
         {
             content: "check that user is redirect - wishlist is empty",
-            trigger: "h2:contains('Shopping Cart')",
+            trigger: "#wrap #cart_products",
             run: function() {},
         },
         {

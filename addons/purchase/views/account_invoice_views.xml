@@ -10,8 +10,8 @@
         <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase'}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a vendor bill.
+          <p class="o_view_nocontent_smiling_face">
+            Create a vendor bill
           </p><p>
             Use this menu to control the invoices to be received from your
             vendors. When registering a new bill, set the purchase order
@@ -31,13 +31,12 @@
         <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase', 'default_purchase_id': active_id}</field>
         <field name="search_view_id" ref="account.view_account_invoice_filter"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-            Click to record a vendor bill related to this purchase.
-            </p>
-            <p>
+          <p class="o_view_nocontent_smiling_face">
+            Record a vendor bill related to this purchase
+          </p><p>
             You can control the invoice from your vendor according to
             what you purchased (services) or received (products).
-            </p>
+          </p>
         </field>
     </record>
     <record id="action_invoice_supplier_tree1_view1" model="ir.actions.act_window.view">
@@ -57,10 +56,18 @@
         <field name="name">account.invoice.supplier.purchase</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="groups_id" eval="[(4,ref('purchase.group_purchase_user'))]"/>
         <field name="arch" type="xml">
-            <field name="reference" position="after" >
-                 <field name="purchase_id" attrs="{'readonly': [('state','not in',['draft'])], 'invisible': ['|', ('state', '=', 'purchase'), ('type', '=', 'in_refund')]}" class="oe_edit_only"
-                    options="{'no_create': True}" context="{'show_total_amount': True}"/>
+            <field name="vendor_bill_id" position="after">
+                <field name="vendor_bill_purchase_id" attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('type', '=', 'in_refund')]}"
+                    class="oe_edit_only" domain="[('partner_id','child_of',[partner_id])]"
+                    placeholder="Select a purchase order or an old bill"
+                    options="{'no_create': True, 'no_open': True}"/>
+                <field name="purchase_id" class="oe_edit_only"
+                    invisible="1" context="{'show_total_amount': True}"/>
+            </field>
+            <field name="vendor_bill_id" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('type', '=', 'in_invoice'), ('state', 'not in', ['draft'])]}</attribute>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1" readonly="0"/>
@@ -79,4 +86,5 @@
             </field>
         </field>
     </record>
+
 </odoo>

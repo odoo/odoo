@@ -1,10 +1,9 @@
 odoo.define('base_calendar.base_calendar', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
 var BasicModel = require('web.BasicModel');
 var field_registry = require('web.field_registry');
-var Notification = require('web.notification').Notification;
+var Notification = require('web.Notification');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
 var WebClient = require('web.WebClient');
@@ -15,9 +14,10 @@ var FieldMany2ManyTags = relational_fields.FieldMany2ManyTags;
 var CalendarNotification = Notification.extend({
     template: "CalendarNotification",
 
-    init: function(parent, title, text, eid) {
-        this._super(parent, title, text, true);
-        this.eid = eid;
+    init: function(parent, params) {
+        this._super(parent, params);
+        this.eid = params.eventID;
+        this.sticky = true;
 
         this.events = _.extend(this.events || {}, {
             'click .link2event': function() {
@@ -66,7 +66,11 @@ WebClient.include({
         // For each notification, set a timeout to display it
         _.each(notifications, function(notif) {
             self.calendar_notif_timeouts[notif.event_id] = setTimeout(function() {
-                var notification = new CalendarNotification(self.notification_manager, notif.title, notif.message, notif.event_id);
+                var notification = new CalendarNotification(self.notification_manager, {
+                    title: notif.title,
+                    text: notif.message,
+                    eventID: notif.event_id,
+                });
                 self.notification_manager.display(notification);
                 self.calendar_notif[notif.event_id] = notification;
             }, notif.timer * 1000);
@@ -94,7 +98,7 @@ WebClient.include({
         // in which the current user is involved is created, edited or deleted
         this.calendar_notif_timeouts = {};
         this.calendar_notif = {};
-        bus.on('notification', this, function (notifications) {
+        this.call('bus_service', 'getBus').on('notification', this, function (notifications) {
             _.each(notifications, (function (notification) {
                 if (notification[0][1] === 'calendar.alarm') {
                     this.display_calendar_notif(notification[1]);

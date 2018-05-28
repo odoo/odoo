@@ -22,55 +22,40 @@
     <t t-name="DocumentViewer.Content">
         <div class="o_viewer_content">
             <div class="o_viewer-header">
-                <h2 class="o_image_caption"><t t-esc="widget.activeAttachment.name"/></h2>
-                <ul class="list-inline pull-right">
-                    <li t-if="widget.activeAttachment.type == 'image'">
-                        <a class="o_print_btn" href="#">
-                            <i class="fa fa-2x fa-print"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_close_btn" href="#">
-                            <i class="fa fa-2x fa-times"/>
-                        </a>
-                    </li>
-                </ul>
+                <span class="o_image_caption">
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.type == 'image'"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.type == 'application/pdf'"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.type == 'video'"/>
+                    <t t-esc="widget.activeAttachment.name"/>
+                    <a href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download"/></a>
+                </span>
+                <a class="o_close_btn pull-right" href="#">×</a>
             </div>
             <div class="o_viewer_img_wrapper">
                 <div class="o_viewer_zoomer">
-                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img">
-                        <i class="fa fa-spinner fa-spin fa-3x fa-fw" aria-hidden="true"/>
+                    <div t-if="widget.activeAttachment.type == 'image'" class="o_loading_img text-center">
+                        <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" aria-hidden="true"/>
                     </div>
                     <img t-if="widget.activeAttachment.type == 'image'" class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=1"/>
-                    <iframe class="mb48 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
+                    <iframe class="mt32 o_viewer_pdf" t-if="widget.activeAttachment.type == 'application/pdf'" t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}" />
                     <video t-if="widget.activeAttachment.type == 'video'" class="o_viewer_video" controls="controls">
                         <source t-attf-src="/web/image/#{widget.activeAttachment.id}" t-att-data-type="widget.activeAttachment.mimetype"/>
                     </video>
                 </div>
             </div>
-            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar">
-                <ul class="list-inline">
-                    <li>
-                        <a class="o_rotate" href="#">
-                            <i class="fa fa-2x fa-repeat"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_zoom_out" href="#">
-                            <i class="fa fa-2x fa-search-minus"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_zoom_in" href="#">
-                            <i class="fa fa-2x fa-search-plus"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="o_download_btn" href="#">
-                            <i class="fa fa-2x fa-download"/>
-                        </a>
-                    </li>
-                </ul>
+            <div t-if="widget.activeAttachment.type == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
+                <div class="btn-group ml0" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus"/></a>
+                </div>
+                <div class="btn-group ml8" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat"/></a>
+                </div>
+                <div class="btn-group ml8" role="group">
+                    <a href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print"/></a>
+                    <a href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download"/></a>
+                </div>
             </div>
         </div>
     </t>
@@ -81,10 +66,10 @@
 
             <t t-if="widget.attachment.length != 1">
                 <a class="arrow arrow-left move_previous" href="#">
-                    <span class="fa fa-3x fa-chevron-left"/>
+                    <span class="fa fa-chevron-left"/>
                 </a>
                 <a class="arrow arrow-right move_next" href="#">
-                    <span class="fa fa-3x fa-chevron-right"/>
+                    <span class="fa fa-chevron-right"/>
                 </a>
             </t>
         </div>
@@ -116,7 +101,7 @@
         </t>
         <t t-if="options.channel_id==='channel_starred'">
             <div class="o_thread_title">No starred message</div>
-            <div> You can mark any message as 'starred', and it shows up in this channel.</div>
+            <div>You can mark any message as 'starred', and it shows up in this channel.</div>
         </t>
     </div>
 
@@ -136,7 +121,7 @@
     </t>
 
     <t t-name="mail.ChatThread.Message">
-        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '')" t-att-data-message-id="message.id">
+        <div t-att-class="'o_thread_message' + (message.expanded ? ' o_message_expanded '  : ' ') + (message.is_selected ? 'o_thread_selected_message' : '') + (message.is_discussion or message.is_notification ? ' o_mail_discussion' : ' o_mail_not_discussion')" t-att-data-message-id="message.id">
             <div t-if="options.display_avatar" class="o_thread_message_sidebar">
                 <t t-if="!message.mailto and message.author_id[0]">
                     <img t-if="message.avatar_src and message.display_author"
@@ -157,14 +142,14 @@
                     t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.is_starred ? 'fa-star' : 'fa-star-o')"
                     t-att-data-message-id="message.id" title="Mark as Todo"/>
             </div>
-            <div t-att-class="'o_thread_message_core' + (message.is_note ? ' o_mail_note' : '')">
-                <p t-if="message.display_author" class="o_mail_info">
+            <div class="o_thread_message_core">
+                <p t-if="message.display_author" class="o_mail_info text-muted">
                     <t t-if="message.is_note">
                         Note by
                     </t>
 
                     <strong t-if="message.mailto">
-                        <a class="o_mail_mailto" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
+                        <a class="text-muted" t-attf-href="mailto:#{message.mailto}?subject=Re: #{message.subject}">
                             <t t-esc="message.mailto"/>
                         </a>
                     </strong>
@@ -222,9 +207,18 @@
                     <t t-if="!(message.tracking_value_ids and message.tracking_value_ids.length &gt; 0)">
                         <t t-raw="message.body"/>
                     </t>
-                     <t t-foreach="message.attachment_ids" t-as="attachment">
-                         <t t-call="mail.Attachment"/>
-                     </t>
+                    <t t-if="message.attachment_ids.length > 0">
+                        <div t-if="message.images.length > 0" class="o_attachments_previews">
+                            <t t-foreach="message.images" t-as="attachment">
+                                <t t-call="mail.AttachmentPreview"/>
+                            </t>
+                        </div>
+                        <div t-if="message.others.length > 0" class="o_attachments_list">
+                            <t t-foreach="message.others" t-as="attachment">
+                                <t t-call="mail.Attachment"/>
+                            </t>
+                        </div>
+                    </t>
                 </div>
             </div>
         </div>
@@ -257,7 +251,7 @@
     </t>
 
     <t t-name="mail.ChatComposer.Attachments">
-        <div t-if="attachments.length > 0" class="o_attachments">
+        <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
             <t t-foreach="attachments" t-as='attachment'>
                 <t t-call="mail.Attachment">
                      <t t-set="editable" t-value="true"/>
@@ -266,74 +260,70 @@
         </div>
     </t>
 
+    <t t-name="mail.AttachmentPreview">
+        <div class="o_attachment" t-att-title="attachment.name">
+            <div class="o_attachment_wrap">
+                <div class="o_image_box">
+                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
+                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
+                        <a class="o_attachment_download" t-att-href='attachment.url'>
+                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
     <t t-name="mail.Attachment">
         <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
-        <div t-attf-class="o_attachment #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
-            <t t-if="type == 'image'">
-                <div class="o_image_box">
-                    <img t-attf-src="/web/image/#{attachment.id}/200x200/?crop=True"/>
-                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
-                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
-                        </a>
+        <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
+            <div class="o_attachment_wrap">
+                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
+                <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
+
+                <div t-attf-class="o_image_box pull-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
+                    <div t-if="has_preview"
+                         class="o_image o_hover"
+                         t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
+                         t-att-data-mimetype="attachment.mimetype">
+                    </div>
+                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name">
+                        <span class="o_image o_hover" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
+                    </a>
+                    <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
+                </div>
+
+                <div class="caption">
+                    <span t-if="has_preview or editable" t-attf-class="ml4 #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc='attachment.name'/></span>
+                    <a t-else="" class="ml4" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><t t-esc='attachment.name'/></a>
+                </div>
+                <div t-if="editable" class="caption small">
+                    <b t-attf-class="ml4 small text-uppercase #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
+                    <div class="progress o_attachment_progress_bar">
+                        <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>
                     </div>
                 </div>
-            </t>
-            <t t-elif="type == 'video'">
-                <div class="o_image_box o_image_preview">
-                    <img class="o_image" t-att-data-mimetype="attachment.mimetype"/>
-                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <a class="o_attachment_play">
-                            <i t-attf-class="fa fa-2x fa-play-circle" title="Play this video" aria-hidden="true"></i>
-                        </a>
-                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
-                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
-                        </a>
-                    </div>
+                <div t-if="!editable" class="caption small">
+                    <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
+                    <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
+                    <a class="ml4 o_attachment_download pull-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download"/></a>
                 </div>
-            </t>
-            <t t-elif="attachment.mimetype == 'application/pdf'">
-                <div class="o_image_box">
-                    <div class="o_image_box">
-                        <img src="/web/static/src/img/mimetypes/pdf.png"/>
-                        <div class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                            <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
-                                <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this PDF" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </t>
-            <t t-else="">
-                <div class="o_image_box">
-                    <img class="o_image" t-att-data-mimetype="attachment.mimetype"/>
-                    <div t-attf-class="o_image_overlay">
-                        <a class="o_overlay_download" t-att-href='attachment.url' target="_blank"/>
-                        <a class="o_attachment_download" t-att-href='attachment.url' target="_blank">
-                            <i t-attf-class="fa fa-2x fa-arrow-circle-o-down" title="Download this attachment" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </div>
-            </t>
-            <div class="caption">
-                <a t-att-href='attachment.url' target="_blank">
-                    <t t-esc='attachment.name'/>
-                </a>
+                <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check"/></div>
+                <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white">×</span></div>
             </div>
-            <t t-if="editable">
-                <div class="o_attachment_delete">
-                    <i class='fa fa-times-circle' title="Delete this attachment" t-att-data-id="attachment.id"/>
-                </div>
-                <div class="o_attachment_progress_bar">
-                    Uploading
-                </div>
-            </t>
         </div>
     </t>
 
      <t t-name="mail.ChatThread.LoadMore">
-        <div t-if="!all_messages_loaded" class="o_thread_show_more">
-            <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
+        <div class="o_thread_show_more">
+            <t t-if="options.loadMoreOnScroll">
+                <span><i class="fa fa-spinner fa-spin"/> Loading older messages... </span>
+            </t>
+            <t t-else="">
+                <button class="btn btn-sm btn-link">-------- Show older messages --------</button>
+            </t>
         </div>
     </t>
 </templates>

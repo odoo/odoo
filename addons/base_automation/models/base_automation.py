@@ -10,7 +10,7 @@ from collections import defaultdict
 import dateutil
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, SUPERUSER_ID
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
@@ -77,6 +77,19 @@ class BaseAutomation(models.Model):
             self.trg_date_id = self.trg_date_range = self.trg_date_range_type = False
         elif self.trigger == 'on_time':
             self.filter_pre_domain = False
+
+    @api.onchange('trigger', 'state')
+    def _onchange_state(self):
+        if self.trigger == 'on_change' and self.state != 'code':
+            ff = self.fields_get(['trigger', 'state'])
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _("The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%(state_value)s\" action type") % {
+                    'trigger_value': dict(ff['trigger']['selection'])['on_change'],
+                    'trigger_label': ff['trigger']['string'],
+                    'state_value': dict(ff['state']['selection'])['code'],
+                }
+            }}
 
     @api.model
     def create(self, vals):

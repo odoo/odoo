@@ -267,8 +267,8 @@
             <search string="Search Payslips">
                 <field name="name" string="Payslips" filter_domain="['|',('name','ilike',self),('number','ilike',self)]"/>
                 <field name="date_from"/>
-                <filter string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
-                <filter string="Done" domain="[('state','=','done')]" help="Done Slip"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]" help="Done Slip"/>
                 <field name="employee_id"/>
                 <field name="payslip_run_id"/>
                 <group expand="0" string="Group By">
@@ -308,7 +308,7 @@
                 <field name="name" string="Payslip Batches"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
-                <filter string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Payslip Batches"/>
                 <filter name="done_filter" string="Done" domain="[('state','=','close')]" help="Done Payslip Batches"/>
             </search>
         </field>

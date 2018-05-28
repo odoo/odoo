@@ -45,7 +45,7 @@ class TestLead2opportunity2win(TestCrmCases):
         mass.sudo(self.crm_salemanager.id).mass_convert()
 
         # Now I check first lead converted on opportunity.
-        self.assertEqual(crm_case_13.name, "Plan to buy 60 keyboards and mouses", "Opportunity name not correct")
+        self.assertEqual(crm_case_13.name, "Quote for 600 keyboards", "Opportunity name not correct")
         self.assertEqual(crm_case_13.type, 'opportunity', "Lead is not converted to opportunity!")
         expected_partner = "Will McEncroe"
         self.assertEqual(crm_case_13.partner_id.name, expected_partner, "Partner mismatch! %s vs %s" % (crm_case_13.partner_id.name, expected_partner))

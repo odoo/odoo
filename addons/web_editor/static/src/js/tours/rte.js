@@ -157,7 +157,7 @@ tour.register('rte', {
     trigger: '#editor-media-icon.active span.fa:first',
 }, {
     content: "save pictogram",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: '#editor-media-icon.active span.o_selected',
 }, {
     content: "select a size for the pictogram",
@@ -171,22 +171,17 @@ tour.register('rte', {
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
     extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
 }, {
+    content: "insert a link url",
+    trigger: 'input[name="url"]',
+    run: "text http://www.odoo.com",
+}, {
     content: "click on color style",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
     extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
 }, {
-    content: "insert a link url",
-    trigger: '#o_link_dialog_url_input',
-    extra_trigger: 'a#link-preview.btn',
-    run: "text http://www.odoo.com",
-}, {
-    content: "change text label",
-    trigger: '#o_link_dialog_label_input',
-    run: "text ABC[IMG] DEF",
-}, {
     content: "save link",
-    trigger: 'button.o_save_button',
-    extra_trigger: 'a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
+    trigger: '.modal-footer > .btn-primary',
+    extra_trigger: 'a#link-preview.btn.btn-success:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
 }, {
     content: "click on other picture",
     trigger: '#editable_area > section .row > div:last img',
@@ -196,18 +191,17 @@ tour.register('rte', {
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
     extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
 }, {
+    content: "insert an email",
+    trigger: 'input[name="url"]',
+    run: "text test@test.test",
+}, {
     content: "click on color style again",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
     extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
 }, {
-    content: "insert an email",
-    trigger: '#o_link_dialog_url_input',
-    extra_trigger: 'a#link-preview.btn',
-    run: "text test@test.test",
-}, {
     content: "save link",
-    trigger: 'button.o_save_button',
-    extra_trigger: 'a#link-preview.btn[href="mailto:test@test.test"]',
+    trigger: '.modal-footer > .btn-primary',
+    extra_trigger: 'a#link-preview.btn.btn-success[href="mailto:test@test.test"]:containsRegex(/^<img [^>]+>$/) img',
 }, {
     content: "select for triple enter then double backspace",
     trigger: '#editable_area > section .row > div:first p:eq(2)',
@@ -323,6 +317,6 @@ tour.register('rte_inline', {
     trigger: '#wrapwrap img:eq(1)[height]:not([class*="fa"])',
 }, {
     content: "check the second font class to css",
-    trigger: '#wrapwrap img:eq(2)[style*="float: right"]',
+    trigger: '#wrapwrap img:eq(2)[style*="float: right"],#wrapwrap img:eq(2)[style*="float:right"]',
 }]);
 });

@@ -2,7 +2,7 @@
 <odoo>
     <template id="assets_backend" name="Payment Assets Backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/payment/static/src/less/payment_acquirer.less"/>
+            <link rel="stylesheet" type="text/scss" href="/payment/static/src/scss/payment_acquirer.scss"/>
         </xpath>
     </template>
 
@@ -28,10 +28,12 @@
                 t-att-data-error-url="error_url or ''"
                 t-att-data-access-token="access_token or ''"
                 t-att-data-partner-id="partner_id"
-                t-att-data-callback-method="callback_method or ''">
+                t-att-data-callback-method="callback_method or ''"
+                t-att-data-order-id="order_id or ''">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
             <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
+            <input type="hidden" t-if="order_id" name="order_id" t-att-value="order_id"/>
             <!-- s2s form submission -->
             <input type="hidden" t-if="access_token" name="access_token" t-att-value="access_token"/>
             <input type="hidden" t-if="success_url" name="success_url" t-att-value="success_url"/>
@@ -138,11 +140,18 @@
                     </div>
                 </t>
             </div>
+            <div t-if='back_button_txt' class="pull-left">
+                <a t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-default'">
+                    <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
+                    <t t-esc="back_button_txt"/>
+                </a>
+            </div>
             <div class="pull-right">
                 <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
                     <t t-if="submit_txt">
-                        <i t-if="icon_class" t-attf-class="fa {{icon_class}}"/>
+                        <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
                         <t t-esc="submit_txt"/>
+                        <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
                     </t>
                     <t t-else="">
                         <i class="fa fa-lock"> Pay</i>

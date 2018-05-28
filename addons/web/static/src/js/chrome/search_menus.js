@@ -1,6 +1,7 @@
 odoo.define('web.FavoriteMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
 var pyeval = require('web.pyeval');
@@ -30,13 +31,15 @@ return Widget.extend({
             }
         },
     },
-    init: function (parent, query, target_model, action_id, filters) {
+    init: function (parent, query, target_model, action, filters) {
         this._super.apply(this,arguments);
         this.searchview = parent;
         this.query = query;
         this.target_model = target_model;
-        this.action_id = action_id;
+        this.action = action;
+        this.action_id = action.id;
         this.filters = {};
+        this.isMobile = config.device.isMobile;
         _.each(filters, this.add_filter.bind(this));
     },
     start: function () {
@@ -96,7 +99,6 @@ return Widget.extend({
         }
         var user_context = this.getSession().user_context;
         var search = this.searchview.build_search_data();
-        // DO NOT FORWARDPORT THIS
         var controllerContext;
         this.trigger_up('get_controller_context', {
             callback: function (ctx) {
@@ -128,7 +130,7 @@ return Widget.extend({
             is_default: default_filter,
             action_id: this.action_id,
         };
-        return data_manager.create_filter(filter).done(function (id) {
+        return this._createFilter(filter).then(function (id) {
             filter.id = id;
             self.toggle_save_menu(false);
             self.$save_name.find('input').val('').prop('checked', false);
@@ -278,6 +280,26 @@ return Widget.extend({
                 }
             });
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates a new search view filter.
+     *
+     * @private
+     * @param {Object} filter the filter description
+     * @returns {$.Deferred} resolved with the RPC's result when it succeeds
+     */
+    _createFilter: function (filter) {
+        var def = $.Deferred();
+        this.trigger_up('create_filter', {
+            filter: filter,
+            on_success: def.resolve.bind(def),
+        });
+        return def;
+    },
 });
 
 });
@@ -285,6 +307,7 @@ return Widget.extend({
 odoo.define('web.FilterMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var search_filters = require('web.search_filters');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -313,6 +336,7 @@ return Widget.extend({
     },
     init: function (parent, filters, fields) {
         this._super(parent);
+        this.isMobile = config.device.isMobile;
         this.filters = filters || [];
         this.searchview = parent;
         this.propositions = [];
@@ -389,6 +413,7 @@ return Widget.extend({
 odoo.define('web.GroupByMenu', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var search_inputs = require('web.search_inputs');
 var Widget = require('web.Widget');
@@ -413,6 +438,7 @@ return Widget.extend({
         var self = this;
         this._super(parent);
         this.searchview = parent;
+        this.isMobile = config.device.isMobile;
         this.groups = groups || [];
         this.groupableFields = [];
         var groupable_types = ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];

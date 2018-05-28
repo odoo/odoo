@@ -26,7 +26,7 @@ class MrpUnbuild(models.Model):
         'Quantity',
         required=True, states={'done': [('readonly', True)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         required=True, states={'done': [('readonly', True)]})
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',

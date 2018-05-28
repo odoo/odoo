@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Chart template of l10n_tr -->
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="name">Verilen Çekler ve Ödeme Emirleri</field>
-        <field name="code">103</field>
-        <field name="reconcile" eval="True"/>
-        <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-    </record>
     <record id="l10ntr_tek_duzen_hesap" model="account.chart.template">
         <field name="name">Tek Düzen Hesap Planı</field>
         <field name="bank_account_code_prefix">102</field>
         <field name="cash_account_code_prefix">100</field>
+        <field name="transfer_account_code_prefix">103</field>
         <field name="code_digits">6</field>
         <field name="currency_id" ref="base.TRY"/>
-        <field name="transfer_account_id" ref="transfer_account_id"/>
-    </record>
-    <record id="transfer_account_id" model="account.account.template">
-        <field name="chart_template_id" ref="l10ntr_tek_duzen_hesap"/>
     </record>
 
     <!-- Account template definition -->

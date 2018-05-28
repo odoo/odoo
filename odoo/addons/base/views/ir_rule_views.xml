@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Rules -->
+        <record id="view_rule_form" model="ir.ui.view">
+            <field name="model">ir.rule</field>
+            <field name="arch" type="xml">
+                <form string="Record rules">
+                  <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="General">
+                            <field name="name"/>
+                            <field name="model_id"/>
+                        </group>
+                        <group col="4" string="Access Rights">
+                            <field name="perm_read"/>
+                            <field name="perm_write"/>
+                            <field name="perm_create"/>
+                            <field name="perm_unlink"/>
+                        </group>
+                    </group>
+                    <separator string="Rule Definition (Domain Filter)"/>
+                    <field name="domain_force" colspan="2" nolabel="1"/>
+                    <group string="Groups (no group = global)">
+                        <field name="global"/>
+                        <field name="groups" nolabel="1" colspan="4"/>
+                    </group>
+                    <i class="fa fa-info fa-3x text-info pull-left"/>
+                    <h3>Interaction between rules</h3>
+                    <div>
+                      <p>
+                         Global rules (non group-specific) are restrictions, and cannot be bypassed.
+                         Group-specific rules grant additional permissions, but are constrained within the bounds of global ones.
+                         The first group rules restrict further the global rules, but can be relaxed by additional group rules.
+                      </p>
+                      <p>
+                        Detailed algorithm:
+                        <ol>
+                          <li>Global rules are combined together with a logical AND operator, and with the result of the following steps</li>
+                          <li>Group-specific rules are combined together with a logical OR operator</li>
+                          <li>If user belongs to several groups, the results from step 2 are combined with logical OR operator</li>
+                        </ol>
+                      </p>
+                      <p>Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )</p>
+                    </div>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_rule_tree" model="ir.ui.view">
+            <field name="model">ir.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Record Rules" decoration-info="not groups">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
+                    <field name="domain_force"/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_rule_search" model="ir.ui.view">
+            <field name="model">ir.rule</field>
+            <field name="arch" type="xml">
+                <search string="Record Rules">
+                    <field name="name" string="Record Rule"/>
+                    <filter string="Global" name="global" domain="[('global','=',True)]"/>
+                    <separator/>
+                    <filter string="Full Access Right" name="full_access_right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
+                    <filter string="Read Access Right" name="read_access_right" domain="[('perm_read','=',True)]"/>
+                    <filter string="Write Access Right" name="write_access_right" domain="[('perm_write','=',True)]"/>
+                    <filter string="Create Access Right" name="create_access_right" domain="[('perm_create','=',True)]"/>
+                    <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink','=',True)]"/>
+                    <field name="model_id"/>
+                    <field name="groups"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_rule" model="ir.actions.act_window">
+            <field name="name">Record Rules</field>
+            <field name="res_model">ir.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_rule_tree"/>
+            <field name="search_view_id" ref="view_rule_search"/>
+        </record>
+        <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security" sequence="3"/>
+
+
+        <record id="property_rule" model="ir.rule">
+            <field name="name">Property multi-company</field>
+            <field name="model_id" ref="model_ir_property"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        </record>
+
+
+</odoo>

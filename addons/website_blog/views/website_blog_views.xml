@@ -108,24 +108,58 @@
                     <field name="write_uid"/>
                     <field name="blog_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Blog" domain="[]" context="{'group_by': 'blog_id'}"/>
-                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
-                        <filter string="Last Contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
+                        <filter string="Blog" name="group_by_blog" domain="[]" context="{'group_by': 'blog_id'}"/>
+                        <filter string="Author" name="group_by_author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Last Contributor" name="last_contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
                     </group>
                 </search>
             </field>
         </record>
+
+        <record id="blog_post_view_kanban" model="ir.ui.view">
+            <field name="name">blog.post.kanban</field>
+            <field name="model">blog.post</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="blog_id"/>
+                    <field name="author_id"/>
+                    <field name="post_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <strong class="col-xs-8">
+                                        <span t-esc="record.name.value"/>
+                                    </strong>
+                                    <strong class="col-xs-4 text-right">
+                                        <span t-esc="record.blog_id.value"/>
+                                    </strong>
+                                    <div class="col-xs-8">
+                                        <i class="fa fa-clock-o"/><span t-esc="record.post_date.value"/>
+                                    </div>
+                                    <div class="col-xs-4 text-right">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.author_id.raw_value)" t-att-title="record.author_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- page action -->
         <record id="action_blog_post" model="ir.actions.act_window">
             <field name="name">Blog Posts</field>
             <field name="res_model">blog.post</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_id" ref="view_blog_post_list"/>
             <field name="search_view_id" ref="view_blog_post_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a new blog post.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new blog post
                 </p>
             </field>
         </record>
@@ -153,8 +187,9 @@
             <field name="name">blog_tag_tree</field>
             <field name="model">blog.tag</field>
             <field name="arch" type="xml">
-                <tree string="Tag List" create="false">
+                <tree string="Tag List">
                     <field name="name"/>
+                    <field name="category_id"/>
                     <field name="post_ids"/>
                 </tree>
             </field>
@@ -168,6 +203,7 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="category_id"/>
                         </group>
                         <label for="post_ids" string="Used in: "/>
                         <field name="post_ids"/>
@@ -184,5 +220,41 @@
             <field name="view_id" ref="blog_tag_tree"/>
         </record>
 
-        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Blog Tags" action="action_tags" sequence="40" />
+        <menuitem id="menu_blog_tag" parent="menu_website_blog_root" name="Tags" action="action_tags" sequence="40" />
+
+        <record id="blog_tag_category_form" model="ir.ui.view">
+            <field name="name">blog_tag_category_form</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <form string="Tag Category Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="blog_tag_category_tree" model="ir.ui.view">
+            <field name="name">blog_tag_category_tree</field>
+            <field name="model">blog.tag.category</field>
+            <field name="arch" type="xml">
+                <tree string="Tag Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tag_category" model="ir.actions.act_window">
+            <field name="name">Tag Category</field>
+            <field name="res_model">blog.tag.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="blog_tag_category_tree"/>
+        </record>
+
+        <menuitem id="menu_website_blog_tag_category" parent="menu_website_blog_root"
+                  name="Tag Categories" action="action_tag_category" sequence="50" />
+
 </odoo>

@@ -3,7 +3,7 @@
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
@@ -20,9 +20,9 @@
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.ui.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.zoomodoo.scss"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
@@ -30,6 +30,7 @@
 
         <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"/>
@@ -39,9 +40,9 @@
 </template>
 
 <template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
-    <t t-call="web.less_helpers"/>
+    <t t-call="web._assets_helpers"/>
 
-    <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
 
     <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"/>
 
@@ -54,7 +55,6 @@
     <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
-    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
 
@@ -98,6 +98,7 @@
             'data-translatable': '1' if translatable else None,
             'data-edit_translations': '1' if edit_translations else None,
             'data-view-xmlid': xmlid if editable or translatable else None,
+            'data-viewid': viewid if editable or translatable else None,
             'data-main-object': repr(main_object) if editable or translatable else None,
             'data-oe-company-name': res_company.name
         }"/>
@@ -226,6 +227,18 @@
         <a href="/" class="navbar-brand logo">
             <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
+    </xpath>
+</template>
+
+<template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Affix Top Menu">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
+    </xpath>
+</template>
+
+<template id="no_autohide_menu" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
     </xpath>
 </template>
 
@@ -561,7 +574,14 @@
 <template id="default_less">
     <style type="text/less">
         div#wrap div &gt; h1 {
-            color: @odoo-brand-primary;
+            color: @o-brand-primary;
+        }
+    </style>
+</template>
+<template id="default_scss">
+    <style type="text/scss">
+        div#wrap div &gt; h1 {
+            color: $o-brand-primary;
         }
     </style>
 </template>
@@ -768,7 +788,7 @@
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                <ul class="nav navbar-nav pull-right" id="top_menu">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="javascript: window.history.back()">Back</a></li>
                                 </ul>
@@ -926,10 +946,10 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                           <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
                           <td class="text-right">
-                              <a class="mr4 fa fa-lg fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
-                              <a class="mr4 fa fa-lg fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-                              <a class="fa fa-lg fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
+                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
                           </td>
                       </tr>
                   </t>

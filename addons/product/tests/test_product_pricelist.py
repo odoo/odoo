@@ -19,7 +19,7 @@ class TestProductPricelist(TransactionCase):
         self.laptop_E5023 = self.env.ref('product.product_delivery_01')
         self.laptop_S3450 = self.env.ref("product.product_product_25")
         self.category_5_id = self.ref('product.product_category_5')
-        self.uom_unit_id = self.ref('product.product_uom_unit')
+        self.uom_unit_id = self.ref('uom.product_uom_unit')
         self.list0 = self.ref('product.list0')
 
         self.ipad_retina_display.write({'uom_id': self.uom_unit_id, 'categ_id': self.category_5_id})

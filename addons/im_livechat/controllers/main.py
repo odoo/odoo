@@ -5,7 +5,7 @@ import base64
 
 from odoo import http, _
 from odoo.http import request
-from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.web.controllers.main import binary_content
 
 

@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
                                     <div class="mt16">
-                                        <button name="%(product.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                        <button name="%(uom.product_uom_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +216,7 @@
                                 <field name="group_warning_sale"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label for="group_warning_sale"/>
+                                <label for="group_warning_sale" string="Sale Warnings"/>
                                 <div class="text-muted">
                                     Get warnings in orders for products or customers
                                 </div>
@@ -347,7 +347,9 @@
                     </div>
                     <h2>Invoicing</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="This default value is applied to any new product created. This can be changed in the product detail form.">
+                        <div id="sales_settings_invoicing_policy"
+                             class="col-xs-12 col-md-6 o_setting_box"
+                             title="This default value is applied to any new product created. This can be changed in the product detail form.">
                             <div class="o_setting_right_pane">
                                 <label for="default_invoice_policy"/>
                                 <div class="text-muted">
@@ -368,7 +370,7 @@
                                     Product used for down payments
                                 </div>
                                 <div class="text-muted">
-                                    <field name="default_deposit_product_id"/>
+                                    <field name="deposit_default_product_id"/>
                                 </div>
                             </div>
                         </div>

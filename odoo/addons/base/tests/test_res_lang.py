@@ -6,7 +6,7 @@ from odoo.tests.common import TransactionCase
 class test_res_lang(TransactionCase):
 
     def test_00_intersperse(self):
-        from odoo.addons.base.res.res_lang import intersperse
+        from odoo.addons.base.models.res_lang import intersperse
 
         assert intersperse("", []) == ("", 0)
         assert intersperse("0", []) == ("0", 0)

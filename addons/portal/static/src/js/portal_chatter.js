@@ -53,20 +53,27 @@ var PortalChatter = Widget.extend({
                 params: this._messageFetchPrepareParams()
             }), this._loadTemplates()
         ).then(function(result){
-            // bind events
-            self.on("change:messages", self, self._renderMessages);
-            self.on("change:message_count", self, function(){
-                self._renderMessageCount();
-                self.set('pager', self._pager(self._current_page));
-            });
-            self.on("change:pager", self, self._renderPager);
-            self.on("change:domain", self, self._onChangeDomain);
-            // set options and parameters
-            self.options = _.extend(self.options, result['options'] || {});
-            self.set('message_count', self.options['message_count']);
-            self.set('messages', self.preprocessMessages(result['messages']));
+            self.result = result;
+            self.options = _.extend(self.options, self.result['options'] || {});
             return result;
         });
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        // bind events
+        this.on("change:messages", this, this._renderMessages);
+        this.on("change:message_count", this, function(){
+            this._renderMessageCount();
+            this.set('pager', this._pager(this._current_page));
+        });
+        this.on("change:pager", this, this._renderPager);
+        this.on("change:domain", this, this._onChangeDomain);
+        // set options and parameters
+        this.set('message_count', this.options['message_count']);
+        this.set('messages', this.preprocessMessages(this.result['messages']));
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

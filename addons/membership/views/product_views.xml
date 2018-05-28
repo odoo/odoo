@@ -12,11 +12,11 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" string="Membership Product"/>
-                    <filter string="Inactive" domain="[('active','=',0)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='From Month' domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                        <filter string='Category' name="category" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' name="from_month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>

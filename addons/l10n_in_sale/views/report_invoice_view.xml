@@ -37,7 +37,7 @@
                                     <t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t></td>
                                     <td class="text-right">
                                         <span t-field="l.quantity"/>
-                                        <span t-field="l.uom_id"  groups="product.group_uom"/>
+                                        <span t-field="l.uom_id"  groups="uom.group_uom"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>

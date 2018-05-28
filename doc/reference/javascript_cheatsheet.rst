@@ -144,9 +144,9 @@ in the action registry.
     .. code-block:: javascript
 
         var ControlPanelMixin = require('web.ControlPanelMixin');
-        var Widget = require('web.Widget');
+        var AbstractAction = require('web.AbstractAction');
 
-        var ClientAction = Widget.extend(ControlPanelMixin, {
+        var ClientAction = AbstractAction.extend(ControlPanelMixin, {
             ...
         });
 

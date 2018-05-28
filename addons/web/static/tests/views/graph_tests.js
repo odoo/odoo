@@ -14,7 +14,7 @@ QUnit.module('Views', {
                 fields: {
                     foo: {string: "Foo", type: "integer", store: true},
                     bar: {string: "bar", type: "boolean"},
-                    product_id: {string: "Product", type: "many2one", relation: 'product'},
+                    product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     color_id: {string: "Color", type: "many2one", relation: 'color'},
                 },
                 records: [
@@ -148,7 +148,7 @@ QUnit.module('Views', {
         });
         return concurrency.delay(0).then(function () {
             assert.ok(!graph.$('svg').length, "should not have a svg");
-            assert.ok(graph.$('.oe_view_nocontent').length, "should have an error message");
+            assert.ok(graph.$('.o_view_nocontent').length, "should have an error message");
             graph.destroy();
             done();
         });
@@ -204,13 +204,13 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should contain a div with a svg element");
-            assert.notOk(graph.$('div.oe_view_nocontent').length,
+            assert.notOk(graph.$('div.o_view_nocontent').length,
                 "should not display the no content helper");
             graph.update({domain: [['product_id', '=', 4]]});
 
             assert.notOk(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should not contain a div with a svg element");
-            assert.ok(graph.$('div.oe_view_nocontent').length,
+            assert.ok(graph.$('div.o_view_nocontent').length,
                 "should display the no content helper");
             graph.destroy();
             done();
@@ -474,6 +474,132 @@ QUnit.module('Views', {
                 graph.destroy();
                 done();
             });
+        });
+    });
+
+    QUnit.test('use a many2one as a measure should work (without groupBy)', function (assert) {
+        assert.expect(3);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 2,
+                "should have a datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure should work (with groupBy)', function (assert) {
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="bar" type="row"/>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('div.o_graph_svg_container svg.nvd3-svg').length, 1,
+                        "should contain a div with a svg element");
+
+            assert.strictEqual(graph.renderer.state.mode, "bar",
+                "should be in bar chart mode by default");
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 2");
+            assert.strictEqual(graph.model.chart.data[1].value, 2,
+                "should have second datapoint with value 2");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure and as a groupby should work', function (assert) {
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id" type="row"/>' +
+                '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            // need to set the measure this way because it cannot be set in the
+            // arch.
+            graph.$buttons.find('li[data-field="product_id"] a').click();
+
+            assert.strictEqual(graph.model.chart.data[0].value, 1,
+                "should have first datapoint with value 1");
+            assert.strictEqual(graph.model.chart.data[1].value, 1,
+                "should have second datapoint with value 1");
+
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.notOk(graph.measures.product_id,
+                "should not have product_id as measure");
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('use a many2one as a measure if set as additional fields', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        var done = assert.async();
+        return concurrency.delay(0).then(function () {
+            assert.ok(graph.measures.product_id,
+                "should have product_id as measure");
+            graph.destroy();
+            done();
         });
     });
 });

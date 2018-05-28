@@ -9,7 +9,7 @@ from dateutil import rrule
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Date, Datetime
-from odoo.addons.resource.models.resource import to_naive_utc, to_naive_user_tz
+from odoo.addons.resource.models.resource import to_naive_utc, to_naive_user_tz, to_tz
 from odoo.addons.resource.tests.common import TestResourceCommon
 
 
@@ -264,6 +264,119 @@ class ResourceWorkingHours(TestResourceCommon):
             self.resource1_id,
             compute_leaves=True)
         self.assertEqual(res, 9.5)
+
+    def test_calendar_leave_intervals_timezone(self):
+        # _iter_leave_intervals takes UTC and outputs UTC
+        # Leave is taken by user in US/Alaska timezone
+        # It should be visible at the right time for every timezone
+        self.env.user.tz = 'US/Alaska'
+        (self.leave1 | self.leave2 | self.leave3).unlink()
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-21 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-26 12:00:00'), self.env.user)
+        })
+
+        def to_tuple(interval):
+            return (interval.start_datetime, interval.end_datetime)
+
+        # Checking for 'Europe/Brussels'
+        self.env.user.tz = 'Europe/Brussels'
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-26 14:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 15:30:00'), self.env.user),
+            self.resource1_id))
+        self.assertEqual(len(leaves), 0)
+
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-26 08:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 11:00:00'), self.env.user),
+            self.resource1_id))[0]
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(to_tuple(leaves[0]), (Datetime.from_string('2013-02-26 07:00:00'), Datetime.from_string('2013-02-26 10:00:00')))
+
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-22 08:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-22 20:00:00'), self.env.user),
+            self.resource1_id))[0]
+        self.assertEqual(len(leaves), 2)
+        self.assertEqual(to_tuple(leaves[0]), (Datetime.from_string('2013-02-22 07:00:00'), Datetime.from_string('2013-02-22 12:00:00')))
+
+        # Checking for 'Japan'
+        self.env.user.tz = 'Japan'
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-26 14:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 15:30:00'), self.env.user),
+            self.resource1_id))
+        self.assertEqual(len(leaves), 0)
+
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-26 08:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-26 11:00:00'), self.env.user),
+            self.resource1_id))[0]
+        self.assertEqual(len(leaves), 1)
+        self.assertEqual(to_tuple(leaves[0]), (Datetime.from_string('2013-02-25 23:00:00'), Datetime.from_string('2013-02-26 02:00:00')))
+
+        leaves = list(self.calendar._iter_leave_intervals(
+            to_naive_utc(Datetime.from_string('2013-02-22 08:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2013-02-22 20:00:00'), self.env.user),
+            self.resource1_id))[0]
+        self.assertEqual(len(leaves), 2)
+        self.assertEqual(to_tuple(leaves[0]), (Datetime.from_string('2013-02-21 23:00:00'), Datetime.from_string('2013-02-22 04:00:00')))
+
+    def test_calendar_work_days_intervals_timezone(self):
+        # _get_day_work_intervals converts from the timezone
+        # of the user into UTC
+        self.env.user.tz = 'US/Alaska'
+        (self.leave1 | self.leave2 | self.leave3).unlink()
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-21 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-26 12:00:00'), self.env.user)
+        })
+
+        def to_tuple(interval):
+            return (interval.start_datetime, interval.end_datetime)
+
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-26'), time(10), time(18), False, self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 19:00:00'), Datetime.from_string('2013-02-27 01:00:00')))
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-26'), time(10), time(18), True, self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 21:00:00'), Datetime.from_string('2013-02-27 01:00:00')))
+
+        self.env.user.tz = 'Japan'
+
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-26'), time(10), time(18), False, self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 01:00:00'), Datetime.from_string('2013-02-26 07:00:00')))
+        intervals = self.calendar._get_day_work_intervals(Date.from_string('2013-02-26'), time(10), time(18), True, self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 03:00:00'), Datetime.from_string('2013-02-26 07:00:00')))
+
+    def test_calendar_leave_days_intervals_timezone(self):
+        # _get_day_leave_intervals converts from the timezone
+        # of the user into UTC
+        self.env.user.tz = 'US/Alaska'
+        (self.leave1 | self.leave2 | self.leave3).unlink()
+        leave = self.env['resource.calendar.leaves'].create({
+            'name': 'Timezoned Leaves',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': to_naive_utc(Datetime.from_string('2013-02-21 10:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2013-02-26 12:00:00'), self.env.user)
+        })
+
+        def to_tuple(interval):
+            return (interval.start_datetime, interval.end_datetime)
+
+        intervals = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(10), time(18), self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 19:00:00'), Datetime.from_string('2013-02-26 21:00:00')))
+
+        self.env.user.tz = 'Japan'
+
+        intervals = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(10), time(18), self.resource1_id)
+        self.assertEqual(to_tuple(intervals[0]), (Datetime.from_string('2013-02-26 01:00:00'), Datetime.from_string('2013-02-26 03:00:00')))
 
     def test_calendar_hours_scheduling_backward(self):
         res = self.calendar._schedule_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
@@ -584,3 +697,153 @@ class TestResourceMixin(TestResourceCommon):
             to_naive_utc(Datetime.from_string('2013-02-12 20:00:00'), self.env.user))
         self.assertEqual(res['days'], 0.75)
         self.assertEqual(res['hours'], 6.0)
+
+    def test_days_count_with_domain(self):
+        self.test.resource_id.write({
+            'user_id': self.lost_user.id,
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'first',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-02-05 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-02-09 18:00:00'), self.lost_user)
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'second',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-01-12 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-01-13 18:00:00'), self.lost_user)
+        })
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', '')]
+        )
+        self.assertEqual(res, 3.0)
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 1.0)
+
+        res = self.test.get_leaves_day_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 2.0)
+
+class TestGlobalLeaves(TestResourceCommon):
+
+    def setUp(self):
+        super(TestGlobalLeaves, self).setUp()
+
+        self.Leave = self.env['resource.calendar.leaves']
+
+        # This leave has a timezone of False : UTC should be used as default
+        self.global_no_tz = self.Leave.create({
+            'name': 'global no timezone',
+            'calendar_id': self.calendar.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-12-25 08:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-12-25 23:00:00'), self.env.user),
+            'tz': False,
+        })
+
+        # This leave has no timezone defined : should default to user timezone (here UTC)
+        self.global_user_tz = self.Leave.create({
+            'name': 'global user timezone',
+            'calendar_id': self.calendar.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-05-01 08:00:00'), self.env.user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-05-01 23:00:00'), self.env.user),
+        })
+
+        # This leave has been taken in Japan timezone
+        # Leave from 8:00 to 13:00 but we have to adapt cause we define it in UTC
+        self.global_spec_tz = self.Leave.create({
+            'name': 'global specific timezone',
+            'calendar_id': self.calendar.id,
+            'date_from': Datetime.from_string('2018-04-05 23:00:00'),
+            'date_to': Datetime.from_string('2018-04-06 04:00:00'),
+            'tz' : 'Japan', # UTC+9
+        })
+
+    def test_timezones(self):
+        self.assertEqual(self.global_no_tz.tz, False)
+        self.assertEqual(self.global_user_tz.tz, self.env.user.tz)
+        self.assertEqual(self.global_spec_tz.tz, 'Japan')
+
+    def test_leave(self):
+        def to_tuple(interval):
+            return (interval.start_datetime, interval.end_datetime)
+
+        # Here we test if the leaves are correctly computed in the case our user is in UTC
+        # NB: Beware of winter/spring time
+        work_no_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-12-25'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_no_tz[0], (Datetime.from_string('2018-12-25 08:00:00'), Datetime.from_string('2018-12-25 16:00:00')))
+
+        work_user_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-05-01'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_user_tz[0], (Datetime.from_string('2018-05-01 08:00:00'), Datetime.from_string('2018-05-01 16:00:00')))
+
+        work_spec = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-04-06'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_spec[0], (Datetime.from_string('2018-04-06 08:00:00'), Datetime.from_string('2018-04-06 13:00:00')))
+
+    def test_leaves_timezones(self):
+        self.env.user.tz = 'US/Alaska' # UTC-9
+
+        def to_tuple(interval):
+            return (interval.start_datetime, interval.end_datetime)
+
+        # Here we test if the leaves are correctly computed in the case our user is in tz Alaska
+        # NB: Beware of winter/spring time
+        work_no_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-12-25'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_no_tz[0], (Datetime.from_string('2018-12-25 17:00:00'), Datetime.from_string('2018-12-26 01:00:00')))
+
+        work_user_tz = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-05-01'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_user_tz[0], (Datetime.from_string('2018-05-01 16:00:00'), Datetime.from_string('2018-05-02 00:00:00')))
+
+        work_spec = [to_tuple(x) for x in self.calendar._get_day_leave_intervals(Date.from_string('2018-04-06'), time(0), time(23, 59, 59), self.resource1_id)]
+        self.assertEqual(work_spec[0], (Datetime.from_string('2018-04-06 16:00:00'), Datetime.from_string('2018-04-06 21:00:00')))
+
+
+class TestTimeType(TestResourceCommon):
+    def setUp(self):
+        super(TestTimeType, self).setUp()
+        Leave = self.env['resource.calendar.leaves']
+
+        self.other1 = Leave.create({
+            'name': 'Formation',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': Datetime.from_string('2013-02-15 09:00:00'),
+            'date_to': Datetime.from_string('2013-02-15 19:00:00'),
+            'time_type': 'other',
+        })
+        self.other2 = Leave.create({
+            'name': 'Homeworking',
+            'calendar_id': self.calendar.id,
+            'resource_id': self.resource1_id,
+            'date_from': Datetime.from_string('2013-02-12 09:00:00'),
+            'date_to': Datetime.from_string('2013-02-12 15:00:00'),
+            'time_type': 'other',
+        })
+
+    def test_leaves_leaves(self):
+        # Here we test if setting the value to leave has the effect intended
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
+        self.assertEqual(len(leave), 1, "When asking for leave should compute the leaves")
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-15'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'leave')])
+        self.assertEqual(len(leave), 0, "When asking for leave should ignore others")
+
+    def test_leaves_other(self):
+        # Here we test if setting the value to other has the effect intended
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-26'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
+        self.assertEqual(len(leave), 0, "When asking for other should ignore leaves")
+        leave = self.calendar._get_day_leave_intervals(Date.from_string('2013-02-15'), time(0), time(23, 59, 59), self.resource1_id, [('time_type', '=', 'other')])
+        self.assertEqual(len(leave), 2, "When asking for other should compute others")

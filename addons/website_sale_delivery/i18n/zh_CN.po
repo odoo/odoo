@@ -3,22 +3,24 @@
 # * website_sale_delivery
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# mrshelly <mrshelly@hotmail.com>, 2016
+# 钟小华 <mackz@sina.com>, 2016
+# fausthuang, 2016
+# Martin Trigaux, 2016
+# Talway <9010446@qq.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
-# 钟小华 <mackz@sina.com>, 2017
-# fausthuang, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
-# Martin Trigaux, 2018
+# Tison He <hedisen@sina.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 11:35+0000\n"
 "PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,20 +35,18 @@ msgid ""
 "%s does not ship to your address, please choose another one.\n"
 "(Error: %s)"
 msgstr ""
-"%s 不能寄到您的地址，请选择其他方式。\n"
-"（错误：%s）"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/> Add delivery methods"
-msgstr "<i class=\"fa fa-arrow-right\" aria-hidden=\"true\"/>添加配送方式"
+msgstr "<i aria-hidden=\"true\" class=\"fa fa-arrow-right\"/>"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid ""
 "<span class=\"badge pull-right o_delivery_compute\">Select to compute "
 "delivery rate</span>"
-msgstr "<span class=\"badge pull-right o_delivery_compute\">选择计算送达率</span>"
+msgstr "<span class=\"badge pull-right o_delivery_compute\"/>"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -68,12 +68,12 @@ msgstr "您想与客户沟通的产品说明。 此说明将被复制到每个�
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr "承运商"
+msgstr "承运方"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr "选择配送方式"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -83,7 +83,7 @@ msgstr "国家"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Delivery Methods"
-msgstr "DHL 配送方式"
+msgstr "DHL 交货方式"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
@@ -99,7 +99,7 @@ msgstr "交货方式"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -114,17 +114,17 @@ msgstr "在线报价单的描述"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Delivery Methods"
-msgstr "FedEx 配送方式"
+msgstr "FedEx 交货方式"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Free"
-msgstr "免费"
+msgstr "空闲"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr "对交货有订单行的设置"
+msgstr "对交货有个订单行的设置"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
@@ -137,13 +137,13 @@ msgstr "已发货"
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
-msgstr "你当前的订单上没有可供的送货方式及送货地址，请联系我们获取更多信息。"
+msgstr "订单上没有选择正确的送货方式及送货地址，请完善。"
 
 #. module: website_sale_delivery
 #: code:addons/website_sale_delivery/controllers/main.py:49
 #, python-format
 msgid "Ouch, you cannot choose this carrier!"
-msgstr "抱歉，您无法选择该承运方！"
+msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -159,7 +159,7 @@ msgstr "报价单"
 #: code:addons/website_sale_delivery/controllers/main.py:41
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "报歉，你的订单我们无法运送"
+msgstr "报歉，您的订单我们无法运送"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_amount_delivery
@@ -169,12 +169,12 @@ msgstr "不含税金的总额。"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.portal_order_page_shipping_tracking
 msgid "Tracking:"
-msgstr "追踪:"
+msgstr "追踪"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Delivery Methods"
-msgstr "USPS 配送方式"
+msgstr "USPS 交货方式"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
@@ -184,4 +184,4 @@ msgstr "在网站可见"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Delivery Methods"
-msgstr "比利时邮政配送方式"
+msgstr "Bpost运输方式"

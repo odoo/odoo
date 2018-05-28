@@ -173,6 +173,7 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).write(vals)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = default or {}

@@ -3,10 +3,9 @@
 # * website_mail_channel
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Julia van Orsouw <julia@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
@@ -33,7 +32,6 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
 "<data><p>Hallo,</p>\n"
 "<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst\n"
 "<strong>${object.name}</strong></p>\n"
@@ -53,11 +51,13 @@ msgid ""
 "<p>If this was a mistake or you did not requested this action, please ignore this message.</p>\n"
 "</data>"
 msgstr ""
-"<data>\n"
-"<p>Hallo,</p> \n"
-"<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst <strong>${object.name}</strong></p> \n"
-"<p>Om te bevestigen, volg de volgende link:</p> <p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p> \n"
-"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p> </data>"
+"<data><p>Hallo,</p>\n"
+"<p>U heeft aangevraagd om te worden ingeschreven voor de mailinglijst\n"
+"<strong>${object.name}</strong></p>\n"
+"<p>Om te bevestigen, volg de volgende link:</p>\n"
+"<p><strong><a href=\"${ctx['token_url']}\">${ctx['token_url']}</a></strong></p>\n"
+"<p>Als u deze aanvraag niet zelf hebt gedaan dan kunt u dit bericht negeren</p>\n"
+"</data>"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.subscribe
@@ -118,7 +118,7 @@ msgstr "Discussiekanaal"
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Follow-Ups"
-msgstr "Opvolgingen"
+msgstr "Betalingsherinneringen"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.invalid_token_subscription

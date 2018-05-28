@@ -162,7 +162,7 @@ QUnit.test('dashboard should be displayed even if there is no content', function
 
     assert.strictEqual(kanban.$('div.o_sales_dashboard').length, 1,
         "should render the dashboard");
-    assert.strictEqual(kanban.$('.oe_view_nocontent:contains(A help message)').length, 1,
+    assert.strictEqual(kanban.$('.o_view_nocontent:contains(A help message)').length, 1,
         "should correctly render the nocontent helper");
 
     kanban.destroy();

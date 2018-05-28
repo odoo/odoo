@@ -83,6 +83,7 @@ class SaleOrder(models.Model):
              "request the payment when issuing the invoice.")
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if self.template_id and self.template_id.number_of_days > 0:
             default = dict(default or {})
@@ -239,7 +240,7 @@ class SaleOrderOption(models.Model):
     website_description = fields.Html('Line Description', sanitize_attributes=False, translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
-    uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of suggested product.")
 

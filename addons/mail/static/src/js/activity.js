@@ -135,6 +135,7 @@ var AbstractActivityField = AbstractField.extend({
 var Activity = AbstractActivityField.extend({
     className: 'o_mail_activity',
     events: {
+        'click a': '_onClickRedirect',
         'click .o_activity_edit': '_onEditActivity',
         'click .o_activity_unlink': '_onUnlinkActivity',
         'click .o_activity_done': '_onMarkActivityDone',
@@ -185,6 +186,17 @@ var Activity = AbstractActivityField.extend({
     },
 
     // handlers
+    _onClickRedirect: function (ev) {
+        var id = $(ev.target).data('oe-id');
+        if (id) {
+            ev.preventDefault();
+            var model = $(ev.target).data('oe-model');
+            this.trigger_up('redirect', {
+                res_id: id,
+                res_model: model,
+            });
+        }
+    },
     _onEditActivity: function (event, options) {
         event.preventDefault();
         var self = this;

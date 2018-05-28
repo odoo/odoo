@@ -11,8 +11,8 @@ var _t = core._t;
 
 
 /**
- * Model use to fetch, format and update 'account.bank.statement' and
- * 'account.bank.statement.line' datas allowing reconciliation
+ * Model use to fetch, format and update 'account.reconciliation.widget',
+ * datas allowing reconciliation
  *
  * The statement internal structure::
  *
@@ -81,6 +81,8 @@ var _t = core._t;
  *              id: integer
  *              display_name: string
  *          }
+ *          analytic_tag_ids: {
+ *          }
  *          label: string
  *          amount: number,
  *          [journal_id]: {
@@ -92,7 +94,7 @@ var _t = core._t;
  */
 var StatementModel = BasicModel.extend({
     avoidCreate: false,
-    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id'],
+    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'analytic_tag_ids'],
 
     /**
      * @override
@@ -131,8 +133,8 @@ var StatementModel = BasicModel.extend({
         return $.when(this._computeLine(line), this._performMoveLine(handle));
     },
     /**
-     * send information 'account.bank.statement.line' model to reconciliate
-     * lines, call rpc to 'reconciliation_widget_auto_reconcile'
+     * send information 'account.reconciliation.widget' model to reconciliate
+     * lines, call rpc to 'auto_reconcile'
      * Update the number of validated line
      *
      * @returns {Deferred<Object>} resolved with an object who contains
@@ -142,8 +144,8 @@ var StatementModel = BasicModel.extend({
         var self = this;
         var ids = _.pluck(_.filter(this.lines, {'reconciled': false}), 'id');
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'reconciliation_widget_auto_reconcile',
+                model: 'account.reconciliation.widget',
+                method: 'auto_reconcile',
                 args: [ids, self.valuenow],
             })
             .then(function (result) {
@@ -340,7 +342,7 @@ var StatementModel = BasicModel.extend({
      * - 'account.bank.statement' fetch the line id and bank_statement_id info
      * - 'account.reconcile.model'  fetch all reconcile model (for quick add)
      * - 'account.account' fetch all account code
-     * - 'account.bank.statement.line' fetch each line data
+     * - 'account.reconciliation.widget' fetch each line data
      *
      * @param {Object} context
      * @param {number[]} context.statement_ids
@@ -355,8 +357,8 @@ var StatementModel = BasicModel.extend({
         this.context = context;
 
         var def_statement = this._rpc({
-                model: 'account.bank.statement',
-                method: 'reconciliation_widget_preprocess',
+                model: 'account.reconciliation.widget',
+                method: 'get_bank_statement_data',
                 args: [statement_ids],
             })
             .then(function (statement) {
@@ -428,8 +430,8 @@ var StatementModel = BasicModel.extend({
     loadData: function(ids, excluded_ids) {
         var self = this;
         return self._rpc({
-            model: 'account.bank.statement.line',
-            method: 'get_data_for_reconciliation_widget',
+            model: 'account.reconciliation.widget',
+            method: 'get_bank_statement_line_data',
             args: [ids, excluded_ids],
         })
         .then(self._formatLine.bind(self));
@@ -449,7 +451,7 @@ var StatementModel = BasicModel.extend({
     quickCreateProposition: function (handle, reconcileModelId) {
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
-        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'tax_id'];
+        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'tax_id', 'analytic_tag_ids'];
         this._blurProposition(handle);
 
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
@@ -575,6 +577,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     updateProposition: function (handle, values) {
+        var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
         if (!prop) {
@@ -582,7 +585,23 @@ var StatementModel = BasicModel.extend({
             line.reconciliation_proposition.push(prop);
         }
         _.each(values, function (value, fieldName) {
-            prop[fieldName] = values[fieldName];
+            if (fieldName === 'analytic_tag_ids') {
+                switch (value.operation) {
+                    case "ADD_M2M":
+                        if (!_.findWhere(prop.analytic_tag_ids, {id: value.ids.id})) {
+                            prop.analytic_tag_ids.push(value.ids);
+                        }
+                        break;
+                    case "FORGET":
+                        var id = self.localData[value.ids[0]].ref;
+                        prop.analytic_tag_ids = _.filter(prop.analytic_tag_ids, function (val) {
+                            return val.id !== id;
+                        });
+                        break;
+                }
+            } else {
+                prop[fieldName] = values[fieldName];
+            }
         });
         if ('account_id' in values) {
             prop.account_code = prop.account_id ? this.accounts[prop.account_id.id] : '';
@@ -600,7 +619,7 @@ var StatementModel = BasicModel.extend({
         return this._computeLine(line);
     },
     /**
-     * Format the value and send it to 'account.bank.statement.line' model
+     * Format the value and send it to 'account.reconciliation.widget' model
      * Update the number of validated lines
      *
      * @param {(string|string[])} handle
@@ -623,7 +642,7 @@ var StatementModel = BasicModel.extend({
         var values = [];
         _.each(handles, function (handle) {
             var line = self.getLine(handle);
-            var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.is_tax && !prop.invalid;});
+            var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.invalid;});
             if (props.length === 0) {
                 // Usability: if user has not choosen any lines and click validate, it has the same behavior
                 // as creating a write-off of the same amount.
@@ -669,8 +688,8 @@ var StatementModel = BasicModel.extend({
         });
 
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'process_reconciliations',
+                model: 'account.reconciliation.widget',
+                method: 'process_bank_statement_line',
                 args: [ids, values],
             })
             .then(function () {
@@ -790,7 +809,7 @@ var StatementModel = BasicModel.extend({
                         _.each(result.taxes, function(tax){
                             var tax_prop = self._formatQuickCreate(line, {
                                 'link': prop.id,
-                                'tax_id': tax.id,
+                                'tax_id': [tax.id, null],
                                 'amount': tax.amount,
                                 'label': tax.name,
                                 'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
@@ -799,8 +818,6 @@ var StatementModel = BasicModel.extend({
                                 '__focus': false
                             });
 
-                            prop.computed_with_tax = tax.price_include
-                            prop.tax_amount = tax.amount
                             prop.amount = tax.base;
                             prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                             prop.invalid = !self._isValid(prop);
@@ -877,6 +894,13 @@ var StatementModel = BasicModel.extend({
      */
     _formatNameGet: function (value) {
         return value ? (value.id ? value : {'id': value[0], 'display_name': value[1]}) : false;
+    },
+    _formatMany2ManyTags: function (value) {
+        var res = [];
+        for (var i=0, len=value.length; i<len; i++) {
+            res[i] = {data: {'id': value[i][0], 'display_name': value[i][1]}};
+        }
+        return res;
     },
     /**
      * Format each propositions (amount, label, account_id)
@@ -970,6 +994,7 @@ var StatementModel = BasicModel.extend({
             'account_id': account,
             'account_code': account ? this.accounts[account.id] : '',
             'analytic_account_id': this._formatNameGet(values.analytic_account_id),
+            'analytic_tag_ids': this._formatMany2ManyTags(values.analytic_tag_ids || []),
             'journal_id': this._formatNameGet(values.journal_id),
             'tax_id': this._formatNameGet(values.tax_id),
             'debit': 0,
@@ -1035,7 +1060,7 @@ var StatementModel = BasicModel.extend({
         return !isNaN(prop.id) || prop.account_id && prop.amount && prop.label && !!prop.label.length;
     },
     /**
-     * Fetch 'account.bank.statement.line' propositions.
+     * Fetch 'account.reconciliation.widget' propositions.
      *
      * @see '_formatMoveLine'
      *
@@ -1054,8 +1079,8 @@ var StatementModel = BasicModel.extend({
         var offset = line.offset;
         var limit = this.limitMoveLines+1;
         return this._rpc({
-                model: 'account.bank.statement.line',
-                method: 'get_move_lines_for_reconciliation_widget',
+                model: 'account.reconciliation.widget',
+                method: 'get_move_lines_for_bank_statement_line',
                 args: [line.id, line.st_line.partner_id, excluded_ids, filter, offset, limit],
             })
             .then(this._formatMoveLine.bind(this, handle));
@@ -1069,8 +1094,7 @@ var StatementModel = BasicModel.extend({
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
-        // Do not forward port in master. @CSN will change this
-        var amount = prop.computed_with_tax && -prop.base_amount || -prop.amount;
+        var amount = -prop.amount;
         if (prop.partial_reconcile === true) {
             amount = -prop.write_off_amount;
         }
@@ -1079,10 +1103,7 @@ var StatementModel = BasicModel.extend({
             name : prop.label,
             debit : amount > 0 ? amount : 0,
             credit : amount < 0 ? -amount : 0,
-            // This one isn't usefull for the server,
-            // But since we need to change the amount (and thus its semantics) into base_amount
-            // It might be useful to have a trace in the RPC for debugging purposes
-            computed_with_tax: prop.computed_with_tax,
+            analytic_tag_ids: [[6, null, _.pluck(prop.analytic_tag_ids, 'id')]]
         };
         if (!isNaN(prop.id)) {
             result.counterpart_aml_id = prop.id;
@@ -1094,7 +1115,8 @@ var StatementModel = BasicModel.extend({
         }
         if (!isNaN(prop.id)) result.counterpart_aml_id = prop.id;
         if (prop.analytic_account_id) result.analytic_account_id = prop.analytic_account_id.id;
-        if (prop.tax_id) result.tax_ids = [[4, prop.tax_id.id, null]];
+        if (prop.tax_id && !prop.is_tax) result.tax_ids = [[4, prop.tax_id.id, null]];
+        if (prop.tax_id && prop.is_tax) result.tax_line_id = prop.tax_id.id;
         return result;
     },
 });
@@ -1105,7 +1127,7 @@ var StatementModel = BasicModel.extend({
  * datas allowing manual reconciliation
  */
 var ManualModel = StatementModel.extend({
-    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id'],
+    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'analytic_tag_ids'],
 
     //--------------------------------------------------------------------------
     // Public
@@ -1113,7 +1135,7 @@ var ManualModel = StatementModel.extend({
 
     /**
      * load data from
-     * - 'account.move.line' fetch the lines to reconciliate
+     * - 'account.reconciliation.widget' fetch the lines to reconciliate
      * - 'account.account' fetch all account code
      *
      * @param {Object} context
@@ -1149,7 +1171,7 @@ var ManualModel = StatementModel.extend({
                     var mode = context.mode === 'customers' ? 'receivable' : 'payable';
                     var args = ['partner', context.partner_ids || null, mode];
                     return self._rpc({
-                            model: 'account.move.line',
+                            model: 'account.reconciliation.widget',
                             method: 'get_data_for_manual_reconciliation',
                             args: args,
                             context: context,
@@ -1162,7 +1184,7 @@ var ManualModel = StatementModel.extend({
                         });
                 case 'accounts':
                     return self._rpc({
-                            model: 'account.move.line',
+                            model: 'account.reconciliation.widget',
                             method: 'get_data_for_manual_reconciliation',
                             args: ['account', context.account_ids || self.account_ids],
                             context: context,
@@ -1181,8 +1203,8 @@ var ManualModel = StatementModel.extend({
                     account_ids = null; // TOFIX: REMOVE ME
                     partner_ids = null; // TOFIX: REMOVE ME
                     return self._rpc({
-                            model: 'account.move.line',
-                            method: 'get_data_for_manual_reconciliation_widget',
+                            model: 'account.reconciliation.widget',
+                            method: 'get_all_data_for_manual_reconciliation',
                             args: [partner_ids, account_ids],
                             context: context,
                         })
@@ -1250,8 +1272,8 @@ var ManualModel = StatementModel.extend({
 
         if (process_reconciliations.length) {
             def = self._rpc({
-                    model: 'account.move.line',
-                    method: 'process_reconciliations',
+                    model: 'account.reconciliation.widget',
+                    method: 'process_move_lines',
                     args: [process_reconciliations],
                 });
         }
@@ -1375,6 +1397,22 @@ var ManualModel = StatementModel.extend({
         }
     },
     /**
+     * override to add journal_id on tax_created_line
+     *
+     * @private
+     * @param {Object} line
+     * @param {Object} values
+     * @returns {Object}
+     */
+    _formatQuickCreate: function (line, values) {
+        var self = this;
+        // Add journal to created line
+        if (values && values.journal_id === undefined && line && line.createForm && line.createForm.journal_id) {
+            values.journal_id = line.createForm.journal_id;
+        }
+        return this._super(line, values)
+    },
+    /**
      * @override
      * @param {object} prop
      * @returns {Boolean}
@@ -1412,7 +1450,7 @@ var ManualModel = StatementModel.extend({
         var limit = this.limitMoveLines+1;
         var args = [line.account_id.id, line.partner_id, excluded_ids, filter, offset, limit];
         return this._rpc({
-                model: 'account.move.line',
+                model: 'account.reconciliation.widget',
                 method: 'get_move_lines_for_manual_reconciliation',
                 args: args,
             })

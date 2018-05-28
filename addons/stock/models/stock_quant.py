@@ -26,7 +26,7 @@ class StockQuant(models.Model):
         'product.template', string='Product Template',
         related='product_id.product_tmpl_id')
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
     company_id = fields.Many2one(related='location_id.company_id',
         string='Company', store=True, readonly=True)
@@ -328,11 +328,11 @@ class QuantPackage(models.Model):
         'product.packaging', 'Package Type', index=True,
         help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
     location_id = fields.Many2one(
-        'stock.location', 'Location', compute='_compute_package_info', search='_search_location',
-        index=True, readonly=True)
+        'stock.location', 'Location', compute='_compute_package_info',
+        index=True, readonly=True, store=True)
     company_id = fields.Many2one(
-        'res.company', 'Company', compute='_compute_package_info', search='_search_company',
-        index=True, readonly=True)
+        'res.company', 'Company', compute='_compute_package_info',
+        index=True, readonly=True, store=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
@@ -400,26 +400,6 @@ class QuantPackage(models.Model):
                 for ml in move_lines:
                     ml.qty_done = 0
 
-
-    def _search_location(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.location_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'in', packs.ids)]
-        else:
-            return [('id', '=', False)]
-
-    def _search_company(self, operator, value):
-        if value:
-            packs = self.search([('quant_ids.company_id', operator, value)])
-        else:
-            packs = self.search([('quant_ids', operator, value)])
-        if packs:
-            return [('id', 'parent_of', packs.ids)]
-        else:
-            return [('id', '=', False)]
 
     def _search_owner(self, operator, value):
         if value:

@@ -11,8 +11,8 @@ from odoo.fields import Datetime
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
-    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
-    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee", store=True)
+    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost', store=True,
         string="Total Cost (Depreciated)", track_visibility="onchange",
         help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
@@ -66,6 +66,17 @@ class FleetVehicle(models.Model):
             acquisition_date = vehicle._get_acquisition_date()
             vehicle.name += u" \u2022 " + str(round(vehicle.total_depreciated_cost, 2)) + u" \u2022 " + acquisition_date
 
+    @api.model
+    def create(self, vals):
+        res = super(FleetVehicle, self).create(vals)
+        if not res.log_contracts:
+            self.env['fleet.vehicle.log.contract'].create({
+                'vehicle_id': res.id,
+                'recurring_cost_amount_depreciated': res.model_id.default_recurring_cost_amount_depreciated,
+                'purchaser_id': res.driver_id.id,
+            })
+        return res
+
     def _get_acquisition_date(self):
         self.ensure_one()
         return babel.dates.format_date(
@@ -109,11 +120,18 @@ class FleetVehicle(models.Model):
                     atn = car_value * min(0.18, (0.055 + 0.001 * (co2 - reference))) * magic_coeff
             return max(1280, atn) / 12.0
 
+    @api.onchange('model_id')
+    def _onchange_model_id(self):
+        self.car_value = self.model_id.default_car_value
+        self.co2 = self.model_id.default_co2
+        self.fuel_type = self.model_id.default_fuel_type
+
 
 class FleetVehicleLogContract(models.Model):
     _inherit = 'fleet.vehicle.log.contract'
 
-    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)")
+    recurring_cost_amount_depreciated = fields.Float("Recurring Cost Amount (depreciated)", track_visibility="onchange")
+
 
 class FleetVehicleModel(models.Model):
     _inherit = 'fleet.vehicle.model'
@@ -138,19 +156,6 @@ class FleetVehicleModel(models.Model):
     def _compute_default_total_depreciated_cost(self):
         for model in self:
             model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
-
-    @api.multi
-    @api.depends('name', 'brand_id', 'default_total_depreciated_cost')
-    def name_get(self):
-        res = super(FleetVehicleModel, self).name_get()
-        new_res = []
-        for res_item in res:
-            model = self.browse(res_item[0])
-            if model.default_total_depreciated_cost != 0.0:
-                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(round(model.default_total_depreciated_cost, 2))))
-            else:
-                new_res.append(res_item)
-        return new_res
 
     @api.depends('default_co2')
     def _compute_co2_fee(self):

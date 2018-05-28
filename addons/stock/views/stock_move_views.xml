@@ -8,7 +8,7 @@
                 <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
@@ -60,7 +60,7 @@
                     <field name="location_id" groups="stock.group_stock_multi_locations" string="From"/>
                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" string="To"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -114,7 +114,7 @@
                     <field name="product_id"/>
                     <field name="name" invisible="1"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="create_date" invisible="1" />
                     <field name="date_expected" invisible="1" />
@@ -200,7 +200,7 @@
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="qty_done" attrs="{'readonly': ['|','|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), ('in_entire_package', '=', True)]}"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), ('in_entire_package', '=', True)]}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), ('in_entire_package', '=', True)]}" string="Unit of Measure" groups="uom.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -229,7 +229,7 @@
                                 <label for="product_uom_qty"/>
                                 <div class="o_row">
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>
                                 </div>
                                 <field name="name" invisible="1"/>
                                 <field name="date_expected" invisible="1"/>
@@ -285,7 +285,7 @@
                         <label for="product_uom_qty"/>
                         <div>
                             <field name="product_uom_qty"/>
-                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="uom.group_uom" class="oe_inline"/>
                         </div>
                         <field name="product_tmpl_id" invisible="1"/>
                     </group>
@@ -323,7 +323,7 @@
                     <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
-                    <filter string="Today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed today or scheduled for today"/>
+                    <filter string="Today" name="today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed today or scheduled for today"/>
                     <separator/>
                     <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
                     <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
@@ -335,7 +335,7 @@
                         <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                         <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
                     </group>
@@ -360,8 +360,8 @@
             <field name="search_view_id" ref="view_move_search"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a stock movement.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stock movement
               </p><p>
                 This menu gives you the full traceability of inventory
                 operations on a specific product. You can filter on the product
@@ -423,7 +423,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
                     <field name="create_date" invisible="1"/>
@@ -478,7 +478,7 @@
                     <field name="picking_id" string="Reference"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="date" groups="base.group_no_one"/>
                 </tree>
             </field>
@@ -534,15 +534,16 @@
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('stock_move_view_kanban')})]"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to register a product receipt.
+              <p class="o_view_nocontent_smiling_face">
+                Register a product receipt
               </p><p>
                 Here you can receive individual products, no matter what
                 purchase order or picking order they come from. You will find
-                the list of all products you are waiting for. Once you receive
-                an order, you can filter based on the name of the vendor or
-                the purchase order reference. Then you can confirm all products
-                received using the buttons on the right of each line.
+                the list of all products you are waiting for.
+              </p><p>
+                Once you receive an order, you can filter based on the name of
+                the vendor or the purchase order reference. Then you can confirm
+                all products received using the buttons on the right of each line.
               </p>
             </field>
         </record>

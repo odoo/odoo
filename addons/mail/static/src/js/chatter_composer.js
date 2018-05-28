@@ -1,7 +1,6 @@
 odoo.define('mail.ChatterComposer', function (require) {
 "use strict";
 
-// var chat_manager = require('mail.chat_manager');
 var composer = require('mail.composer');
 var utils = require('mail.utils');
 
@@ -150,6 +149,8 @@ var ChatterComposer = composer.BasicComposer.extend({
                     res_model: 'res.partner',
                     res_id: partner_id,
                     context: {
+                        active_model: self.model,
+                        active_id: self.context.default_res_id,
                         force_email: true,
                         ref: "compound_context",
                         default_name: parsed_email[0],
@@ -212,7 +213,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         recipient_done.then(function (partner_ids) {
             var context = {
                 default_parent_id: self.id,
-                default_body: utils.get_text2html(self.$input.val()),
+                default_body: utils.get_text2html(self.$input.html()),
                 default_attachment_ids: _.pluck(self.get('attachment_ids'), 'id'),
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,

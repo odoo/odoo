@@ -49,9 +49,9 @@
                                         <field name="account_hide_setup_bar" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string='Hide Setup Bar'/>
+                                        <label string='Hide the Configuration Steps bar'/>
                                         <div class="text-muted">
-                                            Deactivate setup bar on the dashboard
+                                            Deactivate the "Configuration Steps" bar on the dashboard
                                         </div>
                                     </div>
                                 </div>
@@ -69,12 +69,12 @@
                                     </div>
                                     <div class="content-group">
                                         <div class="row mt16">
-                                            <label string="Sales Tax" for="default_sale_tax_id" class="col-md-3 o_light_label"/>
-                                            <field name="default_sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                            <label string="Sales Tax" for="sale_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                         </div>
                                         <div class="row">
-                                            <label string="Purchase Tax" for="default_purchase_tax_id" class="col-md-3 o_light_label"/>
-                                            <field name="default_purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
+                                            <label string="Purchase Tax" for="purchase_tax_id" class="col-md-3 o_light_label"/>
+                                            <field name="purchase_tax_id" domain="[('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company_id)]"/>
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                                     <div class="content-group">
                                         <div class="row mt16">
                                             <label for="currency_id" class="col-md-3 o_light_label"/>
-                                            <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}"/>
+                                            <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
                                         </div>
                                     </div>
                                 </div>
@@ -241,10 +241,10 @@
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_l10n_us_check_printing" widget="upgrade_boolean"/>
+                                    <field name="module_account_check_printing" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Checks" for="module_l10n_us_check_printing"/>
+                                    <label string="Checks" for="module_account_check_printing"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted" id="print_bills_payment">
                                         Print checks to pay your vendors
@@ -355,8 +355,24 @@
                                         <div class="mt16" id="analytic_account_link">
                                             <button name="%(analytic.action_analytic_account_form)d" icon="fa-arrow-right" type="action" string="Analytic Accounts" class="btn-link"/>
                                         </div>
-                                        <div>
-                                            <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Tags for Multidimensional Analytics" class="btn-link"/>
+                                        <div id="analytic_account_groups_link">
+                                            <button name="%(analytic.account_analytic_group_action)d" icon="fa-arrow-right" type="action" string="Analytic Account Groups" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" groups="account.group_account_user">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_analytic_tags"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_analytic_tags"/>
+                                    <div class="text-muted">
+                                        Allows to tag analytic entries and to manage analytic distributions
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_analytic_tags', '=', False)]}">
+                                        <div class="mt16">
+                                            <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Analytic Tags" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
@@ -368,7 +384,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="module_account_budget"/>
                                     <div class="text-muted">
-                                        Compare actual revenues &amp; costs with budgets
+                                        Use budgets to compare actual with expected revenues and costs
                                     </div>
                                     <div id="msg_account_budget" class="content-group" attrs="{'invisible': [('module_account_budget', '=', False)]}">
                                         <div class="text-warning mt16 mb4">
@@ -396,7 +412,7 @@
                                     <field name="group_warning_account"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="group_warning_account"/>
+                                    <label for="group_warning_account" string="Warnings"/>
                                     <div class="text-muted">
                                         Get warnings when invoicing specific customers
                                     </div>

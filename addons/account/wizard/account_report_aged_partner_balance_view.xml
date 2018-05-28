@@ -14,6 +14,7 @@
                     <newline/>
                     <field name="result_selection" widget="radio"/>
                     <field name="target_move" widget="radio"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                 </group>
                 <field name="journal_ids" required="0" invisible="1"/>
                 <footer>

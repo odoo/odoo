@@ -217,24 +217,16 @@ class TxAdyen(models.Model):
     def _adyen_form_validate(self, data):
         status = data.get('authResult', 'PENDING')
         if status == 'AUTHORISED':
-            self.write({
-                'state': 'done',
-                'acquirer_reference': data.get('pspReference'),
-                # 'date_validate': data.get('payment_date', fields.datetime.now()),
-                # 'paypal_txn_type': data.get('express_checkout')
-            })
+            self.write({'acquirer_reference': data.get('pspReference')})
+            self._set_transaction_done()
             return True
         elif status == 'PENDING':
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('pspReference'),
-            })
+            self.write({'acquirer_reference': data.get('pspReference')})
+            self._set_transaction_pending()
             return True
         else:
             error = _('Adyen: feedback error')
             _logger.info(error)
-            self.write({
-                'state': 'error',
-                'state_message': error
-            })
+            self.write({'state_message': error})
+            self._set_transaction_cancel()
             return False

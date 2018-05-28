@@ -68,6 +68,9 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+            <!-- if Rounding Method is computed per line -->
+            <t t-set="display_taxamount"
+               t-value="doc.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
             <t t-foreach="doc.order_lines_layouted()" t-as="page">
                 <table class="table table-condensed">
@@ -78,6 +81,7 @@
                             <th class="text-right">Unit Price</th>
                             <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                             <th class="text-right">Taxes</th>
+                            <th t-if="display_taxamount" class="text-right">Tax Amount</th>
                             <th class="text-right" groups="sale.group_show_price_subtotal">Amount</th>
                             <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
                         </tr>
@@ -99,7 +103,7 @@
                                     <td><span t-field="l.name"/></td>
                                     <td class="text-right">
                                         <span t-field="l.product_uom_qty"/>
-                                        <span t-field="l.product_uom" groups="product.group_uom"/>
+                                        <span t-field="l.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td class="text-right">
                                         <span t-field="l.price_unit"/>
@@ -109,6 +113,10 @@
                                     </td>
                                     <td class="text-right">
                                         <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                    </td>
+                                    <td t-if="display_taxamount" class="text-right">
+                                        <span t-field="l.price_tax"
+                                            t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
                                     </td>
                                     <td class="text-right" groups="sale.group_show_price_subtotal">
                                         <span t-field="l.price_subtotal"

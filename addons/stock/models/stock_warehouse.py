@@ -753,7 +753,7 @@ class Orderpoint(models.Model):
         'product.product', 'Product',
         domain=[('type', '=', 'product')], ondelete='cascade', required=True)
     product_uom = fields.Many2one(
-        'product.uom', 'Product Unit of Measure', related='product_id.uom_id',
+        'uom.uom', 'Product Unit of Measure', related='product_id.uom_id',
         readonly=True, required=True,
         default=lambda self: self._context.get('product_uom', False))
     product_min_qty = fields.Float(

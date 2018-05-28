@@ -74,7 +74,7 @@ var SnippetEditor = Widget.extend({
                 },
                 helper: function () {
                     var $clone = $(this).clone().css({width: '24px', height: '24px', border: 0});
-                    $clone.find('.oe_overlay_options >:not(:contains(.oe_snippet_move)), .oe_handle').remove();
+                    $clone.find('.oe_overlay_options >:not(:contains(.oe_snippet_move)), .o_handle').remove();
                     $clone.find(':not(.glyphicon)').css({position: 'absolute', top: 0, left: 0});
                     $clone.appendTo('body').removeClass('hidden');
                     return $clone;
@@ -123,17 +123,16 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        var mt = parseInt(this.$target.css('margin-top') || 0);
         var offset = this.$target.offset();
         var manipulatorOffset = this.$el.parent().offset();
-        offset.top -= (manipulatorOffset.top + mt);
+        offset.top -= manipulatorOffset.top;
         offset.left -= manipulatorOffset.left;
         this.$el.css({
             width: this.$target.outerWidth(),
             left: offset.left,
             top: offset.top,
         });
-        this.$('.oe_handles').css('height', this.$target.outerHeight(true));
+        this.$('.o_handles').css('height', this.$target.outerHeight());
         this.$el.toggleClass('o_top_cover', offset.top < 15);
     },
     /**
@@ -227,7 +226,12 @@ var SnippetEditor = Widget.extend({
 
             var optionName = val.option;
             var $el = val.$el.children('li').clone(true).addClass('snippet-option-' + optionName);
-            var option = new (options.registry[optionName] || options.Class)(self, self.$target, self.$el, val.data);
+            var option = new (options.registry[optionName] || options.Class)(
+                self,
+                val.base_target ? self.$target.find(val.base_target).eq(0) : self.$target,
+                self.$el,
+                val.data
+            );
             self.styles[optionName || _.uniqueId('option')] = option;
             option.__order = i++;
             return option.attachTo($el);
@@ -598,7 +602,14 @@ var SnippetsMenu = Widget.extend({
             $(r && r.sc).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function () {
+            // Trigger a resize event once entering edit mode as the snippets
+            // menu will take part of the screen width (delayed because of
+            // animation). (TODO wait for real animation end)
+            setTimeout(function () {
+                $window.trigger('resize');
+            }, 1000);
+        });
     },
     /**
      * @override
@@ -626,9 +637,24 @@ var SnippetsMenu = Widget.extend({
         _.each(this.snippetEditors, function (snippetEditor) {
             snippetEditor.cleanForSave();
         });
+
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
             .removeProp('contentEditable');
+
+        this.$editable.find('.o_we_selected_image')
+            .removeClass('o_we_selected_image');
+
+        // Removing query_string used to invalidate cache during image crop
+        _.each(this.$editable.find('.o_cropped_img_to_clean'), function (croppedImg) {
+            var $croppedImg = $(croppedImg);
+            var s = $croppedImg.attr('src').split('?');
+            var src = s[0];
+            var urlParams = s[1] || '';
+            urlParams = $.param(_.omit($.deparam(urlParams), 'unique'));
+            $croppedImg.attr('src', src + (urlParams ? ('?' + urlParams) : ''));
+            $croppedImg.removeClass('o_cropped_img_to_clean');
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -849,6 +875,9 @@ var SnippetsMenu = Widget.extend({
      * @param {string} exclude
      *        jQuery selector that DOM elements must *not* match the be
      *        considered as potential snippet.
+     * @param {string|false} target
+     *        jQuery selector that at least one child of a DOM element must
+     *        match to that DOM element be considered as a potential snippet.
      * @param {boolean} noCheck
      *        true if DOM elements which are technically not in an editable
      *        environment may be considered.
@@ -857,7 +886,7 @@ var SnippetsMenu = Widget.extend({
      *        considered (@see noCheck), this is true if the DOM elements'
      *        parent must also be in an editable environment to be considered.
      */
-    _computeSelectorFunctions : function (include, exclude, noCheck, isChildren) {
+    _computeSelectorFunctions : function (include, exclude, target, noCheck, isChildren) {
         var self = this;
 
         // Convert the selector for elements to include into a list
@@ -873,6 +902,9 @@ var SnippetsMenu = Widget.extend({
         var selectorConditions = _.map(excludeList, function (exc) {
             return ':not(' + exc + ')';
         }).join('');
+        if (target) {
+            selectorConditions += ':has(' + target + ')';
+        }
         if (!noCheck) {
             selectorConditions = ':o_editable' + selectorConditions;
         }
@@ -943,16 +975,18 @@ var SnippetsMenu = Widget.extend({
             var $style = $(this);
             var selector = $style.data('selector');
             var exclude = $style.data('exclude') || '';
+            var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var option_id = $style.data('js');
             var option = {
                 'option': option_id,
                 'base_selector': selector,
                 'base_exclude': exclude,
-                'selector': self._computeSelectorFunctions(selector, exclude, noCheck),
+                'base_target': target,
+                'selector': self._computeSelectorFunctions(selector, exclude, target, noCheck),
                 '$el': $style,
-                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', noCheck, true),
-                'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', noCheck),
+                'drop-near': $style.data('drop-near') && self._computeSelectorFunctions($style.data('drop-near'), '', false, noCheck, true),
+                'drop-in': $style.data('drop-in') && self._computeSelectorFunctions($style.data('drop-in'), '', false, noCheck),
                 'data': $style.data(),
             };
             self.templateOptions.push(option);

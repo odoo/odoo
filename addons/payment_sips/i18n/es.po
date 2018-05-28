@@ -3,18 +3,18 @@
 # * payment_sips
 # 
 # Translators:
+# Martin Trigaux, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Martin Trigaux, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # ES R1 <e2fes@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
 "Last-Translator: ES R1 <e2fes@hotmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/payment_sips/models/payment.py:153
 #, python-format
 msgid "; multiple order found"
-msgstr "; pedido múltiple encontrado "
+msgstr "; encontrado pedido múltiple"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:151
@@ -45,22 +45,22 @@ msgstr "Moneda no compatible con Worldline"
 #: code:addons/payment_sips/models/payment.py:55
 #, python-format
 msgid "Incorrect payment acquirer provider"
-msgstr "Medio de pago incorrecto"
+msgstr "Método de pago del proveedor incorrecto"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
 msgid "Interface Version"
 msgstr "Versión de la interfaz"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "ID de comerciante"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Medio de pago"
+msgstr "Método de pago"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
@@ -68,14 +68,14 @@ msgid "Payment Transaction"
 msgstr "Transacción de pago"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
-msgid "Prod's url"
-msgstr "URL de producción"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production url"
+msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
 msgid "Secret Key"
-msgstr "Clave secreta"
+msgstr "Contraseña secreta"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:149
@@ -84,11 +84,11 @@ msgid "Sips: received data for reference %s"
 msgstr "Sips: received data for reference %s"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
-msgid "Test's url"
-msgstr "URL de prueba"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test url"
+msgstr ""
 
 #. module: payment_sips
-#: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Used for production only"
-msgstr "Solo para fines de producción"
+msgstr "Solo con fines de producción"

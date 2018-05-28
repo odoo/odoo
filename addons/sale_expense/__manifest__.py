@@ -20,6 +20,7 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
         'security/sale_expense_security.xml',
         'views/product_view.xml',
         'views/hr_expense_views.xml',
+        'views/sale_order_views.xml',
     ],
     'demo': ['sale_expense_demo.xml'],
     'test': [],

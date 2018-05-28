@@ -47,6 +47,10 @@ class ormcache(object):
         @ormcache(skiparg=1)
         def _compute_domain(self, model_name, mode="read"):
             ...
+
+    Methods implementing this decorator should never return a Recordset,
+    because the underlying cursor will eventually be closed and raise a
+    `psycopg2.OperationalError`.
     """
     def __init__(self, *args, **kwargs):
         self.args = args

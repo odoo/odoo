@@ -30,6 +30,7 @@ var KanbanColumnProgressBar = Widget.extend({
         this.fieldName = columnState.progressBarValues.field;
         this.colors = columnState.progressBarValues.colors;
         this.sumField = columnState.progressBarValues.sum_field;
+        this.progressBarHelp = columnState.progressBarValues.help;
 
         // Previous progressBar state
         var state = options.progressBarStates[this.columnID];
@@ -130,6 +131,14 @@ var KanbanColumnProgressBar = Widget.extend({
                 }
             },
         });
+        if (this.progressBarHelp && _.every(this.subgroupCounts, function (val) { return val === 0; })) {
+            this.$el.tooltip({
+                delay: '0',
+                trigger:'hover',
+                placement: 'top',
+                title: this.progressBarHelp,
+            });
+        }
 
         // Display and animate the progress bars
         _.each(self.colors, function (val, key) {
@@ -165,9 +174,24 @@ var KanbanColumnProgressBar = Widget.extend({
         // Display and animate the counter number
         var start = this.prevTotalCounterValue;
         var end = this.totalCounterValue;
+
+        if (this.activeFilter) {
+            if (this.sumField) {
+                end = 0;
+                _.each(self.columnState.data, function (record) {
+                    var recordData = record.data;
+                    if (self.activeFilter === recordData[self.fieldName]) {
+                        end += parseFloat(recordData[self.sumField]);
+                    }
+                });
+            } else {
+                end = this.subgroupCounts[this.activeFilter];
+            }
+        }
+        this.prevTotalCounterValue = end;
         var animationClass = start > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge';
 
-        if (start !== undefined && end > start && this.ANIMATE) {
+        if (start !== undefined && (end > start || this.activeFilter) && this.ANIMATE) {
             $({currentValue: start}).animate({currentValue: end}, {
                 duration: 1000,
                 start: function () {

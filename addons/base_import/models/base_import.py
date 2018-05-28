@@ -249,7 +249,7 @@ class Import(models.TransientModel):
 
     @api.multi
     def _read_csv(self, options):
-        """ Returns a CSV-parsed iterator of all empty lines in the file
+        """ Returns a CSV-parsed iterator of all non-empty lines in the file
             :throws csv.Error: if an error is detected during CSV parsing
             :throws UnicodeDecodeError: if ``options.encoding`` is incorrect
         """
@@ -680,10 +680,6 @@ class Import(models.TransientModel):
         _logger.info('importing %d rows...', len(data))
 
         model = self.env[self.res_model].with_context(import_file=True)
-        defer_parent_store = self.env.context.get('defer_parent_store_computation', True)
-        if defer_parent_store and model._parent_store:
-            model = model.with_context(defer_parent_store_computation=True)
-        
         import_result = model.load(import_fields, data)
         _logger.info('done')
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop Product Options">
-  <xpath expr="." position="inside">
-      <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.test.js"></script>
-      <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.js"></script>
-      <link rel='stylesheet' href='/website_sale_options/static/src/css/website_sale.css'/>
-  </xpath>
+<template id="assets_frontend" inherit_id="website.assets_frontend">
+    <xpath expr="script[last()]" position="after">
+        <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.test.js"></script>
+        <script type="text/javascript" src="/website_sale_options/static/src/js/website_sale.js"></script>
+    </xpath>
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_sale_options/static/src/scss/website_sale.scss"/>
+    </xpath>
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">

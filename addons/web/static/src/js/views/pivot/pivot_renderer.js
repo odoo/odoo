@@ -35,7 +35,7 @@ var PivotRenderer = AbstractRenderer.extend({
     _render: function () {
         if (!this._hasContent()) {
             // display the nocontent helper
-            this.replaceElement(QWeb.render('PivotView.nodata'));
+            this._replaceElement(QWeb.render('PivotView.nodata'));
             return this._super.apply(this, arguments);
         }
 
@@ -124,7 +124,8 @@ var PivotRenderer = AbstractRenderer.extend({
             return self.state.fields[gb.split(':')[0]].string;
         });
         var measureTypes = this.state.measures.map(function (name) {
-            return self.state.fields[name].type;
+            var type = self.state.fields[name].type;
+            return type === 'many2one' ? 'integer' : type;
         });
         for (i = 0; i < rows.length; i++) {
             $row = $('<tr>');

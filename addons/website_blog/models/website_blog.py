@@ -77,6 +77,19 @@ class Blog(models.Model):
         return tag_by_blog
 
 
+class BlogTagCategory(models.Model):
+    _name = 'blog.tag.category'
+    _description = 'Blog Tag Category'
+    _order = 'name'
+
+    name = fields.Char('Name', required=True, translate=True)
+    tag_ids = fields.One2many('blog.tag', 'category_id', string='Tags')
+
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', "Tag category already exists !"),
+    ]
+
+
 class BlogTag(models.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
@@ -84,6 +97,7 @@ class BlogTag(models.Model):
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
+    category_id = fields.Many2one('blog.tag.category', 'Category', index=True)
     post_ids = fields.Many2many('blog.post', string='Posts')
 
     _sql_constraints = [
@@ -140,7 +154,7 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)])
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
 
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
@@ -148,7 +162,7 @@ class BlogPost(models.Model):
     post_date = fields.Datetime('Publishing date', compute='_compute_post_date', inverse='_set_post_date', store=True,
                                 help="The blog post will be visible for your visitors as of this date on the website if it is set as published.")
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
+    write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
     visits = fields.Integer('No of Views', copy=False)
@@ -230,11 +244,13 @@ class BlogPost(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(BlogPost, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is published. """
+        groups = super(BlogPost, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+        if self.website_published:
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
 
         return groups
 

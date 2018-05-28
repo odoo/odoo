@@ -8,8 +8,8 @@
                 <form string="Report Configuration">
                     <group>
                         <field name="name"/>
-                        <field name="subtotal" widget="checkbox"/>
-                        <field name="pagebreak" widget="checkbox"/>
+                        <field name="subtotal"/>
+                        <field name="pagebreak"/>
                         <field name="sequence"/>
                     </group>
                 </form>
@@ -17,14 +17,14 @@
         </record>
 
         <record id="report_configuration_tree_view" model="ir.ui.view">
-            <field name="name">report.configuration.form.view</field>
+            <field name="name">report.configuration.tree.view</field>
             <field name="model">sale.layout_category</field>
             <field name="arch" type="xml">
                 <tree string="Report Configuration">
+                        <field name="sequence" widget="handle"/>
                         <field name="name"/>
-                        <field name="subtotal" widget="checkbox"/>
-                        <field name="pagebreak" widget="checkbox"/>
-                        <field name="sequence"/>
+                        <field name="subtotal"/>
+                        <field name="pagebreak"/>
                 </tree>
             </field>
         </record>
@@ -34,10 +34,10 @@
 	        <field name="model">sale.layout_category</field>
 	        <field name="arch" type="xml">
                 <search string="Search Name">
-                    <filter string="Total" domain="[('subtotal','=','True')]"/>
-                    <filter string="Breaks Page" domain="[('pagebreak','=','True')]"/>
+                    <filter string="Total" name="total" domain="[('subtotal','=','True')]"/>
+                    <filter string="Breaks Page" name="breaks_page" domain="[('pagebreak','=','True')]"/>
                     <group string="Group By Name">
-                        <filter string="Name"  context="{'group_by' : 'name'}"/>
+                        <filter string="Name" name="group_name" context="{'group_by' : 'name'}"/>
                     </group>
                 </search>
             </field>

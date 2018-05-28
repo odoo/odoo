@@ -2,12 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import math
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 class MrpProduction(models.Model):
     """ Manufacturing Orders """
@@ -60,7 +59,7 @@ class MrpProduction(models.Model):
         readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(
@@ -288,10 +287,17 @@ class MrpProduction(models.Model):
             bom = self.env['mrp.bom']._bom_find(product=self.product_id, picking_type=self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'normal':
                 self.bom_id = bom.id
+                self.product_qty = self.bom_id.product_qty
+                self.product_uom_id = self.bom_id.product_uom_id.id
             else:
                 self.bom_id = False
-            self.product_uom_id = self.product_id.uom_id.id
+                self.product_uom_id = self.product_id.uom_id.id
             return {'domain': {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
+
+    @api.onchange('bom_id')
+    def _onchange_bom_id(self):
+        self.product_qty = self.bom_id.product_qty
+        self.product_uom_id = self.bom_id.product_uom_id.id
 
     @api.onchange('picking_type_id')
     def onchange_picking_type(self):
@@ -389,7 +395,7 @@ class MrpProduction(models.Model):
             source_location = routing.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.product_qty - self.qty_produced
+        original_quantity = (self.product_qty - self.qty_produced) or 1.0
         data = {
             'sequence': bom_line.sequence,
             'name': self.name,
@@ -497,7 +503,7 @@ class MrpProduction(models.Model):
 
         for operation in bom.routing_id.operation_ids:
             # create workorder
-            cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
+            cycle_number = float_round(bom_qty / operation.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
                                  cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
@@ -525,6 +531,22 @@ class MrpProduction(models.Model):
 
             workorder._generate_lot_ids()
         return workorders
+
+    def _check_lots(self):
+        # Check that the raw materials were consumed for lots that we have produced.
+        if self.product_id.tracking != 'none':
+            finished_lots = set(self.finished_move_line_ids.mapped('lot_id'))
+            raw_finished_lots = set(self.move_raw_ids.mapped('move_line_ids.lot_produced_id'))
+            if not (raw_finished_lots <= finished_lots):
+                lots_short = raw_finished_lots - finished_lots
+                error_msg = _(
+                    'Some raw materials were produced for a lot without finished product. '
+                    'You can correct the following components by unlocking:\n'
+                )
+                move_lines = self.move_raw_ids.mapped('move_line_ids').filtered(lambda x: x.lot_produced_id in lots_short)
+                for ml in move_lines:
+                    error_msg += ml.product_id.display_name + ' (' + ml.lot_produced_id.name +')\n'
+                raise UserError(error_msg)
 
     @api.multi
     def action_cancel(self):
@@ -578,6 +600,7 @@ class MrpProduction(models.Model):
         for wo in self.workorder_ids:
             if wo.time_ids.filtered(lambda x: (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 raise UserError(_('Work order %s is still running') % wo.name)
+        self._check_lots()
         self.post_inventory()
         moves_to_cancel = (self.move_raw_ids | self.move_finished_ids).filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_cancel._action_cancel()
@@ -618,3 +641,10 @@ class MrpProduction(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('production_id', '=', self.id)]
         return action
+    
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("manufacturing order"),
+        )
+        return super(MrpProduction, self).get_empty_list_help(help)

@@ -2,6 +2,7 @@ odoo.define('payment.payment_form', function (require) {
     "use strict";
 
     var ajax = require('web.ajax');
+    var config = require('web.config');
     var core = require('web.core');
     var Dialog = require("web.Dialog");
     var Widget = require("web.Widget");
@@ -152,6 +153,7 @@ odoo.define('payment.payment_form', function (require) {
                             'success_url': self.options.successUrl,
                             'error_url': self.options.errorUrl,
                             'callback_method': self.options.callbackMethod,
+                            'order_id': self.options.orderId,
                         }).then(function (result) {
                             if (result) {
                                 // if the server sent us the html form, we create a form element

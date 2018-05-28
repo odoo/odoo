@@ -37,9 +37,9 @@
                     <field name="event_id" string="Event"/>
                     <field name="attendee_id" string="Registration"/>
                     <group expand="1" string="Group By">
-                        <filter string="Event" context="{'group_by': 'event_id'}" />
-                        <filter string="Question" context="{'group_by': 'question_id'}"/>
-                        <filter string="Answer" context="{'group_by': 'answer_id'}" />
+                        <filter string="Event" name="group_by_event" context="{'group_by': 'event_id'}" />
+                        <filter string="Question" name="group_by_question" context="{'group_by': 'question_id'}"/>
+                        <filter string="Answer" name="group_by_answer" context="{'group_by': 'answer_id'}" />
                     </group>
                 </search>
             </field>

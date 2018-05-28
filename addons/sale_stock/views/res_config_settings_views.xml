@@ -7,14 +7,14 @@
         <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='delivery']" position="after">
-                <div class="col-xs-12 col-md-6 o_setting_box" title="By default Odoo computes the expected delivery date this way: order date + highest customer lead time of products. With this option, you can set a specific delivery date on orders rather than setting lead times on products.">
+                <div class="col-xs-12 col-md-6 o_setting_box" title="This option introduces extra fields in the sales order to easily schedule product deliveries on your own: expected date, commitment date, effective date.">
                     <div class="o_setting_left_pane">
                         <field name="module_sale_order_dates"/>
                     </div>
                     <div class="o_setting_right_pane">
                         <label for="module_sale_order_dates"/>
                         <div class="text-muted">
-                            Set a delivery date on orders
+                            Manage delivery dates from sales orders
                         </div>
                     </div>
                 </div>

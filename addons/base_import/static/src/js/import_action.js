@@ -1,11 +1,11 @@
 odoo.define('base_import.import', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var session = require('web.session');
 var time = require('web.time');
-var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -44,7 +44,7 @@ function jsonp(form, attributes, callback) {
     $(form).ajaxSubmit(attributes);
 }
 
-var DataImport = Widget.extend(ControlPanelMixin, {
+var DataImport = AbstractAction.extend(ControlPanelMixin, {
     template: 'ImportView',
     opts: [
         {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
@@ -124,8 +124,8 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.$('input[name=import_id]').val(id);
 
                 self.renderButtons();
+                self.renderImportLink();
                 var status = {
-                    breadcrumbs: self.action_manager.get_breadcrumbs(),
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.update_control_panel(status);
@@ -149,6 +149,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             e.preventDefault();
             self.exit();
         });
+    },
+    renderImportLink: function() {
+        if (this.res_model == 'res.partner') {
+            this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
+            this.$(".template-import").removeClass("hidden");
+        }
     },
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
@@ -275,7 +281,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         // TODO: test that write // succeeded?
         this.$el.removeClass('oe_import_preview_error oe_import_error');
         this.$el.toggleClass(
-            'oe_import_noheaders',
+            'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
         this._rpc({
                 model: 'base_import.import',
@@ -499,10 +505,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.exit();
     },
     exit: function () {
-        this.do_action({
-            type: 'ir.actions.client',
-            tag: 'history_back'
-        });
+        this.trigger_up('history_back');
     },
     onresults: function (event, from, to, message) {
         var no_messages = _.isEmpty(message);

@@ -42,6 +42,18 @@
             <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
+        <record id="account_payment_term_45days" model="account.payment.term">
+            <field name="name">45 Days</field>
+            <field name="note">Payment terms: 45 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 45, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
+        <record id="account_payment_term_2months" model="account.payment.term">
+            <field name="name">2 Months</field>
+            <field name="note">Payment terms: 2 Months</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 60, 'option': 'day_after_invoice_date'})]"/>
+        </record>
+
         <!--
         Account Statement Sequences
         -->
@@ -52,13 +64,6 @@
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
             <field eval="False" name="company_id"/>
-        </record>
-        <!--
-        Invoice requests (deprecated)
-        -->
-        <record id="req_link_invoice" model="res.request.link">
-            <field name="name">Invoice</field>
-            <field name="object">account.invoice</field>
         </record>
 
         <!-- Account-related subtypes for messaging / Chatter -->

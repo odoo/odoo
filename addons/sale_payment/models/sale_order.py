@@ -1,24 +1,93 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    payment_tx_ids = fields.One2many('payment.transaction', 'sale_order_id', string='Transactions')
-    payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
-    payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', related='payment_tx_id.acquirer_id', store=True)
-    payment_transaction_count = fields.Integer(
-        string="Number of payment transactions",
-        compute='_compute_payment_transaction_count')
+    transaction_ids = fields.Many2many('payment.transaction', 'sale_order_transaction_rel', 'sale_order_id', 'transaction_id',
+                                       string='Transactions', copy=False, readonly=True)
+    authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
+                                                  string='Authorized Transactions', copy=False, readonly=True)
 
-    def _compute_payment_transaction_count(self):
-        transaction_data = self.env['payment.transaction'].read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['sale_order_id'])
-        mapped_data = dict([(m['sale_order_id'][0], m['sale_order_id_count']) for m in transaction_data])
-        for order in self:
-            order.payment_transaction_count = mapped_data.get(order.id, 0)
+    @api.depends('transaction_ids')
+    def _compute_authorized_transaction_ids(self):
+        for trans in self:
+            trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+
+    @api.multi
+    def get_portal_last_transaction(self):
+        self.ensure_one()
+        return self.transaction_ids.get_last_transaction()
+
+    @api.multi
+    def _create_payment_transaction(self, vals):
+        '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
+        current sales orders fields (e.g. the partner or the currency).
+        :param vals: The values to create a new payment.transaction.
+        :return: The newly created payment.transaction record.
+        '''
+        # Ensure the currencies are the same.
+        currency = self[0].pricelist_id.currency_id
+        if any([so.pricelist_id.currency_id != currency for so in self]):
+            raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
+
+        # Ensure the partner are the same.
+        partner = self[0].partner_id
+        if any([so.partner_id != partner for so in self]):
+            raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
+
+        # Try to retrieve the acquirer. However, fallback to the token's acquirer.
+        acquirer_id = vals.get('acquirer_id')
+        acquirer = False
+        payment_token_id = vals.get('payment_token_id')
+
+        if payment_token_id:
+            payment_token = self.env['payment.token'].sudo().browse(payment_token_id)
+
+            # Check payment_token/acquirer matching or take the acquirer from token
+            if acquirer_id:
+                acquirer = self.env['payment.acquirer'].browse(acquirer_id)
+                if payment_token and payment_token.acquirer_id != acquirer:
+                    raise ValidationError(_('Invalid token found! Token acquirer %s != %s') % (
+                    payment_token.acquirer_id.name, acquirer.name))
+                if payment_token and payment_token.partner_id != partner:
+                    raise ValidationError(_('Invalid token found! Token partner %s != %s') % (
+                    payment_token.partner.name, partner.name))
+            else:
+                acquirer = payment_token.acquirer_id
+
+        # Check an acquirer is there.
+        if not acquirer_id and not acquirer:
+            raise ValidationError(_('A payment acquirer is required to create a transaction.'))
+
+        if not acquirer:
+            acquirer = self.env['payment.acquirer'].browse(acquirer_id)
+
+        # Check a journal is set on acquirer.
+        if not acquirer.journal_id:
+            raise ValidationError(_('A journal must be specified of the acquirer %s.' % acquirer.name))
+
+        if not acquirer_id and acquirer:
+            vals['acquirer_id'] = acquirer.id
+
+        vals.update({
+            'amount': sum(self.mapped('amount_total')),
+            'currency_id': currency.id,
+            'partner_id': partner.id,
+            'sale_order_ids': [(6, 0, self.ids)],
+        })
+
+        transaction = self.env['payment.transaction'].create(vals)
+
+        # Process directly if payment_token
+        if transaction.payment_token_id:
+            transaction.s2s_do_transaction()
+
+        return transaction
 
     def _force_lines_to_invoice_policy_order(self):
         for line in self.order_line:
@@ -27,20 +96,18 @@ class SaleOrder(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    def action_view_transaction(self):
-        action = {
-            'type': 'ir.actions.act_window',
-            'name': 'Payment Transactions',
-            'res_model': 'payment.transaction',
-        }
-        if self.payment_transaction_count == 1:
-            action.update({
-                'res_id': self.env['payment.transaction'].search([('sale_order_id', '=', self.id)]).id,
-                'view_mode': 'form',
-            })
-        else:
-            action.update({
-                'view_mode': 'tree,form',
-                'domain': [('sale_order_id', '=', self.id)],
-            })
-        return action
+    @api.multi
+    def _prepare_invoice(self):
+        # Override
+        # Add the transactions in the SO to the invoices.
+        invoice_vals = super(SaleOrder, self)._prepare_invoice()
+        invoice_vals['transaction_ids'] = [(6, 0, self.transaction_ids.ids)]
+        return invoice_vals
+
+    @api.multi
+    def payment_action_capture(self):
+        self.authorized_transaction_ids.s2s_capture_transaction()
+
+    @api.multi
+    def payment_action_void(self):
+        self.authorized_transaction_ids.s2s_void_transaction()

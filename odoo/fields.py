@@ -272,11 +272,13 @@ class Field(MetaField('DummyField', (object,), {})):
         'args': EMPTY_DICT,             # the parameters given to __init__()
         '_attrs': EMPTY_DICT,           # the field's non-slot attributes
         '_module': None,                # the field's module name
+        '_modules': None,               # modules that define this field
         '_setup_done': None,            # the field's setup state: None, 'base' or 'full'
-        '_sequence': None,               # absolute ordering of the field
+        '_sequence': None,              # absolute ordering of the field
 
         'automatic': False,             # whether the field is automatically created ("magic" field)
         'inherited': False,             # whether the field is inherited (_inherits)
+        'inherited_field': None,        # the corresponding inherited field
 
         'name': None,                   # name of the field
         'model_name': None,             # name of the model of this field
@@ -286,7 +288,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'index': False,                 # whether the field is indexed in database
         'manual': False,                # whether the field is a custom field
         'copy': True,                   # whether the field is copied over by BaseModel.copy()
-        'depends': (),                  # collection of field dependencies
+        'depends': None,                # collection of field dependencies
         'recursive': False,             # whether self depends on itself
         'compute': None,                # compute(recs) computes field on recs
         'compute_sudo': False,          # whether field should be recomputed as admin
@@ -391,16 +393,20 @@ class Field(MetaField('DummyField', (object,), {})):
     def _get_attrs(self, model, name):
         """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
+        modules = set()
         attrs = {}
         if not (self.args.get('automatic') or self.args.get('manual')):
             # magic and custom fields do not inherit from parent classes
             for field in reversed(resolve_mro(model, name, self._can_setup_from)):
                 attrs.update(field.args)
+                if '_module' in field.args:
+                    modules.add(field.args['_module'])
         attrs.update(self.args)         # necessary in case self is not in class
 
         attrs['args'] = self.args
         attrs['model_name'] = model._name
         attrs['name'] = name
+        attrs['_modules'] = modules
 
         # initialize ``self`` with ``attrs``
         if attrs.get('compute'):
@@ -426,6 +432,8 @@ class Field(MetaField('DummyField', (object,), {})):
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
             attrs['context_dependent'] = attrs.get('context_dependent', True)
+        if 'depends' in attrs:
+            attrs['depends'] = tuple(attrs['depends'])
 
         return attrs
 
@@ -476,16 +484,22 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_base(self, model):
         """ Setup the attributes of a non-related field. """
-        def make_depends(deps):
-            return tuple(deps(model) if callable(deps) else deps)
+        if self.depends is not None:
+            return
+
+        def get_depends(func):
+            deps = getattr(func, '_depends', ())
+            return deps(model) if callable(deps) else deps
 
         if isinstance(self.compute, pycompat.string_types):
             # if the compute method has been overridden, concatenate all their _depends
-            self.depends = ()
-            for method in resolve_mro(model, self.compute, callable):
-                self.depends += make_depends(getattr(method, '_depends', ()))
+            self.depends = tuple(
+                dep
+                for method in resolve_mro(model, self.compute, callable)
+                for dep in get_depends(method)
+            )
         else:
-            self.depends = make_depends(getattr(self.compute, '_depends', ()))
+            self.depends = tuple(get_depends(self.compute))
 
     def _setup_regular_full(self, model):
         """ Setup the inverse field(s) of ``self``. """
@@ -515,7 +529,8 @@ class Field(MetaField('DummyField', (object,), {})):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        self.depends = ('.'.join(self.related),)
+        if self.depends is None:
+            self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         if not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
@@ -611,7 +626,7 @@ class Field(MetaField('DummyField', (object,), {})):
     @property
     def base_field(self):
         """ Return the base field of an inherited field, or ``self``. """
-        return self.related_field.base_field if self.inherited else self
+        return self.inherited_field.base_field if self.inherited_field else self
 
     #
     # Company-dependent fields
@@ -647,7 +662,7 @@ class Field(MetaField('DummyField', (object,), {})):
     # on ``path``. See method ``modified`` below for details.
     #
 
-    def resolve_deps(self, model):
+    def resolve_deps(self, model, path0=[], seen=frozenset()):
         """ Return the dependencies of ``self`` as tuples ``(model, field, path)``,
             where ``path`` is an optional list of field names.
         """
@@ -658,11 +673,12 @@ class Field(MetaField('DummyField', (object,), {})):
         for dotnames in self.depends:
             if dotnames == self.name:
                 _logger.warning("Field %s depends on itself; please fix its decorator @api.depends().", self)
-            model, path = model0, dotnames.split('.')
-            for i, fname in enumerate(path):
+            model, path = model0, path0
+            for fname in dotnames.split('.'):
                 field = model._fields[fname]
-                result.append((model, field, path[:i]))
+                result.append((model, field, path))
                 model = model0.env.get(field.comodel_name)
+                path = None if path is None else path + [fname]
 
         # add self's model dependencies
         for mname, fnames in model0._depends.items():
@@ -672,17 +688,22 @@ class Field(MetaField('DummyField', (object,), {})):
                 result.append((model, field, None))
 
         # add indirect dependencies from the dependencies found above
+        seen = seen.union([self])
         for model, field, path in list(result):
             for inv_field in model._field_inverses[field]:
                 inv_model = model0.env[inv_field.model_name]
                 inv_path = None if path is None else path + [field.name]
                 result.append((inv_model, inv_field, inv_path))
+            if not field.store and field not in seen:
+                result += field.resolve_deps(model, path, seen)
 
         return result
 
     def setup_triggers(self, model):
         """ Add the necessary triggers to invalidate/recompute ``self``. """
         for model, field, path in self.resolve_deps(model):
+            if self.store and not field.store:
+                _logger.info("Field %s depends on non-stored field %s", self, field)
             if field is not self:
                 path_str = None if path is None else ('.'.join(path) or 'id')
                 model._field_triggers.add(field, (self, path_str))
@@ -719,6 +740,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
+    _description_group_operator = property(attrgetter('group_operator'))
 
     @property
     def _description_searchable(self):
@@ -761,7 +783,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Return the null value for this field in the record format. """
         return False
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
             return None
@@ -1119,7 +1141,7 @@ class Boolean(Field):
     type = 'boolean'
     column_type = ('bool', 'bool')
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1138,9 +1160,7 @@ class Integer(Field):
         'group_operator': 'sum',
     }
 
-    _description_group_operator = property(attrgetter('group_operator'))
-
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return int(value or 0)
 
     def convert_to_cache(self, value, record, validate=True):
@@ -1204,9 +1224,8 @@ class Float(Field):
 
     _related__digits = property(attrgetter('_digits'))
     _description_digits = property(attrgetter('digits'))
-    _description_group_operator = property(attrgetter('group_operator'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         result = float(value or 0.0)
         digits = self.digits
         if digits:
@@ -1247,7 +1266,6 @@ class Monetary(Field):
 
     _related_currency_field = property(attrgetter('currency_field'))
     _description_currency_field = property(attrgetter('currency_field'))
-    _description_group_operator = property(attrgetter('group_operator'))
 
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
@@ -1260,11 +1278,11 @@ class Monetary(Field):
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         # retrieve currency from values or record
         if values and self.currency_field in values:
             field = record._fields[self.currency_field]
-            currency = field.convert_to_cache(values[self.currency_field], record)
+            currency = field.convert_to_cache(values[self.currency_field], record, validate)
             currency = field.convert_to_record(currency, record)
         else:
             # Note: this is wrong if 'record' is several records with different
@@ -1354,6 +1372,9 @@ class Char(_String):
 
     :param int size: the maximum size of values stored for that field
 
+    :param bool trim: states whether the value is trimmed or not (by default,
+        ``True``). Note that the trim operation is applied only by the web client.
+
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``
         may also be a callable such that ``translate(callback, value)``
@@ -1364,6 +1385,7 @@ class Char(_String):
     column_cast_from = ('text',)
     _slots = {
         'size': None,                   # maximum size of values (deprecated)
+        'trim': True,                   # whether value is trimmed (only by web client)
     }
 
     @property
@@ -1380,14 +1402,16 @@ class Char(_String):
         super(Char, self).update_db_column(model, column)
 
     _related_size = property(attrgetter('size'))
+    _related_trim = property(attrgetter('trim'))
     _description_size = property(attrgetter('size'))
+    _description_trim = property(attrgetter('trim'))
 
     def _setup_regular_base(self, model):
         super(Char, self)._setup_regular_base(model)
         assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
             return None
         # we need to convert the string to a unicode object to be able
@@ -1452,7 +1476,7 @@ class Html(_String):
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         if value is None or value is False:
             return None
         if self.sanitize:
@@ -1527,8 +1551,8 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
-    def convert_to_column(self, value, record, values=None):
-        return super(Date, self).convert_to_column(value or None, record, values)
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return super(Date, self).convert_to_column(value or None, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -1600,8 +1624,8 @@ class Datetime(Field):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
 
-    def convert_to_column(self, value, record, values=None):
-        return super(Datetime, self).convert_to_column(value or None, record, values)
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return super(Datetime, self).convert_to_column(value or None, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -1629,7 +1653,8 @@ class Datetime(Field):
 # Received data is returned as buffer (in Python 2) or memoryview (in Python 3).
 _BINARY = memoryview
 if pycompat.PY2:
-    _BINARY = buffer #pylint: disable=buffer-builtin
+    #pylint: disable=buffer-builtin,undefined-variable
+    _BINARY = buffer
 
 class Binary(Field):
     type = 'binary'
@@ -1645,7 +1670,7 @@ class Binary(Field):
 
     _description_attachment = property(attrgetter('attachment'))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         # Binary values may be byte strings (python 2.6 byte array), but
         # the legacy OpenERP convention is to transfer and store binaries
         # as base64-encoded strings. The base64 string may be provided as a
@@ -1729,6 +1754,7 @@ class Selection(Field):
     type = 'selection'
     _slots = {
         'selection': None,              # [(value, string), ...], function or method name
+        'validate': True,               # whether validating upon write
     }
 
     def __init__(self, selection=Default, string=Default, **kwargs):
@@ -1794,6 +1820,11 @@ class Selection(Field):
             selection = selection(env[self.model_name])
         return [value for value, _ in selection]
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if validate and self.validate:
+            value = self.convert_to_cache(value, record)
+        return super(Selection, self).convert_to_column(value, record, values, validate)
+
     def convert_to_cache(self, value, record, validate=True):
         if not validate:
             return value or False
@@ -1819,6 +1850,9 @@ class Reference(Selection):
     @property
     def column_type(self):
         return ('varchar', pg_varchar())
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return Field.convert_to_column(self, value, record, values, validate)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: (res_model, res_id) or False
@@ -1961,7 +1995,7 @@ class Many2one(_Relational):
         for record in records:
             cache.set(record, self, self.convert_to_cache(value, record, validate=False))
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return value or None
 
     def convert_to_cache(self, value, record, validate=True):
@@ -2508,6 +2542,7 @@ class Id(Field):
         'string': 'ID',
         'store': True,
         'readonly': True,
+        'prefetch': False,
     }
 
     def update_db(self, model, columns):

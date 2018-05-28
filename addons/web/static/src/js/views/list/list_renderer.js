@@ -4,7 +4,6 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
@@ -38,6 +37,9 @@ var ListRenderer = BasicRenderer.extend({
         'click thead th.o_column_sortable': '_onSortColumn',
         'click .o_group_header': '_onToggleGroup',
         'click thead .o_list_record_selector input': '_onToggleSelection',
+        'keypress thead tr td' : '_onKeyPress',
+        'keydown tr' : '_onKeyDown',
+        'keydown thead tr' : '_onKeyDown',
     },
     /**
      * @constructor
@@ -66,7 +68,14 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
+    /**
+     * Order to focus to be given to the content of the current view
+     * @override
+     * @public
+     */
+    giveFocus:function() {
+        this.$('tbody .o_list_record_selector input:first()').focus();
+    },
     /**
      * @override
      */
@@ -279,9 +288,9 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append(this._renderWidget(record, node));
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
-            var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
-            this._handleAttributes(widget.$el, node);
-            return $td.append(widget.$el);
+            var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            this._handleAttributes($el, node);
+            return $td.append($el);
         }
         var name = node.attrs.name;
         var field = this.state.fields[name];
@@ -303,16 +312,10 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderButton: function (record, node) {
-        var $button = $('<button>', {
-            type: 'button',
-            title: node.attrs.string,
+        var $button = this._renderButtonFromNode(node, {
+            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
+            textAsTitle: !!node.attrs.icon,
         });
-        if (node.attrs.icon) {
-            $button.addClass('o_icon_button');
-            $button.append($('<i>', {class: 'fa ' + node.attrs.icon}));
-        } else {
-            $button.text(node.attrs.string);
-        }
         this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
 
@@ -581,7 +584,7 @@ var ListRenderer = BasicRenderer.extend({
                     .data('id', record.id)
                     .append($cells);
         if (this.hasSelectors) {
-            $tr.prepend(this._renderSelector('td'));
+            $tr.prepend(this._renderSelector('td', !record.res_id));
         }
         this._setDecorationClasses(record, $tr);
         return $tr;
@@ -601,15 +604,19 @@ var ListRenderer = BasicRenderer.extend({
      * view.  This is rendered as an input inside a div, so we can properly
      * style it.
      *
-     * Note that it takes a tag in argument, because selectores in the header
+     * Note that it takes a tag in argument, because selectors in the header
      * are renderd in a th, and those in the tbody are in a td.
      *
      * @private
-     * @param {any} tag either th or td
+     * @param {string} tag either th or td
+     * @param {boolean} disableInput if true, the input generated will be disabled
      * @returns {jQueryElement}
      */
-    _renderSelector: function (tag) {
+    _renderSelector: function (tag, disableInput) {
         var $content = dom.renderCheckbox();
+        if (disableInput) {
+            $content.find("input[type='checkbox']").prop('disabled', disableInput);
+        }
         return $('<' + tag + ' width="1">')
                     .addClass('o_list_record_selector')
                     .append($content);
@@ -633,13 +640,14 @@ var ListRenderer = BasicRenderer.extend({
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
         // display the no content helper if there is no data to display
-        if (!this._hasContent() && this.noContentHelp) {
-            this._renderNoContentHelper();
+        if (displayNoContentHelper) {
+            this.$el.html(this._renderNoContentHelper());
             return this._super();
         }
 
-        var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
+        var $table = $('<table>').addClass('o_list_view table table-condensed table-hover table-striped');
         this.$el
             .addClass('table-responsive')
             .append($table);
@@ -717,6 +725,34 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to 
+     * a cell using the keyboard, if he presses enter, enter the model represented by the line
+     * 
+     * @private
+     * @param {KeyboardEvent} e
+     */
+    _onKeyDown : function(e) {
+        if (!this.editable) {
+            switch(e.which) {
+                case $.ui.keyCode.DOWN:
+                    $(e.currentTarget).next().find('input').focus();
+                    e.preventDefault();
+                    break;
+                case $.ui.keyCode.UP:
+                    $(e.currentTarget).prev().find('input').focus();
+                    e.preventDefault();
+                    break; 
+                case $.ui.keyCode.ENTER: 
+                    e.preventDefault();
+                    var id = $(e.currentTarget).data('id');
+                    if (id) {
+                        this.trigger_up('open_record', {id:id, target: e.target});
+                    }
+                    break;
+            }
+        }
+    },
+    /**
      * @private
      * @param {MouseEvent} event
      */
@@ -768,7 +804,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onToggleSelection: function (event) {
         var checked = $(event.currentTarget).prop('checked') || false;
-        this.$('tbody .o_list_record_selector input').prop('checked', checked);
+        this.$('tbody .o_list_record_selector input:not(":disabled")').prop('checked', checked);
         this._updateSelection();
     },
 });

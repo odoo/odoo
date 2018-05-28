@@ -195,31 +195,41 @@ class Product(models.Model):
         domain = company_id and ['&', ('company_id', '=', company_id)] or []
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + auto_join directly in expression
-        # The code has been modified because having one location with parent_left being
-        # 0 make the whole domain unusable
-        hierarchical_locations = locations.filtered(lambda location: location.parent_left != 0 and operator == "child_of")
-        other_locations = locations.filtered(lambda location: location not in hierarchical_locations)  # TDE: set - set ?
+        hierarchical_locations = locations if operator == 'child_of' else locations.browse()
+        other_locations = locations - hierarchical_locations
         loc_domain = []
         dest_loc_domain = []
+        # this optimizes [('location_id', 'child_of', hierarchical_locations.ids)]
+        # by avoiding the ORM to search for children locations and injecting a
+        # lot of location ids into the main query
         for location in hierarchical_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain += ['&',
-                           ('location_id.parent_left', '>=', location.parent_left),
-                           ('location_id.parent_left', '<', location.parent_right)]
+            loc_domain.append(('location_id.parent_path', '=like', location.parent_path + '%'))
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain += ['&',
-                                ('location_dest_id.parent_left', '>=', location.parent_left),
-                                ('location_dest_id.parent_left', '<', location.parent_right)]
+            dest_loc_domain.append(('location_dest_id.parent_path', '=like', location.parent_path + '%'))
         if other_locations:
             loc_domain = loc_domain and ['|'] + loc_domain or loc_domain
-            loc_domain = loc_domain + [('location_id', operator, [location.id for location in other_locations])]
+            loc_domain = loc_domain + [('location_id', operator, other_locations.ids)]
             dest_loc_domain = dest_loc_domain and ['|'] + dest_loc_domain or dest_loc_domain
-            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, [location.id for location in other_locations])]
+            dest_loc_domain = dest_loc_domain + [('location_dest_id', operator, other_locations.ids)]
         return (
             domain + loc_domain,
             domain + dest_loc_domain + ['!'] + loc_domain if loc_domain else domain + dest_loc_domain,
             domain + loc_domain + ['!'] + dest_loc_domain if dest_loc_domain else domain + loc_domain
         )
+
+    def _search_qty_available(self, operator, value):
+        # In the very specific case we want to retrieve products with stock available, we only need
+        # to use the quants, not the stock moves. Therefore, we bypass the usual
+        # '_search_product_quantity' method and call '_search_qty_available_new' instead. This
+        # allows better performances.
+        if value == 0.0 and operator == '>' and not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+            product_ids = self._search_qty_available_new(
+                operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
+                self.env.context.get('package_id')
+            )
+            return [('id', 'in', product_ids)]
+        return self._search_product_quantity(operator, value, 'qty_available')
 
     def _search_virtual_available(self, operator, value):
         # TDE FIXME: should probably clean the search methods
@@ -245,24 +255,13 @@ class Product(models.Model):
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
-        for product in self.search([]):
+        for product in self.with_context(prefetch_fields=False).search([]):
             if OPERATORS[operator](product[field], value):
                 ids.append(product.id)
         return [('id', 'in', ids)]
 
-    def _search_qty_available(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        if value == 0.0 and operator in ('=', '>=', '<='):
-            return self._search_product_quantity(operator, value, 'qty_available')
-        product_ids = self._search_qty_available_new(operator, value, self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'))
-        if (value > 0 and operator in ('<=', '<')) or (value < 0 and operator in ('>=', '>')):
-            # include also unavailable products
-            domain = self._search_product_quantity(operator, value, 'qty_available')
-            product_ids += domain[0][2]
-        return [('id', 'in', product_ids)]
-
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
-        # TDE FIXME: should probably clean the search methods
+        ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
         product_ids = set()
         domain_quant = self._get_domain_locations()[0]
         if lot_id:
@@ -378,7 +377,9 @@ class Product(models.Model):
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    responsible_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid, required=True)
+    responsible_id = fields.Many2one(
+        'res.users', string='Responsible', default=lambda self: self.env.uid, required=True,
+        help="This user will be responsible of the next activities related to logistic operations for this product.")
     type = fields.Selection(selection_add=[('product', 'Stockable Product')])
     property_stock_production = fields.Many2one(
         'stock.location', "Production Location",
@@ -390,7 +391,7 @@ class ProductTemplate(models.Model):
         help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory.")
     sale_delay = fields.Float(
         'Customer Lead Time', default=0,
-        help="The average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers.")
+        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the order and the delivery.")
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
@@ -501,7 +502,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if 'uom_id' in vals:
-            new_uom = self.env['product.uom'].browse(vals['uom_id'])
+            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
             done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
             if done_moves:

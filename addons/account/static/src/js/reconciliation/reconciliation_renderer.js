@@ -20,9 +20,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     events: {
         'click div:first button.o_automatic_reconciliation': '_onAutoReconciliation',
         'click div:first h1.statement_name': '_onClickStatementName',
-        'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
         'click button.js_load_more': '_onLoadMore',
+        'blur .statement_name_edition > input': '_onValidateName',
+        'keyup .statement_name_edition > input': '_onKeyupInput'
     },
     /**
      * @override
@@ -63,9 +64,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             defs.push(def);
         }
 
-        this.$('h1.statement_name').text(this._initialState.title);
-
-        delete this._initialState;
+        this.$('h1.statement_name').text(this._initialState.title || _t('No Title'));
 
         this.enterHandler = function (e) {
             if ((e.which === 13 || e.which === 10) && (e.ctrlKey || e.metaKey)) {
@@ -126,7 +125,6 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 type: 'rainbow_man',
                 fadeout: 'no',
                 message: $done,
-                click_close: false,
             });
             this.$el.css('min-height', '450px');
         }
@@ -135,7 +133,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             this._renderNotifications(state.notifications);
         }
 
-        this.$('h1.statement_name').text(state.title);
+        this.$('.statement_name, .statement_name_edition').toggle();
+        this.$('h1.statement_name').text(state.title || _t('No Title'));
     },
 
     //--------------------------------------------------------------------------
@@ -172,7 +171,10 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onClickStatementName: function () {
-        this.$('.statement_name, .statement_name_edition').toggle();
+        if (this._initialState.bank_statement_id) {
+            this.$('.statement_name, .statement_name_edition').toggle();
+            this.$('.statement_name_edition input').focus();
+        }
     },
     /**
      * @private
@@ -234,9 +236,19 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
      * @private
      */
     _onValidateName: function () {
-        var name = this.model.get(this.handleNameRecord).data.name;
+        var name = this.$('.statement_name_edition input').val().trim();
         this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+    },
+    /**
+     * Save title on enter key pressed
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onKeyupInput: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            this.$('.statement_name_edition input').blur();
+        }
     },
 });
 
@@ -428,13 +440,22 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
             var data = this.model.get(this.handleCreateRecord).data;
             this.model.notifyChanges(this.handleCreateRecord, state.createForm).then(function () {
-                var record = self.model.get(self.handleCreateRecord);
-                _.each(self.fields, function (field, fieldName) {
-                    if (self._avoidFieldUpdate[fieldName]) return;
-                    if (fieldName === "partner_id") return;
-                    if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
-                        field.reset(record);
-                    }
+                // FIXME can't it directly written REPLACE_WITH ids=state.createForm.analytic_tag_ids
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}}).then(function (){
+                    var defs = [];
+                    _.each(state.createForm.analytic_tag_ids, function (tag) {
+                        defs.push(self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}}));
+                    });
+                    $.when.apply($, defs).then(function () {
+                        var record = self.model.get(self.handleCreateRecord);
+                        _.each(self.fields, function (field, fieldName) {
+                            if (self._avoidFieldUpdate[fieldName]) return;
+                            if (fieldName === "partner_id") return;
+                            if ((data[fieldName] || state.createForm[fieldName]) && !_.isEqual(state.createForm[fieldName], data[fieldName])) {
+                                field.reset(record);
+                            }
+                        });
+                    });
                 });
             });
         }
@@ -481,7 +502,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
 
     /**
-     * create account_id, tax_id, analytic_account_id, label and amount field
+     * create account_id, tax_id, analytic_account_id, analytic_tag_ids, label and amount fields
      *
      * @private
      * @param {object} state - statement line
@@ -492,18 +513,25 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.account',
             type: 'many2one',
             name: 'account_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.tax',
             type: 'many2one',
             name: 'tax_id',
+            domain: [['company_id', '=', state.st_line.company_id]],
         }, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+        }, {
+            relation: 'account.analytic.tag',
+            type: 'many2many',
+            name: 'analytic_tag_ids',
         }, {
             type: 'char',
             name: 'label',
@@ -530,6 +558,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
+            self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
+                'analytic_tag_ids', record, {mode: 'edit'});
+
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
 
@@ -542,6 +573,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+            self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
@@ -625,6 +657,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * @param {input event} event
      */
     _onFilterChange: function (event) {
         this.trigger_up('change_filter', {'data': _.str.strip($(event.target).val())});
@@ -677,7 +710,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectMoveLine: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('add_proposition', {'data': moveLineId});
@@ -687,7 +720,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectProposition: function (event) {
-        var $el = $(event.target)
+        var $el = $(event.target);
         this._destroyPopover($el);
         var moveLineId = $el.closest('.mv_line').data('line-id');
         this.trigger_up('remove_proposition', {'data': moveLineId});
@@ -712,7 +745,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
         });
         if (invalid.length) {
-            this.do_warn(_("Some fields are undefined"), invalid.join(', '));
+            this.do_warn(_t("Some fields are undefined"), invalid.join(', '));
             return;
         }
         this.trigger_up('create_proposition');
@@ -808,10 +841,10 @@ var ManualLineRenderer = LineRenderer.extend({
 
             return $.when.apply($, defs).then(function () {
                 if (!self.fields.title_account_id) {
-                    self.fields.partner_id.$el.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.partner_id.prependTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 } else {
                     self.fields.partner_id.destroy();
-                    self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
+                    return self.fields.title_account_id.appendTo(self.$('.accounting_view thead td:eq(1) span:first'));
                 }
             });
         });

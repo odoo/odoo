@@ -676,12 +676,14 @@ var FieldX2Many = AbstractField.extend({
         discard_changes: '_onDiscardChanges',
         edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
-        kanban_record_delete: '_onDeleteRecord',
-        list_record_delete: '_onDeleteRecord',
         open_record: '_onOpenRecord',
-        save_line: '_onSaveLine',
+        kanban_record_delete: '_onRemoveRecord',
+        list_record_remove: '_onRemoveRecord',
         resequence: '_onResequence',
+        save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
+        activate_next_widget: '_onActiveNextWidget',
+        navigation_move: '_onNavigationMove',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -699,9 +701,13 @@ var FieldX2Many = AbstractField.extend({
      */
     init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
+        this.nodeOptions = _.defaults(this.nodeOptions, {
+            create_text: _t('Add'),
+        });
         this.operations = [];
         this.isReadonly = this.mode === 'readonly';
         this.view = this.attrs.views[this.attrs.mode];
+        this.isMany2Many = this.field.type === 'many2many' || this.attrs.widget === 'many2many';
         this.activeActions = {};
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
         var arch = this.view && this.view.arch;
@@ -793,6 +799,30 @@ var FieldX2Many = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+       return (this.mode === 'edit' && this.$input) || this.$el;
+    },
+
+    /**
+     * @override
+     * @param {Object} [options]
+     */
+    activate: function (options) {
+        if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
+            return false;
+        }
+        if (this.view.type === 'kanban') {
+            this.$buttons.find(".o-kanban-button-new").focus();
+        }
+        if (this.view.arch.tag === 'tree') {
+            this.renderer.$('.o_field_x2many_list_row_add a').focus();
+        }
+        return true;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -839,6 +869,7 @@ var FieldX2Many = AbstractField.extend({
                 editable: this.mode === 'edit' && arch.attrs.editable,
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
+                isMany2Many: this.isMany2Many,
                 viewType: viewType,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
@@ -912,8 +943,10 @@ var FieldX2Many = AbstractField.extend({
      */
     _renderButtons: function () {
         if (!this.isReadonly && this.view.arch.tag === 'kanban') {
-            var options = { create_text: this.nodeOptions.create_text };
-            this.$buttons = $(qweb.render('KanbanView.buttons', options));
+            this.$buttons = $(qweb.render('KanbanView.buttons', {
+                btnClass: 'btn-default',
+                create_text: this.nodeOptions.create_text,
+            }));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
         }
     },
@@ -979,7 +1012,7 @@ var FieldX2Many = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the user clicks on the 'Add an item' link (list case) or the
+     * Called when the user clicks on the 'Add a line' link (list case) or the
      * 'Add' button (kanban case).
      *
      * @abstract
@@ -996,10 +1029,9 @@ var FieldX2Many = AbstractField.extend({
      * @private
      * @param {OdooEvent} ev
      */
-    _onDeleteRecord: function (ev) {
+    _onRemoveRecord: function (ev) {
         ev.stopPropagation();
-        var shouldForget = this.attrs.widget === 'many2many' || this.field.type === 'many2many';
-        var operation = shouldForget ? 'FORGET' : 'DELETE';
+        var operation = this.isMany2Many ? 'FORGET' : 'DELETE';
         this._setValue({
             operation: operation,
             ids: [ev.data.id],
@@ -1155,6 +1187,16 @@ var FieldX2Many = AbstractField.extend({
     _onToggleColumnOrder: function (ev) {
         ev.data.field = this.name;
     },
+    /*
+    * Move to next widget.
+    *
+    * @private
+    */
+    _onActiveNextWidget: function (e) {
+        e.stopPropagation();
+        this.renderer.unselectRow();
+        this.trigger_up('navigation_move',{direction:'next'});
+    },
 });
 
 var FieldOne2Many = FieldX2Many.extend({
@@ -1253,7 +1295,6 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         // we don't want interference with the components upstream.
         ev.stopPropagation();
-
         if (this.editable) {
             if (!this.activeActions.create) {
                 if (ev.data.onFail) {
@@ -1324,16 +1365,6 @@ var FieldMany2Many = FieldX2Many.extend({
     className: 'o_field_many2many',
     supportedFieldTypes: ['many2many'],
 
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.nodeOptions = _.defaults(this.nodeOptions, {
-            create_text: _t('Add'),
-        });
-    },
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -1350,7 +1381,6 @@ var FieldMany2Many = FieldX2Many.extend({
     _onAddRecord: function (ev) {
         var self = this;
         ev.stopPropagation();
-
         var domain = this.record.getDomain({fieldName: this.name});
 
         new dialogs.SelectCreateDialog(this, {
@@ -1791,6 +1821,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .badge': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
+        'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
         'focusout .o_colorpicker': '_onCloseColorPicker',
     }),
 
@@ -1801,43 +1832,63 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     /**
      * @private
      */
-    _onCloseColorPicker: function (){
+    _onCloseColorPicker: function () {
         this.$color_picker.remove();
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onOpenColorPicker: function (event) {
-        var tag_id = $(event.currentTarget).data('id');
-        var tag = _.findWhere(this.value.data, { res_id: tag_id });
+    _onOpenColorPicker: function (ev) {
+        var tagID = $(ev.currentTarget).data('id');
+        var tagColor = $(ev.currentTarget).data('color');
+        var tag = _.findWhere(this.value.data, { res_id: tagID });
         if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
                 'widget': this,
-                'tag_id': tag_id,
+                'tag_id': tagID,
             }));
 
-            $(event.currentTarget).append(this.$color_picker);
+            $(ev.currentTarget).append(this.$color_picker);
             this.$color_picker.dropdown('toggle');
             this.$color_picker.attr("tabindex", 1).focus();
+            if (!tagColor) {
+                this.$('.o_checkbox input').prop('checked', true);
+            }
         }
     },
     /**
+     * Update color based on target of ev
+     * either by clicking on a color item or
+     * by toggling the 'Hide in Kanban' checkbox.
+     *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onUpdateColor: function (event) {
-        event.preventDefault();
-        var self = this;
-        var color = $(event.currentTarget).data('color');
-        var id = $(event.currentTarget).data('id');
-        var tag = self.$("span.badge[data-id='" + id + "']");
-        var current_color = tag.data('color');
-
-        if (color === current_color) { return; }
-
+    _onUpdateColor: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.currentTarget);
+        var color = $target.data('color');
+        var id = $target.data('id');
+        var tag = this.$("span.badge[data-id='" + id + "']");
+        var currentColor = tag.data('color');
         var changes = {};
+
+        if ($target.is('.o_hide_in_kanban')) {
+            var $checkbox = $('.o_hide_in_kanban .o_checkbox input');
+            $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
+            this.prevColors = this.prevColors ? this.prevColors : {};
+            if ($checkbox.is(':checked')) {
+                this.prevColors[id] = currentColor
+            } else {
+                color = this.prevColors[id] ? this.prevColors[id] : 1;
+            }
+        } else if ($target.is('[class^="o_tag_color"]')) { // $target.is('o_tag_color_')
+            if (color === currentColor) { return; }
+        }
+
         changes[this.colorField] = color;
+
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
             changes: changes,
@@ -1960,6 +2011,11 @@ var FieldStatus = AbstractField.extend({
         this._super.apply(this, arguments);
         this._setState();
         this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
+
+        // Retro-compatibility: clickable used to be defined in the field attrs
+        // instead of options.
+        // If not set, the statusbar is not clickable.
+        this.isClickable = !!this.attrs.clickable || !!this.nodeOptions.clickable;
     },
 
     //--------------------------------------------------------------------------
@@ -2010,7 +2066,7 @@ var FieldStatus = AbstractField.extend({
         this.$el.html(qweb.render("FieldStatus.content", {
             selection_unfolded: selections[0],
             selection_folded: selections[1],
-            clickable: !!this.attrs.clickable,
+            clickable: this.isClickable,
         }));
     },
 
@@ -2277,6 +2333,21 @@ var FieldReference = FieldMany2One.extend({
      */
     start: function () {
         this.$('select').val(this.field.relation);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        if (this.mode === 'edit' && !this.field.relation) {
+            return this.$('select');
+        }
         return this._super.apply(this, arguments);
     },
 

@@ -353,7 +353,7 @@ class TestMrpOrder(TestMrpCommon):
         """ Check the consumed quants of the produced quants when intermediate calls to `post_inventory` during a MO."""
 
         # create a bom for `custom_laptop` with components that aren't tracked
-        unit = self.ref("product.product_uom_unit")
+        unit = self.ref("uom.product_uom_unit")
         custom_laptop = self.env.ref("product.product_product_27")
         custom_laptop.tracking = 'none'
         product_charger = self.env['product.product'].create({

@@ -1,10 +1,7 @@
 odoo.define('web.DataManager', function (require) {
 "use strict";
 
-var config = require('web.config');
 var core = require('web.core');
-var fieldRegistry = require('web.field_registry');
-var pyeval = require('web.pyeval');
 var rpc = require('web.rpc');
 var utils = require('web.utils');
 
@@ -95,18 +92,23 @@ return core.Class.extend({
                 kwargs: {
                     views: views_descr,
                     options: options,
-                    context: context.eval(),
+                    context: context,
                 },
                 model: model,
                 method: 'load_views',
             }).then(function (result) {
-                // Postprocess fields_views and insert them into the fields_views cache
-                result.fields_views = _.mapObject(result.fields_views, self._postprocess_fvg.bind(self));
-                self.processViews(result.fields_views, result.fields);
+                // Freeze the fields dict as it will be shared between views and
+                // no one should edit it
+                utils.deepFreeze(result.fields);
+
+                // Insert views into the fields_views cache
                 _.each(views_descr, function (view_descr) {
                     var toolbar = options.toolbar && view_descr[1] !== 'search';
                     var fv_key = self._gen_key(model, view_descr[0], view_descr[1], toolbar, context);
-                    self._cache.fields_views[fv_key] = $.when(result.fields_views[view_descr[1]]);
+                    var fvg = result.fields_views[view_descr[1]];
+                    fvg.viewFields = fvg.fields;
+                    fvg.fields = result.fields;
+                    self._cache.fields_views[fv_key] = $.when(fvg);
                 });
 
                 // Insert filters, if any, into the filters cache
@@ -185,57 +187,6 @@ return core.Class.extend({
     },
 
     /**
-     * Processes fields and fields_views. For each field, writes its name inside
-     * the field description to make it self-contained. For each fields_view,
-     * completes its fields with the missing ones.
-     *
-     * @param {Object} fieldsViews object of fields_views (keys are view types)
-     * @param {Object} fields all the fields of the model
-     */
-    processViews: function (fieldsViews, fields) {
-        var fieldName, fieldsView, viewType;
-        // write the field name inside the description for all fields
-        for (fieldName in fields) {
-            fields[fieldName].name = fieldName;
-        }
-        for (viewType in fieldsViews) {
-            fieldsView = fieldsViews[viewType];
-            // write the field name inside the description for fields in view
-            for (fieldName in fieldsView.fields) {
-                fieldsView.fields[fieldName].name = fieldName;
-            }
-            // complete fields (in view) with missing ones
-            _.defaults(fieldsView.fields, fields);
-            // process the fields_view
-            _.extend(fieldsView, this._processFieldsView({
-                type: viewType,
-                arch: fieldsView.arch,
-                fields: fieldsView.fields,
-            }));
-        }
-    },
-
-    /**
-     * Private function that postprocesses fields_view (mainly parses the arch attribute)
-     */
-    _postprocess_fvg: function (fields_view) {
-        var self = this;
-
-        // Parse arch
-        var doc = $.parseXML(fields_view.arch).documentElement;
-        fields_view.arch = utils.xml_to_json(doc, (doc.nodeName.toLowerCase() !== 'kanban'));
-
-        // Process inner views (x2manys)
-        _.each(fields_view.fields, function(field) {
-            _.each(field.views || {}, function(view) {
-                self._postprocess_fvg(view);
-            });
-        });
-
-        return fields_view;
-    },
-
-    /**
      * Private function that generates a cache key from its arguments
      */
     _gen_key: function () {
@@ -252,224 +203,6 @@ return core.Class.extend({
      */
     _invalidate: function (cache, key) {
         delete cache[key];
-    },
-
-    ///////////////////////////////////////////////////////////////
-
-    /**
-     * Process a field node, in particular, put a flag on the field to give
-     * special directives to the BasicModel.
-     *
-     * @param {string} viewType
-     * @param {Object} field - the field properties
-     * @param {Object} attrs - the field attributes (from the xml)
-     * @returns {Object} attrs
-     */
-    _processField: function (viewType, field, attrs) {
-        var self = this;
-        attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
-
-        if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
-            attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
-        }
-
-        if (attrs.on_change && !field.onChange) {
-            field.onChange = "1";
-        }
-
-        // the relational data of invisible relational fields should not be
-        // fetched (e.g. name_gets of invisible many2ones), at least those that
-        // are always invisible.
-        // the invisible attribute of a field is supposed to be static ("1" in
-        // general), but not totally as it may use keys of the context
-        // ("context.get('some_key')"). It is evaluated server-side, and the
-        // result is put inside the modifiers as a value of the '(column_)invisible'
-        // key, and the raw value is left in the invisible attribute (it is used
-        // in debug mode for informational purposes).
-        // this should change, for instance the server might set the evaluated
-        // value in invisible, which could then be seen as static by the client,
-        // and add another key in debug mode containing the raw value.
-        // for now, we look inside the modifiers and consider the value only if
-        // it is static (=== true),
-        if (attrs.modifiers.invisible === true || attrs.modifiers.column_invisible === true) {
-            attrs.__no_fetch = true;
-        }
-
-        if (!_.isEmpty(field.views)) {
-            // process the inner fields_view as well to find the fields they use.
-            // register those fields' description directly on the view.
-            // for those inner views, the list of all fields isn't necessary, so
-            // basically the field_names will be the keys of the fields obj.
-            // don't use _ to iterate on fields in case there is a 'length' field,
-            // as _ doesn't behave correctly when there is a length key in the object
-            attrs.views = {};
-            _.each(field.views, function (innerFieldsView, viewType) {
-                viewType = viewType === 'tree' ? 'list' : viewType;
-                innerFieldsView.type = viewType;
-                attrs.views[viewType] = self._processFieldsView(_.extend({}, innerFieldsView));
-            });
-            delete field.views;
-        }
-
-        if (field.type === 'one2many' || field.type === 'many2many') {
-            if (attrs.Widget.prototype.useSubview) {
-                if (!attrs.views) {
-                    attrs.views = {};
-                }
-                var mode = attrs.mode;
-                if (!mode) {
-                    if (attrs.views.tree && attrs.views.kanban) {
-                        mode = 'tree';
-                    } else if (!attrs.views.tree && attrs.views.kanban) {
-                        mode = 'kanban';
-                    } else {
-                        mode = 'tree,kanban';
-                    }
-                }
-                if (mode.indexOf(',') !== -1) {
-                    mode = config.device.size_class !== config.device.SIZES.XS ? 'tree' : 'kanban';
-                }
-                if (mode === 'tree') {
-                    mode = 'list';
-                    if (!attrs.views.list && attrs.views.tree) {
-                        attrs.views.list = attrs.views.tree;
-                    }
-                }
-                attrs.mode = mode;
-                if (mode in attrs.views) {
-                    var view = attrs.views[mode];
-                    var defaultOrder = view.arch.attrs.default_order;
-                    if (defaultOrder) {
-                        // process the default_order, which is like 'name,id desc'
-                        // but we need it like [{name: 'name', asc: true}, {name: 'id', asc: false}]
-                        attrs.orderedBy = _.map(defaultOrder.split(','), function (order) {
-                            order = order.trim().split(' ');
-                            return {name: order[0], asc: order[1] !== 'desc'};
-                        });
-                    } else {
-                        // if there is a field with widget `handle`, the x2many
-                        // needs to be ordered by this field to correctly display
-                        // the records
-                        var handleField = _.find(view.arch.children, function (child) {
-                            return child.attrs && child.attrs.widget === 'handle';
-                        });
-                        if (handleField) {
-                            attrs.orderedBy = [{name: handleField.attrs.name, asc: true}];
-                        }
-                    }
-
-                    attrs.columnInvisibleFields = {};
-                    _.each(view.arch.children, function (child) {
-                        if (child.attrs && child.attrs.modifiers) {
-                            attrs.columnInvisibleFields[child.attrs.name] =
-                                child.attrs.modifiers.column_invisible || false;
-                        }
-                    });
-                }
-            }
-            if (attrs.Widget.prototype.fieldsToFetch) {
-                attrs.viewType = 'default';
-                attrs.relatedFields = _.extend({}, attrs.Widget.prototype.fieldsToFetch);
-                attrs.fieldsInfo = {
-                    default: _.mapObject(attrs.Widget.prototype.fieldsToFetch, function () {
-                        return {};
-                    }),
-                };
-                if (attrs.options.color_field) {
-                    // used by m2m tags
-                    attrs.relatedFields[attrs.options.color_field] = { type: 'integer' };
-                    attrs.fieldsInfo.default[attrs.options.color_field] = {};
-                }
-            }
-        }
-
-        if (attrs.Widget.prototype.fieldDependencies) {
-            attrs.fieldDependencies = attrs.Widget.prototype.fieldDependencies;
-        }
-
-        return attrs;
-    },
-    /**
-     * Visit all nodes in the arch field and process each fields
-     *
-     * @param {string} viewType
-     * @param {Object} arch
-     * @param {Object} fields
-     * @returns {Object} fieldsInfo
-     */
-    _processFields: function (viewType, arch, fields) {
-        var self = this;
-        var fieldsInfo = Object.create(null);
-        utils.traverse(arch, function (node) {
-            if (typeof node === 'string') {
-                return false;
-            }
-            if (!_.isObject(node.attrs.modifiers)) {
-                node.attrs.modifiers = node.attrs.modifiers ? JSON.parse(node.attrs.modifiers) : {};
-            }
-            if (!_.isObject(node.attrs.options) && node.tag === 'button') {
-                node.attrs.options = node.attrs.options ? JSON.parse(node.attrs.options) : {};
-            }
-            if (node.tag === 'field') {
-                fieldsInfo[node.attrs.name] = self._processField(viewType,
-                    fields[node.attrs.name], node.attrs ? _.clone(node.attrs) : {});
-
-                if (fieldsInfo[node.attrs.name].fieldDependencies) {
-                    var deps = fieldsInfo[node.attrs.name].fieldDependencies;
-                    for (var dependency_name in deps) {
-                        var dependency_dict = {name: dependency_name, type: deps[dependency_name].type};
-                        if (!(dependency_name in fieldsInfo)) {
-                            fieldsInfo[dependency_name] = _.extend({}, dependency_dict, {options: deps[dependency_name].options || {}});
-                        }
-                        if (!(dependency_name in fields)) {
-                            fields[dependency_name] = dependency_dict;
-                        }
-                    }
-                }
-                return false;
-            }
-            return node.tag !== 'arch';
-        });
-        return fieldsInfo;
-    },
-    /**
-     * Visit all nodes in the arch field and process each fields and inner views
-     *
-     * @param {Object} viewInfo
-     * @param {Object} viewInfo.arch
-     * @param {Object} viewInfo.fields
-     * @returns {Object} viewInfo
-     */
-    _processFieldsView: function (viewInfo) {
-        var viewFields = this._processFields(viewInfo.type, viewInfo.arch, viewInfo.fields);
-        viewInfo.fieldsInfo = {};
-        viewInfo.fieldsInfo[viewInfo.type] = viewFields;
-        utils.deepFreeze(viewInfo.fields);
-        return viewInfo;
-    },
-    /**
-     * Returns the AbstractField specialization that should be used for the
-     * given field informations. If there is no mentioned specific widget to
-     * use, determine one according the field type.
-     *
-     * @param {string} viewType
-     * @param {Object} field
-     * @param {Object} attrs
-     * @returns {function|null} AbstractField specialization Class
-     */
-    _getFieldWidgetClass: function (viewType, field, attrs) {
-        var Widget;
-        if (attrs.widget) {
-            Widget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
-            if (!Widget) {
-                console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
-            }
-        } else if (viewType === 'kanban' && field.type === 'many2many') {
-            // we want to display the widget many2manytags in kanban even if it
-            // is not specified in the view
-            Widget = fieldRegistry.get('kanban.many2many_tags');
-        }
-        return Widget || fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },
 });
 

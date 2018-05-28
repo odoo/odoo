@@ -7,7 +7,7 @@ var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
 var local_storage = require('web.local_storage');
-var websiteRootInstance = require('website.WebsiteRoot.instance');
+require('root.widget');
 
 var _t = core._t;
 var page_widgets = {};

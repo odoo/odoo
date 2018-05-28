@@ -8,12 +8,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
-        self.ensure_one()
         res = super(SaleOrder, self).action_confirm()
-        # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
-        self.order_line._update_registrations(confirm=self.amount_total == 0, cancel_to_draft=False)
-        if any(self.order_line.filtered(lambda line: line.event_id)):
-            return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
+        for so in self:
+            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+            if any(so.order_line.filtered(lambda line: line.event_id)):
+                return self.env['ir.actions.act_window'].with_context(default_sale_order_id=so.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
 
@@ -62,4 +62,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('event_ticket_id')
     def _onchange_event_ticket_id(self):
-        self.price_unit = (self.event_id.company_id or self.env.user.company_id).currency_id.compute(self.event_ticket_id.price, self.order_id.currency_id)
+        company = self.event_id.company_id or self.env.user.company_id
+        currency = company.currency_id
+        self.price_unit = currency._convert(
+            self.event_ticket_id.price, self.order_id.currency_id, self.order_id.company_id, self.order_id.date_order or fields.Date.today())

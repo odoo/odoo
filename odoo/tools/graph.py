@@ -95,7 +95,7 @@ class graph(object):
 
 
     def init_cutvalues(self):
-        """Initailize cut values of edges of the feasible tree.
+        """Initialize cut values of edges of the feasible tree.
         Edges with negative cut-values are removed from the tree to optimize rank assignment
         """
         self.cut_edges = {}
@@ -306,7 +306,7 @@ class graph(object):
 
 
     def wmedian(self):
-        """Applies median heuristic to find optimzed order of the nodes with in their ranks
+        """Applies median heuristic to find optimized order of the nodes with in their ranks
         """
         for level in self.levels:
 
@@ -541,7 +541,7 @@ class graph(object):
             self.max_order = max(x['y'] for x in self.result.values())
 
     def find_starts(self):
-        """Finds other start nodes of the graph in the case when graph is disconneted
+        """Finds other start nodes of the graph in the case when graph is disconnected
         """
         rem_nodes = []
         for node in self.nodes:

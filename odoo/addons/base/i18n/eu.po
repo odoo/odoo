@@ -3,19 +3,14 @@
 # * base
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Eneko <eastigarraga@codesyntax.com>, 2018
-# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
-# Esther Martín Menéndez <esthermartin001@gmail.com>, 2018
-# Nagore Ruiz de Escudero <nagore.ruiz.escudero@gmail.com>, 2018
-# Naomi Hidalgo <naomihid96@gmail.com>, 2018
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 14:33+0000\n"
-"PO-Revision-Date: 2018-02-19 14:33+0000\n"
-"Last-Translator: Naomi Hidalgo <naomihid96@gmail.com>, 2018\n"
+"POT-Creation-Date: 2017-11-08 13:21+0000\n"
+"PO-Revision-Date: 2017-11-08 13:21+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3135,7 +3130,7 @@ msgid ""
 "An ISR will be generated if you specify the information it needs :\n"
 "    - The bank account you expect to be paid on must be set, and have a valid postal reference.\n"
 "    - Your invoice must have been set assigned a bank account to receive its payment\n"
-"      (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
+"    (this can be done manually, but a default value is automatically set if you have defined a bank account).\n"
 "    - You must have set the postal references of your bank.\n"
 "    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)\n"
 "\n"
@@ -3249,44 +3244,6 @@ msgid ""
 "\n"
 "The module adds the possibility to display data from Odoo in Google Spreadsheets in real time.\n"
 "=================================================================================================\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_fr_pos_cert
-msgid ""
-"\n"
-"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
-"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
-"\n"
-"Install it if you use the Point of Sale app to sell to individuals.\n"
-"\n"
-"The module adds following features:\n"
-"\n"
-"    Inalterability: deactivation of all the ways to cancel or modify key data of POS orders, invoices and journal entries\n"
-"\n"
-"    Security: chaining algorithm to verify the inalterability\n"
-"\n"
-"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
-"\n"
-"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_fr_certification
-msgid ""
-"\n"
-"This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).\n"
-"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
-"\n"
-"The module adds following features:\n"
-"\n"
-"    Inalterability: deactivation of all the ways to cancel or modify key data, invoices and journal entries\n"
-"\n"
-"    Security: chaining algorithm to verify the inalterability\n"
-"\n"
-"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
-"\n"
-"    Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)\n"
 msgstr ""
 
 #. module: base
@@ -3644,19 +3601,6 @@ msgid ""
 "This module contains most code coming from odoo v10 website_portal. Purpose\n"
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_l10n_fr_sale_closing
-msgid ""
-"\n"
-"This module adds support for automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
-"-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n"
-"\n"
-"The module adds following features:\n"
-"\n"
-"    Storage: automatic sales closings with computation of both period and cumulative totals (daily, monthly, annually)\n"
-"\n"
 msgstr ""
 
 #. module: base
@@ -4768,7 +4712,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "<strong>Name</strong>"
-msgstr "<strong>Izena</strong>"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -5112,6 +5056,11 @@ msgid "Accounting & Finance"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_accounting_andamp;_finance
+msgid "Accounting &amp; Finance"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
 msgstr ""
@@ -5173,7 +5122,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.action_view_tree
 #: model:ir.ui.view,arch_db:base.view_window_action_search
 msgid "Action"
-msgstr "Ekintza"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_help
@@ -5239,11 +5188,6 @@ msgid "Actions"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.view,arch_db:base.action_view_company_form_link_2_currencies
-msgid "Activate more currencies"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_active
 #: model:ir.model.fields,field_description:base.field_ir_filters_active
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_active
@@ -5268,11 +5212,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
-msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
 msgstr ""
 
 #. module: base
@@ -5517,7 +5456,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_report_paperformat
 msgid "Allows customization of a report."
-msgstr "Txosten baten pertsonalizazioa baimentzen du."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_delivery
@@ -5544,6 +5483,13 @@ msgstr ""
 msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
 msgstr ""
 
 #. module: base
@@ -5760,7 +5706,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_client_params
-msgid "Arguments sent to the client along with the view tag"
+msgid "Arguments sent to the client along withthe view tag"
 msgstr ""
 
 #. module: base
@@ -5878,7 +5824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_module_module_author
 #: model:ir.ui.view,arch_db:base.view_module_filter
 msgid "Author"
-msgstr "Egile"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -5899,11 +5845,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Automate Marketing Campaigns"
-msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
 msgstr ""
 
 #. module: base
@@ -6323,7 +6264,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
 msgid "Blogs"
-msgstr "Blog-ak"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bo
@@ -6414,7 +6355,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_6
 msgid "Bronze"
-msgstr "Brontze "
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -6857,13 +6798,13 @@ msgid "Clean"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
+#: model:ir.actions.act_window,help:base.action_ui_view_custom
+msgid "Click here to create a customized view"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_ui_view_custom
-msgid "Click here to create a customized view"
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
 msgstr ""
 
 #. module: base
@@ -6896,7 +6837,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Click to create a new partner tag."
-msgstr "Egin klik kide etiketa berria sortzeko."
+msgstr ""
 
 #. module: base
 #: selection:ir.logging,type:0
@@ -6974,7 +6915,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_color
 #: model:ir.model.fields,field_description:base.field_res_users_color
 msgid "Color Index"
-msgstr "Koloreen indizea"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_column1
@@ -7016,13 +6957,13 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_form
 msgid "Comments"
-msgstr "Iruzkinak "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_commercial_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users_commercial_partner_id
 msgid "Commercial Entity"
-msgstr "Erakunde komertziala"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
@@ -7471,9 +7412,8 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
-msgstr "Sortze data"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm
@@ -7700,6 +7640,7 @@ msgstr "Nork sortua"
 #: model:ir.model.fields,field_description:base.field_res_partner_industry_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -7708,7 +7649,7 @@ msgstr "Created on"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
-msgstr "Sorrera"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
@@ -7785,7 +7726,7 @@ msgstr ""
 #: model:ir.model,name:base.model_res_currency_rate
 #: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
-msgstr "Moneta tasa"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -7850,7 +7791,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_search
 #: selection:report.paperformat,format:0
 msgid "Custom"
-msgstr "Pertsonalizatu"
+msgstr ""
 
 #. module: base
 #: selection:ir.model.fields,state:0
@@ -8065,19 +8006,6 @@ msgid "Days"
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
 msgid "Debugging"
 msgstr ""
@@ -8120,7 +8048,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_default
 msgid "Default paper format ?"
-msgstr "Lehenetsitako paper formatua?"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_default
@@ -8303,7 +8231,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
-msgstr "Baztertu"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_discuss
@@ -8426,7 +8354,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_header_line
 msgid "Display a header line"
-msgstr "Erakutsi goiburuko lerro bat"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -8483,7 +8411,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Document"
-msgstr "Dokumentua"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_document_management
@@ -8504,7 +8432,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
 msgid "Documentation"
-msgstr "Dokumentazioa"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documentation_examples
@@ -8516,7 +8444,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_domain
 #: model:ir.model.fields,field_description:base.field_ir_rule_domain_force
 msgid "Domain"
-msgstr "Domeinua"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_domain
@@ -8542,7 +8470,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Egina"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -8679,7 +8607,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_email
 #: model:ir.ui.menu,name:base.menu_email
 msgid "Email"
-msgstr "E-posta"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_form
@@ -8801,7 +8729,7 @@ msgstr ""
 #: code:addons/base/res/report_paperformat.py:68
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
-msgstr "Errorea! Zuk ezin duzu aukeratu "
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_ui_view.py:477
@@ -8972,7 +8900,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat_report_ids
 msgid "Explicitly associated reports"
-msgstr "Esleitutako txostenak"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_line_export_id
@@ -9213,12 +9141,6 @@ msgid "Field \"Type\" cannot be modified on models."
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_ui_view.py:1016
-#, python-format
-msgid "Field %r used in attributes must be present in view but is missing:"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
 msgstr ""
@@ -9408,7 +9330,7 @@ msgstr ""
 #. module: base
 #: selection:report.paperformat,format:0
 msgid "Folio 27  210 x 330 mm"
-msgstr "27 folioa 210 x330 mm"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -9523,23 +9445,6 @@ msgid "France - FEC"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
-msgid "France - VAT Anti-Fraud Certification (CGI 286 I-3 bis)"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_sale_closing
-msgid ""
-"France - VAT Anti-Fraud Certification (CGI 286 I-3 bis) - Sale Closings"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_fr_pos_cert
-msgid ""
-"France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.gf
 msgid "French Guiana"
 msgstr ""
@@ -9588,7 +9493,7 @@ msgstr ""
 #: selection:ir.actions.act_window,target:0
 #: selection:ir.actions.client,target:0
 msgid "Full Screen"
-msgstr "Pantaila osoa"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_func
@@ -10026,7 +9931,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_http
 msgid "HTTP routing"
-msgstr "HTTP bideratzea"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -10066,7 +9971,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_header_spacing
 msgid "Header spacing"
-msgstr "Goiburuko tartea"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -10442,11 +10347,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr ""
@@ -10517,7 +10417,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_mail_server_smtp_debug
 msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
-"log at DEBUG level (this is very verbose and may include confidential info!)"
+"log at DEBUG level(this is very verbose and may include confidential info!)"
 msgstr ""
 
 #. module: base
@@ -10891,7 +10791,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_installer
 msgid "Install Apps"
-msgstr "Instalatu aplikazioak "
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -11280,7 +11180,7 @@ msgstr ""
 #: selection:ir.actions.act_window.view,view_mode:0
 #: model:ir.ui.view,arch_db:base.view_view_search selection:ir.ui.view,type:0
 msgid "Kanban"
-msgstr "Kanban"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.kz
@@ -11508,7 +11408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_users_log___last_update
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create___last_update
 msgid "Last Modified on"
-msgstr "Azken aldaketa"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_write_uid
@@ -11736,7 +11636,7 @@ msgstr ""
 #. module: base
 #: selection:report.paperformat,format:0
 msgid "Ledger  28  431.8 x 279.4 mm"
-msgstr "Liburu nagusia 28 431.8 x 279.4 mm"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_margin_left
@@ -11756,7 +11656,7 @@ msgstr ""
 #. module: base
 #: selection:report.paperformat,format:0
 msgid "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
-msgstr "Legala 3 8.5 x 14 inches/hazbete, 215.9 x 355.6 mm"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -11781,7 +11681,7 @@ msgstr ""
 #. module: base
 #: selection:report.paperformat,format:0
 msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
-msgstr "Letter 3 8.5 x 11 inches/hazbete, 215.9 x 279.4 mm"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_level
@@ -12555,7 +12455,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data_model
 msgid "Model Name"
-msgstr "Ereduaren izena"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.report,name:base.report_ir_model_overview
@@ -12593,7 +12493,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.ir_model_model_menu
 #: model:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "Models"
-msgstr "Ereduak"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -14734,7 +14634,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_dpi
 msgid "Output DPI"
-msgstr "Irteera DPI"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import_overwrite
@@ -14746,7 +14646,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_attachment_create_uid
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Owner"
-msgstr "Jabea"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_P
@@ -14781,12 +14681,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_page_height
 msgid "Page height (mm)"
-msgstr "Orrialde altuera (mm)"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_page_width
 msgid "Page width (mm)"
-msgstr "Orrialde zabalera (mm)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pk
@@ -14811,24 +14711,24 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.paper_format_menuitem
 msgid "Paper Format"
-msgstr "Paper Formatu"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.paper_format_action
 msgid "Paper Format General Configuration"
-msgstr "Paper formatuaren konfigurazio orokorra"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:base.field_res_company_paperformat_id
 msgid "Paper format"
-msgstr "Paper formatua"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.paperformat_view_form
 #: model:ir.ui.view,arch_db:base.paperformat_view_tree
 msgid "Paper format configuration"
-msgstr "Paper formatuaren konfigurazioa"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat_format
@@ -14887,7 +14787,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_menu_id
 msgid "Parent Menu"
-msgstr "Gurasoen menua"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_parent_right
@@ -15104,7 +15004,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "Phone:"
-msgstr "Telefonoa:"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -15120,7 +15020,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_planner
 msgid "Planner"
-msgstr "Planifikatzaile "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
@@ -15329,7 +15229,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr "Inprimatutako txostenaren izena"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_priority
@@ -15529,8 +15429,8 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron_link_field_id
 msgid ""
-"Provide the field used to link the newly created record on the record on "
-"used by the server action."
+"Provide the field used to link the newly created recordon the record on used"
+" by the server action."
 msgstr ""
 
 #. module: base
@@ -15593,7 +15493,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr "Erosketa hitzarmenak"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase
@@ -15646,7 +15546,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "QWeb views"
-msgstr "QWeb ikuspegia"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.qa
@@ -15972,7 +15872,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.reporting_menuitem
 #: model:ir.ui.menu,name:base.reports_menuitem
 msgid "Reporting"
-msgstr "Txostenak"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report
@@ -15993,7 +15893,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_required
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Required"
-msgstr "Beharrezkoa "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
@@ -16026,7 +15926,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_model
 msgid "Resource Model"
-msgstr "Baliabideen eredua"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_name
@@ -16303,7 +16203,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_management
 msgid "Sales Management"
-msgstr "Salmenten kudeaketa "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
@@ -16458,7 +16358,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Search..."
-msgstr "Bilatu..."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.sequence_view
@@ -16492,7 +16392,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat_format
 msgid "Select Proper Paper size"
-msgstr "Hautatu paperaren tamaina egokia"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selectable
@@ -16507,14 +16407,11 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"\"Abisua\" aukeratzean erabiltzaileak jakinarazpena jasoko du mezuarekin, "
-"\"Mezu blokeatzailea\" aukeratzean salbuespena sortuko da mezuarekin eta "
-"jarioa oztopatuko du. Mezua hurrengo eremuan idatzi behar da."
 
 #. module: base
 #: selection:ir.property,type:0 selection:ir.translation,type:0
 msgid "Selection"
-msgstr "Aukeraketa "
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_selection
@@ -16541,11 +16438,6 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
 msgstr ""
-
-#. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Emaila Bidali"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -16744,7 +16636,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.res_config_settings_view_form
 #: model:res.groups,name:base.group_system
 msgid "Settings"
-msgstr "Ezarpenak"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -16855,7 +16747,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_size
 msgid "Size"
-msgstr "Tamaina"
+msgstr ""
 
 #. module: base
 #: sql_constraint:ir.model.fields:0
@@ -17203,7 +17095,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.res_request_link_search_view
 msgid "Subject"
-msgstr "Gaia"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -17259,7 +17151,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_survey
 #: model:ir.module.module,shortdesc:base.module_survey
 msgid "Survey"
-msgstr "Ikerketa"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
@@ -17465,12 +17357,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:760
+#: code:addons/base/ir/ir_translation.py:750
 #, python-format
 msgid "Technical Translations"
 msgstr ""
@@ -17547,12 +17438,6 @@ msgid "Thailand - Accounting Reports"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_users.py:290
-#, python-format
-msgid "The \"App Switcher\" action cannot be selected as home action."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -17563,7 +17448,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:366
 #, python-format
 msgid ""
-"The Selection Options expression is not a valid Pythonic expression. Please "
+"The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
 
@@ -17988,7 +17873,6 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_lang_code
 msgid "This field is used to set/get locales for user"
 msgstr ""
-"Eremu hau erabiltzailearentzako tokia ezartzeko/eskuratzeko erabiltzen da"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -18021,9 +17905,6 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
-"Hau deskargatuko den txostenaren izena da. Mantendu hutsik, txostenaren "
-"fitxategi izena ez aldatzeko. Python adierazpen bat erabil dezakezu "
-"objektuaren eta denboraren aldagaiekin."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -18084,7 +17965,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_hr_timesheet
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Timesheets"
-msgstr "Denbora-orriak"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
@@ -18265,7 +18146,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Translate"
-msgstr "Itzuli"
+msgstr ""
 
 #. module: base
 #: selection:ir.translation,state:0
@@ -18383,7 +18264,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_sequence_implementation
 msgid ""
 "Two sequence object implementations are offered: Standard and 'No gap'. The "
-"later is slower than the former but forbids any gap in the sequence (while "
+"later is slower than the former but forbids anygap in the sequence (while "
 "they are possible in the former)."
 msgstr ""
 
@@ -18422,7 +18303,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Type:"
-msgstr "Mota:"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_U
@@ -19014,7 +18895,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Vendor"
-msgstr "Saltzailea"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
@@ -19025,7 +18906,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Vendors"
-msgstr "Saltzaileak"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -19062,7 +18943,7 @@ msgstr ""
 #: selection:ir.translation,type:0
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr "Ikusi"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch
@@ -19524,7 +19405,7 @@ msgstr ""
 #: code:addons/base/ir/ir_actions_report.py:397
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr "Wkhtmltopdf huts egin du (errore kodea:%s). Mezua:%s"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -19707,9 +19588,9 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:224
 #, python-format
 msgid ""
-"Your Odoo Server does not support SMTP-over-SSL. You could use STARTTLS "
-"instead. If SSL is needed, an upgrade to Python 2.6 on the server-side "
-"should do the trick."
+"Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
+"instead.If SSL is needed, an upgrade to Python 2.6 on the server-side should"
+" do the trick."
 msgstr ""
 
 #. module: base
@@ -20041,7 +19922,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_attachment
 msgid "ir.attachment"
-msgstr "ir.attachment"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum

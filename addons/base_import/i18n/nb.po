@@ -3,15 +3,15 @@
 # * base_import
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Jorunn D. Newth, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -101,7 +101,7 @@ msgstr "Opprettet av"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
 msgid "Created on"
-msgstr "Opprettet"
+msgstr "Opprettet den"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:145
@@ -132,13 +132,6 @@ msgid "Decimal Separator:"
 msgstr "Desimalskilletegn:"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:71
-#, python-format
-msgid "Defer parent/child computation"
-msgstr ""
-
-#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_display_name
@@ -154,7 +147,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_display_name
 msgid "Display Name"
-msgstr "Visningsnavn"
+msgstr "Visnings navn"
 
 #. module: base_import
 #. openerp-web
@@ -300,18 +293,8 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:69
-#, python-format
-msgid ""
-"If the model uses parent/child relations, computing the"
-"                      parent / child relation occurs on every line, and lead"
-" to a slower import.                     Defering it can speed up import."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:97
-#: code:addons/base_import/static/src/xml/base_import.xml:156
+#: code:addons/base_import/static/src/xml/base_import.xml:88
+#: code:addons/base_import/static/src/xml/base_import.xml:147
 #, python-format
 msgid "Import"
 msgstr "Import"
@@ -498,21 +481,21 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:178
 #, python-format
 msgid "Tab"
-msgstr "Tab"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Test Import"
-msgstr "Test import"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:52
 #, python-format
 msgid "Text Delimiter:"
-msgstr "Tekst-skilletegn:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -522,28 +505,26 @@ msgid ""
 "The first row\n"
 "                 contains the label of the column"
 msgstr ""
-"Første rad\n"
-"                 inneholder navnet på kolonnen"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:57
 #, python-format
 msgid "Thousands Separator:"
-msgstr "Skilletegn for tusener:"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:62
 #, python-format
 msgid "Track history during import"
-msgstr "Spor historikk under import"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:192
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr "Kunne ikke laste inn \"{extension}\"-fil, krever Python-modul \"{modname}\""
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:193
@@ -551,8 +532,6 @@ msgstr "Kunne ikke laste inn \"{extension}\"-fil, krever Python-modul \"{modname
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Filformatet \"{}\" er ikke støttet, import støtter bare CSV, ODS, XLS og "
-"XLSX"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -574,14 +553,14 @@ msgstr "Verdi"
 #: code:addons/base_import/models/base_import.py:534
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "Du må sette opp minst ett felt å importere"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:529
 #, python-format
 msgid "at row %d"
-msgstr "på rad %d"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_import
@@ -591,71 +570,71 @@ msgstr "base_import.import"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "base_import.tests.models.char"
-msgstr "base_import.tests.models.char"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "base_import.tests.models.char.noreadonly"
-msgstr "base_import.tests.models.char.noreadonly"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "base_import.tests.models.char.readonly"
-msgstr "base_import.tests.models.char.readonly"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "base_import.tests.models.char.required"
-msgstr "base_import.tests.models.char.required"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "base_import.tests.models.char.states"
-msgstr "base_import.tests.models.char.states"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "base_import.tests.models.char.stillreadonly"
-msgstr "base_import.tests.models.char.stillreadonly"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "base_import.tests.models.m2o"
-msgstr "base_import.tests.models.m2o"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "base_import.tests.models.m2o.related"
-msgstr "base_import.tests.models.m2o.related"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "base_import.tests.models.m2o.required"
-msgstr "base_import.tests.models.m2o.required"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "base_import.tests.models.m2o.required.related"
-msgstr "base_import.tests.models.m2o.required.related"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "base_import.tests.models.o2m"
-msgstr "base_import.tests.models.o2m"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "base_import.tests.models.o2m.child"
-msgstr "base_import.tests.models.o2m.child"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "base_import.tests.models.preview"
-msgstr "base_import.tests.models.preview"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:531
 #, python-format
 msgid "between rows %d and %d"
-msgstr "mellom radene %d og %d"
+msgstr ""

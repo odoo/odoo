@@ -234,6 +234,9 @@ class WebsiteForum(http.Controller):
 
     @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum[0]),('parent_id','=',False),('can_view', '=', True)]"):question>'''], type='http', auth="public", website=True)
     def question(self, forum, question, **post):
+        if not forum.active:
+            return request.render("website_forum.header", {'forum': forum})
+
         # Hide posts from abusers (negative karma), except for moderators
         if not question.can_view:
             raise werkzeug.exceptions.NotFound()

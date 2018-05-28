@@ -81,7 +81,7 @@ class Serialized(fields.Field):
     }
     column_type = ('text', 'text')
 
-    def convert_to_column(self, value, record, values=None):
+    def convert_to_column(self, value, record, values=None, validate=True):
         return json.dumps(value)
 
     def convert_to_cache(self, value, record, validate=True):

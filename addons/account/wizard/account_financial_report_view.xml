@@ -28,6 +28,10 @@
                 </notebook>
             </field>
             <field name="journal_ids" position="replace"/>
+            <field name="company_id" position="replace"/>
+            <field name="date_to" position="after">
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" invisible="0"/>
+            </field>
         </field>
     </record>
 

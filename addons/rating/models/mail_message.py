@@ -8,7 +8,7 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     rating_ids = fields.One2many('rating.rating', 'message_id', string='Related ratings')
-    rating_value = fields.Float("Rating Value", compute='_compute_rating_value', store=True)
+    rating_value = fields.Float("Rating Value", compute='_compute_rating_value', store=False)
 
     @api.multi
     @api.depends('rating_ids', 'rating_ids.rating')

@@ -60,6 +60,14 @@ class OpeningAccountMoveWizard(models.TransientModel):
 
     def validate(self):
         self.opening_move_id.post()
+        return {
+            "effect": {
+                'fadeout': 'slow',
+                'img_url': '/web/static/src/img/smile.svg',
+                'message': _("Well done! The configuration steps have been done successfully."),
+                'type': "rainbow_man"
+            }
+        }
 
     @api.onchange('opening_move_line_ids')
     def opening_move_line_ids_changed(self):

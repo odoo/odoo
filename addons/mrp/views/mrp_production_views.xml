@@ -11,11 +11,11 @@
                     <field name="name"/>
                     <field name="date_planned_start"/>
                     <field name="product_id"/>
+                    <field name="origin"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity"/>
-                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                     <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="origin" groups="base.group_no_one"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -56,6 +56,7 @@
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="workorder_done_count" widget="statinfo" nolabel="1"/> / <field name="workorder_count" widget="statinfo" nolabel="1"/></span>
@@ -84,7 +85,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('id', '=', False)]}"/>
@@ -116,7 +117,7 @@
                                     <field name="product_id" required="1"/>
                                     <field name="name" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="needs_lots" readonly="1" groups="stock.group_production_lot"/>
                                     <field name="is_done" invisible="1"/>
@@ -135,7 +136,7 @@
                                  <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
                                     <field name="product_id" readonly="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="qty_done"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="done_move" invisible="1"/>
@@ -278,10 +279,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Routing" domain="[]" context="{'group_by':'routing_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Routing" name="routing" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Month" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
                     </group>
                </search>
             </field>
@@ -297,14 +298,8 @@
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a Manufacturing Order.
-              </p><p>
-                Based on a Bill of Material, a Manufacturing Order will consume raw materials
-                and produce finished products.
-              </p><p>
-                Manufacturing Orders can be generated automatically based on customer
-                requirements or reordering rules.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p>
             </field>
         </record>
@@ -335,8 +330,8 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="domain">[('state', '=', 'confirmed'), ('routing_id', '!=', False)]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to start a new manufacturing order.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p><p>
                 A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
@@ -356,8 +351,8 @@
             <field name="view_mode">tree,form,kanban,calendar,pivot,graph</field>
             <field name="domain">[('availability', 'in', ('waiting', 'partially_available'))]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to start a new manufacturing order.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new manufacturing order
               </p><p>
                 A manufacturing order, based on a bill of materials, will
                 consume raw materials and produce finished products.
@@ -374,7 +369,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.production</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="view_mode">graph,pivot,tree,form</field>
     </record>
 
     <menuitem id="menu_mrp_workorder_todo"

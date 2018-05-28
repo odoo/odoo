@@ -23,7 +23,7 @@ class StockMoveLine(models.Model):
         'stock.move', 'Stock Move',
         help="Change to a better name")
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)
@@ -44,12 +44,12 @@ class StockMoveLine(models.Model):
     from_loc = fields.Char(compute='_compute_location_description')
     to_loc = fields.Char(compute='_compute_location_description')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
-    state = fields.Selection(related='move_id.state', store=True)
+    state = fields.Selection(related='move_id.state', store=True, related_sudo=False)
     is_initial_demand_editable = fields.Boolean(related='move_id.is_initial_demand_editable')
     is_locked = fields.Boolean(related='move_id.is_locked', default=True, readonly=True)
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
-    reference = fields.Char(related='move_id.reference', store=True)
+    reference = fields.Char(related='move_id.reference', store=True, related_sudo=False)
     in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
     def _compute_location_description(self):
@@ -142,7 +142,7 @@ class StockMoveLine(models.Model):
         res = {}
         if self.qty_done and self.product_id.tracking == 'serial':
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
-                message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
+                message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
         return res
 
@@ -369,6 +369,15 @@ class StockMoveLine(models.Model):
         # `action_done` on the next move lines.
         ml_to_delete = self.env['stock.move.line']
         for ml in self:
+            # Check here if `ml.qty_done` respects the rounding of `ml.product_uom_id`.
+            uom_qty = float_round(ml.qty_done, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
+            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            qty_done = float_round(ml.qty_done, precision_digits=precision_digits, rounding_method='HALF-UP')
+            if float_compare(uom_qty, qty_done, precision_digits=precision_digits) != 0:
+                raise UserError(_('The quantity done for the product "%s" doesn\'t respect the rounding precision \
+                                  defined on the unit of measure "%s". Please change the quantity done or the \
+                                  rounding precision of your unit of measure.') % (ml.product_id.display_name, ml.product_uom_id.name))
+
             qty_done_float_compared = float_compare(ml.qty_done, 0, precision_rounding=ml.product_uom_id.rounding)
             if qty_done_float_compared > 0:
                 if ml.product_id.tracking != 'none':
@@ -394,7 +403,7 @@ class StockMoveLine(models.Model):
                         continue
 
                     if not ml.lot_id:
-                        raise UserError(_('You need to supply a lot/serial number for %s.') % ml.product_id.name)
+                        raise UserError(_('You need to supply a Lot/Serial number for product %s.') % ml.product_id.display_name)
             elif qty_done_float_compared < 0:
                 raise UserError(_('No negative quantities allowed'))
             else:

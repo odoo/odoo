@@ -134,6 +134,14 @@ var x2ManyCommands = {
 };
 
 var BasicModel = AbstractModel.extend({
+    // list of models for which the DataManager's cache should be cleared on
+    // create, update and delete operations
+    noCacheModels: [
+        'ir.actions.act_window',
+        'ir.filters',
+        'ir.ui.view',
+    ],
+
     /**
      * @override
      */
@@ -312,11 +320,12 @@ var BasicModel = AbstractModel.extend({
     deleteRecords: function (recordIds, modelName) {
         var self = this;
         var records = _.map(recordIds, function (id) { return self.localData[id]; });
+        var context = _.extend(records[0].getContext(), session.user_context);
         return this._rpc({
                 model: modelName,
                 method: 'unlink',
                 args: [_.pluck(records, 'res_id')],
-                context: session.user_context, // todo: combine with view context
+                context: context,
             })
             .then(function () {
                 _.each(records, function (record) {
@@ -331,6 +340,8 @@ var BasicModel = AbstractModel.extend({
                         record.count--;
                     }
                 });
+                // optionally clear the DataManager's cache
+                self._invalidateCache(records[0]);
             });
     },
     /**
@@ -347,6 +358,7 @@ var BasicModel = AbstractModel.extend({
         var element = this.localData[id];
         var isNew = this.isNew(id);
         var rollback = 'rollback' in options ? options.rollback : isNew;
+        var initialOffset = element.offset;
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -365,6 +377,7 @@ var BasicModel = AbstractModel.extend({
                 delete elem.tempLimitIncrement;
             }
         });
+        element.offset = initialOffset;
     },
     /**
      * Duplicate a record (by calling the 'copy' route)
@@ -858,7 +871,7 @@ var BasicModel = AbstractModel.extend({
     /**
      * In some case, we may need to remove an element from a list, without going
      * through the notifyChanges machinery.  The motivation for this is when the
-     * user click on 'Add an item' in a field one2many with a required field,
+     * user click on 'Add a line' in a field one2many with a required field,
      * then clicks somewhere else.  The new line need to be discarded, but we
      * don't want to trigger a real notifyChanges (no need for that, and also,
      * we don't want to rerender the UI).
@@ -937,7 +950,7 @@ var BasicModel = AbstractModel.extend({
      * - call the /create or /write method according to the record status
      * - After that, it has to reload all data, in case something changed, server side.
      *
-     * @param {string} record_id local resource
+     * @param {string} recordID local resource
      * @param {Object} [options]
      * @param {boolean} [options.reload=true] if true, data will be reloaded
      * @param {boolean} [options.savePoint=false] if true, the record will only
@@ -1021,11 +1034,14 @@ var BasicModel = AbstractModel.extend({
                         // Erase changes as they have been applied
                         record._changes = {};
 
+                        // Optionally clear the DataManager's cache
+                        self._invalidateCache(record);
+
                         self.unfreezeOrder(record.id);
 
                         // Update the data directly or reload them
                         if (shouldReload) {
-                            self._fetchRecord(record).then(function (record) {
+                            self._fetchRecord(record).then(function () {
                                 def.resolve(changedFields);
                             });
                         } else {
@@ -1135,8 +1151,11 @@ var BasicModel = AbstractModel.extend({
                 method: 'write',
                 args: [resIDs, { active: value }],
             })
-            .then(this.reload.bind(this, parentID));
-
+            .then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                return self.reload(parentID);
+            });
     },
     /**
      * Toggle (open/close) a group in a grouped list, then fetches relevant
@@ -1660,6 +1679,7 @@ var BasicModel = AbstractModel.extend({
                         fields: view ? view.fields : fieldInfo.relatedFields,
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         res_id: d.id,
+                        data: d,
                         viewType: view ? view.type : fieldInfo.viewType,
                         parentID: list.id,
                     });
@@ -2504,7 +2524,7 @@ var BasicModel = AbstractModel.extend({
                     count: ids.length,
                     context: record.context,
                     fieldsInfo: fieldsInfo,
-                    fields: view ? view.fields : fieldInfo.relatedFields,
+                    fields: view ? view.viewFields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
                     modelName: field.relation,
                     res_ids: ids,
@@ -3080,6 +3100,21 @@ var BasicModel = AbstractModel.extend({
         return context;
     },
     /**
+     * Invalidates the DataManager's cache if the main model (i.e. the model of
+     * its root parent) of the given dataPoint is a model in 'noCacheModels'.
+     *
+     * @private
+     * @param {Object} dataPoint
+     */
+    _invalidateCache: function (dataPoint) {
+        while (dataPoint.parentID) {
+            dataPoint = this.localData[dataPoint.parentID];
+        }
+        if (_.contains(this.noCacheModels, dataPoint.model)) {
+            core.bus.trigger('clear_cache');
+        }
+    },
+    /**
      * Returns true if the field is protected against changes, looking for a
      * readonly modifier unless there is a force_save modifier (checking first
      * in the modifiers, and if there is no readonly modifier, checking the
@@ -3613,8 +3648,9 @@ var BasicModel = AbstractModel.extend({
                     if (isFieldInView) {
                         var field = r.fields[fieldName];
                         var fieldType = field.type;
+                        var rec;
                         if (fieldType === 'many2one') {
-                            var rec = self._makeDataPoint({
+                            rec = self._makeDataPoint({
                                 context: r.context,
                                 modelName: field.relation,
                                 data: {id: r._changes[fieldName]},
@@ -3622,8 +3658,18 @@ var BasicModel = AbstractModel.extend({
                             });
                             r._changes[fieldName] = rec.id;
                             many2ones[fieldName] = true;
+                        } else if (fieldType === 'reference') {
+                            var reference = r._changes[fieldName].split(',');
+                            rec = self._makeDataPoint({
+                                context: r.context,
+                                modelName: reference[0],
+                                data: {id: parseInt(reference[1])},
+                                parentID: r.id,
+                            });
+                            r._changes[fieldName] = rec.id;
+                            many2ones[fieldName] = true;
                         } else if (_.contains(['one2many', 'many2many'], fieldType)) {
-                            var x2mCommands = commands[0][2][fieldName];
+                            var x2mCommands = value[2][fieldName];
                             defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
                         } else {
                             r._changes[fieldName] = self._parseServerValue(field, r._changes[fieldName]);
@@ -3808,6 +3854,10 @@ var BasicModel = AbstractModel.extend({
                             // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
+                        // set the limit such that all previously loaded records
+                        // (e.g. if we are coming back to the kanban view from a
+                        // form view) are reloaded
+                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         _.extend(oldGroup, updatedProps);
                         newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {

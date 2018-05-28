@@ -1,48 +1,6 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
-var bus = require('bus.bus').bus;
-
-
-function send_notification(widget, title, content) {
-    if (window.Notification && Notification.permission === "granted") {
-        if (bus.is_master) {
-            _send_native_notification(title, content);
-        }
-    } else {
-        widget.do_notify(title, content);
-        if (bus.is_master) {
-            _beep(widget);
-        }
-    }
-}
-function _send_native_notification(title, content) {
-    var notification = new Notification(title, {body: content, icon: "/mail/static/src/img/odoo_o.png"});
-    notification.onclick = function () {
-        window.focus();
-        if (this.cancel) {
-            this.cancel();
-        } else if (this.close) {
-            this.close();
-        }
-    };
-}
-var _beep = (function () {
-    if (typeof(Audio) === "undefined") {
-        return function () {};
-    }
-    var audio;
-    return function (widget) {
-        if (!audio) {
-            audio = new Audio();
-            var ext = audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-            var session = widget.getSession();
-            audio.src = session.url("/mail/static/src/audio/ting" + ext);
-        }
-        audio.play();
-    };
-})();
-
 function parse_and_transform(html_string, transform_function) {
     var open_token = "OPEN" + Date.now();
     var string = html_string.replace(/&lt;/g, open_token);
@@ -60,7 +18,7 @@ function _parse_and_transform(nodes, transform_function) {
 
 // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
-var url_regexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_\+.~#?&//=]*)/gi;
+var url_regexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_\+.~#?&'$//=]*)/gi;
 function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
@@ -142,7 +100,6 @@ function unaccent (str) {
 }
 
 return {
-    send_notification: send_notification,
     parse_and_transform: parse_and_transform,
     add_link: add_link,
     linkify: linkify,

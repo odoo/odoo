@@ -121,7 +121,7 @@ class Applicant(models.Model):
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
+    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
@@ -278,7 +278,7 @@ class Applicant(models.Model):
     def get_empty_list_help(self, help):
         return super(Applicant, self.with_context(empty_list_help_model='hr.job',
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicants"))).get_empty_list_help(help)
+                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
     @api.multi
     def action_get_created_employee(self):
@@ -335,12 +335,15 @@ class Applicant(models.Model):
             return 'hr_recruitment.mt_applicant_stage_changed'
         return super(Applicant, self)._track_subtype(init_values)
 
-    @api.model
-    def message_get_reply_to(self, ids, default=None):
-        """ Override to get the reply_to of the parent project. """
-        applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job'].message_get_reply_to(applicants.mapped('job_id').ids, default=default)
-        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
+    @api.multi
+    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
+        """ Override to set alias of applicants to their job definition if any. """
+        aliases = self.mapped('job_id')._notify_get_reply_to(default=default, records=None, company=company, doc_names=None)
+        res = {app.id: aliases.get(app.job_id.id) for app in self}
+        leftover = self.filtered(lambda rec: not rec.job_id)
+        if leftover:
+            res.update(super(Applicant, leftover)._notify_get_reply_to(default=default, records=None, company=company, doc_names=doc_names))
+        return res
 
     @api.multi
     def message_get_suggested_recipients(self):
@@ -377,7 +380,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -388,7 +391,7 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message)
+        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout, notif_values)
 
     @api.multi
     def create_employee_from_applicant(self):
@@ -431,9 +434,7 @@ class Applicant(models.Model):
 
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
-        if employee:
-            dict_act_window['res_id'] = employee.id
-        dict_act_window['view_mode'] = 'form,tree'
+        dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
         return dict_act_window
 
     @api.multi

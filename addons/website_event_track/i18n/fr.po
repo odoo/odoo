@@ -3,32 +3,28 @@
 # * website_event_track
 # 
 # Translators:
-# Melanie Bernard <mbe@odoo.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Martin Trigaux, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Olivier Dony <odo@odoo.com>, 2017
-# Shark McGnark <peculiarcheese@gmail.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux, 2016
+# Richard Mathot <rim@odoo.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Loic <loic.richard2@gmail.com>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Clo <clo@odoo.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Florian Hatat, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Clo <clo@odoo.com>, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Loic <loic.richard2@gmail.com>, 2017
-# Florian Hatat, 2017
-# Saad Thaifa <saad.thaifa@gmail.com>, 2017
-# Fabri Yohann <psn@fabri.pw>, 2017
-# Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
 # Lucas Deliege <lud@openerp.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Fred Gilson <fgi@odoo.com>, 2017
+# Fabri Yohann <psn@fabri.pw>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 # fr rev <e2ffr02@hotmail.com>, 2017
-# fr rev <e2ffr04@hotmail.com>, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
+# fr rev <e2ffr04@hotmail.com>, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -66,22 +62,22 @@ msgid ""
 "            "
 msgstr ""
 "<?xml version=\"1.0\"?>\n"
-"<div>\n"
-"    <p>\n"
-"       Cher/chère <t t-esc=\"object.partner_name\"/>\n"
-"    </p><p>\n"
-"        Nous avons le plaisir de vous informer que votre proposition ${object.name} a été acceptée et confirmée pour l'événement ${object.event_id.name}.\n"
-"    </p><p>\n"
-"         Vous trouverez de plus amples informations ici :\n"
-"        <div style=\"margin-top: 16px;\">\n"
-"            <a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
-"                Voir l'événement\n"
-"            </a>\n"
-"        </div>\n"
-"    </p>\n"
-"    <p>Cordialement,</p>\n"
-"</div>\n"
-"            "
+"\n"
+" \n"
+" Cher/chère \n"
+" \n"
+" Nous avons le plaisir de vous informer que votre proposition ${object.name} a été acceptée et confirmée pour l'événement ${object.event_id.name}.\n"
+" \n"
+" Vous trouverez de plus amples informations ici :\n"
+" \n"
+" \n"
+" Voir l'événement\n"
+" \n"
+" \n"
+" \n"
+" Sincèrement,\n"
+"\n"
+"<div><p><t t-esc=\"object.partner_name\"/></p><p></p><p><div style=\"margin-top: 16px;\"><a href=\"/event/${object.event_id.id}/\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a></div></p><p></p></div>"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -91,7 +87,7 @@ msgstr "<b>Date</b><br/>"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
-msgstr "<b>Email</b> :"
+msgstr "<b>Courriel</b> :"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -176,10 +172,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"L'état kanban de la présentation indique les situations spéciales qui l'affecte :\n"
+"L'état kanban du parcours indique les situations spéciales qui l'affecte :\n"
 " * Gris est la situation par défaut\n"
-"* Rouge indique que quelque chose bloque la progression de cette présentation\n"
-" * Vert indique que la présentation est prête pour l'étape suivante"
+"* Rouge indique que quelque chose bloque la progression de ce parcours\n"
+" * Vert indique que le parcours est prêt pour l'étape suivante"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -194,7 +190,7 @@ msgstr "Etape acceptée"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_active
 msgid "Active"
-msgstr "Actif/ve"
+msgstr "Actif"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -241,7 +237,7 @@ msgstr "Application"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
-msgstr "Archivé/s"
+msgstr "Archivé"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -283,7 +279,7 @@ msgstr "Cliquez pour ajouter une session."
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_color
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_color
 msgid "Color Index"
-msgstr "Index de la couleur"
+msgstr "Couleur"
 
 #. module: website_event_track
 #: model:event.type,name:website_event_track.event_type_data_tracks
@@ -298,7 +294,7 @@ msgstr "Confirmation de ${object.name}"
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
 msgid "Confirmed"
-msgstr "Confirmé"
+msgstr "Confirmée"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_create_uid
@@ -334,9 +330,9 @@ msgid ""
 "    solving an event track."
 msgstr ""
 "Définissez les étapes qui seront utilisées pour l'événement, de la\n"
-" création de la présentation jusqu'à sa clôture.\n"
-" Vous utiliserez ces étapes afin de suivre la progression d'une\n"
-" présentation lors d'un événement."
+" création du parcours jusqu'à sa clôture.\n"
+" Vous utiliserez ces étapes afin de suivre la progression d'un\n"
+" parcours d'événement."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -373,7 +369,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -393,7 +389,7 @@ msgstr "Editer le parcours"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage_mail_template_id
 msgid "Email Template"
-msgstr "Modèle d'email"
+msgstr "Modèle de courriel"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -471,7 +467,7 @@ msgstr "Remplissez ce formulaire pour soumettre votre présentation."
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "Filter Tracks..."
-msgstr "Filtrer les sessions...."
+msgstr "Filtre de sessions...."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_social
@@ -510,7 +506,7 @@ msgstr "Gris"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "Regroupé par"
+msgstr "Regrouper par"
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -578,8 +574,8 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
-"Si cette option est active, un e-mail sera envoyé au client lorsque la "
-"présentation atteindra cette étape."
+"Si cette option est active, un e-mail sera envoyé au client lorsque le "
+"parcours atteindra cette étape."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_image
@@ -609,7 +605,7 @@ msgstr "Facteurs clés de réussite permettant de vendre Odoo."
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage___last_update
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_write_uid
@@ -687,15 +683,13 @@ msgstr ""
 #: model:event.track,name:website_event_track.event_track25
 msgid "Merge proposals review, code sprint (entire afternoon)"
 msgstr ""
-"Examen des demandes d'amélioration du code, sprint de codage (tout l'après-"
-"midi)"
+"Examen des propositions de fusion, sprint de codage (tout l'après-midi)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
 msgid "Merge proposals review, code sprint (entire day)."
 msgstr ""
-"Examen des demandes d'amélioration du code, sprint de codage (toute la "
-"journée)"
+"Examen des propositions de fusion, sprint de codage (toute la journée)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
@@ -730,7 +724,7 @@ msgstr "Nouvelle session créée"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "New track proposal"
-msgstr "Nouvelle proposition de présentation"
+msgstr "Nouvelle proposition de parcours"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
@@ -805,7 +799,7 @@ msgid ""
 "                            it's implemented."
 msgstr ""
 "Indiquez ici la liste de documents, notamment les diapositives\n"
-" des présentations. Supprimez l'élément t-if ci-dessus une fois\n"
+" des présentations. Supprimer l'élément ci-dessus une fois\n"
 " l'implémentation effectuée."
 
 #. module: website_event_track
@@ -1047,7 +1041,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_name
 msgid "Title"
-msgstr "Titre"
+msgstr "Civilité"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1062,7 +1056,7 @@ msgstr "Surveiller"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr "Présentation bloquée"
+msgstr "Parcours bloqué"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_date
@@ -1082,17 +1076,17 @@ msgstr "Lieu de la session"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Track Proposals on Website"
-msgstr "Propositions de présentations sur le site Web"
+msgstr "Propositions de parcours sur le site Web"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
-msgstr "Présentation prête"
+msgstr "Parcours prêt"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr "Présentation prête pour la prochaine étape"
+msgstr "Parcours prêt pour la prochaine étape"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
@@ -1100,14 +1094,14 @@ msgstr "Présentation prête pour la prochaine étape"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
 msgid "Track Stage"
-msgstr "Étape de la présentation"
+msgstr "Étape du parcours"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr "Étapes de la présentation"
+msgstr "Étapes du parcours"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -1124,7 +1118,7 @@ msgstr "Tags de la session de l'événement"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr "Présentation bloquée"
+msgstr "Parcours bloqué"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_track_count
@@ -1137,7 +1131,7 @@ msgstr "Sessions"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type_website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr "Propositions de présentations sur le site Web"
+msgstr "Propositions de parcours sur le site Web"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track_from_event
@@ -1145,8 +1139,8 @@ msgid ""
 "Tracks define the schedule of your event. These can be a talk, a round "
 "table, a meeting, etc."
 msgstr ""
-"Les présentations définissent le programme de votre événement. Il peut "
-"s'agir d'un exposé, d'une table ronde, d'une réunion, etc."
+"Les parcours définissent le programme de votre événement. Il peut s'agir "
+"d'un exposé, d'une table ronde, d'une réunion, etc."
 
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
@@ -1154,15 +1148,15 @@ msgid ""
 "Tracks define the schedule of your event. These can bea talk, a round table,"
 " a meeting, etc."
 msgstr ""
-"Les présentations définissent le programme de votre événement. Il peut "
-"s'agir d'un exposé, d'une table ronde, d'une réunion, etc."
+"Les parcours définissent le programme de votre événement. Il peut s'agir "
+"d'un exposé, d'une table ronde, d'une réunion, etc."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_website_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type_website_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
-msgstr "Présentations sur le site Web"
+msgstr "Parcours sur le site Web"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1213,12 +1207,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Email"
-msgstr "Votre Email"
+msgstr "Votre courriel"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Your Name"
-msgstr "Votre Nom"
+msgstr "Votre nom"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1239,10 +1233,10 @@ msgstr "heures"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 msgid "talks"
-msgstr "sessions"
+msgstr "Discuter"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.agenda
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "unpublished"
-msgstr "Non publié"
+msgstr "Non publiés"

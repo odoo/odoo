@@ -879,7 +879,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_module = {}
 addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
@@ -1055,12 +1054,6 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
 
-        #  == BACKWARD COMPATIBILITY TO CONVERT OLD SESSION TYPE TO THE NEW ONES ! REMOVE ME AFTER 11.0 ==
-        if self.get('password'):
-            security.check(self.db, self.uid, self.password)
-            self.session_token = security.compute_session_token(self)
-            self.pop('password')
-        # =================================================================================================
         # here we check if the session is still valid
         if not security.check_session(self):
             raise SessionExpiredException("Session expired")
@@ -1237,6 +1230,7 @@ class Response(werkzeug.wrappers.Response):
     def set_default(self, template=None, qcontext=None, uid=None):
         self.template = template
         self.qcontext = qcontext or dict()
+        self.qcontext['response_template'] = self.template
         self.uid = uid
         # Support for Cross-Origin Resource Sharing
         if request.endpoint and 'cors' in request.endpoint.routing:
@@ -1322,7 +1316,7 @@ class Root(object):
         statics = {}
         for addons_path in odoo.modules.module.ad_paths:
             for module in sorted(os.listdir(str(addons_path))):
-                if module not in addons_module:
+                if module not in addons_manifest:
                     mod_path = opj(addons_path, module)
                     manifest_path = module_manifest(mod_path)
                     path_static = opj(addons_path, module, 'static')
@@ -1333,11 +1327,6 @@ class Root(object):
                             continue
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if 'odoo.addons' in sys.modules:
-                            m = __import__('odoo.addons.' + module)
-                        else:
-                            m = None
-                        addons_module[module] = m
                         addons_manifest[module] = manifest
                         statics['/%s/static' % module] = path_static
 
@@ -1644,11 +1633,6 @@ def content_disposition(filename):
 # RPC controller
 #----------------------------------------------------------
 class CommonController(Controller):
-
-    @route('/jsonrpc', type='json', auth="none")
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        return dispatch_rpc(service, method, args)
 
     @route('/gen_session_id', type='json', auth="none")
     def gen_session_id(self):

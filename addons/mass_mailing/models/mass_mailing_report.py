@@ -17,6 +17,7 @@ class MassMailingReport(models.Model):
     opened = fields.Integer(readonly=True)
     bounced = fields.Integer(readonly=True)
     replied = fields.Integer(readonly=True)
+    clicked = fields.Integer(readonly=True)
     state = fields.Selection([('draft', 'Draft'), ('test', 'Tested'), ('done', 'Sent')],
         string='Status', readonly=True)
     email_from = fields.Char('From', readonly=True)
@@ -39,6 +40,7 @@ class MassMailingReport(models.Model):
                     (count(ms.sent) - count(ms.bounced)) as delivered,
                     count(ms.opened) as opened,
                     count(ms.replied) as replied,
+                    count(ms.clicked) as clicked,
                     mm.state,
                     mm.email_from
                 FROM

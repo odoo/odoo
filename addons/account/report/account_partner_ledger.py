@@ -119,4 +119,6 @@ class ReportPartnerLedger(models.AbstractModel):
             'time': time,
             'lines': self._lines,
             'sum_partner': self._sum_partner,
+            'company_id': self.env['res.company'].browse(
+                data['form']['company_id'][0]),
         }

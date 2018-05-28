@@ -20,9 +20,9 @@
                 <t t-foreach="widget.displayFields" t-as="name">
                     <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
                         <t t-if="widget.displayFields[name].avatar_field">
-                            <t t-esc="fields[name].string"/>:
+                            <t t-if="!isMobile"><t t-esc="fields[name].string"/>:</t>
                             <div class="o_calendar_avatars pull-right">
-                                 <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
+                                <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
                                 <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
                             </div>
                         </t>
@@ -63,16 +63,24 @@
 
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
-            <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
-            <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
-            <button class="o_calendar_button_next btn btn-sm btn-primary"><span class="fa fa-arrow-right"/></button>
-
+            <t t-if="!isMobile">
+                <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
+                <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
+                <button class="o_calendar_button_next btn btn-sm btn-primary"><span class="fa fa-arrow-right"/></button>
+            </t>
             <div class="btn-group btn-group-sm">
                 <button type="button" class="o_calendar_button_day btn btn-sm btn-default">Day</button>
                 <button type="button" class="o_calendar_button_week btn btn-sm btn-default">Week</button>
                 <button type="button" class="o_calendar_button_month btn btn-sm btn-default">Month</button>
             </div>
         </div>
+    </t>
+
+    <t t-name="CalendarView.TodayButtonMobile">
+        <span class="fa-stack o_calendar_button_today">
+            <i class="fa fa-calendar-o fa-stack-2x"></i>
+            <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
+        </span>
     </t>
 
     <div t-name="CalendarView.quick_create" class="o_calendar_quick_create">

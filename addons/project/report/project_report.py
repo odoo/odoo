@@ -36,7 +36,7 @@ class ReportProjectTaskUser(models.Model):
             ('done', 'Ready for next stage')
         ], string='Kanban State', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Contact', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
 
     def _select(self):

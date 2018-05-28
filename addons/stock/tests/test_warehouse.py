@@ -74,7 +74,6 @@ class TestWarehouse(TestStockCommon):
         # TDE TODO: expand this test
 
     def test_basic_move(self):
-        # TDE NOTE: replaces test/move.yml present until saas-10, including onchanges
         product = self.product_3.sudo(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
@@ -154,7 +153,6 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
         picking_out.action_done()
 
@@ -197,9 +195,8 @@ class TestWarehouse(TestStockCommon):
             'location_dest_id': customer_location.id,
         })
         picking_out.action_confirm()
-        picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
-        picking_out.do_transfer()
+        picking_out.action_done()
 
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({

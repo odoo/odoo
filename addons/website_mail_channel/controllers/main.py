@@ -49,7 +49,10 @@ class MailGroup(http.Controller):
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
-        group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
+        group_data = dict(
+            (group.id, {'monthly_message_nbr': message_data.get(group.id, 0),
+                        'members_count': len(group.channel_partner_ids)})
+            for group in groups.sudo())
         return request.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)

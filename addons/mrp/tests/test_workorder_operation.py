@@ -234,7 +234,7 @@ class TestWorkOrderProcess(common.TransactionCase):
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
-        unit = self.ref("product.product_uom_unit")
+        unit = self.ref("uom.product_uom_unit")
         custom_laptop = self.env.ref("product.product_product_27")
         custom_laptop.tracking = 'lot'
 
@@ -389,10 +389,10 @@ class TestWorkOrderProcess(common.TransactionCase):
         """ Testing bill of material with different unit of measure."""
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
-        unit = self.ref("product.product_uom_unit")
-        dozen = self.ref("product.product_uom_dozen")
-        kg = self.ref("product.product_uom_kgm")
-        gm = self.ref("product.product_uom_gram")
+        unit = self.ref("uom.product_uom_unit")
+        dozen = self.ref("uom.product_uom_dozen")
+        kg = self.ref("uom.product_uom_kgm")
+        gm = self.ref("uom.product_uom_gram")
         # Create Product A, B, C
         product_A = self.env['product.product'].create({
             'name': 'Product A',
@@ -511,7 +511,7 @@ class TestWorkOrderProcess(common.TransactionCase):
         """ Test that the correct serial number is suggested on consecutive work orders. """
         laptop = self.env.ref("product.product_product_25")
         graphics_card = self.env.ref("product.product_product_24")
-        unit = self.env.ref("product.product_uom_unit")
+        unit = self.env.ref("uom.product_uom_unit")
         three_step_routing = self.env.ref("mrp.mrp_routing_1")
 
         laptop.tracking = 'serial'

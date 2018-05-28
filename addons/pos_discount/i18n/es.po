@@ -3,18 +3,17 @@
 # * pos_discount
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Nicolás Broggi <rnbroggi@gmail.com>, 2017
-# Carlos rodriguez <carlosalbertor436@gmail.com>, 2017
-# Gustavo Valverde, 2017
-# e2f_EPV Translator <e2f_EPV@outlook.com>, 2018
+# Martin Trigaux, 2016
+# Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# e2f <projects@e2f.com>, 2018
 # ES R1 <e2fes@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"POT-Creation-Date: 2018-03-22 14:09+0000\n"
+"PO-Revision-Date: 2018-03-22 14:09+0000\n"
 "Last-Translator: ES R1 <e2fes@hotmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -24,9 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_iface_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr "Permitir al cajero ofrecer descuentos en todo el pedido"
+msgstr "Permita al cajero ofrecer descuentos en todo el pedido"
 
 #. module: pos_discount
 #. openerp-web
@@ -38,35 +37,54 @@ msgstr "Descuento"
 #. module: pos_discount
 #: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount %"
-msgstr "% de descuento"
+msgstr "Descuento %"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:14
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#, python-format
 msgid "Discount Percentage"
 msgstr "Porcentaje de descuento"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
 #: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
-msgstr "Descuento del producto"
+msgstr "Product de descuento"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:28
+#, python-format
+msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
 msgstr "Solicitar descuento"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_pc
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 msgid "The default discount percentage"
-msgstr "Porcentaje de descuento prediterminado"
+msgstr "Porcentaje de descuento por defecto"
 
 #. module: pos_discount
-#: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/discount.js:29
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to model the discount."
-msgstr "El producto utilizado para crear el descuento."
+msgstr "El producto utilizado para el descuento."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "pos.config"
-msgstr "pos.config"
+msgstr "Configuración del TPV"

@@ -7,11 +7,23 @@
         <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
         <field name="arch" type="xml">
             <xpath expr="//a[@t-if='record.allow_timesheets.raw_value']" position="replace">
-                <a t-if="record.allow_timesheets.raw_value" name="action_view_timesheet" type="object" class="o_project_kanban_box" groups="hr_timesheet.group_hr_timesheet_user">
+                <a t-if="record.allow_timesheets.raw_value" name="action_view_timesheet" type="object" class="o_project_kanban_box o_project_timesheet_box" groups="hr_timesheet.group_hr_timesheet_user">
                     <div>
                         <span class="o_label">Overview</span>
                     </div>
                 </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_search" model="ir.ui.view">
+        <field name="name">project.project.search.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="display_name" filter_domain="[('name','=',self)]" string="Exact name"/>
+                <field name="sale_line_id"/>
             </xpath>
         </field>
     </record>
@@ -34,6 +46,18 @@
             </field>
         </record>
 
+    <record id="project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stage_id']" position="after">
+                <field name="sale_line_id"/>
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
         <record id="project_task_view_form_inherit_sale_timesheet" model="ir.ui.view">
             <field name="name">project.task.form.inherit.timesheet</field>
             <field name="model">project.task</field>
@@ -47,4 +71,12 @@
                 </xpath>
             </field>
         </record>
+
+    <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.client">
+        <field name="name">Overview</field>
+        <field name="tag">timesheet.plan</field>
+        <field name="res_model">project.project</field>
+        <field name="params" eval="{}"/>
+    </record>
+
 </odoo>

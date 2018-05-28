@@ -1060,10 +1060,12 @@ $.summernote.pluginEvents.tab = function (event, editor, layoutInfo, outdent) {
             } else {
                 r = dom.merge(r.sc.parentNode, r.sc, r.so, r.ec, r.eo, null, true);
                 r = range.create(r.sc, r.so, r.ec, r.eo);
-                next = r.sc.splitText(r.so);
-                r.sc.textContent = r.sc.textContent.replace(/(\u00A0)+$/g, '');
-                next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
-                range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
+                if (r.sc.splitText) {
+                    next = r.sc.splitText(r.so);
+                    r.sc.textContent = r.sc.textContent.replace(/(\u00A0)+$/g, '');
+                    next.textContent = next.textContent.replace(/^(\u00A0)+/g, '');
+                    range.create(r.sc, r.sc.textContent.length, r.sc, r.sc.textContent.length).select();
+                }
             }
         }
     }
@@ -1973,15 +1975,6 @@ eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent,
     }
     return false;
 };
-
-$(document).on('click keyup', function () {
-    var $popover = $((range.create()||{}).sc).closest('[contenteditable]');
-    var popover_history = ($popover.data()||{}).NoteHistory;
-    if (!popover_history || popover_history === history) return;
-    var editor = $popover.parent('.note-editor');
-    $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
-    $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
-});
 
 eventHandler.modules.editor.undo = function ($popover) {
     if (!$popover.attr('disabled')) $popover.data('NoteHistory').undo();

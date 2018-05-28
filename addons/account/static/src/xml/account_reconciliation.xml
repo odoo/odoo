@@ -13,8 +13,13 @@
 <t t-name="reconciliation.statement">
     <div t-if="widget._initialState.valuemax">
         <div>
-            <h1 class="statement_name"/>
-            <h1 class="statement_name_edition" style="display: none;"><button class="btn btn-primary btn-sm pull-right">OK</button></h1>
+            <t t-if="widget._initialState.bank_statement_id">
+                <h1 class="statement_name editable" title="Click to Rename" />
+            </t>
+            <t t-else="">
+                <h1 class="statement_name" />
+            </t>
+            <h1 class="statement_name_edition" style="display: none;"/>
             <div class="progress progress-striped">
                 <div class="progress-text">
                     <span class="valuenow"><t t-esc="widget._initialState.valuenow"/></span> / <span class="valuemax"><t t-esc="widget._initialState.valuemax"/></span>
@@ -30,7 +35,7 @@
         </div>
         <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
-    <div t-else="" class="o_view_nocontent">
+    <div t-else="" class="o_view_noreconciliation">
         <p>Nothing to do!</p>
         <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
     </div>
@@ -41,8 +46,8 @@
         <attribute name="class">o_manual_statement</attribute>
     </t>
     <t t-jquery="h1:last, .progress, .o_automatic_reconciliation" t-operation="replace"></t>
-    <t t-jquery=".o_view_nocontent p" t-operation="replace"></t>
-    <t t-jquery=".o_view_nocontent" t-operation="append">
+    <t t-jquery=".o_view_noreconciliation p" t-operation="replace"></t>
+    <t t-jquery=".o_view_noreconciliation" t-operation="append">
         <p><b>Good Job!</b> There is nothing to reconcile.</p>
         <p>All invoices and payments have been matched, your accounts' balances are clean.</p>
     </t>
@@ -155,7 +160,7 @@
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
             </t>
-            <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">there</a>.</p>
+            <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
         <div class="dropdown pull-right">
             <a data-toggle="dropdown" href="#"><span class="fa fa-cog"/></a>
@@ -174,8 +179,12 @@
             <td class="o_td_label">Tax</td>
             <td class="o_td_field"></td>
         </tr>
-        <tr class="create_analytic_account_id">
+        <tr class="create_analytic_account_id" groups="analytic.group_analytic_accounting">
             <td class="o_td_label">Analytic Acc.</td>
+            <td class="o_td_field"></td>
+        </tr>
+        <tr class="create_analytic_tag_ids" groups="analytic.group_analytic_tags">
+            <td class="o_td_label">Analytic Tags.</td>
             <td class="o_td_field"></td>
         </tr>
     </table>

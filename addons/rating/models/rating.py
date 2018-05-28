@@ -37,12 +37,12 @@ class Rating(models.Model):
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document', required=True, help="Identifier of the rated object", index=True)
     parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
-    parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True)
+    parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True, ondelete='cascade')
     parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True)
     parent_res_id = fields.Integer('Parent Document', index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
+    rating = fields.Float(string="Rating Number", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
         ('satisfied', 'Satisfied'),
@@ -105,10 +105,10 @@ class Rating(models.Model):
             'parent_res_model_id': False,
             'parent_res_id': False,
         }
-        if hasattr(current_record, 'rating_get_parent_model_name'):
-            parent_res_model = current_record.rating_get_parent_model_name(values)
-            data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model).id
-            data['parent_res_id'] = current_record.rating_get_parent_id()
+        if hasattr(current_record, 'rating_get_parent'):
+            parent_res_model = getattr(current_record, current_record.rating_get_parent())
+            data['parent_res_model_id'] = self.env['ir.model']._get(parent_res_model._name).id
+            data['parent_res_id'] = parent_res_model.id
         return data
 
     @api.multi
@@ -150,6 +150,7 @@ class RatingMixin(models.AbstractModel):
                 record.rating_last_value = ratings.rating
 
     @api.multi
+    @api.depends('rating_ids')
     def _compute_rating_count(self):
         read_group_res = self.env['rating.rating'].read_group(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids), ('consumed', '=', True)],
@@ -161,10 +162,15 @@ class RatingMixin(models.AbstractModel):
             record.rating_count = result.get(record.id)
 
     def write(self, values):
-        """ If the rated ressource name is modified, we should update the rating res_name too. """
+        """ If the rated ressource name is modified, we should update the rating res_name too.
+            If the rated ressource parent is changed we should update the parent_res_id too"""
         result = super(RatingMixin, self).write(values)
-        if self._rec_name in values:
-            self.rating_ids._compute_res_name()
+        for record in self:
+            if record._rec_name in values:
+                record.rating_ids._compute_res_name()
+            if record.rating_get_parent() in values:
+                for rating in record.rating_ids:
+                    rating.parent_res_id = record[record.rating_get_parent()].id
         return result
 
     def unlink(self):
@@ -174,12 +180,9 @@ class RatingMixin(models.AbstractModel):
         self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
         return result
 
-    def rating_get_parent_model_name(self, vals):
-        """ Return the parent model name """
-        return None
-
-    def rating_get_parent_id(self):
-        """ Return the parent record id """
+    def rating_get_parent(self):
+        """Return the parent relation field name
+           Should return a Many2One"""
         return None
 
     def rating_get_partner_id(self):
@@ -240,7 +243,7 @@ class RatingMixin(models.AbstractModel):
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':rating_%s' style='width:20px;height:20px;float:left;margin-right: 5px;'/>%s"
+                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/10' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
                     % (rate, rate, feedback),
                     subtype=subtype or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py

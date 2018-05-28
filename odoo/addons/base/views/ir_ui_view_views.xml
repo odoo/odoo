@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- View -->
+        <record id="view_view_form" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form string="Views">
+                  <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="model"/>
+                            <field name="priority"/>
+                            <field name="active"/>
+                        </group>
+                        <group groups="base.group_no_one">
+                            <field name="field_parent"/>
+                            <field name="inherit_id"/>
+                            <field name="mode"/>
+                            <field name="model_data_id"/>
+                            <field name="xml_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Architecture">
+                            <button type="object" name="open_translations"
+                                string="Edit Translations" class="oe_link oe_right"/>
+                            <field name="arch_base" string="View Architecture" widget="ace" options="{'mode': 'xml'}"/>
+                        </page>
+                        <page string="Access Rights">
+                            <field name="groups_id"/>
+                        </page>
+                        <page name="inherit_children" string="Inherited Views">
+                            <field name="inherit_children_ids" context="{'default_model':model,'default_type':type,'default_inherit_id':active_id,'default_mode':'extension'}">
+                                <tree default_order="priority,id">
+                                    <field name="id"/>
+                                    <field name="priority"/>
+                                    <field name="name"/>
+                                    <field name="xml_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_view_tree" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <tree string="Views">
+                    <field name="priority" string="Sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="model"/>
+                    <field name="xml_id" groups="base.group_no_one"/>
+                    <field name="inherit_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_view_search" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name" filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('model_data_id','ilike',self)]" string="View"/>
+                    <filter string="Active" name="active" domain="[('active', '=',True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
+                    <separator/>
+                    <filter string="Form" name="form" domain="[('type', '=','form')]"/>
+                    <filter string="Tree" name="tree" domain="[('type', '=', 'tree')]"/>
+                    <filter string="Kanban" name="kanban" domain="[('type', '=', 'kanban')]"/>
+                    <filter string="Search" name="search" domain="[('type', '=', 'search')]"/>
+                    <filter string="QWeb" name="qweb" domain="[('type', '=', 'qweb')]"/>
+                    <field name="model"/>
+                    <field name="inherit_id"/>
+                    <field name="type"/>
+                    <field name="arch_db" string="View Architecture"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Object" name="object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Inherit" name="inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_ui_view" model="ir.actions.act_window">
+            <field name="name">Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="view_id" ref="view_view_tree"/>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help">Views allows you to personalize each view of Odoo. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
+        </record>
+        <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
+
+        <!-- View customizations -->
+        <record id="view_view_custom_form" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <form string="Customized Views">
+                  <sheet>
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="ref_id"/>
+                        <separator string="View Architecture" colspan="4" />
+                        <field name="arch" colspan="4" nolabel="1"/>
+                    </group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_view_custom_tree" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <tree string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_view_custom_search" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <search string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_ui_view_custom" model="ir.actions.act_window">
+            <field name="name">Customized Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view.custom</field>
+            <field name="help" type="html"><p class="o_view_nocontent_smiling_face">Create a customized view</p><p>Customized views are used when users reorganize the content of their dashboard views (via web client)</p></field>
+        </record>
+        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
+
+</odoo>

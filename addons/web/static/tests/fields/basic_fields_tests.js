@@ -3,6 +3,7 @@ odoo.define('web.basic_fields_tests', function (require) {
 
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
@@ -24,7 +25,7 @@ QUnit.module('basic_fields', {
                     date: {string: "A date", type: "date", searchable: true},
                     datetime: {string: "A datetime", type: "datetime", searchable: true},
                     display_name: {string: "Displayed name", type: "char", searchable: true},
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
+                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true, trim: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
                     txt: {string: "txt", type: "text", default: "My little txt Value\nHo-ho-hoooo Merry Christmas"},
                     int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
@@ -1028,6 +1029,43 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('char field trim (or not) characters', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo2 = {string: "Foo2", type: "char", trim: false};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="foo2"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input[name="foo"]').val('  abc  ').trigger('input');
+        form.$('input[name="foo2"]').val('  def  ').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        // edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'abc', 'Foo value should have been trimmed');
+        assert.strictEqual(form.$('input[name="foo2"]').val(), '  def  ', 'Foo2 value should not have been trimmed');
+
+        form.destroy();
+    });
+
     QUnit.test('input field: change value before pending onchange returns', function (assert) {
         assert.expect(3);
 
@@ -1557,6 +1595,64 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
+    QUnit.module('FieldPdfViewer');
+
+    QUnit.test("pdf_viewer without data", function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form>' +
+                    '<field name="document" widget="pdf_viewer"/>' +
+                '</form>',
+        });
+
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
+        assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 1,
+            "there should be a visible 'Upload' button");
+        assert.ok(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
+            "there should be an invisible iframe");
+        assert.strictEqual(form.$('input[type="file"]').length, 1,
+            "there should be one input");
+
+        form.destroy();
+    });
+
+    QUnit.test("pdf_viewer: basic rendering", function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            res_id: 1,
+            arch:
+                '<form>' +
+                    '<field name="document" widget="pdf_viewer"/>' +
+                '</form>',
+            mockRPC: function (route) {
+                if (route.indexOf('/web/static/lib/pdfjs/web/viewer.html') !== -1) {
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
+        assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 0,
+            "there should not be a any visible 'Upload' button");
+        assert.notOk(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
+            "there should be an visible iframe");
+        assert.strictEqual(form.$('.o_field_widget iframe.o_pdfview_iframe').attr('data-src'),
+            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
+            "the src attribute should be correctly set on the iframe");
+
+        form.destroy();
+    });
+
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);
 
@@ -1664,7 +1760,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldImage');
 
     QUnit.test('image fields are correctly rendered', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
@@ -1697,12 +1793,13 @@ QUnit.module('basic_fields', {
             "the image should have the correct class");
         assert.strictEqual(form.$('div[name="document"] > img').attr('width'), "90",
             "the image should correctly set its attributes");
+        assert.strictEqual(form.$('div[name="document"] > img').css('max-width'), "90px",
+            "the image should correctly set its attributes");
         form.destroy();
-
     });
 
     QUnit.test('image fields in subviews are loaded correctly', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
@@ -1731,6 +1828,10 @@ QUnit.module('basic_fields', {
                     assert.step("The view's image should have been fetched");
                     return $.when('wow');
                 }
+                if (route === 'data:image/png;base64,product_image') {
+                    assert.step("The dialog's image should have been fetched");
+                    return $.when();
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1743,9 +1844,38 @@ QUnit.module('basic_fields', {
         form.$('tbody td:contains(gold)').click();
         assert.strictEqual($('.modal-dialog').length, 1,
             'The modal should have opened');
-        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
-            'data:image/png;base64,product_image',
-            'The image of the many2many in its form view should be present');
+        assert.verifySteps([
+            "The view's image should have been fetched",
+            "The dialog's image should have been fetched",
+        ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields with required attribute', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="document" required="1" widget="image"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    throw new Error("Should not do a create RPC with unset required image field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.ok(form.$('.o_form_view').hasClass('o_form_editable'),
+            "form view should still be editable");
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_invalid'),
+            "image field should be displayed as invalid");
 
         form.destroy();
     });
@@ -3042,7 +3172,7 @@ QUnit.module('basic_fields', {
     QUnit.module('PhoneWidget');
 
     QUnit.test('phone field in form view on extra small screens', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         var form = createView({
             View: FormView,
@@ -3058,17 +3188,16 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
         var $phoneLink = form.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 1,
             "should have a anchor with correct classes");
-        assert.strictEqual($phoneLink.text(), 'y\u00ADop',
-            "value should be displayed properly as text with the skype obfuscation");
+        assert.strictEqual($phoneLink.text(), 'yop',
+            "value should be displayed properly");
         assert.strictEqual($phoneLink.attr('href'), 'tel:yop',
             "should have proper tel prefix");
 
@@ -3085,19 +3214,10 @@ QUnit.module('basic_fields', {
         // save
         form.$buttons.find('.o_form_button_save').click();
         $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.text(), 'n\u00ADew',
-            "new value should be displayed properly as text with the skype obfuscation");
+        assert.strictEqual($phoneLink.text(), 'new',
+            "new value should be displayed properly");
         assert.strictEqual($phoneLink.attr('href'), 'tel:new',
             "should still have proper tel prefix");
-
-        // NOT NEEDED AS OF SAAS-11.3
-        // save phone with &shy; and verify it is removed
-        form.$buttons.find('.o_form_button_edit').click();
-        form.$('input[type="text"].o_field_widget').val('h\u00ADi').trigger('input');
-        form.$buttons.find('.o_form_button_save').click();
-        $phoneLink = form.$('a.o_form_uri.o_field_widget');
-        assert.strictEqual($phoneLink.attr('href'), 'tel:hi',
-            "U+00AD should have been removed");
 
         form.destroy();
     });
@@ -3112,16 +3232,15 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
             "should have 5 cells");
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'y\u00ADop',
-            "value should be displayed properly as text with the skype obfuscation");
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
+            "value should be displayed properly");
 
         var $phoneLink = list.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 5,
@@ -3141,7 +3260,7 @@ QUnit.module('basic_fields', {
         list.$buttons.find('.o_list_button_save').click();
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
-        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'n\u00ADew',
+        assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
         $phoneLink = list.$('a.o_form_uri.o_field_widget');
         assert.strictEqual($phoneLink.length, 5,
@@ -3153,14 +3272,6 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in form view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by voip so this
-        // test is irrelevant and fails if voip is installed. The enterprise
-        // module is responsible for testing its own behavior in its own tests.
-        if ('voip.user_agent' in odoo.__DEBUG__.services) {
-            assert.expect(0);
-            return;
-        }
-
         assert.expect(5);
 
         var form = createView({
@@ -3177,17 +3288,16 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
-        var $phone = form.$('span.o_field_widget:not(.o_form_uri)');
+        var $phone = form.$('a.o_field_widget.o_form_uri');
         assert.strictEqual($phone.length, 1,
-            "should have a simple span rather than a link");
+            "should have rendered the phone number as a link with correct classes");
         assert.strictEqual($phone.text(), 'yop',
-            "value should be displayed properly as text without skype obfuscation");
+            "value should be displayed properly");
 
         // switch to edit mode and check the result
         form.$buttons.find('.o_form_button_edit').click();
@@ -3201,21 +3311,13 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('span.o_field_widget:not(.o_form_uri)').text(), 'new',
-            "new value should be displayed properly as text without skype obfuscation");
+        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text(), 'new',
+            "new value should be displayed properly");
 
         form.destroy();
     });
 
     QUnit.test('phone field in editable list view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by voip so this
-        // test is irrelevant and fails if voip is installed. The enterprise
-        // module is responsible for testing its own behavior in its own tests.
-        if ('voip.user_agent' in odoo.__DEBUG__.services) {
-            assert.expect(0);
-            return;
-        }
-
         assert.expect(8);
 
         var list = createView({
@@ -3225,19 +3327,18 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
             "should have 5 cells");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
-            "value should be displayed properly as text without skype obfuscation");
+            "value should be displayed properly");
 
-        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
-            "should have spans with correct classes");
+        assert.strictEqual(list.$('a.o_field_widget.o_form_uri').length, 5,
+            "should have the correct classnames");
 
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
@@ -3253,8 +3354,8 @@ QUnit.module('basic_fields', {
         assert.ok(!$cell.parent().hasClass('o_selected_row'), 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
-        assert.strictEqual(list.$('span.o_field_widget:not(.o_form_uri)').length, 5,
-            "should still have spans with correct classes");
+        assert.strictEqual(list.$('a.o_field_widget.o_form_uri').length, 5,
+            "should still have links with correct classes");
 
         list.destroy();
     });
@@ -3279,9 +3380,8 @@ QUnit.module('basic_fields', {
             },
             config: {
                 device: {
-                    size_class: 0,
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -3290,7 +3390,7 @@ QUnit.module('basic_fields', {
 
         // save
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('.o_field_widget').text().split('\u00AD').join(''), val,
+        assert.strictEqual(form.$('.o_field_widget').text(), val,
             "value should have been correctly escaped");
 
         form.destroy();
@@ -4234,9 +4334,9 @@ QUnit.module('basic_fields', {
 
     // TODO: This test would pass without any issue since all the classes and
     //       custom style attributes are correctly set on the widget in list
-    //       view, but since the less itself for this widget currently only
+    //       view, but since the scss itself for this widget currently only
     //       applies inside the form view, the widget is unusable. This test can
-    //       be uncommented when we refactor the less files so that this widget
+    //       be uncommented when we refactor the scss files so that this widget
     //       stylesheet applies in both form and list view.
     // QUnit.test('percentpie widget in editable list view', function(assert) {
     //     assert.expect(10);

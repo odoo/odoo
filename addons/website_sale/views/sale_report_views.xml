@@ -56,7 +56,11 @@
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state','in',('sale', 'done')), ('team_id.team_type', '=', 'website')]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
-        <field name="help">You don't have any order from the website.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
     </record>
 
     <record id="sale_report_action_view_pivot_website" model="ir.actions.act_window.view">
@@ -79,7 +83,11 @@
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('team_id.team_type', '=', 'website')]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
-        <field name="help">You don't have any order from the website.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order from the website
+            </p>
+        </field>
     </record>
 
     <record id="sale_report_action_view_pivot_carts" model="ir.actions.act_window.view">

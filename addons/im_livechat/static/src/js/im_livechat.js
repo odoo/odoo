@@ -1,7 +1,6 @@
 odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
-var local_storage = require('web.local_storage');
 var bus = require('bus.bus').bus;
 var config = require('web.config');
 var core = require('web.core');
@@ -19,11 +18,17 @@ var QWeb = core.qweb;
 var LIVECHAT_COOKIE_HISTORY = 'im_livechat_history';
 var HISTORY_LIMIT = 15;
 
+var RATING_TO_EMOJI = {
+    "10":"😊",
+    "5":"😐",
+    "1":"😞"
+};
+
 // History tracking
-var page = window.location.href.replace(/^.*\/\/[^\/]+/, '');
+var page = window.location.href.replace(/^.*\/\/[^/]+/, '');
 var page_history = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
 var url_history = [];
-if(page_history){
+if (page_history) {
     url_history = JSON.parse(page_history) || [];
 }
 if (!_.contains(url_history, page)) {
@@ -33,7 +38,6 @@ if (!_.contains(url_history, page)) {
     }
     utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(url_history), 60*60*24); // 1 day cookie
 }
-
 
 var LivechatButton = Widget.extend({
     className:"openerp o_livechat_button hidden-print",
@@ -54,6 +58,7 @@ var LivechatButton = Widget.extend({
         this.chat_window = null;
         this.messages = [];
         this.server_url = server_url;
+        this.busBus = bus;
     },
 
     willStart: function () {
@@ -61,34 +66,36 @@ var LivechatButton = Widget.extend({
         var cookie = utils.get_cookie('im_livechat_session');
         var ready;
         if (!cookie) {
-            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id}).then(function (result) {
-                if (!result.available_for_me) {
-                    return $.Deferred().reject();
-                }
-                self.rule = result.rule;
-            });
+            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id})
+                .then(function (result) {
+                    if (!result.available_for_me) {
+                        return $.Deferred().reject();
+                    }
+                    self.rule = result.rule;
+                });
         } else {
             var channel = JSON.parse(cookie);
-            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100}).then(function (history) {
-                self.history = history;
-            });
+            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100})
+                .then(function (history) {
+                    self.history = history;
+                });
         }
         return ready.then(this.load_qweb_template.bind(this));
     },
 
     start: function () {
         this.$el.text(this.options.button_text);
-        var small_screen = config.device.size_class === config.device.SIZES.XS;
         if (this.history) {
             _.each(this.history.reverse(), this.add_message.bind(this));
             this.open_chat();
-        } else if (!small_screen && this.rule.action === 'auto_popup') {
+        } else if (!config.device.isMobile && this.rule.action === 'auto_popup') {
             var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
             if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
-                this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+                this.auto_popup_timeout =
+                    setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
             }
         }
-        bus.on('notification', this, function (notifications) {
+        this.busBus.on('notification', this, function (notifications) {
             var self = this;
             _.each(notifications, function (notification) {
                 self._on_notification(notification);
@@ -96,9 +103,9 @@ var LivechatButton = Widget.extend({
         });
         return this._super();
     },
-    _on_notification: function(notification){
+    _on_notification: function (notification){
         if (this.channel && (notification[0] === this.channel.uuid)) {
-            if(notification[1]._type === "history_command") { // history request
+            if (notification[1]._type === "history_command") { // history request
                 var cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
                 var history = cookie ? JSON.parse(cookie) : [];
                 session.rpc("/im_livechat/history", {
@@ -106,7 +113,7 @@ var LivechatButton = Widget.extend({
                     channel_uuid: this.channel.uuid,
                     page_history: history,
                 });
-            }else{ // normal message
+            } else { // normal message
                 this.add_message(notification[1]);
                 this.render_messages();
                 if (this.chat_window.folded || !this.chat_window.thread.is_at_bottom()) {
@@ -115,7 +122,7 @@ var LivechatButton = Widget.extend({
             }
         }
     },
-    load_qweb_template: function(){
+    load_qweb_template: function (){
         var xml_files = ['/mail/static/src/xml/chat_window.xml',
                          '/mail/static/src/xml/thread.xml',
                          '/im_livechat/static/src/xml/im_livechat.xml'];
@@ -154,8 +161,8 @@ var LivechatButton = Widget.extend({
                 self.send_welcome_message();
                 self.render_messages();
 
-                bus.add_channel(channel.uuid);
-                bus.start_polling();
+                self.busBus.add_channel(channel.uuid);
+                self.busBus.start_polling();
 
                 utils.set_cookie('im_livechat_session', JSON.stringify(channel), 60*60);
                 utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
@@ -229,6 +236,8 @@ var LivechatButton = Widget.extend({
             date: moment(time.str_to_datetime(data.date)),
             is_needaction: false,
             is_note: data.is_note,
+            is_discussion: data.is_discussion,
+            is_notification: data.is_notification,
             customer_email_data: []
         };
 
@@ -295,7 +304,7 @@ var Feedback = Widget.extend({
 
     events: {
         'click .o_livechat_rating_choices img': 'on_click_smiley',
-        'click .o_livechat_no_feedback em': 'on_click_no_feedback',
+        'click .o_livechat_no_feedback span': 'on_click_no_feedback',
         'click .o_rating_submit_button': 'on_click_send',
     },
 
@@ -313,7 +322,7 @@ var Feedback = Widget.extend({
 
         // only display textearea if bad smiley selected
         var close_chat = false;
-        if (this.rating === 0) {
+        if (this.rating !== 10) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
@@ -341,7 +350,8 @@ var Feedback = Widget.extend({
         };
         return session.rpc('/im_livechat/feedback', args).then(function () {
             if (options.close) {
-                var content = _.str.sprintf(_t("Rating: :rating_%d"), self.rating);
+                var emoji = RATING_TO_EMOJI[self.rating] || "??" ;
+                var content = _.str.sprintf(_t("Rating: %s"), emoji);
                 if (options.reason) {
                     content += " \n" + options.reason;
                 }

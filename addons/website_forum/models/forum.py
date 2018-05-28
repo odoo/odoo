@@ -793,17 +793,19 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Post, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        """ Add access button to everyone if the document is active. """
+        groups = super(Post, self)._notify_get_groups(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            group_data['has_button_access'] = True
+        if self.state == 'active':
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
 
         return groups
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, message_type='notification', subtype=None, **kwargs):
+    def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
@@ -823,7 +825,7 @@ class Post(models.Model):
                 raise KarmaError('Not enough karma to comment')
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
+        return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
     def message_get_message_notify_values(self, message, message_values):

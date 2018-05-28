@@ -4,8 +4,10 @@
 import unittest
 
 from odoo.osv.query import Query
+from odoo.tests.common import tagged
 
 
+@tagged('standard', 'at_install')
 class QueryTestCase(unittest.TestCase):
 
     def test_basic_query(self):

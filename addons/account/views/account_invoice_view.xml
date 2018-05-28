@@ -44,7 +44,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
-                    <field name="uom_id" groups="product.group_uom"/>
+                    <field name="uom_id" groups="uom.group_uom"/>
                     <field name="price_unit"/>
                     <field name="discount" groups="base.group_no_one"/>
                     <field name="price_subtotal"/>
@@ -65,7 +65,7 @@
                             <label for="quantity"/>
                             <div>
                                 <field name="quantity" class="oe_inline"/>
-                                <field name="uom_id" class="oe_inline" groups="product.group_uom"/>
+                                <field name="uom_id" class="oe_inline" groups="uom.group_uom"/>
                             </div>
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_no_one"/>
@@ -75,6 +75,7 @@
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
                             <field name="invoice_line_tax_ids" context="{'type':parent.type}" domain="[('type_tax_use','!=','none'),('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'no_create': True}"/>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -94,7 +95,7 @@
                     <field name="name"/>
                     <field name="account_id" groups="account.group_account_user"/>
                     <field name="base"/>
-                    <field name="amount_total"/>
+                    <field name="amount_total" string="Amount"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
@@ -111,7 +112,7 @@
                         <field name="account_id" groups="account.group_account_user"/>
                         <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                         <field name="manual"/>
-                        <field name="amount_total"/>
+                        <field name="amount_total" string="Amount"/>
                         <field name="base"/>
                         <field name="currency_id" invisible="1"/>
                     </group>
@@ -135,6 +136,8 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
+                    <field name="amount_untaxed" string="Tax Excluded" sum="Total"/>
+                    <field name="amount_tax" sum="Total"/>
                     <field name="amount_total_signed" string="Total" sum="Total"/>
                     <field name="residual_signed" string="Amount Due" sum="Amount Due"/>
                     <field name="currency_id" invisible="1"/>
@@ -198,6 +201,8 @@
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                     <field name="date_due"/>
                     <field name="origin"/>
+                    <field name="amount_untaxed" string="Tax Excluded" sum="Total"/>
+                    <field name="amount_tax" sum="Total"/>
                     <field name="amount_total_signed" string="Total" sum="Total"/>
                     <field name="residual_signed" string="To Pay" sum="To pay"/>
                     <field name="currency_id" invisible="1"/>
@@ -233,7 +238,7 @@
                         <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}"/>
                         <label string="Credit Note " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}"/>
                         <h1 class="mt0">
-                            <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="number" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                                 <field name="sequence_number_next_prefix" class="oe_inline"/>
                                 <field name="sequence_number_next" class="oe_inline"/>
@@ -247,6 +252,10 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'default_company_type': 'company'}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="reference" string="Vendor Reference"/>
+                            <field name="vendor_bill_id" attrs="{'invisible': [('state','not in',['draft'])]}"
+                              domain="[('partner_id','child_of', [partner_id]), ('state','in',('open','paid')), ('type','=','in_invoice')]"
+                              string="Auto-Complete" placeholder="Select an old vendor bill"
+                              options="{'no_create': True}" context="{'show_total_amount': True}"/>
                         </group>
                         <group>
                             <field name="origin" attrs="{'invisible': [('origin', '=', False)]}"/>
@@ -271,14 +280,14 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
                                         context="{'default_partner_id': parent.partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','purchase'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" string="Amount"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                             </field>
@@ -294,6 +303,7 @@
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="amount"/>
                                                 <field name="amount_rounding" invisible="1"/>
                                                 <field name="amount_total" invisible="1"/>
@@ -322,7 +332,7 @@
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
                                         attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
-                                    <field name="user_id" string="Responsible"/>
+                                    <field name="user_id" string="Purchase Representative"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_user"/>
                                     <field name="payment_term_id" options="{'no_create': True}"/>
@@ -338,6 +348,7 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="o_attachment_preview" attrs="{'invisible': ['|',('type', '!=', 'in_invoice'),('state', '!=', 'draft')]}"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
@@ -357,7 +368,9 @@
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', 'not in', ('open','paid'))]}" class="oe_highlight" groups="base.group_user"/>
                     <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','paid'))]}" groups="base.group_user"/>
                     <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', 'not in', ('open','paid'))]}" groups="base.group_user"/>
-                    <button name="%(action_account_invoice_payment)d" id="account_invoice_payment_btn" type="action" states="open" string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="%(action_account_invoice_payment)d" id="account_invoice_payment_btn" type="action"
+                            attrs="{'invisible': [('state', '!=', 'open')]}"
+                            string="Register Payment" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_invoice_open" type="object" states="draft" string="Validate" class="oe_highlight o_invoice_validate" groups="account.group_account_invoice"/>
                     <button name="%(action_account_invoice_refund)d" type='action' string='Add Credit Note' groups="account.group_account_invoice" attrs="{'invisible': ['|',('type', '=', 'out_refund'), ('state', 'not in', ('open','paid'))]}"/>
                     <button name="action_invoice_draft" states="cancel" string="Reset to Draft" type="object" groups="account.group_account_invoice"/>
@@ -421,21 +434,21 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
                                         context="{'default_partner_id': parent.partner_id}"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <field name="price_unit"/>
                                     <field name="discount" groups="base.group_no_one"/>
-                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type}"
+                                    <field name="invoice_line_tax_ids" widget="many2many_tags" options="{'no_create': True}" context="{'type':parent.type, 'tree_view_ref': 'account.account_tax_view_tree', 'search_view_ref': 'account.account_tax_view_search'}"
                                         domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]"/>
-                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal" string="Subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                 </tree>
                                 <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="price_subtotal"/>
                                     <field name="quantity"/>
-                                    <field name="uom_id" groups="product.group_uom"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -490,11 +503,12 @@
                                     <field name="name"/>
                                     <!--Need invisible fields for on_change to create all necessary info -->
                                     <field name="tax_id" invisible="1"/>
-                                    <field name="account_analytic_id" invisible="1"/>
                                     <field name="sequence" invisible="1"/>
                                     <field name="manual" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="amount" invisible="1"/>
+                                    <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="amount_rounding" invisible="1"/>
                                     <field name="amount_total"/>
                                     <field name="currency_id" invisible="1" force_save="1"/>
@@ -536,7 +550,7 @@
                     <field name="user_id" string="Salesperson" domain="[('share','=', False)]"/>
                     <field name="date" string="Period"/>
                     <separator/>
-                    <filter domain="[('user_id','=',uid)]" help="My Invoices"/>
+                    <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -551,35 +565,13 @@
                         ]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_partner_id" string="Partner" context="{'group_by':'commercial_partner_id'}"/>
-                        <filter string="Salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter name="status" string="Status" context="{'group_by':'state'}"/>
                         <separator/>
-                        <filter string="Invoice Date" context="{'group_by':'date_invoice'}"/>
-                        <filter string="Due Date" context="{'group_by':'date_due'}"/>
+                        <filter string="Invoice Date" name="invoicedate" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Due Date" name="duedate" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
-            </field>
-        </record>
-
-        <!-- TODO: remove in master -->
-        <record id="view_account_invoice_filter_inherit_invoices" model="ir.ui.view">
-            <field name="name">account.invoice.select.invoices</field>
-            <field name="model">account.invoice</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <data/>
-            </field>
-        </record>
-
-        <!-- TODO: remove in master -->
-        <record id="view_account_invoice_filter_inherit_credit_notes" model="ir.ui.view">
-            <field name="name">account.invoice.select.credit.notes</field>
-            <field name="model">account.invoice</field>
-            <field name="mode">primary</field>
-            <field name="inherit_id" ref="view_account_invoice_filter"/>
-            <field name="arch" type="xml">
-                <data/>
             </field>
         </record>
 
@@ -652,16 +644,10 @@
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a customer invoice.
+              <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
               </p><p>
-                Odoo's electronic invoicing allows to ease and fasten the
-                collection of customer payments. Your customer receives the
-                invoice by email and he can pay online and/or import it
-                in his own system.
-              </p><p>
-                The discussions with your customer are automatically displayed at
-                the bottom of each invoice.
+                Create invoices, register payments and keep track of the discussions with your customers.
               </p>
             </field>
         </record>
@@ -693,11 +679,11 @@
             <field name="context">{'default_type': 'out_refund', 'type': 'out_refund', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a credit note.
+              <p class="o_view_nocontent_smiling_face">
+                Create a credit note
               </p><p>
-                Note that the easiest way to create a credit note is to do it directly form
-                the customer invoice, to refund it totally or partially.
+                Note that the easiest way to create a credit note is to do it directly 
+                from the customer invoice.
               </p>
             </field>
         </record>
@@ -731,10 +717,10 @@
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to record a new vendor bill.
+              <p class="o_view_nocontent_smiling_face">
+                Record a new vendor bill
               </p><p>
-                You can control the invoice from your vendor according to
+                You can control the invoice from your vendor based on
                 what you purchased or received.
               </p>
             </field>
@@ -767,8 +753,10 @@
             <field name="context">{'default_type': 'in_refund', 'type': 'in_refund', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to record a new vendor credit note.
+              <p class="o_view_nocontent_smiling_face">
+                Create a vendor credit note
+              </p><p>
+                Note that the easiest way to create a vendor credit note it to do it directly from the vendor bill.
               </p>
             </field>
         </record>

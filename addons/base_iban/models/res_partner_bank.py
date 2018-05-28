@@ -2,7 +2,7 @@
 
 import re
 
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -11,7 +11,12 @@ def normalize_iban(iban):
 
 def pretty_iban(iban):
     """ return iban in groups of four characters separated by a single space """
-    return ' '.join([iban[i:i + 4] for i in range(0, len(iban), 4)])
+    try:
+        validate_iban(iban)
+        iban = ' '.join([iban[i:i + 4] for i in range(0, len(iban), 4)])
+    except ValidationError:
+        pass
+    return iban
 
 def get_bban_from_iban(iban):
     """ Returns the basic bank account number corresponding to an IBAN.
@@ -43,6 +48,8 @@ def validate_iban(iban):
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
+    acc_type = fields.Selection(selection_add=[("iban", "IBAN")])
+
     @api.one
     @api.depends('acc_number')
     def _compute_acc_type(self):
@@ -59,13 +66,13 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def create(self, vals):
-        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
+        if vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        if (vals.get('acc_type') == 'iban') and vals.get('acc_number'):
+        if vals.get('acc_number'):
             vals['acc_number'] = pretty_iban(normalize_iban(vals['acc_number']))
         return super(ResPartnerBank, self).write(vals)
 

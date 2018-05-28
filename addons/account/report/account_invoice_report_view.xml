@@ -25,7 +25,7 @@
     </record>
 
     <!-- Custom reports (aka filters) -->
-    <record id="filter_invoice_salespersons" model="ir.filters">
+    <record id="filter_invoice_report_salespersons" model="ir.filters">
         <field name="name">By Salespersons</field>
         <field name="model_id">account.invoice.report</field>
         <field name="domain">[]</field>
@@ -71,7 +71,7 @@
                 <field name="date"/>
                 <filter string="This Year" name="thisyear" domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="Journal invoices with period in current year"/>
                 <separator/>
-                <filter string="To Invoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
+                <filter string="To Invoice" name="toinvoice" domain="[('state','=','draft')]" help = "Draft Invoices"/>
                 <filter string="Invoiced" name="current" domain="[('state','not in', ('draft','cancel'))]"/>
                 <separator/>
                 <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
@@ -80,8 +80,8 @@
                 <filter string="Customer" name="customer" domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"/>
                 <filter string="Vendor" name="supplier" domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"/>
                 <separator/>
-                <filter string="Invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
-                <filter string="Credit Note" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
+                <filter string="Invoice" name="invoice" domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"/>
+                <filter string="Credit Note" name="creditnote" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="user_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
@@ -90,11 +90,11 @@
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesperson" name='user' context="{'group_by':'user_id'}"/>
                     <filter string="Product Category" name="category_product" context="{'group_by':'categ_id','residual_invisible':True}"/>
-                    <filter string="Status" context="{'group_by':'state'}"/>
-                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical" />
-                    <filter string="Date" context="{'group_by':'date'}"/>
-                    <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
+                    <filter string="Date" name="date" context="{'group_by':'date'}"/>
+                    <filter string="Due Month" name="duemonth" context="{'group_by':'date_due:month'}"/>
                     <filter string="Analytic Account" name="account_analytic_id" context="{'group_by':'account_analytic_id'}" groups="analytic.group_analytic_accounting" />
                 </group>
             </search>

@@ -34,7 +34,7 @@ class AccountAccountTag(models.Model):
 
     name = fields.Char(required=True)
     applicability = fields.Selection([('accounts', 'Accounts'), ('taxes', 'Taxes')], required=True, default='accounts')
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Account Tag without removing it.")
 
 #----------------------------------------------------------
@@ -84,6 +84,15 @@ class AccountAccount(models.Model):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
+    @api.model
+    def _search_new_account_code(self, company, digits, prefix):
+        for num in range(1, 100):
+            new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
+            rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
+            if not rec:
+                return new_code
+        raise UserError(_('Cannot generate an unused account code.'))
+
     def _compute_opening_debit_credit(self):
         for record in self:
             opening_debit = opening_credit = 0.0
@@ -107,7 +116,7 @@ class AccountAccount(models.Model):
     def _set_opening_debit_credit(self, amount, field):
         """ Generic function called by both opening_debit and opening_credit's
         inverse function. 'Amount' parameter is the value to be set, and field
-        either 'debit' or 'credit', depending on wich one of these two fields
+        either 'debit' or 'credit', depending on which one of these two fields
         got assigned.
         """
         opening_move = self.company_id.account_opening_move_id
@@ -164,20 +173,19 @@ class AccountAccount(models.Model):
         return super(AccountAccount, contextual_self).default_get(default_fields)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
+            domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
-        accounts = self.search(domain + args, limit=limit)
-        return accounts.name_get()
+        account_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(account_ids).name_get()
 
     @api.onchange('internal_type')
     def onchange_internal_type(self):
-        if self.internal_type in ('receivable', 'payable'):
-            self.reconcile = True
+        self.reconcile = self.internal_type in ('receivable', 'payable')
 
     @api.onchange('code')
     def onchange_code(self):
@@ -204,7 +212,7 @@ class AccountAccount(models.Model):
             result.append((account.id, name))
         return result
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
@@ -215,7 +223,7 @@ class AccountAccount(models.Model):
     def load(self, fields, data):
         """ Overridden for better performances when importing a list of account
         with opening debit/credit. In that case, the auto-balance is postpone
-        untill the whole file has been imported.
+        until the whole file has been imported.
         """
         rslt = super(AccountAccount, self).load(fields, data)
 
@@ -225,21 +233,56 @@ class AccountAccount(models.Model):
                 company._auto_balance_opening_move()
         return rslt
 
+    def _toggle_reconcile_to_true(self):
+        '''Toggle the `reconcile´ boolean from False -> True
+
+        Note that: lines with debit = credit = amount_currency = 0 are set to `reconciled´ = True
+        '''
+        query = """
+            UPDATE account_move_line SET
+                reconciled = CASE WHEN debit = 0 AND credit = 0 AND amount_currency = 0
+                    THEN true ELSE false END,
+                amount_residual = (debit-credit),
+                amount_residual_currency = amount_currency
+            WHERE full_reconcile_id IS NULL and account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
+    def _toggle_reconcile_to_false(self):
+        '''Toggle the `reconcile´ boolean from True -> False
+
+        Note that it is disallowed if some lines are partially reconciled.
+        '''
+        partial_lines_count = self.env['account.move.line'].search_count([
+            ('account_id', 'in', self.ids),
+            ('full_reconcile_id', '=', False),
+            ('|'),
+            ('matched_debit_ids', '!=', False),
+            ('matched_credit_ids', '!=', False),
+        ])
+        if partial_lines_count > 0:
+            raise UserError(_('You cannot switch an account to not allow the reconciliation'
+                              'if some partial reconciliations are still pending.'))
+        query = """
+            UPDATE account_move_line
+                SET amount_residual = 0, amount_residual_currency = 0
+            WHERE full_reconcile_id = NULL AND account_id IN %s
+        """
+        self.env.cr.execute(query, [tuple(self.ids)])
+
     @api.multi
     def write(self, vals):
-        # Dont allow changing the company_id when account_move_line already exist
+        # Do not allow changing the company_id when account_move_line already exist
         if vals.get('company_id', False):
             move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
             for account in self:
                 if (account.company_id.id != vals['company_id']) and move_lines:
                     raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
-        # If user change the reconcile flag, all aml should be recomputed for that account and this is very costly.
-        # So to prevent some bugs we add a constraint saying that you cannot change the reconcile field if there is any aml existing
-        # for that account.
-        if vals.get('reconcile'):
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            if len(move_lines):
-                raise UserError(_('You cannot change the value of the reconciliation on this account as it already has some moves'))
+        if 'reconcile' in vals:
+            if vals['reconcile']:
+                self.filtered(lambda r: not r.reconcile)._toggle_reconcile_to_true()
+            else:
+                self.filtered(lambda r: r.reconcile)._toggle_reconcile_to_false()
         return super(AccountAccount, self).write(vals)
 
     @api.multi
@@ -276,13 +319,11 @@ class AccountAccount(models.Model):
 
 class AccountGroup(models.Model):
     _name = "account.group"
-
     _parent_store = True
     _order = 'code_prefix'
 
     parent_id = fields.Many2one('account.group', index=True, ondelete='cascade')
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
+    parent_path = fields.Char(index=True)
     name = fields.Char(required=True)
     code_prefix = fields.Char()
 
@@ -296,12 +337,14 @@ class AccountGroup(models.Model):
         return result
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if not args:
             args = []
         criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
         domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
-        return self.search(domain + args, limit=limit).name_get()
+        group_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(group_ids).name_get()
+
 
 class AccountJournal(models.Model):
     _name = "account.journal"
@@ -378,8 +421,9 @@ class AccountJournal(models.Model):
     belongs_to_company = fields.Boolean('Belong to the user\'s current company', compute="_belong_to_company", search="_search_company_journals",)
 
     # Bank journals fields
-    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False)
-    bank_statements_source = fields.Selection([('undefined', 'Undefined Yet'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
+    company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
+    bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
+    bank_statements_source = fields.Selection([('undefined', 'Undefined'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
@@ -476,7 +520,7 @@ class AccountJournal(models.Model):
         bank_accounts.unlink()
         return ret
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
@@ -515,7 +559,7 @@ class AccountJournal(models.Model):
                     self.bank_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals:
                 if not vals.get('bank_account_id'):
-                    raise UserError(_('You cannot empty the bank account once set.'))
+                    raise UserError(_('You cannot remove the bank account from the journal once set.'))
                 else:
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
@@ -573,31 +617,26 @@ class AccountJournal(models.Model):
 
         :param name: name of the bank account
         :param company: company for which the wizard is running
-        :param currency_id: ID of the currency in wich is the bank account
+        :param currency_id: ID of the currency in which is the bank account
         :param type: either 'cash' or 'bank'
         :return: mapping of field names and values
         :rtype: dict
         '''
-
+        digits = 6
+        acc = self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
+        if acc:
+            digits = len(acc.code)
         # Seek the next available number for the account code
-        code_digits = company.accounts_code_digits or 0
         if type == 'bank':
             account_code_prefix = company.bank_account_code_prefix or ''
         else:
             account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
-        for num in range(1, 100):
-            new_code = str(account_code_prefix.ljust(code_digits - 1, '0')) + str(num)
-            rec = self.env['account.account'].search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
-            if not rec:
-                break
-        else:
-            raise UserError(_('Cannot generate an unused account code.'))
 
         liquidity_type = self.env.ref('account.data_account_type_liquidity')
         return {
                 'name': name,
                 'currency_id': currency_id or False,
-                'code': new_code,
+                'code': self.env['account.account']._search_new_account_code(company, digits, account_code_prefix),
                 'user_type_id': liquidity_type and liquidity_type.id or False,
                 'company_id': company.id,
         }
@@ -668,13 +707,13 @@ class AccountJournal(models.Model):
         return res
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         connector = '|'
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             connector = '&'
-        recs = self.search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit)
-        return recs.name_get()
+        journal_ids = self._search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(journal_ids).name_get()
 
     @api.multi
     @api.depends('company_id')
@@ -743,9 +782,8 @@ class AccountTax(models.Model):
         return self.env['account.tax.group'].search([], limit=1)
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
-    tax_adjustment = fields.Boolean(help='Set this field to true if this tax can be used in the tax adjustment wizard, used to manually fill some data in the tax declaration')
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None'), ('adjustment', 'Adjustment')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, oldname='type',
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -775,43 +813,39 @@ class AccountTax(models.Model):
         oldname='use_cash_basis',
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
-    cash_basis_account = fields.Many2one(
+    cash_basis_account_id = fields.Many2one(
         'account.account',
         string='Tax Received Account',
         domain=[('deprecated', '=', False)],
+        oldname='cash_basis_account',
         help='Account used as counterpart for the journal entry, for taxes eligible based on payments.')
+    cash_basis_base_account_id = fields.Many2one(
+        'account.account',
+        domain=[('deprecated', '=', False)],
+        string='Base Tax Received Account',
+        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
 
-    @api.multi
-    def unlink(self):
-        company_id = self.env.user.company_id.id
-        IrDefault = self.env['ir.default']
-        taxes = self.browse(IrDefault.get('product.template', 'taxes_id', company_id=company_id) or [])
-        if self & taxes:
-            IrDefault.sudo().set('product.template', 'taxes_id', (taxes - self).ids, company_id=company_id)
-        taxes = self.browse(IrDefault.get('product.template', 'supplier_taxes_id', company_id=company_id) or [])
-        if self & taxes:
-            IrDefault.sudo().set('product.template', 'supplier_taxes_id', (taxes - self).ids, company_id=company_id)
-        return super(AccountTax, self).unlink()
-
     @api.one
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
+        if not self._check_m2m_recursion('children_tax_ids'):
+            raise ValidationError(_("Recursion found for tax '%s'.") % (self.name,))
         if not all(child.type_tax_use in ('none', self.type_tax_use) for child in self.children_tax_ids):
             raise ValidationError(_('The application scope of taxes in a group must be either the same as the group or "None".'))
 
-    @api.one
+    @api.multi
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=80):
-        """ Returns a list of tupples containing id, name, as internally it is called {def name_get}
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        """ Returns a list of tuples containing id, name, as internally it is called {def name_get}
             result format: {[(id, name), (id, name), ...]}
         """
         args = args or []
@@ -819,11 +853,11 @@ class AccountTax(models.Model):
             domain = [('description', operator, name), ('name', operator, name)]
         else:
             domain = ['|', ('description', operator, name), ('name', operator, name)]
-        taxes = self.search(expression.AND([domain, args]), limit=limit)
-        return taxes.name_get()
+        tax_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(tax_ids).name_get()
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         context = self._context or {}
 
         if context.get('type'):
@@ -837,7 +871,7 @@ class AccountTax(models.Model):
             if journal.type in ('sale', 'purchase'):
                 args += [('type_tax_use', '=', journal.type)]
 
-        return super(AccountTax, self).search(args, offset, limit, order, count=count)
+        return super(AccountTax, self)._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
 
     @api.onchange('amount')
     def onchange_amount(self):
@@ -856,7 +890,10 @@ class AccountTax(models.Model):
     def get_grouping_key(self, invoice_tax_val):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
         self.ensure_one()
-        return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'])
+        return str(invoice_tax_val['tax_id']) + '-' + \
+               str(invoice_tax_val['account_id']) + '-' + \
+               str(invoice_tax_val['account_analytic_id']) + '-' + \
+               str(invoice_tax_val.get('analytic_tag_ids', []))
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -896,7 +933,7 @@ class AccountTax(models.Model):
 
     @api.multi
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None):
-        """ Returns all information required to apply taxes (in self + their children in case of a tax goup).
+        """ Returns all information required to apply taxes (in self + their children in case of a tax group).
             We consider the sequence of the parent for group of taxes.
                 Eg. considering letters as taxes and alphabetic order as sequence :
                 [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
@@ -1040,6 +1077,7 @@ class AccountReconcileModel(models.Model):
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
 
     second_account_id = fields.Many2one('account.account', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_journal_id = fields.Many2one('account.journal', string='Second Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
@@ -1051,6 +1089,7 @@ class AccountReconcileModel(models.Model):
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags')
 
     @api.onchange('name')
     def onchange_name(self):

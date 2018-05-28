@@ -16,7 +16,7 @@ class MrpBom(models.Model):
     _order = "sequence"
 
     def _get_default_product_uom_id(self):
-        return self.env['product.uom'].search([], limit=1, order='id').id
+        return self.env['uom.uom'].search([], limit=1, order='id').id
 
     code = fields.Char('Reference')
     active = fields.Boolean(
@@ -38,7 +38,7 @@ class MrpBom(models.Model):
         'Quantity', default=1.0,
         digits=dp.get_precision('Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
@@ -180,15 +180,16 @@ class MrpBomLine(models.Model):
     _rec_name = "product_id"
 
     def _get_default_product_uom_id(self):
-        return self.env['product.uom'].search([], limit=1, order='id').id
+        return self.env['uom.uom'].search([], limit=1, order='id').id
 
     product_id = fields.Many2one(
         'product.product', 'Product', required=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
     product_qty = fields.Float(
         'Product Quantity', default=1.0,
         digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
         oldname='product_uom', required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control")
@@ -295,8 +296,8 @@ class MrpBomLine(models.Model):
             'views': [(attachment_view.id, 'kanban'), (False, 'form')],
             'view_mode': 'kanban,tree,form',
             'view_type': 'form',
-            'help': _('''<p class="oe_view_nocontent_create">
-                        Click to upload files to your product.
+            'help': _('''<p class="o_view_nocontent_smiling_face">
+                        Upload files to your product
                     </p><p>
                         Use this feature to store any files, like drawings or specifications.
                     </p>'''),

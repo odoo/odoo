@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID
+from odoo import SUPERUSER_ID, tools
 from odoo.http import request, route
 from odoo.addons.bus.controllers.main import BusController
 
@@ -42,7 +42,8 @@ class MailChatController(BusController):
             author_id = request.env['res.users'].sudo().browse(request.session.uid).partner_id.id
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         mail_channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
-        message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=message_content, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext')
+        body = tools.plaintext2html(message_content)
+        message = mail_channel.sudo().with_context(mail_create_nosubscribe=True).message_post(author_id=author_id, email_from=False, body=body, message_type='comment', subtype='mail.mt_comment', content_subtype='plaintext')
         return message and message.id or False
 
     @route(['/mail/chat_history'], type="json", auth="none")

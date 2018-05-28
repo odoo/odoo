@@ -7,8 +7,7 @@ from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_register_open(self):
@@ -447,7 +446,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'debit': 0.0,
         }]
 
-        account_statement_line.process_reconciliations([{'new_aml_dicts': new_aml_dicts}])
+        self.env['account.reconciliation.widget'].process_bank_statement_line(account_statement_line.ids, [{'new_aml_dicts': new_aml_dicts}])
 
         # I confirm the bank statement using Confirm button
 

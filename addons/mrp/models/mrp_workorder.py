@@ -35,7 +35,7 @@ class MrpWorkorder(models.Model):
         related='production_id.product_id', readonly=True,
         help='Technical: used in views only.', store=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='production_id.product_uom_id', readonly=True,
         help='Technical: used in views only.')
     production_availability = fields.Selection(
@@ -113,12 +113,13 @@ class MrpWorkorder(models.Model):
     final_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    tracking = fields.Selection(related='production_id.product_id.tracking')
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id')
     is_user_working = fields.Boolean(
-        'Is the Current User Working', compute='_compute_is_user_working',
+        'Is the Current User Working', compute='_compute_working_users',
         help="Technical field indicating whether the current user is working. ")
+    working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
+    last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
     production_messages = fields.Html('Workorder Message', compute='_compute_production_messages')
 
     next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
@@ -150,9 +151,14 @@ class MrpWorkorder(models.Model):
         else:
             self.duration_percent = 0
 
-    def _compute_is_user_working(self):
-        """ Checks whether the current user is working """
+    def _compute_working_users(self):
+        """ Checks whether the current user is working, all the users currently working and the last user that worked. """
         for order in self:
+            order.working_user_ids = [(4, order.id) for order in order.time_ids.filtered(lambda time: not time.date_end).sorted('date_start').mapped('user_id')]
+            if order.working_user_ids:
+                order.last_working_user_id = order.working_user_ids[-1]
+            elif order.time_ids:
+                order.last_working_user_id = order.time_ids.sorted('date_end')[-1].user_id
             if order.time_ids.filtered(lambda x: (x.user_id.id == self.env.user.id) and (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 order.is_user_working = True
             else:
@@ -339,28 +345,25 @@ class MrpWorkorder(models.Model):
         # If last work order, then post lots used
         # TODO: should be same as checking if for every workorder something has been done?
         if not self.next_work_order_id:
-            production_moves = self.production_id.move_finished_ids.filtered(lambda x: (x.state not in ('done', 'cancel')))
-            for production_move in production_moves:
-                if production_move.product_id.id == self.production_id.product_id.id and production_move.has_tracking != 'none':
-                    move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                    if move_line:
-                        move_line.product_uom_qty += self.qty_producing
-                    else:
-                        move_line.create({'move_id': production_move.id,
-                                 'product_id': production_move.product_id.id,
-                                 'lot_id': self.final_lot_id.id,
-                                 'product_uom_qty': self.qty_producing,
-                                 'product_uom_id': production_move.product_uom.id,
-                                 'qty_done': self.qty_producing,
-                                 'workorder_id': self.id,
-                                 'location_id': production_move.location_id.id, 
-                                 'location_dest_id': production_move.location_dest_id.id,
-                        })
-                elif production_move.unit_factor:
-                    rounding = production_move.product_uom.rounding
-                    production_move.quantity_done += float_round(self.qty_producing * production_move.unit_factor, precision_rounding=rounding)
+            production_move = self.production_id.move_finished_ids.filtered(
+                                lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
+            if production_move.product_id.tracking != 'none':
+                move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                if move_line:
+                    move_line.product_uom_qty += self.qty_producing
                 else:
-                    production_move.quantity_done += self.qty_producing
+                    move_line.create({'move_id': production_move.id,
+                             'product_id': production_move.product_id.id,
+                             'lot_id': self.final_lot_id.id,
+                             'product_uom_qty': self.qty_producing,
+                             'product_uom_id': production_move.product_uom.id,
+                             'qty_done': self.qty_producing,
+                             'workorder_id': self.id,
+                             'location_id': production_move.location_id.id,
+                             'location_dest_id': production_move.location_dest_id.id,
+                    })
+            else:
+                production_move.quantity_done += self.qty_producing
 
         if not self.next_work_order_id:
             for by_product_move in self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel'))):

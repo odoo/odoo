@@ -25,10 +25,10 @@
                 <group expand='0' string='Group by...'>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
-                    <filter string='Owner' context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
-                    <filter string='Lot/Serial Number' context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
-                    <filter string='Package' domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
-                    <filter string='Company' domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
+                    <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
+                    <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
+                    <filter string='Company' name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -56,12 +56,12 @@
                             <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
                             <div class="o_row">
                                 <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
                         </group>
@@ -84,7 +84,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="reserved_quantity" string="Reserved"/>
                 <field name="quantity" string="On Hand"/>
-                <field name="product_uom_id" groups="product.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -120,7 +120,13 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
         <field name="context">{'search_default_internal_loc': 1, 'search_default_stockable': 1, 'group_by': ['product_id', 'location_id']}</field>
-        <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No inventory found
+            </p><p>
+                This analysis gives you a fast overview on the current stock level of your products and their current inventory value.    
+            </p>
+        </field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
         <field name="name">Stock On Hand</field>
@@ -151,8 +157,9 @@
                 <field name="location_id"/>
                 <field name="packaging_id"/>
                 <group  expand='0' string='Group by...'>
-                   <!-- FORWARD-PORT UP TO v11 -->
-                   <filter string='Packaging' domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                   <filter string='Company' name="company" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>
                </group>
             </search>
         </field>
@@ -191,7 +198,7 @@
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="qty_done" string="Quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                     <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
@@ -199,7 +206,7 @@
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                 </sheet>
@@ -262,7 +269,10 @@
         <field name="res_model">stock.quant.package</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-            <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new package
+            </p><p>
+                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
             </p>
         </field>
     </record>

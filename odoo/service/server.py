@@ -36,7 +36,7 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
-from odoo.modules.module import run_unit_tests, runs_post_install
+from odoo.modules.module import run_unit_tests
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
@@ -92,9 +92,6 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         me = threading.currentThread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
-# _reexec() should set LISTEN_* to avoid connection refused during reload time. It
-# should also work with systemd socket activation. This is currently untested
-# and not yet used.
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -106,14 +103,15 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
                                                            handler=RequestHandler)
 
     def server_bind(self):
-        envfd = os.environ.get('LISTEN_FDS')
-        if envfd and os.environ.get('LISTEN_PID') == str(os.getpid()):
+        SD_LISTEN_FDS_START = 3
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
             self.reload_socket = True
-            self.socket = socket.fromfd(int(envfd), socket.AF_INET, socket.SOCK_STREAM)
-            # should we os.close(int(envfd)) ? it seem python duplicate the fd.
+            self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            _logger.info('HTTP service (werkzeug) running through socket activation')
         else:
             self.reload_socket = False
             super(ThreadedWSGIServerReloadable, self).server_bind()
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
 
     def server_activate(self):
         if not self.reload_socket:
@@ -215,7 +213,7 @@ class ThreadedServer(CommonServer):
             raise KeyboardInterrupt()
 
     def cron_thread(self, number):
-        from odoo.addons.base.ir.ir_cron import ir_cron
+        from odoo.addons.base.models.ir_cron import ir_cron
         while True:
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = odoo.modules.registry.Registry.registries
@@ -257,7 +255,6 @@ class ThreadedServer(CommonServer):
         t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
         t.setDaemon(True)
         t.start()
-        _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
 
     def start(self, stop=False):
         _logger.debug("Setting signal handlers")
@@ -827,7 +824,7 @@ class WorkerCron(Worker):
                 start_rss, start_vms = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
-            base.ir.ir_cron.ir_cron._acquire_job(db_name)
+            base.models.ir_cron.ir_cron._acquire_job(db_name)
             odoo.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
@@ -883,17 +880,8 @@ def _reexec(updated_modules=None):
         args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
-    os.execv(sys.executable, args)
-
-def load_test_file_yml(registry, test_file):
-    with registry.cursor() as cr:
-        odoo.tools.convert_yaml_import(cr, 'base', open(test_file, 'rb'), 'test', {}, 'init')
-        if config['test_commit']:
-            _logger.info('test %s has been commited', test_file)
-            cr.commit()
-        else:
-            _logger.info('test %s has been rollbacked', test_file)
-            cr.rollback()
+    # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
+    os.execve(sys.executable, args, os.environ)
 
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
@@ -929,9 +917,7 @@ def preload_registries(dbnames):
                 test_file = config['test_file']
                 _logger.info('loading test file %s', test_file)
                 with odoo.api.Environment.manage():
-                    if test_file.endswith('yml'):
-                        load_test_file_yml(registry, test_file)
-                    elif test_file.endswith('py'):
+                    if test_file.endswith('py'):
                         load_test_file_py(registry, test_file)
 
             # run post-install tests
@@ -940,10 +926,11 @@ def preload_registries(dbnames):
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
                                 registry._init_modules)
+                _logger.info("Starting post tests")
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
                         result = run_unit_tests(module_name, registry.db_name,
-                                                position=runs_post_install)
+                                                position='post_install')
                         registry._assertion_report.record_result(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)

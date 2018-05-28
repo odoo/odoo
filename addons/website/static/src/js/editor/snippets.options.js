@@ -3,7 +3,7 @@ odoo.define('website.snippets.options', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var widgets = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var options = require('web_editor.snippets.options');
 
 var _t = core._t;
@@ -123,12 +123,11 @@ options.registry.carousel = options.Class.extend({
         this.$target.on('slid.bs.carousel', function () {
             self.$target.carousel('pause');
             self.trigger_up('option_update', {
-                optionNames: ['background', 'background_position', 'colorpicker'],
+                optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
                 data: self.$target.find('.item.active'),
             });
         });
-        this.$target.trigger('slid.bs.carousel');
 
         return def;
     },
@@ -143,6 +142,14 @@ options.registry.carousel = options.Class.extend({
         this.$target.find('[data-slide]').attr('data-cke-saved-href', '#' + this.id);
         this.$target.find('[data-target]').attr('data-target', '#' + this.id);
         this._rebindEvents();
+    },
+    /**
+     * @override
+     */
+    onFocus: function () {
+        // Needs to be done on focus, not on start, as all other options are
+        // maybe not all initialized in start
+        this.$target.trigger('slid.bs.carousel');
     },
     /**
      * Associates unique ID on cloned slider elements.
@@ -162,7 +169,7 @@ options.registry.carousel = options.Class.extend({
         this._super.apply(this, arguments);
         this.$target.find('.item').removeClass('next prev left right active')
             .first().addClass('active');
-        this.$target.find('.carousel-indicators').find('li').removeClass('active')
+        this.$target.find('.carousel-indicators').find('li').removeClass('active').html('')
             .first().addClass('active');
         this.$target.removeClass('oe_img_bg ' + this._class).css('background-image', '');
     },
@@ -263,9 +270,7 @@ options.registry.carousel = options.Class.extend({
     },
 });
 
-options.registry['margin-x'] = options.registry.marginAndResize.extend({
-    preventChildPropagation: true,
-
+options.registry.sizing_x = options.registry.sizing.extend({
     /**
      * @override
      */
@@ -287,15 +292,13 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
      * @override
      */
     _getSize: function () {
-        this.grid = this._super();
-        var width = this.$target.parents('.row:first').first().outerWidth();
-
-        var grid = [1,2,3,4,5,6,7,8,9,10,11,12];
-        this.grid.e = [_.map(grid, function (v) {return 'col-md-'+v;}), _.map(grid, function (v) {return width/12*v;})];
-
-        grid = [-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11];
-        this.grid.w = [_.map(grid, function (v) {return 'col-md-offset-'+v;}), _.map(grid, function (v) {return width/12*v;}), 12];
-
+        var width = this.$target.closest('.row').width();
+        var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+        this.grid = {
+            e: [_.map(gridE, function (v) { return 'col-md-' + v; }), _.map(gridE, function (v) { return width/12*v; }), 'width'],
+            w: [_.map(gridW, function (v) { return 'col-md-offset-' + v; }), _.map(gridW, function (v) { return width/12*v; }), 'margin-left'],
+        };
         return this.grid;
     },
     /**
@@ -322,7 +325,82 @@ options.registry['margin-x'] = options.registry.marginAndResize.extend({
                 this.$target.addClass('col-md-offset-' + offset);
             }
         }
-        this._super(compass, beginClass, current);
+        this._super.apply(this, arguments);
+    },
+});
+
+options.registry.layout_column = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Changes the number of columns.
+     *
+     * @see this.selectClass for parameters
+     */
+    selectCount: function (previewMode, value, $li) {
+        this._updateColumnCount(value - this.$target.children().length);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds new columns which are clones of the last column or removes the
+     * last x columns.
+     *
+     * @private
+     * @param {integer} count - positif to add, negative to remove
+     */
+    _updateColumnCount: function (count) {
+        if (!count) {
+            return;
+        }
+
+        this.trigger_up('request_history_undo_record', {$target: this.$target});
+
+        if (count > 0) {
+            var $lastColumn = this.$target.children().last();
+            for (var i = 0 ; i < count ; i++) {
+                $lastColumn.clone().insertAfter($lastColumn);
+            }
+        } else {
+            this.$target.children().slice(count).remove();
+        }
+
+        this._resizeColumns();
+        this.trigger_up('cover_update');
+    },
+    /**
+     * Resizes the columns so that they are kept on one row.
+     *
+     * @private
+     */
+    _resizeColumns: function () {
+        var $columns = this.$target.children();
+        var colsLength = $columns.length;
+        var colSize = Math.floor(12 / colsLength) || 1;
+        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
+        var colClass = 'col-md-' + colSize;
+        _.each($columns, function (column) {
+            var $column = $(column);
+            $column.attr('class', $column.attr('class').replace(/\bcol-md-(offset-)?\d+\b/g, ''));
+            $column.addClass(colClass);
+        });
+        if (colOffset) {
+            $columns.first().addClass('col-md-offset-' + colOffset);
+        }
+    },
+    /**
+     * @override
+     */
+    _setActive: function () {
+        this._super.apply(this, arguments);
+        this.$el.find('li[data-select-count]').removeClass('active')
+            .filter('li[data-select-count=' + this.$target.children().length + ']').addClass('active');
     },
 });
 
@@ -379,7 +457,10 @@ options.registry.parallax = options.Class.extend({
     _refresh: function () {
         var self = this;
         _.defer(function () {
-            self.$target.data('snippet-view')._rebuild();
+            self.trigger_up('animation_start_demand', {
+                editableMode: true,
+                $target: self.$target,
+            });
         });
     },
     /**
@@ -389,6 +470,204 @@ options.registry.parallax = options.Class.extend({
         this._super.apply(this, arguments);
         this.$el.find('[data-scroll]').removeClass('active')
             .filter('[data-scroll="' + (this.$target.attr('data-scroll-background-ratio') || 0) + '"]').addClass('active');
+    },
+});
+
+var FacebookPageDialog = weWidgets.Dialog.extend({
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
+        ['/website/static/src/xml/website.facebook_page.xml']
+    ),
+    template: 'website.facebook_page_dialog',
+    events: _.extend({}, weWidgets.Dialog.prototype.events || {}, {
+        'change': '_onOptionChange',
+    }),
+
+    /**
+     * @constructor
+     */
+    init: function (parent, fbData, options) {
+        this._super(parent, _.extend({
+            title: _t("Facebook Page"),
+        }, options || {}));
+
+        this.fbData = $.extend(true, {}, fbData);
+        this.final_data = this.fbData;
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$previewPage = this.$('.o_facebook_page');
+        this.opened().then(this._renderPreview.bind(this));
+        return this._super.apply(this, arguments);
+    },
+
+    //------------------------------------------------------------------
+    // Private
+    //------------------------------------------------------------------
+
+    /**
+     * Manages Facebook page preview. Also verifies if the page exists on
+     * Facebook or not.
+     *
+     * @private
+     */
+    _renderPreview: function () {
+        var self = this;
+        var match = this.fbData.href.match(/^(?:https?:\/\/)?(?:www\.)?(?:fb|facebook)\.com\/(\w+)/);
+        if (match) {
+            // Check if the page exists on Facebook or not
+            $.ajax({
+                url: 'https://graph.facebook.com/' + match[1] + '/picture',
+                statusCode: {
+                    200: function () {
+                        self._toggleWarning(true);
+
+                        // Managing height based on options
+                        if (self.fbData.tabs) {
+                            self.fbData.height = self.fbData.tabs === 'events' ? 300 : 500;
+                        } else if (self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 165 : 70;
+                        } else if (!self.fbData.small_header) {
+                            self.fbData.height = self.fbData.show_facepile ? 225 : 150;
+                        }
+                        options.registry.facebookPage.prototype.markFbElement(self, self.$previewPage, self.fbData);
+                    },
+                    404: function () {
+                        self._toggleWarning(false);
+                    },
+                },
+            });
+        } else {
+            this._toggleWarning(false);
+        }
+    },
+    /**
+     * Toggles the warning message and save button and destroy iframe preview.
+     *
+     * @private
+     * @param {boolean} toggle
+     */
+    _toggleWarning: function (toggle) {
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$previewPage,
+        });
+        this.$('.facebook_page_warning').toggleClass('hidden', toggle);
+        this.$footer.find('.btn-primary').prop('disabled', !toggle);
+    },
+
+    //------------------------------------------------------------------
+    // Handlers
+    //------------------------------------------------------------------
+
+    /**
+     * Called when a facebook option is changed -> adapt the preview and saved
+     * data.
+     *
+     * @private
+     */
+    _onOptionChange: function () {
+        var self = this;
+        // Update values in fbData
+        this.fbData.tabs = _.map(this.$('.o_facebook_tabs input:checked'), function (tab) { return tab.name; }).join(',');
+        this.fbData.href = this.$('.o_facebook_page_url').val();
+        _.each(this.$('.o_facebook_options input'), function (el) {
+            self.fbData[el.name] = $(el).prop('checked');
+        });
+        this._renderPreview();
+    },
+});
+options.registry.facebookPage = options.Class.extend({
+    /**
+     * Initializes the required facebook page data to create the animation
+     * iframe.
+     *
+     * @override
+     */
+    willStart: function () {
+        var defs = [this._super.apply(this, arguments)];
+
+        var defaults = {
+            href: false,
+            height: 215,
+            width: 350,
+            tabs: '',
+            small_header: false,
+            hide_cover: false,
+            show_facepile: false,
+        };
+        this.fbData = _.defaults(_.pick(this.$target.data(), _.keys(defaults)), defaults);
+
+        if (!this.fbData.href) {
+            // Fetches the default url for facebook page from website config
+            var self = this;
+            defs.push(this._rpc({
+                model: 'website',
+                method: 'search_read',
+                args: [[], ['social_facebook']],
+                limit: 1,
+            }).then(function (res) {
+                if (res) {
+                    self.fbData.href = res[0].social_facebook || 'https://www.facebook.com/Odoo';
+                }
+            }));
+        }
+
+        return $.when.apply($, defs);
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        var self = this;
+        this.$target.on('click.facebook_page_option', '.o_add_facebook_page', function (ev) {
+            ev.preventDefault();
+            self.fbPageOptions();
+        });
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super.apply(this, arguments);
+        this.$target.off('.facebook_page_option');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Opens a dialog to configure the facebook page options.
+     *
+     * @see this.selectClass for parameters
+     */
+    fbPageOptions: function () {
+        var dialog = new FacebookPageDialog(this, this.fbData).open();
+        dialog.on('save', this, function (fbData) {
+            this.$target.empty();
+            this.fbData = fbData;
+            options.registry.facebookPage.prototype.markFbElement(this, this.$target, this.fbData);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Static
+    //--------------------------------------------------------------------------
+
+    /**
+     * @static
+     */
+    markFbElement: function (self, $el, fbData) {
+        _.each(fbData, function (value, key) {
+            $el.attr('data-' + key, value);
+            $el.data(key, value);
+        });
+        self.trigger_up('animation_start_demand', {
+            editableMode: true,
+            $target: $el,
+        });
     },
 });
 
@@ -424,7 +703,9 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.$target.data('snippet-view').destroy();
+        this.trigger_up('animation_stop_demand', {
+            $target: this.$target,
+        });
 
         this.$target.find('.o_ul_toggle_self, .o_ul_toggle_next').remove();
         this.$target.find('li:has(>ul,>ol)').map(function () {
@@ -588,7 +869,7 @@ options.registry.gallery = options.Class.extend({
     addImages: function (previewMode) {
         var self = this;
         var $container = this.$('.container:first');
-        var dialog = new widgets.MediaDialog(this, {select_images: true}, this.$target.closest('.o_editable'), null);
+        var dialog = new weWidgets.MediaDialog(this, {multiImages: true}, this.$target.closest('.o_editable'), null);
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         dialog.on('save', this, function (attachments) {

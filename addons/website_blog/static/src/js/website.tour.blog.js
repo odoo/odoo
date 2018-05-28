@@ -35,7 +35,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: ".o_select_media_dialog .btn.o_save_button",
+        trigger: ".o_select_media_dialog .modal-footer > .btn-primary",
         extra_trigger: ".o_existing_attachment_cell.o_selected",
         content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",

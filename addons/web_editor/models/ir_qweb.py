@@ -30,7 +30,7 @@ import odoo.modules
 from odoo import api, models, fields
 from odoo.tools import ustr, pycompat
 from odoo.tools import html_escape as escape
-from odoo.addons.base.ir import ir_qweb
+from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 

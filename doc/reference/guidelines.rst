@@ -136,8 +136,8 @@ The complete tree should look like
     |       |   `-- <my_module_name>.js
     |       |-- css/
     |       |   `-- <my_module_name>.css
-    |       |-- less/
-    |       |   `-- <my_module_name>.less
+    |       |-- scss/
+    |       |   `-- <my_module_name>.scss
     |       `-- xml/
     |           `-- <my_module_name>.xml
     |-- views/
@@ -912,7 +912,7 @@ The convention is to organize the code according to the following structure:
 - *static/src/fonts*
 - *static/src/img*
 - *static/src/js*
-- *static/src/less*: less files
+- *static/src/scss*: scss files
 - *static/src/xml*: all qweb templates that will be rendered in JS
 - *static/tests*: this is where we put all test related files.
 

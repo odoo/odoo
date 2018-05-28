@@ -43,7 +43,7 @@ def parse_version(s):
     The algorithm assumes that strings like "-" and any alpha string that
     alphabetically follows "final"  represents a "patch level".  So, "2.4-1"
     is assumed to be a branch or patch of "2.4", and therefore "2.4.1" is
-    considered newer than "2.4-1", whic in turn is newer than "2.4".
+    considered newer than "2.4-1", which in turn is newer than "2.4".
 
     Strings like "a", "b", "c", "alpha", "beta", "candidate" and so on (that
     come before "final" alphabetically) are assumed to be pre-release versions,

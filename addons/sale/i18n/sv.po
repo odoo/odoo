@@ -3,7 +3,7 @@
 # * sale
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Kim Asplund <kim.asplund@gmail.com>, 2017
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
 # Zou Haojun <haojunzou84@gmail.com>, 2017
@@ -13,7 +13,6 @@
 # Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
 # Jonathan S <jonathan.c.strom@gmail.com>, 2017
 # Haojun Zou <apollo_zhj@msn.com>, 2017
-# lynnliuying <lynn.liu1971@gmail.com>, 2017
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2017
 # Egils Verkstad <egils@riseup.net>, 2017
 # Robert Frykelius <robert.frykelius@linserv.se>, 2017
@@ -22,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Martin Wilderoth <martin.wilderoth@linserv.se>, 2017\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -1257,14 +1256,6 @@ msgid "Is expired"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/models/sale.py:861
-#, python-format
-msgid ""
-"It is forbidden to modify the following fields in a locked order:\n"
-"%s"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1862,7 +1853,7 @@ msgstr "Antal Fakturerat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "Qty Ordered"
-msgstr "Antal beställda"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
@@ -1884,7 +1875,7 @@ msgstr "Antal"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr "Antal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -2018,7 +2009,6 @@ msgstr "Rapportering"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2301,7 +2291,7 @@ msgstr "Leverans"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
 msgid "Shipping Costs"
-msgstr "Fraktkostnader"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2414,12 +2404,12 @@ msgstr "Visa Skatt B2C"
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Excluded Prices"
-msgstr "Belopp Exkl. Moms"
+msgstr ""
 
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Included Prices"
-msgstr "Belopp Exkl. Moms"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2428,7 +2418,7 @@ msgstr "Belopp Exkl. Moms"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "Moms"
+msgstr "Skatter"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -2528,7 +2518,7 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoiceable line."
+msgid "There is no invoicable line."
 msgstr ""
 
 #. module: sale
@@ -2625,7 +2615,7 @@ msgstr "Totalt pris"
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Total Tax Included"
-msgstr "Totalt Inklusive moms"
+msgstr "Inklusive moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_service_type
@@ -2752,8 +2742,6 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
-"Du kan inte ta bort en skickad offert eller en orderorder! Försök att "
-"avbryta det innan."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1069
@@ -2762,8 +2750,6 @@ msgid ""
 "You can not remove a sales order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
-"Du kan inte ta bort en försäljningsorderlinje. Förkasta ändringar och försök"
-" att ställa in kvantiteten till 0."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -2775,13 +2761,13 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "Här hittar du alla beställningar som är redo att faktureras."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:229
 #, python-format
 msgid "Your Order has been confirmed."
-msgstr "Din beställning har bekräftats."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams

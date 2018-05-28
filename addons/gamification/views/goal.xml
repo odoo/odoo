@@ -6,10 +6,9 @@
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal
+            </p><p>
                 A goal is defined by a user and a goal definition.
                 Goals can be created automatically by using challenges.
             </p>
@@ -118,8 +117,8 @@
                 <group expand="0" string="Group By">
                     <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter name="group_by_definition" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="End Date" name="enddate" domain="[]" context="{'group_by':'end_date'}"/>
                 </group>
             </search>
         </field>
@@ -199,10 +198,9 @@
         <field name="res_model">gamification.goal.definition</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal definition.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal definition
+            </p><p>
                 A goal definition is a technical model of goal defining a condition to reach.
                 The dates, values to reach or users are defined in goal instance.
             </p>
@@ -282,8 +280,8 @@
                 <field name="model_id"/>
                 <field name="field_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
-                    <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Computation Mode" name="computationmode" domain="[]" context="{'group_by':'computation_mode'}"/>
                 </group>
             </search>
         </field>

@@ -52,26 +52,6 @@
             <field name="type">email</field>
         </record>
 
-        <record id="categ_meet1" model="calendar.event.type">
-            <field name="name">Customer Meeting</field>
-        </record>
-
-        <record id="categ_meet2" model="calendar.event.type">
-            <field name="name">Internal Meeting</field>
-        </record>
-
-        <record id="categ_meet3" model="calendar.event.type">
-            <field name="name">Off-site Meeting</field>
-        </record>
-
-        <record id="categ_meet4" model="calendar.event.type">
-            <field name="name">Open Discussion</field>
-        </record>
-
-        <record id="categ_meet5" model="calendar.event.type">
-            <field name="name">Feedback Meeting</field>
-        </record>
-
         <record id="calendar_template_meeting_invitation" model="mail.template">
             <field name="name">Calendar: Meeting Invitation</field>
             <field name="email_from">${object.event_id.user_id.email or ''}</field>

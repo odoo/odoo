@@ -18,7 +18,7 @@ class ProductionLot(models.Model):
         'product.product', 'Product',
         domain=[('type', 'in', ['product', 'consu'])], required=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='product_id.uom_id', store=True)
     quant_ids = fields.One2many('stock.quant', 'lot_id', 'Quants', readonly=True)
     create_date = fields.Datetime('Creation Date')

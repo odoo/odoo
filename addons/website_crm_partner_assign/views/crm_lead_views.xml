@@ -50,10 +50,10 @@
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
                 <filter name="stage" position="after">
-                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
-                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
@@ -110,10 +110,10 @@
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
                 <filter name="customer" position="after">
-                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
-                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>

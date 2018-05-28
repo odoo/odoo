@@ -5,7 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var time = require('web.time');
 var weContext = require('web_editor.context');
-var widget = require('web_editor.widget');
+var weWidgets = require('web_editor.widget');
 var websiteNavbarData = require('website.navbar');
 var websiteRootData = require('website.WebsiteRoot');
 var Widget = require('web.Widget');
@@ -13,12 +13,12 @@ var Widget = require('web.Widget');
 var _t = core._t;
 var qweb = core.qweb;
 
-var PagePropertiesDialog = widget.Dialog.extend({
+var PagePropertiesDialog = weWidgets.Dialog.extend({
     template: 'website.pagesMenu.page_info',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.pageProperties.xml']
     ),
-    events: _.extend({}, widget.Dialog.prototype.events, {
+    events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'keyup input#page_name': '_onNameChanged',
         'keyup input#page_url': '_onUrlChanged',
         'change input#create_redirect': '_onCreateRedirectChanged',
@@ -30,23 +30,39 @@ var PagePropertiesDialog = widget.Dialog.extend({
      */
     init: function (parent, page_id, options) {
         var self = this;
-        var serverUrl = window.location.origin + "/";
+        var serverUrl = window.location.origin + '/';
         var length_url = serverUrl.length;
         var serverUrlTrunc = serverUrl;
-        if(length_url > 30)
+        if (length_url > 30) {
             serverUrlTrunc = serverUrl.slice(0,14) + '..' + serverUrl.slice(-14);
+        }
         this.serverUrl = serverUrl;
         this.serverUrlTrunc = serverUrlTrunc;
         this.current_page_url = window.location.pathname;
         this.page_id = page_id;
 
         var buttons = [
-            {text: _t("Save"), classes: "btn-primary o_save_button", click: self.save},
+            {text: _t("Save"), classes: 'btn-primary', click: this.save},
             {text: _t("Discard"), close: true},
         ];
         if (options.fromPageManagement) {
-            buttons.push({text: _t("Go To Page"), icon: "fa-globe", classes: "btn-link pull-right", click: function(e){window.location.href = '/' + self.page.url;}});
+            buttons.push({
+                text: _t("Go To Page"),
+                icon: 'fa-globe',
+                classes: 'btn-link pull-right',
+                click: function (e) {
+                    window.location.href = '/' + self.page.url;
+                },
+            });
         }
+        buttons.push({
+            text: _t("Delete Page"),
+            icon: 'fa-trash',
+            classes: 'btn-link pull-right',
+            click: function (e) {
+                _deletePage.call(this, self.page_id, options.fromPageManagement);
+            },
+        });
         this._super(parent, _.extend({}, {
             title: _t("Page Properties"),
             size: 'medium',
@@ -64,10 +80,8 @@ var PagePropertiesDialog = widget.Dialog.extend({
         defs.push(this._rpc({
             model: 'website.page',
             method: 'get_page_info',
-            args: [self.page_id,context.website_id],
-            kwargs: {
-                context: context
-            },
+            args: [this.page_id, context.website_id],
+            context: context,
         }).then(function (page) {
             page[0].url = _.str.startsWith(page[0].url, '/') ? page[0].url.substring(1) : page[0].url;
             self.page = page[0];
@@ -85,79 +99,81 @@ var PagePropertiesDialog = widget.Dialog.extend({
     /**
      * @override
      */
-    start: function() {
+    start: function () {
         var self = this;
         var context = weContext.get();
 
-        this.$(".ask_for_redirect").hide();
-        this.$(".redirect_type").hide();
-        this.$(".warn_about_call").hide();
+        var defs = [this._super.apply(this, arguments)];
 
-        this._getPageDependencies(self.page_id, context)
+        this.$('.ask_for_redirect').addClass('hidden');
+        this.$('.redirect_type').addClass('hidden');
+        this.$('.warn_about_call').addClass('hidden');
+
+        defs.push(this._getPageDependencies(this.page_id, context)
         .then(function (dependencies) {
             var dep_text = [];
-            _.each(dependencies, function(value, index){
+            _.each(dependencies, function (value, index) {
                 if (value.length > 0) {
                     dep_text.push(value.length + ' ' + index.toLowerCase());
                 }
             });
             dep_text = dep_text.join(', ');
-            $('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            $('#dependencies_redirect [data-toggle="popover"]').popover({
-               container: 'body'
+            self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
+            self.$('#dependencies_redirect [data-toggle="popover"]').popover({
+                container: 'body',
             });
-        });
-        this._getSupportedMimetype(context)
+        }));
+
+        defs.push(this._getSupportedMimetype(context)
         .then(function (mimetypes) {
             self.supportedMimetype = mimetypes;
-        });
-        this._getPageKeyDependencies(self.page_id, context)
+        }));
+
+        defs.push(this._getPageKeyDependencies(this.page_id, context)
         .then(function (dependencies) {
             var dep_text = [];
-            _.each(dependencies, function(value, index){
+            _.each(dependencies, function (value, index) {
                 if (value.length > 0) {
                     dep_text.push(value.length + ' ' + index.toLowerCase());
                 }
             });
             dep_text = dep_text.join(', ');
-            $('.warn_about_call').html(qweb.render('website.show_page_key_dependencies', { dependencies: dependencies, dep_text: dep_text }));
-            $('.warn_about_call [data-toggle="popover"]').popover({
-               container: 'body'
+            self.$('.warn_about_call').html(qweb.render('website.show_page_key_dependencies', {dependencies: dependencies, dep_text: dep_text}));
+            self.$('.warn_about_call [data-toggle="popover"]').popover({
+               container: 'body',
             });
-        });
+        }));
 
-        var l10n = _t.database.parameters;
         var datepickersOptions = {
-           minDate: moment({ y: 1900 }),
-           maxDate: moment().add(200, "y"),
-           calendarWeeks: true,
-           icons : {
-               time: 'fa fa-clock-o',
-               date: 'fa fa-calendar',
-               next: 'fa fa-chevron-right',
-               previous: 'fa fa-chevron-left',
-               up: 'fa fa-chevron-up',
-               down: 'fa fa-chevron-down',
-              },
-           locale : moment.locale(),
-           format : time.getLangDatetimeFormat(),
-           widgetPositioning : {
-              horizontal: 'auto',
-              vertical: 'top',
-           },
-         };
-         if (self.page.date_publish) {
-            datepickersOptions.defaultDate = time.str_to_datetime(self.page.date_publish);
-         }
+            minDate: moment({y: 1900}),
+            maxDate: moment().add(200, 'y'),
+            calendarWeeks: true,
+            icons : {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                next: 'fa fa-chevron-right',
+                previous: 'fa fa-chevron-left',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+            },
+            locale : moment.locale(),
+            format : time.getLangDatetimeFormat(),
+            widgetPositioning : {
+                horizontal: 'auto',
+                vertical: 'top',
+            },
+        };
+        if (this.page.date_publish) {
+            datepickersOptions.defaultDate = time.str_to_datetime(this.page.date_publish);
+        }
+        this.$('#date_publish_container').datetimepicker(datepickersOptions);
 
-         this.$("#date_publish_container").datetimepicker(datepickersOptions);
-
-         return this._super.apply(this, arguments);
+        return $.when.apply($, defs);
     },
     /**
      * @override
      */
-    destroy: function(){
+    destroy: function () {
         $('.popover').popover('hide');
         return this._super.apply(this, arguments);
     },
@@ -169,15 +185,15 @@ var PagePropertiesDialog = widget.Dialog.extend({
     /**
      * @override
      */
-    save: function(data){
+    save: function (data) {
         var self = this;
         var context = weContext.get();
-        var url = $(".o_page_management_info #page_url").val();
+        var url = this.$('#page_url').val();
 
-        var $date_publish = $(".o_page_management_info #date_publish");
+        var $date_publish = this.$("#date_publish");
         $date_publish.closest(".form-group").removeClass('has-error');
         var date_publish = $date_publish.val();
-        if (date_publish != "") {
+        if (date_publish !== "") {
             date_publish = this._parse_date(date_publish);
             if (!date_publish) {
                 $date_publish.closest(".form-group").addClass('has-error');
@@ -185,31 +201,31 @@ var PagePropertiesDialog = widget.Dialog.extend({
             }
         }
         var params = {
-            id: self.page.id,
-            name: $(".o_page_management_info #page_name").val(),
-            //replace duplicate following "/" by only one "/"
-            url: url.replace(/\/{2,}/g,"/"),
-            is_menu: $(".o_page_management_info #is_menu").prop('checked'),
-            is_homepage: $(".o_page_management_info #is_homepage").prop('checked'),
-            website_published: $(".o_page_management_info #is_published").prop('checked'),
-            create_redirect: $(".o_page_management_info #create_redirect").prop('checked'),
-            redirect_type: $(".o_page_management_info #redirect_type").val(),
-            website_indexed: $(".o_page_management_info #is_indexed").prop('checked'),
+            id: this.page.id,
+            name: this.$('#page_name').val(),
+            // Replace duplicate following '/' by only one '/'
+            url: url.replace(/\/{2,}/g, '/'),
+            is_menu: this.$('#is_menu').prop('checked'),
+            is_homepage: this.$('#is_homepage').prop('checked'),
+            website_published: this.$('#is_published').prop('checked'),
+            create_redirect: this.$('#create_redirect').prop('checked'),
+            redirect_type: this.$('#redirect_type').val(),
+            website_indexed: this.$('#is_indexed').prop('checked'),
             date_publish: date_publish,
         };
-        self._rpc({
+        this._rpc({
             model: 'website.page',
             method: 'save_page_info',
             args: [[context.website_id], params],
-            kwargs: {
-                context: context
-            },
+            context: context,
         }).then(function (url) {
-            // If from page manager: reload url, if from page itself: go to (possibly) new url
-            if (self._getMainObject().model == 'website.page')
+            // If from page manager: reload url, if from page itself: go to
+            // (possibly) new url
+            if (self._getMainObject().model === 'website.page') {
                 window.location.href = url.toLowerCase();
-            else
+            } else {
                 window.location.reload(true);
+            }
         });
     },
 
@@ -304,54 +320,47 @@ var PagePropertiesDialog = widget.Dialog.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
     _onUrlChanged: function () {
         var url = this.$('input#page_url').val();
-        if (url != this.page.url) {
-            this.$(".ask_for_redirect").show();
-        }
-        else {
-            this.$(".ask_for_redirect").hide();
-        }
+        this.$('.ask_for_redirect').toggleClass('hidden', url === this.page.url);
     },
+    /**
+     * @private
+     */
     _onNameChanged: function () {
         var name = this.$('input#page_name').val();
-        //If the file type is a supported mimetype, check if it is t-called. If so, warn user
-        //Note: different from page_search_dependencies which check only for url and not key
+        // If the file type is a supported mimetype, check if it is t-called.
+        // If so, warn user. Note: different from page_search_dependencies which
+        // check only for url and not key
         var ext = '.' + this.page.name.split('.').pop();
-        if(ext in this.supportedMimetype && ext != '.html'){
-            if (name != this.page.name) {
-                this.$(".warn_about_call").show();
-            }
-            else {
-                this.$(".warn_about_call").hide();
-            }
+        if (ext in this.supportedMimetype && ext !== '.html') {
+            this.$('.warn_about_call').toggleClass('hidden', name === this.page.name);
         }
     },
+    /**
+     * @private
+     */
     _onCreateRedirectChanged: function () {
-      var createRedirect = this.$('input#create_redirect').prop('checked');
-      if (createRedirect) {
-          this.$(".redirect_type").show();
-      }
-      else {
-          this.$(".redirect_type").hide();
-      }
+        var createRedirect = this.$('input#create_redirect').prop('checked');
+        this.$('.redirect_type').toggleClass('hidden', !createRedirect);
     },
 });
 
-var MenuEntryDialog = widget.LinkDialog.extend({
-    xmlDependencies: widget.LinkDialog.prototype.xmlDependencies.concat(
+var MenuEntryDialog = weWidgets.LinkDialog.extend({
+    xmlDependencies: weWidgets.LinkDialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
 
     /**
      * @constructor
-     * @override
      */
     init: function (parent, options, editor, data) {
         data.text = data.name || '';
         data.isNewWindow = data.new_window;
         this.data = data;
-        this.menu_link_options = options.menu_link_options;
         this._super(parent, _.extend({}, {
             title: _t("Create Menu"),
         }, options || {}), editor, data);
@@ -360,23 +369,24 @@ var MenuEntryDialog = widget.LinkDialog.extend({
      * @override
      */
     start: function () {
-        var self = this;
+        // Remove style related elements
         this.$('.o_link_dialog_preview').remove();
-        this.$('.window-new, .link-style').closest('.form-group').remove();
-        this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
-        if (this.menu_link_options) { // add menu link option only when adding new menu
-            self.$('#o_link_dialog_url_input').closest('.form-group').hide();
-            this.$('#o_link_dialog_label_input').closest('.form-group').after(qweb.render('website.contentMenu.dialog.edit.link_menu_options'));
-            // remove the label that is automatically added before
-            this.$('#o_link_dialog_url_input').parent().siblings().html('');
-            this.$('input[name=link_menu_options]').on('change', function () {
-                self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
-            });
-        }
+        this.$('input[name="is_new_window"], .link-style').closest('.form-group').remove();
         this.$modal.find('.modal-lg').removeClass('modal-lg')
                    .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
+
+        // Adapt URL label
+        this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
+
+        this.$('#o_link_dialog_url_input').after(qweb.render('website.contentMenu.dialog.edit.link_menu_hint'));
+
         return this._super.apply(this, arguments);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
@@ -387,17 +397,14 @@ var MenuEntryDialog = widget.LinkDialog.extend({
             $e.focus();
             return;
         }
-        if (this.$('input[name=link_menu_options]:checked').val() === 'new_page') {
-            window.location = '/website/add/' + encodeURIComponent($e.val()) + '?add_menu=1';
-            return;
-        }
         return this._super.apply(this, arguments);
     },
+
 });
 
-var SelectEditMenuDialog = widget.Dialog.extend({
+var SelectEditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.select',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
 
@@ -425,12 +432,12 @@ var SelectEditMenuDialog = widget.Dialog.extend({
     },
 });
 
-var EditMenuDialog = widget.Dialog.extend({
+var EditMenuDialog = weWidgets.Dialog.extend({
     template: 'website.contentMenu.dialog.edit',
-    xmlDependencies: widget.Dialog.prototype.xmlDependencies.concat(
+    xmlDependencies: weWidgets.Dialog.prototype.xmlDependencies.concat(
         ['/website/static/src/xml/website.contentMenu.xml']
     ),
-    events: _.extend({}, widget.Dialog.prototype.events, {
+    events: _.extend({}, weWidgets.Dialog.prototype.events, {
         'click a.js_add_menu': '_onAddMenuButtonClick',
         'click button.js_delete_menu': '_onDeleteMenuButtonClick',
         'click button.js_edit_menu': '_onEditMenuButtonClick',
@@ -558,7 +565,7 @@ var EditMenuDialog = widget.Dialog.extend({
      */
     _onAddMenuButtonClick: function () {
         var self = this;
-        var dialog = new MenuEntryDialog(this, {menu_link_options: true}, undefined, {});
+        var dialog = new MenuEntryDialog(this, {}, undefined, {});
         dialog.on('save', this, function (link) {
             var new_menu = {
                 id: _.uniqueId('new-'),
@@ -694,11 +701,16 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
         return def;
     },
+    /**
+     * Opens the page properties dialog.
+     *
+     * @private
+     * @returns {Deferred}
+     */
     _pageProperties: function () {
-        var self = this;
-        var moID = self._getMainObject().id;
-        var dialog = new PagePropertiesDialog(self,moID,{}).open();
-        return dialog;
+        var moID = this._getMainObject().id;
+        var dialog = new PagePropertiesDialog(this, moID, {}).open();
+        return dialog.opened();
     },
 });
 
@@ -756,35 +768,54 @@ var PageManagement = Widget.extend({
     },
     _onDeletePageButtonClick: function (ev) {
         var pageId = $(ev.currentTarget).data('id');
-        var self = this;
-        var context = weContext.get();
-
-        var def = $.Deferred();
-        // Search the page dependencies
-        this._getPageDependencies(pageId, context)
-        .then(function (dependencies) {
-        // Inform the user about those dependencies and ask him confirmation
-            var confirmDef = $.Deferred();
-            Dialog.safeConfirm(self, "", {
-                title: _t("Delete Page"),
-                $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
-                confirm_callback: confirmDef.resolve.bind(confirmDef),
-                cancel_callback: def.resolve.bind(self),
-            });
-            return confirmDef;
-        }).then(function () {
-        // Delete the page if the user confirmed
-            return self._rpc({
-                model: 'website.page',
-                method: 'delete_page',
-                args: [pageId],
-                context: context,
-            });
-        }).then(function () {
-            window.location.reload(true);
-        }, def.reject.bind(def));
+        _deletePage.call(this, pageId, true);
     },
 });
+
+/**
+ * Deletes the page after showing a dependencies warning for the given page id.
+ *
+ * @private
+ * @param {integer} pageId - The ID of the page to be deleted
+ * @param {Boolean} fromPageManagement
+ *                  Is the function called by the page manager?
+ *                  It will affect redirect after page deletion: reload or '/'
+ */
+// TODO: This function should be integrated in a widget in the future
+function _deletePage(pageId, fromPageManagement) {
+    var self = this;
+    var context = weContext.get();
+    var def = $.Deferred();
+
+    // Search the page dependencies
+    this._getPageDependencies(pageId, context)
+    .then(function (dependencies) {
+    // Inform the user about those dependencies and ask him confirmation
+        var confirmDef = $.Deferred();
+        Dialog.safeConfirm(self, "", {
+            title: _t("Delete Page"),
+            $content: $(qweb.render('website.delete_page', {dependencies: dependencies})),
+            confirm_callback: confirmDef.resolve.bind(confirmDef),
+            cancel_callback: def.resolve.bind(self),
+        });
+        return confirmDef;
+    }).then(function () {
+    // Delete the page if the user confirmed
+        return self._rpc({
+            model: 'website.page',
+            method: 'delete_page',
+            args: [pageId],
+            context: context,
+        });
+    }).then(function () {
+        if (fromPageManagement) {
+            window.location.reload(true);
+        }
+        else {
+            window.location.href = '/';
+        }
+    }, def.reject.bind(def));
+}
 
 websiteNavbarData.websiteNavbarRegistry.add(ContentMenu, '#content-menu');
 websiteRootData.websiteRootRegistry.add(PageManagement, '#edit_website_pages');

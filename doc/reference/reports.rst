@@ -190,7 +190,7 @@ Barcodes
 --------
 
 Barcodes are images returned by a controller and can easily be embedded in
-reports thanks to the QWeb syntax:
+reports thanks to the QWeb syntax (e.g. see :ref:`reference/qweb/attributes`):
 
 .. code-block:: html
 

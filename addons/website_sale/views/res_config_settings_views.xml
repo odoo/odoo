@@ -6,6 +6,23 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.res_config_settings_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[@id='sales_settings_invoicing_policy']" position="after">
+                <!--
+                Show the automatic invoices setting in sales settings.
+                -->
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     attrs="{'invisible': ['|', ('default_invoice_policy', '!=', 'order'), '&amp;', ('portal_confirmation_options', '!=', 'pay'), ('module_website_quote', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="automatic_invoice" nolabel="1"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="automatic_invoice"/>
+                        <div class="text-muted">
+                            Generate the invoice automatically when the payment is received
+                        </div>
+                    </div>
+                </div>
+            </xpath>
             <div id="webmaster_settings" position="after">
                 <h2>Product Catalog</h2>
                 <div class="row mt16 o_settings_container" id="sale_product_catalog_settings">
@@ -22,17 +39,6 @@
                                 <div class="mt16">
                                     <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="product_image_setting">
-                        <div class="o_setting_left_pane">
-                            <field name="group_website_multiimage" widget="checkbox"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_website_multiimage"/>
-                            <div class="text-muted">
-                                Display an images carousel on product pages
                             </div>
                         </div>
                     </div>
@@ -108,7 +114,7 @@
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
-                                    <field name="default_sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                 </div>
                                 <div>
                                     <button type="action" name="%(account.action_tax_form)d" string="Taxes" class="btn-link" icon="fa-arrow-right"/>

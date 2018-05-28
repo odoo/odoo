@@ -4,7 +4,7 @@
 import logging
 
 from odoo import exceptions
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
@@ -85,9 +85,8 @@ class TestResConfig(TransactionCase):
         self.assertEqual(res.args[0], self.expected_final_error_msg_wo_menu)
 
 
+@tagged('post_install', '-at_install')
 class TestResConfigExecute(TransactionCase):
-    at_install = False
-    post_install = True
 
     def test_01_execute_res_config(self):
         """

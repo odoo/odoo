@@ -5,6 +5,7 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var core = require('web.core');
 var mixins = require('web.mixins');
+var base = require('web_editor.base');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
 var weWidgets = require('web_editor.widget');
@@ -156,6 +157,11 @@ renderer.tplPopovers = function (lang, options) {
             event: 'delete'
         })).appendTo($imageprop);
 
+    $(tplIconButton('fa fa-crop', {
+        title: _t('Crop Image'),
+        event: 'cropImage',
+    })).insertAfter($imagePopover.find('[data-event="imageShape"][data-value="img-thumbnail"]'));
+
     $imagePopover.find('.popover-content').append($airPopover.find(".note-history").clone());
 
     $imagePopover.find('[data-event="showImageDialog"]').before($airPopover.find('[data-event="showLinkDialog"]').clone());
@@ -206,7 +212,9 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     // stop animation when edit content
     var previous = $(".note-control-selection").data('target');
     if (previous) {
-        $(previous).css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        var $previous = $(previous);
+        $previous.css({"-webkit-animation-play-state": "", "animation-play-state": "", "-webkit-transition": "", "transition": "", "-webkit-animation": "", "animation": ""});
+        $previous.find('.o_we_selected_image').addBack('.o_we_selected_image').removeClass('o_we_selected_image');
     }
     // end
 
@@ -223,8 +231,9 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
         $container.find('a[data-event="padding"][data-value="xl"]').parent().toggleClass("active", $(oStyle.image).hasClass("padding-xl"));
         $container.find('a[data-event="padding"][data-value=""]').parent().toggleClass("active", !$container.find('.active a[data-event="padding"]').length);
 
-        if (dom.isImgFont(oStyle.image)) {
+        $(oStyle.image).addClass('o_we_selected_image');
 
+        if (dom.isImgFont(oStyle.image)) {
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
             $container.find('.only_fa').removeClass("hidden");
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
@@ -237,7 +246,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
 
         } else {
-
             $container.find('.hidden:not(.only_fa)').removeClass("hidden");
             $container.find('.only_fa').addClass("hidden");
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
@@ -256,7 +264,6 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             }
 
             $container.find('.note-color').addClass("hidden");
-
         }
 
         $container.find('button[data-event="floatMe"][data-value="left"]').toggleClass("active", $(oStyle.image).hasClass("pull-left"));
@@ -394,6 +401,10 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
         media: media,
+        options: {
+            lastFilters: ['background'],
+            onUpload: $editable.data('callbacks').onImageUpload,
+        },
     });
     return new $.Deferred().reject();
 };
@@ -401,6 +412,14 @@ $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
     core.bus.trigger('alt_dialog_demand', {
+        $editable: $editable,
+        media: $selection.data('target'),
+    });
+};
+$.summernote.pluginEvents.cropImage = function (event, editor, layoutInfo, sorted) {
+    var $editable = layoutInfo.editable();
+    var $selection = layoutInfo.handle().find('.note-control-selection');
+    core.bus.trigger('crop_image_dialog_demand', {
         $editable: $editable,
         media: $selection.data('target'),
     });
@@ -430,8 +449,8 @@ dom.isImgFont = function (node) {
     var className = (node && node.className || "");
     if (node && (nodeName === "SPAN" || nodeName === "I") && className.length) {
         var classNames = className.split(/\s+/);
-        for (var k=0; k<weWidgets.fontIcons.length; k++) {
-            if (_.intersection(weWidgets.fontIcons[k].alias, classNames).length) {
+        for (var k=0; k<base.fontIcons.length; k++) {
+            if (_.intersection(base.fontIcons[k].alias, classNames).length) {
                 return true;
             }
         }
@@ -660,7 +679,15 @@ function summernote_mousedown(event) {
     }
 
     // restore range if range lost after clicking on non-editable area
-    r = range.create();
+    try {
+        r = range.create();
+    } catch (e) {
+        // If this code is running inside an iframe-editor and that the range
+        // is outside of this iframe, this will fail as the iframe does not have
+        // the permission to check the outside content this way. In that case,
+        // we simply ignore the exception as it is as if there was no range.
+        return;
+    }
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
@@ -784,6 +811,14 @@ eventHandler.attach = function (oLayoutInfo, options) {
     $(document).on("keyup", reRangeSelectKey);
 
     var clone_data = false;
+
+    if (options.model) {
+        oLayoutInfo.editable().data({'oe-model': options.model, 'oe-id': options.id});
+    }
+    if (options.getMediaDomain) {
+        oLayoutInfo.editable().data('oe-media-domain', options.getMediaDomain);
+    }
+
     var $node = oLayoutInfo.editor();
     if ($node.data('oe-model') || $node.data('oe-translation-id')) {
         $node.on('content_changed', function () {
@@ -1003,6 +1038,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         this.setParent(parent);
 
         core.bus.on('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.on('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.on('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.on('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1013,6 +1049,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         mixins.EventDispatcherMixin.destroy.call(this);
 
         core.bus.off('alt_dialog_demand', this, this._onAltDialogDemand);
+        core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
     },
@@ -1032,7 +1069,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             return;
         }
         data.__alreadyDone = true;
-        var altDialog = new weWidgets.alt(this,
+        var altDialog = new weWidgets.AltDialog(this,
             data.options || {},
             data.$editable,
             data.media
@@ -1044,6 +1081,34 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             altDialog.on('cancel', this, data.onCancel);
         }
         altDialog.open();
+    },
+
+    /**
+     * Called when a demand to open a crop dialog is received on the bus.
+     *
+     * @private
+     * @param {Object} data
+     */
+    _onCropImageDialogDemand: function (data) {
+        if (data.__alreadyDone) {
+            return;
+        }
+        data.__alreadyDone = true;
+        var cropImageDialog = new weWidgets.CropImageDialog(this,
+            _.extend({
+                res_model: data.$editable.data('oe-model'),
+                res_id: data.$editable.data('oe-id'),
+            }, data.options || {}),
+            data.$editable,
+            data.media
+        );
+        if (data.onSave) {
+            cropImageDialog.on('save', this, data.onSave);
+        }
+        if (data.onCancel) {
+            cropImageDialog.on('cancel', this, data.onCancel);
+        }
+        cropImageDialog.open();
     },
     /**
      * Called when a demand to open a link dialog is received on the bus.
@@ -1085,6 +1150,7 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
             _.extend({
                 res_model: data.$editable.data('oe-model'),
                 res_id: data.$editable.data('oe-id'),
+                domain: data.$editable.data('oe-media-domain'),
             }, data.options),
             data.$editable,
             data.media

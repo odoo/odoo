@@ -8,8 +8,7 @@ class Documentation(models.Model):
     _name = 'forum.documentation.toc'
     _description = 'Documentation ToC'
     _inherit = ['website.seo.metadata']
-    _order = "parent_left"
-    _parent_order = "sequence, name"
+    _order = "sequence, name"
     _parent_store = True
 
     sequence = fields.Integer('Sequence')
@@ -17,8 +16,7 @@ class Documentation(models.Model):
     introduction = fields.Html('Introduction', translate=True)
     parent_id = fields.Many2one('forum.documentation.toc', string='Parent Table Of Content', ondelete='cascade')
     child_ids = fields.One2many('forum.documentation.toc', 'parent_id', string='Children Table Of Content')
-    parent_left = fields.Integer(string='Left Parent', index=True)
-    parent_right = fields.Integer(string='Right Parent', index=True)
+    parent_path = fields.Char(index=True)
     post_ids = fields.One2many('forum.post', 'documentation_toc_id', string='Posts')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+      <!-- Top menu item -->
+          <menuitem id="menu_board_root" name="Dashboards" sequence="305" web_icon="base,static/description/board.png" groups="base.group_user"/>
+          <menuitem id="menu_reporting_dashboard" name="Dashboards" parent="menu_board_root" sequence="0"/>
+          <menuitem id="menu_reporting_config" name="Configuration" parent="menu_board_root" sequence="100" groups="base.group_system"/>
+
+      <!-- Top menu item -->
+      <menuitem name="Settings"
+          id="menu_administration"
+          web_icon="base,static/description/settings.png"
+          sequence="500"
+          groups="base.group_erp_manager"/>
+          <menuitem id="menu_management" name="Apps" sequence="310" web_icon="base,static/description/modules.png" groups="base.group_system"/>
+          <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
+          <menuitem id="menu_users" name="Users &amp; Companies" parent="menu_administration" sequence="0"/>
+          <menuitem id="menu_translation" name="Translations" parent="menu_administration" sequence="1"/>
+              <menuitem id="menu_translation_app" name="Application Terms" parent="menu_translation" sequence="4" groups="base.group_no_one"/>
+              <menuitem id="menu_translation_export" name="Import / Export" parent="menu_translation" sequence="3" groups="base.group_no_one"/>
+
+          <menuitem id="menu_custom" name="Technical" parent="menu_administration" sequence="110" groups="base.group_no_one"/>
+              <menuitem id="next_id_2" name="User Interface" parent="menu_custom"/>
+              <menuitem id="menu_email" name="Email" parent="menu_custom" sequence="1"/>
+              <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom"/>
+              <menuitem id="menu_automation" name="Automation" parent="base.menu_custom"/>
+              <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
+              <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
+
+          <menuitem id="base.menu_tests" name="Tests" sequence="1000000" web_icon="test_exceptions,static/description/icon.png"/>
+
+      <record model="ir.ui.menu" id="base.menu_administration">
+          <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+      </record>
+
+      <record id="action_client_base_menu" model="ir.actions.client">
+          <field name="name">Open Settings Menu</field>
+          <field name="tag">reload</field>
+          <field name="params" eval="{'menu_id': ref('base.menu_administration')}"/>
+      </record>
+      <record id="open_menu" model="ir.actions.todo">
+          <field name="action_id" ref="action_client_base_menu"/>
+          <field name="sequence">100</field>
+          <field name="state">done</field>
+      </record>
+      <record id="action_open_website" model="ir.actions.act_url">
+          <field name="name">Home Menu</field>
+          <field name="target">self</field>
+          <field name="url">/web</field>
+      </record>
+</odoo>

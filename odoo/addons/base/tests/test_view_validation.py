@@ -5,6 +5,7 @@ from lxml import etree
 import io
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.view_validation import (
     valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
     valid_type_in_col, valid_att_in_field, valid_att_in_label,
@@ -94,6 +95,7 @@ valid_tree = etree.parse(io.BytesIO(b'''\
 ''')).getroot()
 
 
+@tagged('standard', 'at_install')
 class TestViewValidation(unittest.TestCase):
     """ Test the view validation code (but not the views themselves). """
 

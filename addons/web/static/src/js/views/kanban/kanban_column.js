@@ -4,15 +4,14 @@ odoo.define('web.KanbanColumn', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var kanban_quick_create = require('web.kanban_quick_create');
 var KanbanRecord = require('web.KanbanRecord');
+var RecordQuickCreate = require('web.kanban_record_quick_create');
 var view_dialogs = require('web.view_dialogs');
 var Widget = require('web.Widget');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 
 var _t = core._t;
 var QWeb = core.qweb;
-var RecordQuickCreate = kanban_quick_create.RecordQuickCreate;
 
 var KanbanColumn = Widget.extend({
     template: 'KanbanView.Group',
@@ -25,11 +24,11 @@ var KanbanColumn = Widget.extend({
     events: {
         'click .o_column_edit': '_onEditColumn',
         'click .o_column_delete': '_onDeleteColumn',
-        'click .o_column_archive': '_onArchiveRecords',
-        'click .o_column_unarchive': '_onUnarchiveRecords',
         'click .o_kanban_quick_add': '_onAddQuickCreate',
         'click .o_kanban_load_more': '_onLoadMore',
         'click .o_kanban_toggle_fold': '_onToggleFold',
+        'click .o_column_archive_records': '_onArchiveRecords',
+        'click .o_column_unarchive_records': '_onUnarchiveRecords'
     },
     /**
      * @override
@@ -49,6 +48,8 @@ var KanbanColumn = Widget.extend({
         this.modelName = data.model;
 
         this.quick_create = options.quick_create;
+        this.quickCreateView = options.quickCreateView;
+        this.groupedBy = options.groupedBy;
         this.grouped_by_m2o = options.grouped_by_m2o;
         this.editable = options.editable;
         this.deletable = options.deletable;
@@ -158,6 +159,18 @@ var KanbanColumn = Widget.extend({
 
         return $.when.apply($, defs);
     },
+    /**
+     * Called when a record has been quick created, as a new column is rendered
+     * and appended into a fragment, before replacing the old column in the DOM.
+     * When this happens, the quick create widget is inserted into the new
+     * column directly, and it should be focused. However, as it is rendered
+     * into a fragment, the focus has to be set manually once in the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.quickCreateWidget) {
+            this.quickCreateWidget.on_attach_callback();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -165,6 +178,8 @@ var KanbanColumn = Widget.extend({
 
     /**
      * Adds the quick create record to the top of the column.
+     *
+     * @returns {Deferred}
      */
     addQuickCreate: function () {
         if (this.folded) {
@@ -174,12 +189,28 @@ var KanbanColumn = Widget.extend({
             });
             return;
         }
+
         if (this.quickCreateWidget) {
-            return;
+            return $.Deferred().reject();
         }
-        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
-        this.quickCreateWidget = new RecordQuickCreate(this, width);
-        this.quickCreateWidget.insertAfter(this.$header);
+        this.trigger_up('close_quick_create'); // close other quick create widgets
+        this.trigger_up('start_quick_create');
+        var context = this.data.getContext();
+        context['default_' + this.groupedBy] = this.id;
+        this.quickCreateWidget = new RecordQuickCreate(this, {
+            context: context,
+            formViewRef: this.quickCreateView,
+            model: this.modelName,
+        });
+        return this.quickCreateWidget.insertAfter(this.$header);
+    },
+    /**
+     * Closes the quick create widget if it isn't dirty.
+     */
+    cancelQuickCreate: function () {
+        if (this.quickCreateWidget) {
+            this.quickCreateWidget.cancel();
+        }
     },
     /**
      * @returns {Boolean} true iff the column is empty
@@ -244,14 +275,6 @@ var KanbanColumn = Widget.extend({
      */
     _onAddQuickCreate: function () {
         this.addQuickCreate();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onArchiveRecords: function (event) {
-        event.preventDefault();
-        this.trigger_up('kanban_column_archive_records', {archive: true});
     },
     /**
      * @private
@@ -338,10 +361,24 @@ var KanbanColumn = Widget.extend({
      * @private
      * @param {MouseEvent} event
      */
+    _onArchiveRecords: function (event) {
+        event.preventDefault();
+        Dialog.confirm(this, _t("Are you sure that you want to archive all the records from this column?"), {
+            confirm_callback: this.trigger_up.bind(this, 'kanban_column_records_toggle_active', {
+                archive: true,
+            }),
+        });
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
     _onUnarchiveRecords: function (event) {
         event.preventDefault();
-        this.trigger_up('kanban_column_archive_records', {archive: false});
-    },
+        this.trigger_up('kanban_column_records_toggle_active', {
+            archive: false,
+        });
+    }
 });
 
 return KanbanColumn;

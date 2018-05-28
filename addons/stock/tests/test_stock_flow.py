@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class TestStockFlow(TestStockCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
         """ Basic stock operation on incoming and outgoing shipment. """
         LotObj = self.env['stock.production.lot']
@@ -418,7 +418,7 @@ class TestStockFlow(TestStockCommon):
         # Back order of Outgoing shipment
         # ----------------------------------------------------------------------
 
-        back_order_out.do_transfer()
+        back_order_out.action_done()
 
         # Check stock location quants and available quantity for product A.
         quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])
@@ -1643,10 +1643,6 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
 
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
-
     def test_72_picking_state_partial_reserve(self):
         """ This test will check that the state of the picking is correctly computed according
         to the state of its move lines and its move type.
@@ -1737,10 +1733,6 @@ class TestStockFlow(TestStockCommon):
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")
-
-        # force assign on the delivery order, it should be assigned
-        picking_out.force_assign()
-        self.assertEquals(picking_out.state, "assigned")
 
     def test_74_move_state_waiting_mto(self):
         """ This test will check that when a move is unreserved, its state changes to 'waiting' if

@@ -67,8 +67,8 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
-        <p class="oe_view_nocontent_create">
-          Click to add a new tag.
+        <p class="o_view_nocontent_smiling_face">
+          Add a new tag
         </p>
       </field>
     </record>
@@ -154,12 +154,10 @@
         <field name="arch" type="xml">
             <form string="Note" class="oe_form_nomargin o_note_form_view">
                 <header>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
-                </header>
-                <sheet>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
-                    <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
-                </sheet>
+                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <field name="memo" type="html" class="oe_memo"/>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
@@ -192,7 +190,7 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
       </field>
@@ -207,8 +205,8 @@
       <field name="search_view_id" ref="view_note_note_filter"/>
       <field name="context">{}</field>
       <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a personal note.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new personal note
           </p><p>
             Use notes to organize personal tasks or notes. All
             notes are private; no one else will be able to see them. However

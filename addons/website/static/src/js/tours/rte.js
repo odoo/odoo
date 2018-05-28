@@ -94,7 +94,7 @@ tour.register('rte_translator', {
     run: 'text test french placeholder',
 }, {
     content: "close modal",
-    trigger: 'button.o_save_button',
+    trigger: '.modal-footer > .btn-primary',
     extra_trigger: '.modal input:propValue(test french placeholder)',
 }, {
     content: "save translation",

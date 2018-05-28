@@ -5,7 +5,7 @@ from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
 
 class account_journal(models.Model):
@@ -38,65 +38,57 @@ class account_journal(models.Model):
         elif self.type == 'bank':
             return ['', _('Bank: Balance')]
 
+    # Below method is used to get data of bank and cash statemens
     @api.multi
     def get_line_graph_datas(self):
+        """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
+
+        def build_graph_data(date, amount):
+            #display date in locale format
+            name = format_date(date, 'd LLLL Y', locale=locale)
+            short_name = format_date(date, 'd MMM', locale=locale)
+            return {'x':short_name,'y': amount, 'name':name}
+
+        self.ensure_one()
+        BankStatement = self.env['account.bank.statement']
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
-        bank_stmt = []
-        # Query to optimize loading of data for bank statement graphs
-        # Return a list containing the latest bank statement balance per day for the
-        # last 30 days for current journal
-        query = """SELECT a.date, a.balance_end
-                        FROM account_bank_statement AS a,
-                            (SELECT c.date, max(c.id) AS stmt_id
-                                FROM account_bank_statement AS c
-                                WHERE c.journal_id = %s
-                                    AND c.date > %s
-                                    AND c.date <= %s
-                                    GROUP BY date, id
-                                    ORDER BY date, id) AS b
-                        WHERE a.id = b.stmt_id;"""
-
-        self.env.cr.execute(query, (self.id, last_month, today))
-        bank_stmt = self.env.cr.dictfetchall()
-
-        last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids),('date', '<=', last_month.strftime(DF))], order="date desc, id desc", limit=1)
-        start_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
-
         locale = self._context.get('lang') or 'en_US'
-        show_date = last_month
-        #get date in locale format
-        name = format_date(show_date, 'd LLLL Y', locale=locale)
-        short_name = format_date(show_date, 'd MMM', locale=locale)
-        data.append({'x':short_name,'y':start_balance, 'name':name})
 
-        for stmt in bank_stmt:
-            #fill the gap between last data and the new one
-            number_day_to_add = (datetime.strptime(stmt.get('date'), DF) - show_date).days
-            last_balance = data[len(data) - 1]['y']
-            for day in range(0,number_day_to_add + 1):
-                show_date = show_date + timedelta(days=1)
-                #get date in locale format
-                name = format_date(show_date, 'd LLLL Y', locale=locale)
-                short_name = format_date(show_date, 'd MMM', locale=locale)
-                data.append({'x': short_name, 'y':last_balance, 'name': name})
-            #add new stmt value
-            data[len(data) - 1]['y'] = stmt.get('balance_end')
+        #starting point of the graph is the last statement
+        last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', today.strftime(DF))], order='date desc, id desc', limit=1)
+        if not last_stmt:
+            last_stmt = BankStatement.search([('journal_id', '=', self.id), ('date', '<=', last_month.strftime(DF))], order='date desc, id desc', limit=1)
+        last_balance = last_stmt and last_stmt.balance_end_real or 0
+        data.append(build_graph_data(today, last_balance))
 
-        #continue the graph if the last statement isn't today
-        if show_date != today:
-            number_day_to_add = (today - show_date).days
-            last_balance = data[len(data) - 1]['y']
-            for day in range(0,number_day_to_add):
-                show_date = show_date + timedelta(days=1)
-                #get date in locale format
-                name = format_date(show_date, 'd LLLL Y', locale=locale)
-                short_name = format_date(show_date, 'd MMM', locale=locale)
-                data.append({'x': short_name, 'y':last_balance, 'name': name})
+        #then we subtract the total amount of bank statement lines per day to get the previous points
+        #(graph is drawn backward)
+        date = today
+        amount = last_balance
+        query = """SELECT l.date, sum(l.amount) as amount
+                        FROM account_bank_statement_line l
+                        RIGHT JOIN account_bank_statement st ON l.statement_id = st.id
+                        WHERE st.journal_id = %s
+                          AND l.date > %s
+                          AND l.date <= %s
+                        GROUP BY l.date
+                        ORDER BY l.date desc
+                        """
+        self.env.cr.execute(query, (self.id, last_month, today))
+        for val in self.env.cr.dictfetchall():
+            date = datetime.strptime(val['date'], DF)
+            if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
+                data[:0] = [build_graph_data(date, amount)]
+            amount -= val['amount']
+
+        # make sure the graph starts 1 month ago
+        if date.strftime(DF) != last_month.strftime(DF):
+            data[:0] = [build_graph_data(last_month, amount)]
 
         [graph_title, graph_key] = self._graph_title_and_key()
-        color = '#875A7B' if '+e' in version else '#7c7bad'
+        color = '#875A7B' if 'e' in version else '#7c7bad'
         return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
 
     @api.multi
@@ -175,8 +167,11 @@ class account_journal(models.Model):
             # optimization to read sum of balance from account_move_line
             account_ids = tuple(ac for ac in [self.default_debit_account_id.id, self.default_credit_account_id.id] if ac)
             if account_ids:
-                amount_field = 'balance' if (not self.currency_id or self.currency_id == self.company_id.currency_id) else 'amount_currency'
-                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s AND date <= %%s;""" % (amount_field,)
+                amount_field = 'aml.balance' if (not self.currency_id or self.currency_id == self.company_id.currency_id) else 'aml.amount_currency'
+                query = """SELECT sum(%s) FROM account_move_line aml
+                           LEFT JOIN account_move move ON aml.move_id = move.id
+                           WHERE aml.account_id in %%s
+                           AND move.date <= %%s AND move.state = 'posted';""" % (amount_field,)
                 self.env.cr.execute(query, (account_ids, fields.Date.today(),))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
@@ -194,7 +189,7 @@ class account_journal(models.Model):
             query_results_drafts = self.env.cr.dictfetchall()
 
             today = datetime.today()
-            query = """SELECT amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
+            query = """SELECT amount_total, currency_id AS currency, type, date_invoice, company_id FROM account_invoice WHERE journal_id = %s AND date <= %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
@@ -220,11 +215,11 @@ class account_journal(models.Model):
 
     def _get_open_bills_to_pay_query(self):
         """
-        Returns a tuple contaning the SQL query used to gather the open bills
+        Returns a tuple containing the SQL query used to gather the open bills
         data as its first element, and the arguments dictionary to use to run
         it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type
+        return ("""SELECT state, residual_signed as amount_total, currency_id AS currency, type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
 
@@ -234,7 +229,7 @@ class account_journal(models.Model):
         gather the bills in draft state data, and the arguments
         dictionary to use to run it as its second.
         """
-        return ("""SELECT state, amount_total, currency_id AS currency, type
+        return ("""SELECT state, amount_total, currency_id AS currency, type, date_invoice, company_id
                   FROM account_invoice
                   WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
 
@@ -246,10 +241,11 @@ class account_journal(models.Model):
         rslt_sum = 0.0
         for result in results_dict:
             cur = self.env['res.currency'].browse(result.get('currency'))
+            company = self.env['res.company'].browse(result.get('company_id')) or self.env.user.company_id
             rslt_count += 1
-
             type_factor = result.get('type') in ('in_refund', 'out_refund') and -1 or 1
-            rslt_sum += type_factor * cur.compute(result.get('amount_total'), target_currency)
+            rslt_sum += type_factor * cur._convert(
+                result.get('amount_total'), target_currency, company, result.get('date_invoice') or fields.Date.today())
         return (rslt_count, rslt_sum)
 
     @api.multi
@@ -378,19 +374,18 @@ class account_journal(models.Model):
         return self.open_payments_action('transfer')
 
     @api.multi
-    def open_payments_action(self, payment_type):
-        ctx = self._context.copy()
-        ctx.update({
-            'default_payment_type': payment_type,
-            'default_journal_id': self.id
-        })
-        ctx.pop('group_by', None)
-        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_payments')
-        if action_rec:
-            action = action_rec.read([])[0]
-            action['context'] = ctx
-            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
-            return action
+    def open_payments_action(self, payment_type, mode='tree'):
+        if payment_type == 'outbound':
+            action_ref = 'account.action_account_payments_payable'
+        elif payment_type == 'transfer':
+            action_ref = 'account.action_account_payments_transfer'
+        else:
+            action_ref = 'account.action_account_payments'
+        [action] = self.env.ref(action_ref).read()
+        action['context'] = dict(safe_eval(action.get('context')), default_journal_id=self.id, search_default_journal_id=self.id)
+        if mode == 'form':
+            action['views'] = [[False, 'form']]
+        return action
 
     @api.multi
     def open_action_with_context(self):
@@ -420,6 +415,21 @@ class account_journal(models.Model):
             'context': "{'default_journal_id': " + str(self.id) + "}",
         })
         return action
+
+    @api.multi
+    def create_customer_payment(self):
+        """return action to create a customer payment"""
+        return self.open_payments_action('inbound', mode='form')
+
+    @api.multi
+    def create_supplier_payment(self):
+        """return action to create a supplier payment"""
+        return self.open_payments_action('outbound', mode='form')
+
+    @api.multi
+    def create_internal_transfer(self):
+        """return action to create a internal transfer"""
+        return self.open_payments_action('transfer', mode='form')
 
     #####################
     # Setup Steps Stuff #

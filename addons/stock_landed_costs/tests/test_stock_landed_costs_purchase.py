@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     def setUp(self):

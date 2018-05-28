@@ -52,8 +52,8 @@
                 <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name', 'ilike', self)]" string="Theme"/>
                 <field name="category_id" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('category_id', 'ilike', self)]" string="Category"/>
                 <group>
-                    <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
-                    <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                    <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
+                    <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                 </group>
             </search>
         </field>
@@ -67,7 +67,7 @@
         <field name="view_id" ref="theme_view_kanban"/>
         <field name="search_view_id" ref="theme_view_search"/>
         <field name="domain" eval="[
-            '|', ('category_id', 'not in', [ref('base.module_category_hidden', False), ref('base.module_category_theme_hidden', False)]), ('name', '=', 'theme_default'),
+            ('category_id', 'not in', [ref('base.module_category_theme_hidden', False)]),
             '|', ('category_id', '=', ref('base.module_category_theme', False)), ('category_id.parent_id', '=', ref('base.module_category_theme', False))
         ]"/>
     </record>

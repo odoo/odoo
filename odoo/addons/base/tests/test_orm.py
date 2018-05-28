@@ -163,6 +163,25 @@ class TestORM(TransactionCase):
                                   ['date:month', 'date:day'], lazy=False)
         self.assertEqual(len(res), len(partner_ids))
 
+        # combine groupby and orderby
+        months = ['February 2013', 'January 2013', 'December 2012', 'November 2012']
+        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+                                  groupby=['date:month'], orderby='date:month DESC')
+        self.assertEqual([item['date:month'] for item in res], months)
+
+        # order by date should reorder by date:month
+        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+                                  groupby=['date:month'], orderby='date DESC')
+        self.assertEqual([item['date:month'] for item in res], months)
+
+        # order by date should reorder by date:day
+        days = ['11 Feb 2013', '28 Jan 2013', '14 Jan 2013', '07 Jan 2013',
+                '31 Dec 2012', '17 Dec 2012', '19 Nov 2012']
+        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
+                                  groupby=['date:month', 'date:day'],
+                                  orderby='date DESC', lazy=False)
+        self.assertEqual([item['date:day'] for item in res], days)
+
     def test_write_duplicate(self):
         p1 = self.env['res.partner'].create({'name': 'W'})
         (p1 + p1).write({'name': 'X'})

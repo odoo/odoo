@@ -1,4 +1,4 @@
-odoo.define('website.WebsiteRoot.instance', function (require) {
+odoo.define('root.widget', function (require) {
 'use strict';
 
 require('web.dom_ready');
@@ -43,6 +43,7 @@ var WebsiteRoot = BodyManager.extend({
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
+        animation_stop_demand: '_onAnimationStopDemand',
         ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
@@ -140,20 +141,22 @@ var WebsiteRoot = BodyManager.extend({
         if ($from === undefined) {
             $from = this.$('#wrapwrap');
         }
-        var defs = _.map(sAnimation.registry, function (Animation) {
+        var defs = _.map(sAnimation.registry, function (Animation, animationName) {
             var selector = Animation.prototype.selector || '';
             var $target = $from.find(selector).addBack(selector);
 
             var defs = _.map($target, function (el) {
                 var $snippet = $(el);
-                var animation = $snippet.data('snippet-view');
-                if (animation) {
-                    self.animations = _.without(self.animations, animation);
-                    animation.destroy();
+                var animationIndex = _.findIndex(self.animations, function (animation) {
+                    return animation.__name === animationName && $snippet[0] === animation.el;
+                });
+                if (animationIndex >= 0) {
+                    self.animations[animationIndex].destroy();
+                    self.animations.splice(animationIndex, 1);
                 }
-                animation = new Animation(self, editableMode);
+                var animation = new Animation(self, editableMode);
+                animation.__name = animationName;
                 self.animations.push(animation);
-                $snippet.data('snippet-view', animation);
                 return animation.attachTo($snippet);
             });
             return $.when.apply($, defs);
@@ -165,12 +168,18 @@ var WebsiteRoot = BodyManager.extend({
      * in edition mode for example.
      *
      * @private
+     * @param {jQuery} [$stopTarget]
+     *        only stop the animations linked to the given element(s)
      */
-    _stopAnimations: function () {
-        _.each(this.animations, function (animation) {
-            animation.destroy();
+    _stopAnimations: function ($stopTarget) {
+        var removedAnimations = _.map(this.animations, function (animation) {
+            if (!$stopTarget || $stopTarget.filter(animation.el).length) {
+                animation.destroy();
+                return animation;
+            }
+            return null;
         });
-        this.animations = [];
+        this.animations = _.difference(this.animations, removedAnimations);
     },
 
     //--------------------------------------------------------------------------
@@ -194,9 +203,10 @@ var WebsiteRoot = BodyManager.extend({
      * stopped.
      *
      * @private
+     * @param {OdooEvent} ev
      */
-    _onAnimationStopDemand: function () {
-        this._stopAnimations();
+    _onAnimationStopDemand: function (ev) {
+        this._stopAnimations(ev.data.$target);
     },
     /**
      * @todo review

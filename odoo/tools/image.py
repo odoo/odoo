@@ -41,7 +41,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
         :param base64_source: base64-encoded version of the source
             image; if False, returns False
         :param size: 2-tuple(width, height). A None value for any of width or
-            height mean an automatically computed value based respectivelly
+            height mean an automatically computed value based respectively
             on height or width of the source image.
         :param encoding: the output encoding
         :param filetype: the output filetype, by default the source image's
@@ -234,7 +234,7 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
 
 def image_get_resized_images(base64_source, return_big=False, return_medium=True, return_small=True,
     big_name='image', medium_name='image_medium', small_name='image_small',
-    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False):
+    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes={}):
     """ Standard tool function that returns a dictionary containing the
         big, medium and small versions of the source image. This function
         is meant to be used for the methods of functional fields for
@@ -245,7 +245,7 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         only image_medium and image_small values, to update those fields.
 
         :param base64_source: base64-encoded version of the source
-            image; if False, all returnes values will be False
+            image; if False, all returned values will be False
         :param return_{..}: if set, computes and return the related resizing
             of the image
         :param {..}_name: key of the resized image in the return dictionary;
@@ -255,33 +255,36 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
             previous parameters.
     """
     return_dict = dict()
+    size_big = sizes.get(big_name, (1024, 1024))
+    size_medium = sizes.get(medium_name, (128, 128))
+    size_small = sizes.get(small_name, (64, 64))
     if isinstance(base64_source, pycompat.text_type):
         base64_source = base64_source.encode('ascii')
     if return_big:
-        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big)
+        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big, size=size_big)
     if return_medium:
-        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium)
+        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium, size=size_medium)
     if return_small:
-        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
+        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small, size=size_small)
     return return_dict
 
-def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small'):
+def image_resize_images(vals, big_name='image', medium_name='image_medium', small_name='image_small', sizes={}):
     """ Update ``vals`` with image fields resized as expected. """
     if vals.get(big_name):
         vals.update(image_get_resized_images(vals[big_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False))
+                        avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False, sizes=sizes))
     elif vals.get(medium_name):
         vals.update(image_get_resized_images(vals[medium_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False))
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=False, sizes=sizes))
     elif vals.get(small_name):
         vals.update(image_get_resized_images(vals[small_name],
                         return_big=True, return_medium=True, return_small=True,
                         big_name=big_name, medium_name=medium_name, small_name=small_name,
-                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True))
+                        avoid_resize_big=True, avoid_resize_medium=True, avoid_resize_small=True, sizes=sizes))
     elif big_name in vals or medium_name in vals or small_name in vals:
         vals[big_name] = vals[medium_name] = vals[small_name] = False
 

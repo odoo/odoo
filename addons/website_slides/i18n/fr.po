@@ -3,26 +3,23 @@
 # * website_slides
 # 
 # Translators:
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Martin Trigaux, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
-# lucasdeliege <deliegelucas@gmail.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Clo <clo@odoo.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux, 2016
+# Clo <clo@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
+# Loic <loic.richard2@gmail.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
+# Frédéric LIETART <stuff@tifred.fr>, 2016
+# Jeanjean Noname <monsieur.spock@gmail.com>, 2016
 # Eloïse Stilmant <est@odoo.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Shark McGnark <peculiarcheese@gmail.com>, 2017
-# Loic <loic.richard2@gmail.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Frédéric LIETART <stuff@tifred.fr>, 2017
-# Jeanjean Noname <monsieur.spock@gmail.com>, 2017
 # Fabien Bourgeois <fabien@yaltik.com>, 2017
-# Florian Hatat, 2017
-# fr rev <e2ffr02@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -93,20 +90,21 @@ msgid ""
 "</p>\n"
 msgstr ""
 "\n"
-"<p>Bonjour,</p>\n"
-"<p>\n"
-"    Un nouveau/une nouvelle ${object.slide_type} intitulé(e) <strong>${object.name}</strong> a été publié(e) sur  ${object.channel_id.name} le ${format_tz(object.write_date, tz=user.tz)}\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        Voir <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
+"Bonjour,\n"
+"\n"
+" Un nouveau ${object.slide_type} ${object.name} a été publié sur ${object.channel_id.name} à ${format_tz(object.write_date, tz=user.tz)}\n"
+"\n"
+"\n"
+" \n"
+" \n"
+" \n"
+"\n"
+"\n"
+" \n"
+" Voir ${object.name}\n"
+" \n"
+"\n"
+"<p></p><p><strong></strong></p><p style=\"text-align: center; margin-top: 10px;\"><a href=\"${object.website_url}\"><img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"></a></p><p style=\"text-align: center; margin-top: 10px;\"><a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"><strong></strong></a></p>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
@@ -149,7 +147,7 @@ msgid ""
 "id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
 "<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> courriel</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
@@ -358,18 +356,18 @@ msgstr "Actions"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
 msgid "Active"
-msgstr "Actif/ve"
+msgstr "Actif"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
-msgstr "Archivé/s"
+msgstr "Archivé"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
-msgid "Authenticated Users Only"
-msgstr "Utilisateurs authentifiés uniquement"
+msgid "Authentified Users Only"
+msgstr "Réservé aux utilisateurs authentifiés"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
@@ -482,8 +480,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
-"Impossible de récupérer les données de l'URL. Document ou droit d'accès non disponible.\n"
-"Voici la réponse reçue : %s"
+"Impossible de récupérer les données de l'URL. Document ou droit d'accès non "
+"disponible.n\\Voici la réponse reçue : %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slides.py:322
@@ -565,7 +563,7 @@ msgid ""
 "\n"
 "Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
 msgstr ""
-"Découvrez comment intégrer MRP, PLM, qualité et maintenance dans une seule application pour optimiser l'efficacité de vos opérations de fabrication.\n"
+"Découvrez comment intégrer MRP, PLM, qualité et maintenance dans une seule application pour maximiser l'efficacité de vos opérations de fabrication.\n"
 "\n"
 "Pour en savoir plus sur les fonctionnalités, consultez https://www.odoo.com/page/manufacturing-features\n"
 "\n"
@@ -600,7 +598,7 @@ msgstr "N'aime pas"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_category_sequence
@@ -655,12 +653,13 @@ msgstr "Sécurité du téléchargement"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
 msgid "Email template to send slide publication through email"
-msgstr "Modèle d'email pour envoyer la publication de présentations par email"
+msgstr ""
+"Modèle de courriel pour envoyer la publication de diapositives par courriel"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
 msgid "Email template used when sharing a slide"
-msgstr "Modèle d'email utilisé lors du partage d'une présentation"
+msgstr "Modèle de courriel utilisé lors du partage d'une diapositive"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
@@ -760,7 +759,7 @@ msgstr "Graphique des présentations"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
-msgstr "Regroupé par"
+msgstr "Regrouper par"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
@@ -824,7 +823,7 @@ msgstr "Type de fichier incorrect, SVP sélectionner un fichier PDF ou image"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
@@ -971,7 +970,7 @@ msgstr "Démonstration du logiciel tout-en-un Odoo"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_1
 msgid "Odoo CRM"
-msgstr "Odoo CRM"
+msgstr "Odoo CRM"
 
 #. module: website_slides
 #: model:slide.category,name:website_slides.category_2
@@ -982,7 +981,7 @@ msgstr "Journées Odoo"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_7
 msgid "Odoo Inventory"
-msgstr "Odoo Inventaire"
+msgstr "Odoo Inventory"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
@@ -997,12 +996,12 @@ msgstr "Odoo Marketing"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
 msgid "Odoo Sales"
-msgstr "Odoo Ventes"
+msgstr "Odoo Sales"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr "Démonstration d'Odoo Signature"
+msgstr "Démonstration d'Odoo Sign"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_9
@@ -1240,7 +1239,7 @@ msgid ""
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
-"Plus besoin d'imprimer les documents, les signer puis les numériser. Passez à la signature électronique avec Odoo Signature ! \n"
+"Plus besoin d'imprimer les documents, les signer puis les numériser. Passez à la signature électronique avec Odoo Sign ! \n"
 "\n"
 "En savoir plus sur https://www.odoo.com/page/sign"
 
@@ -1320,7 +1319,7 @@ msgstr "Miniature"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
 #, python-format
 msgid "Title"
-msgstr "Titre"
+msgstr "Civilité"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_total
@@ -1447,7 +1446,7 @@ msgid ""
 msgstr ""
 "Logiciel de gestion d'entrepôt pour le XXIe siècle.\n"
 "\n"
-"Découvrez Odoo Inventaire : https://www.odoo.com/page/warehouse"
+"Découvrez Odoo Inventory : https://www.odoo.com/page/warehouse"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form

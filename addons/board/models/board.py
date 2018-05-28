@@ -46,4 +46,7 @@ class Board(models.AbstractModel):
             return node
 
         archnode = etree.fromstring(arch)
+        # add the js_class 'board' on the fly to force the webclient to
+        # instantiate a BoardView instead of FormView
+        archnode.set('js_class', 'board')
         return etree.tostring(remove_unauthorized_children(archnode), pretty_print=True, encoding='unicode')

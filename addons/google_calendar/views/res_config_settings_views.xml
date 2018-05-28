@@ -18,20 +18,4 @@
                 </div>
             </field>
         </record>
-
-        <record id="action_config_settings_google_calendar" model="ir.actions.act_window">
-            <field name="name">Settings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="context">{'module' : 'general_settings'}</field>
-            <field name="target">inline</field>
-        </record>
-
-        <menuitem id="menu_calendar_google_tech_config"
-            name="API Credentials"
-            parent="calendar.menu_calendar_configuration"
-            groups="base.group_no_one"
-            action="action_config_settings_google_calendar"/>
-
 </odoo>

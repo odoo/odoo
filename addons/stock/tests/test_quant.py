@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import closing
 from datetime import datetime, timedelta
 
 from odoo.exceptions import ValidationError
@@ -227,14 +228,12 @@ class StockQuant(TransactionCase):
 
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
-        cr2 = self.registry.cursor()
-        cr2.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, stock_location.id))
-        quant_id = cr2.fetchone()
-        cr2.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
+        with closing(self.registry.cursor()) as cr:
+            cr.execute("SELECT id FROM stock_quant WHERE product_id=%s AND location_id=%s", (product.id, stock_location.id))
+            quant_id = cr.fetchone()
+            cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 1.0)
 
-        self.env['stock.quant']._update_available_quantity(product, stock_location, 1.0)
-        cr2.rollback()
-        cr2.close()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 11.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
 
@@ -344,11 +343,10 @@ class StockQuant(TransactionCase):
 
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
-        cr2 = self.registry.cursor()
-        cr2.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quants.ids)
-        self.env['stock.quant']._update_available_quantity(product, stock_location, -1.0)
-        cr2.rollback()
-        cr2.close()
+        with closing(self.registry.cursor()) as cr:
+            cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quants.ids)
+            self.env['stock.quant']._update_available_quantity(product, stock_location, -1.0)
+
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 9.0)
         self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
 
@@ -527,6 +525,7 @@ class StockQuant(TransactionCase):
     def test_action_done_1(self):
         stock_location = self.env.ref('stock.stock_location_stock')
         pack_location = self.env.ref('stock.location_pack_zone')
+        pack_location.active = True
         product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',

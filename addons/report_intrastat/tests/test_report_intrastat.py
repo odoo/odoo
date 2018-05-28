@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from odoo import tools
 from odoo.tests import common
 from odoo.modules.module import get_module_resource
@@ -29,6 +27,4 @@ class RepoortIntrastatTest(common.TransactionCase):
         })
 
     def test_00_create_pdf(self):
-        data, data_format = self.env.ref('report_intrastat.account_intrastatinvoices').render(self.invoice.ids)
-        if tools.config['test_report_directory']:
-            open(os.path.join(tools.config['test_report_directory'], 'report_intrastat-intrastat_report.' + data_format), 'wb+').write(data)
+        tools.test_reports.try_report(self.cr, self.uid, 'report_intrastat.report_intrastatinvoice', self.invoice.ids)

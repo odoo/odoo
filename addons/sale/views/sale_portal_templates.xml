@@ -107,12 +107,6 @@
                           <span class='hidden-xs' t-field="order.date_order" t-options="{'time_only': True}"/>
                         </td>
                         <td>
-                            <t t-if="order.state == 'progress'">
-                                <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Invoiced</span></span>
-                            </t>
-                            <t t-if="order.state in ['shipping_except','invoice_except']">
-                                <span class="label label-danger"><i class="fa fa-fw fa-warning"></i><span class="hidden-xs"> Problem</span></span>
-                            </t>
                             <t t-if="order.state == 'done'">
                                 <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Done</span></span>
                             </t>
@@ -221,12 +215,17 @@
 
               <hr/>
 
+
+              <t t-set="display_discount" t-value="any([l.discount for l in order.order_line])"/>
               <div class="row">
-                <div class="col-md-6">
+                <div t-att-class="'col-md-5' if display_discount else 'col-md-6'">
                   <strong>Product</strong>
                 </div>
                 <div class="hidden-sm hidden-xs col-md-2 text-right">
                   <strong>Unit Price</strong>
+                </div>
+                <div t-if="display_discount" class="hidden-sm hidden-xs col-md-1 text-right" >
+                  <strong>Discount</strong>
                 </div>
                 <div class="hidden-sm hidden-xs col-md-2 text-right">
                   <strong>Quantity</strong>
@@ -240,11 +239,14 @@
                     <div class="visible-lg col-lg-1 text-center">
                       <span t-field="ol.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                     </div>
-                    <div id='product_name' class="col-lg-4 col-sm-6 col-xs-3">
+                    <div id='product_name' t-att-class="'col-lg-3 col-sm-5 col-xs-4' if display_discount else 'col-lg-4 col-sm-6 col-xs-3'">
                       <span t-esc="ol.product_id.name"/>
                     </div>
-                  <div class="col-xs-3 text-right">
+                  <div class="col-sm-3 hidden-xs text-right">
                     <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
+                  </div>
+                  <div t-if="display_discount" class="col-sm-1 hidden-xs text-right" style='white-space: nowrap'>
+                      <span t-field="ol.discount"/> %
                   </div>
                   <div class="col-xs-2 text-right">
                     <t t-if="ol._name == 'sale.order.line'">

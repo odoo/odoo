@@ -14,7 +14,7 @@ except ImportError:
 
 import odoo
 from odoo import api, models
-from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
+from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.http import request
 from odoo.tools import config, ustr, pycompat
 
@@ -35,6 +35,7 @@ def _guess_mimetype(ext=False, default='text/html'):
     exts = {
         '.css': 'text/css',
         '.less': 'text/less',
+        '.scss': 'text/scss',
         '.js': 'text/javascript',
         '.xml': 'text/xml',
         '.csv': 'text/csv',

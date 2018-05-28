@@ -4,7 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
-var RainbowMan = require('web.rainbow_man');
+var RainbowMan = require('web.RainbowMan');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
@@ -309,6 +309,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
     },
     _check_for_tooltip: function (tip, tour_name) {
+
+        if ($('.blockUI').length) {
+            this._deactivate_tip(tip);
+            this._log.push("blockUI is preventing the tip to be consumed");
+            return;
+        }
+
         var $trigger;
         if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
@@ -409,13 +416,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
-        if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name
-         && this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
+        if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
+            this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +
                                 '</strong>');
-            new RainbowMan({message: $rainbow_message, click_close: false}).appendTo(this.$body);
+            new RainbowMan({message: $rainbow_message}).appendTo(this.$body);
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
@@ -491,10 +498,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             },
         },
 
-        TOGGLE_APPSWITCHER: {
+        TOGGLE_HOME_MENU: {
             edition: "enterprise",
             trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click the <i>Home icon</i> to navigate across apps.'),
+            content: _t('Click on the <i>Home icon</i> to navigate across apps.'),
             position: "bottom",
         },
 

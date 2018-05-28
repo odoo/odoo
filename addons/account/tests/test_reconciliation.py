@@ -1,8 +1,11 @@
+from odoo import api
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 import time
 import unittest
 
 
+@tagged('post_install', '-at_install')
 class TestReconciliation(AccountingTestCase):
 
     """Tests for reconciliation (account.tax)
@@ -101,6 +104,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(move_line.currency_id.id, aml_dict[move_line.account_id.id]['currency_id'])
             if 'currency_diff' in aml_dict[move_line.account_id.id]:
                 currency_diff_move = move_line.full_reconcile_id.exchange_move_id
+                self.assertTrue(currency_diff_move, 'The full reconciliation should have created an exchange rate journal entry')
                 for currency_diff_line in currency_diff_move.line_ids:
                     if aml_dict[move_line.account_id.id].get('currency_diff') == 0:
                         if currency_diff_line.account_id.id == move_line.account_id.id:
@@ -194,11 +198,11 @@ class TestReconciliation(AccountingTestCase):
         customer_move_lines, supplier_move_lines = self.make_customer_and_supplier_flows(self.currency_usd_id, 50, self.bank_journal_euro, 40, 0.0, False)
         self.check_results(customer_move_lines, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': -61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
         })
         self.check_results(supplier_move_lines, {
             self.account_euro.id: {'debit': 0.0, 'credit': 40.0, 'amount_currency': 0.0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 61.16, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
         })
 
     def test_statement_euro_invoice_usd_transaction_chf(self):
@@ -236,7 +240,7 @@ class TestReconciliation(AccountingTestCase):
               'move_line': line_id,
               'debit': 0.0,
               'credit': 32.7,
-              'name': line_id.name,
+              'name': 'test_statement_euro_invoice_usd_transaction_euro_full',
             }], new_aml_dicts=[{
               'debit': 0.0,
               'credit': 7.3,
@@ -245,14 +249,15 @@ class TestReconciliation(AccountingTestCase):
             }])
         self.check_results(bank_stmt.move_line_ids, {
             self.account_euro.id: {'debit': 40.0, 'credit': 0.0, 'amount_currency': 0, 'currency_id': False},
-            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': -41.97, 'currency_id': self.currency_usd_id, 'currency_diff': 0, 'amount_currency_diff': -8.03},
-            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': -9.37, 'currency_id': self.currency_usd_id},
+            self.account_rcv.id: {'debit': 0.0, 'credit': 32.7, 'amount_currency': 0, 'currency_id': False},
+            self.diff_income_account.id: {'debit': 0.0, 'credit': 7.3, 'amount_currency': 0, 'currency_id': False},
         })
 
         # The invoice should be paid, as the payments totally cover its total
         self.assertEquals(invoice_record.state, 'paid', 'The invoice should be paid by now')
         invoice_rec_line = invoice_record.move_id.line_ids.filtered(lambda x: x.account_id.reconcile)
         self.assertTrue(invoice_rec_line.reconciled, 'The invoice should be totally reconciled')
+        self.assertTrue(invoice_rec_line.full_reconcile_id, 'The invoice should have a full reconcile number')
         self.assertEquals(invoice_rec_line.amount_residual, 0, 'The invoice should be totally reconciled')
         self.assertEquals(invoice_rec_line.amount_residual_currency, 0, 'The invoice should be totally reconciled')
 
@@ -478,7 +483,7 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
             self.assertEquals(aml.currency_id.id, line['currency_id'])
 
-    def test_partial_reconcile_currencies(self):
+    def test_partial_reconcile_currencies_01(self):
         #                client Account (payable, rsa)
         #        Debit                      Credit
         # --------------------------------------------------------
@@ -657,3 +662,86 @@ class TestReconciliation(AccountingTestCase):
         credit_aml.with_context(invoice_id=inv2.id).remove_move_reconcile()
         self.assertAlmostEquals(inv1.residual, 10)
         self.assertAlmostEquals(inv2.residual, 20)
+
+    def test_partial_reconcile_currencies_02(self):
+        ####
+        # Day 1: Invoice Cust/001 to customer (expressed in USD)
+        # Market value of USD (day 1): 1 USD = 0.5 EUR
+        # * Dr. 100 USD / 50 EUR - Accounts receivable
+        # * Cr. 100 USD / 50 EUR - Revenue
+        ####
+        account_revenue = self.env['account.account'].search(
+            [('user_type_id', '=', self.env.ref(
+                'account.data_account_type_revenue').id)], limit=1)
+        dest_journal_id = self.env['account.journal'].search(
+            [('type', '=', 'purchase'),
+             ('company_id', '=', self.env.ref('base.main_company').id)],
+            limit=1)
+
+        # Delete any old rate - to make sure that we use the ones we need.
+        old_rates = self.env['res.currency.rate'].search(
+            [('currency_id', '=', self.currency_usd_id)])
+        old_rates.unlink()
+
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': time.strftime('%Y') + '-01-01',
+            'rate': 2,
+        })
+
+        invoice_cust_1 = self.account_invoice_model.create({
+            'partner_id': self.partner_agrolait_id,
+            'account_id': self.account_rcv.id,
+            'type': 'out_invoice',
+            'currency_id': self.currency_usd_id,
+            'date_invoice': time.strftime('%Y') + '-01-01',
+        })
+        self.account_invoice_line_model.create({
+            'quantity': 1.0,
+            'price_unit': 100.0,
+            'invoice_id': invoice_cust_1.id,
+            'name': 'product that cost 100',
+            'account_id': account_revenue.id,
+        })
+        invoice_cust_1.action_invoice_open()
+        self.assertEqual(invoice_cust_1.residual_company_signed, 50.0)
+        aml = invoice_cust_1.move_id.mapped('line_ids').filtered(
+            lambda x: x.account_id == account_revenue)
+        self.assertEqual(aml.credit, 50.0)
+        #####
+        # Day 2: Receive payment for half invoice Cust/1 (in USD)
+        # -------------------------------------------------------
+        # Market value of USD (day 2): 1 USD = 1 EUR
+
+        # Payment transaction:
+        # * Dr. 50 USD / 50 EUR - EUR Bank (valued at market price
+        # at the time of receiving the money)
+        # * Cr. 50 USD / 50 EUR - Accounts Receivable
+        #####
+        self.env['res.currency.rate'].create({
+            'currency_id': self.currency_usd_id,
+            'name': time.strftime('%Y') + '-01-02',
+            'rate': 1,
+        })
+        # register payment on invoice
+        payment = self.env['account.payment'].create(
+            {'payment_type': 'inbound',
+             'payment_method_id': self.env.ref(
+                 'account.account_payment_method_manual_in').id,
+             'partner_type': 'customer',
+             'partner_id': self.partner_agrolait_id,
+             'amount': 50,
+             'currency_id': self.currency_usd_id,
+             'payment_date': time.strftime('%Y') + '-01-02',
+             'journal_id': dest_journal_id.id,
+             })
+        payment.post()
+        payment_move_line = False
+        for l in payment.move_line_ids:
+            if l.account_id == invoice_cust_1.account_id:
+                payment_move_line = l
+        invoice_cust_1.register_payment(payment_move_line)
+        # We expect at this point that the invoice should still be open,
+        # because they owe us still 50 CC.
+        self.assertEqual(invoice_cust_1.state, 'open',
+                         'Invoice is in status %s' % invoice_cust_1.state)

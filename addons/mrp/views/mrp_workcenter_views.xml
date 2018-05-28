@@ -19,8 +19,8 @@
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="domain">[('workcenter_id', '=', active_id), ('state', '!=', 'done')]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a work center.
+              <p class="o_view_nocontent_smiling_face">
+                Add a work center
               </p><p>
                 Work Centers allow you to create and manage manufacturing
                 units. They consist of workers and/or machines, which are
@@ -89,8 +89,8 @@
             <field name="domain">[('workcenter_id','=',active_id')]</field>
             <field name="context">{'search_default_thismonth':True}</field>
             <field name="help" type="html">
-              <p>
-                Overall Equipment Effectiveness: no working or blocked time.
+              <p class="o_view_nocontent_empty_folder">
+                Overall Equipment Effectiveness: no working or blocked time
               </p>
             </field>
         </record>
@@ -106,8 +106,8 @@
                                    'default_workcenter_id': active_id,
                                    'search_default_workcenter_id': [active_id]}</field>
             <field name="help" type="html">
-              <p>
-                No productivity loss for this equipment.
+              <p class="o_view_nocontent_empty_folder">
+                No productivity loss for this equipment
               </p>
             </field>
         </record>
@@ -119,6 +119,11 @@
             <field name="domain">[('workcenter_id','=', active_id),('state','=','done')]</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,pivot,tree,form,gantt</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work orders performance
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="mrp_workorder_report">
@@ -130,6 +135,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,pivot,tree,form,gantt</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work orders performance
+              </p>
+            </field>
         </record>
 
         <!-- Workcenter Kanban view-->
@@ -232,7 +242,7 @@
                                                 attrs="{'invisible': [('working_state','in',('normal','blocked'))]}"/>
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane">
+                                </div><div class="container o_kanban_card_manage_pane dropdown-menu">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
                                             <div class="o_kanban_card_manage_title">
@@ -337,6 +347,9 @@
                                             <field name="oee_target"/> %
                                         </div>
                                     </group>
+                                    <group string="Costing Information" name="costing">
+                                        <field name="costs_hour"/>
+                                    </group>
                                     <group>
                                         <label for="time_start"/>
                                         <div>
@@ -363,9 +376,9 @@
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Archived" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -384,8 +397,8 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('mrp_workcenter_view')})]"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a new Work Center
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work center
               </p><p>
                 Manufacturing operations are processed at Work Centers. A Work Center can be composed
                 of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
@@ -403,9 +416,8 @@
             <field name="view_id" ref="mrp_workcenter_kanban"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
-              <p>
-                <a type="action" name="%(mrp_workcenter_action)d">Click here
-                </a> to create a new Work Center.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new work center
               </p><p>
                 Manufacturing operations are processed at Work Centers. A Work Center can be composed of
                 workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
@@ -506,8 +518,8 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
-          <p>
-            No productivity loss defined.
+          <p class="o_view_nocontent_empty_folder">
+            No productivity loss defined
           </p>
         </field>
     </record>
@@ -556,6 +568,8 @@
             <form string="Workcenter Productivity">
                 <group>
                     <group>
+                        <field name="production_id"/>
+                        <field  name="workorder_id"/>
                         <field name="workcenter_id"/>
                         <field name="loss_id"/>
                     </group><group>
@@ -615,10 +629,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,pivot,tree,form</field>
         <field name="domain">[]</field>
-        <field name="context">{'search_default_thismonth':True}</field>
+        <field name="context">{'search_default_workcenter_group': 1, 'search_default_thismonth':True, 'create':False,'edit':False}</field>
         <field name="help" type="html">
-          <p>
-            Overall Equipment Effectiveness: no working or blocked time.
+          <p class="o_view_nocontent_empty_folder">
+            Overall Equipment Effectiveness: no working or blocked time
           </p>
         </field>
     </record>

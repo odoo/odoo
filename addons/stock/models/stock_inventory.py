@@ -83,7 +83,7 @@ class Inventory(models.Model):
              "system propose for a single product / lot /... ")
     total_qty = fields.Float('Total Quantity', compute='_compute_total_qty')
     category_id = fields.Many2one(
-        'product.category', 'Inventoried Category',
+        'product.category', 'Product Category',
         readonly=True, states={'draft': [('readonly', False)]},
         help="Specify Product Category to focus your inventory on a particular Category.")
     exhausted = fields.Boolean('Include Exhausted Products', readonly=True, states={'draft': [('readonly', False)]})
@@ -297,7 +297,7 @@ class Inventory(models.Model):
 class InventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
-    _order = "product_name ,inventory_id, location_name, product_code, prodlot_name"
+    _order = "product_id, inventory_id, location_id, prod_lot_id"
 
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory',
@@ -307,32 +307,21 @@ class InventoryLine(models.Model):
         'product.product', 'Product',
         domain=[('type', '=', 'product')],
         index=True, required=True)
-    product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True, readonly=True)
-    product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         required=True,
-        default=lambda self: self.env.ref('product.product_uom_unit', raise_if_not_found=True))
+        default=lambda self: self.env.ref('uom.product_uom_unit', raise_if_not_found=True))
     product_qty = fields.Float(
         'Checked Quantity',
         digits=dp.get_precision('Product Unit of Measure'), default=0)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         index=True, required=True)
-    # TDE FIXME: necessary ? only in order -> replace by location_id
-    location_name = fields.Char(
-        'Location Name', related='location_id.complete_name', store=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id','=',product_id)]")
-    # TDE FIXME: necessary ? -> replace by location_id
-    prodlot_name = fields.Char(
-        'Serial Number Name',
-        related='prod_lot_id.name', store=True)
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
@@ -343,7 +332,7 @@ class InventoryLine(models.Model):
         'Theoretical Quantity', compute='_compute_theoretical_qty',
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
     inventory_location_id = fields.Many2one(
-        'stock.location', 'Location', related='inventory_id.location_id', related_sudo=False)
+        'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')
@@ -371,15 +360,8 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.multi
-    def write(self, values):
-        values.pop('product_name', False)
-        res = super(InventoryLine, self).write(values)
-        return res
-
     @api.model
     def create(self, values):
-        values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         existings = self.search([
@@ -391,10 +373,9 @@ class InventoryLine(models.Model):
             ('prod_lot_id', '=', values.get('prod_lot_id'))])
         res = super(InventoryLine, self).create(values)
         if existings:
-            raise UserError(_("You cannot have two inventory adjustements in state 'in Progress' with the same product "
-                              "(%s), same location (%s), same package, same owner and same lot. Please first validate "
-                              "the first inventory adjustement with this product before creating another one.") %
-                            (res.product_id.display_name, res.location_id.display_name))
+            raise UserError(_("You cannot have two inventory adjustments in progress for the same product (%s) "
+                              "in the same location, for the same package, the same owner and the same lot number. "
+                              "Please validate or cancel the first inventory adjustment before creating a new one.") % (res.product_id.display_name))
         return res
 
     @api.constrains('product_id')

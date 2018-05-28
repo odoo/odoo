@@ -9,14 +9,13 @@
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Niki Waibel, 2017
 # e2f <projects@e2f.com>, 2018
-# Katharina Moritz <kmo@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-03-22 14:10+0000\n"
+"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,29 +24,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
 msgid "API Login Id"
 msgstr "API Anmeldungs Id"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
 msgid "API Transaction Key"
 msgstr "API Transaction Key"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr "Authorize.net-Profil-ID"
+msgstr "Authorize.net Profil-ID"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:167
+#: code:addons/payment_authorize/models/payment.py:178
 #, python-format
 msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
-"Authorize: empfangene Daten mit fehlender Referenz (%s) oder trans_id (%s) "
-"oder Fingerabdruck (%s)"
+"Autorisieren: empfangene Daten mit fehlender Referenz (%s) oder trans_id "
+"(%s) oder Fingerabdruck (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -67,7 +66,7 @@ msgstr "Name des Karteninhabers"
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "Expires (MM / YY)"
-msgstr "Ablauf (MM/JJ)"
+msgstr "Läuft ab (MM / JJ)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
@@ -105,17 +104,17 @@ msgid "Please sign in to complete your profile."
 msgstr ""
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
 msgstr "Anbieter"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
 msgid "Save Cards"
 msgstr "Karten speichern"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:372
+#: code:addons/payment_authorize/models/payment.py:383
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
 msgstr "Die Erstellung des Kundenprofils bei Autorize.NET ist fehlgeschlagen."
@@ -129,16 +128,14 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
-msgstr ""
-"Dies enthält die eindeutige Referenz für diese Partner-/Zahlungs-Token-"
-"Kombination im Backend von Authorize.net."
+msgstr "Dies enthält die eindeutige Referenz"
 
 #. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
 msgid ""
 "This option allows customers to save their credit card as a payment token "
 "and to reuse it for a later purchase. If you manage subscriptions (recurring"

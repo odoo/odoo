@@ -3,17 +3,17 @@
 # * website_quote
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
-# Martin Trigaux, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux, 2016
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -98,10 +98,10 @@ msgstr ""
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Beste ${object.partner_id.name},</p><br/>\n"
-"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is bevestigd!</p><br/>\n"
+"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is gevalideerd!</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>U kunt uw offertes, verkooporders en facturen online bekijken door te gaan naar onze <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online portal</a>.</p><br/>\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
 "                % endif\n"
 "\n"
 "                <p>Als u nog vragen heeft, aarzel dan niet om contact met ons op.</p><br/>\n"
@@ -124,6 +124,11 @@ msgstr ""
 "</div>"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "! You can"
+msgstr "! Je kan het"
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
@@ -144,7 +149,6 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -338,7 +342,7 @@ msgid ""
 "                                will appear on all quotations using this\n"
 "                                template."
 msgstr ""
-"<strong>Sjabloonkop:</strong> deze inhoud\n"
+"<strong>Sjabloonhoofding:</strong> deze inhoud\n"
 "verschijnt op alle offertes die het sjabloon\n"
 "gebruiken."
 
@@ -362,7 +366,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr "<strong>Deze offerte vervalt in</strong>"
+msgstr "<strong>Dit aanbod vervalt in</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -405,7 +409,7 @@ msgstr "Actief"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Add to order lines"
-msgstr "Toevoegen aan orderregels"
+msgstr "Toevoegen aan orderlijnen"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_3
@@ -481,7 +485,8 @@ msgstr "Terug naar verkooporder"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Be available for periodic review meeting with Odoo SA account managers"
 msgstr ""
-"Wees beschikbaar voor periode meetings met de account managers van Odoo SA"
+"Wees beschikbaar voor periodieke meetings met de account managers van Odoo "
+"SA"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -786,8 +791,8 @@ msgstr ""
 "Geweldige offerte sjablonen zullen significant helpen\n"
 "bij het<strong>vergroten van uw succes</strong>. Het \n"
 "eerste deel is meestal over uw bedrijf,\n"
-"uw referenties, uw methode/garanties, \n"
-"uw team, SLA, voorwaarden, etc."
+"uw referenties, uw methode of\n"
+"garanties, uw team, SLA, voorwaarden, etc."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -853,7 +858,7 @@ msgid ""
 "                        use this modified template."
 msgstr ""
 "Wanneer een offerte wordt bewerkt in de 'Preview' van een offerte, kunt u\n"
-"de offerte bijwerken voor alleen deze klant. Wanneer u een offertesjabloon\n"
+"de offerte bijwerken voor alleen deze klant. Wanneer u een offerte sjabloon\n"
 "bewerkt (vanuit het Configuratie menu), zullen alle toekomstige offerte \n"
 "het aangepaste sjabloon gebruiken."
 
@@ -880,7 +885,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Incl. tax)"
-msgstr "Incl. BTW)"
+msgstr "Incl. belastingen)"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -996,7 +1001,7 @@ msgstr "Orderregel omschrijving"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Lines"
-msgstr "Regels"
+msgstr "Lijnen"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1087,7 +1092,7 @@ msgstr "Online betaling"
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Signature"
-msgstr "Onine handtekening"
+msgstr "On,ine handtekening"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1113,6 +1118,12 @@ msgstr "Optioneel product:"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_options
 msgid "Optional Products Lines"
 msgstr "Optionele producten regels"
+
+#. module: website_quote
+#: code:addons/website_quote/models/sale_order.py:210
+#, python-format
+msgid "Order paid by %s. Transaction: %s. Amount: %s."
+msgstr "Order betaald door %s. Transactie: %s. Bedrag: %s."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1286,19 +1297,19 @@ msgstr "Offerte optie"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr "Offertesjabloon"
+msgstr "Offerte sjabloon"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr "Offertesjabloon regels"
+msgstr "Offerte sjabloon regels"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "Offertesjabloon referentie"
+msgstr "Offerte sjabloon referentie"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
@@ -1380,7 +1391,7 @@ msgstr "Verkooporder referentie"
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Sales Quotation Template Lines"
-msgstr "Verkoop offertesjabloonregels"
+msgstr "Verkoopofferte sjabloonregels"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search
@@ -1423,12 +1434,12 @@ msgstr "Voorgestelde producten"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Belastingen"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Taxes:"
-msgstr "BTW:"
+msgstr "Belastingen:"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_2
@@ -1549,7 +1560,7 @@ msgid ""
 "This order has been validated. Thanks for your trust\n"
 "                          and do not hesitate to"
 msgstr ""
-"Deze order is bevestigd. Dank voor uw vertrouwen\n"
+"Deze order is gecontroleerd. Dank voor uw vertrouwen\n"
 "                          en aarzel niet om"
 
 #. module: website_quote
@@ -1564,9 +1575,9 @@ msgid ""
 "                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
-"Titels met stijl <i>Kop 1</i> en\n"
-"<i>Kop 2</i> worden gebruikt om de\n"
-"inhoudsopgave automatisch te genereren."
+"Titels met stijl <i>Hoofding 1</i> en\n"
+"<i>Hoofding 2</i> worden gebruikt om de\n"
+"inhoudstafel automatisch te genereren."
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_2
@@ -1579,7 +1590,7 @@ msgstr "Om meer informatie te krijgen, bezoek het"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Total Price"
-msgstr "Bedrag Incl. BTW"
+msgstr "Totaalprijs"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -1720,11 +1731,6 @@ msgstr ""
 "Jaarlijkse upgrade training sessies wanneer een nieuwe versie is uitgebracht"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "You can"
-msgstr "U kan"
-
-#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
@@ -1733,7 +1739,7 @@ msgid ""
 "                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
-"U kunt <strong>een omschrijving instellen per product</strong>. Odoo zal\n"
+"U kunt <strong>een omschrijving instellen per product</strong>. Odoozal\n"
 "automatisch een offerte te maken met behulp van de omschrijvingen\n"
 "van alle producten in het voorstel. De inhoudsopgave\n"
 "aan de linkerkant wordt automatisch gegenereerd met behulp van de stijlen die u\n"
@@ -1743,7 +1749,7 @@ msgstr ""
 #: code:addons/website_quote/controllers/main.py:150
 #, python-format
 msgid "You cannot add options to a confirmed order."
-msgstr "U kan geen opties toevoegen aan een bevestigd order."
+msgstr "U kan geen opties toevoegen aan een verkooporder."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1794,9 +1800,19 @@ msgid "Your order ${object.name} is confirmed"
 msgstr "Uw order ${object.name} is bevestigd"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your payment has been authorized."
 msgstr "Uw betaling is geauthoriseerd."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your payment has been received, thank you for your trust."
+msgstr "Uw betaling is ontvangen, bedankt voor uw vertrouwen."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your transaction is waiting confirmation."
+msgstr "Je transactie is in behandeling."
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1833,27 +1849,18 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid ""
-"for\n"
-"                          any questions."
-msgstr ""
-"voor\n"
-"alle vragen."
+msgid "has already been cancelled"
+msgstr "is al geannuleerd"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled!"
-msgstr "is al geannuleerd!"
+msgid "has already been validated"
+msgstr "is al bevestigd"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated!"
-msgstr "is al gevalideerd!"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent!"
-msgstr "is nog niet verzonden!"
+msgid "has not yet been sent"
+msgstr "is nog niet verzonden"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

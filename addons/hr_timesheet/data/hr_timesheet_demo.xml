@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="account_analytic_account_project_2" model="account.analytic.account">
+        <field name="name">Research &amp; Development Project</field>
+        <field name="code">RD</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="project.project_project_2" model="project.project">
+        <field name="analytic_account_id" ref="account_analytic_account_project_2"/>
+    </record>
+
+    <record id="project.project_project_4" model="project.project">
+        <field name="analytic_account_id" ref="analytic.analytic_deltapc"/>
+    </record>
+
     <record id="working_hours_requirements" model="account.analytic.line">
         <field name="name">Requirements analysis and specification</field>
         <field name="user_id" ref='base.user_root'/>
@@ -35,7 +49,7 @@
         <field name="unit_amount">1.00</field>
         <field name="project_id" ref='project.project_project_2'/>
         <field name="amount">-30.00</field>
-    </record>   
+    </record>
 
     <record id="working_hours_maintenance" model="account.analytic.line">
         <field name="name">Delivery and maintenance</field>
@@ -44,6 +58,6 @@
         <field name="unit_amount">1.00</field>
         <field name="project_id" ref='project.project_project_2'/>
         <field name="amount">-30.00</field>
-    </record>   
+    </record>
 
 </odoo>

@@ -55,8 +55,8 @@ class PosSaleReport(models.Model):
                         cr.company_id = so.company_id AND
                         cr.date_start <= COALESCE(so.date_order, now()) AND
                         (cr.date_end IS NULL OR cr.date_end > COALESCE(so.date_order, now())))
-                    LEFT JOIN product_uom u on (u.id=sol.product_uom)
-                    LEFT JOIN product_uom u2 on (u2.id=pt.uom_id)
+                    LEFT JOIN uom_uom u on (u.id=sol.product_uom)
+                    LEFT JOIN uom_uom u2 on (u2.id=pt.uom_id)
         """ % self.env['res.currency']._select_companies_rates()
         return so_str
 

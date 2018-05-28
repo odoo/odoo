@@ -19,9 +19,6 @@ from sales order. It adds sales name and sales Reference on production order.
         'security/ir.model.access.csv',
     ],
     'demo': [],
-    'test':[
-        'test/sale_mrp.yml',
-        ],
     'installable': True,
     'auto_install': True,
 }

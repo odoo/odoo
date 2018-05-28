@@ -17,8 +17,10 @@ QUnit.module('Views', {
                     bar: {string: "bar", type: "boolean"},
                     date: {string: "Date", type: "date", store: true},
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
+                    other_product_id: {string: "Other Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
                     customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
+                    computed_field: {string: "Computed and not stored", compute:true},
                 },
                 records: [
                     {
@@ -28,6 +30,7 @@ QUnit.module('Views', {
                         date: '2016-12-14',
                         product_id: 37,
                         customer: 1,
+                        computed_field: 19,
                     }, {
                         id: 2,
                         foo: 1,
@@ -35,6 +38,7 @@ QUnit.module('Views', {
                         date: '2016-10-26',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 23,
                     }, {
                         id: 3,
                         foo: 17,
@@ -42,12 +46,14 @@ QUnit.module('Views', {
                         date: '2016-12-15',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 26,
                     }, {id: 4,
                         foo: 2,
                         bar: false,
                         date: '2016-04-11',
                         product_id: 41,
                         customer: 1,
+                        computed_field: 19,
                     },
                 ]
             },
@@ -121,6 +127,22 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot view add computed fields explicitly defined as measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="computed_field" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.ok(pivot.measures.computed_field, "measures contains the field 'computed_field'");
+        pivot.destroy();
+    });
+
     QUnit.test('clicking on a cell triggers a do_action', function (assert) {
         assert.expect(2);
 
@@ -152,7 +174,12 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
-                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                    views: [
+                        { viewID: 2, type: 'form' },
+                        { viewID: 5, type: 'kanban' },
+                        { viewID: false, type: 'list' },
+                        { viewID: false, type: 'pivot' },
+                    ],
                 },
                 context: {someKey: true, search_default_test: 3},
                 title: 'Partners',
@@ -445,14 +472,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.$buttons.find('li[data-field=__count] a').click();
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -470,14 +497,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.update({domain: [['foo', '=', 12345]]});
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -496,7 +523,7 @@ QUnit.module('Views', {
             arch: '<pivot string="Partners"></pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.destroy();
     });
@@ -514,13 +541,13 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.update({domain: [['foo', '=', 12345]]});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should still have a no_content_helper");
         pivot.update({domain: []});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
 
         // tries to open a field selection menu, to make sure it was not
@@ -957,6 +984,164 @@ QUnit.module('Views', {
 
         var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
         assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('not use a many2one as a measure by default', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+        assert.notOk(pivot.measures.product_id,
+            "should not have product_id as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('use a many2one as a measure with specified additional measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+        assert.ok(pivot.measures.product_id,
+            "should have product_id as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with many2one field as a measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('table tbody tr').text().trim(), "Total2112",
+            "should display product_id count as measure");
+        pivot.destroy();
+    });
+
+    QUnit.test('m2o as measure, drilling down into data', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+        // click on date by month
+        pivot.$('ul.o_pivot_field_menu > li[data-field="date"] a[data-interval="month"]').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '2211',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+            viewOptions: {
+                additionalMeasures: ['product_id'],
+            },
+        });
+
+        pivot.$buttons.find('li[data-field=product_id] a').click();
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '421131',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with same many2one field as a measure and grouped by (and drill down)', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="measure"/>' +
+                '</pivot>',
+        });
+
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+
+        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').text(), '211',
+            'should have loaded the proper data');
+        pivot.destroy();
+    });
+
+    QUnit.test('Row and column groupbys plus a domain', function (assert) {
+        assert.expect(3);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=customer] a').click();
+
+        // Set a Row groupby
+        pivot.$('tbody .o_pivot_header_cell_closed').click();
+        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 41]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
+                               pivot_measures: ['foo'],
+                               pivot_row_groupby: ['product_id']};
+
+        // Mock 'save as favorite'
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'The pivot view should have the right context');
+
+        var $xpadHeader = pivot.$('tbody .o_pivot_header_cell_closed[data-original-title=Product]');
+        assert.equal($xpadHeader.length, 1,
+            'There should be only one product line because of the domain');
+
+        assert.equal($xpadHeader.text(), 'xpad',
+            'The product should be the right one');
 
         pivot.destroy();
     });

@@ -2,18 +2,12 @@
 # This file contains the translation of the following modules:
 # * stock
 # 
-# Translators:
-# Batzul B <batzul.active@gmail.com>, 2018
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2018
-# Martin Trigaux, 2018
-# Onii Onii <onii0223@yahoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Onii Onii <onii0223@yahoo.com>, 2018\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,34 +16,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:230
-#, python-format
-msgid ""
-"\n"
-"\n"
-"%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move.py:231
-#, python-format
-msgid ""
-"\n"
-"\n"
-"Blocking: %s"
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/models/stock_move.py:308
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s нөөцлөгдсөн)"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:311
 #, python-format
 msgid " (reserved)"
-msgstr "(нөөцлөгдсөн)"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_state
@@ -65,19 +41,19 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "#Products"
-msgstr "Бараанууд"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:481
+#: code:addons/stock/models/stock_warehouse.py:480
 #, python-format
 msgid "%s: Supply Product from %s"
-msgstr "%s: Барааг %s-с нийлүүлэх"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/res_company.py:24
 #, python-format
 msgid "%s: Transit Location"
-msgstr "%s: Дамжуулах Байрлал"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_state
@@ -89,11 +65,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"* Шинэ: Агуулахын хөдөлгөөн үүсгэгдээд хараахан батлагдаагүй.\n"
-"* Өөр хөдөлгөөн хүлээж буй: Энэ хөдөлгөөн нь өөр хөдөлгөөнийг хүлээж буй, тухайлбал хэлхээт урсгалд.\n"
-"* Бэлэн болохыг хүлээж буй: Татан авалтын шийдэл хараахан тодорхой болоогүй. Энэ нь товлогчийн ажиллахыг хүлээж буй байж болох бөгөөд бүрдэл хэсгүүдийг үйлдвэрлэх захиалга үүсэхийг хүлээж байж болно...\n"
-"* Бэлэн: Бүх бараа нь нөөцлөгдсөн бөгөөд Бэлэн төлөвтэй болсон.\n"
-"* Хийгдсэн: Хүргэлт хийгдсэн."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_usage
@@ -107,24 +78,16 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
-"* Нийлүүлэгчийн Байршил: Хийсвэр байрлал бөгөөд нийлүүлэгчээс ирэх барааны эх байрлалыг илэрхийлдэг \n"
-"* Харагдац: Хийсвэр байрлал бөгөөд агуулахын мөчирлөсөн бүтэцийг үүсгэхэд хэрэглэгддэг. Энэ байрлал нь бараа агуулдаггүй бөгөөд дэд байрлалуудыг дотроо агуулдаг \n"
-"* Дотоод Байрлал: Агуулах доторх бодит байрлалууд \n"
-"* Захиалагчийн Байрлал: Хийсвэр байрлал бөгөөд захиалагчид илгээсэн барааны хүрэх байрлалыг илэрхийлдэг \n"
-"* Тооллогын дутагдал: Хийсвэр байрлал бөгөөд тооллогын зөрүүний хөдөлгөөний харьцсан байрлалыг илэрхийлдэг (Тооллого) \n"
-"* Татан авалт: Хийсвэр байрлал бөгөөд татан авалтын харьцах байрлал (нийлүүлэгч эсвэл үйлдвэрлэл) нь тодорхойгүй байхад түр хэрэглэгддэг. Татан авалт төлөвлөгч ажилласан дараагаар энэ байрлал нь хоосон байх ёстой. \n"
-"* Үйлдвэрлэл: Хийсвэр байрлал бөгөөд үйлдвэрлэлийн ажилбар харьцсан байрлал болж хэрэглэгддэг: энэ байрлал нь түүхий эдийг хүлээн авч бэлэн бүтээгдэхүүний үүсгэдэг \n"
-"* Дамжих байрлал: Компани хооронд болон агуулах хоорондын хөдөлгөөнүүдэд харьцсан байрлал болж хэрэглэгддэг"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", НББ эсвэл худалдан авалт суусан үед"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "- The Odoo Team"
-msgstr "- Odoo баг"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -139,7 +102,6 @@ msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">'Available'</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">'Бэлэн'</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -147,8 +109,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Delivery</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Дарна уу <span "
-"class=\"fa fa-truck\"/> Хүргэлт</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -156,8 +116,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Click on <span "
 "class=\"fa fa-truck\"/> Shipment</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Дарна уу <span "
-"class=\"fa fa-truck\"/> Хүргэлт</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -165,8 +123,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Order</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Захиалга "
-"Батлах</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -174,8 +130,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Sale</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Борлуулалт "
-"Батлах</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -183,8 +137,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Find Incoming "
 "Shipments</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Ирж буй "
-"Хүргэлтийг Олох</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -192,8 +144,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Process the "
 "products</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Бараануудыг "
-"боловсруулах</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -201,8 +151,6 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Хүргэлтийг "
-"Батлах</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -210,19 +158,17 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Хүлээн авах "
-"Захиалгыr Батлах</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr "<span class=\"o_stat_text\">Дэлгэрэнгүй</span>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr "<span class=\"o_stat_text\">Урьдчилан таамагласан</span>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -230,8 +176,6 @@ msgid ""
 "<span class=\"o_stat_text\">Min :</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Мин :</span>\n"
-"                                <span class=\"o_stat_text\">Макс:</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -239,8 +183,6 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
-"<span class=\"o_stat_text\">Мин:</span>\n"
-"                                <span class=\"o_stat_text\">Макс:</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -546,7 +488,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Product</strong>"
-msgstr "Бараа"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -561,7 +503,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Quantity</strong>"
-msgstr "Тоо хэмжээ"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -627,7 +569,7 @@ msgid "A classic sales flow looks like the following:"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:86
+#: code:addons/stock/models/stock_move_line.py:85
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -641,7 +583,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:76
+#: code:addons/stock/models/stock_quant.py:75
 #, python-format
 msgid "A serial number should only be linked to a single product."
 msgstr ""
@@ -738,7 +680,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
-msgstr "Бүгд"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
@@ -780,7 +722,7 @@ msgid "Allow moving packs"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:82
+#: code:addons/stock/models/stock_quant.py:81
 #, python-format
 msgid "An incoming date cannot be set to an untracked product."
 msgstr ""
@@ -847,7 +789,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "As soon as possible"
-msgstr "Аль болох эрт"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -867,13 +809,13 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_variants_action
 msgid "Attribute Values"
-msgstr "Хувилбарын Утгууд"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Хувилбарууд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
@@ -918,7 +860,7 @@ msgid "Back order <em>%s</em> <b>cancelled</b>."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:790
+#: code:addons/stock/models/stock_picking.py:774
 #, python-format
 msgid "Back order <em>%s</em> <b>created</b>."
 msgstr ""
@@ -986,7 +928,7 @@ msgstr ""
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr "Хориглох Мессеж"
+msgstr ""
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
@@ -1006,7 +948,7 @@ msgstr ""
 #. module: stock
 #: selection:procurement.rule,action:0
 msgid "Buy"
-msgstr "Худалдаж авах"
+msgstr ""
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -1019,7 +961,7 @@ msgid "By Unique Serial Number"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:612
+#: code:addons/stock/models/stock_move.py:600
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -1037,16 +979,11 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_procure_method
 msgid ""
 "By default, the system will take from the stock in the source location and "
-"passively wait for availability. The other possibility allows you to "
-"directly create a procurement on the source location (and thus ignore its "
-"current stock) to gather products. If we want to chain moves and have this "
-"one to wait for the previous, this second option should be chosen."
+"passively wait for availability.The other possibility allows you to directly"
+" create a procurement on the source location (and thus ignore its current "
+"stock) to gather products. If we want to chain moves and have this one to "
+"wait for the previous,this second option should be chosen."
 msgstr ""
-"Анхныхаараа систем эх байрлалаас бараа материалыг авч бэлэн болохыг "
-"хүлээдэг. Өөрөөр бас шууд татан авах захиалгыг эх байрлал руу авчрахаар "
-"үүсгэдэг (ингэснээр эх байрлал дах нөөцийг шалгадаггүй). Хэрэв бид "
-"хөдөлгөөнийг хэлхэж энэ нь өмнөх хөдөлгөөнийг хүлээдэг байхаар зохион "
-"байгуулахыг хүсвэл энэ хоёр дахь сонголтыг хэрэглэх нь зохимжтой."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_active
@@ -1083,7 +1020,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
-msgstr "Цагалбар Харагдац"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:428
@@ -1092,7 +1029,7 @@ msgid "Can't find any customer or supplier location."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:476
+#: code:addons/stock/models/stock_warehouse.py:475
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr ""
@@ -1106,7 +1043,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
 #: model:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Cancel"
-msgstr "Цуцлах"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -1117,7 +1054,7 @@ msgstr ""
 #: selection:stock.inventory,state:0 selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr "Цуцлагдсан"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:468
@@ -1255,7 +1192,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Click to define a new product."
-msgstr "Шинэ бараа үүсгэхдээ дарна."
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_type_list
@@ -1290,7 +1227,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_company
 msgid "Companies"
-msgstr "Компаниуд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_company_id
@@ -1307,7 +1244,7 @@ msgstr "Компаниуд"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_company_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
-msgstr "Компани"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date_done
@@ -1322,17 +1259,17 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "DHL-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "FedEx-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "UPS-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1342,7 +1279,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr "bpost-н хүргэлт болон хүргэлтийн өртгийг тооцох"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -1352,7 +1289,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_config_settings
 msgid "Configuration"
-msgstr "Тохиргоо"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -1389,7 +1326,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 msgid "Contact"
-msgstr "Холбох хаяг"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_child_ids
@@ -1455,7 +1392,7 @@ msgid "Create Backorder"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:715
+#: code:addons/stock/models/stock_picking.py:699
 #, python-format
 msgid "Create Backorder?"
 msgstr ""
@@ -1546,7 +1483,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_create_uid
 msgid "Created by"
-msgstr "Үүсгэгч"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_create_date
@@ -1579,7 +1516,7 @@ msgstr "Үүсгэгч"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_create_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_create_date
 msgid "Created on"
-msgstr "Үүсгэсэн"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
@@ -1596,7 +1533,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_date
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_create_date
 msgid "Creation Date"
-msgstr "Үүсгэсэн Огноо"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_date
@@ -1620,11 +1557,6 @@ msgid "Cumulative Quantity"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_destination_location_id
-msgid "Current Destination Location"
-msgstr ""
-
-#. module: stock
 #: selection:stock.quantity.history,compute_at_date:0
 msgid "Current Inventory"
 msgstr ""
@@ -1637,11 +1569,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_picking_move_line_ids
 msgid "Current Picking Move Line"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_current_source_location_id
-msgid "Current Source Location"
 msgstr ""
 
 #. module: stock
@@ -1665,7 +1592,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_location_search
 #, python-format
 msgid "Customer"
-msgstr "Захиалагч"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_sale_delay
@@ -1689,7 +1616,7 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_customers
 #: selection:stock.picking.type,code:0
 msgid "Customers"
-msgstr "Захиалагчид"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
@@ -1734,7 +1661,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_dhl
-msgid "DHL"
+msgid "DHL USA"
 msgstr ""
 
 #. module: stock
@@ -1938,7 +1865,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_name
 msgid "Description"
-msgstr "Гүйлгээний утга"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2089,7 +2016,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_display_name
 msgid "Display Name"
-msgstr "Дэлгэцийн Нэр"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2108,7 +2035,7 @@ msgstr ""
 #: selection:stock.move,state:0 selection:stock.picking,state:0
 #: selection:stock.scrap,state:0
 msgid "Done"
-msgstr "Дууссан"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_done
@@ -2165,16 +2092,6 @@ msgid "End"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_ids
-msgid "Entire Package"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_picking_entire_package_detail_ids
-msgid "Entire Package Detail"
-msgstr ""
-
-#. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:14
 #, python-format
@@ -2197,7 +2114,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:407
+#: code:addons/stock/models/stock_quant.py:397
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr ""
@@ -2217,7 +2134,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_date_expected
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Expected Date"
-msgstr "Төлөвлөгөөт Огноо"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_product_expiry
@@ -2316,7 +2233,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
-#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "From"
 msgstr ""
 
@@ -2338,7 +2254,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
-msgstr "Ирээдүйн Үйл ажиллагаанууд"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:330
@@ -2433,7 +2349,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr "Бүлэглэх"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -2517,7 +2433,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_id
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6904
+#: model:ir.model.fields,field_description:stock.field_stock_quant_package_id_6902
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_id
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_id
@@ -2529,16 +2445,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:412
+#: code:addons/stock/models/stock_inventory.py:406
 #, python-format
 msgid "INV:"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:97
+#: code:addons/stock/wizard/stock_change_product_qty.py:94
 #, python-format
 msgid "INV: %s"
 msgstr ""
@@ -2724,7 +2640,7 @@ msgid "Immediate Transfer"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:678
+#: code:addons/stock/models/stock_picking.py:662
 #, python-format
 msgid "Immediate Transfer?"
 msgstr ""
@@ -2742,11 +2658,6 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Import using the top left button in"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move_line_in_entire_package
-msgid "In Entire Package"
 msgstr ""
 
 #. module: stock
@@ -2807,7 +2718,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_reception_steps
 msgid "Incoming Shipments"
-msgstr "Ирж буй Хүргэлтүүд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_incoterms_code
@@ -3000,7 +2911,7 @@ msgstr ""
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
 msgid "Inventory Configuration: a step-by-step guide."
-msgstr "Агуулахын тохиргоо: алхам алхамаарх зааварчилгаа"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_date
@@ -3021,7 +2932,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_line_tree
 msgid "Inventory Lines"
-msgstr "Тооллогын мөрүүд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3102,11 +3013,6 @@ msgid "Is Locked"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
-msgid "Is Processed"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
 msgid "Is a Return Location?"
 msgstr ""
@@ -3135,17 +3041,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:254
+#: code:addons/stock/models/stock_quant.py:244
 #, python-format
-msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+msgid "It is not possible to reserve more products than you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:256
+#: code:addons/stock/models/stock_quant.py:246
 #, python-format
-msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+msgid "It is not possible to unreserve more products than you have in stock."
 msgstr ""
 
 #. module: stock
@@ -3234,7 +3138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty___last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap___last_update
 msgid "Last Modified on"
-msgstr "Сүүлийн зассан хийсэн огноо"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_write_uid
@@ -3269,7 +3173,7 @@ msgstr "Сүүлийн зассан хийсэн огноо"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_write_uid
 msgid "Last Updated by"
-msgstr "Сүүлийн засвар хийсэн"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_write_date
@@ -3304,7 +3208,7 @@ msgstr "Сүүлийн засвар хийсэн"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_write_date
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_write_date
 msgid "Last Updated on"
-msgstr "Сүүлийн засвар хийсэн огноо"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:71
@@ -3317,7 +3221,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
-msgstr "Хожимдсон Үйл ажиллагаанууд"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -3395,7 +3299,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_location_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_location_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -3452,7 +3355,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
-msgstr "Түгжих"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -3547,7 +3450,7 @@ msgid "MTO rule"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:474
+#: code:addons/stock/models/stock_warehouse.py:473
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
@@ -3799,7 +3702,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms_name
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_name
 msgid "Name"
-msgstr "Нэр"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
@@ -3813,11 +3716,11 @@ msgstr ""
 #: code:addons/stock/models/stock_scrap.py:65 selection:stock.move,state:0
 #, python-format
 msgid "New"
-msgstr "Шинэ"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:173
-#: code:addons/stock/models/stock_picking.py:597
+#: code:addons/stock/models/stock_move_line.py:172
+#: code:addons/stock/models/stock_picking.py:584
 #, python-format
 msgid "New Move:"
 msgstr ""
@@ -3840,7 +3743,7 @@ msgstr ""
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "No Message"
-msgstr "Мессеж байхгүй"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_propagation_minimum_delta
@@ -3854,7 +3757,7 @@ msgid "No Tracking"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:389
+#: code:addons/stock/models/stock_move_line.py:388
 #, python-format
 msgid "No negative quantities allowed"
 msgstr ""
@@ -3905,10 +3808,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_note
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Notes"
-msgstr "Тэмдэглэл"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:544
+#: code:addons/stock/models/stock_picking.py:531
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr ""
@@ -4117,7 +4020,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Order Date"
-msgstr "Захиалгын Огноо"
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.location_order
@@ -4128,7 +4031,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 msgid "Ordered Quantity"
-msgstr "Захиалгаа Тоо хэмжээ"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4265,9 +4168,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
-#: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
-#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 #: model:ir.ui.view,arch_db:stock.view_quant_package_tree
 #, python-format
 msgid "Package"
@@ -4284,11 +4185,6 @@ msgid "Package BarCode with Contents"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "Package Content"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 msgid "Package Name"
 msgstr ""
@@ -4300,11 +4196,6 @@ msgid "Package Reference"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Package Reference:"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
 msgstr ""
@@ -4312,12 +4203,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.report_package_barcode
-#: model:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "Package Type:"
 msgstr ""
 
 #. module: stock
@@ -4391,7 +4276,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_partner_id
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Partner"
-msgstr "Харилцагч"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_partner_address_id
@@ -4526,13 +4411,13 @@ msgid "Planner"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:649
+#: code:addons/stock/models/stock_picking.py:636
 #, python-format
 msgid "Please add some lines to move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:823
+#: code:addons/stock/models/stock_picking.py:805
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr ""
@@ -4613,7 +4498,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_group_id
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Procurement Group"
-msgstr "Татан авалтын Бүлэг"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_location_id
@@ -4623,7 +4508,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Татан авалтын Шаардах"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -4681,7 +4566,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_product_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_product_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -4692,22 +4576,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Product"
-msgstr "Бараа"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:180
+#: code:addons/stock/models/stock_location.py:173
 #: model:ir.model.fields,field_description:stock.field_stock_location_route_categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, python-format
 msgid "Product Categories"
-msgstr "Барааны Ангилал"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_category_id
 msgid "Product Category"
-msgstr "Барааны Ангилал"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_code
@@ -4754,7 +4638,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_product_tmpl_id
 msgid "Product Template"
-msgstr "Бараа"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_type
@@ -4770,12 +4654,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_product_uom
 msgid "Product Unit of Measure"
-msgstr "Барааны Хэмжих нэгж"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
-msgstr "Барааны Хувилбар"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -4803,7 +4687,7 @@ msgid "Production Location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:170
+#: code:addons/stock/models/stock_location.py:163
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4815,7 +4699,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_location_form
 #, python-format
 msgid "Products"
-msgstr "Бараанууд"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:310
@@ -4865,7 +4749,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_path
 msgid "Pushed Flow"
-msgstr "Түлхэсэн Урсгал"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat_putaway_id
@@ -4876,11 +4760,6 @@ msgstr ""
 #: model:ir.model,name:stock.model_product_putaway
 #: model:ir.model.fields,field_description:stock.field_stock_location_putaway_strategy_id
 msgid "Put Away Strategy"
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_form
-msgid "Put in Pack"
 msgstr ""
 
 #. module: stock
@@ -4923,7 +4802,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_quant_ids
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild_quant_ids
 msgid "Quant"
@@ -4939,7 +4817,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Quantity"
-msgstr "Тоо"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -4974,15 +4852,9 @@ msgid "Quantity Reserved"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:80
+#: code:addons/stock/wizard/stock_change_product_qty.py:77
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move.py:611
-#, python-format
-msgid "Quantity decreased!"
 msgstr ""
 
 #. module: stock
@@ -5041,7 +4913,7 @@ msgid "Quants"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:70
+#: code:addons/stock/models/stock_quant.py:69
 #, python-format
 msgid "Quants cannot be created for consumables or services."
 msgstr ""
@@ -5121,12 +4993,12 @@ msgstr ""
 #: code:addons/stock/models/product.py:324
 #, python-format
 msgid "Received Qty"
-msgstr "Хүлээн авсан Тоо ширхэг"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Receptions"
-msgstr "Хүлээн авалт"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group_name
@@ -5141,7 +5013,7 @@ msgstr "Хүлээн авалт"
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 #: model:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking_board
 msgid "Reference"
-msgstr "Дугаар"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence_id
@@ -5180,7 +5052,7 @@ msgid "Removal Strategy"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:111
+#: code:addons/stock/models/stock_quant.py:104
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr ""
@@ -5219,7 +5091,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr "Тайлангууд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_use_propagation_minimum_delta
@@ -5240,7 +5112,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_procurement_jit
 msgid "Reservation"
-msgstr "Урьдчилсан захиалга"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -5277,7 +5149,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_responsible_id
 #: model:ir.model.fields,field_description:stock.field_product_template_responsible_id
 msgid "Responsible"
-msgstr "Хариуцлага"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_route_ids
@@ -5308,7 +5180,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Бэлтгэлийн Буцаалт"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:97
@@ -5411,7 +5283,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_scheduled_date
 msgid "Scheduled Date"
-msgstr "Товлогдсон Огноо"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_date_expected
@@ -5426,7 +5298,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:836
+#: code:addons/stock/models/stock_picking.py:818
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap_scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -5515,9 +5387,6 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"\"Анхааруулга\" сонголтыг сонгосноор хэрэглэгчид мессеж анхааруулагдах "
-"болно. \"Хориглох Мессеж\"-г сонгосноор алдааг өгч урсгалыг зогсоох болно. "
-"Мессеж нь дараагийн талбарт бичигдэх ёстой."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5532,34 +5401,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_sequence
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Sequence"
-msgstr "Дараалал"
+msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:685
+#: code:addons/stock/models/stock_warehouse.py:678
 #, python-format
 msgid "Sequence in"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:689
+#: code:addons/stock/models/stock_warehouse.py:682
 #, python-format
 msgid "Sequence internal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:686
+#: code:addons/stock/models/stock_warehouse.py:679
 #, python-format
 msgid "Sequence out"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:687
+#: code:addons/stock/models/stock_warehouse.py:680
 #, python-format
 msgid "Sequence packing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:688
+#: code:addons/stock/models/stock_warehouse.py:681
 #, python-format
 msgid "Sequence picking"
 msgstr ""
@@ -5623,7 +5492,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Set to Draft"
-msgstr "Ноорог Болгох"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_location_id
@@ -5637,7 +5506,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_general_settings
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Settings"
-msgstr "Тохиргоо"
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -5755,7 +5624,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_origin
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_origin
 msgid "Source Document"
-msgstr "Эх Баримт"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_location_src_id
@@ -5831,7 +5700,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Status"
-msgstr "Төлөв"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:96
@@ -5880,7 +5749,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_move_id
 msgid "Stock Move"
-msgstr "Барааны Хөдөлгөөн"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5894,7 +5763,7 @@ msgstr "Барааны Хөдөлгөөн"
 #: model:ir.ui.view,arch_db:stock.view_move_search
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Stock Moves"
-msgstr "Барааны хөдөлгөөнүүд"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_graph
@@ -6076,9 +5945,9 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_path_auto
 msgid ""
-"The 'Manual Operation' value will create a stock move after the current one."
-" With 'Automatic No Step Added', the location is replaced in the original "
-"move."
+"The 'Manual Operation' value will create a stock move after the current "
+"one.With 'Automatic No Step Added', the location is replaced in the original"
+" move."
 msgstr ""
 
 #. module: stock
@@ -6096,7 +5965,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1065
+#: code:addons/stock/models/stock_move.py:1033
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -6222,7 +6091,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:266
-#: code:addons/stock/models/stock_move_line.py:80
+#: code:addons/stock/models/stock_move_line.py:79
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
@@ -6434,22 +6303,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_detail_ids
-msgid ""
-"Those are the entire packages of a picking shown in the view of detailed "
-"operations"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_picking_entire_package_ids
-msgid ""
-"Those are the entire packages of a picking shown in the view of operations"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_location_dest_id
 #: model:ir.ui.view,arch_db:stock.view_move_tree
-#: model:ir.ui.view,arch_db:stock.view_quant_package_picking_tree
 msgid "To"
 msgstr ""
 
@@ -6511,7 +6366,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
-msgstr "Өнөөдрийн Ажилбарууд"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_total_qty
@@ -6568,7 +6423,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_picking
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Transfer"
-msgstr "Шилжүүлэх"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_picking_partner_id
@@ -6628,14 +6483,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_price_unit
 msgid "Unit Price"
-msgstr "Нэгж Үнэ"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot_product_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant_product_uom_id
-#: model:ir.model.fields,field_description:stock.field_stock_return_picking_line_uom_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_product_uom_id
 #: model:ir.ui.view,arch_db:stock.stock_move_tree
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6649,7 +6503,7 @@ msgstr "Нэгж Үнэ"
 #: model:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
-msgstr "Хэмжих нэгж"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6660,7 +6514,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Units of Measure"
-msgstr "Хэмжих нэгж"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
@@ -6669,7 +6523,7 @@ msgid "Units of Measures"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:321
+#: code:addons/stock/models/stock_quant.py:311
 #, python-format
 msgid "Unknown Pack"
 msgstr ""
@@ -6696,7 +6550,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unlock"
-msgstr "Түгжээг цуцлах"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -6777,7 +6631,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_stock_user
 msgid "User"
-msgstr "Хэрэглэгч"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -6803,7 +6657,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
-msgstr "Нийлүүлэгч"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_supplier
@@ -6846,7 +6700,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Volume"
-msgstr "Эзлэхүүн"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6895,7 +6749,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_warehouse_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Warehouse"
-msgstr "Агуулах"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse
@@ -6918,7 +6772,7 @@ msgid "Warehouse to Propagate"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:711
+#: code:addons/stock/models/stock_warehouse.py:704
 #, python-format
 msgid "Warehouse's Routes"
 msgstr ""
@@ -6933,11 +6787,11 @@ msgid "Warehouses"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:110
+#: code:addons/stock/models/stock_move_line.py:109
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
-msgstr "Анхааруулга"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -6953,7 +6807,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_group_warning_stock
 msgid "Warnings"
-msgstr "Анхааруулга"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7098,7 +6952,7 @@ msgid "You are not allowed to create a lot for this picking type"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:636
+#: code:addons/stock/models/stock_move.py:622
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -7150,7 +7004,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:511
+#: code:addons/stock/models/product.py:509
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -7168,7 +7022,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:338
+#: code:addons/stock/models/stock_move_line.py:337
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -7176,25 +7030,25 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:116
+#: code:addons/stock/models/stock_move_line.py:115
 #, python-format
 msgid "You can not enter negative quantities!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:398
+#: code:addons/stock/models/stock_inventory.py:392
 #, python-format
 msgid "You can only adjust stockable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1073
+#: code:addons/stock/models/stock_move.py:1041
 #, python-format
 msgid "You can only delete draft moves."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:126
+#: code:addons/stock/models/stock_move_line.py:125
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
@@ -7205,7 +7059,7 @@ msgid "You can review and edit the predefined units via the"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:936
+#: code:addons/stock/models/stock_move.py:913
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
@@ -7217,13 +7071,13 @@ msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:386
+#: code:addons/stock/models/stock_inventory.py:380
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progress' with the "
-"same product (%s), same location (%s), same package, same owner and same "
-"lot. Please first validate the first inventory adjustement with this product"
-" before creating another one."
+"same product(%s), same location(%s), same package, same owner and same lot. "
+"Please first validatethe first inventory adjustement with this product "
+"before creating another one."
 msgstr ""
 
 #. module: stock
@@ -7235,19 +7089,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1101
+#: code:addons/stock/models/stock_move.py:1097
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1097
+#: code:addons/stock/models/stock_move.py:1093
 #, python-format
 msgid "You cannot split a move done"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:88
+#: code:addons/stock/models/stock_quant.py:87
 #, python-format
 msgid ""
 "You cannot take products from or deliver products to a location of type "
@@ -7264,14 +7118,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:672
-#, python-format
-msgid ""
-"You cannot validate a transfer if you have not processed any quantity for "
-"%s."
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/models/stock_picking.py:656
 #, python-format
 msgid "You cannot validate a transfer if you have not processed any quantity."
@@ -7285,7 +7131,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_picking_return.py:110
+#: code:addons/stock/models/stock_move_line.py:131
+#, python-format
+msgid ""
+"You have already assigned this serial number to this product. Please correct"
+" the serial numbers encoded."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_picking_return.py:106
 #, python-format
 msgid "You have manually created product lines, please delete them to proceed"
 msgstr ""
@@ -7311,7 +7165,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:795
+#: code:addons/stock/models/stock_warehouse.py:788
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
@@ -7319,7 +7173,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:98
+#: code:addons/stock/models/stock_location.py:91
 #, python-format
 msgid "You have to set a name for this location."
 msgstr ""
@@ -7345,20 +7199,19 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:387
-#: code:addons/stock/models/stock_picking.py:670
+#: code:addons/stock/models/stock_picking.py:669
 #, python-format
 msgid "You need to supply a lot/serial number for %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1047
+#: code:addons/stock/models/stock_move.py:1043
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/product.py:369
-#: code:addons/stock/models/product.py:504
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
@@ -7435,7 +7288,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "days"
-msgstr "өдөр"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7547,7 +7400,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_fixed_putaway_strat
@@ -7612,6 +7465,11 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "with the <i>Validate</i> button"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "↳Put in Pack"
 msgstr ""
 
 #. module: stock

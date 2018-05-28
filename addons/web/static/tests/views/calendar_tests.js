@@ -3,17 +3,19 @@ odoo.define('web.calendar_tests', function (require) {
 
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
+var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 
+var createActionManager = testUtils.createActionManager;
 
 CalendarRenderer.include({
     getAvatars: function () {
         var res = this._super.apply(this, arguments);
         for (var k in res) {
-            res[k] = res[k].replace(/src="([^"]+)"/, 'src="#test:\$1"');
+            res[k] = res[k].replace(/src="([^"]+)"/, 'data-src="\$1"');
         }
         return res;
     }
@@ -113,40 +115,28 @@ QUnit.module('Views', {
                     '<field name="stop_date"/>'+
                 '</group>'+
             '</form>',
-        "event,1,form": {
-            attrs: {},
-            children: [
-                {
-                    attrs: {
-                        modifiers: '{"invisible": true}',
-                        name: "allday"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",false]]}',
-                        name: "start"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",true]]}',
-                        name: "stop"
-                    },
-                    children: [],
-                    tag: 'field'
-                }
-            ],
-            tag: "form"
-        }
+        "event,1,form":
+            '<form>' +
+                '<field name="allday" invisible="1"/>' +
+                '<field name="start" attrs=\'{"invisible": [["allday","=",false]]}\'/>' +
+                '<field name="stop" attrs=\'{"invisible": [["allday","=",true]]}\'/>' +
+            '</form>',
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
-        assert.expect(22);
+        assert.expect(24);
+
+        this.data.event.records.push({
+            id: 7,
+            user_id: session.uid,
+            partner_id: false,
+            name: "event 7",
+            start: "2016-12-18 09:00:00",
+            stop: "2016-12-18 10:00:00",
+            allday: false,
+            partner_ids: [2],
+            type: 1
+        });
 
         var calendar = createView({
             View: CalendarView,
@@ -187,7 +177,7 @@ QUnit.module('Views', {
         assert.strictEqual($sidebar.find('.o_selected_range').length, 1, "should highlight the target day in mini calendar");
 
         calendar.$buttons.find('.o_calendar_button_month').trigger('click'); // display all the month
-        assert.strictEqual(calendar.$('.fc-event').length, 6, "should display 6 events on the month (5 events + 2 week event - 1 'event 6' is filtered)");
+        assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (5 events + 2 week event - 1 'event 6' is filtered + 1 'Undefined event')");
         assert.strictEqual($sidebar.find('.o_selected_range').length, 31, "month scale should highlight all days in mini calendar");
 
         // test filters
@@ -196,15 +186,19 @@ QUnit.module('Views', {
 
         var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
         assert.ok($typeFilter.length, "should display 'user' filter");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 2, "should display 2 filter items for 'user'");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'user'");
+
+        // filters which has no value should show with string "Undefined" and should show at the last
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last').data('value'), false, "filters having false value should be displayed at last in filter items");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item:last > span').text(), "Undefined", "filters having false value should display 'Undefined' string");
 
         var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");
         assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
         assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
-        assert.strictEqual(calendar.$('.fc-event').length, 6,
-            "should display 6 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
+        assert.strictEqual(calendar.$('.fc-event').length, 7,
+            "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
         calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
         calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
@@ -223,6 +217,52 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
         calendar.destroy();
+    });
+
+    QUnit.test('breadcrumbs are updated with the displayed period', function (assert) {
+        assert.expect(3);
+
+        var archs = {
+            'event,1,calendar': '<calendar date_start="start" date_stop="stop" all_day="allday">' +
+                '<field name="name"/>' +
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            flags: {
+                initialDate: initialDate,
+            },
+            name: 'Meetings Test',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']],
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+
+        // displays month mode by default
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
+
+        // switch to day mode
+        actionManager.controlPanel.$('.o_calendar_button_day').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 12, 2016)', "should display the current day");
+
+        // switch to month mode
+        actionManager.controlPanel.$('.o_calendar_button_month').click();
+        assert.strictEqual(actionManager.controlPanel.$('.breadcrumb li').text(),
+            'Meetings Test (December 2016)', "should display the current month");
+
+        actionManager.destroy();
     });
 
     QUnit.test('create and change events', function (assert) {
@@ -1709,11 +1749,96 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         calendar.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber+1, "every widget must be destroyed exept the parent");
+        assert.strictEqual(instanceNumber, initialInstanceNumber + 3, "every widget must be destroyed exept the parent");
 
         calendar.destroy();
 
         testUtils.unpatch(mixins.ParentedMixin);
+    });
+
+    QUnit.test('create an event (async dialog) [REQUIRE FOCUS]', function (assert) {
+        assert.expect(3);
+
+        var def = $.Deferred();
+        testUtils.patch(Dialog, {
+            open: function () {
+                var _super = this._super.bind(this);
+                def.then(_super);
+                return this;
+            },
+        });
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // create an event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal').length, 0,
+            "should not have opened the dialog yet");
+
+        def.resolve();
+
+        assert.strictEqual($('.modal').length, 1,
+            "should have opened the dialog");
+        assert.strictEqual($('.modal input')[0], document.activeElement,
+            "should focus the input in the dialog");
+
+        calendar.destroy();
+        testUtils.unpatch(Dialog);
+    });
+
+    QUnit.test('calendar is configured to hide the groupby menu', function (assert) {
+        assert.expect(2);
+
+        var archs = {
+            'event,1,calendar': '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            name: 'some action',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']]
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+        var $groupBy = actionManager.controlPanel.$('span.fa.fa-bars');
+        assert.strictEqual($groupBy.length, 1, 'just making sure we have the groupby menu');
+        assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
+        actionManager.destroy();
     });
 
     QUnit.test('timezone does not affect current day', function (assert) {

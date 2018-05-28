@@ -23,11 +23,12 @@ ListRenderer.include({
         navigation_move: '_onNavigationMove',
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
+        'click .o_field_x2many_list_row_add a': '_onAddRecord',
+        'keydown .o_field_x2many_list_row_add a': '_onKeyDownAddRecord',
         'click tbody td.o_data_cell': '_onCellClick',
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
         'click tfoot': '_onFooterClick',
-        'click tr .o_list_record_delete': '_onTrashIconClick',
-        'click .o_field_x2many_list_row_add a': '_onAddRecord',
+        'click tr .o_list_record_remove': '_onRemoveIconClick',
     }),
     /**
      * @override
@@ -38,13 +39,17 @@ ListRenderer.include({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
 
-        // if addCreateLine is true, the renderer will add a 'Add an item' link
+        // if addCreateLine is true, the renderer will add a 'Add a line' link
         // at the bottom of the list view
         this.addCreateLine = params.addCreateLine;
 
         // if addTrashIcon is true, there will be a small trash icon at the end
         // of each line, so the user can delete a record.
         this.addTrashIcon = params.addTrashIcon;
+
+        // replace the trash icon by X in case of many2many relations
+        // so that it means 'unlink' instead of 'remove'
+        this.isMany2Many = params.isMany2Many;
 
         this.currentRow = null;
         this.currentFieldIndex = null;
@@ -336,6 +341,7 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
+        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id)
 
         return $.when.apply($, defs);
     },
@@ -489,6 +495,7 @@ ListRenderer.include({
     /**
      * Editable rows are possibly extended with a trash icon on their right, to
      * allow deleting the corresponding record.
+     * For many2many editable lists, the trash bin is replaced by X.
      *
      * @override
      * @param {any} record
@@ -498,9 +505,10 @@ ListRenderer.include({
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
-            var $icon = $('<button>', {class: 'fa fa-trash-o o_list_record_delete_btn', name: 'delete',
-                'aria-label': _t('Delete row ') + (index+1)});
-            var $td = $('<td>', {class: 'o_list_record_delete'}).append($icon);
+            var $icon = this.isMany2Many ?
+                            $('<button>', {class: 'fa fa-times', name: 'unlink', 'aria-label': _t('Unlink row ') + (index+1)}) :
+                            $('<button>', {class: 'fa fa-trash-o', name: 'delete', 'aria-label': _t('Delete row ') + (index+1)});
+            var $td = $('<td>', {class: 'o_list_record_remove'}).append($icon);
             $row.append($td);
         }
         return $row;
@@ -515,7 +523,7 @@ ListRenderer.include({
     _renderRows: function () {
         var $rows = this._super();
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add an item"));
+            var $a = $('<a href="#">').text(_t("Add a line"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_field_x2many_list_row_add')
@@ -681,7 +689,7 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is called when we click on the 'Add an Item' button in a sub
+     * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
      * @param {MouseEvent} event
@@ -732,6 +740,34 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
+    _onKeyDownAddRecord: function(e) {
+        switch(e.keyCode) {
+            case $.ui.keyCode.ENTER:
+                e.stopPropagation();
+                e.preventDefault();
+                this._onAddRecord(e);
+                break;
+        }
+    },
+    /** 
+     * It will returns the first visible widget that is editable
+     *
+     * @private
+     * @returns {Class} Widget returns first widget
+     */
+    _getFirstWidget: function () {
+        var record = this.state.data[this.currentRow];
+        var recordWidgets = this.allFieldWidgets[record.id];
+        var firstWidget = _.find(recordWidgets, function (widget) {
+            var isFirst = widget.$el.is(':visible') && 
+                                (widget.$el.has('input').length > 0 ||
+                                widget.tagName== 'input') && 
+                            !widget.$el.hasClass('o_readonly_modifier');
+            return isFirst;
+        });
+        return firstWidget;
+    },
+
     /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
@@ -785,12 +821,20 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                if (this.currentFieldIndex + 1 < this.columns.length) {
-                    this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
-                        .fail(this._moveToNextLine.bind(this));
+                // When navigating with the keyboard, we want to get out of the list editable if the
+                // first field is left empty.
+                var column = this.columns[this.currentFieldIndex];
+                var firstWidget = this._getFirstWidget();
+                if (column.attrs.name === firstWidget.name && !firstWidget.$input.val()) {
+                    this.trigger_up('activate_next_widget');
                 } else {
-                    this._moveToNextLine();
-                }
+                    if (this.currentFieldIndex + 1 < this.columns.length) {
+                        this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
+                            .fail(this._moveToNextLine.bind(this));
+                    } else {
+                        this._moveToNextLine();
+                    }
+                 }
                 break;
             case 'next_line':
                 this._moveToNextLine();
@@ -804,6 +848,17 @@ ListRenderer.include({
                 });
                 break;
         }
+    },
+    /**
+     * Triggers a remove event. I don't know why we stop the propagation of the
+     * event.
+     *
+     * @param {MouseEvent} event
+     */
+    _onRemoveIconClick: function (event) {
+        event.stopPropagation();
+        var id = $(event.target).closest('tr').data('id');
+        this.trigger_up('list_record_remove', {id: id});
     },
     /**
      * If the list view editable, just let the event bubble. We don't want to
@@ -827,17 +882,6 @@ ListRenderer.include({
         if (this.currentRow === null) {
             this._super.apply(this, arguments);
         }
-    },
-    /**
-     * Triggers a delete event. I don't know why we stop the propagation of the
-     * event.
-     *
-     * @param {MouseEvent} event
-     */
-    _onTrashIconClick: function (event) {
-        event.stopPropagation();
-        var id = $(event.target).closest('tr').data('id');
-        this.trigger_up('list_record_delete', {id: id});
     },
     /**
      * When a click happens outside the list view, or outside a currently

@@ -40,7 +40,7 @@ class ServerActions(models.Model):
         Model = self.env[action.model_id.model]
         if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
-            records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids, force=False)
+            records.message_subscribe(self.partner_ids.ids, self.channel_ids.ids)
         return False
 
     @api.model

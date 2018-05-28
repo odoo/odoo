@@ -8,7 +8,7 @@ from os import utime
 import time
 
 from odoo import api
-from odoo.addons.base.ir.ir_qweb import AssetsBundle
+from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.modules.module import get_resource_path
 from odoo.tests import HttpCase
 from odoo.tests.common import TransactionCase
@@ -332,22 +332,21 @@ class TestAssetsBundleInBrowser(HttpCase):
     def test_02_js_interpretation_inline(self):
         """ Checks that the javascript of a bundle is correctly interpretet when mixed with inline.
         """
-        with self.registry.cursor() as test_cursor:
-            view_arch = """
-            <data>
-                <xpath expr="." position="inside">
-                    <script type="text/javascript">
-                        var d = 4;
-                    </script>
-                </xpath>
-            </data>
-            """
-            self.env(cr=test_cursor)['ir.ui.view'].create({
-                'name': 'test bundle inheritance inline js',
-                'type': 'qweb',
-                'arch': view_arch,
-                'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
-            })
+        view_arch = """
+        <data>
+            <xpath expr="." position="inside">
+                <script type="text/javascript">
+                    var d = 4;
+                </script>
+            </xpath>
+        </data>
+        """
+        self.env['ir.ui.view'].create({
+            'name': 'test bundle inheritance inline js',
+            'type': 'qweb',
+            'arch': view_arch,
+            'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
+        })
 
         self.phantom_js(
             "/test_assetsbundle/js",
@@ -359,7 +358,7 @@ class TestAssetsBundleInBrowser(HttpCase):
 class TestAssetsBundleWithIRAMock(TransactionCase):
     def setUp(self):
         super(TestAssetsBundleWithIRAMock, self).setUp()
-        self.lessbundle_xmlid = 'test_assetsbundle.bundle3'
+        self.stylebundle_xmlid = 'test_assetsbundle.bundle3'
         self.counter = counter = Counter()
 
         # patch methods 'create' and 'unlink' of model 'ir.attachment'
@@ -380,8 +379,8 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.addCleanup(self.env['ir.attachment']._revert_method, 'unlink')
 
     def _get_asset(self):
-        files, remains = self.env['ir.qweb']._get_asset_content(self.lessbundle_xmlid, {})
-        return AssetsBundle(self.lessbundle_xmlid, files, remains, env=self.env)
+        files, remains = self.env['ir.qweb']._get_asset_content(self.stylebundle_xmlid, {})
+        return AssetsBundle(self.stylebundle_xmlid, files, remains, env=self.env)
 
     def _bundle(self, asset, should_create, should_unlink):
         self.counter.clear()
@@ -390,7 +389,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self.assertEquals(self.counter['unlink'], int(should_unlink))
 
     def test_01_debug_mode_assets(self):
-        """ Checks that the ir.attachments records created for compiled less assets in debug mode
+        """ Checks that the ir.attachments records created for compiled assets in debug mode
         are correctly invalidated.
         """
         # Compile for the first time
@@ -400,7 +399,7 @@ class TestAssetsBundleWithIRAMock(TransactionCase):
         self._bundle(self._get_asset(), False, False)
 
         # Touch the file and compile a third time
-        path = get_resource_path('test_assetsbundle', 'static', 'src', 'less', 'test_lessfile1.less')
+        path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
         t = time.time() + 5
         asset = self._get_asset()
         _touch(path, asset, t=t)

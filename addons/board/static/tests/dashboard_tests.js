@@ -1,8 +1,10 @@
 odoo.define('board.dashboard_tests', function (require) {
 "use strict";
 
+var BoardView = require('board.BoardView');
+
+var ListController = require('web.ListController');
 var testUtils = require('web.test_utils');
-var FormView = require('web.FormView');
 var ListRenderer = require('web.ListRenderer');
 
 var createView = testUtils.createView;
@@ -43,7 +45,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -56,7 +58,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
     form.destroy();
 
     form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -68,7 +70,7 @@ QUnit.test('dashboard basic rendering', function (assert) {
 
     assert.ok(form.renderer.$el.hasClass('o_dashboard'),
         "with a dashboard, the renderer should have the proper css class");
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent').length, 1,
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 1,
         "should have a no content helper");
     assert.strictEqual(form.get('title'), "My Dashboard",
         "should have the correct title");
@@ -79,7 +81,7 @@ QUnit.test('display the no content helper', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -94,7 +96,7 @@ QUnit.test('display the no content helper', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent p:contains(click to add a partner)').length, 1,
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 1,
         "should have a no content helper with action help");
     form.destroy();
 });
@@ -103,7 +105,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.expect(25);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -124,8 +126,8 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -156,7 +158,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     form.$('.oe_fold').click();
 
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible again");
-    assert.verifySteps(['load action', 'add custom', 'add custom']);
+    assert.verifySteps(['load action', 'edit custom', 'edit custom']);
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
 
@@ -184,7 +186,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.strictEqual(form.$('.oe_action').length, 0, "should have no displayed action");
 
-    assert.verifySteps(['load action', 'add custom', 'add custom', 'add custom', 'add custom']);
+    assert.verifySteps(['load action', 'edit custom', 'edit custom', 'edit custom', 'edit custom']);
     form.destroy();
 });
 
@@ -194,7 +196,7 @@ QUnit.test('can sort a sub list', function (assert) {
     this.data.partner.fields.foo.sortable = true;
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -233,7 +235,7 @@ QUnit.test('can open a record', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -276,7 +278,7 @@ QUnit.test('can drag and drop a view', function (assert) {
     assert.expect(4);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -293,8 +295,8 @@ QUnit.test('can drag and drop a view', function (assert) {
                     views: [[4, 'list']],
                 });
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -322,7 +324,7 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -340,8 +342,8 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
                     views: [[4, 'list'],[5, 'kanban']],
                 });
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -370,7 +372,7 @@ QUnit.test('non-existing action in a dashboard', function (assert) {
     assert.expect(1);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -407,7 +409,7 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
     assert.expect(2);
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -466,7 +468,7 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     });
 
     var form = createView({
-        View: FormView,
+        View: BoardView,
         model: 'board',
         data: this.data,
         arch: '<form string="My Dashboard">' +
@@ -497,6 +499,61 @@ QUnit.test('subviews are aware of attach in or detach from the DOM', function (a
     testUtils.unpatch(ListRenderer);
 
     form.destroy();
+});
+
+QUnit.test('dashboard intercepts custom events triggered by sub controllers', function (assert) {
+    assert.expect(4);
+
+    // we patch the ListController to force it to trigger the custom events that
+    // we want the dashboard to intercept (to stop them or to tweak their data)
+    testUtils.patch(ListController, {
+        start: function () {
+            this.trigger_up('update_filters');
+            this.trigger_up('env_updated');
+            this.do_action({}, {keepSearchView: true});
+        },
+    });
+
+    var board = createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({res_model: 'partner', views: [[false, 'list']]});
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,false,list': '<tree string="Partner"/>',
+        },
+        intercepts: {
+            do_action: function (ev) {
+                assert.strictEqual(ev.data.options.keepSearchView, false,
+                    "the 'keepSearchView' options should have been set to false");
+            },
+            env_updated: function (ev) {
+                assert.strictEqual(ev.target.modelName, 'board',
+                    "env_updated event should be triggered by the dashboard itself");
+                assert.step('env_updated');
+            },
+            update_filters: assert.step.bind(assert, 'update_filters'),
+        },
+    });
+
+    assert.verifySteps([
+        'env_updated', // triggered by the dashboard itself
+    ]);
+
+    testUtils.unpatch(ListController);
+    board.destroy();
 });
 
 });

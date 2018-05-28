@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models, modules
-from odoo.tools import pycompat
-from odoo.addons.base.res.res_users import is_selection_groups
+from odoo.addons.base.models.res_users import is_selection_groups
 
 
 class Users(models.Model):
@@ -30,8 +29,8 @@ class Users(models.Model):
         ('inbox', 'Handle in Odoo')],
         'Notification Management', required=True, default='email',
         help="Policy on how to handle Chatter notifications:\n"
-             "- Emails: notifications are sent to your email\n"
-             "- Odoo: notifications appear in your Odoo Inbox")
+             "- Handle by Emails: notifications are sent to your email address\n"
+             "- Handle in Odoo: notifications appear in your Odoo Inbox")
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -55,9 +54,8 @@ class Users(models.Model):
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         user = super(Users, self).create(values)
-
-        # create a welcome message
-        user._create_welcome_message()
+        # Auto-subscribe to channels
+        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
         return user
 
     @api.multi
@@ -72,56 +70,6 @@ class Users(models.Model):
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
-
-    def _create_welcome_message(self):
-        self.ensure_one()
-        if not self.has_group('base.group_user'):
-            return False
-        company_name = self.company_id.name if self.company_id else ''
-        body = _('%s has joined the %s network.') % (self.name, company_name)
-        # TODO change SUPERUSER_ID into user.id but catch errors
-        return self.partner_id.sudo().message_post(body=body)
-
-    def _message_post_get_pid(self):
-        self.ensure_one()
-        if 'thread_model' in self.env.context:
-            self = self.with_context(thread_model='res.users')
-        return self.partner_id.id
-
-    @api.multi
-    @api.returns('self', lambda value: value.id)
-    def message_post(self, **kwargs):
-        """ Redirect the posting of message on res.users as a private discussion.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id. """
-        current_pids = []
-        partner_ids = kwargs.get('partner_ids', [])
-        user_pid = self._message_post_get_pid()
-        for partner_id in partner_ids:
-            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
-                current_pids.append(partner_id[1])
-            elif isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
-                current_pids.append(partner_id[2])
-            elif isinstance(partner_id, pycompat.integer_types):
-                current_pids.append(partner_id)
-        if user_pid not in current_pids:
-            partner_ids.append(user_pid)
-        kwargs['partner_ids'] = partner_ids
-        return self.env['mail.thread'].message_post(**kwargs)
-
-    def message_update(self, msg_dict, update_vals=None):
-        return True
-
-    def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
-        return True
-
-    @api.multi
-    def message_partner_info_from_emails(self, emails, link_mail=False):
-        return self.env['mail.thread'].message_partner_info_from_emails(emails, link_mail=link_mail)
-
-    @api.multi
-    def message_get_suggested_recipients(self):
-        return dict((res_id, list()) for res_id in self._ids)
 
     @api.model
     def activity_user_count(self):
@@ -139,7 +87,7 @@ class Users(models.Model):
         self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
         model_ids = [a['id'] for a in activity_data]
-        model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
+        model_names = {n[0]: n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
         user_activities = {}
         for activity in activity_data:
@@ -151,7 +99,7 @@ class Users(models.Model):
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
-            if activity['states'] in ('today','overdue'):
+            if activity['states'] in ('today', 'overdue'):
                 user_activities[activity['model']]['total_count'] += activity['count']
 
         return list(user_activities.values())

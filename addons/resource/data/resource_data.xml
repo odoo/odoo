@@ -24,6 +24,7 @@
     <record id="resource_calendar_std_35h" model="resource.calendar">
         <field name="name">Standard 35 Hours/Week</field>
         <field name="company_id" ref="base.main_company"/>
+        <field name="hours_per_day">7.0</field>
         <field name="attendance_ids"
             eval="[
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
@@ -43,6 +44,7 @@
     <record id="resource_calendar_std_38h" model="resource.calendar">
         <field name="name">Standard 38 Hours/Week</field>
         <field name="company_id" ref="base.main_company"/>
+        <field name="hours_per_day">7.6</field>
         <field name="attendance_ids"
             eval="[
                 (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),

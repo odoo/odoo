@@ -7,7 +7,7 @@
             <form string="Point of Sale Orders" create="0">
                 <header>
                     <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" states="draft" context="{'pos_session_id' : session_id}"/>
-                    <button name="action_pos_order_invoice" string="Invoice" type="object" states="paid" attrs="{'readonly': [('partner_id','=',False)]}"/>
+                    <button name="action_pos_order_invoice" string="Invoice" type="object" attrs="{'invisible': ['|', ('invoice_group', '=', False), ('state','!=','invoiced')], 'readonly': [('partner_id','=',False)]}"/>
                     <button name="refund" string="Return Products" type="object"
                         attrs="{'invisible':[('state','=','draft')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,paid,done" />
@@ -28,6 +28,7 @@
                     <field name="session_id" />
                     <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer':1}" attrs="{'readonly': [('state','=','invoiced')]}"/>
                     <field name="fiscal_position_id" options="{'no_create': True}"/>
+                    <field name="invoice_group" invisible="1"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Products">
@@ -37,7 +38,7 @@
                                 <field name="qty"/>
                                 <field name="price_unit" widget="monetary"/>
                                 <field name="discount" widget="monetary"/>
-                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="price_subtotal_incl" widget="monetary"/>
@@ -50,7 +51,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="price_subtotal" invisible="1" widget="monetary"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
-                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="notice"/>
                                 </group>
@@ -85,7 +86,7 @@
                             <field name="picking_id" readonly="1"/>
                             <field name="pos_reference"/>
                         </group>
-                        <group string="Accounting Information">
+                        <group string="Accounting Information" groups="account.group_account_manager">
                             <group>
                                 <field name="sale_journal" domain="[('type','=','sale')]"/>
                                 <field name="account_move" readonly="1"
@@ -155,12 +156,10 @@
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a new order.
+            <p class="o_view_nocontent_empty_folder">
+                No orders found
             </p><p>
-                Use this menu to browse previous orders. To record new
-                orders, you may use the menu <i>Your Session</i> for
-                the touchscreen interface.
+                To record new orders, start a new session.
             </p>
         </field>
     </record>
@@ -283,19 +282,19 @@
             <search string="Search Sales Order">
                 <field name="name"/>
                 <field name="date_order"/>
-                <filter string="New" domain="[('state','=','draft')]"/>
-                <filter string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
-                <filter string="Invoiced" domain="[('state','=','invoiced')]"/>
-                <filter string="Posted" domain="[('state','=','done')]"/>
+                <filter string="New" name="new" domain="[('state','=','draft')]"/>
+                <filter string="Done" name="done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('state','=','invoiced')]"/>
+                <filter string="Posted" name="posted" domain="[('state','=','done')]"/>
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="Salesman" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Session" domain="[]" context="{'group_by':'session_id'}"/>
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Order Month" domain="[]" context="{'group_by':'date_order'}"/>
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Salesman" name="salesman" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Session" name="session" domain="[]" context="{'group_by':'session_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Order Month" name="order_month" domain="[]" context="{'group_by':'date_order'}"/>
                 </group>
             </search>
         </field>

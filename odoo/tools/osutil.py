@@ -33,7 +33,7 @@ def listdir(dir, recursive=False):
 def walksymlinks(top, topdown=True, onerror=None):
     """
     same as os.walk but follow symlinks
-    attention: all symlinks are walked before all normals directories
+    attention: all symlinks are walked before all normal directories
     """
     for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
         if topdown:

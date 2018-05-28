@@ -90,6 +90,15 @@ in each method::
 
     Test methods must start with ``test_``
 
+.. autoclass:: odoo.tests.common.Form
+    :members:
+
+.. autoclass:: odoo.tests.common.M2MProxy
+    :members: add, remove, clear
+
+.. autoclass:: odoo.tests.common.O2MProxy
+    :members: new, edit, remove
+
 Running tests
 -------------
 

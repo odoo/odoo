@@ -3,33 +3,30 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Martin Trigaux, 2017
-# Micky Jault <micky037@hotmail.fr>, 2017
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
-# Loic <loic.richard2@gmail.com>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# Xavier Symons <xsy@openerp.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# Leo Schmitt <inactive+lschmitt@transifex.com>, 2017
-# Agathe Mollé <molleagathe@gmail.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Xavier Belmere <Info@cartmeleon.com>, 2017
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Tony Galmiche <tony.galmiche@infosaone.com>, 2017
-# Nancy Bolognesi <nb@microcom.ca>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Lucas Deliege <lud@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Simona Busalacchi <simobusalacchi.sb@gmail.com>, 2017
-# Florian Hatat, 2017
-# Olivier Dony <odo@odoo.com>, 2017
-# Frédéric LIETART <stuff@tifred.fr>, 2017
-# lucasdeliege <deliegelucas@gmail.com>, 2017
-# Fabien Pinckaers <fp@openerp.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Loic <loic.richard2@gmail.com>, 2016
+# Tony Galmiche <tony.galmiche@infosaone.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Xavier Symons <xsy@openerp.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
+# Agathe Mollé <molleagathe@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Simona Busalacchi <simobusalacchi.sb@gmail.com>, 2016
+# Florian Hatat, 2016
+# Frédéric LIETART <stuff@tifred.fr>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2017
-# fr rev <e2ffr02@hotmail.com>, 2018
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Lucas Deliege <lud@openerp.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
@@ -79,36 +76,30 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\\<p>nBonjour,</p>\n"
 "\n"
-"<p>Bonjour,</p>\n"
-"\n"
-"\n"
-"<p>Nous avons été contactés par ces prospects de votre région. Ainsi, les leads suivants ont été attribués à  ${ctx['partner_id'].name}:</p>\n"
+"\\<p>nNous avons été contactés par ces prospects de votre région. Ainsi, les leads suivants ont été attribués à ${ctx['partner_id'].name}:</p>\n"
 "\n"
 "<ol>\n"
 "% for lead in ctx['partner_leads']:\n"
-"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li><br/>\n"
+" <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''}</li> <br/>\n"
 "% endfor\n"
+"\n"
 "</ol>\n"
-"\n"
-"% if ctx.get('partner_in_portal'):\n"
-"<p>Connectez-vous à votre <a href=\"${object.get_portal_url()}\">Portail Partenaires</a> pour plus d'informations. Pour chaque lead, vous trouverez deux boutons en haut à gauche sur lesquels il vous faut appuyer après avoir contacté le lead: « Je suis intéressé » et « Je ne suis pas intéressé ».</p>\n"
+"% if ctx.get('partner_in_portal'):\\<p>nConnectez-vous à votre <a href=\"${object.get_portal_url()}\">Portail Partenaires</a> pour plus d'informations. Pour chaque lead, vous trouverez deux boutons en haut à gauche sur lesquels il vous faut appuyer après avoir contacté le lead : « Je suis intéressé » et « Je ne suis pas intéressé ».</p><p>\n"
 "% else:\n"
-"<p>\n"
-"     Vous ne pouvez pas encore accéder à notre base de données via le portail. Contactez \n"
-"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.\n"
-"</p>\n"
-"% endif\n"
-"<p>Le lead sera transféré à un autre partenaire si vous ne le contactez pas sous 20 jours.</p>\n"
 "\n"
-"<p>Merci,</p>\n"
+" Vous ne pouvez pas encore accéder à notre base de données via le portail. Contactez \n"
+" ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.</p>\\<p>n\n"
+"% endif\n"
+"Le lead sera transféré à un autre partenaire si vous ne le contactez pas sous 20 jours.</p>\n"
+"\\<p>nMerci,</p>\n"
 "\n"
 "${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
 "\n"
 "% if not ctx['partner_id'].user_id:\n"
 "P. S : Il semble que vous n'ayez pas de gestionnaire de compte attribué. Contactez-nous.\n"
 "% endif\n"
-"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -125,7 +116,7 @@ msgstr "Nb d'opportunités"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "&amp;times;"
-msgstr "&amp;times;"
+msgstr "&times;"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -173,7 +164,7 @@ msgid ""
 "customer before accepting the lead</span>"
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
-"style=\"display:none;\">Vous devez renseigner la prochaine action et "
+"style=\"display:none;\">Vous devez effectuer la prochaine action et "
 "contacter le client avant d'accepter le lead</span>"
 
 #. module: website_crm_partner_assign
@@ -213,7 +204,7 @@ msgstr "Activation"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_active
 #, python-format
 msgid "Active"
-msgstr "Actif/ve"
+msgstr "Actif"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -470,7 +461,7 @@ msgstr "Détails de l'Activité à Venir"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_display_name
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_display_name
 msgid "Display Name"
-msgstr "Nom à afficher"
+msgstr "Nom affiché"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -490,12 +481,12 @@ msgstr "Editer l'opportunité"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Email"
-msgstr "Email"
+msgstr "Courriel"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
 msgid "Email Template"
-msgstr "Modèle d'email"
+msgstr "Modèle de courriel"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -596,7 +587,7 @@ msgstr "Niveau"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr "Regroupé par"
+msgstr "Regrouper par"
 
 #. module: website_crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -656,7 +647,7 @@ msgstr "Date de facturation du compte"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation___last_update
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade___last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_write_uid
@@ -717,7 +708,7 @@ msgstr "Emplacement de la piste"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead Single Links"
-msgstr "Liens vers les leads"
+msgstr "Liens uniques de leads"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -746,7 +737,7 @@ msgstr "Nom du niveau"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
-msgstr "Importance du grade"
+msgstr "Poids du niveau"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -931,7 +922,7 @@ msgstr "Activations de partenaire"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_forward_id
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_assignation_lines
 msgid "Partner Assignation"
-msgstr "Assignation pour partenaires"
+msgstr "Assignation de partenaire"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.res_partner_grade_action
@@ -1121,7 +1112,7 @@ msgstr "Étape"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "States..."
-msgstr "États…"
+msgstr "Indique…"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1206,7 +1197,7 @@ msgstr "Très haut"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_website_published
 msgid "Visible in Website"
-msgstr "Visible sur le site web."
+msgstr "Visible sur le site web"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead

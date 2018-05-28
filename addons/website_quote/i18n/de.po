@@ -4,16 +4,12 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2017
-# Tina Rittmüller <tr@ife.de>, 2017
-# Gab_Odoo <gab@odoo.com>, 2017
-# Henry Mineehen <info@mineehen.de>, 2017
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Mathias Neef <mn@copado.de>, 2017
-# Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Andi, 2017
-# Rudolf Schnapka <rs@techno-flex.de>, 2017
 # Wolfgang Taferner, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Niki Waibel, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
 # Markus Wernersbach <inactive+wernersbacher@transifex.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # key six <mobile.umts@gmail.com>, 2017
@@ -21,20 +17,24 @@
 # Malte Jansen <work@maltejansen.de>, 2017
 # Dejan Dinic, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
-# Anja Funk <anja.funk@afimage.de>, 2017
-# Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Niki Waibel, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Mathias Neef <mn@copado.de>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
+# Andi, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
 # e2f_de_t6 <e2f_de_t6@outlook.com>, 2017
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
 # DE R1 <e2fes1@hotmail.com>, 2017
-# Katharina Moritz <kmo@e2f.com>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2018\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,8 +124,8 @@ msgstr ""
 "                <p>Sie können Ihre Angebote, Aufträge und Rechnungen online über unser <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a> ansehen.</p><br/>\n"
 "                % endif\n"
 "\n"
-"                <p>Bei Fragen kontaktieren Sie uns bitte.</p><br/>\n"
-"                <p>Danke, dass Sie sich für ${object.company_id.name or \"us\"} entschieden haben!</p>\n"
+"                <p>If you have any question, do not hesitate to contact us.</p><br/>\n"
+"                <p>Thank you for choosing ${object.company_id.name or \"us\"}!</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -133,10 +133,10 @@ msgstr ""
 "                <p style=\"font-size: 14px;\">${user.signature | safe}\n"
 "                </p>\n"
 "                % endif\n"
-"                <p style=\"font-size: 11px;\"><strong>Gesendet von\n"
+"                <p style=\"font-size: 11px;\"><strong>Sent by\n"
 "                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
 "                    <strong>${user.company_id.name}</strong>\n"
-"                </a> über <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
 "                </strong></p>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
@@ -144,11 +144,16 @@ msgstr ""
 "</div>"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "! You can"
+msgstr "! Sie können"
+
+#. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
 #: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:ir.ui.view,arch_db:website_quote.report_saleorder_validity_date
 msgid "% discount"
-msgstr "% Nachlass"
+msgstr "% Rabatt"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
@@ -164,7 +169,6 @@ msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "&amp;times;"
@@ -200,7 +204,7 @@ msgstr "<i class=\"fa fa-check\"/> Annehmen"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<i class=\"fa fa-check\"/> Accept &amp; Pay"
-msgstr "<i class=\"fa fa-check\"/> Annehmen &amp; bezahlen"
+msgstr "<i class=\"fa fa-check\"/> Annehmen &amp; zahlen"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -358,7 +362,7 @@ msgid ""
 "                                template."
 msgstr ""
 "<strong>Vorlagenüberschrift:</strong> Dieser Inhalt\n"
-"                                wird bei allen Angeboten aus dieser Vorlage\n"
+"                                wird bei allen Angeboten mithilfe dieser Vorlage\n"
 "                                angezeigt."
 
 #. module: website_quote
@@ -593,7 +597,7 @@ msgstr "Hier klicken, um eine Vorlage zu erstellen."
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Confirmation"
-msgstr "Bestätigung"
+msgstr "Bestätigung der Bestellung"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_mail_template_id
@@ -759,7 +763,7 @@ msgstr "Felder"
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Follows a transparent ranking system. Ready - Silver - Gold"
-msgstr "Folgt einem transparenten Rangsystem. Bereit – Silber – Gold"
+msgstr "Folgt einem transparenten Rangsystem. Fertig – Silber – Gold"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_1
@@ -1137,6 +1141,12 @@ msgid "Optional Products Lines"
 msgstr "Optionale Produktpositionen"
 
 #. module: website_quote
+#: code:addons/website_quote/models/sale_order.py:210
+#, python-format
+msgid "Order paid by %s. Transaction: %s. Amount: %s."
+msgstr "Auftrag bezahlt von %s. Transaktion: %s. Betrag: %s."
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Our Offer"
 msgstr "Unser Angebot"
@@ -1420,7 +1430,7 @@ msgstr "Sektion"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
-msgstr "Nummernfolge"
+msgstr "Reihenfolge"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1705,7 +1715,7 @@ msgid ""
 msgstr ""
 "Wir sorgen stets dafür, dass unsere Produkte\n"
 "                                       einen fairen Preis erhalten, sodass Sie mit\n"
-"                                       deren Erwerb glücklich sind."
+"                                       Ihrem Kauf glücklich sind."
 
 #. module: website_quote
 #: model:ir.actions.report,name:website_quote.report_web_quote
@@ -1737,11 +1747,6 @@ msgstr "Arbeitsablauf"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Yearly upgrade training sessions when a new version is released"
 msgstr "Jährliche Upgrade-Trainings bei Veröffentlichung einer neuen Version."
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "You can"
-msgstr ""
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -1814,9 +1819,19 @@ msgid "Your order ${object.name} is confirmed"
 msgstr "Ihr Auftrag ${object.name} wurde bestätigt."
 
 #. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.payment_confirmation_status
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Your payment has been authorized."
 msgstr "Ihre Zahlung wurde genehmigt."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your payment has been received, thank you for your trust."
+msgstr "Ihre Zahlung ist eingegangen. Vielen Dank für Ihr Vertrauen."
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation
+msgid "Your transaction is waiting confirmation."
+msgstr "Ihre Transaktion erwartet eine Bestätigung"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -1853,25 +1868,18 @@ msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid ""
-"for\n"
-"                          any questions."
-msgstr ""
+msgid "has already been cancelled"
+msgstr "wurde bereits storniert"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been cancelled!"
-msgstr "wurde bereits abgebrochen!"
+msgid "has already been validated"
+msgstr "wurde bereits validiert"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has already been validated!"
-msgstr "wurde bereits bestätigt!"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.so_quotation
-msgid "has not yet been sent!"
-msgstr "wurde noch nicht verschickt!"
+msgid "has not yet been sent"
+msgstr "wurde noch nicht gesendet"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation

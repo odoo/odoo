@@ -10,14 +10,7 @@ import odoo.tests
 
 class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
-        cr = self.registry.cursor()
-        assert cr == self.registry.test_cr
-        env = Environment(cr, self.uid, {})
-
-        # By default parent_store computation is deferred until end of
-        # tests. Pricelist items however are sorted based on these
-        # fields, so they need to be computed.
-        env['product.category']._parent_store_compute()
+        env = self.env
 
         journal_obj = env['account.journal']
         account_obj = env['account.account']
@@ -28,9 +21,7 @@ class TestUi(odoo.tests.HttpCase):
                                                  'name': 'Account Receivable - Test',
                                                  'user_type_id': env.ref('account.data_account_type_receivable').id,
                                                  'reconcile': True})
-        field = self.env['ir.model.fields'].search([('name', '=', 'property_account_receivable_id'),
-                                                    ('model', '=', 'res.partner'),
-                                                    ('relation', '=', 'account.account')], limit=1)
+        field = env['ir.model.fields']._get('res.partner', 'property_account_receivable_id')
         env['ir.property'].create({'name': 'property_account_receivable_id',
                                    'company_id': main_company.id,
                                    'fields_id': field.id,
@@ -294,7 +285,6 @@ class TestUi(odoo.tests.HttpCase):
         # that are returned by the backend in module_boot. Without
         # this you end up with js, css but no qweb.
         env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
-        cr.release()
 
         self.phantom_js("/pos/web",
                         "odoo.__DEBUG__.services['web_tour.tour'].run('pos_pricelist')",

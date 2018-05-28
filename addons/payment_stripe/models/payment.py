@@ -8,6 +8,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -106,7 +107,7 @@ class PaymentTransactionStripe(models.Model):
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
-            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else self.amount*100),
+            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name,
             'metadata[reference]': self.reference,
             'description': self.reference,
@@ -117,11 +118,15 @@ class PaymentTransactionStripe(models.Model):
             charge_params['card'] = str(tokenid)
         if email:
             charge_params['receipt_email'] = email.strip()
+
+        _logger.info('_create_stripe_charge: Sending values to URL %s, values:\n%s', api_url_charge, pprint.pformat(charge_params))
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,
                           headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
@@ -135,15 +140,18 @@ class PaymentTransactionStripe(models.Model):
 
         refund_params = {
             'charge': self.acquirer_reference,
-            'amount': int(self.amount*100), # by default, stripe refund the full amount (we don't really need to specify the value)
+            'amount': int(float_round(self.amount * 100, 2)), # by default, stripe refund the full amount (we don't really need to specify the value)
             'metadata[reference]': self.reference,
         }
 
+        _logger.info('_create_stripe_refund: Sending values to URL %s, values:\n%s', api_url_refund, pprint.pformat(refund_params))
         r = requests.post(api_url_refund,
                             auth=(self.acquirer_id.stripe_secret_key, ''),
                             params=refund_params,
                             headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_refund(self, **kwargs):
@@ -183,18 +191,17 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state not in ('draft', 'pending', 'refunding'):
+        if self.state != 'draft':
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         if status == 'succeeded':
-            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': new_state,
-                'date_validate': fields.datetime.now(),
+                'date': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
+            self._set_transaction_done()
             self.execute_callback()
             if self.payment_token_id:
                 self.payment_token_id.verified = True
@@ -203,11 +210,11 @@ class PaymentTransactionStripe(models.Model):
             error = tree['error']['message']
             _logger.warn(error)
             self.sudo().write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': tree.get('id'),
-                'date_validate': fields.datetime.now(),
+                'date': fields.datetime.now(),
             })
+            self._set_transaction_cancel()
             return False
 
     @api.multi

@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
         ('always', 'Show inventory on website and prevent sales if not enough stock'),
         ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
         ('custom', 'Show product-specific notifications'),
-    ], string='Inventory', default='never')
+    ], string='Inventory Availability', default='never')
     available_threshold = fields.Float(string='Availability Threshold')
 
     @api.multi

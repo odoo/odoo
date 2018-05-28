@@ -135,7 +135,7 @@ class WebsiteEventTrackController(http.Controller):
             'description': escape(post['description'])
         })
         if request.env.user != request.website.user_id:
-            track.sudo().message_subscribe_users(user_ids=request.env.user.ids)
+            track.sudo().message_subscribe(partner_ids=request.env.user.partner_id.ids)
         else:
             partner = request.env['res.partner'].sudo().search([('email', '=', post['email_from'])])
             if partner:

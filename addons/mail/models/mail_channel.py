@@ -4,7 +4,7 @@ import base64
 from email.utils import formataddr
 
 import re
-import uuid
+from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -56,7 +56,7 @@ class Channel(models.Model):
         ('channel', 'Channel')],
         'Channel Type', default='channel')
     description = fields.Text('Description')
-    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4(), copy=False)
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
@@ -185,27 +185,24 @@ class Channel(models.Model):
         return result
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
         in the backend. Mailing lists should indeed send minimal emails to avoid
         the noise. """
-        groups = super(Channel, self)._notification_recipients(message, groups)
+        groups = super(Channel, self)._notify_get_groups(message, groups)
         for (index, (group_name, group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
-        self.ensure_one()
-        res = super(Channel, self).message_get_email_values(notif_mail=notif_mail)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(safe_eval(res['headers']))
-            except Exception:
-                pass
+    def _notify_specific_email_values(self, message):
+        res = super(Channel, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
@@ -229,21 +226,21 @@ class Channel(models.Model):
         return super(Channel, self).message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
-    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+    def _notify_email_recipients(self, message, recipient_ids):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
                 'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
                 'recipient_ids': [],
             }
-        return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
+        return super(Channel, self)._notify_email_recipients(message, recipient_ids)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
+    def message_post(self, **kwargs):
         # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
-        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(**kwargs)
         return message
 
     def _alias_check_contact(self, message, message_dict, alias):
@@ -682,7 +679,7 @@ class Channel(models.Model):
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
             channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.") % channel_partners[0].partner_id.name
+            msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
             You can mention a channel by typing <b>#channel</b>.<br>

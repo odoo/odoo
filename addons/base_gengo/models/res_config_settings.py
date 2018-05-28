@@ -13,5 +13,5 @@ class ResConfigSettings(models.TransientModel):
       help="This comment will be automatically be enclosed in each an every request sent to Gengo")
     gengo_auto_approve = fields.Boolean(string="Auto Approve Translation ?", related="company_id.gengo_auto_approve",
       help="Jobs are Automatically Approved by Gengo.")
-    gengo_sandbox = fields.Boolean(string="Sandbox Mode",
+    gengo_sandbox = fields.Boolean(string="Sandbox Mode", related="company_id.gengo_sandbox",
       help="Check this box if you're using the sandbox mode of Gengo, mainly used for testing purpose.")

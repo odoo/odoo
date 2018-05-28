@@ -25,6 +25,6 @@ Italian accounting chart and localization.
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.chart.template.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
         ],
 }

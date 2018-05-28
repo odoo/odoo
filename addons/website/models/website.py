@@ -723,6 +723,7 @@ class Page(models.Model):
         return url
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         view = self.env['ir.ui.view'].browse(self.view_id.id)
         # website.page's ir.ui.view should have a different key than the one it
@@ -799,7 +800,6 @@ class Menu(models.Model):
     _description = "Website Menu"
 
     _parent_store = True
-    _parent_order = 'sequence'
     _order = "sequence, id"
 
     def _default_sequence(self):
@@ -814,8 +814,7 @@ class Menu(models.Model):
     website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_left = fields.Integer('Parent Left', index=True)
-    parent_right = fields.Integer('Parent Rigth', index=True)
+    parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     @api.one
@@ -885,11 +884,16 @@ class Menu(models.Model):
         for menu in data['data']:
             menu_id = self.browse(menu['id'])
             # if the url match a website.page, set the m2o relation
-            page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
-            if page:
-                menu['page_id'] = page.id
-            elif menu_id.page_id:
-                menu_id.page_id.write({'url': menu['url']})
+            # except if the menu url is '#', meaning it will be used as a menu container, most likely for a dropdown
+            if menu['url'] == '#':
+                if menu_id.page_id:
+                    menu_id.page_id = None
+            else:
+                page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
+                if page:
+                    menu['page_id'] = page.id
+                elif menu_id.page_id:
+                    menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)
 
         return True
@@ -901,9 +905,9 @@ class WebsiteRedirect(models.Model):
     _order = "sequence, id"
     _rec_name = 'url_from'
 
-    type = fields.Selection([('301', 'Moved permanently'), ('302', 'Moved temporarily')], string='Redirection Type')
-    url_from = fields.Char('Redirect From')
-    url_to = fields.Char('Redirect To')
+    type = fields.Selection([('301', 'Moved permanently (301)'), ('302', 'Moved temporarily (302)')], string='Redirection Type', required=True)
+    url_from = fields.Char('Redirect From', required=True)
+    url_to = fields.Char('Redirect To', required=True)
     website_id = fields.Many2one('website', 'Website')
     active = fields.Boolean(default=True)
-    sequence = fields.Integer(default=0)
+    sequence = fields.Integer()
