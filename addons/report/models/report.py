@@ -424,13 +424,15 @@ class Report(models.Model):
                 head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
                 temporary_files.append(head_file_path)
                 with closing(os.fdopen(head_file_fd, 'w')) as head_file:
-                    head_file.write(headers[index])
+                    for header in headers:
+                        head_file.write(header)
                 local_command_args.extend(['--header-html', head_file_path])
             if footers:
                 foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
                 temporary_files.append(foot_file_path)
                 with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
-                    foot_file.write(footers[index])
+                    for footer in footers:
+                        foot_file.write(footer)
                 local_command_args.extend(['--footer-html', foot_file_path])
 
             # Body stuff
