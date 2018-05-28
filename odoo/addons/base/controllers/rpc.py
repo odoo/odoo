@@ -16,7 +16,7 @@ class RPC(Controller):
         result = dispatch_rpc(service, method, params)
         return dumps((result,), methodresponse=1, allow_none=False)
 
-    @route("/xmlrpc/<service>", auth="none", method="POST", csrf=False)
+    @route("/xmlrpc/<service>", auth="none", method="POST", csrf=False, save_session=False)
     def xmlrpc_1(self, service):
         """XML-RPC service that returns faultCode as strings.
 
@@ -29,7 +29,7 @@ class RPC(Controller):
             response = wsgi_server.xmlrpc_handle_exception_string(error)
         return Response(response=response, mimetype='text/xml')
 
-    @route("/xmlrpc/2/<service>", auth="none", method="POST", csrf=False)
+    @route("/xmlrpc/2/<service>", auth="none", method="POST", csrf=False, save_session=False)
     def xmlrpc_2(self, service):
         """XML-RPC service that returns faultCode as int."""
         try:
@@ -38,7 +38,7 @@ class RPC(Controller):
             response = wsgi_server.xmlrpc_handle_exception_int(error)
         return Response(response=response, mimetype='text/xml')
 
-    @route('/jsonrpc', type='json', auth="none")
+    @route('/jsonrpc', type='json', auth="none", save_session=False)
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return dispatch_rpc(service, method, args)
