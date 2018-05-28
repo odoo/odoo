@@ -1208,7 +1208,20 @@ QUnit.module('Views', {
     });
 
     QUnit.test('"all" filter', function (assert) {
-        assert.expect(3);
+        assert.expect(6);
+
+        var interval = [
+            ["start", "<=", "2016-12-17 23:59:59"],
+            ["stop", ">=", "2016-12-11 00:00:00"],
+        ];
+
+        var domains = [
+            interval.concat([["partner_ids", "in", [2,1]]]),
+            interval.concat([["partner_ids", "in", [1]]]),
+            interval,
+        ];
+
+        var i = 0;
 
         var calendar = createView({
             View: CalendarView,
@@ -1229,6 +1242,13 @@ QUnit.module('Views', {
             '</calendar>',
             viewOptions: {
                 initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.deepEqual(args.kwargs.domain, domains[i]);
+                    i++;
+                }
+                return this._super.apply(this, arguments);
             },
         });
 
