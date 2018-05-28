@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- onboarding step -->
+    <template id="onboarding_payment_acquirer_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Payment Method</t>
+            <t t-set="description">Choose the payment methods to collect payments on your invoices.</t>
+            <t t-set="done_text">Payment method set!</t>
+            <t t-set="method" t-value="'action_open_payment_onboarding_payment_acquirer'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="id" t-value="company.id" />
+            <t t-set="done" t-value="company.payment_acquirer_onboarding_done" />
+        </t>
+    </template>
+    <!-- add it in the account invoice onboarding panel -->
+    <template id="account_invoice_payment_acquirer_onboarding"
+              name="account invoice payment acquirer onboarding"
+              inherit_id="account.account_invoice_onboarding_panel">
+        <xpath expr="//t[@name='sample_invoice_step']" position="before">
+            <t t-call="payment.onboarding_payment_acquirer_step" name="payment_acquirer_step" />
+         </xpath>
+    </template>
+    <!--PAYMENT ACQUIRER-->
+    <record model="ir.ui.view" id="payment_acquirer_onboarding_wizard_form">
+        <field name="name">payment.acquirer.onboarding.wizard.form</field>
+        <field name="model">payment.acquirer.onboarding.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Choose a payment method">
+                <div class="mb16">
+                    Configure our recommended payment methods or
+                    <a type="action" role="button" name="payment.action_payment_acquirer">
+                        see all other available methods.
+                    </a>
+                </div>
+                <div class="row">
+                    <div class="col-xs-1 mb16">
+                        <field name="paypal_checked" nolabel="1" />
+                    </div>
+                    <div>
+                        <label for="paypal_checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div attrs="{'invisible': [('paypal_checked', '=', False)]}"
+                         class="col-xs-offset-1">
+                        <a href="https://www.paypal.com" target="_blank">PayPal</a>
+                        is the easiest way to accept payments. It's easy to configure and it offers
+                        <a href="https://www.paypal.com/us/webapps/mpp/merchant-fees"
+                           target="_blank">
+                            a transparent fee structure.
+                        </a>
+                        <group>
+                            <field name="paypal_email_account"
+                                   attrs="{'required': [('paypal_checked', '=', True)]}" />
+                            <field name="paypal_seller_account" />
+                            <field name="paypal_pdt_token"
+                                   attrs="{'required': [('paypal_checked', '=', True)]}" />
+                        </group>
+                        <separator />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-1 mb16">
+                        <field name="stripe_checked" nolabel="1" />
+                    </div>
+                    <div>
+                        <label for="stripe_checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div attrs="{'invisible': [('stripe_checked', '=', False)]}"
+                         class="col-xs-offset-1">
+                        <a href="https://stripe.com" target="_blank">Stripe</a>
+                        is a payment provider with
+                        <a href="https://stripe.com/pricing" target="_blank">
+                            a simple fee structure and no hidden costs.
+                        </a>
+                        No other gateway or merchant account is required. We recommend this solution
+                        to manage credit card payments.
+                        <group>
+                            <field name="stripe_secret_key"
+                                   attrs="{'required': [('stripe_checked', '=', True)]}" />
+                            <field name="stripe_publishable_key"
+                                   attrs="{'required': [('stripe_checked', '=', True)]}" />
+                            <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">
+                                <span class="fa fa-arrow-right">Get my Stripe keys</span>
+                            </a>
+                        </group>
+                        <separator />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-1">
+                        <field name="manual_checked" nolabel="1" />
+                    </div>
+                    <div>
+                        <label for="manual_checked" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div attrs="{'invisible': [('manual_checked', '=', False)]}"
+                         class="col-xs-offset-1">
+                        Provide customers with instructions to pay outside of your platform (wire
+                        transfer, cash on delivery, etc.).
+                        <group>
+                            <field name="manual_name"
+                                   attrs="{'required': [('manual_checked', '=', True)]}" />
+                            <field name="manual_post_msg"
+                                   attrs="{'required': [('manual_checked', '=', True)]}" />
+                        </group>
+                    </div>
+                </div>
+                <footer>
+                    <div class="mb16" name="skip_step_text">
+                        You can skip this step if invoices are pre-paid.
+                    </div>
+                    <button name="add_payment_methods" string="OK" class="oe_highlight"
+                            type="object" />
+                    <button name="action_skip_payment_onboarding_payment_acquirer_step" string="Skip this step"
+                            type="object" />
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_payment_onboarding_payment_acquirer_wizard" model="ir.actions.act_window">
+        <field name="name">Choose a payment method</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">payment.acquirer.onboarding.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment.payment_acquirer_onboarding_wizard_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>

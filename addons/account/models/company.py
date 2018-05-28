@@ -6,7 +6,7 @@ import time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
 from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
@@ -66,6 +66,19 @@ Best Regards,'''))
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+
+    # account invoice onboarding
+    account_invoice_onboarding_closed = fields.Boolean(
+        string="Account invoice onboarding panel closed",
+        help="Refers to the account invoice onboarding panel closed state.")
+    account_invoice_onboarding_folded = fields.Boolean(
+        string="Account invoice onboarding panel folded",
+        help="Refers to the account invoice onboarding panel folded state.")
+
+    account_onboarding_invoice_layout_done = fields.Boolean("Onboarding invoice layout step done",
+        compute="_compute_account_onboarding_invoice_layout_done")
+    account_onboarding_sample_invoice_sent = fields.Boolean(
+        "Onboarding sample invoice step completed", default=False)
 
     @api.multi
     def _check_lock_dates(self, vals):
@@ -398,3 +411,100 @@ Best Regards,'''))
                         'debit': credit_diff,
                         'credit': debit_diff,
                     })
+
+    @api.depends('logo', 'account_invoice_onboarding_closed')
+    def _compute_account_onboarding_invoice_layout_done(self):
+        """ The invoice onboarding step is marked as done if logo is filled
+            and different from the default one. """
+        for record in self:
+            record.account_onboarding_invoice_layout_done = \
+                record.account_invoice_onboarding_closed or (
+                    bool(record.logo) and record.logo != record._get_logo())
+
+    @api.model
+    def action_toggle_fold_account_invoice_onboarding(self):
+        """ Toggle the onboarding panel `folded` state. """
+        self.env.user.company_id.account_invoice_onboarding_folded =\
+            not self.env.user.company_id.account_invoice_onboarding_folded
+
+    @api.model
+    def action_close_account_invoice_onboarding(self):
+        """ Mark the onboarding panel as closed. """
+        self.env.user.company_id.account_invoice_onboarding_closed = True
+
+    @api.model
+    def action_open_account_onboarding_invoice_layout(self):
+        """ Onboarding step for the invoice layout. """
+        action = self.env.ref('account.action_open_account_onboarding_invoice_layout').read()[0]
+        action['res_id'] = self.env.user.company_id.id
+        return action
+
+    @api.model
+    def _get_sample_invoice(self):
+        """ Get a sample invoice or create one if it does not exist. """
+        # use current user as partner
+        partner = self.env.user.partner_id
+
+        company_id = self.env.user.company_id.id
+        # try to find an existing sample invoice
+        sample_invoice = self.env['account.invoice'].search(
+            [('company_id', '=', company_id),
+             ('partner_id', '=', partner.id)], limit=1)
+
+        if len(sample_invoice) == 0:
+            # If there are no existing accounts or no journal, fail
+            account = self.env['account.account'].search([('company_id', '=', company_id)], limit=1)
+            if len(account) == 0:
+                action = self.env.ref('account.action_account_config')
+                msg = _(
+                    "We cannot find a chart of accounts for this company, you should configure it. \n"
+                    "Please go to Account Configuration and select or install a fiscal localization.")
+                raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+
+            journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
+            if len(journal) == 0:
+                action = self.env.ref('account.action_account_journal_form')
+                msg = _("We cannot find any journal for this company. You should create one."
+                        "\nPlease go to Configuration > Journals.")
+                raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
+
+            sample_invoice = self.env['account.invoice'].create({
+                'name': _("Sample invoice"),
+                'journal_id': journal.id,
+                'partner_id': partner.id,
+            })
+            # sample invoice lines
+            self.env['account.invoice.line'].create({
+                'name': _("Sample invoice line name"),
+                'invoice_id': sample_invoice.id,
+                'account_id': account.id,
+                'price_unit': 199.99,
+                'quantity': 2,
+            })
+            self.env['account.invoice.line'].create({
+                'name': _("Sample invoice line name 2"),
+                'invoice_id': sample_invoice.id,
+                'account_id': account.id,
+                'price_unit': 25,
+                'quantity': 1,
+            })
+        return sample_invoice
+
+    @api.model
+    def action_open_account_onboarding_sample_invoice(self):
+        """ Onboarding step for sending a sample invoice. Open a window to compose an email,
+            with the edi_invoice_template message loaded by default. """
+        sample_invoice = self._get_sample_invoice()
+        template = self.env.ref('account.email_template_edi_invoice', False)
+        action = self.env.ref('account.action_open_account_onboarding_sample_invoice').read()[0]
+        action['context'] = {
+            'default_res_id': sample_invoice.id,
+            'default_use_template': bool(template),
+            'default_template_id': template and template.id or False,
+            'default_model': 'account.invoice',
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
+            'custom_layout': 'mail.mail_notification_borders',
+            'force_email': True,
+        }
+        return action
