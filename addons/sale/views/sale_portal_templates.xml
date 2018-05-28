@@ -134,7 +134,6 @@
               <div class="row">
                 <div class="col-md-6 col-xs-9 col-sm-9">
                     <h4>
-                        <t t-call='portal.record_pager'/>
                         <t t-if="order.state in ('sent', 'cancel')">Quotation</t>
                         <t t-else="">Order</t>
                         <span t-esc="order.name"/>

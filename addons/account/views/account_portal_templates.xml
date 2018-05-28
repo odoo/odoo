@@ -73,16 +73,6 @@
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
                 <div class="col-md-3 col-sm-4 hidden-print">
-                    <ol class="breadcrumb o_portal_submenu">
-                        <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                        <li t-if="page_name == 'invoice'" class="active">
-                            <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
-                            <t t-else="">Invoices</t>
-                        </li>
-                        <li t-if="invoice">
-                            <t t-esc="invoice.number"/>
-                        </li>
-                    </ol>
                     <div class="bs-sidebar mb16" id="sidebar_content">
                         <div class="text-center o_account_portal_sidebar">
                             <h2><strong><span t-field="invoice.amount_total"/></strong></h2>

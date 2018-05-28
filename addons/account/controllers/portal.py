@@ -5,7 +5,7 @@ import re
 from werkzeug.exceptions import NotFound
 
 from odoo import http, _
-from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
@@ -49,7 +49,8 @@ class PortalAccount(CustomerPortal):
             'invoice': invoice,
         }
         if access_token:
-            values['no_breadcrumbs'] = True
+            # force breadcrumbs even if access_token to `invite` users to register if they click on it
+            values['no_breadcrumbs'] = False
             values['access_token'] = access_token
 
         if kwargs.get('error'):
@@ -58,6 +59,9 @@ class PortalAccount(CustomerPortal):
             values['warning'] = kwargs['warning']
         if kwargs.get('success'):
             values['success'] = kwargs['success']
+
+        history = request.session.get('my_invoices_history', [])
+        values.update(get_records_pager(history, invoice))
 
         return values
 
@@ -96,6 +100,8 @@ class PortalAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         invoices = AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_invoices_history'] = invoices.ids[:100]
+
         values.update({
             'date': date_begin,
             'invoices': invoices,
@@ -116,8 +122,6 @@ class PortalAccount(CustomerPortal):
             return request.redirect('/my')
 
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
-        # force to hide orginal breadcrumbs if we have access_token or not
-        values['no_breadcrumbs'] = True
         return request.render("account.portal_invoice_page", values)
 
     @http.route([
