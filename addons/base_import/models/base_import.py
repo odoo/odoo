@@ -505,7 +505,7 @@ class Import(models.TransientModel):
             # preview to a list in the return.
             _logger.debug("Error during parsing preview", exc_info=True)
             preview = None
-            if self.file_type == 'text/csv':
+            if self.file_type == 'text/csv' and self.file:
                 preview = self.file[:ERROR_PREVIEW_BYTES].decode('iso-8859-1')
             return {
                 'error': str(error),
