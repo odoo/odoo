@@ -163,7 +163,9 @@ class AccountMove(models.Model):
         def _get_tax_account(tax, amount):
             if tax.tax_exigibility == 'on_payment' and tax.cash_basis_account:
                 return tax.cash_basis_account
-            return tax.refund_account_id if amount < 0 else tax.account_id
+            if tax.type_tax_use == 'purchase':
+                return tax.refund_account_id if amount < 0 else tax.account_id
+            return tax.refund_account_id if amount >= 0 else tax.account_id
 
         # Cache the already computed tax to avoid useless recalculation.
         processed_taxes = self.env['account.tax']
