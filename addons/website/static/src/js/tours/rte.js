@@ -19,10 +19,13 @@ tour.register('rte_translator', {
     trigger: '.modal-footer button:first',
     extra_trigger: '.modal select[name="lang"]:propValueContains(fr_BE)',
 }, {
+    content : "click language dropdown",
+    trigger : '.js_language_selector .dropdown-toggle',
+    timeout: 60000,
+}, {
     content: "go to english version",
     trigger: '.js_language_selector a[data-lang="en_US"]',
     extra_trigger: 'html[lang*="fr"]',
-    timeout: 60000,
 }, {
     content: "Open new page menu",
     trigger: '#new-content-menu > a',
@@ -41,7 +44,7 @@ tour.register('rte_translator', {
 }, {
     content: "drop a snippet",
     trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
-    run: 'drag_and_drop',
+    run: 'drag_and_drop #wrap',
 }, {
     content: "change content",
     trigger: '.oe_overlay_options .oe_options:visible',
@@ -56,6 +59,10 @@ tour.register('rte_translator', {
     content: "save",
     trigger: 'button[data-action=save]',
     extra_trigger: '#wrap p:first b',
+
+}, {
+    content : "click language dropdown",
+    trigger : '.js_language_selector .dropdown-toggle',
 }, {
     content: "click on french version",
     trigger: '.js_language_selector a[data-lang="fr_BE"]',
@@ -112,6 +119,11 @@ tour.register('rte_translator', {
     content: "check: placeholder translation",
     trigger: 'input[placeholder="test french placeholder"]',
     run: function () {}, // it's a check
+
+}, {
+    content : "click language dropdown",
+    trigger : '.js_language_selector .dropdown-toggle',
+
 }, {
     content: "return to english version",
     trigger: '.js_language_selector a[data-lang="en_US"]',
@@ -139,6 +151,11 @@ tour.register('rte_translator', {
     content: "save new change",
     trigger: 'button[data-action=save]',
     extra_trigger: '#wrap p u',
+
+    }, {
+    content : "click language dropdown",
+    trigger : '.js_language_selector .dropdown-toggle',
+
 }, {
     content: "return in french",
     trigger: 'html[lang="en-US"] .js_language_selector a[data-lang="fr_BE"]',

@@ -20,6 +20,7 @@ Odoo Customer References
         'data/res_partner_demo.xml',
     ],
     'data': [
+        'data/website_customer_data.xml',
         'views/website_customer_templates.xml',
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
         <record model="crm.lead.tag" id="tag_portal_lead_partner_unavailable">
             <field name="name">No more partner available</field>
             <field name="color">3</field>
@@ -50,4 +51,15 @@ PS: It looks like you do not have an account manager assigned to you, please con
 % endif
             ]]></field>
         </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="menu_resellers" model="website.menu">
+            <field name="name">Resellers</field>
+            <field name="url">/partners</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">55</field>
+        </record>
+    </data>
+
 </odoo>

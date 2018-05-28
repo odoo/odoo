@@ -19,7 +19,7 @@ tour.register("banner", {
     trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
     content: _t("Drag the <i>Cover</i> block and drop it in your page."),
     position: "bottom",
-    run: "drag_and_drop",
+    run: "drag_and_drop #wrap",
 }, {
     trigger: "#wrapwrap .s_text_block_image_fw h2",
     content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
@@ -35,7 +35,7 @@ tour.register("banner", {
     trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
     content: _t("Drag another block in your page, below the cover."),
     position: "bottom",
-    run: "drag_and_drop",
+    run: "drag_and_drop #wrap",
 }, {
     trigger: "button[data-action=save]",
     extra_trigger: ".oe_overlay_options .oe_options",

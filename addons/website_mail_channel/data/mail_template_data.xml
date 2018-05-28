@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <data>
         <record id="mail_template_list_subscribe" model="mail.template">
             <field name="name">Subscribe to mailing list</field>
             <field name="model_id" ref="mail.model_mail_channel"/>
@@ -26,4 +27,15 @@
 <p>If this was a mistake or you did not requested this action, please ignore this message.</p>
 </field>
         </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="menu_mailing_list" model="website.menu">
+            <field name="name">Mailing Lists</field>
+            <field name="url">/groups</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">55</field>
+        </record>
+    </data>
+
 </odoo>
