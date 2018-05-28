@@ -29,7 +29,15 @@
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
                 <field name="event_id" position="after">
-                    <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
+                    <field
+                        name="event_ticket_id"
+                        domain="[
+                            ('event_id', '=', event_id),
+                            '|', ('seats_availability', '=', 'unlimited'), ('seats_available', '>', 0)
+                        ]"
+                        attrs="{'invisible': [('event_id', '=', False)]}"
+                        options="{'no_open': True, 'no_create': True}"
+                    />
                 </field>
                 <group name="event" position="after">
                     <group string="Origin">

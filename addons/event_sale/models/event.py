@@ -186,12 +186,20 @@ class EventTicket(models.Model):
 class EventRegistration(models.Model):
     _inherit = 'event.registration'
 
-    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket')
+    event_ticket_id = fields.Many2one('event.event.ticket', string='Event Ticket',
+        readonly=True, states={'draft': [('readonly', False)]})
     # in addition to origin generic fields, add real relational fields to correctly
     # handle attendees linked to sales orders and their lines
     # TDE FIXME: maybe add an onchange on sale_order_id + origin
     sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
+
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        super(EventRegistration, self)._onchange_event_id()
+
+        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
+            self.event_ticket_id = None
 
     @api.multi
     @api.constrains('event_ticket_id', 'state')
