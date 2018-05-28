@@ -550,7 +550,7 @@ var ActionManager = Widget.extend({
         } else {
             var w = window.open(url, '_blank');
             if (!w || w.closed || typeof w.closed === 'undefined') {
-                var message = _t('A popup window was blocked. You ' +
+                var message = _t('A popup window has been blocked. You ' +
                              'may need to change your browser settings to allow ' +
                              'popup windows for this page.');
                 this.do_warn(_t('Warning'), message, true);
