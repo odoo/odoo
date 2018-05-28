@@ -301,7 +301,7 @@
                                         </group>
                                     </group>
                                 </form>
-                                <tree string="Sales Order Lines" section_line="true" editable="bottom" 
+                                <tree string="Sales Order Lines" section_line="true" editable="bottom"
                                     decoration-info="invoice_status=='to invoice'" decoration-danger="line_type == 'section'">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_updatable" invisible="1"/>
@@ -453,7 +453,14 @@
                     <field name="user_id"/>
                     <field name="team_id" string="Sales Channel"/>
                     <field name="analytic_account_id"/>
-                    <field name="product_id"/>
+                    <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
+                        will not be searched as often, and if they need to be searched it's usually in the context of products
+                        and then they can be searched from the page listing the sale order lines related to a product (from the product itself).
+                    -->
+                    <field name="order_line" string="Line Product" filter_domain="[('order_line.product_id.name', 'ilike', self)]"/>
+                    <field name="order_line" string="Line Description" filter_domain="[('order_line.name', 'ilike', self), ('order_line.line_type', '=', 'product'), ]"/>
+                    <field name="order_line" string="Line Note" filter_domain="[('order_line.name', 'ilike', self), ('order_line.line_type', '=', 'note'), ]"/>
+                    <field name="order_line" string="Line Section" filter_domain="[('order_line.name', 'ilike', self), ('order_line.line_type', '=', 'section'), ]"/>
                     <filter string="My Orders" domain="[('user_id','=',uid)]" name="my_sale_orders_filter"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
@@ -572,10 +579,10 @@
               <p class="o_view_nocontent_smiling_face">
                 No orders to upsell found
               </p><p>
-                These are orders with products invoiced based on ordered quantities, 
+                These are orders with products invoiced based on ordered quantities,
                 in the case you have delivered more than what was ordered.
               </p><p>
-                A typical example is the pre-paid hours of service, 
+                A typical example is the pre-paid hours of service,
                 where you want to sell extra hours to the customer
                 because the initial hours have already been used.
               </p>
@@ -613,7 +620,6 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <tree string="Sales Order Lines" create="false">
-                    <field name="product_id" invisible="1"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="name"/>

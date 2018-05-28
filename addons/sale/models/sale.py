@@ -163,8 +163,6 @@ class SaleOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
-
     def _compute_portal_url(self):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
