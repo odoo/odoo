@@ -92,6 +92,7 @@ var FormView = BasicView.extend({
                             for (var viewName in views) {
                                 // clone to make runbot green?
                                 attrs.views[viewName] = self._processFieldsView(views[viewName], viewName);
+                                self._processSubViewAttrs(attrs.views[viewName], attrs);
                             }
                             self._setSubViewLimit(attrs);
                         }));
