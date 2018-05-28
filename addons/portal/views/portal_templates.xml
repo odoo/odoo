@@ -72,11 +72,12 @@
             <div class="container mt16 mb16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
-                        <div class="col-sm-12">
-                            <ol class="breadcrumb o_portal_submenu">
+                        <div t-attf-class="col-sm-12">
+                            <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
                                 <li><a href="/my/home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'">Your Details</li>
                             </ol>
+                            <t t-call='portal.record_pager'/>
                         </div>
                     </div>
                 </div>
