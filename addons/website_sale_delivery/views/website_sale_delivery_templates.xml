@@ -54,6 +54,63 @@
         </xpath>
     </template>
 
+    <!-- <template id="auto_load_delivery_price" name="Auto Load Delivery Price" inherit_id="website_sale_delivery.payment_delivery" active="False" customize_show="True"> -->
+    <template id="auto_load_delivery_price" name="Auto Load Delivery Price" inherit_id="website_sale.payment" active="False" customize_show="True">
+        <xpath expr="//div[@id='wrapwrap']//span[hasclass('o_delivery_compute')]" position="replace">
+            <i class="fa fa-spinner fa-spin"></i>
+        </xpath>
+        <xpath expr="//div[@id='wrapwrap']" position="after">
+            <script>
+                var $carriers = $("#delivery_carrier input[name='delivery_type']");
+                var _onCarrierUpdateAnswer2 = function(result) {
+                    var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .badge.hidden');
+                    var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + result.carrier_id + '] ~ .o_delivery_compute');
+                    if (result.status === true) {
+                        $carrier_badge.children('span').text(result.new_amount_delivery);
+                        $carrier_badge.removeClass('hidden');
+                        $compute_badge.addClass('hidden');
+                    }
+                    else {
+                        console.error(result.error_message);
+                        $compute_badge.text(result.error_message);
+                    }
+                };
+
+                $.each($carriers, function(index, value) {
+                    var carrier_id = value.value;
+                    var values = {'carrier_id': carrier_id, 'preview': true};
+                    ajax.jsonRpc('/shop/update_carrier', 'call', values)
+                      .then(_onCarrierUpdateAnswer2);
+                });
+
+                // var _onCarrierUpdateAnswer3 = function(result) {
+                //     $.each(result, function(index, value) {
+                //         var $carrier_badge = $('#delivery_carrier input[name="delivery_type"][value=' + value.carrier_id + '] ~ .badge.hidden');
+                //         var $compute_badge = $('#delivery_carrier input[name="delivery_type"][value=' + value.carrier_id + '] ~ .o_delivery_compute');
+                //         if (value.status === true) {
+                //             $carrier_badge.children('span').text(value.new_amount_delivery);
+                //             $carrier_badge.removeClass('hidden');
+                //             $compute_badge.addClass('hidden');
+                //         }
+                //         else {
+                //             console.error(value.error_message);
+                //             $compute_badge.text(value.error_message);
+                //         }
+                //     });
+                // };
+                //
+                // var carrier_ids = $.map($carriers, function (val, i) { return val.value });
+                // var values = {'carrier_ids': carrier_ids};
+                // ajax.jsonRpc('/shop/carrier_price_list', 'call', values)
+                //   .then(_onCarrierUpdateAnswer3);
+            </script>
+        </xpath>
+    </template>
+
+    <record id="website_sale_delivery.auto_load_delivery_price" model="ir.ui.view">
+        <field name="customize_show" eval="True"/>
+    </record>
+
     <template id="portal_order_page_shipping_tracking" name="Shipping tracking on orders followup" inherit_id="sale_stock.portal_order_page_shipping">
         <xpath expr="//div[@id='picking_info']" position="after">
             <div t-if="i.carrier_tracking_ref">
