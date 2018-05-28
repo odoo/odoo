@@ -1305,9 +1305,6 @@ var FieldPdfViewer = FieldBinaryFile.extend({
      * @param {DOMElement} iframe
      */
     _disableButtons: function (iframe) {
-        if (this.mode === 'readonly') {
-            $(iframe).contents().find('button#download').hide();
-        }
         $(iframe).contents().find('button#openFile').hide();
     },
     /**
