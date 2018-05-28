@@ -801,10 +801,10 @@
         t-att-id="widget.idForLabel"/>
 </t>
 <t t-name="FieldRadio.button">
-    <div class="o_radio_item" aria-atomic="true">
-        <input type="radio" class="o_radio_input" t-att-checked="checked ? true : undefined"
+    <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
+        <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined"
             t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
-        <label class="o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
+        <label class="custom-control-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
 

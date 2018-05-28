@@ -619,14 +619,16 @@
         <ul class="d-none js_add_cart_variants" t-att-data-attribute_value_ids="json.dumps(attribute_value_ids)"/>
         <input type="hidden" t-if="len(product.product_variant_ids) == 1" class="product_id" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-if="len(product.product_variant_ids) &gt; 1">
-          <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-            <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
-            <span t-esc="variant_id.name_get()[0][1]"/>
-            <t t-set="diff_price" t-value="variant_id.price - variant_id.product_tmpl_id.price"/>
-            <span class="badge badge-pill" t-if="diff_price != 0">
-              <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(diff_price)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-            </span>
-          </label>
+            <div t-foreach="product.product_variant_ids" t-as="variant_id" class="custom-control custom-radio">
+                <input type="radio" name="product_id" class="custom-control-input js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
+                <label t-attf-for="radio_variant_#{variant_id.id}" label-default="label-default" class="custom-control-label">
+                    <span t-esc="variant_id.name_get()[0][1]"/>
+                    <t t-set="diff_price" t-value="variant_id.price - variant_id.product_tmpl_id.price"/>
+                    <span class="badge badge-pill" t-if="diff_price != 0">
+                        <t t-esc="diff_price > 0 and '+' or '-'"/><span t-esc="abs(diff_price)" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                    </span>
+                </label>
+            </div>
         </t>
       </xpath>
     </template>
