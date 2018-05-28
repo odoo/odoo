@@ -841,22 +841,25 @@ ActionManager.include({
      *
      * @private
      * @param {OdooEvent} ev
+     * @param {string} ev.data.name the name of view
      * @param {string} ev.data.view_type the type of view to open
      * @param {integer} [ev.data.res_id] the id of the record to open (for
      *   mono-record views)
      * @param {string} [ev.data.model] record model
+     * @param {integer} [ev.data.active_id] the active_id of the record to open
+     * @param {integer} [ev.data.actionID] the id of action
      *
      */
     _onOpenRecordNewTab: function (event) {
         var currentController = this.getCurrentController();
         var currentAction = currentController && this.actions[currentController.actionID];
         this.do_action({
-            name: currentAction.name,
+            name: event.data.name || currentAction.name,
             type: 'ir.actions.act_url',
             target: 'new',
-            url: '#id=' + event.data.res_id + '&action=' + currentAction.id + '&model=' + event.data.model
-                    + '&view_type=' + event.data.view_type
-                    + (currentAction.context.active_id ? '&active_id='+currentAction.context.active_id : ''),
+            url: '#id=' + event.data.res_id + '&action=' + (event.data.actionID || currentAction.id) + '&model=' + event.data.model
+                    + (event.data.view_type ? '&view_type=' + event.data.view_type : '')
+                    + '&active_id=' + (event.data.active_id ? event.data.active_id : currentAction.context.active_id),
         });
     },
     /**

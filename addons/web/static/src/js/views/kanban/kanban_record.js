@@ -10,7 +10,6 @@ var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
-var rpc = require('web.rpc');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var widgetRegistry = require('web.widget_registry');
@@ -41,7 +40,6 @@ var KanbanRecord = Widget.extend({
         this.deletable = options.deletable;
         this.read_only_mode = options.read_only_mode;
         this.default_action = options.default_action;
-        this.default_action_name = options.default_action_name;
         this.qweb = options.qweb;
         this.subWidgets = {};
 
@@ -171,18 +169,27 @@ var KanbanRecord = Widget.extend({
     _openRecord: function (target) {
         var self = this;
         var action = this.default_action;
-        if (action) {
-            if(action === "object"){
-                rpc.query({
-                    model: this.modelName,
-                    method: this.default_action_name,
-                    args: [this.id],
-                }).then(function (result) {
-                    self.do_action(result, {additional_context: {active_id: self.id}});
+        if (action && target === "new") {
+            var def = $.Deferred();
+            this.trigger_up('load_action', {
+                actionID: action,
+                context: {
+                    active_id: this.id,
+                    active_model: this.modelName,
+                },
+                on_success: def.resolve.bind(def),
+            });
+            $.when(def).then(function (result) {
+                self.trigger_up('open_record_new_tab', {
+                    name: result.name,
+                    res_id: result.res_id,
+                    model: result.res_model,
+                    active_id: self.id,
+                    actionID: result.id,
                 });
-            } else {
-                self.do_action(action, {additional_context: {active_id: self.id}});
-            }
+            })
+        } else if (action) {
+            self.do_action(action, {additional_context: {'active_id': self.id}});
         } else {
             var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
             this.trigger_up('open_record', {
