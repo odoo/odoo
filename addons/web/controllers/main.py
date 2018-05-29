@@ -1491,6 +1491,10 @@ class Reports(http.Controller):
             if 'ids' in action['datas']:
                 report_ids = action['datas'].pop('ids')
             report_data.update(action['datas'])
+        elif 'data' in action:
+            if 'ids' in action['data']:
+                report_ids = action['data'].pop('ids')
+            report_data.update(action['data'])
 
         report_id = report_srv.report(
             request.session.db, request.session.uid, request.session.password,
