@@ -573,7 +573,7 @@ class PaymentTransaction(models.Model):
     fees = fields.Monetary(string='Fees', currency_field='currency_id', readonly=True,
                            help='Fees amount; set by the system because depends on the acquirer')
     currency_id = fields.Many2one('res.currency', 'Currency', required=True, readonly=True)
-    reference = fields.Char(string='Reference', required=True, readonly=True,
+    reference = fields.Char(string='Reference', required=True, readonly=True, index=True,
                             help='Internal reference of the TX')
     acquirer_reference = fields.Char(string='Acquirer Reference', readonly=True, help='Reference of the TX as stored in the acquirer database')
     # duplicate partner / transaction data to store the values at transaction time
