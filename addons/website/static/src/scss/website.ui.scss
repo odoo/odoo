@@ -105,14 +105,9 @@ body .modal {
         @include o-w-preserve-forms;
         @include o-w-preserve-links;
         @include o-w-preserve-btn;
-        @include o-w-preserve-wells;
+        @include o-w-preserve-cards;
         @include o-w-preserve-modals;
         @include o-w-preserve-tabs;
-
-        &:not(.oe_mobile_preview) button.close {
-            @include o-w-close-icon(12px);
-            margin-right: -2px;
-        }
     }
 
     // MOBILE PREVIEW
@@ -122,13 +117,6 @@ body .modal {
         .modal-dialog {
             display: inline-block;
             width: auto;
-
-            .close {
-                color: lightgray;
-                opacity: 1;
-                font-size: 25px;
-                font-weight: normal;
-            }
 
             .modal-content {
                 background-color: black!important;
@@ -266,7 +254,7 @@ body .modal {
                                 font-weight: normal;
 
                                 .oe_remove {
-                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px);
+                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px); // FIXME
                                     @include o-position-absolute(5px, 5px);
                                 }
                             }
@@ -535,4 +523,3 @@ body .modal {
         color: $o-brand-primary;
     }
 }
-
