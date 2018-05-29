@@ -649,7 +649,7 @@ class QWeb(object):
             el.set("t-groups", el.attrib.pop("groups"))
 
         # if tag don't have qweb attributes don't use directives
-        if self._is_static_node(el):
+        if self._is_static_node(el, options):
             return self._compile_static_node(el, options)
 
         # create an iterator on directives to compile in order
@@ -794,7 +794,7 @@ class QWeb(object):
             'content',
         ]
 
-    def _is_static_node(self, el):
+    def _is_static_node(self, el, options):
         """ Test whether the given element is purely static, i.e., does not
         require dynamic rendering for its attributes.
         """
@@ -1164,7 +1164,7 @@ class QWeb(object):
         return el.tail is not None and [self._append(ast.Str(pycompat.to_text(el.tail)))] or []
 
     def _compile_directive_esc(self, el, options):
-        field_options = self._compile_widget_options(el, 'esc')
+        field_options = self._compile_widget_options(el)
         content = self._compile_widget(el, el.attrib.pop('t-esc'), field_options)
         if not field_options:
             # if content is not False and if content is not None:
@@ -1188,7 +1188,7 @@ class QWeb(object):
         return content + self._compile_widget_value(el, options)
 
     def _compile_directive_raw(self, el, options):
-        field_options = self._compile_widget_options(el, 'raw')
+        field_options = self._compile_widget_options(el)
         content = self._compile_widget(el, el.attrib.pop('t-raw'), field_options)
         return content + self._compile_widget_value(el, options)
 
@@ -1217,7 +1217,7 @@ class QWeb(object):
                             ast.Name(id='content', ctx=ast.Load()),
                             ast.Str(expression),
                             ast.Str(el.tag),
-                            field_options and self._compile_expr(field_options) or ast.Dict(keys=[], values=[]),
+                            field_options,
                             ast.Name(id='options', ctx=ast.Load()),
                             ast.Name(id='values', ctx=ast.Load()),
                         ],
@@ -1246,10 +1246,38 @@ class QWeb(object):
             )
         ]
 
-    # for backward compatibility to remove after v10
-    def _compile_widget_options(self, el, directive_type):
-        return el.attrib.pop('t-options', None)
-    # end backward
+    def _compile_widget_options(self, el):
+        """
+        compile t-options and add to the dict the t-options-xxx values
+        """
+        options = el.attrib.pop('t-options', None)
+        # the options can be None, a dict {}, or the method dict()
+        ast_options = options and self._compile_expr(options) or ast.Dict(keys=[], values=[])
+
+        # convert ast.Call from dict() into ast.Dict
+        if isinstance(ast_options, ast.Call):
+            ast_options = ast.Dict(
+                keys=[ast.Str(k.arg) for k in ast_options.keywords],
+                values=[k.value for k in ast_options.keywords]
+            )
+
+        for complete_key in OrderedDict(el.attrib):
+            if complete_key.startswith('t-options-'):
+                key = complete_key[10:]
+                value = self._compile_expr(el.attrib.pop(complete_key))
+
+                replacement = False
+                for astStr in ast_options.keys:
+                    if astStr.s == key:
+                        ast_options.values[ast_options.keys.index(astStr)] = value
+                        replacement = True
+                        break
+
+                if not replacement:
+                    ast_options.keys.append(ast.Str(key))
+                    ast_options.values.append(value)
+
+        return ast_options.keys and ast_options or None
 
     def _compile_directive_field(self, el, options):
         """ Compile something like ``<span t-field="record.phone">+1 555 555 8069</span>`` """
@@ -1263,7 +1291,7 @@ class QWeb(object):
             "t-field must have at least a dot like 'record.field_name'"
 
         expression = el.attrib.pop('t-field')
-        field_options = self._compile_widget_options(el, 'field')
+        field_options = self._compile_widget_options(el) or ast.Dict(keys=[], values=[])
         record, field_name = expression.rsplit('.', 1)
 
         return [
@@ -1285,7 +1313,7 @@ class QWeb(object):
                         ast.Str(field_name),
                         ast.Str(expression),
                         ast.Str(node_name),
-                        field_options and self._compile_expr(field_options) or ast.Dict(keys=[], values=[]),
+                        field_options,
                         ast.Name(id='options', ctx=ast.Load()),
                         ast.Name(id='values', ctx=ast.Load()),
                     ],
