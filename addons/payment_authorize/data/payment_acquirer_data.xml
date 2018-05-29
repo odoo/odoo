@@ -4,6 +4,7 @@
 
         <record id="payment.payment_acquirer_authorize" model="payment.acquirer">
             <field name="name">Authorize.Net</field>
+            <field name="website_name">Credit Card (powered by Authorize.net)</field>
             <field name="image" type="base64" file="payment_authorize/static/src/img/authorize_icon.png"/>
             <field name="provider">authorize</field>
             <field name="company_id" ref="base.main_company"/>

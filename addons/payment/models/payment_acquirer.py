@@ -64,6 +64,8 @@ class PaymentAcquirer(models.Model):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
 
     name = fields.Char('Name', required=True, translate=True)
+    website_name = fields.Char('Display as', translate=True,
+                          help='Name of the payment acquirer displayed in the payment form')
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
