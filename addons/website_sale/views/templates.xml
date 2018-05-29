@@ -1099,7 +1099,7 @@
                 </t>
                 <input type='submit'/>
             </form>
-            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right fa fa-edit js_edit_address no-decoration' title="Edit this address"></a>
+            <a t-if="not actual_partner or (ship.id in actual_partner.ids + actual_partner.child_ids.ids)" class='btn btn-link pull-right js_edit_address no-decoration' title="Edit this address"><i class='fa fa-edit'/></a>
             <div t-att-class="'panel panel-default %s' % (selected and 'border_primary' or 'js_change_shipping')">
                 <div class='panel-body' style='min-height: 130px;'>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
@@ -1152,7 +1152,7 @@
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
                                     <h4 class="text-danger" t-esc="err" />
                                 </t>
-                                <form name="/shop/checkout" method="post" class="checkout_autoformat">
+                                <form action="/shop/address" method="post" class="checkout_autoformat">
                                     <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-md-12 div_name">
                                         <label class="control-label" for="name">Name</label>
                                         <input type="text" name="name" class="form-control" t-att-value="'name' in checkout and checkout['name']" />

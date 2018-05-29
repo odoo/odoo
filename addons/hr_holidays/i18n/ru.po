@@ -16,13 +16,14 @@
 # Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 14:10+0000\n"
 "PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
+"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr "%g оставаясь вне %g"
 #: code:addons/hr_holidays/models/hr_leave.py:205
 #, python-format
 msgid "%s : %.2f day(s)"
-msgstr ""
+msgstr "%s : %.2f дней"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:207
@@ -105,12 +106,12 @@ msgstr "&lt;th class=\"text-center\" colspan="
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 msgid "<small class=\"text-muted\">from</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">from</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_leave_report_kanban
 msgid "<small class=\"text-muted\">to</small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">to</small>"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -260,7 +261,7 @@ msgstr "Распределение для %s"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:114
 #, python-format
 msgid "Allocation of %s : %.2f day(s) To %s"
-msgstr ""
+msgstr "Планирование для %s : %.2f день(дней) до %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
@@ -639,7 +640,7 @@ msgstr "Первое утверждение"
 #: code:addons/hr_holidays/report/holidays_summary_report.py:112
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Не найдены данные в форме, отчет не сформирован"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept__date_from
@@ -929,7 +930,7 @@ msgstr "Обзор отгулов"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Leaves Taken:"
-msgstr ""
+msgstr "Использованные отпуска:"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
@@ -963,7 +964,7 @@ msgstr "Отпуска."
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2018"
-msgstr ""
+msgstr "Обязательные отпуска 2018"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0
@@ -1027,7 +1028,7 @@ msgstr "Менеджеры"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Leaves:"
-msgstr ""
+msgstr "Макс. отпуск:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
@@ -1124,6 +1125,7 @@ msgstr "Количество отпуска"
 msgid ""
 "Number of days of the leave request according to your working schedule."
 msgstr ""
+"Количество рабочих дней по календарю, приходящихся на запрашиваемый период."
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -1148,6 +1150,10 @@ msgid ""
 "                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
+"После того, как вы запишите запрос на отпуск, он будет отправлен\n"
+"                к менеджеру на утверждение. Убедитесь, что вы отсылаете запрос на отпуск\n"
+"                на верное количество дней, а также правильного вида(по болезни, плановый \n"
+"\t\tотпуск, компенсация и т.п.)."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:366
@@ -1415,6 +1421,10 @@ msgid ""
 "The status is 'Refused', when leave request is refused by manager.\n"
 "The status is 'Approved', when leave request is approved by manager."
 msgstr ""
+"Статус 'Запросить', когда запрос создан.\n"
+"Статус 'Утвердить', когда запрос подтвержден пользователем.\n"
+"Статус 'Отклонен', когда запрос отклонен менеджером.\n"
+"Статус 'Утверждён', когда запрос одобрен менеджером."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__first_approver_id
@@ -1447,12 +1457,16 @@ msgstr ""
 msgid ""
 "This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
+"Это значение считается как сумма всех запросов на отпусков с отрицательным "
+"значением."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__max_leaves
 msgid ""
 "This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
+"Это значение считается как сумма всех запросов на отпусков с положительным "
+"значением."
 
 #. module: hr_holidays
 #: selection:hr.leave,state:0 selection:hr.leave.allocation,state:0
@@ -1536,7 +1550,7 @@ msgstr "Проверить"
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Validator"
-msgstr ""
+msgstr "Утверждающий"
 
 #. module: hr_holidays
 #: selection:hr.leave.type,color_name:0

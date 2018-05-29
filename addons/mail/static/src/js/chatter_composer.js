@@ -46,7 +46,6 @@ var ChatterComposer = composer.BasicComposer.extend({
             message = _.extend(message, {
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
-                content_subtype: 'html',
                 context: self.context,
             });
 
@@ -213,7 +212,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         recipient_done.then(function (partner_ids) {
             var context = {
                 default_parent_id: self.id,
-                default_body: utils.get_text2html(self.$input.html()),
+                default_body: utils.get_text2html(self.$input.val()),
                 default_attachment_ids: _.pluck(self.get('attachment_ids'), 'id'),
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,

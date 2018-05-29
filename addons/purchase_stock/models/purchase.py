@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
         for order in self:
-            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
+            if order.picking_ids and all([x.state in ['done', 'cancel'] for x in order.picking_ids]):
                 order.is_shipped = True
 
     @api.onchange('picking_type_id')

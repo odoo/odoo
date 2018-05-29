@@ -6,13 +6,14 @@
 # Martin Trigaux, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-22 14:10+0000\n"
 "PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +57,8 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Günü geçmiş lotları ve seri numaralarını, \"Son Kullanma Uyarıları\" "
+"filtresini kullanarak belirleme tarihi."
 
 #. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -85,6 +88,7 @@ msgstr "Lot/Seri"
 msgid ""
 "Number of days before an alert should be raised on the lot/serial number."
 msgstr ""
+"Bir uyarıdan önceki günlerin sayısı lot/seri numaralarında yükseltilmeli."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__life_time
@@ -93,6 +97,8 @@ msgid ""
 "Number of days before the goods may become dangerous and must not be "
 "consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Mallar tehlikeli hale gelmeden ve tüketilmek zorunda olmadan önceki günlerin"
+" sayısı. Bu sayı lot/seri numaralarından hesaplanacaktır."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -119,7 +125,7 @@ msgstr "Ürün Uyarı Zamanı"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Ürün Son Kullanım Uyarısı"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__life_time
@@ -158,7 +164,7 @@ msgstr "Kaldırma Tarihi"
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
-msgstr ""
+msgstr "Uyarı Tarihine ulaşıldı."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__life_date

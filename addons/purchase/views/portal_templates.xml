@@ -24,9 +24,9 @@
 
   <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
     <t t-call="portal.portal_layout">
-      <h3>Purchase Orders
-        <t t-call="portal.portal_searchbar"/>
-      </h3>
+      <t t-call="portal.portal_searchbar">
+        <t t-set="title">Purchase Orders</t>
+      </t>
       <div t-if="orders" class="panel panel-default">
       <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
         <thead>
@@ -44,6 +44,9 @@
             </td>
             <td><span t-field="order.date_order"/></td>
             <td>
+              <t t-if="order.invoice_status == 'to invoice'">
+                <span class="label label-info"><i class="fa fa-fw fa-file-text"/> Waiting for Bill</span>
+              </t>
               <t t-if="order.state == 'cancel'">
                 <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
               </t>

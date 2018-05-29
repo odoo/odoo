@@ -416,8 +416,17 @@ class Message(models.Model):
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
+        # fetch notification status
+        notif_dict = {}
+        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('is_read', '=', False)])
+        for notif in notifs:
+            mid = notif.mail_message_id.id
+            if not notif_dict.get(mid):
+                notif_dict[mid] = {'partner_id': list()}
+            notif_dict[mid]['partner_id'].append(notif.res_partner_id.id)
+
         for message in message_values:
-            message['needaction_partner_ids'] = self.env['mail.notification'].sudo().search([('mail_message_id', '=', message['id']), ('is_read', '=', False)]).mapped('res_partner_id').ids
+            message['needaction_partner_ids'] = notif_dict.get(message['id'], dict()).get('partner_id', [])
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id
             message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id
             message['is_notification'] = message['is_note'] and not message['model'] and not message['res_id']

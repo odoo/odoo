@@ -599,6 +599,35 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one in non edit mode', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                            '<field name="trululu"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a.o_form_uri').length, 1,
+            "should display 1 m2o link in form");
+        assert.strictEqual(form.$('a.o_form_uri').attr('href'), "#id=4&model=partner",
+            "href should contain id and model");
+
+        // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_many2one input').val('').trigger('keyup').trigger('focusout');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('a.o_form_uri').attr('href'), "#",
+            "href should have #");
+
+        form.destroy();
+    });
+
     QUnit.test('many2one searches with correct value', function (assert) {
         var done = assert.async();
         assert.expect(6);
@@ -1208,8 +1237,99 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('list in form: discard newly added element with empty required field (onchange)', function (assert) {
-        assert.expect(8);
+    QUnit.test('list in form: name_get with unique ids (default_get)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].display_name = "MyTrululu";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        p: [
+                            [0, 0, { trululu: 1 }],
+                            [0, 0, { trululu: 1 }]
+                        ]
+                    });
+                }
+                if (args.method === 'name_get') {
+                    assert.deepEqual(args.args[0], _.uniq(args.args[0]),
+                        "should not have duplicates in name_get rpc");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').text(), "MyTrululuMyTrululu",
+            "both records should have the correct display_name for trululu field");
+
+        form.destroy();
+    });
+
+    QUnit.test('list in form: show name of many2one fields in multi-page (default_get)', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom" limit="1">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        p: [
+                            [0, 0, { display_name: 'record1', trululu: 1 }],
+                            [0, 0, { display_name: 'record2', trululu: 2 }]
+                        ]
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').first().text(),
+            "record1", "should show display_name of 1st record");
+        assert.strictEqual(form.$('td.o_data_cell').first().next().text(),
+            "first record", "should show display_name of trululu of 1st record");
+
+        form.$('button.o_pager_next').click();
+
+        assert.strictEqual(form.$('td.o_data_cell').first().text(),
+            "record2", "should show display_name of 2nd record");
+        assert.strictEqual(form.$('td.o_data_cell').first().next().text(),
+            "second record", "should show display_name of trululu of 2nd record");
+
+        form.destroy();
+    });
+
+    QUnit.test('list in form: discard newly added element with empty required field (onchange in default_get)', function (assert) {
+        // variant of the test "list in form: discard newly added element with
+        // empty required field (default_get)", in which the `default_get`
+        // performs an `onchange` at the same time. This `onchange` may create
+        // some records, which should not be abandoned on discard, similarly
+        // to records created directly by `default_get`
+        assert.expect(7);
 
         var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
@@ -1220,7 +1340,74 @@ QUnit.module('relational_fields', {
                     obj.p = [[0, 0, { display_name: "entry", trululu: false }]];
                 }
             },
-            trululu: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                '<field name="product_id"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({
+                        product_id: 37,
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // check that there is a record in the editable list with empty string as required field
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have a row in the editable list");
+        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
+            "should have the correct displayed name");
+        var requiredField = $('td.o_data_cell.o_required_modifier');
+        assert.strictEqual(requiredField.length, 1,
+            "should have a required field on this record");
+        assert.strictEqual(requiredField.text(), "",
+            "should have empty string in the required field on this record");
+
+        // click on empty required field in editable list record
+        requiredField.click();
+        // click off so that the required field still stay empty
+        $('body').click();
+
+        // record should not be dropped
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should not have dropped record in the editable list");
+        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
+            "should still have the correct displayed name");
+        assert.strictEqual($('td.o_data_cell.o_required_modifier').text(), "",
+            "should still have empty string in the required field");
+
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+        form.destroy();
+    });
+
+    QUnit.test('list in form: discard newly added element with empty required field (onchange after default_get)', function (assert) {
+        // discarding a record from an `onchange` in a `default_get` should not
+        // abandon the record. However, any `onchange` after `default_get`
+        // should be abandoned on discard
+        assert.expect(6);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                if (obj.product_id === 37) {
+                    obj.p = [[0, 0, { display_name: "entry", trululu: false }]];
+                }
+            },
         };
 
         var form = createView({
@@ -1262,13 +1449,9 @@ QUnit.module('relational_fields', {
         // click off so that the required field still stay empty
         $('body').click();
 
-        // record should not be dropped
-        assert.strictEqual(form.$('.o_data_row').length, 1,
-            "should not have droppped record in the editable list");
-        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
-            "should still have the correct displayed name");
-            assert.strictEqual($('td.o_data_cell.o_required_modifier').text(), "",
-            "should still have empty string in the required field");
+        // record should be dropped
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "should have dropped record in the editable list");
 
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         form.destroy();
@@ -2239,6 +2422,43 @@ QUnit.module('relational_fields', {
             "the modal should be closed");
         assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
             "the partner name should have been updated to 'test'");
+
+        form.destroy();
+    });
+
+    QUnit.test('x2many list sorted by many2one', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        this.data.partner.fields.trululu.sortable = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="id"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '124',
+            "should have correct order initially");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '412',
+            "should have correct order (ASC)");
+
+        form.$('.o_list_view thead th:nth(1)').click();
+
+        assert.strictEqual(form.$('.o_data_row .o_list_number').text(), '214',
+            "should have correct order (DESC)");
 
         form.destroy();
     });
@@ -5763,7 +5983,7 @@ QUnit.module('relational_fields', {
                 rpcCount++;
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [[0, args.args[1].p[0][1], {
-                        int_field: 123, product_id: 41
+                        foo: false, int_field: 123, product_id: 41,
                     }]]);
                 }
                 return this._super(route, args);
@@ -8917,6 +9137,74 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row .o_data_cell').text(),
             'new record editedanother new record', "should display the two records");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many form view with action button', function (assert) {
+        // once the action button is clicked, the record is reloaded (via the
+        // on_close handler, executed because the python method does not return
+        // any action, or an ir.action.act_window_close) ; this test ensures that
+        // it reloads the fields of the opened view (i.e. the form in this case).
+        // See https://github.com/odoo/odoo/issues/24189
+        assert.expect(7);
+
+        var data = this.data;
+        data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: data,
+            res_id: 1,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree><field name="display_name"/></tree>' +
+                        '<form>' +
+                            '<button type="action" string="Set Timmy"/>' +
+                            '<field name="timmy"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            archs: {
+                'partner_type,false,list': '<tree><field name="display_name"/></tree>',
+            },
+            intercepts: {
+                execute_action: function (ev) {
+                    data.partner.records[1].display_name = 'new name';
+                    data.partner.records[1].timmy = [12];
+                    ev.data.on_closed();
+                },
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "there should be one record in the one2many");
+        assert.strictEqual(form.$('.o_data_cell').text(), 'second record',
+            "initial display_name of o2m record should be correct");
+
+        // open one2many record in form view
+        form.$('.o_data_cell:first').click();
+        assert.strictEqual($('.modal .o_form_view').length, 1,
+            "should have opened the form view in a dialog");
+        assert.strictEqual($('.modal .o_form_view .o_data_row').length, 0,
+            "there should be no record in the many2many");
+
+        // click on the action button
+        $('.modal .o_form_view button').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "fields in the o2m form view should have been read");
+        assert.strictEqual($('.modal .o_data_cell').text(), 'gold',
+            "many2many subrecord should have been fetched");
+
+        // save the dialog
+        $('.modal .modal-footer .btn-primary').click();
+
+        assert.strictEqual(form.$('.o_data_cell').text(), 'new name',
+            "fields in the o2m list view should have been read as well");
 
         form.destroy();
     });

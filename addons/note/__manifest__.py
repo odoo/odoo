@@ -17,6 +17,7 @@
         'security/ir.model.access.csv',
         'data/mail_activity_data.xml',
         'data/note_data.xml',
+        'data/res_users_data.xml',
         'views/note_views.xml',
         'views/note_templates.xml',
         'views/mail_activity_views.xml',

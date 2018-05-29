@@ -74,7 +74,7 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.is_visible and submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
+    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">

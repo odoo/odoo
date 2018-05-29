@@ -16,9 +16,9 @@ class TransferPaymentAcquirer(models.Model):
     provider = fields.Selection(selection_add=[('transfer', 'Wire Transfer')], default='transfer')
 
     @api.model
-    def _create_missing_journal_for_acquirers(self):
+    def _create_missing_journal_for_acquirers(self, company=None):
         # By default, the wire transfer method uses the default Bank journal.
-        company = self.env.user.company_id
+        company = company or self.env.user.company_id
         acquirers = self.env['payment.acquirer'].search(
             [('provider', '=', 'transfer'), ('journal_id', '=', False), ('company_id', '=', company.id)])
 
@@ -26,7 +26,7 @@ class TransferPaymentAcquirer(models.Model):
             [('type', '=', 'bank'), ('company_id', '=', company.id)], limit=1)
         if bank_journal:
             acquirers.write({'journal_id': bank_journal.id})
-        return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers()
+        return super(TransferPaymentAcquirer, self)._create_missing_journal_for_acquirers(company=company)
 
     def transfer_get_form_action_url(self):
         return '/payment/transfer/feedback'
