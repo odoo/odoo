@@ -406,8 +406,13 @@ FormRenderer.include({
             }
             return $.when();
         };
+        var name = node.attrs.name;
+        if (node.attrs.string) {
+            name = name + '_' + node.attrs.string;
+        }
+
         this.trigger_up('activeBarcode', {
-            name: node.attrs.name,
+            name: name,
             commands: commands
         });
     },
