@@ -26,6 +26,7 @@ class FleetVehicle(models.Model):
     driver_id = fields.Many2one('res.partner', 'Driver', track_visibility="onchange", help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
         track_visibility="onchange", required=True, help='Model of the vehicle')
+    log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignation Logs')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
@@ -279,7 +280,6 @@ class FleetVehicle(models.Model):
             'domain': [('vehicle_id', '=', self.id)],
             'context': {'default_driver_id': self.driver_id.id, 'default_vehicle_id': self.id}
         }
-
 
 class FleetVehicleOdometer(models.Model):
     _name = 'fleet.vehicle.odometer'
