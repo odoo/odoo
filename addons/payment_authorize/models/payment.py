@@ -24,6 +24,13 @@ class PaymentAcquirerAuthorize(models.Model):
     provider = fields.Selection(selection_add=[('authorize', 'Authorize.Net')])
     authorize_login = fields.Char(string='API Login Id', required_if_provider='authorize', groups='base.group_user')
     authorize_transaction_key = fields.Char(string='API Transaction Key', required_if_provider='authorize', groups='base.group_user')
+    auth_msg = fields.Html(
+        'Authorized Message', translate=True,
+        default=lambda s: _('Your payment has been authorized. The amount will be captured at the delivery. Thank you for your order!'),
+        help='Message displayed, if the payment gets authorized.')
+
+    def _get_acquirer_html_fields(self):
+        return ['auth_msg', 'pre_msg', 'post_msg', 'pending_msg', 'done_msg', 'cancel_msg', 'error_msg']
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.

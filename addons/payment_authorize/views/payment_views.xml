@@ -12,6 +12,9 @@
                         <a colspan="2" href="https://www.odoo.com/documentation/user/online/ecommerce/shopper_experience/authorize.html" target="_blank">How to get paid with Authorize.Net</a>
                     </group>
                 </xpath>
+                <xpath expr='//field[@name="pending_msg"]' position="after">
+                    <field name="auth_msg" attrs="{'invisible': [('capture_manually', '!=', True)]}"/>
+                </xpath>
             </field>
         </record>
 
