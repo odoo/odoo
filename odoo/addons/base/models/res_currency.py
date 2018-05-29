@@ -219,19 +219,26 @@ class Currency(models.Model):
         company = self.env['res.company'].browse(self._context.get('company_id')) or self.env['res.users']._get_company()
         return self._convert(from_amount, to_currency, company, date)
 
-    def _select_companies_rates(self):
+    def _select_companies_rates(self, currency_id=False, company_id=False, rate_date=False):
+        if currency_id or company_id or rate_date:
+            where_clause_components = []
+            if currency_id:
+                where_clause_components.append("currency_id = %s" % currency_id)
+            if company_id:
+                where_clause_components.append("(company_id = %s or company_id IS NULL)" % company_id)
+            if rate_date:
+                where_clause_components.append("name <= coalesce(%s, now()) and (date_end is null or date_end > coalesce(%s, now()))" % (rate_date,rate_date))
+            query = "SELECT rate FROM res_currency_rate WHERE "
+            query += " AND ".join(where_clause_components)
+            query += " limit 1 "
+            return query
         return """
             SELECT
                 r.currency_id,
                 COALESCE(r.company_id, c.id) as company_id,
                 r.rate,
                 r.name AS date_start,
-                (SELECT name FROM res_currency_rate r2
-                 WHERE r2.name > r.name AND
-                       r2.currency_id = r.currency_id AND
-                       (r2.company_id is null or r2.company_id = c.id)
-                 ORDER BY r2.name ASC
-                 LIMIT 1) AS date_end
+                r.date_end,
             FROM res_currency_rate r
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
         """
@@ -244,8 +251,9 @@ class CurrencyRate(models.Model):
 
     name = fields.Date(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today())
+    date_end = fields.Datetime(string='Date end', index=True, store=True, compute='_compute_date_end')
     rate = fields.Float(digits=(12, 6), default=1.0, help='The rate of the currency to the currency of rate 1')
-    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, index=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
 
@@ -272,3 +280,27 @@ class CurrencyRate(models.Model):
                 name = ''
                 operator = 'ilike'
         return super(CurrencyRate, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+        
+    @api.depends('currency_id.rate_ids')
+    def _compute_date_end(self):
+        currency_ids = self.mapped('currency_id').ids
+        
+        self.env.cr.execute("""
+            UPDATE res_currency_rate
+            SET date_end=rates.date_end
+            FROM (
+                SELECT
+                    r.id,
+                    COALESCE(r.company_id, c.id) as company_id,
+                    (SELECT name FROM res_currency_rate r2
+                     WHERE r2.name > r.name AND
+                           r2.currency_id = r.currency_id AND
+                           (r2.company_id is null or r2.company_id = c.id)
+                     ORDER BY r2.name ASC
+                     LIMIT 1) AS date_end
+                FROM res_currency_rate r
+                JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
+            ) as rates
+            WHERE res_currency_rate.id=rates.id
+                  AND res_currency_rate.currency_id = ANY (%s)
+        """, (currency_ids,))
