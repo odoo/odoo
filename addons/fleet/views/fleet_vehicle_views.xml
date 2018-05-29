@@ -128,6 +128,7 @@
                 <field name="license_plate" />
                 <field name="model_id" />
                 <field name="driver_id" />
+                <field name="log_drivers" invisible="1"/>
                 <field name="vin_sn" />
                 <field name="acquisition_date" />
                 <field name="state_id"/>
@@ -144,6 +145,7 @@
         <field name="arch" type="xml">
             <search string="All vehicles">
                 <field name="name" filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" string="Vehicle"/>
+                <field name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]" string="Drivers History"/>
                 <field name="driver_id"/>
                 <field name="tag_ids"/>
                 <field name="location"/>
