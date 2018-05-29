@@ -1,7 +1,5 @@
 .o_reconciliation {
     h1 {
-        width: 48%;
-        padding: 0 0 0 15px;
         margin: 0 0 25px 0;
         float: left;
         font-size: 2em;
@@ -21,8 +19,8 @@
     }
 
     .progress {
-        width: 49%;
-        margin: 10px 15px 0 0;
+        width: 100%;
+        margin: 10px 0 2px 0;
         float: right;
         position: relative;
         display: inline-block;
@@ -33,6 +31,12 @@
             text-align: center;
             position: absolute;
             width: 100%;
+        }
+    }
+    
+    h1, .progress {
+        @media screen and (min-width: $screen-xs) {
+            width: 48%;
         }
     }
 
@@ -107,6 +111,9 @@
         tr.invalid {
             text-decoration: line-through;
         }
+        td {
+            padding: 1px 2px;
+        }
         thead td {
             border-top: $o-account-light-border;
             padding-top: 4px;
@@ -124,6 +131,7 @@
             color: $gray;
             background: #fff;
             border: 0;
+            text-align: center;
             .fa-add-remove:before {
                 content: "";
             }
@@ -155,10 +163,18 @@
             text-align: right;
             width: 15px;
             color: #ccc;
-            background: #fff;
-            border: 0;
+
+            &:empty {
+                padding: 0;
+                width: 0;
+            }
         }
 
+        table.accounting_view {
+            .cell_right, .cell_left, .cell_label, .cell_due_date, .cell_account_code,.cell_info_popover {
+                box-shadow: 0 1px 0 #EAEAEA;
+            }
+        }
         /* info popover */
 
         table.details {
@@ -188,23 +204,34 @@
             visibility: visible !important;
             @include o-transform(rotate(90deg));
         }
+        .toggle_create {
+            font-size: 10px;
+        }
 
         /* Match view & Create view */
 
         > .match, > .create {
+            display: none;
             max-height: 0px;
             overflow: hidden;
-            margin-top: 5px;
             margin-bottom: 5px;
             @include o-transition(max-height, 250ms);
         }
         &[data-mode="match"] > .match {
+            display: block;
             max-height: none;
             @include o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {
+            display: block;
             max-height: 210px;
             @include o-transition(max-height, 400ms);
+        }
+    }
+
+    .o_reconcile_models {
+        .btn-primary + .btn-primary {
+            margin-left: 2px;
         }
     }
 
@@ -212,9 +239,10 @@
 
     .match {
         > div {
-            padding: 1px;
+            padding: 5px 6px 10px;
             border: 1px solid #eee;
             border-radius: 5px;
+            margin: 5px 0 0 0;
         }
         .cell_action .fa-add-remove:before {
             content: "";
@@ -223,7 +251,7 @@
             content: "\f067";
         }
         .match_controls {
-            padding: 0 0 5px ($o-account-action-col-width+$o-account-main-table-borders-padding);
+            padding: 5px 0 5px ($o-account-action-col-width+$o-account-main-table-borders-padding);
 
             .filter {
                 width: 240px;
@@ -254,11 +282,14 @@
     /* Create view */
     .create {
         > div {
-            margin: 0 $o-account-action-col-width;
-            padding: 10px;
+            margin: 0 0 0 $o-account-action-col-width;
+            padding: 5px 10px;
             overflow: auto;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 0 0 5px 5px;
+        }
+        .quick_add {
+            margin-bottom: 7px;
         }
         table {
             width: 49%;
