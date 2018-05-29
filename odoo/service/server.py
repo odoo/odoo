@@ -103,6 +103,11 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
         super(ThreadedWSGIServerReloadable, self).__init__(host, port, app,
                                                            handler=RequestHandler)
 
+        # See https://github.com/pallets/werkzeug/pull/770
+        # This allow the request threads to not be set as daemon
+        # so the server waits for them when shutting down gracefully.
+        self.daemon_threads = False
+
     def server_bind(self):
         SD_LISTEN_FDS_START = 3
         if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
@@ -117,6 +122,33 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
     def server_activate(self):
         if not self.reload_socket:
             super(ThreadedWSGIServerReloadable, self).server_activate()
+
+    def process_request(self, request, client_address):
+        """
+        Start a new thread to process the request.
+        Override the default method of class socketserver.ThreadingMixIn
+        to be able to get the thread object which is instantiated
+        and set its start time as an attribute
+        """
+        t = threading.Thread(target = self.process_request_thread,
+                             args = (request, client_address))
+        t.daemon = self.daemon_threads
+        t.type = 'http'
+        t.start_time = time.time()
+        t.start()
+
+    def _handle_request_noblock(self):
+        """
+        In the python module `socketserver` `process_request` loop,
+        the __shutdown_request flag is not checked between select and accept.
+        Thus when we set it to `True` thanks to the call `httpd.shutdown`,
+        a last request is accepted before exiting the loop.
+        We override this function to add an additional check before the accept().
+        """
+        if self._BaseServer__shutdown_request:
+            return
+        super(ThreadedWSGIServerReloadable, self)._handle_request_noblock()
+
 
 #----------------------------------------------------------
 # FileSystem Watcher for autoreload and cache invalidation
@@ -195,6 +227,8 @@ class ThreadedServer(CommonServer):
 
         #self.socket = None
         self.httpd = None
+        self.limits_reached_threads = set()
+        self.limit_reached_time = None
 
     def signal_handler(self, sig, frame):
         if sig in [signal.SIGINT, signal.SIGTERM]:
@@ -217,6 +251,38 @@ class ThreadedServer(CommonServer):
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
 
+    def process_limit(self):
+        rss, vms = memory_info(psutil.Process(os.getpid()))
+        if vms > config['limit_memory_soft']:
+            _logger.info('Server virtual memory limit (%s) reached.', vms)
+            self.limits_reached_threads.add(threading.currentThread())
+
+        for thread in threading.enumerate():
+            if not thread.daemon or getattr(thread, 'type', None) == 'cron':
+                # We apply the limits on cron threads and HTTP requests,
+                # longpolling requests excluded.
+                if getattr(thread, 'start_time', None):
+                    thread_execution_time = time.time() - thread.start_time
+                    thread_limit_time_real = config['limit_time_real']
+                    if (getattr(thread, 'type', None) == 'cron' and
+                            config['limit_time_real_cron'] > 0):
+                        thread_limit_time_real = config['limit_time_real_cron']
+                    if thread_execution_time > thread_limit_time_real:
+                        _logger.info(
+                            'Thread %s virtual real time limit (%d/%ds) reached.',
+                            thread, thread_execution_time, thread_limit_time_real)
+                        self.limits_reached_threads.add(thread)
+        # Clean-up threads that are no longer alive
+        # e.g. threads that exceeded their real time,
+        # but which finished before the server could restart.
+        for thread in list(self.limits_reached_threads):
+            if not thread.isAlive():
+                self.limits_reached_threads.remove(thread)
+        if self.limits_reached_threads:
+            self.limit_reached_time = self.limit_reached_time or time.time()
+        else:
+            self.limit_reached_time = None
+
     def cron_thread(self, number):
         from odoo.addons.base.models.ir_cron import ir_cron
         while True:
@@ -225,10 +291,13 @@ class ThreadedServer(CommonServer):
             _logger.debug('cron%d polling for jobs', number)
             for db_name, registry in registries.items():
                 if registry.ready:
+                    thread = threading.currentThread()
+                    thread.start_time = time.time()
                     try:
                         ir_cron._acquire_job(db_name)
                     except Exception:
                         _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                    thread.start_time = None
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -247,6 +316,7 @@ class ThreadedServer(CommonServer):
                 self.cron_thread(i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
             t.setDaemon(True)
+            t.type = 'cron'
             t.start()
             _logger.debug("cron%d started!" % i)
 
@@ -275,6 +345,9 @@ class ThreadedServer(CommonServer):
             import win32api
             win32api.SetConsoleCtrlHandler(lambda sig: self.signal_handler(sig, None), 1)
 
+        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
+
         test_mode = config['test_enable'] or config['test_file']
         if test_mode or (config['http_enable'] and not stop):
             # some tests need the http deamon to be available...
@@ -283,12 +356,16 @@ class ThreadedServer(CommonServer):
     def stop(self):
         """ Shutdown the WSGI server. Wait for non deamon threads.
         """
-        _logger.info("Initiating shutdown")
-        _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+        if getattr(odoo, 'phoenix', None):
+            _logger.info("Initiating server reload")
+        else:
+            _logger.info("Initiating shutdown")
+            _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+
+        stop_time = time.time()
 
         if self.httpd:
             self.httpd.shutdown()
-            self.close_socket(self.httpd.socket)
 
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
@@ -297,8 +374,10 @@ class ThreadedServer(CommonServer):
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id:
-                while thread.isAlive():
+            if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
+                    thread not in self.limits_reached_threads):
+                while thread.isAlive() and (time.time() - stop_time) < 1:
+                    # We wait for requests to finish, up to 1 second.
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
@@ -329,7 +408,28 @@ class ThreadedServer(CommonServer):
         # by the signal handler)
         try:
             while self.quit_signals_received == 0:
-                time.sleep(60)
+                self.process_limit()
+                if self.limit_reached_time:
+                    has_other_valid_requests = any(
+                        not t.daemon and
+                        t not in self.limits_reached_threads
+                        for t in threading.enumerate()
+                        if getattr(t, 'type', None) == 'http')
+                    if (not has_other_valid_requests or
+                            (time.time() - self.limit_reached_time) > SLEEP_INTERVAL):
+                        # We wait there is no processing requests
+                        # other than the ones exceeding the limits, up to 1 min,
+                        # before asking for a reload.
+                        self.reload()
+                        # `reload` increments `self.quit_signals_received`
+                        # and the loop will end after this iteration,
+                        # therefore leading to the server stop.
+                        # `reload` also sets the `phoenix` flag
+                        # to tell the server to restart the server after shutting down.
+                    else:
+                        time.sleep(1)
+                else:
+                    time.sleep(SLEEP_INTERVAL)
         except KeyboardInterrupt:
             pass
 
