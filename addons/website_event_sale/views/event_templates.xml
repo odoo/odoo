@@ -122,4 +122,16 @@
         <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'hidden' or ''}"/>
     </xpath>
 </template>
+
+<!-- Add the ticket name on the registration complete page. -->
+<template id="sale_registration_complete" inherit_id="website_event.registration_complete" name="Sale Registration Completed">
+    <xpath expr="//thead/tr/th[1]" position="after">
+        <th>Ticket</th>
+    </xpath>
+    <xpath expr="//tbody/t/tr/td[1]" position="after">
+        <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
+    </xpath>
+</template>
+
 </odoo>
+
