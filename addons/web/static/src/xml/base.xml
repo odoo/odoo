@@ -608,12 +608,12 @@
     <div t-if="hasModel" class="o_field_domain_panel">
         <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
 
-        <button t-if="isValid" class="btn btn-xs btn-secondary o_domain_show_selection_button" type="button">
+        <button t-if="isValid" class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
             <t t-esc="nbRecords"/> record(s)
         </button>
         <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
 
-        <button t-if="inDialogEdit" class="btn btn-xs btn-primary o_field_domain_dialog_button">Edit Domain</button>
+        <button t-if="inDialogEdit" class="btn btn-sm btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
     <div t-else="">Select a model to add a filter.</div>
 </t>
@@ -626,7 +626,7 @@
 </t>
 <t t-name="DomainTree.OperatorSelector">
     <div t-if="!widget.readonly" class="btn-group o_domain_tree_operator_selector" aria-atomic="true">
-        <button class="btn btn-xs btn-primary o_domain_tree_operator_caret" data-toggle="dropdown">
+        <button class="btn btn-sm btn-primary o_domain_tree_operator_caret" data-toggle="dropdown">
             <t t-if="widget.operator === '&amp;'">All</t>
             <t t-if="widget.operator === '|'">Any</t>
             <t t-if="widget.operator === '!'">None</t>
@@ -645,7 +645,7 @@
 <div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
     <t t-if="widget.children.length === 0">
         <span>Match <strong>all records</strong></span>
-        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
+        <button t-if="!widget.readonly" class="btn btn-sm btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
     </t>
     <t t-else="">
         <div class="o_domain_tree_header">
@@ -706,7 +706,7 @@
                     </div>
                     <div class="o_domain_leaf_value_tags">
                         <input placeholder="Add new value" type="text" class="o_input"/>
-                        <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag"/>
+                        <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag"/>
                     </div>
                 </t>
                 <t t-else="">
@@ -946,12 +946,12 @@
         t-att-name="widget.name"/>
 </t>
 <t t-name="CopyClipboardText">
-    <button class="btn btn-xs btn-primary o_clipboard_button o_btn_text_copy">
+    <button class="btn btn-sm btn-primary o_clipboard_button o_btn_text_copy">
         <span class="fa fa-clipboard">Copy Text</span>
     </button>
 </t>
 <t t-name="CopyClipboardChar">
-    <button class="btn btn-xs btn-primary o_clipboard_button o_btn_char_copy">
+    <button class="btn btn-sm btn-primary o_clipboard_button o_btn_char_copy">
         <span class="fa fa-clipboard">Copy Text</span>
     </button>
 </t>
