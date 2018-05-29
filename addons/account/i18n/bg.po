@@ -33,6 +33,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"* Състояние \"Чернова\" се използва при създаване на нова и непотвърдена фактура\n"
+"* Състояние \"Отворена\" се използва при фактури с генериран номер. Остава в това състояние, докато не бъде разплатена.\n"
+"* Състояние \"Платена\" се присвоява автоматично, когато фактурата е разплатена. Съответните записи в дневниците могат да бъдат публикувани.\n"
+"* Състояние \"Анулирана\" се използва при отказ на клиента от фактурата."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
@@ -58,7 +62,7 @@ msgstr "брой Транзакции"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -69,7 +73,7 @@ msgstr "${object.company_id.name} Фактура (Ref ${object.number or 'n/a'})
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Касов Ордер (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -99,7 +103,7 @@ msgstr "%s (копие)"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>на</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -177,6 +181,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Уважаеми ${object.partner_id.name},</p>\n"
+"<p>Благодарим за плащането Ви.<br/>Ето Вашият приходен касов ордер <strong>${(object.name or '').replace('/','-')}</strong> за сума <strong>${format_amount(object.amount, object.currency_id)}</strong> от ${object.company_id.name}.</p>\n"
+"<p>Ако имате въпросе, не се колебайте да се свържете с нас.</p>\n"
+"<p>С уважение,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -247,6 +261,71 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"% set record = ctx.get('record')\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
+"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\">\n"
+"                        <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                            Фактура ${object.record_name}\n"
+"                        </span>\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\">\n"
+"                        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"          </table>\n"
+"    </td>\n"
+"  </tr>\n"
+"  <!-- CONTENT -->\n"
+"  <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                <tbody>\n"
+"                    <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                        ${object.body | safe}\n"
+"                    </td>\n"
+"                </tbody>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        ${company.name}<br/>\n"
+"                        ${company.phone or ''}\n"
+"                    </td>\n"
+"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                        % if company.email:\n"
+"                        <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                        % endif\n"
+"                        % if company.website:\n"
+"                        <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                        ${company.website}\n"
+"                        </a>\n"
+"                        % endif\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -296,6 +375,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Уважаеми ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Намерете приложена Вашата \n"
+"% if object.number:\n"
+"Фактура <strong>${object.number}</strong>\n"
+"% else:\n"
+"фактура\n"
+"% endif\n"
+"% if object.origin:\n"
+"(с референция: ${object.origin})\n"
+"% endif\n"
+"за сума <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"от ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Виж Фактура</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Тази фактура е вече платена.</p>\n"
+"% else:\n"
+"    <p>Моля. платете при първа възможност.</p>\n"
+"% endif\n"
+"\n"
+"<p>Thank you,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -354,6 +477,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Импорт</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 контакта</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -364,6 +492,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Създайте ръчно<br/>\n"
+"                                        <span class=\"small\">&lt; 200 contacts</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -621,6 +754,8 @@ msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
 msgstr ""
+"<strong>Изчистени Фактури:</strong> лесни за създаване, красиви и "
+"пълнофункционални фактури."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -644,6 +779,8 @@ msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
 msgstr ""
+"<strong>Създайте Депозит<br/>\n"
+"                                        Това Ви позволява да отчетете различни плащания, които съставят банковото извлечение.  (Може да се наложи да"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -651,6 +788,8 @@ msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
 msgstr ""
+"<strong>Регистрирайте фактурата в Odoo</strong><br/> със съответната дата, и"
+" създайте Достачик, ако той още не съществува."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -687,7 +826,7 @@ msgstr "<strong>До дата :</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr ""
+msgstr "<strong>Депозити</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -753,6 +892,8 @@ msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
 msgstr ""
+"<strong>Отбележете фактурите за плащане</strong><br/>\n"
+"                                        Групирайте или филтрирайте фактурите за да видите кои са дължими следващата седмица, след това отворете всяка поотделно, цъкнете <strong>'Плати'</strong> и изберете предпочитаният начин на плащане."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -1006,7 +1147,7 @@ msgstr ""
 #: code:addons/account/models/account.py:707
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "Банкова сметка може да е само към една счетоводна сметка.."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1040,6 +1181,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"Жърналът се използва за вписване на контировките на операциите\n"
+"                свързани с ежедневният Ви бизнес."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1074,13 +1217,15 @@ msgid ""
 "A rounding per line is advised if your prices are tax-included. That way, "
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
+"Закръгляне на ниво ред се препоръчва, когато цените Ви са с включено ДДС. По"
+" този начин, сумата на сумите ще съвпада на общо-то с данъците."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:880
 #: code:addons/account/models/account_bank_statement.py:883
 #, python-format
 msgid "A selected move line was already reconciled."
-msgstr ""
+msgstr "Избраният ред е вече сългасуван."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:891
@@ -1245,7 +1390,7 @@ msgstr "Номер на сметка"
 #. module: account
 #: model:ir.model,name:account.model_account_report_partner_ledger
 msgid "Account Partner Ledger"
-msgstr ""
+msgstr "Партньорски Сметкоплан"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_property_account_payable_id
@@ -4411,7 +4556,7 @@ msgstr "Записи"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_print_journal_sort_selection
 msgid "Entries Sorted by"
-msgstr ""
+msgstr "Записите Сортирани по"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1006
@@ -5696,6 +5841,8 @@ msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
 msgstr ""
+"Добавя колона Валута в отчетите, в които валутата се различава от основната "
+"ни."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_reconciled
@@ -5830,7 +5977,7 @@ msgstr ""
 #: selection:account.print.journal,sort_selection:0
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr ""
+msgstr "Номер на Контировка"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -7848,6 +7995,7 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
+"Отпечатва Отчет с колона Валута, ако валутата е различна от основната ни."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8101,7 +8249,7 @@ msgstr "Равнени"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_reconciled
 msgid "Reconciled Entries"
-msgstr ""
+msgstr "Съгласувани Записи"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_form
