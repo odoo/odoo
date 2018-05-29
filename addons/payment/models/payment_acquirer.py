@@ -4,6 +4,7 @@ import hmac
 import logging
 from datetime import datetime
 import pprint
+import re
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, image_resize_image, ustr
@@ -109,9 +110,11 @@ class PaymentAcquirer(models.Model):
 
     pre_msg = fields.Html(
         'Help Message', translate=True,
+        default='',
         help='Message displayed to explain and help the payment process.')
     post_msg = fields.Html(
         'Thanks Message', translate=True,
+        default='',
         help='Message displayed after having done the payment process.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
@@ -272,15 +275,27 @@ class PaymentAcquirer(models.Model):
             journals += acquirer.journal_id
         return journals
 
+    def _get_acquirer_html_fields(self):
+        return ['pre_msg', 'post_msg', 'pending_msg', 'done_msg', 'cancel_msg', 'error_msg']
+
+    def _check_on_empty_html_fields(self, vals, **params):
+        html_fields = self._get_acquirer_html_fields()
+        for field in html_fields:
+            if vals.get(field):
+                test = len(re.sub(r"((<(.|\n)*?>)|(&nbsp;))", "", vals.get(field)).strip())
+                if test == 0:
+                    vals[field] = ''
+        return vals
+
     @api.model
     def create(self, vals):
         image_resize_images(vals)
-        return super(PaymentAcquirer, self).create(vals)
+        return super(PaymentAcquirer, self).create(self._check_on_empty_html_fields(vals))
 
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
-        return super(PaymentAcquirer, self).write(vals)
+        return super(PaymentAcquirer, self).write(self._check_on_empty_html_fields(vals))
 
     @api.multi
     def toggle_website_published(self):
