@@ -3,6 +3,7 @@
 
 from odoo.http import route, request
 from odoo.addons.mass_mailing.controllers.main import MassMailController
+from odoo import _
 
 
 class MassMailController(MassMailController):
@@ -18,12 +19,24 @@ class MassMailController(MassMailController):
                     'email': email,
                     'mailing_id': mailing_id})
             elif mailing.mailing_model_name == 'mail.mass_mailing.list':
-                super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
-                return request.render('website_mass_mailing.page_unsubscribed', {
+                # Unique mailing list unsubscription
+                # super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
+                # return request.render('website_mass_mailing.page_unsubscribed', {
+                #     'email': email,
+                #     'mailing_id': mailing_id,
+                #     'res_id': res_id,
+                #     'mailing_list_name': mailing.contact_list_ids[0].display_name
+                # })
+
+                # Choose your subscriptions
+                contact = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=ilike', email)])
+                opt_out_list_ids = contact.opt_out_list_ids.filtered(lambda rel: rel.opt_out == True).mapped('list_id')
+                return request.render('website_mass_mailing.page_list_subscription', {
                     'email': email,
                     'mailing_id': mailing_id,
-                    'res_id': res_id,
-                    'mailing_list_name': mailing.contact_list_ids[0].display_name
+                    'list_ids': contact.list_ids,
+                    'opt_out_list_ids': opt_out_list_ids,
+                    'contact': contact
                 })
             else:
                 super(MassMailController, self).mailing(mailing_id, email=email, res_id=res_id, **post)
@@ -41,20 +54,6 @@ class MassMailController(MassMailController):
             mailing.update_opt_out(email, opt_in_ids, False)
             mailing.update_opt_out(email, opt_out_ids, True)
 
-    # @route('/mail/mailing/unsubscribe_contact', type='json', auth='none')
-    # def unsubscribe_contact(self, email, mailing_id):
-    #     mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
-    #     if mailing.exists():
-    #         model = request.env[mailing.mailing_model_name]
-    #         email_field = 'email' if 'email' in model._fields else 'email_from'
-    #         contacts = model.sudo().search([(email_field, '=ilike', email)])
-    #         if contacts:
-    #             contacts.sudo().write({
-    #                 'opt_out': True
-    #             })
-    #             return 'success'
-    #         return 'not found'
-    #     return 'error'
 
     @route('/mail/mailing/subscribe_contact', type='json', auth='none')
     def subscribe_contact(self, email, mailing_id, res_id):
@@ -76,6 +75,19 @@ class MassMailController(MassMailController):
             return 'success'
         return 'error'
 
+    @route('/mail/mailing/feedback', type='json', auth='none')
+    def send_feedback(self, mailing_id, email, feedback):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing.exists() and email:
+            model = request.env[mailing.mailing_model_real]
+            email_field = 'email' if 'email' in model._fields else 'email_from'
+            record = model.sudo().search([(email_field, '=ilike', email)])
+            if record:
+                record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
+                return 'success'
+            return 'not found'
+        return 'error'
+
     @route('/mail/mailing/blacklist/check', type='json', auth='none')
     def check_blacklist(self, email):
         if email:
@@ -92,7 +104,7 @@ class MassMailController(MassMailController):
             if not record.email:
                 request.env['mail.mass_mailing.blacklist'].sudo().create({
                     'email': email,
-                    'reason': "The applicant has added himself in the blacklist using the unsubscription page"
+                    'reason': "The recipient has added himself in the blacklist using the unsubscription page"
                 })
                 return 'success'
             return 'found'

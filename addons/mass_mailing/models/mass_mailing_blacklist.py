@@ -4,6 +4,7 @@ import re
 
 from odoo import api, fields, models, _
 
+EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
 class MailBlackList(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
@@ -14,6 +15,7 @@ class MailBlackList(models.Model):
     email = fields.Char(string='Email Address', required=True, index=True)
     reason = fields.Char()
     company_id = fields.Many2one('res.company', string='Company Name')
+
     _sql_constraints = [
         ('unique_email', 'unique (email)', 'Email address already exists!')
     ]
@@ -67,9 +69,13 @@ class MailBlackListMixin(models.Model):
     blacklist_id = fields.Many2one('mail.mass_mailing.blacklist', store=False, search="_search_blacklist_id",
                                    string='Blacklist id')
 
-    is_blacklisted = fields.Boolean(string='Blacklist', compute="_compute_is_blacklisted",
-        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list", groups="base.group_user")
-    blacklist_reason = fields.Char(compute="_compute_is_blacklisted")
+    # Note :
+    # With store = False, the access to the field is not evaluated because the fields is not in DB.
+    # With store = True, the access to the field can be evaluated.
+    is_blacklisted = fields.Boolean(string='Blacklist', compute="_compute_is_blacklisted", store=True,
+        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list",
+        groups="base.group_user")
+    blacklist_reason = fields.Char(compute="_compute_is_blacklisted", store=True)
 
     @api.depends(lambda self: self._get_depends())
     def _compute_is_blacklisted(self):
@@ -82,19 +88,22 @@ class MailBlackListMixin(models.Model):
             rec.blacklist_reason = str(item['reason']) if item and item['reason'] else ''
 
     def _search_blacklist_id(self, operator, value):
-        [email_field] = self._email_field_name
-        # implement search with domain [('blacklist_id', 'in', value)]
-        assert operator == 'in' and isinstance(value, list)
-        black_recs = self.env['mail.mass_mailing.blacklist'].browse(value)
-        emails = black_recs.mapped('email')
-        return [(email_field, 'in', emails)]
+        if self._email_field_name:
+            [email_field] = self._email_field_name
+            # implement search with domain [('blacklist_id', 'in', value)]
+            assert operator == 'in' and isinstance(value, list)
+            black_recs = self.env['mail.mass_mailing.blacklist'].browse(value)
+            emails = black_recs.mapped('email')
+            return [(email_field, 'in', emails)]
+        # else:
+        #     return []
 
     @api.multi
     def toggle_blacklist(self):
         [email_field] = self._email_field_name
         self.ensure_one()
         email = self[email_field]
-        if email and re.match('([^ ,;<@]+@[^> ,;]+)', email):
+        if email and re.match(EMAIL_PATTERN, email):
             blacklist = self.env["mail.mass_mailing.blacklist"]
             blacklist_rec = blacklist.sudo().search([('email', '=', email)])
             if blacklist_rec.email:
@@ -103,7 +112,7 @@ class MailBlackListMixin(models.Model):
             else:
                 blacklist.sudo().create({
                     'email': email,
-                    'reason': "%s has blacklisted the applicant using toggle widget from %s" % (self.env['res.users'].browse(self._uid).name, self._description)
+                    'reason': "%s has blacklisted the recipient from %s" % (self.env['res.users'].browse(self._uid).name, self._description)
                 })
                 return True
         return 'not_found'

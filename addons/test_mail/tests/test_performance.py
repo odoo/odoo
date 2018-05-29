@@ -6,6 +6,7 @@ from email.utils import formataddr
 from odoo.tests.common import TransactionCase, users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+import logging
 
 
 @tagged('mail_performance')
@@ -150,9 +151,11 @@ class TestAdvMailPerformance(TransactionCase):
         self.env.ref('mail.mt_activities').write({'default': True})
 
     @users('admin', 'emp')
-    @warmup
     def test_adv_activity(self):
         model = self.env['mail.test.activity']
+
+        # warmup (@warmup fails because of cache issue)
+        model.create({'name': 'Test'})
 
         with self.assertQueryCount(admin=8, emp=8):  # test_mail only: 8 - 8
             model.create({'name': 'Test'})

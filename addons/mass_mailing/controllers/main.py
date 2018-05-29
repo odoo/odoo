@@ -25,11 +25,10 @@ class MassMailController(http.Controller):
             res_ids = []
 
             if mailing.mailing_model_name == 'mail.mass_mailing.list':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([
-                    ('email', '=', email),
-                    ('list_ids', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
+                contact = request.env['mail.mass_mailing.contact'].sudo().search([
+                    ('email', '=', email)
                 ])
-                res_ids = contacts.ids
+                res_ids = contact.list_ids
             else:
                 res_ids = [res_id]
 
