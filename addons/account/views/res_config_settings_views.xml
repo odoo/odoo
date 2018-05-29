@@ -133,21 +133,6 @@
                                 </div>
                             </div>
                         </div>
-                        <h2>Fiscal Periods</h2>
-                        <div class="row mt16 o_settings_container" id="accounting_reports">
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1" groups="account.group_account_user"/>
-                            <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1" groups="account.group_account_user">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_account_reports" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_account_reports"/>
-                                    <div class="text-muted" id="account_reports">
-                                        Navigate easily through reports and see what is behind the numbers
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <h2>Currencies</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box">
@@ -198,6 +183,23 @@
                                 </div>
                             </div>
                         </div>
+                        <t groups="account.group_account_user">
+                            <h2>Fiscal Periods</h2>
+                            <div class="row mt16 o_settings_container" id="accounting_reports">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1" groups="account.group_account_user"/>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1" groups="account.group_account_user">
+                                    <div class="o_setting_left_pane">
+                                        <field name="module_account_reports" widget="upgrade_boolean"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="module_account_reports"/>
+                                        <div class="text-muted" id="account_reports">
+                                            Navigate easily through reports and see what is behind the numbers
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
                         <h2>Customer Payments</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" id="account_followup" title="This feature is useful if you issue a high amounts of invoices.">
