@@ -733,53 +733,6 @@ function patch (target, props) {
         });
     }
 }
-/**
- * In Phantomjs, there is a crash when calling window.getSelection
- * in order for the tests to work, for the specific test that uses it, replace
- * the default window.getSelection by a mock
- *
- * usage:
- *     QUnit.test('...',function(done){
- *          var unpatchWindowGetSelection = testUtils.patchWindowGetSelection();
- *
- *          // do something that needs to use window.getSelection()
- *          assert.strictEqual(....);
- *
- *          // restore the original function
- *          unpatchWindowGetSelection();
- *
- *          // finish the test
- *          done();
- *     })
- *
- * @returns {function} the unpatch function
- */
-function patchWindowGetSelection() {
-    var originalWindowGetSelection = window.getSelection;
-    window.getSelection = function () {
-        return {
-            removeAllRanges: function () {},
-            addRange: function (range) {},
-            getRangeAt: function (index) {
-                return {
-                    startOffset : 0
-                };
-            },
-            anchorNode: {
-                parentNode: {
-                    childNodes: [{
-                        outerHTML: "@",
-                        nodeType: 3,
-                        textContent: '@',
-                    }],
-                },
-            },
-        };
-    };
-    return function () {
-        window.getSelection = originalWindowGetSelection;
-    };
-}
 
 /**
  * Unpatches a given Class or Object.
@@ -831,7 +784,6 @@ return $.when(
         intercept: intercept,
         observe: observe,
         patch: patch,
-        patchWindowGetSelection: patchWindowGetSelection,
         removeSrcAttribute: removeSrcAttribute,
         triggerKeypressEvent: triggerKeypressEvent,
         triggerMouseEvent: triggerMouseEvent,

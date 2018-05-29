@@ -5,7 +5,7 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td>
-                <a t-if="invoice.state == 'open'" t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
+                <a t-if="invoice.state == 'open' and invoice.type == 'out_invoice'" t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
                     <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
                 </a>
             </td>

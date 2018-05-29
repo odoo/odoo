@@ -36,8 +36,9 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
                     'product_qty': quantity,
                     'product_uom': product.uom_po_id.id,
                     'price_unit': self.product_price_unit,
-                    'date_planned': datetime.today(),
+                    'date_planned': '2017-10-07',
                 })],
+             'date_order': '2017-10-01',
         })
         rslt.button_confirm()
         return rslt
@@ -51,7 +52,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'currency_id': self.currency_two.id,
             'name': 'vendor bill',
             'type': 'in_invoice',
-            'date_invoice': time.strftime('%Y') + '-12-22',
+            'date_invoice': '2017-12-31',
             'account_id': account_receivable.id,
         })
         rslt.purchase_order_change()
@@ -76,6 +77,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then receive the goods.
         """
+        # Create a PO and an invoice for it
         test_product = self.test_product_order
         purchase_order = self._create_purchase(test_product)
 
@@ -83,15 +85,29 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         invoice_line = self.env['account.invoice.line'].search([('invoice_id', '=', invoice.id)])
         invoice_line.quantity = 1
 
-        self.currency_rate.rate = 13.834739702
+        # The currency rate changes
+        self.currency_rate = self.env['res.currency.rate'].create({
+            'currency_id': self.currency_one.id,
+            'company_id': self.company.id,
+            'rate': 13.834739702,
+            'name': '2017-12-22',
+        })
 
+        # Validate the invoice and refund the goods
         invoice.action_invoice_open()
-        self._process_pickings(purchase_order.picking_ids)
+        self._process_pickings(purchase_order.picking_ids, date='2017-12-24')
         picking = self.env['stock.picking'].search([('purchase_id', '=', purchase_order.id)])
         self.check_reconciliation(invoice, picking)
 
-        #return the goods and refund the invoice
-        self.currency_rate.rate = 10.54739702
+        # The currency rate changes again
+        self.currency_rate = self.env['res.currency.rate'].create({
+            'currency_id': self.currency_one.id,
+            'company_id': self.company.id,
+            'rate': 10.54739702,
+            'name': '2018-01-01',
+        })
+
+        # Return the goods and refund the invoice
         stock_return_picking = self.env['stock.return.picking']\
             .with_context(active_ids=[picking.id], active_id=picking.id).create({})
         stock_return_picking.product_return_moves.quantity = 1.0
@@ -100,12 +116,25 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         return_pick.action_assign()
         return_pick.move_lines.quantity_done = 1
         return_pick.action_done()
-        self.currency_rate.rate = 9.56564564
+        self._change_pickings_date(return_pick, '2018-01-13')
+
+        # The currency rate changes again
+        self.currency_rate = self.env['res.currency.rate'].create({
+            'currency_id': self.currency_one.id,
+            'company_id': self.company.id,
+            'rate': 9.56564564,
+            'name': '2018-03-12',
+        })
+
+        # Refund the invoice
         refund_invoice_wiz = self.env['account.invoice.refund'].with_context(active_ids=[invoice.id]).create({
             'description': 'test_invoice_shipment_refund',
             'filter_refund': 'cancel',
+            'date': '2018-03-15',
         })
         refund_invoice_wiz.invoice_refund()
+
+        # Check the result
         refund_invoice = self.env['account.invoice'].search([('name', '=', 'test_invoice_shipment_refund')])[0]
         self.assertTrue(invoice.state == refund_invoice.state == 'paid'), "Invoice and refund should both be in 'Paid' state"
         self.check_reconciliation(refund_invoice, return_pick)

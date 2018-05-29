@@ -508,7 +508,6 @@ QUnit.module('core', function () {
                 {
                     "default_attachment_ids": [],
                     "default_body": "",
-                    "default_content_subtype": "html",
                     "default_model": "res.users",
                     "default_parent_id": false,
                     "default_res_id": 1
@@ -526,7 +525,6 @@ QUnit.module('core', function () {
         assert.deepEqual(result.context, {
             "default_attachment_ids": [],
             "default_body": "",
-            "default_content_subtype": "html",
             "default_model": "res.users",
             "default_parent_id": false,
             "default_res_id": 1,

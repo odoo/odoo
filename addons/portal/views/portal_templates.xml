@@ -66,7 +66,7 @@
 
     <template id="portal_layout" name="Portal Layout">
         <t t-call="portal.frontend_layout">
-            <div class="container mt16 o_portal">
+            <div class="container mt16 mb16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
                         <div class="col-sm-12">
@@ -147,72 +147,93 @@
         :param string filterby : name of the filter criteria
         :param default_url : the base url of the pages (like '/my/orders')
         :param boolean o_portal_search_panel : set to True to active the input search
-        :param html $0 : content of the t-call, <li>a</li><li>b</li>
+        :param html $0 : content of the t-call, <li class="pull-left">Link</li>
+        :param title : bavbar title
+        :param classes : navbar classes
     -->
     <template id="portal_searchbar" name="Portal Search Bar">
-        <t t-if='searchbar_inputs'>
-            <div class='hidden-xs pull-right o_portal_search_panel'>
-                 <div class="input-group">
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            <span id="search_label">Search</span> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
-                                <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <input type="text" class="form-control o_portal_search_panel_fixed_width" t-att-value='search' name="search"/>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
-                    </span>
+        <nav t-attf-class="navbar o_portal_navbar {{classes if classes else 'o_portal_navbar_default'}}">
+            <div class="container-fluid">
+                <!--  Navbar title only -->
+                <div class="navbar-header pull-left">
+                    <t t-set="no_title">No title</t>
+                    <h3 class="navbar-brand"><t t-esc="title or no_title"/></h3>
                 </div>
-            </div>
-        </t>
-        <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
-                <span class="fa fa-sort fa-lg" />
-                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
-                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
-                        <span t-esc="searchbar_sortings[option].get('label')"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div t-if="searchbar_filters" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
-                <span class="fa fa-filter fa-lg" />
-                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
-                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
-                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
-                        <span t-esc="searchbar_filters[option].get('label')"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div t-if="searchbar_groupby" class="dropdown pull-right mr4">
-            <button id="portal_searchbar_groupby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
-                <span class="fa fa-bars fa-lg" />
-                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
-                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
-                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
-                        <span t-esc="searchbar_groupby[option].get('label')"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        
+
+                <!-- Non-collapsing menu item(s) -->
+                <div class="navbar-header navbar-right pull-right">
+                    <ul class="nav pull-left">
+                        <t t-raw="0"/>
+                        <li t-if="searchbar_sortings" class="dropdown pull-left ml16">
+                            <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-sort"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li t-if="searchbar_filters" class="dropdown pull-left ml4">
+                            <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-filter"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_filters[filterby].get('label', 'All')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                                        <span t-esc="searchbar_filters[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li t-if="searchbar_groupby" class="dropdown pull-left ml4">
+                            <button id="portal_searchbar_groupby" data-toggle="dropdown" class="btn btn-default navbar-btn">
+                                <span class="fa fa-object-group"/>
+                                <span class="hidden-xs hidden-sm"><t t-esc="searchbar_groupby[groupby].get('label', 'None')"/></span>
+                                <span class="caret"/>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
+                                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
+                                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
+                                        <span t-esc="searchbar_groupby[option].get('label')"/>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <button t-if='searchbar_inputs' type="button" class="navbar-toggle collapsed btn ml16" data-toggle="collapse" data-target="#o_portal_searchbar_collapse"><span class="fa fa-search"/></button>
+                </div>
+                <div t-if='searchbar_inputs' class="visible-xs-block clearfix"/>
+
+                <!-- Collapsing content (searchbar_inputs) -->
+                <div t-if='searchbar_inputs' class="collapse navbar-collapse text-right" id="o_portal_searchbar_collapse">
+                    <div class="navbar-form o_portal_search_panel">
+                         <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span id="search_label" class="hidden-xs mr4">Search</span><span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
+                                        <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="text" class="form-control" t-att-value='search' name="search"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default search-submit" type="button"><span class="fa fa-search hidden-xs"/><span class="fa fa-arrow-right visible-xs-inline-block"/></button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- /.container-fluid -->
+        </nav>
     </template>
 
     <template id="portal_contact" name="Contact">

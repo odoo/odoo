@@ -54,7 +54,8 @@ class HrEmployee(models.Model):
     @api.depends('last_attendance_id.check_in', 'last_attendance_id.check_out', 'last_attendance_id')
     def _compute_attendance_state(self):
         for employee in self:
-            employee.attendance_state = employee.last_attendance_id and not employee.last_attendance_id.check_out and 'checked_in' or 'checked_out'
+            att = employee.last_attendance_id.sudo()
+            employee.attendance_state = att and not att.check_out and 'checked_in' or 'checked_out'
 
     @api.constrains('pin')
     def _verify_pin(self):

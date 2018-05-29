@@ -2,21 +2,6 @@
 <odoo>
     <data noupdate="1">
 
-        <!--default alias for leads-->
-        <record id="mail_alias_expense" model="mail.alias">
-            <field name="alias_name">expense</field>
-            <field name="alias_model_id" ref="model_hr_expense"/>
-            <field name="alias_user_id" ref="base.user_root"/>
-            <field name="alias_contact">employees</field>
-        </record>
-
-
-        <!-- Resource: product.categ -->
-        <record id="cat_expense" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Expenses</field>
-        </record>
-
         <record id="product_product_fixed_cost" model="product.product">
             <field name="name">Expenses</field>
             <field name="list_price">0.0</field>

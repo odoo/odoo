@@ -4,6 +4,7 @@
 
 import json
 import logging
+import re
 from hashlib import sha256
 
 from werkzeug import urls
@@ -120,6 +121,16 @@ class TxSips(models.Model):
     _sips_error_tx_status = ['03', '12', '24', '25', '30', '40', '51', '63', '94']
     _sips_pending_tx_status = ['60']
     _sips_cancel_tx_status = ['17']
+
+    @api.model
+    def _compute_reference(self, values=None, prefix=None):
+        acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+        if acquirer and acquirer.provider == 'sips':
+            if not prefix and values:
+                prefix = self._compute_reference_prefix(values)
+                prefix = re.sub(r'[^0-9a-zA-Z-]+', 'x', prefix)
+
+        return super(TxSips, self)._compute_reference(values=values, prefix=prefix)
 
     # --------------------------------------------------
     # FORM RELATED METHODS

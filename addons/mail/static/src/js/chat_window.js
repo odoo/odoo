@@ -16,7 +16,8 @@ var HEIGHT_FOLDED = '34px';
 return Widget.extend({
     template: "mail.ChatWindow",
     custom_events: {
-        escape_pressed: '_onEscapePressed'
+        escape_pressed: '_onEscapePressed',
+        document_viewer_closed: '_onDocumentViewerClose',
     },
     events: {
         'click .o_chat_composer': '_onComposerClick',
@@ -180,6 +181,9 @@ return Widget.extend({
         if ($(ev.target).closest('a, button').length) {
             return;
         }
+        this.focus_input();
+    },
+    _onDocumentViewerClose: function (ev) {
         this.focus_input();
     },
     /**

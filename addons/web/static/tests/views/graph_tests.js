@@ -602,6 +602,22 @@ QUnit.module('Views', {
             done();
         });
     });
+
+    QUnit.test('graph view crash when moving from search view using Down key', function (assert) {
+        assert.expect(1);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Partners" type="pie">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+        graph.renderer.giveFocus();
+        assert.ok(true,"should not generate any error");
+        graph.destroy();
+    });
 });
 
 });

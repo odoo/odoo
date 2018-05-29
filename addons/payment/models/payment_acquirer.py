@@ -73,7 +73,8 @@ class PaymentAcquirer(models.Model):
         'res.company', 'Company',
         default=lambda self: self.env.user.company_id.id, required=True)
     view_template_id = fields.Many2one(
-        'ir.ui.view', 'Form Button Template', default=_get_default_view_template_id, required=True)
+        'ir.ui.view', 'Form Button Template', required=True,
+        default=_get_default_view_template_id)
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
@@ -244,7 +245,7 @@ class PaymentAcquirer(models.Model):
         }
 
     @api.model
-    def _create_missing_journal_for_acquirers(self):
+    def _create_missing_journal_for_acquirers(self, company=None):
         '''Create the journal for active acquirers.
         We want one journal per acquirer. However, we can't create them during the 'create' of the payment.acquirer
         because every acquirers are defined on the 'payment' module but is active only when installing their own module
@@ -259,7 +260,7 @@ class PaymentAcquirer(models.Model):
         acquirer_names = [a.name.split('_')[1] for a in acquirer_modules]
 
         # Search for acquirers having no journal
-        company = self.env.user.company_id
+        company = company or self.env.user.company_id
         acquirers = self.env['payment.acquirer'].search(
             [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
 

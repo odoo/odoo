@@ -26,7 +26,6 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
     var KeyboardNavigationMixin = {
         events: {
             'keydown': '_onKeyDown',
-            'keypress': '_onKeyPress',
             'keyup': '_onKeyUp',
         },
 
@@ -127,6 +126,11 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                         }
                     }
                 });
+
+                var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
+                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
+                    elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
+                });
                 this._addAccessKeyOverlays();
             }
             if (keyDownEvent.altKey && !keyDownEvent.ctrlKey && keyDownEvent.key.length === 1) { // we don't want to catch the Alt key down, only the characters A to Z and number keys
@@ -138,6 +142,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                     if (elementWithAccessKey.length) {
                         if (this.BrowserDetection.isOsMac() ||
                             !this.BrowserDetection.isBrowserChrome()) { // on windows and linux, chrome does not prevent the default of the accesskeys
+                            elementWithAccessKey[0].focus();
                             elementWithAccessKey[0].click();
                             if (keyDownEvent.preventDefault) keyDownEvent.preventDefault(); else keyDownEvent.returnValue = false;
                             if (keyDownEvent.stopPropagation) keyDownEvent.stopPropagation();
@@ -175,21 +180,6 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                         }
                     }
                 }
-            }
-        },
-        /**
-         * hides the shortcut overlays when key press event is triggered on the ALT key
-         *
-         * @private
-         * @param keyPressEvent {jQueryKeyboardEvent} the keyboard event triggered
-         * @return {undefined|false}
-         */
-        _onKeyPress: function (keyPressEvent) {
-            if ((keyPressEvent.altKey || keyPressEvent.key === 'Alt') && !keyPressEvent.ctrlKey) {
-                if (keyPressEvent.preventDefault) keyPressEvent.preventDefault(); else keyPressEvent.returnValue = false;
-                if (keyPressEvent.stopPropagation) keyPressEvent.stopPropagation();
-                if (keyPressEvent.cancelBubble) keyPressEvent.cancelBubble = true;
-                return false;
             }
         },
         /**

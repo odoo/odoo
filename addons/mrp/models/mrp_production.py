@@ -480,10 +480,16 @@ class MrpProduction(models.Model):
     @api.multi
     def _generate_workorders(self, exploded_boms):
         workorders = self.env['mrp.workorder']
+        original_one = False
         for bom, bom_data in exploded_boms:
             # If the routing of the parent BoM and phantom BoM are the same, don't recreate work orders, but use one master routing
             if bom.routing_id.id and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.routing_id.id != bom.routing_id.id):
-                workorders += self._workorders_create(bom, bom_data)
+                temp_workorders = self._workorders_create(bom, bom_data)
+                workorders += temp_workorders
+                if temp_workorders: # In order to avoid two "ending work orders"
+                    if original_one:
+                        temp_workorders[-1].next_work_order_id = original_one
+                    original_one = temp_workorders[0]
         return workorders
 
     def _workorders_create(self, bom, bom_data):
@@ -580,7 +586,7 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish._action_done()
-            #order.action_assign()
+            order.action_assign()
             consume_move_lines = moves_to_do.mapped('active_move_line_ids')
             for moveline in moves_to_finish.mapped('active_move_line_ids'):
                 if moveline.product_id == order.product_id and moveline.move_id.has_tracking != 'none':

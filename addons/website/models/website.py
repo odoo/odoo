@@ -889,9 +889,10 @@ class Menu(models.Model):
                 if menu_id.page_id:
                     menu_id.page_id = None
             else:
-                page = self.env['website.page'].search([('url', '=', menu['url'])], limit=1)
+                page = self.env['website.page'].search(['|', ('url', '=', menu['url']), ('url', '=', '/' + menu['url'])], limit=1)
                 if page:
                     menu['page_id'] = page.id
+                    menu['url'] = page.url
                 elif menu_id.page_id:
                     menu_id.page_id.write({'url': menu['url']})
             menu_id.write(menu)

@@ -2414,7 +2414,7 @@ QUnit.module('Views', {
 
         // Press 'Tab' -> should go to next line
         // add a value in the cell because the Tab on an empty first cell would activate the next widget in the view
-        list.$('.o_selected_row input').val(11).trigger('input'); 
+        list.$('.o_selected_row input').val(11).trigger('input');
         list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
         assert.ok(list.$('.o_data_row:nth(3)').hasClass('o_selected_row'),
             "fourth row should be in edition");
@@ -3429,6 +3429,47 @@ QUnit.module('Views', {
         list.destroy();
 
         testUtils.unpatch(mixins.ParentedMixin);
+    });
+
+    QUnit.test('concurrent reloads finishing in inverse order', function (assert) {
+        assert.expect(3);
+
+        var blockSearchRead = false;
+        var def = $.Deferred();
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC: function (route) {
+                var result = this._super.apply(this, arguments);
+                if (route === '/web/dataset/search_read' && blockSearchRead) {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should contain 4 records");
+
+        // reload with a domain (this request is blocked)
+        blockSearchRead = true;
+        list.reload({domain: [['foo', '=', 'yop']]});
+
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should still contain 4 records (search_read being blocked)");
+
+        // reload without the domain
+        blockSearchRead = false;
+        list.reload({domain: []});
+
+        // unblock the RPC
+        def.resolve();
+        assert.strictEqual(list.$('.o_list_view .o_data_row').length, 4,
+            "list view should still contain 4 records");
+
+        list.destroy();
     });
 
     QUnit.test('list view on a "noCache" model', function (assert) {

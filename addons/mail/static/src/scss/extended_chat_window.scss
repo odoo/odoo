@@ -42,14 +42,10 @@
             }
             .o_chatter_composer_tools {
                 @include o-position-absolute($right: 0px, $top: 0px);
-
-                @media (max-width: $screen-xs-max) {
-                    @include o-position-absolute($right: 6px, $top: 0px);
-                }
                 button {
-                    padding: 8px;
+                    padding: 10px;
                     @media (max-width: $screen-xs-max) {
-                        padding: 7px 6px 0px 6px;
+                        padding: 13px;
                     }
                     &.btn-icon {
                         font-size: 1.3em;

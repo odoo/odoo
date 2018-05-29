@@ -21,24 +21,28 @@ class MrpStockReport(models.TransientModel):
 
     @api.model
     def _get_move_lines(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
+        lines_seen = move_lines
+        lines_todo = list(move_lines)
+        while lines_todo:
+            move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_orig_ids:
-                res |= move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
+                lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
+                    lambda m: m.lot_id == move_line.lot_id
+                ) - lines_seen
             # if MTS
+            elif move_line:
+                lines = self.env['stock.move.line'].search([
+                    ('product_id', '=', move_line.product_id.id),
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('id', 'not in', lines_seen.ids),
+                    ('date', '<', move_line.date),
+                ])
             else:
-                if move_line:
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '<', move_line.date),
-                    ])
-        if res:
-            res |= self._get_move_lines(res)
-        return res
+                continue
+            lines_todo += list(lines)
+            lines_seen |= lines
+        return lines_seen - move_lines
 
     @api.model
     def get_lines(self, line_id=None, **kw):

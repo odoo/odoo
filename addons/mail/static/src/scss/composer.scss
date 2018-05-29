@@ -24,7 +24,7 @@
         position: relative;
         background: white;
 
-        input {
+        textarea, input {
             border: none;
         }
     }
@@ -41,19 +41,9 @@
     }
 
     .o_composer {
-        .o_composer_input[contenteditable=true]:empty:before {
-            content: attr(placeholder);
-            opacity: 0.4;
-        }
-        .o_composer_input {
-            border: none;
-            box-shadow: none;
-            cursor: text;
-            display: inline-block;
-            height: 100%;
-            padding: 0px 0px $o-mail-chatter-gap;
-            white-space: pre-wrap;
-            word-break: break-all;
+        .o_composer_input > textarea {
+            width: 100%;
+            resize: none;
         }
         .o_composer_mention_dropdown .o_mention_proposition > a {
             @include o-text-overflow;
@@ -82,18 +72,19 @@
                 color: $o-brand-optional;
             }
         }
-    }
 
-   .o_mail_emoji_container {
-        padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
-        border: 1px solid $gray-lighter-dark;
-        background-color: $gray-lighter;
+        .o_mail_emoji_container {
+            padding: 0 $o-mail-chatter-gap $o-mail-chatter-gap 0;
+            border: 1px solid $gray-lighter-dark;
+            border-width: 1px 0 0 0;
+            background-color: $gray-lighter;
 
-        .o_mail_emoji {
-            margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
-            cursor: pointer; // only in the popover
-            min-width: 20px;
-            min-height: 20px;
+            .o_mail_emoji {
+                margin: $o-mail-chatter-gap 0 0 $o-mail-chatter-gap;
+                cursor: pointer; // only in the popover
+                min-width: 20px;
+                min-height: 20px;
+            }
         }
     }
 
@@ -119,13 +110,19 @@
 
         .o_composer {
             border-radius: 2px;
+            textarea {
+                padding-right: $grid-gutter-width; // avoid overlaps betwenn textarea and o_composer_button_full_composer
+            }
 
+            .o_mail_emoji_container {
+                margin: 0 -$o-mail-chatter-gap;
+            }
         }
 
         .o_composer, .o_composer_subject {
             border: 1px solid $gray-lighter-dark;
 
-            input {
+            textarea, input {
                 padding: 0 0 $o-mail-chatter-gap;
                 border: none;
             }
@@ -137,9 +134,6 @@
 
         .o_chatter_composer_tools {
             border-top: 1px solid $gray-lighter-dark;
-            @media (max-width: $screen-xs-max) {
-                margin-top: 10px;
-            }
         }
 
         &:not(.o_chat_inline_composer) {
@@ -158,24 +152,26 @@
 
         &.o_chat_inline_composer {
             .o_composer_container {
-                @include o-flex(1, 1, auto);
+                @include o-flex(1, 0, auto);
             }
             .o_composer {
-                display: flex;
-                min-height: 40px;
                 padding: $o-mail-chatter-gap $o-mail-chatter-gap 0 $o-mail-chatter-gap;
                 border-radius: 2px 0 0 2px;
                 border-right-width: 0;
-            }
-            .o_mail_emoji_container {
-                text-align: right;
-                border-width: 1px;
+
+                .o_mail_emoji_container {
+                    text-align: right;
+                    border-right-width: 1px;
+                }
             }
             .o_composer_input {
+                @include o-flex-display();
                 @include o-flex-flow(row, wrap);
             }
             .o_composer_text_field {
                 @include o-flex(1, 1, 50%);
+                margin: 0;
+                padding: 0;
             }
             .o_chatter_composer_tools {
                 @include o-flex(0, 1, auto);
@@ -207,24 +203,31 @@
             border-top: 1px solid $gray-lighter-dark;
             width: 100%;
         }
-        .o_mail_emoji_container {
-            @include o-position-absolute(auto, 0, 100%, 0);
-            border-bottom-width: 1px;
+        .o_composer {
+            .o_mail_emoji_container {
+                @include o-position-absolute(auto, 0, 100%, 0);
+                border-bottom-width: 1px;
+            }
         }
         .o_composer_input {
+            @include o-flex-display();
             @include o-flex-flow(row, nowrap);
+
+            textarea.o_composer_text_field {
+                @include o-flex(1, 1, auto);
+            }
 
             .o_chatter_composer_tools {
                 @include o-flex(0, 0, auto);
             }
+            @media (max-width: $screen-xs-max) {
+                .o_composer_button_send {
+                    display: inline-block;
+                }
+            }
         }
         .o_composer_button_send, .o_chatter_avatar {
             display: none;
-        }
-        @media (max-width: $screen-xs-max) {
-            .o_composer_button_send {
-                display: inline-block;
-            }
         }
     }
 }

@@ -353,7 +353,7 @@ class PaymentTxOgone(models.Model):
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
             'OPERATION': 'SAL',
-            'ECI': 2,   # Recurring (from MOTO)
+            'ECI': 9,   # Recurring (from eCommerce)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
             'PARAMPLUS' : url_encode(param_plus)

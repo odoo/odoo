@@ -12,7 +12,6 @@ var testUtils = require('web.test_utils');
 
 var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
-var patchWindowGetSelection = testUtils.patchWindowGetSelection;
 
 QUnit.module('mail', {}, function () {
 
@@ -156,14 +155,13 @@ QUnit.test('@ mention in channel', function (assert) {
 
         // click on general
         $general.click();
-        var $input = discuss.$('.o_composer_input').first();
+        var $input = discuss.$('textarea.o_composer_text_field').first();
         assert.ok($input.length, "should display a composer input");
 
         // Simulate '@' typed by user with mocked Window.getSelection
         // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
         $input.focus();
-        $input.text("@");
-        var unpatchWindowGetSelection = patchWindowGetSelection();
+        $input.val("@");
         $input.trigger('keyup');
 
         fetchListenersDef
@@ -249,7 +247,7 @@ QUnit.test('@ mention in channel', function (assert) {
                 $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
                 assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
                     "should not have any partner mention proposition after ENTER");
-                assert.strictEqual($input.find('a').text() , "@Admin",
+                assert.strictEqual($input.val().trim() , "@Admin",
                     "should have the correct mention link in the composer input");
 
                 // send message
@@ -266,7 +264,6 @@ QUnit.test('@ mention in channel', function (assert) {
                             "@Admin", "should have correct mention link in the message content");
 
                         // Restore window.getSelection
-                        unpatchWindowGetSelection();
                         discuss.destroy();
                         done();
                 });

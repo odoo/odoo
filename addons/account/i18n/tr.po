@@ -30,6 +30,10 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n"
+" * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı faturayı ödeyinceye kadar açık durumdadır.\n"
+" * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış  yada uzlaştırılmamış olmasıyla ilgilidir.\n"
+" * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -9271,6 +9275,8 @@ msgid ""
 "This %s has been created from: <a href=# data-oe-model=account.invoice data-"
 "oe-id=%d>%s</a>"
 msgstr ""
+"Bu %s şu adresten oluşturuldu: <a href=# data-oe-model=account.invoice data-"
+"oe-id=%d>%s</a>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search

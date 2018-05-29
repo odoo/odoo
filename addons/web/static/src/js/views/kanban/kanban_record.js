@@ -23,7 +23,6 @@ var KanbanRecord = Widget.extend({
     events: {
         'click .oe_kanban_action': '_onKanbanActionClicked',
         'click .o_kanban_manage_toggle_button': '_onManageTogglerClicked',
-        'keydown' : '_onKanbanKeyDown',
     },
     /**
      * @override
@@ -289,6 +288,9 @@ var KanbanRecord = Widget.extend({
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
             this.$el.on('click', this._onGlobalClick.bind(this));
+            this.$el.on('keydown', this._onKeyDownCard.bind(this));
+        } else {
+            this.$el.on('keydown', this._onKeyDownOpenFirstLink.bind(this));
         }
         this._processFields();
         this._processWidgets();
@@ -505,11 +507,33 @@ var KanbanRecord = Widget.extend({
                 this.do_warn("Kanban: no action for type : " + type);
         }
     },
-    _onKanbanKeyDown: function (event) {
+    /**
+     * This event is linked to the kanban card when there is a global_click
+     * class on this card
+     *
+     * @private
+     * @param {KeyDownEvent} event
+     */
+    _onKeyDownCard: function (event) {
         switch (event.keyCode) {
             case $.ui.keyCode.ENTER:
                 event.preventDefault();
-                this._openRecord();
+                this._onGlobalClick(event);
+                break;
+        }
+    },
+    /**
+     * This event is linked ot the kanban card when there is no global_click
+     * class on the card
+     *
+     * @private
+     * @param {KeyDownEvent} event
+     */
+    _onKeyDownOpenFirstLink: function (event) {
+        switch (event.keyCode) {
+            case $.ui.keyCode.ENTER:
+                event.preventDefault();
+                $(event.target).find('a, button').first().click();
                 break;
         }
     },

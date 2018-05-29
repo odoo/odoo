@@ -426,11 +426,14 @@ form: module.record_id""" % (xml_id,)
 
         if rec.get('target'):
             res['target'] = rec.get('target','')
+        if rec.get('multi'):
+            res['multi'] = safe_eval(rec.get('multi', 'False'))
         if src_model:
             res['binding_model_id'] = self.env['ir.model']._get(src_model).id
             res['binding_type'] = 'report' if rec.get('key2') == 'client_print_multi' else 'action'
-        if rec.get('multi'):
-            res['multi'] = safe_eval(rec.get('multi', 'False'))
+            if rec.get('key2') in (None, 'client_action_relate'):
+                if not res.get('multi'):
+                    res['binding_type'] = 'action_form_only'
         id = self.env['ir.model.data']._update('ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 

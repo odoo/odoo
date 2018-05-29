@@ -1059,6 +1059,39 @@ class TestSinglePicking(TestStockCommon):
         for move in delivery.move_lines:
             self.assertEqual(move.quantity_done, move.product_uom_qty, 'Initial demand should be equals to quantity done')
 
+    def test_extra_move_5(self):
+        """ Create a picking a move that is problematic with
+        rounding (5.95 - 5.5 = 0.4500000000000002). Ensure that
+        initial demand is corrct afer action_done and backoder
+        are not created.
+        """
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        product = self.kgB
+        self.MoveObj.create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 5.5,
+            'quantity_done': 5.95,
+            'product_uom': product.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5.5)
+        delivery.action_confirm()
+        delivery.action_assign()
+        delivery.action_done()
+        self.assertEqual(delivery.move_lines.product_uom_qty, 5.95, 'Move initial demand should be 5.95')
+
+        back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
+        self.assertFalse(back_order, 'There should be no back order')
+
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with
         only one in stock. After the first check availability, I should have 1 reserved

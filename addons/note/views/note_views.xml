@@ -157,7 +157,9 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
-                <field name="memo" type="html" class="oe_memo"/>
+                <sheet>
+                  <field name="memo" type="html" class="oe_memo"/>
+                </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>

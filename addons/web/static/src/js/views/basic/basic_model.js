@@ -1068,7 +1068,13 @@ var BasicModel = AbstractModel.extend({
     addFieldsInfo: function (recordID, viewInfo) {
         var record = this.localData[recordID];
         record.fields = _.extend({}, record.fields, viewInfo.fields);
-        record.fieldsInfo = _.extend({}, record.fieldsInfo, viewInfo.fieldsInfo);
+        // complete the given fieldsInfo with the fields of the main view, so
+        // that those field will be reloaded if a reload is triggered by the
+        // secondary view
+        var fieldsInfo = _.mapObject(viewInfo.fieldsInfo, function (fieldsInfo) {
+            return _.defaults({}, fieldsInfo, record.fieldsInfo[record.viewType]);
+        });
+        record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
     },
     /**
      * For list resources, this freezes the current records order.
@@ -1553,8 +1559,10 @@ var BasicModel = AbstractModel.extend({
                             rec = self._makeDataPoint(params);
                             list._cache[rec.res_id] = rec.id;
                         }
-
-                        rec._noAbandon = true;
+                        // Do not abandon the record if it has been created
+                        // from `default_get`. The list has a savepoint only
+                        // after having fully executed `default_get`.
+                        rec._noAbandon = !list._savePoint;
                         list._changes.push({operation: 'ADD', id: rec.id});
                         if (command[0] === 1) {
                             list._changes.push({operation: 'UPDATE', id: rec.id});
@@ -1973,6 +1981,9 @@ var BasicModel = AbstractModel.extend({
         var records = [];
         var ids = [];
         list = this._applyX2ManyOperations(list);
+        if (_.isEmpty(list.data)) {
+            return $.when();
+        }
         _.each(list.data, function (localId) {
             var record = self.localData[localId];
             var data = record._changes || record.data;
@@ -1986,13 +1997,16 @@ var BasicModel = AbstractModel.extend({
         return this._rpc({
                 model: model,
                 method: 'name_get',
-                args: [ids],
+                args: [_.uniq(ids)],
                 context: list.context,
             })
             .then(function (name_gets) {
-                for (var i = 0; i < name_gets.length; i++) {
-                    records[i].data.display_name = name_gets[i][1];
-                }
+                _.each(records, function (record) {
+                    var nameGet = _.find(name_gets, function (nameGet) {
+                        return nameGet[0] === record.data.id;
+                    });
+                    record.data.display_name = nameGet[1];
+                });
             });
     },
     /**
@@ -2010,7 +2024,8 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRecord: function (record, options) {
         var self = this;
-        var fieldNames = options && options.fieldNames || record.getFieldNames();
+        options = options || {};
+        var fieldNames = options.fieldNames || record.getFieldNames(options);
         fieldNames = _.uniq(fieldNames.concat(['display_name']));
         return this._rpc({
                 model: record.model,
@@ -2477,7 +2492,16 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var def;
         if (list.static) {
-            def = this._readUngroupedList(list);
+            def = this._readUngroupedList(list).then(function () {
+                if (list.parentID && self.isNew(list.parentID)) {
+                    // list from a default_get, so fetch display_name for many2one fields
+                    var many2ones = self._getMany2OneFieldNames(list);
+                    var defs = _.map(many2ones, function (name) {
+                        return self._fetchNameGets(list, name);
+                    });
+                    return $.when.apply($, defs);
+                }
+            });
         } else {
             def = this._searchReadUngroupedList(list);
         }
@@ -2510,8 +2534,9 @@ var BasicModel = AbstractModel.extend({
     _fetchX2Manys: function (record, options) {
         var self = this;
         var defs = [];
-        var fieldNames = options && options.fieldNames || record.getFieldNames();
-        var viewType = options && options.viewType || record.viewType;
+        options = options || {};
+        var fieldNames = options.fieldNames || record.getFieldNames(options);
+        var viewType = options.viewType || record.viewType;
         _.each(fieldNames, function (fieldName) {
             var field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
@@ -3034,11 +3059,32 @@ var BasicModel = AbstractModel.extend({
      * default view type.
      *
      * @param {Object} element an element from the localData
+     * @param {Object} [options]
+     * @param {Object} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {string[]} the list of field names
      */
-    _getFieldNames: function (element) {
+    _getFieldNames: function (element, options) {
         var fieldsInfo = element.fieldsInfo;
-        return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
+        var viewType = options && options.viewType || element.viewType;
+        return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
+    },
+    /**
+     * Get many2one fields names in a datapoint. This is useful in order to
+     * fetch their names in the case of a default_get.
+     *
+     * @private
+     * @param {Object} datapoint a valid resource object
+     * @returns {string[]} list of field names that are many2one
+     */
+    _getMany2OneFieldNames: function (datapoint) {
+        var many2ones = [];
+        _.each(datapoint.fields, function (field, name) {
+            if (field.type === 'many2one') {
+                many2ones.push(name);
+            }
+        });
+        return many2ones;
     },
     /**
      * Evaluate the record evaluation context.  This method is supposed to be
@@ -3533,13 +3579,16 @@ var BasicModel = AbstractModel.extend({
      * @see _fetchRecord @see _makeDefaultRecord
      *
      * @param {Object} record
-     * @param {Object} record
+     * @param {Object} [options]
+     * @param {Object} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Deferred<Object>} resolves to the finished resource
      */
     _postprocess: function (record, options) {
         var self = this;
         var defs = [];
-        _.each(record.getFieldNames(), function (name) {
+
+        _.each(record.getFieldNames(options), function (name) {
             var field = record.fields[name];
             var fieldInfo = record.fieldsInfo[record.viewType][name] || {};
             var options = fieldInfo.options || {};
@@ -3879,14 +3928,20 @@ var BasicModel = AbstractModel.extend({
                     var emptyGroupsIDs = _.difference(_.pluck(previousGroups, 'id'), list.data);
                     _.each(emptyGroupsIDs, function (groupID) {
                         list.data.push(groupID);
+                        var emptyGroup = self.localData[groupID];
+                        // this attribute hasn't been updated in the previous
+                        // loop for empty groups
+                        emptyGroup.aggregateValues = {};
                     });
                 }
                 return $.when.apply($, defs).then(function () {
-                    // generate the res_ids of the main list, being the concatenation
-                    // of the fetched res_ids in each group
-                    list.res_ids = _.flatten(_.map(arguments, function (group) {
-                        return group ? group.res_ids : [];
-                    }));
+                    if (!options || !options.onlyGroups) {
+                        // generate the res_ids of the main list, being the concatenation
+                        // of the fetched res_ids in each group
+                        list.res_ids = _.flatten(_.map(arguments, function (group) {
+                            return group ? group.res_ids : [];
+                        }));
+                    }
                     return list;
                 });
             });
@@ -4116,10 +4171,20 @@ var BasicModel = AbstractModel.extend({
                 var r2 = self.localData[record2ID];
                 var data1 = _.extend({}, r1.data, r1._changes);
                 var data2 = _.extend({}, r2.data, r2._changes);
-                if (data1[order.name] < data2[order.name]) {
+
+                // Default value to sort against: the value of the field
+                var orderData1 = data1[order.name];
+                var orderData2 = data2[order.name];
+
+                // If the field is a relation, sort on the display_name of those records
+                if (list.fields[order.name].type === 'many2one') {
+                    orderData1 = orderData1 ? self.localData[orderData1].data.display_name : "";
+                    orderData2 = orderData2 ? self.localData[orderData2].data.display_name : "";
+                }
+                if (orderData1 < orderData2) {
                     return order.asc ? -1 : 1;
                 }
-                if (data1[order.name] > data2[order.name]) {
+                if (orderData1 > orderData2) {
                     return order.asc ? 1 : -1;
                 }
                 return compareRecords(record1ID, record2ID, level + 1);

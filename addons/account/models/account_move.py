@@ -55,7 +55,8 @@ class AccountMove(models.Model):
                     total_amount += amount
                     for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
                         total_reconciled += partial_line.amount
-            if float_is_zero(total_amount, precision_rounding=move.currency_id.rounding):
+            precision_currency = move.currency_id or move.company_id.currency_id
+            if float_is_zero(total_amount, precision_rounding=precision_currency.rounding):
                 move.matched_percentage = 1.0
             else:
                 move.matched_percentage = total_reconciled / total_amount
@@ -102,8 +103,7 @@ class AccountMove(models.Model):
     partner_id = fields.Many2one('res.partner', compute='_compute_partner_id', string="Partner", store=True, readonly=True)
     amount = fields.Monetary(compute='_amount_compute', store=True)
     narration = fields.Text(string='Internal Note')
-    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True,
-        default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
     matched_percentage = fields.Float('Percentage Matched', compute='_compute_matched_percentage', digits=0, store=True, readonly=True, help="Technical field used in cash basis method")
     # Dummy Account field to search on account.move by account_id
     dummy_account_id = fields.Many2one('account.account', related='line_ids.account_id', string='Account', store=False, readonly=True)
@@ -746,8 +746,6 @@ class AccountMoveLine(models.Model):
             raise UserError(_('Entries are not from the same account.'))
         if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
             raise UserError(_('Account %s (%s) does not allow reconciliation. First change the configuration of this account to allow it.') % (all_accounts[0].name, all_accounts[0].code))
-        if len(partners) > 1:
-            raise UserError(_('The partner has to be the same on all lines for receivable and payable accounts.'))
 
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
@@ -873,8 +871,9 @@ class AccountMoveLine(models.Model):
             rec_move_ids += account_move_line.matched_credit_ids
         if self.env.context.get('invoice_id'):
             current_invoice = self.env['account.invoice'].browse(self.env.context['invoice_id'])
+            aml_to_keep = current_invoice.move_id.line_ids | current_invoice.move_id.line_ids.mapped('full_reconcile_id.exchange_move_id.line_ids')
             rec_move_ids = rec_move_ids.filtered(
-                lambda r: (r.debit_move_id + r.credit_move_id) & current_invoice.move_id.line_ids
+                lambda r: (r.debit_move_id + r.credit_move_id) & aml_to_keep
             )
         return rec_move_ids.unlink()
 
@@ -1099,7 +1098,7 @@ class AccountMoveLine(models.Model):
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
             'partner_id': self.partner_id.id,
-            'company_id': self.env.user.company_id.id,
+            'company_id': self.analytic_account_id.company_id.id or self.env.user.company_id.id,
         }
 
     def _prepare_analytic_distribution_line(self, distribution):
@@ -1122,7 +1121,7 @@ class AccountMoveLine(models.Model):
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
-            'company_id': self.env.user.company_id.id
+            'company_id': distribution.account_id.company_id.id or self.env.user.company_id.id,
         }
 
     @api.model

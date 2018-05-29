@@ -109,7 +109,7 @@ class WebsitePayment(http.Controller):
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
 
-        tx = request.env['payment.transaction'].sudo().create(values)
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         render_values = {
             'return_url': '/website_payment/confirm?tx_id=%d' % tx.id,
@@ -142,7 +142,7 @@ class WebsitePayment(http.Controller):
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
 
-        tx = request.env['payment.transaction'].sudo().create(values)
+        tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
 
         try:
             res = tx.s2s_do_transaction()

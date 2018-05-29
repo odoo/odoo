@@ -663,6 +663,54 @@ class TestReconciliation(AccountingTestCase):
         self.assertAlmostEquals(inv1.residual, 10)
         self.assertAlmostEquals(inv2.residual, 20)
 
+    def test_unreconcile_exchange(self):
+        # Use case:
+        # - Company currency in EUR
+        # - Create 2 rates for USD:
+        #   1.0 on 2018-01-01
+        #   0.5 on 2018-02-01
+        # - Create an invoice on 2018-01-02 of 111 USD
+        # - Register a payment on 2018-02-02 of 111 USD
+        # - Unreconcile the payment
+
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-07-01',
+            'rate': 1.0,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        self.env['res.currency.rate'].create({
+            'name': time.strftime('%Y') + '-08-01',
+            'rate': 0.5,
+            'currency_id': self.currency_usd_id,
+            'company_id': self.env.ref('base.main_company').id
+        })
+        inv = self.create_invoice(invoice_amount=111, currency_id=self.currency_usd_id)
+        payment = self.env['account.payment'].create({
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'amount': 111,
+            'currency_id': self.currency_usd_id,
+            'journal_id': self.bank_journal_usd.id,
+            'payment_date': time.strftime('%Y') + '-08-01',
+        })
+        payment.post()
+        credit_aml = payment.move_line_ids.filtered('credit')
+
+        # Check residual before assignation
+        self.assertAlmostEquals(inv.residual, 111)
+
+        # Assign credit, check exchange move and residual
+        inv.assign_outstanding_credit(credit_aml.id)
+        self.assertEqual(len(payment.move_line_ids.mapped('full_reconcile_id').exchange_move_id), 1)
+        self.assertAlmostEquals(inv.residual, 0)
+
+        # Unreconcile invoice and check residual
+        credit_aml.with_context(invoice_id=inv.id).remove_move_reconcile()
+        self.assertAlmostEquals(inv.residual, 111)
+
     def test_partial_reconcile_currencies_02(self):
         ####
         # Day 1: Invoice Cust/001 to customer (expressed in USD)

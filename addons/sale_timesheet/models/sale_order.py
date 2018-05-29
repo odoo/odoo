@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         # redirect to form or kanban view
         billable_projects = self.project_ids.filtered(lambda project: project.sale_line_id)
-        if len(billable_projects) == 1:
+        if len(billable_projects) == 1 and self.env.user.has_group('project.group_project_manager'):
             action = billable_projects[0].action_view_timesheet_plan()
         else:
             view_form_id = self.env.ref('project.edit_project').id
@@ -106,24 +106,14 @@ class SaleOrder(models.Model):
     @api.multi
     def action_view_timesheet(self):
         self.ensure_one()
-        action = self.env.ref('hr_timesheet.act_hr_timesheet_line')
-        list_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_tree').id
-        form_view_id = self.env.ref('hr_timesheet.hr_timesheet_line_form').id
+        action = self.env.ref('hr_timesheet.timesheet_action_all').read()[0]
+        action['context'] = self.env.context  # erase default filters
 
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'views': [[list_view_id, 'tree'], [form_view_id, 'form']],
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
         if self.timesheet_count > 0:
-            result['domain'] = "[('id','in',%s)]" % self.timesheet_ids.ids
+            action['domain'] = [('so_line', 'in', self.order_line.ids)]
         else:
-            result = {'type': 'ir.actions.act_window_close'}
-        return result
+            action = {'type': 'ir.actions.act_window_close'}
+        return action
 
 
 class SaleOrderLine(models.Model):
@@ -151,7 +141,7 @@ class SaleOrderLine(models.Model):
 
         lines_by_timesheet = self.filtered(lambda sol: sol.qty_delivered_method == 'timesheet')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
-        mapping = lines_by_timesheet._get_delivered_quantity_by_analytic(domain)
+        mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
         for line in lines_by_timesheet:
             line.qty_delivered = mapping.get(line.id, 0.0)
 

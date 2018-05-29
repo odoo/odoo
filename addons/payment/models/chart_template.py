@@ -11,4 +11,4 @@ class WizardMultiChartsAccounts(models.TransientModel):
         res = super(WizardMultiChartsAccounts, self)._create_bank_journals_from_o2m(company, acc_template_ref)
 
         # Try to generate the missing journals
-        return res + self.env['payment.acquirer']._create_missing_journal_for_acquirers()
+        return res + self.env['payment.acquirer']._create_missing_journal_for_acquirers(company=company)

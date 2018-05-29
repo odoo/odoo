@@ -403,7 +403,7 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         media: media,
         options: {
             lastFilters: ['background'],
-            onUpload: $editable.data('callbacks').onImageUpload,
+            onUpload: $editable.data('callbacks').onUpload,
         },
     });
     return new $.Deferred().reject();
@@ -689,7 +689,7 @@ function summernote_mousedown(event) {
         return;
     }
     var editables = $(".o_editable[contenteditable], .note-editable[contenteditable]");
-    var r_editable = editables.has((r||{}).sc);
+    var r_editable = editables.has((r||{}).sc).addBack(editables.filter((r||{}).sc));
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
         var saved_editable = editables.has((remember_selection||{}).sc);
         if ($editable.length && !saved_editable.closest('.o_editable, .note-editor').is($editable)) {
