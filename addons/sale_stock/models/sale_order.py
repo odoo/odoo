@@ -210,6 +210,8 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+        if date_planned < datetime.now():
+            date_planned = datetime.now()
         values.update({
             'company_id': self.order_id.company_id,
             'group_id': group_id,
