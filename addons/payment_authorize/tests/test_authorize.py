@@ -22,6 +22,8 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         self.currency_usd = self.env['res.currency'].search([('name', '=', 'USD')], limit=1)[0]
         # get the authorize account
         self.authorize = self.env.ref('payment.payment_acquirer_authorize')
+        self.authorize.authorize_login = u'dummy'
+        self.authorize.authorize_transaction_key = u'dummy'
         # Be sure to be in 'capture' mode
         # self.authorize.auto_confirm = 'confirm_so'
 

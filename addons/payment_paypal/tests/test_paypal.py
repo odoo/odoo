@@ -124,7 +124,7 @@ class PaypalForm(PaypalCommon):
             'protection_eligibility': u'Ineligible',
             'last_name': u'Poilu',
             'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'dummy',
+            'receiver_email': False,
             'payment_status': u'Pending',
             'payment_gross': u'',
             'tax': u'0.00',
