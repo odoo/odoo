@@ -77,7 +77,7 @@
             <field name="arch" type="xml">
                 <page name="event_mail_schedule" position="before">
                     <page string="Tickets">
-                        <field name="event_ticket_ids" context="{'default_name': name}">
+                        <field name="event_ticket_ids" context="{'default_name': name}" mode="tree,kanban">
                             <tree string="Tickets" editable="bottom">
                                 <field name="name"/>
                                 <field name="product_id" context="{'default_event_ok':1}"/>
@@ -87,6 +87,44 @@
                                 <field name="seats_reserved" readonly="1"/>
                                 <field name="seats_unconfirmed" readonly="1"/>
                             </tree>
+                            <kanban class="o_kanban_mobile">
+                                <field name="product_id"/>
+                                <field name="name"/>
+                                <field name="price"/>
+                                <field name="seats_max"/>
+                                <field name="seats_reserved"/>
+                                <field name="seats_unconfirmed"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    <strong><t t-esc="record.name.value"/></strong>
+                                                </div>
+                                                <div class="col-xs-4 text-right"><strong> <t t-esc="record.price.value"/></strong></div>
+                                            </div>
+                                            <div t-esc="record.product_id.value"/>
+                                            <div><i>
+                                            <t t-esc="record.seats_reserved.value"/> reserved + <t t-esc="record.seats_reserved.value"/> unconfirmed
+                                            </i></div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <form string="Tickets">
+                                <group>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="product_id" context="{'default_event_ok':1}"/>
+                                        <field name="deadline"/>
+                                        <field name="price"/>
+                                    </group><group>
+                                        <field name="seats_max"/>
+                                        <field name="seats_reserved" readonly="1"/>
+                                        <field name="seats_unconfirmed" readonly="1"/>
+                                    </group>
+                                </group>
+                            </form>
                         </field>
                     </page>
                 </page>
