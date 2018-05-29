@@ -89,10 +89,9 @@ class SaleOrder(models.Model):
             taxes_ids = self.fiscal_position_id.map_tax(taxes, carrier.product_id, self.partner_id).ids
 
         # Create the sales order line
-        carrier_name = carrier.product_id.with_context(lang=self.partner_id.lang).name_get()[0][1]
         values = {
             'order_id': self.id,
-            'name': carrier_name,
+            'name': carrier.with_context(lang=self.partner_id.lang).name,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,
