@@ -64,6 +64,17 @@ class TestQWebTField(TransactionCase):
         with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
             self.engine.render(field, {'company': None})
 
+    def test_render_t_options(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
+            """
+        })
+        text = etree.fromstring(view1.render()).find('span').text
+        self.assertEqual(text, u'5.0000')
+
 
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
