@@ -461,10 +461,11 @@ class MailTemplate(models.Model):
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
         for res_id, template in res_ids_to_templates.items():
-            templates_to_res_ids.setdefault(template, []).append(res_id)
+            templates_to_res_ids.setdefault((template, template.env.context.get('lang')), []).append(res_id)
 
         results = dict()
         for template, template_res_ids in templates_to_res_ids.items():
+            template = template[0]
             Template = self.env['mail.template']
             # generate fields value for all res_ids linked to the current template
             if template.lang:
