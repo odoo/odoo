@@ -92,7 +92,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-xs">Change</a></h3>
+                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-secondary btn-sm">Change</a></h3>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">

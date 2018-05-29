@@ -90,12 +90,12 @@
                         <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
                     </li>
                     <li t-if="'website_published' in main_object.fields_get() and main_object._name != 'website.page'">
-                        <a role="button" class="btn btn-primary btn-xs dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
+                        <a role="button" class="btn btn-primary btn-sm dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
                         <div class="dropdown-menu" role="menu">
                             <a role="menuitem" style="text-align: left;" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}"
-                                   class="dropdown-item btn btn-link btn-xs" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
+                                   class="dropdown-item btn btn-link btn-sm" title='Edit in backend' id="edit-in-backend">Edit in backend</a>
                         </div>
                     </li>
                     <li t-if="translatable">
