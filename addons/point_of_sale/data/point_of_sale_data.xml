@@ -29,6 +29,11 @@
             <field name="name">Tips</field>
         </record>
 
+        <record id="product_unknown" model="product.product">
+            <field name="name">Missing Product</field>
+            <field name="active" eval="False"/>
+        </record>
+
         <record model="pos.config" id="pos_config_main">
             <field name="name">Main</field>
             <field name="picking_type_id" ref="picking_type_posout"/>
