@@ -238,7 +238,7 @@ class Currency(models.Model):
                 COALESCE(r.company_id, c.id) as company_id,
                 r.rate,
                 r.name AS date_start,
-                r.date_end,
+                r.date_end
             FROM res_currency_rate r
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
         """
