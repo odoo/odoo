@@ -7,13 +7,14 @@
 # B Dochev, 2017
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +59,22 @@ msgid ""
 "<p>Thank you,</p>\n"
 "      </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Уважаеми ${object.partner_id.name},</p>\n"
+"<p>Радваме се да Ви уведомим, че вашата поръчка беше изпратена.</p>\n"
+"<p>\n"
+"%if object.carrier_tracking_ref:\n"
+"  Вашият номер за следене на поръчката:\n"
+"  %if object.carrier_tracking_url:\n"
+"    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"  %else:\n"
+"    ${object.carrier_tracking_ref}.\n"
+"  %endif\n"
+"%endif\n"
+"</p>\n"
+"<p>Вижте приложената товарителница за подробности.</p>\n"
+"<p>Благодарим Ви,</p>\n"
+"      </data>"
 
 #. module: delivery
 #: model:mail.template,body_html:delivery.mail_template_data_delivery_notification
@@ -460,6 +477,7 @@ msgid "Fixed Price"
 msgstr "Фиксирана цена"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -583,7 +601,7 @@ msgstr "Дължината трябва да е положително числ�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "Лог-вай заявките за по-лесна диагностика"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -652,6 +670,7 @@ msgstr ""
 " не могат да бъдат изчислени."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -863,6 +882,7 @@ msgid "Stock Move"
 msgstr "Преместване на стока"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
