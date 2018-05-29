@@ -152,9 +152,10 @@ img, .media_iframe_video, .o_image {
         margin-right: @grid-gutter-width / 2;
     }
 }
-img {
-    // Make all images responsive by default but with inline-block display
-    .img-responsive(inline-block);
+img.o_we_custom_image {
+    // Images added with the editor are .img-responsive by default but should
+    // still behave like inline content.
+    display: inline-block;
 }
 
 // Others
