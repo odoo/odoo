@@ -38,7 +38,7 @@
         font-weight: 500;
         line-height: $o-navbar-height;
 
-        @media (max-width: $screen-xs-max) {
+        @media (max-width: $screen-sm-max) {
             float: none;
             margin: 0;
             border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
@@ -148,7 +148,7 @@
         }
     }
 
-    @media (max-width: $screen-xs-max) {
+    @media (max-width: $screen-sm-max) {
         @include o-transition(height, 200ms, linear);
 
         position: relative;
@@ -208,7 +208,7 @@
     }
 }
 
-@media (max-width: $screen-xs-max) {
+@media (max-width: $screen-sm-max) {
     body.o_mobile_menu_opened {
         overflow: hidden;
         height: 100%;
@@ -221,7 +221,7 @@
     }
 }
 
-@media (max-width: $screen-xs-max) {
+@media (max-width: $screen-sm-max) {
      .o_switch_company_menu > .dropdown-menu {
          padding-top: 0px;
          li.bg-info {
