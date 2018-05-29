@@ -35,14 +35,6 @@ def float_to_time(hours):
     return time(int(integral), int(60 * fractional), 0)
 
 
-def to_user_tz(dt, record):
-    """ Convert the given datetime to the current user's timezone. """
-    if not isinstance(dt, datetime):
-        dt = string_to_datetime(dt)
-    tz = timezone(record._context.get('tz') or record.env.user.tz)
-    return dt.astimezone(tz)
-
-
 def _boundaries(intervals, opening, closing):
     """ Iterate on the boundaries of intervals. """
     for start, stop, recs in intervals:
@@ -148,9 +140,6 @@ class ResourceCalendar(models.Model):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
         return res
 
-    def _get_tz(self):
-        return self._context.get('tz') or self.env.user.tz
-
     def _get_default_attendance_ids(self):
         return [
             (0, 0, {'name': _('Monday Morning'), 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
@@ -180,8 +169,10 @@ class ResourceCalendar(models.Model):
         )
     hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
-    tz = fields.Selection(_tz_get, default=_get_tz, string='Timezone',
-                          help="This field is used in order to define in which timezone the resources will work.")
+    tz = fields.Selection(
+        _tz_get, string='Timezone', required=True,
+        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        help="This field is used in order to define in which timezone the resources will work.")
 
     @api.onchange('attendance_ids')
     def _onchange_hours_per_day(self):
@@ -194,15 +185,15 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
-    def _attendance_intervals(self, start_dt, end_dt):
+    def _attendance_intervals(self, start_dt, end_dt, resource=None):
         """ Return the attendance intervals in the given datetime range.
-            The returned intervals are expressed in the calendar's timezone.
+            The returned intervals are expressed in the resource's timezone.
         """
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
 
-        # express all dates and times in the calendar's timezone
-        tz = timezone(self.tz)
+        # express all dates and times in the resource's timezone
+        tz = timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
 
@@ -218,7 +209,7 @@ class ResourceCalendar(models.Model):
             weekday = int(attendance.dayofweek)
 
             for day in rrule(DAILY, start, until=until, byweekday=weekday):
-                # attendance hours are interpreted in the calendar's timezone
+                # attendance hours are interpreted in the resource's timezone
                 dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
                 dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
                 result.append((max(start_dt, dt0), min(end_dt, dt1), attendance))
@@ -244,7 +235,7 @@ class ResourceCalendar(models.Model):
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
-        tz = timezone(self.tz)
+        tz = timezone((resource or self).tz)
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
         result = []
@@ -257,7 +248,7 @@ class ResourceCalendar(models.Model):
 
     def _work_intervals(self, start_dt, end_dt, resource=None, domain=None):
         """ Return the effective work intervals between the given datetimes. """
-        return (self._attendance_intervals(start_dt, end_dt) -
+        return (self._attendance_intervals(start_dt, end_dt, resource) -
                 self._leave_intervals(start_dt, end_dt, resource, domain))
 
     # --------------------------------------------------
@@ -282,7 +273,7 @@ class ResourceCalendar(models.Model):
             end_dt = end_dt.replace(tzinfo=utc)
 
         if compute_leaves:
-            intervals = self._work_intervals(start_dt, end_dt, None, domain)
+            intervals = self._work_intervals(start_dt, end_dt, domain=domain)
         else:
             intervals = self._attendance_intervals(start_dt, end_dt)
 
@@ -447,6 +438,10 @@ class ResourceResource(models.Model):
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
+    tz = fields.Selection(
+        _tz_get, string='Timezone', required=True,
+        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        help="This field is used in order to define in which timezone the resources will work.")
 
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
@@ -463,6 +458,12 @@ class ResourceResource(models.Model):
     def create(self, values):
         if values.get('company_id') and not values.get('calendar_id'):
             values['calendar_id'] = self.env['res.company'].browse(values['company_id']).resource_calendar_id.id
+        if not values.get('tz'):
+            # retrieve timezone on user or calendar
+            tz = (self.env['res.users'].browse(values.get('user_id')).tz or
+                  self.env['resource.calendar'].browse(values.get('calendar_id')).tz)
+            if tz:
+                values['tz'] = tz
         return super(ResourceResource, self).create(values)
 
     @api.multi
@@ -479,6 +480,11 @@ class ResourceResource(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             self.calendar_id = self.company_id.resource_calendar_id.id
+
+    @api.onchange('user_id')
+    def _onchange_user_id(self):
+        if self.user_id:
+            self.tz = self.user_id.tz
 
 
 class ResourceCalendarLeaves(models.Model):

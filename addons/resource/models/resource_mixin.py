@@ -27,13 +27,20 @@ class ResourceMixin(models.AbstractModel):
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
         index=True, related='resource_id.calendar_id', store=True)
+    tz = fields.Selection(
+        string='Timezone', related='resource_id.tz', readonly=True,
+        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        help="This field is used in order to define in which timezone the resources will work.")
 
     @api.model
     def create(self, values):
         if not values.get('resource_id'):
-            resource = self.env['resource.resource'].create({
-                'name': values.get(self._rec_name)
-            })
+            resource_vals = {'name': values.get(self._rec_name)}
+            tz = (values.pop('tz', False) or
+                  self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
+            if tz:
+                resource_vals['tz'] = tz
+            resource = self.env['resource.resource'].create(resource_vals)
             values['resource_id'] = resource.id
         return super(ResourceMixin, self).create(values)
 
@@ -58,7 +65,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the
             quantity of working time expressed as days and as hours.
         """
-
+        resource = self.resource_id
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
@@ -71,16 +78,16 @@ class ResourceMixin(models.AbstractModel):
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = calendar._attendance_intervals(from_full, to_full)
+        intervals = calendar._attendance_intervals(from_full, to_full, resource)
         day_total = defaultdict(float)
         for start, stop, meta in intervals:
             day_total[start.date()] += (stop - start).total_seconds() / 3600
 
         # actual hours per day
         if compute_leaves:
-            intervals = calendar._work_intervals(from_datetime, to_datetime, self.resource_id, domain)
+            intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
         else:
-            intervals = calendar._attendance_intervals(from_datetime, to_datetime)
+            intervals = calendar._attendance_intervals(from_datetime, to_datetime, resource)
         day_hours = defaultdict(float)
         for start, stop, meta in intervals:
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
@@ -106,7 +113,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a dict {'days': n, 'hours': h} containing the number of leaves
             expressed as days and as hours.
         """
-
+        resource = self.resource_id
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
@@ -119,14 +126,14 @@ class ResourceMixin(models.AbstractModel):
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = calendar._attendance_intervals(from_full, to_full)
+        intervals = calendar._attendance_intervals(from_full, to_full, resource)
         day_total = defaultdict(float)
         for start, stop, meta in intervals:
             day_total[start.date()] += (stop - start).total_seconds() / 3600
 
         # compute actual hours per day
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, self.resource_id, domain)
+        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
+        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
         day_hours = defaultdict(float)
         for start, stop, meta in (attendances & leaves):
             day_hours[start.date()] += (stop - start).total_seconds() / 3600
@@ -152,6 +159,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a list of tuples (day, hours) for each day
             containing at least an attendance.
         """
+        resource = self.resource_id
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
@@ -160,7 +168,7 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals(from_datetime, to_datetime, self.resource_id, domain)
+        intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600
@@ -177,6 +185,7 @@ class ResourceMixin(models.AbstractModel):
             Returns a list of tuples (day, hours, resource.calendar.leaves)
             for each leave in the calendar.
         """
+        resource = self.resource_id
         calendar = calendar or self.resource_calendar_id
 
         # naive datetimes are made explicit in UTC
@@ -185,8 +194,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, self.resource_id, domain)
+        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
+        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
         result = []
         for start, stop, leave in (leaves & attendances):
             hours = (stop - start).total_seconds() / 3600
