@@ -398,13 +398,13 @@
                                 </div>
                                 <div class="row mt4">
                                     <div class="col-6">
-                                        <a class="btn btn-xs btn-success" role="button" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-sm btn-success" role="button" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                         </a>
-                                        <a class="btn btn-xs btn-info" role="button" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-sm btn-info" role="button" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                         </a>
-                                        <a class="btn btn-xs btn-danger" role="button" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-sm btn-danger" role="button" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                         </a>
                                     </div>
