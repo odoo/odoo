@@ -2602,6 +2602,65 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('O2M with parented m2o and domain on parent.m2o', function (assert) {
+        assert.expect(3);
+
+        /* records in an o2m can have a m2o pointing to themselves
+         * in that case, a domain evaluation on that field followed by name_search
+         * shouldn't send virtual_ids to the server
+         */
+
+        this.data.turtle.fields.parent_id = {string: "Parent", type: "many2one", relation: 'turtle'};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="parent_id" />' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            archs: {
+                'turtle,false,form': '<form><field name="parent_id" domain="[(\'id\', \'in\', parent.turtles)]"/></form>',
+            },
+
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/call_kw/turtle/name_search') {
+                    // We are going to pass twice here
+                    // First time, we really have nothing
+                    // Second time, a virtual_id has been created
+                    assert.deepEqual(args.kwargs.args, [['id', 'in', []]]);
+                }
+                return this._super(route, args);
+            }
+        });
+
+        form.$('.o_field_x2many_list[name=turtles] .o_field_x2many_list_row_add a').click();
+        var $modal = $('.modal-content');
+
+        var $turtleParent = $modal.find('.o_field_many2one input');
+        var $dropdown = $turtleParent.autocomplete('widget');
+
+        $turtleParent.click();
+
+        $dropdown.find('li.o_m2o_dropdown_option:contains(Create)').first().mouseenter().click();
+
+        $modal = $('.modal-content');
+
+        $modal.eq(1).find('.modal-footer .btn-primary').eq(0).click(); // Confirm new Record
+        $modal.eq(0).find('.modal-footer .btn-primary').eq(1).click(); // Save & New
+
+        assert.equal(form.$('.o_data_row').length, 1,
+            'The main record should have the new record in its o2m');
+
+        $modal = $('.modal-content');
+        $modal.find('.o_field_many2one input').click();
+
+        form.destroy();
+    });
+
     QUnit.test('one2many list editable with cell readonly modifier', function (assert) {
         assert.expect(4);
 

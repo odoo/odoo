@@ -3129,6 +3129,15 @@ var BasicModel = AbstractModel.extend({
                     // when sent to the server, the x2manys values must be a list
                     // of commands in a context, but the list of ids in a domain
                     ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
+                } else if (field.type === 'one2many') { // Ids are evaluated as a list of ids
+                    /* Filtering out virtual ids from the ids list
+                     * The server will crash if there are virtual ids in there
+                     * The webClient doesn't do literal id list comparison like ids == list
+                     * Only relevant in o2m: m2m does create actual records in db
+                     */
+                    ids = _.filter(ids, function (id) {
+                        return typeof id !== 'string';
+                    });
                 }
                 context[fieldName] = ids;
             }
