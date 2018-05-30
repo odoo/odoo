@@ -57,7 +57,7 @@
                                 <field name="use_existing_lots" groups="stock.group_production_lot"/>
                             </group>
                             <group string="Locations" groups="stock.group_stock_multi_locations">
-                                <field name="default_location_src_id" attrs="{'required': [('code', '=', 'internal')]}"/>
+                                <field name="default_location_src_id" attrs="{'required': [('code', 'in', ('internal', 'outgoing'))]}"/>
                                 <field name="default_location_dest_id" attrs="{'required': [('code', 'in', ('internal', 'incoming'))]}"/>
                             </group>
                         </group>
