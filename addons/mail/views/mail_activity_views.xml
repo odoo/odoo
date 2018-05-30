@@ -91,11 +91,10 @@
                         <field name="has_recommended_activities"/>
                     </group>
                     <group attrs="{'invisible': [('has_recommended_activities','=',False)]}">
-                        <div>
-                            <p><strong>Recommended Activities</strong></p>
-                            <field name="recommended_activity_type_id" widget="radio"
+                        <div class="o_row">
+                            <strong>Recommended Activities</strong>
+                            <field name="recommended_activity_type_id" widget="selection_badge"
                                 domain="[('previous_type_ids', '=', previous_activity_type_id)]"
-                                options="{'horizontal':true}"
                                 nolabel="1"/>
                         </div>
                     </group>

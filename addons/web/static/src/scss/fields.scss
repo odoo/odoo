@@ -229,6 +229,24 @@
         cursor: ns-resize;
     }
 
+    &.o_field_selection_badge {
+        .o_selection_badge {
+            display: inline-block;
+            margin: 0px 0px 4px 4px;
+            padding: 1px 6px;
+            color: $o-main-color-muted;
+            border: 1px solid $o-color-silver-dark;
+            cursor: pointer;
+            &.active {
+                color: $o-brand-optional;
+                border-color: $o-brand-optional;
+            }
+            &:hover:not(.active) {
+                color: darken($o-color-silver-dark, 30%);
+                border-color: darken($o-color-silver-dark, 30%);
+            }
+        }
+    }
     // Radio buttons
     &.o_field_radio {
         .o_radio_input {
