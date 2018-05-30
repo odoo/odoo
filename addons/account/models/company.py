@@ -7,6 +7,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round, float_is_zero
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
 
 
 class ResCompany(models.Model):
@@ -74,27 +75,59 @@ Best Regards,'''))
         return last_day > last_day_of_month and last_day_of_month or last_day
 
     @api.multi
-    def compute_fiscalyear_dates(self, date):
-        """ Computes the start and end dates of the fiscalyear where the given 'date' belongs to
-            @param date: a datetime object
-            @returns: a dictionary with date_from and date_to
-        """
-        self = self[0]
-        last_month = self.fiscalyear_last_month
-        last_day = self.fiscalyear_last_day
-        if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
-            date = date.replace(month=last_month, day=last_day)
-        else:
-            if last_month == 2 and last_day == 29 and (date.year + 1) % 4 != 0:
-                date = date.replace(month=last_month, day=28, year=date.year + 1)
-            else:
-                date = date.replace(month=last_month, day=last_day, year=date.year + 1)
-        date_to = date
-        date_from = date + timedelta(days=1)
-        if date_from.month == 2 and date_from.day == 29:
-            date_from = date_from.replace(day=28, year=date_from.year - 1)
-        else:
-            date_from = date_from.replace(year=date_from.year - 1)
+    def compute_fiscalyear_dates(self, current_date):
+        '''Computes the start and end dates of the fiscal year where the given 'date' belongs to.
+
+        :param current_date: A datetime.date/datetime.datetime object.
+        :return: A dictionary containing:
+            * date_from
+            * date_to
+            * [Optionally] record: The fiscal year record.
+        '''
+        self.ensure_one()
+        date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        # Search a fiscal year record containing the date.
+        # If a record is found, then no need further computation, we get the dates range directly.
+        fiscalyear = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_str),
+            ('date_to', '>=', date_str),
+        ], limit=1)
+        if fiscalyear:
+            return {
+                'date_from': datetime.strptime(fiscalyear.date_from, DEFAULT_SERVER_DATE_FORMAT).date(),
+                'date_to': datetime.strptime(fiscalyear.date_to, DEFAULT_SERVER_DATE_FORMAT).date(),
+                'record': fiscalyear,
+            }
+
+        date_from, date_to = date_utils.get_fiscal_year(
+            current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
+
+        date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
+
+        # Search for fiscal year records reducing the delta between the date_from/date_to.
+        # This case could happen if there is a gap between two fiscal year records.
+        # E.g. two fiscal year records: 2017-01-01 -> 2017-02-01 and 2017-03-01 -> 2017-12-31.
+        # => The period 2017-02-02 - 2017-02-30 is not covered by a fiscal year record.
+
+        fiscalyear_from = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_from_str),
+            ('date_to', '>=', date_from_str),
+        ], limit=1)
+        if fiscalyear_from:
+            date_from = datetime.strptime(fiscalyear_from.date_to, DEFAULT_SERVER_DATE_FORMAT).date() + timedelta(days=1)
+
+        fiscalyear_to = self.env['account.fiscal.year'].search([
+            ('company_id', '=', self.id),
+            ('date_from', '<=', date_to_str),
+            ('date_to', '>=', date_to_str),
+        ], limit=1)
+        if fiscalyear_to:
+            date_to = datetime.strptime(fiscalyear_to.date_from, DEFAULT_SERVER_DATE_FORMAT).date() - timedelta(days=1)
+
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix):
