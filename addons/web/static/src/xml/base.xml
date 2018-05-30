@@ -792,6 +792,13 @@
         <label class="o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
+
+<t t-name="FieldSelectionBadge">
+    <span t-foreach="values" t-as="value" t-attf-class="o_selection_badge #{value[0] == current_value ? 'active' : ''}" t-att-data-index="value_index">
+        <t t-esc="value[1]"/>
+    </span>
+</t>
+
 <t t-name="FieldMany2One">
     <t t-if="widget.mode === 'readonly'">
         <a t-if="!widget.nodeOptions.no_open" class="o_form_uri" href="#"/>
