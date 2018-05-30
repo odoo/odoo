@@ -30,7 +30,7 @@ class Task(models.Model):
     @api.depends('timesheet_ids.unit_amount')
     def _compute_effective_hours(self):
         for task in self:
-            task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
+            task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
