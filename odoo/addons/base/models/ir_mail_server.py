@@ -7,7 +7,7 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid
+from email.utils import COMMASPACE, formatdate, getaddresses, make_msgid
 import logging
 import re
 import smtplib
@@ -17,7 +17,7 @@ import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, pycompat, format_address
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -119,7 +119,7 @@ def encode_rfc2822_address_header(header_text):
         # Header as a string, using an unlimited line length.", the old one
         # was "A synonym for Header.encode()." so call encode() directly?
         name = Header(pycompat.to_text(name)).encode()
-        return formataddr((name, email))
+        return format_address((name, email))
 
     addresses = getaddresses([pycompat.to_native(ustr(header_text))])
     return COMMASPACE.join(encode_addr(a) for a in addresses)

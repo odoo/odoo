@@ -7,8 +7,6 @@ import hashlib
 import pytz
 import threading
 
-from email.utils import formataddr
-
 import requests
 from lxml import etree
 from werkzeug import urls
@@ -17,7 +15,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.modules import get_module_resource
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
+from odoo.tools import pycompat, format_address
 
 # Global variables used for the warning fields declared on the res.partner
 # in the following modules : sale, purchase, account, stock 
@@ -372,7 +370,7 @@ class Partner(models.Model):
     def _compute_email_formatted(self):
         for partner in self:
             if partner.email:
-                partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
+                partner.email_formatted = format_address((partner.name or u"False", partner.email or u"False"))
             else:
                 partner.email_formatted = ''
 

@@ -20,13 +20,12 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
-from odoo.tools import pycompat, ustr
+from odoo.tools import pycompat, ustr, format_address
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -845,7 +844,7 @@ class MailThread(models.AbstractModel):
             company_name = company.name if company else self.env.user.company_id.name
             for res_id in result_email.keys():
                 name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = formataddr((name, result_email[res_id]))
+                result[res_id] = format_address((name, result_email[res_id]))
 
         left_ids = set(_res_ids) - set(result_email)
         if left_ids:
@@ -2147,7 +2146,7 @@ class MailThread(models.AbstractModel):
             author = self.env.user.partner_id
         if not author.email:
             raise exceptions.UserError(_("Unable to notify message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email))
+        email_from = format_address((author.name, author.email))
 
         msg_values = {
             'subject': subject,
@@ -2182,7 +2181,7 @@ class MailThread(models.AbstractModel):
             author = self.env.user.partner_id
         if not author.email:
             raise exceptions.UserError(_("Unable to log message, please configure the sender's email address."))
-        email_from = formataddr((author.name, author.email))
+        email_from = format_address((author.name, author.email))
 
         message_values = {
             'subject': subject,

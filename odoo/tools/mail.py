@@ -11,12 +11,22 @@ import threading
 import time
 
 from email.header import decode_header, Header
-from email.utils import getaddresses, formataddr
+from email.utils import getaddresses, formataddr, parseaddr
 from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
 from odoo.tools import pycompat, misc
+
+# python3 only imports to support internationalised emails.
+try:
+    import idna
+except ImportError:
+    idna = None
+try:
+    from email.headerregistry import Address
+except ImportError:
+    Address = None
 
 _logger = logging.getLogger(__name__)
 
@@ -495,7 +505,7 @@ def email_split_and_format(text):
     formataddr. """
     if not text:
         return []
-    return [formataddr((addr[0], addr[1])) for addr in getaddresses([text])
+    return [format_address((addr[0], addr[1])) for addr in getaddresses([text])
                 # getaddresses() returns '' when email parsing fails, and
                 # sometimes returns emails without at least '@'. The '@'
                 # is strictly required in RFC2822's `addr-spec`.
@@ -539,3 +549,48 @@ def decode_smtp_header(smtp_header):
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
     return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+
+
+def safe_idna_encode(domain):
+    """Domains containing non-ascii characters should be encoded according to
+       IDNS-2008 standard.
+    """
+    domain = ustr(domain)  # need a text, not bytes!
+    try:
+        if idna:
+            encoded = idna.encode(domain, uts46=True)
+        else:
+            encoded = domain.encode('idna')
+    except Exception:
+        # we shouldn't crash here for any reason
+        encoded = domain.encode('ascii', errors='ignore')
+    return ustr(encoded)
+
+
+def format_address(name_addr):
+    """Format a pair of (name, address) to an RFC compliant string.
+       Works on any string that parseaddr can decode into a (name, addr) couple.
+       The result is going to be "name" <addr> if everything is in ASCII.
+       Otherwise it does the relevant encodings only if necessary.
+       When non-ascii characters are present in the local part, it must be
+       MIME-word encoded. The domain name must be idna-encoded if it contains
+       non-ascii characters.
+    """
+    if not isinstance(name_addr, tuple):
+        name_addr = parseaddr(name_addr)
+    name, addr = name_addr
+    try:
+        return formataddr((name, addr))
+    except UnicodeEncodeError:  # non-ascii in the local part or domain
+        try:
+            name.encode('ascii')
+        except UnicodeEncodeError:
+            name = Header(pycompat.to_text(name), 'utf-8').encode()
+        localpart, domain = addr.split('@', 1)
+        try:
+            localpart.encode('ascii')
+        except UnicodeEncodeError:
+            localpart = Header(localpart, 'utf-8').encode()
+        domain = safe_idna_encode(domain)
+        address = Address(name, username=localpart, domain=domain)
+        return ustr(address)
