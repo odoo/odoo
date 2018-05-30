@@ -895,7 +895,9 @@ class AccountMoveLine(models.Model):
             if (line.account_id.internal_type in ('receivable', 'payable')):
                 partners.add(line.partner_id.id)
             if line.reconciled:
-                raise UserError(_('You are trying to reconcile some entries that are already reconciled!'))
+                #La siguente linea fue modificada por Trescloud para mejora la presentacion del mensaje de error.
+                raise UserError(u'''¡Está intentando conciliar asientos que ya están conciliados!, Por favor
+                                    verifique la linea %s del asiento %s'''%(line.name, line.move_id.name))
         if len(company_ids) > 1:
             raise UserError(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
