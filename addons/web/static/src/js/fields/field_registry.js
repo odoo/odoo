@@ -60,6 +60,7 @@ registry
 registry
     .add('selection', relational_fields.FieldSelection)
     .add('radio', relational_fields.FieldRadio)
+    .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)

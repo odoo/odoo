@@ -11382,6 +11382,79 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+
+    QUnit.module('FieldSelectionBadge');
+
+    QUnit.test('FieldSelectionBadge widget on a many2one in a new record', function (assert) {
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="product_id" widget="selection_badge"/>' +
+                '</form>',
+        });
+
+        assert.ok(form.$('span.o_selection_badge').length, "should have rendered outer div");
+        assert.strictEqual(form.$('span.o_selection_badge').length, 2, "should have 2 possible choices");
+        assert.ok(form.$('span.o_selection_badge:contains(xphone)').length, "one of them should be xphone");
+        assert.strictEqual(form.$('span.active').length, 0, "none of the input should be checked");
+
+        $("span.o_selection_badge:first").click();
+
+        assert.strictEqual(form.$('span.active').length, 1, "one of the input should be checked");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        var newRecord = _.last(this.data.partner.records);
+        assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('FieldSelectionBadge widget on a selection in a new record', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="color" widget="selection_badge"/>' +
+                '</form>',
+        });
+
+        assert.ok(form.$('span.o_selection_badge').length, "should have rendered outer div");
+        assert.strictEqual(form.$('span.o_selection_badge').length, 2, "should have 2 possible choices");
+        assert.ok(form.$('span.o_selection_badge:contains(Red)').length, "one of them should be Red");
+
+        // click on 2nd option
+        form.$("span.o_selection_badge").eq(1).click();
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        var newRecord = _.last(this.data.partner.records);
+        assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('FieldSelectionBadge widget on a selection in a readonly mode', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="color" widget="selection_badge" readonly="1"/>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('span.o_readonly_modifier').length, 1, "should have 1 possible value in readonly mode");
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyCheckBoxes');
 
     QUnit.test('widget many2many_checkboxes', function (assert) {

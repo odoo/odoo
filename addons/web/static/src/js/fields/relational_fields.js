@@ -2301,6 +2301,75 @@ var FieldRadio = FieldSelection.extend({
     },
 });
 
+
+var FieldSelectionBadge = FieldSelection.extend({
+    template: null,
+    className: 'o_field_selection_badge',
+    tagName: 'span',
+    specialData: "_fetchSpecialMany2ones",
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click span.o_selection_badge': '_onBadgeClicked',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @override
+     */
+    _renderEdit: function () {
+        this.currentValue = this.value;
+
+        if (this.field.type === 'many2one') {
+            this.currentValue = this.value && this.value.data.id;
+        }
+        this.$el.empty();
+        this.$el.html(qweb.render('FieldSelectionBadge', {'values': this.values, 'current_value': this.currentValue}));
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the life cycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     * @override
+     */
+    _setValues: function () {
+        // Note: We can make abstract widget for common code in radio and selection badge
+        if (this.field.type === 'selection') {
+            this.values = this.field.selection || [];
+        } else if (this.field.type === 'many2one') {
+            this.values = _.map(this.record.specialData[this.name], function (val) {
+                return [val.id, val.display_name];
+            });
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onBadgeClicked: function (event) {
+        var index = $(event.target).data('index');
+        var value = this.values[index];
+        if (value[0] !== this.currentValue) {
+            if (this.field.type === 'many2one') {
+                this._setValue({id: value[0], display_name: value[1]});
+            } else {
+                this._setValue(value[0]);
+            }
+        } else {
+            this._setValue(false);
+        }
+    },
+});
+
 /**
  * The FieldReference is a combination of a select (for the model) and
  * a FieldMany2one for its value.
@@ -2461,6 +2530,7 @@ return {
     KanbanFieldMany2ManyTags: KanbanFieldMany2ManyTags,
 
     FieldRadio: FieldRadio,
+    FieldSelectionBadge: FieldSelectionBadge,
     FieldSelection: FieldSelection,
     FieldStatus: FieldStatus,
 
