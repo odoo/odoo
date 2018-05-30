@@ -7,7 +7,7 @@ from email.header import Header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import COMMASPACE, formataddr, formatdate, getaddresses, make_msgid
+from email.utils import COMMASPACE, formatdate, getaddresses, make_msgid
 import logging
 import re
 import smtplib
@@ -17,7 +17,7 @@ import html2text
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import except_orm, UserError
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr, pycompat, format_address
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -91,38 +91,19 @@ address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
 def extract_rfc2822_addresses(text):
     """Returns a list of valid RFC2822 addresses
        that can be found in ``source``, ignoring
-       malformed ones and non-ASCII ones.
+       malformed ones.
     """
     if not text:
         return []
-    candidates = address_pattern.findall(ustr(text))
-    return [c for c in candidates if is_ascii(c)]
+    return address_pattern.findall(ustr(text))
 
 
 def encode_rfc2822_address_header(header_text):
-    """If ``header_text`` contains non-ASCII characters,
-       attempts to locate patterns of the form
-       ``"Name" <address@domain>`` and replace the
-       ``"Name"`` portion by the RFC2047-encoded
-       version, preserving the address part untouched.
+    """Attempts to locate patterns of the form ``"Name" <address@domain>`` in``header_text``,
+       and properly encode any pattern that contains non-ASCII characters, according to RFC2047.
     """
-    def encode_addr(addr):
-        name, email = addr
-        # If s is a <text string>, then charset is a hint specifying the
-        # character set of the characters in the string. The Unicode string
-        # will be encoded using the following charsets in order: us-ascii,
-        # the charset hint, utf-8. The first character set to not provoke a
-        # UnicodeError is used.
-        # -> always pass a text string to Header
-
-        # also Header.__str__ in Python 3 "Returns an approximation of the
-        # Header as a string, using an unlimited line length.", the old one
-        # was "A synonym for Header.encode()." so call encode() directly?
-        name = Header(pycompat.to_text(name)).encode()
-        return formataddr((name, email))
-
     addresses = getaddresses([pycompat.to_native(ustr(header_text))])
-    return COMMASPACE.join(encode_addr(a) for a in addresses)
+    return COMMASPACE.join(format_address(a) for a in addresses)
 
 
 class IrMailServer(models.Model):
