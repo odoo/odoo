@@ -88,18 +88,20 @@ class ResPartner(models.Model):
         any blank or non-alphanumerical character.
         """
         if stdnum_vat: # We use stdnum if it is available, as it has individual compact functions applying the specificities of each country
-            return stdnum_vat.compact(vat)
+            try:
+                 # use stdnum if it is available, as it has individual compact functions applying the specificities
+                 # of each country. Fallback on the naive compacting otherwise, or if it fails.
+                return stdnum_vat.compact(vat)
+            except:
+                pass
 
         return re.sub('\W', '', vat)
 
     @api.model
     def _split_vat(self, vat):
-        try:
-            compacted_vat = self.compact_vat_number(vat)
-            vat_country, vat_number = compacted_vat[:2], compacted_vat[2:]
-            return vat_country, vat_number
-        except:
-            return None, None
+        compacted_vat = self.compact_vat_number(vat)
+        vat_country, vat_number = compacted_vat[:2], compacted_vat[2:]
+        return vat_country, vat_number
 
     @api.model
     def simple_vat_check(self, country_code, vat_number):
