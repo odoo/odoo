@@ -1310,7 +1310,7 @@
                             <div class="clearfix" />
                             <div class="oe_structure" />
 
-                            <div id="payment_method" class="col-md-12" t-if="(form_acquirers or s2s_acquirers or tokens) and website_sale_order.amount_total">
+                            <div id="payment_method" class="col-md-12" t-if="(form_acquirers or tokens) and website_sale_order.amount_total">
                                 <h3 class="mb24">Pay with </h3>
                                 <t t-call="payment.payment_tokens_list">
                                     <t t-set="mode" t-value="'payment'"/>
@@ -1330,7 +1330,7 @@
                                 </t>
                             </div>
 
-                            <div t-if="not (form_acquirers or s2s_acquirers)">
+                            <div t-if="not form_acquirers">
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
@@ -1581,7 +1581,7 @@
                         <t t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span t-if="order.payment_tx_id.acquirer_id.auth_msg" t-raw="order.payment_tx_id.acquirer_id.auth_msg"/>
+                        <span t-if="payment_tx_id.acquirer_id.auth_msg" t-raw="payment_tx_id.acquirer_id.auth_msg"/>
                     </t>
                 </div>
                 <div class="panel-body" t-if="payment_tx_id.acquirer_id.post_msg">

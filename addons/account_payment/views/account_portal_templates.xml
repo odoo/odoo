@@ -97,6 +97,25 @@
                     <t t-call="account_payment.portal_invoice_payment"/>
                 </div>
             </div>
+        </xpath>
+        <xpath expr="//div[@id='invoice_content']" position="after">
+            <div class="panel-body" t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total" id="portal_pay">
+                <div t-if="pms or form_acquirers" id="payment_method" class="col-md-offset-3 col-md-6">
+                    <h4 class="mb24">Pay with</h4>
+                    <t t-call="payment.payment_tokens_list">
+                        <t t-set="mode" t-value="'payment'"/>
+                        <t t-set="partner_id" t-value="invoice.partner_id.id"/>
+                        <t t-set="success_url" t-value="'/my/invoices/%s%s' % (invoice.id, ('?access_token=%s' % (access_token)) if access_token else '')"/>
+                        <t t-set="error_url" t-value="'/my/invoices/%s%s' % (invoice.id, ('?access_token=%s' % (access_token)) if access_token else '')"/>
+                        <t t-set="access_token" t-value="access_token or ''"/>
+                        <t t-set="callback_method" t-value="''"/>
+                        <t t-set="form_action" t-value="'/invoice/pay/' + str(invoice.id) + '/s2s_token_tx/'"/>
+                        <t t-set="prepare_tx_url" t-value="'/invoice/pay/' + str(invoice.id) + '/form_tx/'"/>
+                        <t t-set="submit_txt" t-value="'Pay Now'"/>
+                        <t t-set="icon_class" t-value="'fa-lock'"/>
+                    </t>
+                </div>
+            </div>
             <div class="panel-body" t-if="existing_token">
                 <div class="col-md-offset-3 col-md-6">
                     <i class="fa fa-info"></i> You have credits card registered, you can log-in to be able to use them.

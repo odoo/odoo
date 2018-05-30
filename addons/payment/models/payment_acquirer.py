@@ -332,14 +332,13 @@ class PaymentAcquirer(models.Model):
         if not partner:
             partner = self.env.user.partner_id
         active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
-        form_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 'form' and acq.view_template_id)
-        s2s_acquirers = active_acquirers.filtered(lambda acq: acq.payment_flow == 's2s' and acq.registration_view_template_id)
+        form_acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
+                                                               (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
             'form_acquirers': form_acquirers,
-            's2s_acquirers': s2s_acquirers,
             'pms': self.env['payment.token'].search([
                 ('partner_id', '=', partner.id),
-                ('acquirer_id', 'in', s2s_acquirers.ids)]),
+                ('acquirer_id', 'in', form_acquirers.filtered(lambda acq: acq.payment_flow == 's2s').ids)]),
         }
 
     @api.multi

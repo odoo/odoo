@@ -84,9 +84,10 @@ class WebsitePayment(http.Controller):
             'error_msg': kw.get('error_msg')
         })
 
-        values['s2s_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 's2s']
-        values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form']
-        values['pms'] = request.env['payment.token'].search([('acquirer_id', 'in', [acq.id for acq in values['s2s_acquirers']])])
+        values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow in ['form', 's2s']]
+        values['pms'] = request.env['payment.token']\
+            .search([('acquirer_id', 'in',
+                      [acq.id for acq in values['form_acquirers'].filter(lambda acq: acq.payment_flow == 's2s')])])
 
         return request.render('payment.pay', values)
 
