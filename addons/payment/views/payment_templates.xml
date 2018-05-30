@@ -45,15 +45,17 @@
                 <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
                 <t t-set="MAX_BRAND_LINE" t-value="3"/>
                 <t t-foreach="s2s_acquirers" t-as="acq">
-                    <div class="panel-body">
+                    <div t-attf-id="o_payment_acq_{{acq.id}}"
+                         class="container"
+                        t-attf-seq="{{acq.sequence}}">
+                        <div class="panel-body">
                         <label>
                             <t t-if="mode == 'manage'">
                                 <input type="radio" t-att-data-acquirer-id="acq.id"
                                     t-att-data-s2s-payment="true"
                                     t-att-data-provider="acq.provider"
                                     name="pm_id" t-attf-value="new_{{acq.id}}"
-                                    t-att-class="'hidden' if acquirers_count==1 else ''"
-                                    t-att-checked="acquirers_count == 1"/>
+                                    t-att-class="'hidden' if acquirers_count==1 else ''"/>
                             </t>
                             <t t-else="">
                                 <input type="radio" t-att-data-acquirer-id="acq.id"
@@ -63,7 +65,12 @@
                                     t-att-class="'hidden' if (acquirers_count==1 and pms_count==0) else ''"
                                     t-att-checked="acquirers_count==1 and pms_count==0"/>
                             </t>
-                            <span class="payment_option_name" t-esc="acq.name"/>
+                            <span class="payment_option_name" t-esc="acq.website_name"/>
+                            <span t-if="acq.pre_msg"
+                                  t-attf-id="o_payment_pre_msg_acq_{{acq.id}}"
+                                  t-att-class="
+                                  ('hidden ' if(acquirers_count &gt; 1 and pms_count==0 and form_acquirers[0]!=acq or pms_count &gt;0) else '') + ('padded grey' if not (acquirers_count==1 and pms_count==0) else 'grey')">
+                                <p t-field="acq.pre_msg"/></span>
                         </label>
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -90,17 +97,25 @@
                             </t>
                         </div>
                     </div>
+                    </div>
                 </t>
                 <t t-if="mode == 'payment'" t-foreach="form_acquirers" t-as="acq">
+                    <div t-attf-id="o_payment_acq_{{acq.id}}"
+                          class="container"
+                    t-attf-seq="{{acq.sequence}}">
                     <div class="panel-body">
                         <label>
                             <input type="radio" t-att-data-acquirer-id="acq.id"
                                 t-att-data-form-payment="true"
                                 t-att-data-provider="acq.provider"
                                 t-att-class="'hidden' if (acquirers_count==1 and pms_count==0) else ''"
-                                t-att-checked="acquirers_count==1 and pms_count==0"
                                 name="pm_id" t-attf-value="form_{{acq.id}}"/>
-                            <span class="payment_icon_name" t-esc="acq.name"/>
+                            <span class="payment_icon_name" t-esc="acq.website_name"/>
+                            <span t-if="acq.pre_msg"
+                                  t-attf-id="o_payment_pre_msg_acq_{{acq.id}}"
+                                  t-att-class="
+                                  ('hidden ' if(acquirers_count &gt; 1 and pms_count==0 and form_acquirers[0]!=acq or pms_count &gt;0) else '') + ('padded grey' if not (acquirers_count==1 and pms_count==0) else 'grey')">
+                                <p t-field="acq.pre_msg"/></span>
                         </label>
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
@@ -120,6 +135,7 @@
                     </div>
                     <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="hidden {{'panel-footer' if acq.save_token == 'ask' else ''}}">
                         <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/> Save my payment data</label>
+                    </div>
                     </div>
                 </t>
                 <t t-foreach="pms" t-as="pm">
