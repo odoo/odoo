@@ -115,6 +115,11 @@ class Channel(models.Model):
 
     @api.model
     def create(self, vals):
+        # ensure image at quick create
+        if not vals.get('image'):
+            defaults = self.default_get(['image'])
+            vals['image'] = defaults['image']
+
         tools.image_resize_images(vals)
         # Create channel and alias
         channel = super(Channel, self.with_context(
