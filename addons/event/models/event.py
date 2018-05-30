@@ -431,6 +431,13 @@ class EventRegistration(models.Model):
     def button_reg_cancel(self):
         self.state = 'cancel'
 
+    @api.onchange('event_id')
+    def _onchange_event_id(self):
+        """ This method is overriden in event_sale.
+            It's just added here so super() can be called and we don't risk someone later not paying attention to the override.
+        """
+        pass
+
     @api.onchange('partner_id')
     def _onchange_partner(self):
         if self.partner_id:

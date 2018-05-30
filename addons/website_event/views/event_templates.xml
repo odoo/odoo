@@ -608,6 +608,7 @@
                         <thead>
                             <tr>
                                 <th>Reference</th>
+                                <!-- Note: we override this on website_event_sale to add the ticket here. -->
                                 <th>Name</th>
                                 <th>E-mail</th>
                                 <th>Phone</th>
@@ -617,6 +618,7 @@
                             <t t-foreach="attendees" t-as="attendee">
                                 <tr>
                                     <td><t t-esc="attendee.id"/></td>
+                                    <!-- Note: we override this on website_event_sale to add the ticket here. -->
                                     <td><i class="fa fa-user"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
                                     <td><i class="fa fa-envelope"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
                                     <td><i class="fa fa-phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
