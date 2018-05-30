@@ -9,6 +9,7 @@ from email.utils import formataddr
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
+from odoo.tools import format_address
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
@@ -27,7 +28,11 @@ class Message(models.Model):
     @api.model
     def _get_default_from(self):
         if self.env.user.email:
-            return formataddr((self.env.user.name, self.env.user.email))
+            try:
+                formatted_email = format_address((self.env.user.name, self.env.user.email))
+            except:
+                raise UserError(_("Unable to encode sender's email address %s, is it correct?") % self.env.user.email)
+            return formatted_email
         raise UserError(_("Unable to send email, please configure the sender's email address."))
 
     @api.model
