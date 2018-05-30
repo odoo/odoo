@@ -259,6 +259,14 @@
             <rng:optional><rng:attribute name="avatar_field" /></rng:optional>
             <rng:optional><rng:attribute name="write_model" /></rng:optional>
             <rng:optional><rng:attribute name="write_field" /></rng:optional>
+            <rng:optional>
+                <rng:attribute name="force_save">
+                    <rng:choice>
+                      <rng:value>1</rng:value>
+                      <rng:value>0</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+            </rng:optional>
             <!-- Widget *static* options defined as an arbitrary JSON dict, with
                  widget-dependent parameters. To be ignored if widget/client does
                  not support them. -->

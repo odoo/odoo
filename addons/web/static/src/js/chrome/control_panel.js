@@ -80,6 +80,9 @@ var ControlPanel = Widget.extend({
         }
 
         this.bus = new Bus(this);
+        // the updateIndex is used to prevent concurrent updates of the control
+        // panel depending on asynchronous code to be executed in the wrong order
+        this.bus.updateIndex = 0;
         this.bus.on("update", this, this.update);
     },
     /**
@@ -126,6 +129,8 @@ var ControlPanel = Widget.extend({
      * elements that are not in status.cp_content
      */
     update: function(status, options) {
+        this.bus.updateIndex++;
+
         this._toggle_visibility(!status.hidden);
 
         // Don't update the ControlPanel in headless mode as the views have

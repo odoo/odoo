@@ -14,9 +14,17 @@ var MASTER_TAB_HEARTBEAT_PERIOD = 1500;  // 1.5 second
 bus.ERROR_DELAY = 10000;
 
 bus.Bus = Widget.extend({
-    init: function () {
+    /**
+     * @override
+     * @param {Object} params
+     * @param {Object} params.session the session to use to perform the poll RPC
+     * @param {string} params.pollRoute the longpolling route to use
+     */
+    init: function (params) {
         var self = this;
         this._super();
+        this.pollRoute = params.pollRoute;
+        this.session = params.session;
         this.options = {};
         this.activated = false;
         this.bus_id = _.uniqueId('bus');
@@ -77,7 +85,7 @@ bus.Bus = Widget.extend({
         }
         var data = {channels: self.channels, last: self.last, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        this._pollRpc = session.rpc('/longpolling/poll', data, {shadow : true, timeout: 60000});
+        this._pollRpc = session.rpc(this.pollRoute, data, {shadow : true, timeout: 60000});
         this._pollRpc.then(function (result) {
             self._pollRpc = false;
             self.on_notification(result);
@@ -164,13 +172,17 @@ bus.Bus = Widget.extend({
  * - bus.tab_list : list of opened tab ids
  * - bus.tab_master : generated id of the master tab
  */
-var CrossTabBus = bus.Bus.extend({
+bus.CrossTabBus = bus.Bus.extend({
     init: function () {
         this._super.apply(this, arguments);
+
+        // used to prefix localStorage keys
+        this.sanitizedOrigin = this.session.origin.replace(/:\/{0,2}/g, '_');
+
         this.is_master = false;
         this.is_registered = false;
-        if (parseInt(getItem('bus.last_ts', 0)) + 50000 < new Date().getTime()) {
-            setItem('bus.last', -1);
+        if (parseInt(this._getItem('last_ts', 0)) + 50000 < new Date().getTime()) {
+            this._setItem('last', -1);
         }
 
         on("storage", this.on_storage.bind(this));
@@ -189,15 +201,15 @@ var CrossTabBus = bus.Bus.extend({
                 // Write last_presence in local storage if it has been updated since last heartbeat
                 var hb_period = this.is_master ? MASTER_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
                 if (self.last_presence + hb_period > new Date().getTime()) {
-                    setItem('bus.last_presence', self.last_presence);
+                    self._setItem('last_presence', self.last_presence);
                 }
-            });
+            }, this._generateKey.bind(this));
             if (this.is_master) {
-                setItem('bus.channels', this.channels);
-                setItem('bus.options', this.options);
+                this._setItem('channels', this.channels);
+                this._setItem('options', this.options);
             } else {
-                this.channels = getItem('bus.channels', this.channels);
-                this.options = getItem('bus.options', this.options);
+                this.channels = this._getItem('channels', this.channels);
+                this.options = this._getItem('options', this.options);
             }
             return;  // start_polling will be called again on tab registration
         }
@@ -208,7 +220,7 @@ var CrossTabBus = bus.Bus.extend({
      },
     on_notification: function (notifications) {
         if (this.is_master) { // broadcast to other tabs
-            var last = getItem('bus.last', -1);
+            var last = this._getItem('last', -1);
             var max_id = Math.max(last, 0);
             var new_notifications = _.filter(notifications, function (notif) {
                 max_id = Math.max(max_id, notif.id);
@@ -216,9 +228,9 @@ var CrossTabBus = bus.Bus.extend({
             });
             this.last = max_id;
             if (new_notifications.length) {
-                setItem('bus.last', max_id);
-                setItem('bus.last_ts', new Date().getTime());
-                setItem('bus.notification', new_notifications);
+                this._setItem('last', max_id);
+                this._setItem('last_ts', new Date().getTime());
+                this._setItem('notification', new_notifications);
                 this._super(new_notifications);
             }
         } else {
@@ -230,45 +242,78 @@ var CrossTabBus = bus.Bus.extend({
         // localStorage (avoid race condition)
         var value = e.newValue;
         // notifications changed
-        if (e.key === 'bus.notification') {
+        if (e.key === this._generateKey('notification')) {
             var notifs = JSON.parse(value);
             this.on_notification(notifs);
         }
         // update channels
-        if (e.key === 'bus.channels') {
+        if (e.key === this._generateKey('channels')) {
             this.channels = JSON.parse(value);
         }
         // update options
-        if (e.key === 'bus.options') {
+        if (e.key === this._generateKey('options')) {
             this.options = JSON.parse(value);
         }
         // update focus
-        if (e.key === 'bus.focus') {
+        if (e.key === this._generateKey('focus')) {
             this.set('window_focus', JSON.parse(value));
         }
     },
     add_channel: function () {
         this._super.apply(this, arguments);
-        setItem('bus.channels', this.channels);
+        this._setItem('channels', this.channels);
     },
     delete_channel: function () {
         this._super.apply(this, arguments);
-        setItem('bus.channels', this.channels);
+        this._setItem('channels', this.channels);
     },
     get_last_presence: function () {
-        return getItem('bus.last_presence') || new Date().getTime();
+        return this._getItem('last_presence') || new Date().getTime();
     },
     update_option: function () {
         this._super.apply(this, arguments);
-        setItem('bus.options', this.options);
+        this._setItem('options', this.options);
     },
     delete_option: function () {
         this._super.apply(this, arguments);
-        setItem('bus.options', this.options);
+        this._setItem('options', this.options);
     },
     focus_change: function (focus) {
         this._super.apply(this, arguments);
-        setItem('bus.focus', focus);
+        this._setItem('focus', focus);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Generates localStorage keys prefixed by bus. (the name of this addon),
+     * and the sanitized origin, to prevent keys from conflicting when several
+     * bus instances (polling different origins) co-exist.
+     *
+     * @private
+     * @param {string} key
+     * @returns key prefixed with the origin
+     */
+    _generateKey: function (key) {
+        return 'bus.' + this.sanitizedOrigin + '.' + key;
+    },
+    /**
+     * @private
+     * @param {string} key
+     * @param {*} defaultValue
+     */
+    _getItem: function (key, defaultValue) {
+        return getItem(this._generateKey(key), defaultValue);
+    },
+    /**
+     * @private
+     * @param {string} key
+     * @param {*} value
+     */
+    _setItem: function (key, value) {
+        setItem(this._generateKey(key), value);
     },
 });
 
@@ -291,14 +336,16 @@ function setItem(key, value) {
     local_storage.setItem(key, JSON.stringify(value));
 }
 
+
 var tab_manager = {
-    peersKey: 'bus.peers',
-    masterKey: 'bus.master',
-    heartbeatKey: 'bus.heartbeat',
     isMaster: false,
     id: new Date().getTime() + ':' + (Math.random() * 1000000000 | 0),
 
-    register_tab: function (is_master_callback, is_no_longer_master, on_heartbeat_callback) {
+    register_tab: function (is_master_callback, is_no_longer_master, on_heartbeat_callback, generateKey) {
+        this.heartbeatKey = generateKey('heartbeat');
+        this.masterKey = generateKey('master');
+        this.peersKey = generateKey('peers');
+
         this.is_master_callback = is_master_callback;
         this.is_no_longer_master = is_no_longer_master || function () {};
         this.on_heartbeat_callback = on_heartbeat_callback || function () {};
@@ -417,10 +464,14 @@ var tab_manager = {
 
 // bus singleton, depending of the browser :
 // if supporting LocalStorage, there will be only one tab polling
+var params = {
+    pollRoute: '/longpolling/poll',
+    session: session,
+};
 if (typeof Storage !== "undefined") {
-    bus.bus = new CrossTabBus();
+    bus.bus = new bus.CrossTabBus(params);
 } else {
-    bus.bus = new bus.Bus();
+    bus.bus = new bus.Bus(params);
 }
 
 return bus;
