@@ -7,8 +7,8 @@ from odoo import api, models
 class BomStructureReport(models.AbstractModel):
     _name = 'report.mrp.mrp_bom_structure_report'
 
-    @staticmethod
-    def _get_child_vals(record, level, qty, uom):
+    @api.model
+    def _get_child_vals(self, record, level, qty, uom):
         """Get bom.line values.
 
         :param record: mrp.bom.line record
