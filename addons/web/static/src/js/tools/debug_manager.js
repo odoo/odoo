@@ -106,14 +106,15 @@ var DebugManager = Widget.extend({
         if (events && events.length) {
             this._events.push(events);
         }
-        this.trigger('update-stats', this._events);
+        this.trigger_up('update-stats', {rqs: this._events});
     },
     requests_clear: function () {
         if (!this._events) { return; }
         this._events = [];
-        this.trigger('update-stats', this._events);
+        this.trigger_up('update-stats', {rqs: this._events});
     },
-    _update_stats: function (rqs) {
+    _update_stats: function (ev) {
+        var rqs = ev.data.rqs;
         var requests = 0, rtime = 0, queries = 0, qtime = 0;
         for(var r = 0; r < rqs.length; ++r) {
             for (var i = 0; i < rqs[r].length; i++) {
