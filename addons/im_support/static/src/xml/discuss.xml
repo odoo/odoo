@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <t t-extend="mail.chat.Sidebar">
+        <t t-jquery="hr" t-operation="before">
+            <t t-foreach="channels" t-as="channel">
+                <t t-if="channel.type == 'livechat'">
+                    <div t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id == channel.id) ? 'o_active': ''}"
+                         t-att-data-channel-id="channel.id">
+                        <span class="o_channel_name"><i class="fa fa-question-circle mr8"/>Odoo Support</span>
+                        <t t-set="counter" t-value="0"/>
+                        <t t-call="mail.chat.SidebarNeedaction"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </t>
+
+</template>

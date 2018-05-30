@@ -235,11 +235,26 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
         var self = this;
         var shouldReload = (options && 'reload' in options) ? options.reload : true;
         var def = shouldReload ? this.model.reload(this.handle, params) : $.when();
+        // we check here that the updateIndex of the control panel hasn't changed
+        // between the start of the update request and the moment the controller
+        // asks the control panel to update itself ; indeed, it could happen that
+        // another action/controller is executed during this one reloads itself,
+        // and if that one finishes first, it replaces this controller in the DOM,
+        // and this controller should no longer update the control panel.
+        // note that this won't be necessary as soon as each controller will have
+        // its own control panel
+        var cpUpdateIndex = this.cp_bus && this.cp_bus.updateIndex;
         return this.dp.add(def).then(function (handle) {
+            if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+                return;
+            }
             self.handle = handle || self.handle; // update handle if we reloaded
             var state = self.model.get(self.handle);
             var localState = self.renderer.getLocalState();
             return self.dp.add(self.renderer.updateState(state, params)).then(function () {
+                if (self.cp_bus && cpUpdateIndex !== self.cp_bus.updateIndex) {
+                    return;
+                }
                 self.renderer.setLocalState(localState);
                 self._update(state);
             });

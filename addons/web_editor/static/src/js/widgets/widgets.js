@@ -308,7 +308,10 @@ var ImageWidget = MediaWidget.extend({
                     img.src += _.str.sprintf('?access_token=%s', img.access_token);
                 }
                 if (!self.$media.is('img')) {
-                    self._replaceMedia($('<img/>'));
+                    // Note: by default the images receive the bootstrap opt-in
+                    // img-responsive class. We cannot make them all responsive
+                    // by design because of libraries and client databases img.
+                    self._replaceMedia($('<img/>', {class: 'img-responsive o_we_custom_image'}));
                 }
                 self.$media.attr('src', img.src);
 

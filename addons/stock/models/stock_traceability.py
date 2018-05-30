@@ -56,7 +56,6 @@ class MrpStockReport(models.TransientModel):
             lines = move_line.search([
                 ('lot_id', '=', context.get('lot_name') or rec_id),
                 ('state', '=', 'done'),
-                ('move_id.returned_move_ids', '=', False),
             ])
             if model == 'stock.move.line':
                 for line in lines:
