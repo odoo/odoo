@@ -8,6 +8,7 @@ class LeaveReport(models.Model):
     _name = "hr.leave.report"
     _description = 'Leave Summary / Report'
     _auto = False
+    _order = "date_from DESC, employee_id"
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     name = fields.Char('Description', readonly=True)
