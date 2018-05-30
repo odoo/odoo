@@ -639,6 +639,12 @@ class TestFields(common.TransactionCase):
         self.assertEqual(message.env, self.env)
         self.assertEqual(message.discussion.env, self.env)
 
+        # Check for description value can_create, can_write and can_unlink for relation field
+        field = message._fields['author'].get_description(self.env)
+        self.assertIn('can_create', field)
+        self.assertIn('can_write', field)
+        self.assertIn('can_unlink', field)
+
     def test_24_reference(self):
         """ test reference fields. """
         record = self.env['test_new_api.mixed'].create({})
