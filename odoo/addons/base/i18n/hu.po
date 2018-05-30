@@ -3,17 +3,18 @@
 # * base
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# krnkris, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2016
+# Martin Trigaux, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-20 07:12+0000\n"
 "PO-Revision-Date: 2017-10-20 07:12+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7150,7 +7151,7 @@ msgstr "'%s' úgy tűnik nem egész szám ehhez a mezőhöz '%%(field)s'"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_form
 msgid "(edit)"
-msgstr "(szerkeszt)"
+msgstr "(szerkesztés)"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -8505,7 +8506,7 @@ msgstr "Mellékelt dokumentum neve"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Attached To"
-msgstr "Csatolva ehhez"
+msgstr "Csatolva a következőhöz"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
@@ -8515,7 +8516,7 @@ msgstr "Melléklet"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_name
 msgid "Attachment Name"
-msgstr "Melléklet neve"
+msgstr "Csatolmány neve"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -9132,7 +9133,7 @@ msgstr "Kanada - Könyvelés"
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 #: model:ir.ui.view,arch_db:base.wizard_update_translations
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégsem"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -10904,7 +10905,7 @@ msgid ""
 "Disabling this option will also uninstall the following modules \n"
 "%s"
 msgstr ""
-"Ennek a lehetőségnek a kikapcsolásával, törölni fogja a következő modulokat \n"
+"Ezen lehetőség kikapcsolásával továbbá eltávolításra fognak kerülni a következő modulok: \n"
 "%s"
 
 #. module: base
@@ -11125,7 +11126,7 @@ msgstr "Dominikai Köztársaság - könyvelés"
 #. module: base
 #: selection:ir.actions.todo,state:0
 msgid "Done"
-msgstr "Elvégezve"
+msgstr "Kész"
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
@@ -11240,7 +11241,7 @@ msgstr "E-mail"
 #: model:ir.ui.view,arch_db:base.view_users_form
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "Email Address"
-msgstr "E-mail címek"
+msgstr "E-mail cím"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fetchmail
@@ -11480,7 +11481,7 @@ msgstr "Export"
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Export Complete"
-msgstr "Exportálás elvégezve"
+msgstr "Exportálás kész"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_exports_export_fields
@@ -11855,7 +11856,7 @@ msgstr "Fájl"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_datas
 msgid "File Content"
-msgstr "Fájl tartalom"
+msgstr "Fájltartalom"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_format
@@ -14807,6 +14808,18 @@ msgid "Memos pad"
 msgstr "Emlékeztetők szerkesztője"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
 #: model:ir.ui.view,arch_db:base.edit_menu
 #: model:ir.ui.view,arch_db:base.edit_menu_access
@@ -17214,19 +17227,19 @@ msgstr "Erőforrás"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_field
 msgid "Resource Field"
-msgstr "Erőforrás mező"
+msgstr "Erőforrásmező"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_id
 #: model:ir.model.fields,field_description:base.field_wkf_instance_res_id
 #: model:ir.model.fields,field_description:base.field_wkf_triggers_res_id
 msgid "Resource ID"
-msgstr "Erőforrás ID azonosító"
+msgstr "Erőforrás azonosítója"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_model
 msgid "Resource Model"
-msgstr "Forrás modell"
+msgstr "Erőforrásmodell"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment_res_name
@@ -18126,7 +18139,7 @@ msgstr "Forrás tevékenység"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_src_model
 msgid "Source Model"
-msgstr "Forrás modell"
+msgstr "Forrásmodell"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_window_action_form
@@ -18909,7 +18922,8 @@ msgstr "A valutakódnak egyedinek kell lennie!"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_model
 msgid "The database object this attachment will be attached to."
-msgstr "Ez az adatbázis-objektum melléklet ehhez lesz adva."
+msgstr ""
+"Az adatbázis-objektum, amelyhez ez a csatolmány hozzáfűzésre fog kerülni."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_wkf_transition_act_to
@@ -19293,8 +19307,8 @@ msgid ""
 "This field holds the image used as avatar for this contact, limited to "
 "1024x1024px"
 msgstr ""
-"Ez a mező tartalmazza a képet ami a felhasználó avatárja, korlátozva van a "
-"méret erre 1024x1024px"
+"Ez a mező tartalmazza a kapcsolattartó avatárjaként szolgáló képet, amelynek"
+" maximális mérete 1024x1024px"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang_code
@@ -21022,8 +21036,9 @@ msgid ""
 "You are creating a new user. After saving, the user will receive an invite "
 "email containing a link to set its password."
 msgstr ""
-"Új felhasználót hoz létre. Elmentés után, a felhasználó kap egy meghívó "
-"levelet, amiben a jelszó létrehozásához kap egy elérési utat."
+"Új felhasználót hoz létre. A mentés után a felhasználó kapni fog egy meghívó"
+" e-mailt, amely tartalmazni fogja a jelszó beállításához szükséges "
+"hivatkozást."
 
 #. module: base
 #: code:addons/base/module/module.py:395
@@ -21388,7 +21403,7 @@ msgstr "E-kereskedelem lehetséges termékek"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "email@yourcompany.com"
-msgstr "email@vállalkozása.com"
+msgstr "email@onvallalata.hu"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -21719,7 +21734,7 @@ msgstr "nyelvhez nem talált fordítást: '%s'"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_form
 msgid "on"
-msgstr "ezen"
+msgstr "ekkor:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_cache

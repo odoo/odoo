@@ -180,7 +180,9 @@ class Partner(models.Model, FormatAddress):
         [('contact', 'Contact'),
          ('invoice', 'Invoice address'),
          ('delivery', 'Shipping address'),
-         ('other', 'Other address')], string='Address Type',
+         ('other', 'Other address'),
+         ("private", "Private Address"),
+        ], string='Address Type',
         default='contact',
         help="Used to select automatically the right address according to the context in sales and purchases documents.")
     street = fields.Char()
@@ -700,7 +702,7 @@ class Partner(models.Model, FormatAddress):
 
     def _get_gravatar_image(self, email):
         gravatar_image = False
-        email_hash = hashlib.md5(email.lower()).hexdigest()
+        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
         try:
             image_content = urllib2.urlopen(url + "?d=404&s=128", timeout=5).read()

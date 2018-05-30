@@ -3,7 +3,7 @@
 # * purchase
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
@@ -20,13 +20,15 @@
 # Mehmet Öztürk <mozturk357@gmail.com>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016
+# Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -628,6 +630,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Teklifin onaylanması ve satın alma siparişine dönüştürülmesi gereken tarihi "
+"gösterir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -693,6 +697,8 @@ msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
 "to the vendor bill. Several PO can be selected."
 msgstr ""
+"Kodlama yardımı. Seçildiği zaman, ilişkili satın alma sipariş satırları "
+"tedarikçi faturasına eklenir. Bir çok PO seçilebilir."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -721,6 +727,7 @@ msgstr "Mali Koşul"
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
 msgstr ""
+"Bir satın alma siparişinin onaylanması için 2 onay seviyesi almak gerekir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -877,6 +884,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Satıcı teslimat süreleri için hata payı. Sistem, ürün tedarik etmek için "
+"Satın Alma Siparişleri ürettiğinde, beklenmedik satıcı gecikmeleriyle başa "
+"çıkacakları günler öncesinden planlanacaktır."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -894,7 +904,7 @@ msgstr "Satınalma Sipariş Satırı için Mesaj"
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr " Çift doğrulama gerektiren minimum miktar"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1170,6 +1180,10 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"Satınalma Analizi, şirket satın alma geçmişinizi ve performansınızı kolayca "
+"kontrol etmenizi ve analiz etmenizi sağlar. Bu menüden görüşme "
+"performansınızı, satıcılarınızın teslim performanslarını vb. "
+"Izleyebilirsiniz."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1243,6 +1257,8 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr ""
+"Onaydan sonra satın alma siparişi vermek istediğinizde düzenlenebilir olması"
+" için Satın Alma Siparişi Değiştirme kullanılır."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1269,7 +1285,7 @@ msgstr "Satınalma sipariş satırı silindi."
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "Faturalanan satın alma siparişi."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1312,6 +1328,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"Eğer doğrudan tedarikçiden müşteriye teslimat olmasını istiyorsanız, adres "
+"girin. Eğer boş tutarsanız şirketinize teslimat olur."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_qty
@@ -1578,7 +1596,7 @@ msgstr "Vergiler"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Teslimat Bırakma Adresini görüntülemek için kullanılan teknik alan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1600,6 +1618,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"Ürün formu satın alma işleminin daha iyi olması için detaylı bilgi içerir: "
+"fiyatlar, tedarik etme lojistiği, muhasebe bilgileri, mevcut tedarikçiler "
+"vb."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1608,6 +1629,9 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"Ürün formu satın alma işleminin daha iyi olması için detaylı bilgi içerir: "
+"fiyatlar, tedarik etme lojistiği, muhasebe bilgileri, mevcut tedarikçiler "
+"vb."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1627,6 +1651,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"Teklif için gerekli ilk adım satın alma adımı. Satın alma siparişine "
+"dönüştürüldükten sonra, ürün makbuzunu ve tedarikçi faturasını kontrol "
+"edebileceksiniz."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category_property_account_creditor_price_difference_categ
@@ -1634,6 +1661,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Bu hesap, satın alma fiyatı ile muhasebe maliyeti arasındaki fiyat farkı "
+"değeri için kullanılacaktır."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1685,7 +1714,7 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "Bu satıcı faturası üzerinden oluşturuldu: %s"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:198
@@ -1697,6 +1726,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Click to create a new RfQ."
 msgstr ""
+"Bu tedarikçinin hiç siparişi yok. Yeni bir RfQ oluşturmak için tıklayınız."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id

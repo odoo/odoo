@@ -454,6 +454,7 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
         var self = this;
         var dialog = new common.DomainEditorDialog(this, {
             res_model: this.options.model || this.field_manager.get_field_value(this.options.model_field),
+            context: self.build_context(),
             default_domain: this.get('value'),
             title: this.get('effective_readonly') ? _t('Selected records') : _t('Select records...'),
             readonly: this.get('effective_readonly'),
@@ -1189,9 +1190,40 @@ var FieldBinaryFile = FieldBinary.extend({
             });
         }
     },
+    /**
+     * Render the value of the binary file field
+     *
+     * The value depends on the mode (readonly/edit) and the attribute filename
+     * in the xml node of the field:
+     *
+     *
+     *              with filename       without filename
+     *           [------------------|-----------------------]
+     * readonly: |  saved filename  |      binary size      |
+     *     edit: | current filename | base64 representation |
+     *           [------------------|-----------------------]
+     *
+     *
+     * This is how the filename is retrieved:
+     *
+     *   - Suppose that the binary field is named 'data'
+     *   - The xml node of this field is as follow:
+     *
+     *        `<field name='data' filename='fdata'/>`
+     *
+     *   - 'fdata' is another field whose value is the filename
+     *   - On the following record:
+     *
+     *          `{data: "Cg==1das02fa01", fdata: 'my-file.txt'}`
+     *
+     *   - The content of the file is the value of 'data': Cg==1das02fa01
+     *   - The filename is the value of 'fdata': my-file.txt
+     */
     render_value: function() {
-        var filename = this.view.datarecord[this.node.attrs.filename];
+        var filename;
         if (this.get("effective_readonly")) {
+            // Filename from saved state (might render from a discard operation)
+            filename = this.view.datarecord[this.node.attrs.filename]; // do not forward-port >= 11.0
             this.do_toggle(!!this.get('value'));
             if (this.get('value')) {
                 this.$el.empty().append($("<span/>").addClass('fa fa-download'));
@@ -1205,6 +1237,9 @@ var FieldBinaryFile = FieldBinary.extend({
                 }
             }
         } else {
+            // Filename at the moment (might be unsaved state)
+            var filenameField = this.field_manager.fields[this.node.attrs.filename]; // do not forward-port >= 11.0
+            filename = filenameField ? filenameField.get('value') : '';
             if(this.get('value')) {
                 this.$el.children().removeClass('o_hidden');
                 this.$('.o_select_file_button').first().addClass('o_hidden');

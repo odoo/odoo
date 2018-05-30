@@ -648,7 +648,7 @@ class Channel(models.Model):
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
             channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.") % channel_partners[0].partner_id.name
+            msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
             You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
             You can mention a channel by typing <b>#channel</b>.<br>

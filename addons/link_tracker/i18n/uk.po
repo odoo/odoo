@@ -4,8 +4,8 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2016
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Bohdan Lisnenko, 2016
+# Zoriana Zaiats, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
 # Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
@@ -77,12 +77,12 @@ msgstr "Favicon"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_icon_src
 msgid "Favicon Source"
-msgstr ""
+msgstr "Джерело Favicon"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url_host
 msgid "Host of the short URL"
-msgstr ""
+msgstr "Хост короткої URL-адреси"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_id
@@ -94,7 +94,7 @@ msgstr "ІД"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_ip
 msgid "Internet Protocol"
-msgstr ""
+msgstr "Інтернет-протокол"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker___last_update
@@ -132,7 +132,7 @@ msgstr "Відстеження посилань"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
 msgid "Number of Clicks"
-msgstr ""
+msgstr "Кількість натискань"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_title
@@ -142,97 +142,97 @@ msgstr "Заголовок сторінки"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_redirected_url
 msgid "Redirected URL"
-msgstr ""
+msgstr "Перенаправлена URL-адреса"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_code
 msgid "Short URL Code"
-msgstr ""
+msgstr "Короткий код URL"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code
 msgid "Short URL code"
-msgstr ""
+msgstr "Короткий код URL"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_view_click_statistics
 msgid "Statistics of Clicks"
-msgstr ""
+msgstr "Статистика натискань"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_url
 msgid "Target URL"
-msgstr ""
+msgstr "Цільова URL"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Title and URL"
-msgstr ""
+msgstr "Заголовок URL"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
-msgstr ""
+msgstr "Відстеження посилання"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
 msgid "Tracked URL"
-msgstr ""
+msgstr "Відстеження URL-адреси"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
-msgstr ""
+msgstr "Відкрити сторінку"
 
 #. module: link_tracker
 #: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
-msgstr ""
+msgstr "Відкрити веб-сторінку"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Website Link"
-msgstr ""
+msgstr "Посилання веб-сайту"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_form
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_graph
 msgid "Website Link Clicks"
-msgstr ""
+msgstr "Натискання посилання веб-сайту"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form_stats
 msgid "Website Link Graph"
-msgstr ""
+msgstr "Графіка посилання веб-сайту"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_graph
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_tree
 msgid "Website Links"
-msgstr ""
+msgstr "Посилання веб-сайту"
 
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_click_tree
 msgid "Website Links Clicks"
-msgstr ""
+msgstr "Натискання посилань веб-сайту"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker
 msgid "link.tracker"
-msgstr ""
+msgstr "link.tracker"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
 msgid "link.tracker.click"
-msgstr ""
+msgstr "link.tracker.click"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "link.tracker.code"
-msgstr ""
+msgstr "link.tracker.code"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats
 msgid "link.tracker.form.graph.action"
-msgstr ""
+msgstr "link.tracker.form.graph.action"

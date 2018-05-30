@@ -5877,20 +5877,20 @@ msgid ""
 "       the spreading, for the selected Analytic Accounts of Budgets.\n"
 msgstr ""
 "\n"
-"Module permettant aux comptables de gérer les budgets analytiques et croisés.\n"
-"================================================== ========================\n"
+"Module permettant aux comptables de gérer les budgets analytiques et croisés\n"
+"============================================================================\n"
 "\n"
-"  Une fois que les budgets sont définis (dans Facturation / Budgets / Budgets), les gestionnaires de projet peuvent fixer le montant prévu sur chaque compte analytique.\n"
+"Une fois que les budgets sont définis (dans Facturation / Budgets / Budgets), les gestionnaires de projet peuvent fixer le montant prévu sur chaque compte analytique.\n"
 "\n"
 "Le comptable a la possibilité de voir le total des prévisions de chaque budget afin d'assurer que le total prévu n'est ni supérieur ni inférieur à ce qu'il avait planifié. Chaque budget peut être visualisé sous forme de vue graphique.\n"
 "\n"
-"  Trois rapports sont disponibles:\n"
-"  ----------------------------\n"
-"  1. Le premier est réalisé à partir d'une liste des budgets. Il donne la répartition des comptes analytiques pour ces budgets.\n"
+"Trois rapports sont disponibles:\n"
+"--------------------------------\n"
 "\n"
-"  2. Le second est un résumé du précédent, il donne la répartition par comptes analytiques budgétaires sélectionnés\n"
-"\n"
+"1. Le premier est réalisé à partir d'une liste des budgets. Il donne la répartition des comptes analytiques pour ces budgets.\n"
+"2. Le second est un résumé du précédent, il donne la répartition par comptes analytiques budgétaires sélectionnés\n"
 "3. Le dernier est réalisé à partir du plan comptable analytique. Il donne la répartition, pour les comptes analytiques budgétaires sélectionnés.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_action_rule
@@ -13012,7 +13012,7 @@ msgid ""
 "If several child actions return an action, only the last one will be executed.\n"
 "                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action."
 msgstr ""
-"Si plusieurs actions filles retournent une action, seul la dernière sera exécutée.\n"
+"Si plusieurs actions filles retournent une action, seule la dernière sera exécutée.\n"
 "Cela peut se produire quand on a : \n"
 " - des actions-serveur qui exécutent du code retournant une action \n"
 " - ou des actions-serveur retournant une action du client."
@@ -14714,6 +14714,18 @@ msgstr "Gestion des Membres"
 #: model:ir.module.module,shortdesc:base.module_note_pad
 msgid "Memos pad"
 msgstr "Blocs notes"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name

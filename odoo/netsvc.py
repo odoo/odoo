@@ -145,6 +145,13 @@ def init_logger():
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
             if tools.config['logrotate'] is not False:
+                if tools.config['workers'] > 1:
+                    # TODO: fallback to regular file logging in master for safe(r) defaults?
+                    #
+                    # Doing so here would be a good idea but also might break
+                    # situations were people do log-shipping of rotated data?
+                    _logger.warn("WARNING: built-in log rotation is not reliable in multi-worker scenarios and may incur significant data loss. "
+                                 "It is strongly recommended to use an external log rotation utility or use system loggers (--syslog) instead.")
                 handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
             elif os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)

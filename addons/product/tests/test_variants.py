@@ -40,6 +40,15 @@ class TestVariantsSearch(TransactionCase):
         self.assertIn(self.product_shirt_template, search_value,
                       'Shirt should be found searching L')
 
+    def test_name_search(self):
+        self.product_slip_template = self.env['product.template'].create({
+            'name': 'Slip',
+        })
+        res = self.env['product.product'].name_search('Shirt', [], 'not ilike', None)
+        res_ids = [r[0] for r in res]
+        self.assertIn(self.product_slip_template.product_variant_ids.id, res_ids,
+                      'Slip should be found searching \'not ilike\'')
+
 
 class TestVariants(common.TestProductCommon):
 

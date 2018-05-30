@@ -3,6 +3,7 @@
 # * payment_stripe
 # 
 # Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2018
 # Carson Tsai <Ra661tCat@gmail.com>, 2018
 # Martin Trigaux, 2018
 msgid ""
@@ -26,26 +27,27 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
+"指向您的品牌或產品的正方形圖片的相對或絕對網址。在條紋配置文件中定義。請參閱：https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "信用卡認證編號"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card Holder Name"
-msgstr ""
+msgstr "卡持有人姓名"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card Number"
-msgstr ""
+msgstr "卡號"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
 msgid "Checkout Image URL"
-msgstr ""
+msgstr "檢出圖像URL"
 
 #. module: payment_stripe
 #. openerp-web
@@ -57,7 +59,7 @@ msgstr "關閉"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "確認<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: payment_stripe
 #. openerp-web
@@ -69,17 +71,17 @@ msgstr "錯誤"
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Expiration Date"
-msgstr "有效日期"
+msgstr "到期日期"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "MM / YY"
-msgstr ""
+msgstr "MM / YY"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "款項讓受方"
+msgstr "付款方式"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
@@ -91,7 +93,7 @@ msgstr "付款交易"
 #: code:addons/payment_stripe/static/src/js/stripe.js:43
 #, python-format
 msgid "Payment error"
-msgstr ""
+msgstr "付款錯誤"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
@@ -107,7 +109,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment.py:120
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
-msgstr ""
+msgstr "Stripe：已找到 %s 個可用於參考 %s 的訂單"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:111
@@ -121,9 +123,9 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment.py:116
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr ""
+msgstr "Stripe：未找到參考 %s 的訂單"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"

@@ -1397,7 +1397,7 @@ msgstr "会计凭证行调节"
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr "会计凭证行调节(销账)"
+msgstr "会计凭证行调节(冲减)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1586,6 +1586,11 @@ msgstr "地址"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
 msgstr "调整税金"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -3217,7 +3222,7 @@ msgstr "创建供应商"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:1887
 #, python-format
 msgid "Create Write-off"
-msgstr "创建销账"
+msgstr "创建冲减"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -3253,7 +3258,7 @@ msgstr "创建模型"
 #: code:addons/account/static/src/js/account_reconciliation_widgets.js:2493
 #, python-format
 msgid "Create writeoff"
-msgstr "创建销账"
+msgstr "创建冲减"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5413,7 +5418,7 @@ msgstr "提示发票已送出。"
 #, python-format
 msgid ""
 "It is mandatory to specify an account and a journal to create a write-off."
-msgstr "创建销账的时候必须要制定科目和日记账"
+msgstr "创建冲减的时候必须要制定科目和日记账"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:322
@@ -7636,13 +7641,13 @@ msgstr "调节分录"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 msgid "Reconcile With Write-Off"
-msgstr "销账式调节"
+msgstr "冲减式调节"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:94
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr "销账式调节"
+msgstr "冲减调节"
 
 #. module: account
 #. openerp-web
@@ -10155,27 +10160,27 @@ msgstr "税金调整的向导"
 #: model:ir.ui.view,arch_db:account.view_account_move_line_reconcile_full
 #, python-format
 msgid "Write-Off"
-msgstr "销账"
+msgstr "冲减"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_journal_id
 msgid "Write-Off Journal"
-msgstr "销账日记账"
+msgstr "冲减日记账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
 msgid "Write-Off Move"
-msgstr "销账凭证"
+msgstr "冲减凭证"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff_writeoff_acc_id
 msgid "Write-Off account"
-msgstr "销账科目"
+msgstr "冲减科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_writeoff
 msgid "Write-Off amount"
-msgstr "销账金额"
+msgstr "冲减金额"
 
 #. module: account
 #: sql_constraint:account.move.line:0

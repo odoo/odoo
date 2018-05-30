@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_control_suppliers
@@ -29,6 +29,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"- Натисніть на <span class=\"fa fa-phone text-success\"></span> оголосити, що замовлення замолвено <br>\n"
+"                - Натисніть на <span class=\"fa fa-check text-success\"></span> оголосити, що замовлення отримано <br>\n"
+"                - Натисніть на <span class=\"fa fa-times-circle text-danger\"></span> оголосити, що замовлення не доступно"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -37,6 +40,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"- Натисніть на <span class=\"fa fa-phone text-success\"></span> оголосити, що замовлення замолвено <br>\n"
+"                - Натисніть на <span class=\"fa fa-check text-success\"></span> оголосити, що замовлення отримано <br>\n"
+"                - Натисніть на <span class=\"fa fa-times-circle text-danger\"></span> оголосити, що замовлення не доступно"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -55,6 +61,9 @@ msgid ""
 "                An expense is automatically created at the order receipt.<br>\n"
 "                A payment represents the employee reimbursement to the company."
 msgstr ""
+"Грошовий рух може бути або витратою, або оплатою.<br>\n"
+"                Витрата автоматично створюється за чековим замовленням.<br>\n"
+"                Оплата являє собою відшкодування співробітникам компанії."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_action
@@ -93,6 +102,8 @@ msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
 "                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
 msgstr ""
+"Попередження використовуються для попередження працівника від можливих проблем, пов'язаних із замовленнями обіду.\n"
+"Для створення оповіщення про обід необхідно визначити його рекурсію, часовий інтервал, протягом якого сповіщення має бути виконане, і повідомлення, яке потрібно відобразити."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -133,7 +144,7 @@ msgstr "По співробітникам"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
 msgid "By Order"
-msgstr ""
+msgstr "Замовленням"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
@@ -148,7 +159,7 @@ msgstr "За постачальниками"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_description
 msgid "Can be an order or a payment"
-msgstr ""
+msgstr "Можебути замовленням або платіжкою"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_cashmove_amount
@@ -339,6 +350,10 @@ msgid ""
 "                - Time interval: from 00h00 am to 11h59 pm<br>\n"
 "                - Message: \"You must order before 10h30 am\""
 msgstr ""
+"Наприклад: <br>\n"
+"                - Пробудження: щодня<br>\n"
+"                - Часовий інтервал: з 00:00 до 11:55 вечора<br>\n"
+"                - Повідомлення: \"Ви повинні замовити до 10:30 ранку\""
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -363,6 +378,9 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+"Допомагає вам керувати вашими потребами на обід, якщо ви є менеджером, ви "
+"зможете створювати нові товари, забирати гроші та підтверджувати або "
+"скасовувати замовлення."
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -390,6 +408,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash moves can be either an expense or a payment.\n"
 "                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Тут ви можете бачити ваші касові операції.<br>Грошові рухи можуть бути як витратами, так і платіжками.\n"
+"Витрата автоматично створюється при отриманні замовлення, тоді як оплата - відшкодування компанії, закодованої менеджером."
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
@@ -470,13 +490,13 @@ msgstr "Ланч"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Обіднє сповіщення"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:234
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "Обідня касова операція"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:63
@@ -561,19 +581,19 @@ msgstr "Примітка"
 #: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager cancels the orders."
-msgstr ""
+msgstr "Лише ваш менеджер обіду скасовує замовлення."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:163
 #, python-format
 msgid "Only your lunch manager processes the orders."
-msgstr ""
+msgstr "Лише ваш менеджер обідів обробляє замовлення."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch.py:183
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
-msgstr ""
+msgstr "Лише ваш менеджер обіду встановлює замовлення, як отримане."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
@@ -592,7 +612,7 @@ msgstr "Місяць замовлення"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Дерево рядків замовення"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
@@ -698,12 +718,12 @@ msgstr "Дерево товарів"
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "Отримано"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Receive meals"
-msgstr ""
+msgstr "Отримана їжа"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_search
@@ -719,7 +739,7 @@ msgstr "Повторення"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 msgid "Register Cash Moves"
-msgstr ""
+msgstr "Реєстр касових операцій"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_saturday
@@ -797,6 +817,8 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"Немає попереднього запису замовлення. Натисніть \"Мій обід\", а потім "
+"створіть новий ланч."
 
 #. module: lunch
 #. openerp-web
@@ -898,44 +920,44 @@ msgstr ""
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "форма касової операції"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree_2
 msgid "cashmove tree"
-msgstr ""
+msgstr "дерево касових операцій"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "касова операція обіду"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "оплата обіду співробітника"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line
 msgid "lunch order line"
-msgstr ""
+msgstr "рядок замовлення обіду"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "lunch product"
-msgstr ""
+msgstr "обідній товар"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "lunch product category"
-msgstr ""
+msgstr "категорія товару обід"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_line_lucky
 msgid "lunch.order.line.lucky"
-msgstr ""
+msgstr "lunch.order.line.lucky"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
