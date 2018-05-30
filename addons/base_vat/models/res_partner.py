@@ -78,7 +78,14 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     base_vat_check_status = fields.Selection(selection=VAT_CHECK_ANSWERS, string='VAT Verification Status', compute='compute_base_vat_check_status')
-    base_vat_vies_answer = fields.Selection(selection=VAT_CHECK_ANSWERS, string='Cached Answer from VIES', help="Technical field containing the answer received from VIES regarding this partner's VAT number, if the service has been contacted for it. None otherwise.")
+
+    # Using a cache field in conjunction with a non-stored computed field like
+    # this allows changing the vat check status (hence, the color of the field
+    # in form view) when the current company is changed from one with VIES
+    # setting on to another not using it, without losing the information gotten
+    # from VIES about the VAT number of each partner, and so without needing
+    # calling VIES again next time we switch to a company with VIES check enabled.
+    base_vat_cached_vies_answer = fields.Selection(selection=VAT_CHECK_ANSWERS, string='Cached Answer from VIES', help="Technical field containing the answer received from VIES regarding this partner's VAT number, if the service has been contacted for it. None otherwise.")
 
     @api.model
     def compact_vat_number(self, vat):
@@ -158,27 +165,16 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.onchange('vat', 'commercial_partner_id')
+    @api.onchange('vat', 'commercial_partner_id', 'country_id')
     def _onchange_invalidate_vies_answer(self):
         """ On change invalidating the cached answer from VIES, since the data related
         to the VAT number have changed, so we will need to recall VIES next time
         we need to get base_vat_check_status with a company having vat_check_vies
         option set to True.
         """
-        self.base_vat_vies_answer = False
+        self.base_vat_cached_vies_answer = False
 
-    @api.onchange('country_id')
-    def _onchange_invalidate_vies_answer_on_children(self):
-        """ On change invalidating the cached answer from VIES for this partner's
-        children, since the country code of their parent has changed (and it was
-        possibly used to check their vat number), so we will need to recall VIES next time
-        we need to get base_vat_check_status with a company having vat_check_vies
-        option set to True.
-        """
-        for record in self.child_ids:
-            record.base_vat_vies_answer = False
-
-    @api.depends('vat', 'commercial_partner_id.country_id', 'base_vat_vies_answer')
+    @api.depends('vat', 'country_id', 'commercial_partner_id.country_id')
     def compute_base_vat_check_status(self):
         for partner in self:
             company = self.env.context.get('company_id')
@@ -186,13 +182,24 @@ class ResPartner(models.Model):
                 company = self.env.user.company_id
             check_rslt = 'unknown'
             if partner.vat:
-                if partner.parent_id and partner.vat == partner.parent_id.vat:
-                    check_rslt = partner.parent_id.base_vat_check_status
+                if partner.parent_id: # we cannot check partner != commercial_partner_id directly, because of newIds in edition mode
+                    check_rslt = partner.commercial_partner_id.base_vat_check_status
                 elif company.vat_check_vies:
-                    if not partner.base_vat_vies_answer: # We only call the webservice if we haven't called it before, otherwise we use cached data
-                        partner.base_vat_vies_answer = partner._check_and_interpret_vat(self.vies_vat_check)
+                    if not partner.base_vat_cached_vies_answer or partner.base_vat_cached_vies_answer == 'unknown':
+                         # We only call the webservice if we haven't called it
+                         # before or did not return anything, otherwise we use cached data
 
-                    check_rslt = partner.base_vat_vies_answer
+                        vies_answer = partner._check_and_interpret_vat(self.vies_vat_check)
+
+                        if isinstance(partner.id, models.NewId):
+                            # If we are editing the record, the new cached data is part of the edited data, hence cancelable
+                            partner.base_vat_cached_vies_answer = vies_answer
+                        else:
+                            # If we are not editing, the cached data must be directly saved to db
+                            # (doing a mere '=' does not work here, since we are in a compute function)
+                            partner.write({'base_vat_cached_vies_answer': vies_answer})
+
+                    check_rslt = partner.base_vat_cached_vies_answer
                 else:
                     check_rslt = partner._check_and_interpret_vat(self.simple_vat_check)
 

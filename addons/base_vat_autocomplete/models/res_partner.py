@@ -106,7 +106,11 @@ class ResCompany(models.Model):
     def vies_vat_change(self):
         self.ensure_one()
         company_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
-        company_name, company_address = self.env['res.partner']._get_partner_vals(self.vat)
+
+        vat_country, vat_number = self.env['res.partner']._split_vat(self.vat)
+        vies_result = self.env['res.partner'].vies_vat_check(vat_country, vat_number)
+
+        company_name, company_address = self.env['res.partner']._parse_partner_vals(vies_result)
         if not self.name and company_name:
             self.name = company_name
         #set the address fields
