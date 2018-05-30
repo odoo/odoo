@@ -19,7 +19,7 @@ tour.register('crm_tour', {
     position: "bottom",
 }, {
     trigger: ".o_kanban_quick_create input:first",
-    content: _t("<b>Choose a name</b> for your opportunity."),
+    content: _t("<b>Choose a name</b> for your opportunity, example: <i>'Need a new website'</i>"),
     position: "right",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
