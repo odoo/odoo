@@ -1756,6 +1756,16 @@ Relational fields
         <field name="recommended_activity_type_id" widget="radio"
             options="{'horizontal':true}"/>
 
+- selection_badge (FieldSelectionBadge)
+    This is a subfield of FieldSelection, but specialized to display all the
+    valid choices as rectangular badges.
+
+    - Supported field types: *selection, many2one*
+
+    .. code-block:: xml
+
+        <field name="recommended_activity_type_id" widget="selection_badge"/>
+
 - many2one (FieldMany2One)
     Default widget for many2one fields.
 
