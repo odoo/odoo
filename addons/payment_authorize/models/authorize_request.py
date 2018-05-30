@@ -78,7 +78,7 @@ class AuthorizeAPI():
 
         :param record acquirer: payment.acquirer account that will be contacted
         """
-        if acquirer.environment == 'test':
+        if acquirer.status == 'test':
             self.url = 'https://apitest.authorize.net/xml/v1/request.api'
         else:
             self.url = 'https://api.authorize.net/xml/v1/request.api'

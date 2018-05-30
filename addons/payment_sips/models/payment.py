@@ -59,7 +59,7 @@ class AcquirerSips(models.Model):
         # Test key provided by Worldine
         key = u'002001000000001_KEY1'
 
-        if self.environment == 'prod':
+        if self.status == 'enabled':
             key = getattr(self, 'sips_secret')
 
         shasign = sha256((data + key).encode('utf-8'))
@@ -74,7 +74,7 @@ class AcquirerSips(models.Model):
         if not currency_code:
             raise ValidationError(_('Currency not supported by Wordline'))
         amount = int(values['amount'] * 100)
-        if self.environment == 'prod':
+        if self.status == 'enabled':
             # For production environment, key version 2 is required
             merchant_id = getattr(self, 'sips_merchant_id')
             key_version = self.env['ir.config_parameter'].sudo().get_param('sips.key_version', '2')
@@ -109,7 +109,7 @@ class AcquirerSips(models.Model):
     @api.multi
     def sips_get_form_action_url(self):
         self.ensure_one()
-        return self.environment == 'prod' and self.sips_prod_url or self.sips_test_url
+        return self.status == 'enabled' and self.sips_prod_url or self.sips_test_url
 
 
 class TxSips(models.Model):

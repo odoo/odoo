@@ -21,9 +21,9 @@ class PaymentAcquirerPayumoney(models.Model):
     payumoney_merchant_key = fields.Char(string='Merchant Key', required_if_provider='payumoney', groups='base.group_user')
     payumoney_merchant_salt = fields.Char(string='Merchant Salt', required_if_provider='payumoney', groups='base.group_user')
 
-    def _get_payumoney_urls(self, environment):
+    def _get_payumoney_urls(self, status):
         """ PayUmoney URLs"""
-        if environment == 'prod':
+        if status == 'enabled':
             return {'payumoney_form_url': 'https://secure.payu.in/_payment'}
         else:
             return {'payumoney_form_url': 'https://test.payu.in/_payment'}
@@ -77,7 +77,7 @@ class PaymentAcquirerPayumoney(models.Model):
     @api.multi
     def payumoney_get_form_action_url(self):
         self.ensure_one()
-        return self._get_payumoney_urls(self.environment)['payumoney_form_url']
+        return self._get_payumoney_urls(self.status)['payumoney_form_url']
 
 
 class PaymentTransactionPayumoney(models.Model):

@@ -13,7 +13,6 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer">
-                    <field name="environment" invisible='1'/>
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
@@ -23,31 +22,6 @@
                         <field name="inbound_payment_method_ids" invisible="1"/>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
                             <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
-                            <button name="toggle_environment_value"
-                                    attrs="{'invisible': ['|', ('environment', '=', 'test'), ('provider', '=', 'transfer')]}"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-play">
-                                <div class="o_stat_info o_field_widget">
-                                    <span class="text-success">Production</span>
-                                    <span class="o_stat_text">Environment</span>
-                                </div>
-                            </button>
-                            <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
-                            <button name="toggle_environment_value"
-                                    attrs="{'invisible': ['|', ('environment', '=', 'prod'), ('provider', '=', 'transfer')]}"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-stop">
-                                <div class="o_stat_info o_field_widget">
-                                    <span class="o_warning_text">Test</span>
-                                    <span class="o_stat_text">Environment</span>
-                                </div>
-                            </button>
-                            <button name="toggle_website_published"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-globe">
-                                <field name="website_published" widget="boolean_button"
-                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
-                            </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
@@ -64,6 +38,7 @@
                                 <field name="provider" groups="base.group_no_one"/>
                                 <field name="website_name" placeholder="Display name" readonly="False" nolabel="0"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
+                                <field name="status" widget="radio"/>
                             </group>
                         </group>
                         <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
@@ -134,15 +109,14 @@
                     <field name="id"/>
                     <field name="name"/>
                     <field name="description"/>
-                    <field name="environment"/>
                     <field name="provider"/>
                     <field name="module_id"/>
                     <field name="module_state"/>
-                    <field name="website_published"/>
+                    <field name="status"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
-                            <div t-attf-class="oe_kanban_global_click #{installed and record.website_published.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
+                            <div t-attf-class="oe_kanban_global_click #{installed and record.status.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                                 <div class="o_kanban_image">
                                     <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.raw_value)" alt="Acquirer"/>
                                 </div>
@@ -152,11 +126,11 @@
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
-                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
+                                        <field name="status" widget="label_selection" options="{'classes': {'test': 'warning', 'enabled': 'success', 'disabled': 'default'}}"/>
                                     </t>
-                                    <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm" name="button_immediate_install">Install</button>
-                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Activate</button>
-                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>
+                                    <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm"
+                                            name="button_immediate_install">Install
+                                    </button>
                                 </div>
                             </div>
                         </t>
@@ -173,8 +147,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="provider"/>
-                    <field name="website_published"/>
-                    <field name="environment"/>
+                    <field name="status"/>
                 </tree>
             </field>
         </record>
@@ -188,7 +161,6 @@
                     <field name="provider"/>
                     <group expand="0" string="Group By">
                         <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
-                        <filter string="Environment" name="environment" domain="[]" context="{'group_by': 'environment'}"/>
                     </group>
                 </search>
             </field>

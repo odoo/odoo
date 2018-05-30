@@ -54,10 +54,10 @@ class PaymentAcquirerIngenico(models.Model):
         """ Ingenico URLS:
          - standard order: POST address for form-based """
         return {
-            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard_utf8.asp' % (environment,),
-            'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect_utf8.asp' % (environment,),
-            'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect_utf8.asp' % (environment,),
-            'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
+            'ogone_standard_order_url': 'https://secure.ogone.com/ncol/%s/orderstandard_utf8.asp' % ('prod' if status == 'enabled' else status,),
+            'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect_utf8.asp' % ('prod' if status == 'enabled' else status,),
+            'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect_utf8.asp' % ('prod' if status == 'enabled' else status,),
+            'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % ('prod' if status == 'enabled' else status,),
         }
 
     def _ingenico_generate_shasign(self, inout, values):
@@ -374,7 +374,7 @@ class PaymentTxIngenico(models.Model):
 
         data['SHASIGN'] = self.acquirer_id._ingenico_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % ('prod' if self.acquirer_id.status == 'enabled' else self.acquirer_id.status)
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -408,7 +408,7 @@ class PaymentTxIngenico(models.Model):
         }
         data['SHASIGN'] = self.acquirer_id._ingenico_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (self.acquirer_id.environment)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % ('prod' if self.acquirer_id.status == 'enabled' else self.acquirer_id.status)
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -500,7 +500,7 @@ class PaymentTxIngenico(models.Model):
             'PSWD': account.ingenico_password,
         }
 
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
+        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % ('prod' if self.acquirer_id.status == 'enabled' else self.acquirer_id.status)
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -547,7 +547,7 @@ class PaymentToken(models.Model):
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
 
-            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (acquirer.environment,)
+            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % ('prod' if acquirer.status == 'enabled' else acquirer.status,)
             result = requests.post(url, data=data).content
 
             try:

@@ -54,9 +54,9 @@ class AcquirerPaypal(models.Model):
         return res
 
     @api.model
-    def _get_paypal_urls(self, environment):
+    def _get_paypal_urls(self, status):
         """ Paypal URLS """
-        if environment == 'prod':
+        if status == 'enabled':
             return {
                 'paypal_form_url': 'https://www.paypal.com/cgi-bin/webscr',
                 'paypal_rest_url': 'https://api.paypal.com/v1/oauth2/token',
@@ -119,7 +119,7 @@ class AcquirerPaypal(models.Model):
 
     @api.multi
     def paypal_get_form_action_url(self):
-        return self._get_paypal_urls(self.environment)['paypal_form_url']
+        return self._get_paypal_urls(self.status)['paypal_form_url']
 
 
 class TxPaypal(models.Model):

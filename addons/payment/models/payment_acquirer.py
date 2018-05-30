@@ -59,7 +59,7 @@ class PaymentAcquirer(models.Model):
     """
     _name = 'payment.acquirer'
     _description = 'Payment Acquirer'
-    _order = 'website_published desc, sequence, name'
+    _order = 'status desc, sequence, name'
 
     def _get_default_view_template_id(self):
         return self.env.ref('payment.default_acquirer_button', raise_if_not_found=False)
@@ -81,13 +81,14 @@ class PaymentAcquirer(models.Model):
     registration_view_template_id = fields.Many2one(
         'ir.ui.view', 'S2S Form Template', domain=[('type', '=', 'qweb')],
         help="Template for method registration")
-    environment = fields.Selection([
+    status = fields.Selection([
+        ('enabled', 'Production'),
         ('test', 'Test'),
-        ('prod', 'Production')], string='Environment',
-        default='test', oldname='env', required=True)
-    website_published = fields.Boolean(
-        'Visible in Portal / Website', copy=False,
-        help="Make this payment acquirer available (Customer invoices, etc.)")
+        ('disabled', 'Disabled')], string='Mode', help='In test mode, a fake payment is processed through a test '
+                                                     'payment interface. This mode is advised when setting up the '
+                                                     'acquirer. Watch out, test and production modes require '
+                                                     'different credentials.',
+        default='disabled', required=True)
     # Formerly associated to `authorize` option from auto_confirm
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
@@ -197,18 +198,19 @@ class PaymentAcquirer(models.Model):
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
-    @api.multi
-    def _check_required_if_provider(self):
+    def _check_missing_required_fields(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
-        required if record.provider is <provider>. """
-        for acquirer in self:
-            if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in self._fields.items()):
-                return False
-        return True
-
-    _constraints = [
-        (_check_required_if_provider, 'Required fields not filled', []),
-    ]
+        required if record.provider is <provider>.
+        Else if the field has 'required_if_provider=""' attribute, then it is required
+        for all providers"""
+        missing_fields = []
+        for field, f in self._fields.items():
+            if getattr(f, 'required_if_provider', None) in [self.provider, ''] and not self[field]:
+                missing_fields.append(f.string)
+        if missing_fields:
+            return ', '.join(missing_fields)
+        else:
+            return False
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -243,7 +245,7 @@ class PaymentAcquirer(models.Model):
             'default_debit_account_id': account.id,
             'default_credit_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
-            'show_on_dashboard': self.website_published,
+            'show_on_dashboard': self.status != 'disabled',
             # Don't show payment methods in the backend.
             'inbound_payment_method_ids': inbound_payment_method_ids,
             'outbound_payment_method_ids': [],
@@ -295,18 +297,13 @@ class PaymentAcquirer(models.Model):
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
-        return super(PaymentAcquirer, self).write(self._check_on_empty_html_fields(vals))
-
-    @api.multi
-    def toggle_website_published(self):
-        ''' When clicking on the website publish toggle button, the website_published is reversed and
-        the acquirer journal is set or not in favorite on the dashboard.
-        '''
-        self.ensure_one()
-        self.website_published = not self.website_published
-        if self.journal_id:
-            self.journal_id.show_on_dashboard = self.website_published
-        return True
+        res = super(PaymentAcquirer, self).write(self._check_on_empty_html_fields(vals))
+        for acquirer in self.filtered(lambda a: a.status != 'disabled'):
+            if acquirer._check_missing_required_fields():
+                super(PaymentAcquirer, acquirer).write({'status': 'disabled'})
+                raise ValidationError("Some information is missing to activate the payment acquirer: \n %s"
+                                      % acquirer._check_missing_required_fields())
+        return res
 
     @api.multi
     def get_form_action_url(self):
@@ -331,7 +328,7 @@ class PaymentAcquirer(models.Model):
             company = self.env.user.company_id
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.sudo().search([('website_published', '=', True), ('company_id', '=', company.id)])
+        active_acquirers = self.sudo().search([('status', '!=', 'disabled'), ('company_id', '=', company.id)])
         form_acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {
@@ -493,12 +490,6 @@ class PaymentAcquirer(models.Model):
             method = getattr(self, cust_method_name)
             return method(data)
         return True
-
-    @api.multi
-    def toggle_environment_value(self):
-        prod = self.filtered(lambda acquirer: acquirer.environment == 'prod')
-        prod.write({'environment': 'test'})
-        (self-prod).write({'environment': 'prod'})
 
     @api.multi
     def button_immediate_install(self):

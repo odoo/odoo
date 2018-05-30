@@ -21,7 +21,7 @@ class OgonePayment(PaymentAcquirerCommon):
     def test_10_ogone_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.status, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering + shasign
@@ -98,7 +98,7 @@ class OgonePayment(PaymentAcquirerCommon):
     @mute_logger('odoo.addons.payment_ingenico.models.payment', 'ValidationError')
     def test_20_ogone_form_management(self):
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.status, 'test', 'test without test environment')
 
         # typical data posted by ogone after client has successfully paid
         ogone_post_data = {
@@ -161,7 +161,7 @@ class OgonePayment(PaymentAcquirerCommon):
     def test_30_ogone_s2s(self):
         test_ref = 'test_ref_%.15f' % time.time()
         # be sure not to do stupid thing
-        self.assertEqual(self.ogone.environment, 'test', 'test without test environment')
+        self.assertEqual(self.ogone.status, 'test', 'test without test environment')
 
         # create a new draft tx
         tx = self.env['payment.transaction'].create({

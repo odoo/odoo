@@ -30,10 +30,10 @@ class AcquirerBuckaroo(models.Model):
     brq_websitekey = fields.Char('WebsiteKey', required_if_provider='buckaroo', groups='base.group_user')
     brq_secretkey = fields.Char('SecretKey', required_if_provider='buckaroo', groups='base.group_user')
 
-    def _get_buckaroo_urls(self, environment):
+    def _get_buckaroo_urls(self, status):
         """ Buckaroo URLs
         """
-        if environment == 'prod':
+        if status == 'enabled':
             return {
                 'buckaroo_form_url': 'https://checkout.buckaroo.nl/html/',
             }
@@ -90,7 +90,7 @@ class AcquirerBuckaroo(models.Model):
             'Brq_amount': values['amount'],
             'Brq_currency': values['currency'] and values['currency'].name or '',
             'Brq_invoicenumber': values['reference'],
-            'brq_test': False if self.environment == 'prod' else True,
+            'brq_test': False if self.status == 'enabled' else True,
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
@@ -103,7 +103,7 @@ class AcquirerBuckaroo(models.Model):
 
     @api.multi
     def buckaroo_get_form_action_url(self):
-        return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
+        return self._get_buckaroo_urls(self.status)['buckaroo_form_url']
 
 
 class TxBuckaroo(models.Model):

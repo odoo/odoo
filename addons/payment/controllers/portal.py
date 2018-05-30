@@ -8,7 +8,7 @@ from odoo.http import request
 class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
     def payment_method(self, **kwargs):
-        acquirers = list(request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')]))
+        acquirers = list(request.env['payment.acquirer'].search([('status', '!=', 'disabled'), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')]))
         partner = request.env.user.partner_id
         payment_tokens = partner.payment_token_ids
         payment_tokens |= partner.commercial_partner_id.sudo().payment_token_ids
@@ -72,7 +72,7 @@ class WebsitePayment(http.Controller):
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
         if not acquirers:
-            acquirers = env['payment.acquirer'].search([('website_published', '=', True), ('company_id', '=', user.company_id.id)])
+            acquirers = env['payment.acquirer'].search([('status', '!=', 'disabled'), ('company_id', '=', user.company_id.id)])
 
         # Check partner
         partner_id = user.partner_id.id if not user._is_public() else False

@@ -36,7 +36,7 @@ class AdyenForm(AdyenCommon):
     def test_10_adyen_form_render(self):
         # be sure not to do stupid things
         adyen = self.env.ref('payment.payment_acquirer_adyen')
-        self.assertEqual(adyen.environment, 'test', 'test without test environment')
+        self.assertEqual(adyen.status, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering

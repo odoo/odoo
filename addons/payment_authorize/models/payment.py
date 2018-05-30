@@ -48,9 +48,9 @@ class PaymentAcquirerAuthorize(models.Model):
         res['tokenize'].append('authorize')
         return res
 
-    def _get_authorize_urls(self, environment):
+    def _get_authorize_urls(self, status):
         """ Authorize URLs """
-        if environment == 'prod':
+        if status == 'enabled':
             return {'authorize_form_url': 'https://secure2.authorize.net/gateway/transact.dll'}
         else:
             return {'authorize_form_url': 'https://test.authorize.net/gateway/transact.dll'}
@@ -120,7 +120,7 @@ class PaymentAcquirerAuthorize(models.Model):
     @api.multi
     def authorize_get_form_action_url(self):
         self.ensure_one()
-        return self._get_authorize_urls(self.environment)['authorize_form_url']
+        return self._get_authorize_urls(self.status)['authorize_form_url']
 
     @api.model
     def authorize_s2s_form_process(self, data):

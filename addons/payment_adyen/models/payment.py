@@ -28,10 +28,10 @@ class AcquirerAdyen(models.Model):
     adyen_skin_hmac_key = fields.Char('Skin HMAC Key', required_if_provider='adyen', groups='base.group_user')
 
     @api.model
-    def _get_adyen_urls(self, environment):
+    def _get_adyen_urls(self, status):
         """ Adyen URLs: yhpp: hosted payment page: pay.shtml for single, select.shtml for multiple """
         return {
-            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % ('live' if environment == 'prod' else environment),
+            'adyen_form_url': 'https://%s.adyen.com/hpp/pay.shtml' % ('live' if status == 'enabled' else status),
         }
 
     @api.multi
@@ -159,7 +159,7 @@ class AcquirerAdyen(models.Model):
 
     @api.multi
     def adyen_get_form_action_url(self):
-        return self._get_adyen_urls(self.environment)['adyen_form_url']
+        return self._get_adyen_urls(self.status)['adyen_form_url']
 
 
 class TxAdyen(models.Model):
