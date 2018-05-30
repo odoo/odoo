@@ -5,8 +5,8 @@ from odoo import fields, models, tools
 
 
 class LeaveReport(models.Model):
-
     _name = "hr.leave.report"
+    _description = 'Leave Summary / Report'
     _auto = False
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
