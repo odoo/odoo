@@ -70,7 +70,7 @@ class PaymentAcquirer(models.Model):
     description = fields.Html('Description')
     sequence = fields.Integer('Sequence', default=10, help="Determine the display order")
     provider = fields.Selection(
-        selection=[('manual', 'Manual Configuration')], string='Provider',
+        selection=[('manual', 'Custom Payment Form')], string='Provider',
         default='manual', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
