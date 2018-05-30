@@ -914,7 +914,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Add a new lead')
         else:
-            help_title = _('Create a new opportunity to add it to your pipeline')
+            help_title = _('Create an opportunity in your pipeline')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
