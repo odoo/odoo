@@ -72,7 +72,7 @@ class Users(models.Model):
         return write_res
 
     @api.model
-    def activity_user_count(self):
+    def systray_get_activities(self):
         query = """SELECT m.id, count(*), act.res_model as model,
                         CASE
                             WHEN %(today)s::date - act.date_deadline::date = 0 Then 'today'

@@ -49,12 +49,12 @@ GROUP BY id"""
                 _logger.info('Note default columns created for user id %s', user.id)
 
     @api.model
-    def activity_user_count(self):
+    def systray_get_activities(self):
         """ If user have not scheduled any note, it will not appear in activity menu.
             Making note activity always visible with number of notes on label. If there is no notes,
             activity menu not visible for note.
         """
-        activities = super(Users, self).activity_user_count()
+        activities = super(Users, self).systray_get_activities()
         notes_count = self.env['note.note'].search_count([('user_id', '=', self.env.uid)])
         if notes_count:
             note_index = next((index for (index, a) in enumerate(activities) if a["model"] == "note.note"), None)
