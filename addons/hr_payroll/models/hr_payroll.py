@@ -630,7 +630,7 @@ class HrPayslip(models.Model):
                         'employee_id': contract.employee_id.id,
                         'quantity': qty,
                         'rate': rate,
-                        'move_id': move.id, #TRESCLOUD agregado
+                        'receivable_move_line_id': move.id, #TRESCLOUD agregado
                     }
                 else:
                     #blacklist this rule and its children
