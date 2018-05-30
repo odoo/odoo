@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Ogone Payment Acquirer',
+    'name': 'Ingenico Payment Acquirer',
     'category': 'Accounting',
-    'summary': 'Payment Acquirer: Ogone Implementation',
+    'summary': 'Payment Acquirer: Ingenico (formerly Ogone)',
     'version': '1.0',
-    'description': """Ogone Payment Acquirer""",
+    'description': """Ingenico Payment Acquirer""",
     'depends': ['payment'],
     'data': [
         'views/payment_views.xml',

@@ -5,7 +5,7 @@ import time
 
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
-from odoo.addons.payment_ogone.controllers.main import OgoneController
+from odoo.addons.payment_ingenico.controllers.main import OgoneController
 from werkzeug import urls
 
 from odoo.tools import mute_logger
@@ -16,7 +16,7 @@ class OgonePayment(PaymentAcquirerCommon):
     def setUp(self):
         super(OgonePayment, self).setUp()
 
-        self.ogone = self.env.ref('payment.payment_acquirer_ogone')
+        self.ogone = self.env.ref('payment.payment_acquirer_ingenico')
 
     def test_10_ogone_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
@@ -95,7 +95,7 @@ class OgonePayment(PaymentAcquirerCommon):
                 'ogone: wrong value for form input %s: received %s instead of %s' % (form_input.get('name'), form_input.get('value'), form_values[form_input.get('name')])
             )
 
-    @mute_logger('odoo.addons.payment_ogone.models.payment', 'ValidationError')
+    @mute_logger('odoo.addons.payment_ingenico.models.payment', 'ValidationError')
     def test_20_ogone_form_management(self):
         # be sure not to do stupid thing
         self.assertEqual(self.ogone.environment, 'test', 'test without test environment')

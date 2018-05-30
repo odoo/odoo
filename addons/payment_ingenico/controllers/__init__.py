@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import ogone
+from . import main

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="ogone_form">
+        <template id="ingenico_form">
             <input type="hidden" name="data_set" t-att-data-action-url="tx_url" data-remove-me=""/>
             <!-- seller -->
             <input type='hidden' name='PSPID' t-att-value='PSPID'/>
@@ -35,8 +35,8 @@
             <input type='hidden' name='CANCELURL' t-att-value='CANCELURL'/>
         </template>
 
-        <template id="ogone_s2s_form">
-            <input type="hidden" name="data_set" data-create-route="/payment/ogone/s2s/create_json_3ds"/>
+        <template id="ingenico_s2s_form">
+            <input type="hidden" name="data_set" data-create-route="/payment/ingenico/s2s/create_json_3ds"/>
             <input type="hidden" name="acquirer_id" t-att-value="id"/>
             <input t-if="return_url" type="hidden" name="return_url" t-att-value="return_url"/>
             <input t-if="partner_id" type="hidden" name="partner_id" t-att-value="partner_id"/>

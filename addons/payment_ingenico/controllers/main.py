@@ -11,33 +11,33 @@ from odoo.addons.payment.models.payment_acquirer import ValidationError
 _logger = logging.getLogger(__name__)
 
 
-class OgoneController(http.Controller):
-    _accept_url = '/payment/ogone/test/accept'
-    _decline_url = '/payment/ogone/test/decline'
-    _exception_url = '/payment/ogone/test/exception'
-    _cancel_url = '/payment/ogone/test/cancel'
+class IngenicoController(http.Controller):
+    _accept_url = '/payment/ingenico/test/accept'
+    _decline_url = '/payment/ingenico/test/decline'
+    _exception_url = '/payment/ingenico/test/exception'
+    _cancel_url = '/payment/ingenico/test/cancel'
 
     @http.route([
-        '/payment/ogone/accept', '/payment/ogone/test/accept',
-        '/payment/ogone/decline', '/payment/ogone/test/decline',
-        '/payment/ogone/exception', '/payment/ogone/test/exception',
-        '/payment/ogone/cancel', '/payment/ogone/test/cancel',
+        '/payment/ingenico/accept', '/payment/ingenico/test/accept',
+        '/payment/ingenico/decline', '/payment/ingenico/test/decline',
+        '/payment/ingenico/exception', '/payment/ingenico/test/exception',
+        '/payment/ingenico/cancel', '/payment/ingenico/test/cancel',
     ], type='http', auth='none')
-    def ogone_form_feedback(self, **post):
-        """ Ogone contacts using GET, at least for accept """
-        _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+    def ingenico_form_feedback(self, **post):
+        """ Ingenico contacts using GET, at least for accept """
+        _logger.info('Ingenico: entering form_feedback with post data %s', pprint.pformat(post))  # debug
+        request.env['payment.transaction'].sudo().form_feedback(post, 'ingenico')
         return werkzeug.utils.redirect(url_unquote_plus(post.pop('return_url', '/')))
 
-    @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
-    def ogone_s2s_create_json(self, **kwargs):
+    @http.route(['/payment/ingenico/s2s/create_json'], type='json', auth='public', csrf=False)
+    def ingenico_s2s_create_json(self, **kwargs):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
-    @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
-    def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+    @http.route(['/payment/ingenico/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
+    def ingenico_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
         if not kwargs.get('partner_id'):
             kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
@@ -59,9 +59,9 @@ class OgoneController(http.Controller):
         if verify_validity != False:
             baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
             params = {
-                'accept_url': baseurl + '/payment/ogone/validate/accept',
-                'decline_url': baseurl + '/payment/ogone/validate/decline',
-                'exception_url': baseurl + '/payment/ogone/validate/exception',
+                'accept_url': baseurl + '/payment/ingenico/validate/accept',
+                'decline_url': baseurl + '/payment/ingenico/validate/decline',
+                'exception_url': baseurl + '/payment/ingenico/validate/exception',
                 'return_url': kwargs.get('return_url', baseurl)
                 }
             tx = token.validate(**params)
@@ -72,8 +72,8 @@ class OgoneController(http.Controller):
 
         return res
 
-    @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
-    def ogone_s2s_create(self, **post):
+    @http.route(['/payment/ingenico/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
+    def ingenico_s2s_create(self, **post):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
@@ -86,9 +86,9 @@ class OgoneController(http.Controller):
         if token and post.get('verify_validity'):
             baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
             params = {
-                'accept_url': baseurl + '/payment/ogone/validate/accept',
-                'decline_url': baseurl + '/payment/ogone/validate/decline',
-                'exception_url': baseurl + '/payment/ogone/validate/exception',
+                'accept_url': baseurl + '/payment/ingenico/validate/accept',
+                'decline_url': baseurl + '/payment/ingenico/validate/decline',
+                'exception_url': baseurl + '/payment/ingenico/validate/exception',
                 'return_url': post.get('return_url', baseurl)
                 }
             tx = token.validate(**params)
@@ -97,20 +97,20 @@ class OgoneController(http.Controller):
         return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
 
     @http.route([
-        '/payment/ogone/validate/accept',
-        '/payment/ogone/validate/decline',
-        '/payment/ogone/validate/exception',
+        '/payment/ingenico/validate/accept',
+        '/payment/ingenico/validate/decline',
+        '/payment/ingenico/validate/exception',
     ], type='http', auth='none')
-    def ogone_validation_form_feedback(self, **post):
+    def ingenico_validation_form_feedback(self, **post):
         """ Feedback from 3d secure for a bank card validation """
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        request.env['payment.transaction'].sudo().form_feedback(post, 'ingenico')
         return werkzeug.utils.redirect(werkzeug.url_unquote(post.pop('return_url', '/')))
 
-    @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
+    @http.route(['/payment/ingenico/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):
         try:
-            tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
-            tx._ogone_s2s_validate_tree(kwargs)
+            tx = request.env['payment.transaction'].sudo()._ingenico_form_get_tx_from_data(kwargs)
+            tx._ingenico_s2s_validate_tree(kwargs)
         except ValidationError:
             return 'ko'
         return 'ok'
