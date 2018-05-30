@@ -26,7 +26,7 @@ QUnit.test('note activity menu widget: create note from activity menu', function
     testUtils.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
-            if (args.method === 'activity_user_count') {
+            if (args.method === 'systray_get_activities') {
                 return $.when(self.data['mail.activity.menu']['records']);
             }
             if (route === '/note/new') {

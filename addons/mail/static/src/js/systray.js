@@ -179,7 +179,7 @@ var ActivityMenu = Widget.extend({
 
         return self._rpc({
             model: 'res.users',
-            method: 'activity_user_count',
+            method: 'systray_get_activities',
             kwargs: {
                 context: session.user_context,
             },

@@ -61,7 +61,7 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
     testUtils.addMockEnvironment(activityMenu, {
             services: this.services,
             mockRPC: function (route, args) {
-                if (args.method === 'activity_user_count') {
+                if (args.method === 'systray_get_activities') {
                     return $.when([]);
                 }
                 return this._super(route, args);
@@ -79,7 +79,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     testUtils.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
-            if (args.method === 'activity_user_count') {
+            if (args.method === 'systray_get_activities') {
                 return $.when(self.data['mail.activity.menu']['records']);
             }
             return this._super(route, args);
