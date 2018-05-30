@@ -820,7 +820,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.basicComposer.do_toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
         this.extendedComposer.do_toggle(this.channel.type !== 'static' && !!this.channel.mass_mailing);
 
-        if (!config.device.touch) {
+        if (!config.device.isMobile) {
             var composer = this.channel.mass_mailing ? this.extendedComposer : this.basicComposer;
             composer.focus();
         }
