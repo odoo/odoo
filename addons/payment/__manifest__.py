@@ -20,6 +20,7 @@
         'views/res_partner_views.xml',
         'security/ir.model.access.csv',
         'security/payment_security.xml',
+        'views/res_config_settings_views.xml',
     ],
     'installable': True,
     'auto_install': True,

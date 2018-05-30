@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.reports.followup</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="account_payment" position="replace">
+                <div id="account_payment" class="content-group" attrs="{'invisible': [('module_account_payment', '=', False)]}">
+                    <div class="mt16">
+                        <button type="action" icon="fa-arrow-right" name="%(payment.action_payment_acquirer)d" string="Payment acquirers" class="oe_link"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
