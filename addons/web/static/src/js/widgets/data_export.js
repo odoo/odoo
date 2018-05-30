@@ -238,13 +238,14 @@ var DataExport = Dialog.extend({
 
         var got_fields = new $.Deferred();
         this.$import_compat_radios.change(function(e) {
+            self.isCompatibleMode = !!$(e.target).val();
             self.$('.o_field_tree_structure').remove();
 
             self._rpc({
                     route: '/web/export/get_fields',
                     params: {
                         model: self.record.model,
-                        import_compat: !!$(e.target).val(),
+                        import_compat: self.isCompatibleMode,
                     },
                 })
                 .done(function (records) {
@@ -260,6 +261,10 @@ var DataExport = Dialog.extend({
                         .remove();
                     got_fields.resolve();
                     self.on_show_data(records);
+                    // In compatible mode add ID field as first field to export
+                    if (self.isCompatibleMode) {
+                        self.$('.o_fields_list').prepend(new Option(_('External ID'), 'id'));
+                    }
                     _.each(records, function (record) {
                         if (_.contains(self.defaultExportFields, record.id)) {
                             self.add_field(record.id, record.string);
@@ -473,7 +478,9 @@ var DataExport = Dialog.extend({
             Dialog.alert(this, _t("Please select fields to export..."));
             return;
         }
-        exported_fields.unshift({name: 'id', label: _t('External ID')});
+        if (!this.isCompatibleMode) {
+            exported_fields.unshift({name: 'id', label: _t('External ID')});
+        }
 
         var export_format = this.$export_format_inputs.filter(':checked').val();
 

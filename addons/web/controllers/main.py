@@ -1257,9 +1257,7 @@ class Export(http.Controller):
         else:
             fields = self.fields_get(model)
 
-        if import_compat:
-            fields.pop('id', None)
-        else:
+        if not import_compat:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         if parent_field:
@@ -1271,7 +1269,7 @@ class Export(http.Controller):
 
         records = []
         for field_name, field in fields_sequence:
-            if import_compat:
+            if import_compat and not field_name == 'id':
                 if exclude and field_name in exclude:
                     continue
                 if field.get('readonly'):
