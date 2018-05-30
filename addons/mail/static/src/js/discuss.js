@@ -895,7 +895,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this._basicComposer.do_toggle(this._thread.getType() !== 'mailbox' && !this._thread.isMassMailing());
         this._extendedComposer.do_toggle(this._thread.getType() !== 'mailbox' && !!this._thread.isMassMailing());
 
-        if (!config.device.touch) {
+        if (!config.device.isMobile) {
             var composer = this._thread.getType() !== 'mailbox' && this._thread.isMassMailing() ?
                             this._extendedComposer :
                             this._basicComposer;
