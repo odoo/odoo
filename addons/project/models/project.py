@@ -546,13 +546,13 @@ class Task(models.Model):
             if task.date_assign:
                 dt_date_assign = fields.Datetime.from_string(task.date_assign)
                 task.working_hours_open = task.project_id.resource_calendar_id.get_work_hours_count(
-                        dt_create_date, dt_date_assign, False, compute_leaves=True)
+                        dt_create_date, dt_date_assign, compute_leaves=True)
                 task.working_days_open = task.working_hours_open / 24.0
 
             if task.date_end:
                 dt_date_end = fields.Datetime.from_string(task.date_end)
                 task.working_hours_close = task.project_id.resource_calendar_id.get_work_hours_count(
-                    dt_create_date, dt_date_end, False, compute_leaves=True)
+                    dt_create_date, dt_date_end, compute_leaves=True)
                 task.working_days_close = task.working_hours_close / 24.0
 
         (self - task_linked_to_calendar).update(dict.fromkeys(
