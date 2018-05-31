@@ -110,6 +110,7 @@ class MailThread(models.AbstractModel):
     message_has_error_counter = fields.Integer(
         'Number of error', compute='_compute_message_has_error',
         help="Number of messages with delivery error")
+    related_attachment_count = fields.Integer('Attachment Count', compute='_compute_related_attachment_count')
 
     @api.one
     @api.depends('message_follower_ids')
@@ -144,6 +145,12 @@ class MailThread(models.AbstractModel):
             ('channel_id', operator, operand)])
         # using read() below is much faster than followers.mapped('res_id')
         return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+
+    @api.multi
+    def _compute_related_attachment_count(self):
+        for record in self:
+            domain = [('res_id', '=', record.id), ('res_model', '=', self._name)]
+            record.related_attachment_count = self.env['ir.attachment'].search_count(domain)
 
     @api.multi
     @api.depends('message_follower_ids')
