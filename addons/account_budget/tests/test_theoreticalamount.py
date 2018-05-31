@@ -19,10 +19,10 @@ _logger = logging.getLogger(__name__)
 @tagged('post_install', '-at_install')
 class TestTheoreticalAmount(TestAccountBudgetCommon):
     def setUp(self):
-        super(TestTheoreticalAmount, self).setUp()
         #create the budgetary position
-        with patch.object(datetime, 'now', lambda tzinfo=None: datetime(2018, 10, 30, 10, 0)), \
-             patch.object(datelib, 'today', lambda tzinfo=None: datelib(2018, 10, 30)):
+        with patch.object(datetime, 'now', lambda tzinfo=None: datetime(1983, 10, 30, 10, 0)), \
+             patch.object(datelib, 'today', lambda tzinfo=None: datelib(1983, 10, 30)):
+            super(TestTheoreticalAmount, self).setUp()
             user_type_id = self.ref('account.data_account_type_revenue')
             tag_id = self.ref('account.account_tag_operating')
             account_rev = self.env['account.account'].create({
@@ -36,8 +36,8 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
                 'account_ids': [(4, account_rev.id)],
             })
             #create the budget and budget lines
-            first_january = datetime(2018, 1, 1)
-            self.last_day_of_budget = first_january + timedelta(days=364)  # will be 30th of December or 31th in case of leap year
+            first_january = datetime(1983, 1, 1)
+            self.last_day_of_budget = first_january.end_of('year')
 
             crossovered_budget = self.env['crossovered.budget'].create({
                 'name': 'test budget name',
@@ -58,16 +58,16 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
                 'date_from': first_january.date(),
                 'date_to': self.last_day_of_budget.date(),
                 'planned_amount': -364,
-                'paid_date': datelib(2018, 9, 9),
+                'paid_date': datelib(1983, 9, 9),
             })
 
     def test_theoritical_amount_without_paid_date(self):
         test_list = [
-            (datetime(2018, 1, 1), 0),
-            (datetime(2018, 1, 2), -1),
-            (datetime(2018, 1, 3), -2),
-            (datetime(2018, 1, 11), -10),
-            (datetime(2018, 2, 20), -50),
+            (datetime(1983, 1, 1), 0),
+            (datetime(1983, 1, 2), -1),
+            (datetime(1983, 1, 3), -2),
+            (datetime(1983, 1, 11), -10),
+            (datetime(1983, 2, 20), -50),
             (self.last_day_of_budget, -364),
         ]
         for date, expected_amount in test_list:
@@ -80,11 +80,11 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
 
     def test_theoritical_amount_with_paid_date(self):
         test_list = [
-            (datetime(2018, 1, 1), 0),
-            (datetime(2018, 1, 2), 0),
-            (datetime(2018, 9, 8), 0),
-            (datetime(2018, 9, 9), -364),
-            (datetime(2018, 9, 10), -364),
+            (datetime(1983, 1, 1), 0),
+            (datetime(1983, 1, 2), 0),
+            (datetime(1983, 9, 8), 0),
+            (datetime(1983, 9, 9), -364),
+            (datetime(1983, 9, 10), -364),
             (self.last_day_of_budget, -364),
         ]
         for date, expected_amount in test_list:
