@@ -128,6 +128,59 @@ class Base(models.AbstractModel):
                                 [(name_field, '=', self.id), ('company_id', 'in', [False, self.company_id.id])])
                             setattr(self, field, equal)
 
+    @api.constrains(lambda self: (x for x in self._fields if ('company_id' == self._fields[x].name) or (self._fields[x].name not in ('create_uid', 'write_uid') and 'many2' in self._fields[x].type and 'company_id' in self.env[self._fields[x].comodel_name]._fields and (self._fields[x].store or self._fields[x].inverse))))
+    def _check_company_id_model_fields(self):
+
+        def _gettattr():
+            if self._fields[field].inherited:
+                parent_model = self._fields[field].related_field.model_name
+                parent_rec = getattr(
+                    rec, self._inherits[parent_model], False)
+                return getattr(parent_rec, field, False)
+            else:
+                return getattr(rec, field, False)
+
+        constraint_in_entries = []
+        for constrain in self._constraint_methods:
+            if constrain.__name__ == '_check_company_id_for_each_field':
+                constraint_in_entries += list(constrain._constrains)
+                break
+        if self._auto and not self._transient and 'company_id' in self._fields and len(constraint_in_entries) > 1:
+            fields_to_check = []
+            compatible_fields = {k: v for k, v in self._fields.items() if (
+                'many2' in v.type and v.name not in (
+                    'company_id', 'create_uid', 'write_uid') and not (v.compute or v.related))}
+            for field in compatible_fields:
+                if self._fields[field].company_dependent or (self._fields[field].inherited and self._fields[field].base_field.company_dependent):
+                    continue
+                comodel_fields = self.env[self._fields[field].comodel_name]._fields
+                if 'company_id' in comodel_fields:
+                    fields_to_check += [field]
+            if fields_to_check.count('message_partner_ids') > 0:
+                fields_to_check.remove('message_partner_ids')
+            for rec in self.sudo():
+                for field in fields_to_check:
+                    if 'res.users' == self._fields[field].comodel_name:
+                        continue
+                    if 'many2one' == self._fields[field].type:
+                        rec_field_one = _gettattr()
+                        if not rec_field_one.check_company(self.company_id):
+                            raise ValidationError(
+                                _('The Company in the %s (%s) and in '
+                                  '%s (%s) must be the same.') % (
+                                    rec._name, rec.display_name,
+                                    rec_field_one._name,
+                                    rec_field_one.display_name))
+                    elif 'many2many' == self._fields[field].type:
+                        rec_field_many = _gettattr()
+                        for line in rec_field_many:
+                            if not line.check_company(self.company_id):
+                                raise ValidationError(
+                                    _('The Company in the %s (%s) and in '
+                                      '%s (%s) must be the same.') % (
+                                        rec._name, rec.display_name,
+                                        line._name, line.display_name))
+
 
 class Unknown(models.AbstractModel):
     """
