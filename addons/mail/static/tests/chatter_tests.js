@@ -1,6 +1,7 @@
 odoo.define('mail.chatter_tests', function (require) {
 "use strict";
 
+var AttachmentBox = require('mail.AttachmentBox');
 var mailTestUtils = require('mail.testUtils');
 
 var concurrency = require('web.concurrency');
@@ -34,7 +35,7 @@ QUnit.module('Chatter', {
                         string: "Followers",
                         type: "one2many",
                         relation: 'mail.followers',
-                        relation_field: "res_id"
+                        relation_field: "res_id",
                     },
                     message_ids: {
                         string: "messages",
@@ -53,9 +54,14 @@ QUnit.module('Chatter', {
                         type: 'selection',
                         selection: [['overdue', 'Overdue'], ['today', 'Today'], ['planned', 'Planned']],
                     },
+                    related_attachment_count: {
+                        string: 'Attachment count',
+                        type: 'integer',
+                    },
                 },
                 records: [{
                     id: 2,
+                    related_attachment_count: 3,
                     display_name: "first partner",
                     foo: "HELLO",
                     message_follower_ids: [],
@@ -134,6 +140,25 @@ QUnit.module('Chatter', {
                 },
                 records: [],
             },
+            'ir.attachment': {
+                fields:{
+                    name:{type:'char', string:"attachment name", required:true},
+                    res_model:{type:'char', string:"res model"},
+                    res_id:{type:'integer', string:"res id"},
+                    url:{type:'char', string:'url'},
+                    type:{ type:'selection', selection:[['url',"URL"],['binary',"BINARY"]]},
+                    mimetype:{type:'char', string:"mimetype"},
+                    datas_fname:{type:'char', string:"filename"},
+                },
+                records:[
+                    {id:1, name:"name1", type:'url', mimetype:'image/png', datas_fname:'filename.jpg',
+                     res_id: 7, res_model: 'partner'},
+                    {id:2, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                     datas_fname:"file2.txt", res_id: 7, res_model: 'partner'},
+                    {id:3, name:"name2", type:'binary', mimetype:"application/x-msdos-program",
+                     datas_fname:"file2.txt", res_id: 5, res_model: 'partner'},
+                ],
+            },
         };
     },
     afterEach: function () {
@@ -144,7 +169,7 @@ QUnit.module('Chatter', {
 });
 
 QUnit.test('basic rendering', function (assert) {
-    assert.expect(8);
+    assert.expect(9);
 
     var count = 0;
     var unwanted_read_count = 0;
@@ -187,12 +212,60 @@ QUnit.test('basic rendering', function (assert) {
         "there should be a followers widget, moved inside the chatter's topbar");
     assert.ok(form.$('.o_chatter').length, "there should be a chatter widget");
     assert.ok(form.$('.o_mail_thread').length, "there should be a mail thread");
+    assert.strictEqual(form.$('.o_chatter_button_attachment').length, 1, "should have one attachment button");
     assert.ok(!form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should not be available");
 
     form.$buttons.find('.o_form_button_edit').click();
     assert.strictEqual(count, 0, "should have done no read_followers rpc as there are no followers");
     assert.strictEqual(unwanted_read_count, 0, "followers should only be fetched with read_followers route");
+    form.destroy();
+});
+
+QUnit.test('attachmentBox basic rendering', function (assert) {
+    assert.expect(11);
+    this.data.partner.records.push({
+        id: 7,
+        display_name: "attachment_test",
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                '</div>' +
+            '</form>',
+        res_id: 7,
+    });
+    var $button = form.$('.o_chatter_button_attachment');
+    assert.strictEqual($button.length, 1, "should have one attachment button");
+    $button.click();
+    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 1,
+        "attachment widget should exist after a first click on the button");
+    assert.strictEqual(form.$('.o_attachment_image').length, 1, "there should be an image preview");
+    assert.strictEqual(form.$('.o_attachments_previews').length, 1, "there should be a list of previews");
+    assert.strictEqual(form.$('.o_attachments_list').length, 1, "there should be a list of non previewable attachments");
+    assert.strictEqual(form.$('.o_attachment_title').text(), 'name1',
+        "the image name should be correct");
+    // since there are two elements "Download name2"; one "name" and the other "txt" as text content, the following test
+    // asserts both at the same time.
+    assert.strictEqual(form.$('a[title = "Download name2"]').text().trim(), 'name2txt',
+        "the attachment name should be correct");
+    assert.ok(form.$('.o_attachment_image').css('background-image').indexOf('/web/image/1/160x160/?crop=true') >= 0,
+        "the attachment image URL should be correct");
+    assert.strictEqual(form.$('.o_attachment_download').eq(0).attr('href'), '/web/content/1?download=true',
+        "the download URL of name1 must be correct");
+    assert.strictEqual(form.$('.o_attachment_download').eq(1).attr('href'), '/web/content/2?download=true',
+        "the download URL of name2 must be correct");
+    $button.click();
+    assert.strictEqual(form.$('.o_mail_chatter_attachments').length, 0,
+        "attachment widget should de destroyed after we reclick the button");
     form.destroy();
 });
 
@@ -1496,7 +1569,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
             } else if (route === '/web/dataset/call_kw/partner/read') {
                 nbReads++;
                 if (nbReads === 1) { // first read
-                    assert.strictEqual(args.args[1].length, 4, 'should read all fiels the first time');
+                    assert.strictEqual(args.args[1].length, 5, 'should read all fiels the first time');
                 } else if (nbReads === 2) { // second read: after the unlink
                     assert.ok(_.isEqual(args.args[1], ['activity_ids', 'display_name']),
                         'should only read the activities (+ display_name) after an unlink');
