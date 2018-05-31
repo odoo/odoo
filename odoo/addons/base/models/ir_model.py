@@ -181,6 +181,40 @@ class Base(models.AbstractModel):
                                         rec._name, rec.display_name,
                                         line._name, line.display_name))
 
+    @api.constrains(lambda self: ('company_id', ) if 'company_id' in self._fields else ())
+    def _check_company_id_base(self):
+        """This method ensure consistency between the model
+        other company-dependent linked models, that are either provided
+        as one2many in the first model, or where the other models reference
+        the first model in some field."""
+
+        fields_list = []
+        domains = []
+        if 'company_id' in self._fields and not self.env.context.get('bypass_company_validation', False):
+            models_to_search = {k: v for k, v in self.env.registry.models.items() if v._auto and not v._transient and k != 'res.users'}
+            for model in models_to_search:
+                if 'company_id' in self.env[model]._fields:
+                    fields_to_search = {k: v for k, v in self.env[model]._fields.items() if v.name not in ('create_uid', 'write_uid') and 'many2' in v.type and v.comodel_name == self._name and v.store}
+                    for field in fields_to_search:
+                        fields_list += [k for k, v in self.env[model]._fields.items() if v.name not in ('create_uid', 'write_uid') and 'one2many' in v.type and v.comodel_name == model]
+                        domains += [(model, field)]
+        for rec in self.sudo():
+            if not rec.company_id:
+                continue
+            check_list = [getattr(rec, k, False) for k in fields_list if getattr(rec, k, False)]
+            for model, domain in [(mod, [fld, 'in', rec.ids]) for mod, fld in domains]:
+                check_list.append(rec.sudo().env[model].search(domain + [
+                    ('company_id', '!=', rec.company_id.id),
+                    ('company_id', '!=', False),
+                ], limit=1))
+            for field in check_list:
+                if not field.check_company(rec.company_id):
+                    raise ValidationError(_(
+                        'You cannot change the company, as this %s (%s) '
+                        'is assigned to %s (%s).'
+                    ) % (rec._name, rec.display_name,
+                         field._name, field.display_name))
+
 
 class Unknown(models.AbstractModel):
     """
