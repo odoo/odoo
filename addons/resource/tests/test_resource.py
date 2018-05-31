@@ -353,13 +353,12 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(data, {'days': 2, 'hours': 20})
 
         # using Jean as a timezone reference
-        datas = self.john.get_work_days_data(
+        data = self.john.get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.john.tz),
             calendar=self.calendar_jean,
         )
-        self.assertEqual(datas['days'], 5)
-        self.assertEqual(datas['hours'], 40)
+        self.assertEqual(data, {'days': 5, 'hours': 40})
 
         # half days
         leave = self.env['resource.calendar.leaves'].create({
@@ -377,13 +376,12 @@ class TestResMixin(TestResourceCommon):
         self.assertEqual(data, {'days': 4.5, 'hours': 36})
 
         # using John as a timezone reference, leaves are outside attendances
-        datas = self.john.get_work_days_data(
+        data = self.john.get_work_days_data(
             datetime_tz(2018, 4, 2, 0, 0, 0, tzinfo=self.john.tz),
             datetime_tz(2018, 4, 6, 23, 0, 0, tzinfo=self.john.tz),
             calendar=self.calendar_jean,
         )
-        self.assertEqual(datas['days'], 5)
-        self.assertEqual(datas['hours'], 40)
+        self.assertEqual(data, {'days': 5, 'hours': 40})
 
         leave.unlink()
 
