@@ -28,8 +28,7 @@ class ResourceMixin(models.AbstractModel):
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
         index=True, related='resource_id.calendar_id', store=True)
     tz = fields.Selection(
-        string='Timezone', related='resource_id.tz', readonly=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        string='Timezone', related='resource_id.tz',
         help="This field is used in order to define in which timezone the resources will work.")
 
     @api.model
