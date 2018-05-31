@@ -94,7 +94,7 @@ class ResConfigSettings(models.TransientModel):
     @api.multi
     def change_report_template(self):
         self.ensure_one()
-        template = self.env.ref('base.view_company_report_form')
+        template = self.env.ref('base.view_company_document_template_form')
         return {
             'name': _('Choose Your Document Layout'),
             'type': 'ir.actions.act_window',
