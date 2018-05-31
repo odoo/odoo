@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:153
@@ -48,7 +48,7 @@ msgstr "Неправильний постачальник платіжного �
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
 msgid "Interface Version"
-msgstr ""
+msgstr "Версія інтерфейсу"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
@@ -68,12 +68,12 @@ msgstr "Платіжні операції"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
 msgid "Prod's url"
-msgstr ""
+msgstr "URL-адреса товару"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
 msgid "Secret Key"
-msgstr ""
+msgstr "Секретний ключ"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:149
@@ -84,9 +84,9 @@ msgstr "Sips: отримані дані для довідки %s"
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
 msgid "Test's url"
-msgstr ""
+msgstr "URL-адреса тесту"
 
 #. module: payment_sips
 #: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
 msgid "Used for production only"
-msgstr ""
+msgstr "Використовується тільки для виробництва"

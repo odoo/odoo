@@ -5,21 +5,21 @@
 # Translators:
 # Bohdan Lisnenko, 2017
 # ТАрас <tratatuta@i.ua>, 2017
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2018\n"
+"Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:328
@@ -102,7 +102,7 @@ msgstr "Вартість"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_line_id
 msgid "Cost Line"
-msgstr "Витрата"
+msgstr "Рядок витрати"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_cost_lines
@@ -211,7 +211,7 @@ msgstr "Групувати за"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -222,7 +222,7 @@ msgstr "Інформація"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 msgid "Is a Landed Cost"
-msgstr ""
+msgstr "Є додатковими витратами"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
@@ -254,7 +254,7 @@ msgstr "Тип додаткових витрат"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr ""
+msgstr "Типи додаткових витрат"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -327,7 +327,7 @@ msgstr "Можна підтвердити лише проекти додатко
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
 msgid "Pickings"
-msgstr "Відбори"
+msgstr "Комплектування"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
@@ -414,10 +414,10 @@ msgid ""
 " time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
-"Обрані відбори не містять переміщень на які можна розподілити додаткові "
-"витрати. Коригування собівартості можливе лише для товарів з оцінкою запасів"
-" у реальному часі та обліком за справжніми цінами. Перевірте, чи в цьому "
-"справа або оберіть інші відбори."
+"Обране комплектування не містить переміщень на які можна розподілити "
+"додаткові витрати. Коригування собівартості можливе лише для товарів з "
+"оцінкою запасів у реальному часі та обліком за справжніми цінами. Перевірте,"
+" чи в цьому справа або оберіть інше комплектування."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
