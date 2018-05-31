@@ -51,21 +51,6 @@
                         </div>
                         <h2>Time Management</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_hr_timesheet"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_hr_timesheet"/>
-                                    <div class="text-muted">
-                                        Track time spent on projects and tasks
-                                    </div>
-                                    <div class="row mt16" attrs="{'invisible':['|', ('module_hr_timesheet', '=', False), ('project_time_mode_id', '!=', False)]}">
-                                        <label for="project_time_mode_id" class="col-md-3 o_light_label"/>
-                                        <field name="project_time_mode_id" options="{'no_create': True, 'no_open': True}"/>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" name="project_time_management">
                                 <div class="o_setting_left_pane">
                                     <field name="module_project_forecast" widget="upgrade_boolean"/>
