@@ -238,7 +238,7 @@ def _check_module_names(cr, module_names):
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_marked_modules(cr, graph, states, force, progressdict, report,
-                        loaded_modules, perform_checks, models_to_check):
+                        loaded_modules, perform_checks, models_to_check=set()):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
     processed_modules = []
