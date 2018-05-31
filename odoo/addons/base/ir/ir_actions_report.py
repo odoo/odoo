@@ -383,20 +383,27 @@ class IrActionsReport(models.Model):
         os.close(pdf_report_fd)
         temporary_files.append(pdf_report_path)
 
-        try:
-            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
-            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            out, err = process.communicate()
+        while True:
+            try:
+                wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
+                process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                out, err = process.communicate()
 
-            if process.returncode not in [0, 1]:
-                if process.returncode == -11:
-                    message = _(
-                        'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                if process.returncode not in [0, 1]:
+                    if process.returncode == -11:
+                        if not set_viewport_size:
+                            set_viewport_size = True
+                            command_args.extend(['--viewport-size', landscape and '1024x1280' or '1280x1024'])
+                            continue
+                        message = _(
+                            'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                    else:
+                        message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
+                    raise UserError(message % (str(process.returncode), err[-1000:]))
                 else:
-                    message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
-                raise UserError(message % (str(process.returncode), err[-1000:]))
-        except:
-            raise
+                    break
+            except:
+                raise
 
         with open(pdf_report_path, 'rb') as pdf_document:
             pdf_content = pdf_document.read()
