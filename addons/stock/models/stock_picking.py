@@ -240,8 +240,8 @@ class Picking(models.Model):
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Picking Type',
-        required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        required=True, readonly=True,
+        states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection([
         ('incoming', 'Vendors'),
         ('outgoing', 'Customers'),
