@@ -191,7 +191,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
-                    <field name="partner_name" groups="base.group_user"/>
+                    <field name="partner_id" groups="base.group_user" string="Vendor"/>
                     <field name="date_invoice" string="Bill Date"/>
                     <field name="number"/>
                     <field name="reference"/>

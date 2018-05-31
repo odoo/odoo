@@ -369,8 +369,7 @@ class AccountInvoice(models.Model):
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
-    source_email = fields.Char(string='Source Email', track_visibility='always')
-    partner_name = fields.Char(string='Vendor', compute="_compute_partner_name")
+    source_email = fields.Char(string='Source Email', track_visibility='onchange')
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
@@ -455,11 +454,6 @@ class AccountInvoice(models.Model):
             # use _get_current_sequence to manage the date range sequences
             sequence = journal_sequence._get_current_sequence()
             sequence.number_next = int(result.group(2))
-
-    @api.depends('partner_id')
-    def _compute_partner_name(self):
-        for inv in self:
-            inv.partner_name = inv.partner_id and inv.partner_id.name or _('Undefined')
 
     @api.multi
     def _get_printed_report_name(self):
