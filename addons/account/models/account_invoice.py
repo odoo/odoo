@@ -369,7 +369,7 @@ class AccountInvoice(models.Model):
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
-    source_email = fields.Char(string='Source Email')
+    source_email = fields.Char(string='Source Email', track_visibility='always')
     partner_name = fields.Char(string='Vendor', compute="_compute_partner_name")
 
     _sql_constraints = [
@@ -544,18 +544,7 @@ class AccountInvoice(models.Model):
                     view_id = get_view_id('invoice_supplier_form', 'account.invoice.supplier.form').id
                 elif partner.customer and not partner.supplier:
                     view_id = get_view_id('invoice_form', 'account.invoice.form').id
-        res = super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'tree':
-            draft_bill = self.search([
-                ('type', '=', 'in_invoice'), ('state', '=', 'draft')
-            ], limit=1)
-            doc = etree.XML(res['arch'])
-            if draft_bill:
-                origin_field = doc.find(".//field[@name='origin']")
-                node = origin_field.getparent()
-                node.insert(node.index(origin_field) + 1, etree.XML("<field name='source_email'/>"))
-            res['arch'] = etree.tostring(doc, encoding='unicode')
-        return res
+        return super(AccountInvoice, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
     @api.model_cr_context
     def _init_column(self, column_name):
@@ -632,6 +621,10 @@ class AccountInvoice(models.Model):
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
         # Split `From` and `CC` email address from received email and check if any of odoo partner is associated with that email
         subscribe_partner_ids = partner_ids = [pid for pid in self._find_partner_from_emails(self._invoice_email_split(msg_dict), force_create=False) if pid]
         # If sender of the email is the one from odoo internal user then it is likely that the vendor forwarded bill as an email to the internal user and inturn,
