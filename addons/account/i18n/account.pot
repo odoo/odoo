@@ -7869,6 +7869,30 @@ msgid "There are still unposted entries in the period you want to lock. You shou
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:81
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:85
+#, python-format
+msgid "The new lock date for advisors must be set after the previous lock date."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:96
+#, python-format
+msgid "You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:107
+#, python-format
+msgid "You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:170
 #, python-format
 msgid "There is no account defined on the journal %s for %s involved in a cash difference."
