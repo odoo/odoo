@@ -195,12 +195,9 @@ class MrpProductProduceLine(models.TransientModel):
         """ When the user is encoding a produce line for a tracked product, we apply some logic to
         help him. This onchange will warn him if he set `qty_done` to a non-supported value.
         """
-        res = {}
         if self.product_id.tracking == 'serial' and self.qty_done:
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
-                message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
-                res['warning'] = {'title': _('Warning'), 'message': message}
-        return res
+                raise UserError(_('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
