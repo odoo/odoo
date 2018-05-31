@@ -38,7 +38,7 @@
                                 <field name="provider" groups="base.group_no_one"/>
                                 <field name="website_name" placeholder="Display name" readonly="False" nolabel="0"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
-                                <field name="status" widget="radio"/>
+                                <field class="oe_status" name="status" widget="radio"/>
                             </group>
                         </group>
                         <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
