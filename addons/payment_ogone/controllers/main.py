@@ -26,7 +26,10 @@ class OgoneController(http.Controller):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
-        request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)
+        try:
+            request.registry['payment.transaction'].form_feedback(cr, uid, post, 'ogone', context=context)
+        except Exception as e:
+            _logger.error("ogone_form_feedback: Couldn't validate payment with params %s\n\nException message: %s", pprint.pformat(post), e)
         return werkzeug.utils.redirect(post.pop('return_url', '/'))
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
@@ -49,8 +52,7 @@ class OgoneController(http.Controller):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         payment = request.registry.get('payment.transaction')
         try:
-            tx = payment._ogone_form_get_tx_from_data(cr, uid, kwargs, context=context)
-            payment._ogone_s2s_validate(tx)
+            payment.form_feedback(cr, uid, kwargs, 'ogone', context=context)
         except ValidationError:
             return 'ko'
 
