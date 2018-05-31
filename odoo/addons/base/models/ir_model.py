@@ -86,6 +86,48 @@ class Base(models.AbstractModel):
         res = self.add_company_suffix(names)
         return res
 
+    def check_company(self, company_id):
+        """This method will be used in constrains methods
+        to ensure consistency between linked many2one models company-wise.
+        Typically when the method returns false a Validation Error
+        will be raised."""
+        if not company_id:
+            return True
+        if 'company_id' not in self._fields:
+            return True
+        return not bool(self.filtered(
+            lambda r: r.company_id and r.company_id != company_id))
+
+    @api.onchange(lambda self: ('company_id', ) if 'company_id' in self._fields else ())
+    def _onchange_company_id(self):
+        if 'company_id' in self._fields:
+            if self._fields['company_id'].relational and len(self._fields['company_id'].depends) > 0:
+                return
+            fields_to_false = []
+            compatible_fields = {k: v for k, v in self._fields.items() if (
+                'many2' in v.type and v.name not in (
+                    'company_id', 'create_uid', 'write_uid') and not (v.compute or v.related))}
+            for field in compatible_fields:
+                comodel_fields = self.env[self._fields[field].comodel_name]._fields
+                if 'company_id' in comodel_fields:
+                    fields_to_false += [field]
+            for field in fields_to_false:
+                if 'res.users' == self._fields[field].comodel_name:
+                    continue
+                record = getattr(self, field, False)
+                if not record.check_company(self.company_id):
+                    if '2one' in self._fields[field].type:
+                        equal = getattr(self.company_id, field, False)
+                        setattr(self, field, equal)
+                    elif '2many' in self._fields[field].type:
+                        comodel = self._fields[field].comodel_name
+                        name_field = [k for k, v in self.env[comodel]._fields.items() if v.type == 'many2many' and v.comodel_name == self.model_name]
+                        if name_field:
+                            name_field = name_field[0]
+                            equal = self.env[comodel].search(
+                                [(name_field, '=', self.id), ('company_id', 'in', [False, self.company_id.id])])
+                            setattr(self, field, equal)
+
 
 class Unknown(models.AbstractModel):
     """
