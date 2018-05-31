@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class MailTest(models.Model):
+class ResourceTest(models.Model):
     _description = 'Test Resource Model'
     _name = 'resource.test'
     _inherit = ['resource.mixin']

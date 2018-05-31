@@ -38,6 +38,7 @@
                    <group>
                     <field name="resource_type" />
                     <field name="calendar_id"/>
+                    <field name="tz"/>
                     <field name="time_efficiency"/>
                    </group>
                 </group>
@@ -250,6 +251,7 @@
                     <group>
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="hours_per_day"/>
+                        <field name="tz"/>
                     </group>
                     <notebook>
                         <page string="Working Hours">
@@ -261,7 +263,6 @@
                                     <field name="name"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
-                                    <field name="tz"/>
                                 </tree>
                             </field>
                         </page>
