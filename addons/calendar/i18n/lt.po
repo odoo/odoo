@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:18+0000\n"
-"PO-Revision-Date: 2017-06-22 14:01+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-05-31 10:23+0000\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -397,7 +397,7 @@ msgstr ""
 #: code:addons/calendar/calendar.py:774
 #, python-format
 msgid "%s at (%s To %s) (%s)"
-msgstr ""
+msgstr "%s (%s iki %s) (%s)"
 
 #. module: calendar
 #: code:addons/calendar/calendar.py:263
@@ -544,7 +544,7 @@ msgstr "Kalendoriaus pakvietimas"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
-msgstr ""
+msgstr "Paspauskite čia, norėdami atnaujinti tik šį, o ne visus pasikartojančius įvykius."
 
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
@@ -856,7 +856,7 @@ msgstr "Jeigu pažymėtas - naujos  žinutės reikalauja Jūsų dėmesio."
 msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
-msgstr ""
+msgstr "Jei laukas 'Aktyvus' bus atžymėtas, tai leis paslėpti įvykį, jo neištrinant."
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -866,7 +866,7 @@ msgstr "Pakvietimas"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "Pakvietimo požymis"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1270,7 +1270,7 @@ msgstr "Pradžios data"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_start
 msgid "Start date of an event, without time for full days events"
-msgstr ""
+msgstr "Įvykio pradžios data be laiko, visos dienos įvykiams"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1297,7 +1297,7 @@ msgstr "Stabdyti"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_stop
 msgid "Stop date of an event, without time for full days events"
-msgstr ""
+msgstr "Įvykio pabaigos data be laiko, visos dienos įvykiams"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
@@ -1351,7 +1351,7 @@ msgstr "Trečias"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "Šis įvykis yra pasikartojantis...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th

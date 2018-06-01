@@ -4,20 +4,20 @@
 # 
 # Translators:
 # Aleksandr Jadov <a.jadov@tata.lt>, 2017
-# Paulius Sladkevičius <paulius@hbee.eu>, 2015
+# Paulius Sladkevičius <paulius@versada.eu>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-29 10:27+0000\n"
-"PO-Revision-Date: 2017-07-09 21:27+0000\n"
-"Last-Translator: Aleksandr Jadov <a.jadov@tata.lt>\n"
+"PO-Revision-Date: 2018-05-31 14:01+0000\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:373
@@ -264,17 +264,17 @@ msgstr "Paspauskite, norėdami sukurti naują modelį."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
 msgid "Click to create a new odometer log."
-msgstr ""
+msgstr "Paspauskite, norėdami pridėti naują odomentro rodmenį."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
 msgid "Click to create a new service entry."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti naują paslaugos įrašą."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
 msgid "Click to create a new type of service."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti naują paslaugos tipą."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -284,7 +284,7 @@ msgstr "Paspauskite, norėdami sukurti naują automobilį."
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
 msgid "Click to create a vehicle status."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti transporto priemonės būseną."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_color
@@ -1119,13 +1119,13 @@ msgstr "Modelis"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_tree
 msgid "Model Make"
-msgstr ""
+msgstr "Modelio markė"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Model make of Vehicle"
-msgstr ""
+msgstr "Transporto priemonės modelio markė"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_name
@@ -1997,7 +1997,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
+msgstr "Jūs galite apibrėžti kelis modelius (pvz.: A3, A4) kiekvienai markei (Audi)."
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -2036,7 +2036,7 @@ msgstr "pvz. Tesla"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_state
 msgid "fleet.vehicle.state"
-msgstr ""
+msgstr "fleet.vehicle.state"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_tag
