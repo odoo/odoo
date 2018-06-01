@@ -164,6 +164,7 @@ class MailTemplate(models.Model):
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
                                           "priority one will be used.")
     body_html = fields.Html('Body', translate=True, sanitize=False)
+    template_id = fields.Many2one('ir.ui.view', string="QWeb Template", help="Template use to render the email body")
     report_name = fields.Char('Report Filename', translate=True,
                               help="Name to use for the generated report file (may contain placeholders)\n"
                                    "The extension can be omitted and will then come from the report type.")
@@ -289,7 +290,7 @@ class MailTemplate(models.Model):
         return html
 
     @api.model
-    def render_template(self, template_txt, model, res_ids, post_process=False):
+    def render_template(self, template_txt, model, res_ids, post_process=False, engine="mako"):
         """ Render the given template text, replace mako expressions ``${expr}``
         with the result of evaluating these expressions with an evaluation
         context containing:
@@ -309,13 +310,14 @@ class MailTemplate(models.Model):
 
         results = dict.fromkeys(res_ids, u"")
 
-        # try to load the template
-        try:
-            mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
-            template = mako_env.from_string(tools.ustr(template_txt))
-        except Exception:
-            _logger.info("Failed to load template %r", template_txt, exc_info=True)
-            return multi_mode and results or results[res_ids[0]]
+        if engine == 'mako':
+            # try to load the template
+            try:
+                mako_env = mako_safe_template_env if self.env.context.get('safe') else mako_template_env
+                template = mako_env.from_string(tools.ustr(template_txt))
+            except Exception:
+                _logger.info("Failed to load template %r", template_txt, exc_info=True)
+                return multi_mode and results or results[res_ids[0]]
 
         # prepare template variables
         records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
@@ -331,11 +333,16 @@ class MailTemplate(models.Model):
         }
         for res_id, record in res_to_rec.items():
             variables['object'] = record
-            try:
-                render_result = template.render(variables)
-            except Exception:
-                _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
-                raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+            variables['record'] = record
+            if engine == "mako":
+                try:
+                    render_result = template.render(variables)
+                except Exception:
+                    _logger.info("Failed to render template %r using values %r" % (template, variables), exc_info=True)
+                    raise UserError(_("Failed to render template %r using values %r")% (template, variables))
+            if engine == "qweb":
+                render_result = pycompat.to_text(template_txt.render(variables, engine="ir.qweb"))
+
             if render_result == u"False":
                 render_result = u""
             results[res_id] = render_result
@@ -414,11 +421,15 @@ class MailTemplate(models.Model):
         """
         self.ensure_one()
         multi_mode = True
+        has_qweb_template_id = False
         if isinstance(res_ids, pycompat.integer_types):
             res_ids = [res_ids]
             multi_mode = False
         if fields is None:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date']
+
+        if 'body_html' in fields and self.template_id:
+            has_qweb_template_id = True
 
         res_ids_to_templates = self.get_email_template(res_ids)
 
@@ -435,9 +446,16 @@ class MailTemplate(models.Model):
                 Template = Template.with_context(lang=template._context.get('lang'))
             for field in fields:
                 Template = Template.with_context(safe=field in {'subject'})
-                generated_field_values = Template.render_template(
-                    getattr(template, field), template.model, template_res_ids,
-                    post_process=(field == 'body_html'))
+                if field == 'body_html' and has_qweb_template_id:
+                    template_txt = template.template_id
+                    generated_field_values = Template.render_template(
+                            template_txt, template.model, template_res_ids,
+                            post_process=(field == 'body_html'), engine="qweb")
+                else:
+                    template_txt = getattr(template, field)
+                    generated_field_values = Template.render_template(
+                        template_txt, template.model, template_res_ids,
+                        post_process=(field == 'body_html'), engine="mako")
                 for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients

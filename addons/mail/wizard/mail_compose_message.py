@@ -495,17 +495,17 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
+        template = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id)
         if fields is None:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc',  'reply_to', 'attachment_ids', 'mail_server_id']
         returned_fields = fields + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields=fields)
+        template_values = template.generate_email(res_ids, fields=fields)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')
             values[res_id] = res_id_values
-
         return multi_mode and values or values[res_ids[0]]
 
     @api.model
