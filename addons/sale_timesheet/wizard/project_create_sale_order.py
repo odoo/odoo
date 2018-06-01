@@ -12,13 +12,18 @@ class ProjectCreateSalesOrder(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(ProjectCreateSalesOrder, self).default_get(fields)
+
+        active_model = self._context.get('active_model')
+        if active_model != 'project.project':
+            raise UserError(_('You can only apply this action from a project.'))
+
         active_id = self._context.get('active_id')
         if 'project_id' in fields and active_id:
             result['project_id'] = active_id
             result['partner_id'] = self.env['project.project'].browse(active_id).partner_id.id
         return result
 
-    project_id = fields.Many2one('project.project', "Project", domain=[('sale_line_id', '=', False)], help="Project to make billable")
+    project_id = fields.Many2one('project.project', "Project", domain=[('sale_line_id', '=', False)], help="Project to make billable", required=True)
     product_id = fields.Many2one('product.product', domain=[('type', '=', 'service'), ('invoice_policy', '=', 'delivery')], required=True)
     partner_id = fields.Many2one('res.partner', string="Customer", domain=[('customer', '=', True)], required=True)
     price_unit = fields.Float("Price", help="Price unit of the selected product for the generated Sales Order.")
@@ -76,11 +81,11 @@ class ProjectCreateSalesOrder(models.TransientModel):
         })
 
         view_form_id = self.env.ref('sale.view_order_form').id
-        return {
-            'type': 'ir.actions.act_window',
+        action = self.env.ref('sale.action_orders').read()[0]
+        action.update({
             'views': [(view_form_id, 'form')],
             'view_mode': 'form',
             'name': sale_order.name,
-            'res_model': 'sale.order',
             'res_id': sale_order.id,
-        }
+        })
+        return action
