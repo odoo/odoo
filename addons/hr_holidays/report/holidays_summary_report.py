@@ -3,10 +3,9 @@
 
 import calendar
 
-from datetime import timedelta
-from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.datetime import timedelta, relativedelta
 
 
 class HrHolidaySummaryReport(models.AbstractModel):
@@ -60,15 +59,15 @@ class HrHolidaySummaryReport(models.AbstractModel):
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
         holidays = self.env['hr.leave'].search([
             ('employee_id', '=', empid), ('state', 'in', holiday_type),
-            ('date_from', '<=', str(end_date)),
-            ('date_to', '>=', str(start_date))
+            ('date_from', '<=', end_date),
+            ('date_to', '>=', start_date)
         ])
         for holiday in holidays:
             # Convert date to user timezone, otherwise the report will not be consistent with the
             # value displayed in the interface.
-            date_from = fields.Datetime.from_string(holiday.date_from)
+            date_from = holiday.date_from
             date_from = fields.Datetime.context_timestamp(holiday, date_from).date()
-            date_to = fields.Datetime.from_string(holiday.date_to)
+            date_to = holiday.date_to
             date_to = fields.Datetime.context_timestamp(holiday, date_to).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:

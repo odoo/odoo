@@ -2,14 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import datetime
-import dateutil
 import email
 import hashlib
 import hmac
 import lxml
 import logging
-import pytz
 import re
 import socket
 import time
@@ -28,6 +25,7 @@ from werkzeug import urls
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.tools import pycompat, ustr
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import datetime
 
 
 _logger = logging.getLogger(__name__)
@@ -415,13 +413,12 @@ class MailThread(models.AbstractModel):
                 created on-the-fly by the templates)
             - unused since at least one day (create_date and write_date)
         """
-        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
+        limit_date = datetime.datetime.utcnow().subtract(days=1)
         self.env['ir.attachment'].search([
             ('res_model', '=', 'mail.compose.message'),
             ('res_id', '=', 0),
-            ('create_date', '<', limit_date_str),
-            ('write_date', '<', limit_date_str)]
+            ('create_date', '<', limit_date),
+            ('write_date', '<', limit_date)]
         ).unlink()
         return True
 
@@ -1597,20 +1594,20 @@ class MailThread(models.AbstractModel):
         if message.get('Date'):
             try:
                 date_hdr = tools.decode_smtp_header(message.get('Date'))
-                parsed_date = dateutil.parser.parse(date_hdr, fuzzy=True)
+                parsed_date = datetime.parse(date_hdr, fuzzy=True)
                 if parsed_date.utcoffset() is None:
                     # naive datetime, so we arbitrarily decide to make it
                     # UTC, there's no better choice. Should not happen,
                     # as RFC2822 requires timezone offset in Date headers.
-                    stored_date = parsed_date.replace(tzinfo=pytz.utc)
+                    stored_date = parsed_date.replace(tzinfo='UTC')
                 else:
-                    stored_date = parsed_date.astimezone(tz=pytz.utc)
+                    stored_date = parsed_date.astimezone('UTC')
             except Exception:
                 _logger.info('Failed to parse Date header %r in incoming mail '
                                 'with message-id %r, assuming current date/time.',
                                 message.get('Date'), message_id)
                 stored_date = datetime.datetime.now()
-            msg_dict['date'] = stored_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            msg_dict['date'] = stored_date
 
         if message.get('In-Reply-To'):
             parent_ids = self.env['mail.message'].search([('message_id', '=', tools.decode_smtp_header(message['In-Reply-To'].strip()))], limit=1)

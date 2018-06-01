@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import time
 from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from odoo.tools.datetime import date, relativedelta
 
 
 class ReportAgedPartnerBalance(models.AbstractModel):
@@ -19,13 +17,13 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         # The context key allow it to appear
         ctx = self._context
         periods = {}
-        start = datetime.strptime(date_from, "%Y-%m-%d") - relativedelta(days=1)
+        start = date_from - relativedelta(days=1)
         for i in range(5)[::-1]:
             stop = start - relativedelta(days=period_length)
             periods[str(i)] = {
                 'name': (i!=0 and (str((5-(i+1)) * period_length) + '-' + str((5-i) * period_length)) or ('+'+str(4 * period_length))),
-                'stop': start.strftime('%Y-%m-%d'),
-                'start': (i!=0 and stop.strftime('%Y-%m-%d') or False),
+                'stop': start,
+                'start': (i!=0 and stop or False),
             }
             start = stop - relativedelta(days=1)
 
@@ -218,7 +216,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         docs = self.env[model].browse(self.env.context.get('active_id'))
 
         target_move = data['form'].get('target_move', 'all')
-        date_from = data['form'].get('date_from', time.strftime('%Y-%m-%d'))
+        date_from = data['form'].get('date_from', date.today())
 
         if data['form']['result_selection'] == 'customer':
             account_type = ['receivable']
@@ -233,7 +231,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             'doc_model': model,
             'data': data['form'],
             'docs': docs,
-            'time': time,
             'get_partner_lines': movelines,
             'get_direction': total,
             'company_id': self.env['res.company'].browse(

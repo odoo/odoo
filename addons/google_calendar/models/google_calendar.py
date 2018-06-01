@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 import requests
-from dateutil import parser
 import json
 import logging
 import operator
-import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import exception_to_unicode
+from odoo.tools.datetime import timedelta, datetime, parse
 
 _logger = logging.getLogger(__name__)
 
@@ -193,12 +190,12 @@ class GoogleCalendar(models.AbstractModel):
     def generate_data(self, event, isCreating=False):
         if event.allday:
             start_date = event.start_date
-            final_date = (datetime.strptime(event.stop_date, tools.DEFAULT_SERVER_DATE_FORMAT) + timedelta(days=1)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+            final_date = event.stop_date + timedelta(days=1)
             type = 'date'
             vstype = 'dateTime'
         else:
-            start_date = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(event.start)).isoformat('T')
-            final_date = fields.Datetime.context_timestamp(self, fields.Datetime.from_string(event.stop)).isoformat('T')
+            start_date = fields.Datetime.context_timestamp(self, event.start).isoformat()
+            final_date = fields.Datetime.context_timestamp(self, event.stop).isoformat()
             type = 'dateTime'
             vstype = 'date'
         attendee_list = []
@@ -317,10 +314,10 @@ class GoogleCalendar(models.AbstractModel):
         }
 
         if lastSync:
-            params['updatedMin'] = lastSync.strftime("%Y-%m-%dT%H:%M:%S.%fz")
+            params['updatedMin'] = lastSync.to_gcal()
             params['showDeleted'] = True
         else:
-            params['timeMin'] = self.get_minTime().strftime("%Y-%m-%dT%H:%M:%S.%fz")
+            params['timeMin'] = self.get_minTime().to_gcal()
 
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
@@ -371,7 +368,7 @@ class GoogleCalendar(models.AbstractModel):
 
         status, content, ask_time = self.env['google.service']._do_request(url, data_json, headers, type='PATCH')
 
-        update_date = datetime.strptime(content['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
+        update_date = datetime.from_string(content['updated'])
         oe_event.write({'oe_update_date': update_date})
 
         if self.env.context.get('curr_attendee'):
@@ -471,14 +468,13 @@ class GoogleCalendar(models.AbstractModel):
                 alarm = CalendarAlarm.create(data)
             alarm_record.add(alarm.id)
 
-        UTC = pytz.timezone('UTC')
         if single_event_dict.get('start') and single_event_dict.get('end'):  # If not cancelled
 
             if single_event_dict['start'].get('dateTime', False) and single_event_dict['end'].get('dateTime', False):
-                date = parser.parse(single_event_dict['start']['dateTime'])
-                stop = parser.parse(single_event_dict['end']['dateTime'])
-                date = str(date.astimezone(UTC))[:-6]
-                stop = str(stop.astimezone(UTC))[:-6]
+                date = parse(single_event_dict['start']['dateTime'])
+                stop = parse(single_event_dict['end']['dateTime'])
+                date = str(date.astimezone('UTC'))[:-6]
+                stop = str(stop.astimezone('UTC'))[:-6]
                 allday = False
             else:
                 date = single_event_dict['start']['date']
@@ -486,9 +482,9 @@ class GoogleCalendar(models.AbstractModel):
                 d_end = fields.Date.from_string(stop)
                 allday = True
                 d_end = d_end + timedelta(days=-1)
-                stop = fields.Date.to_string(d_end)
+                stop = d_end
 
-            update_date = datetime.strptime(single_event_dict['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
+            update_date = datetime.from_string(single_event_dict['updated'])
             result.update({
                 'start': date,
                 'stop': stop,
@@ -573,7 +569,7 @@ class GoogleCalendar(models.AbstractModel):
 
             if lastSync and recs.get_last_sync_date() and not recs.get_disable_since_synchro():
                 lastSync = recs.get_last_sync_date()
-                _logger.info("[%s] Calendar Synchro - MODE SINCE_MODIFIED : %s !", user_to_sync, fields.Datetime.to_string(lastSync))
+                _logger.info("[%s] Calendar Synchro - MODE SINCE_MODIFIED : %s !", user_to_sync, lastSync)
             else:
                 lastSync = False
                 _logger.info("[%s] Calendar Synchro - MODE FULL SYNCHRO FORCED", user_to_sync)
@@ -605,8 +601,8 @@ class GoogleCalendar(models.AbstractModel):
         my_attendees = self.env['calendar.attendee'].with_context(virtual_id=False).search([('partner_id', '=', my_partner_id),
             ('google_internal_event_id', '=', False),
             '|',
-            ('event_id.stop', '>', fields.Datetime.to_string(self.get_minTime())),
-            ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
+            ('event_id.stop', '>', self.get_minTime()),
+            ('event_id.final_date', '>', self.get_minTime()),
         ])
         for att in my_attendees:
             other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
@@ -619,7 +615,7 @@ class GoogleCalendar(models.AbstractModel):
                 if not att.event_id.recurrent_id or att.event_id.recurrent_id == 0:
                     status, response, ask_time = self.create_an_event(att.event_id)
                     if status_response(status):
-                        update_date = datetime.strptime(response['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
+                        update_date = datetime.from_string(response['updated'])
                         att.event_id.write({'oe_update_date': update_date})
                         new_ids.append(response['id'])
                         att.write({'google_internal_event_id': response['id'], 'oe_synchro_date': update_date})
@@ -695,7 +691,7 @@ class GoogleCalendar(models.AbstractModel):
 
             my_odoo_attendees = CalendarAttendee.with_context(context_novirtual).search([
                 ('partner_id', '=', my_partner_id),
-                ('event_id.oe_update_date', '>', lastSync and fields.Datetime.to_string(lastSync) or self.get_minTime().fields.Datetime.to_string()),
+                ('event_id.oe_update_date', '>', lastSync or self.get_minTime()),
                 ('google_internal_event_id', '!=', False),
             ])
 
@@ -721,8 +717,8 @@ class GoogleCalendar(models.AbstractModel):
                 ('partner_id', '=', my_partner_id),
                 ('google_internal_event_id', '!=', False),
                 '|',
-                ('event_id.stop', '>', fields.Datetime.to_string(self.get_minTime())),
-                ('event_id.final_date', '>', fields.Datetime.to_string(self.get_minTime())),
+                ('event_id.stop', '>', self.get_minTime()),
+                ('event_id.final_date', '>', self.get_minTime()),
             ]
 
             # Select all events from Odoo which have been already synchronized in gmail
@@ -852,9 +848,9 @@ class GoogleCalendar(models.AbstractModel):
         return True
 
     def check_and_sync(self, oe_event, google_event):
-        if datetime.strptime(oe_event.oe_update_date, "%Y-%m-%d %H:%M:%S.%f") > datetime.strptime(google_event['updated'], "%Y-%m-%dT%H:%M:%S.%fz"):
+        if oe_event.oe_update_date > google_event['updated']:
             self.update_to_google(oe_event, google_event)
-        elif datetime.strptime(oe_event.oe_update_date, "%Y-%m-%d %H:%M:%S.%f") < datetime.strptime(google_event['updated'], "%Y-%m-%dT%H:%M:%S.%fz"):
+        elif oe_event.oe_update_date < google_event['updated']:
             self.update_from_google(oe_event, google_event, 'write')
 
     def get_sequence(self, instance_id):
@@ -881,7 +877,7 @@ class GoogleCalendar(models.AbstractModel):
 
     def get_last_sync_date(self):
         current_user = self.env.user
-        return current_user.google_calendar_last_sync_date and fields.Datetime.from_string(current_user.google_calendar_last_sync_date) + timedelta(minutes=0) or False
+        return current_user.google_calendar_last_sync_date and current_user.google_calendar_last_sync_date + timedelta(minutes=0) or False
 
     def do_refresh_token(self):
         current_user = self.env.user

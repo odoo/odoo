@@ -205,12 +205,12 @@
                     domain="[('activity_ids.user_id', '=', uid)]"/>
                 <separator/>
                 <filter string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    domain="[('activity_ids.date_deadline', '&lt;', context_today())]"
                     help="Show all records which has next action date is before today"/>
                 <filter string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    domain="[('activity_ids.date_deadline', '=', context_today())]"/>
                 <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today())
                         ]"/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
@@ -904,7 +904,7 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
-                <filter string="This Year" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="This Year" name="year" domain="[('create_date','&lt;=', datetime.now().end_of('year')),('create_date','&gt;=',datetime.now().start_of('year'))]"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>

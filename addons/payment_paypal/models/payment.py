@@ -3,14 +3,13 @@
 import json
 import logging
 
-import dateutil.parser
-import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from odoo.tools.float_utils import float_compare
+from odoo.tools import datetime
 
 
 _logger = logging.getLogger(__name__)
@@ -198,12 +197,12 @@ class TxPaypal(models.Model):
         if status in ['Completed', 'Processed']:
             _logger.info('Validated Paypal payment for tx %s: set as done' % (self.reference))
             try:
-                # dateutil and pytz don't recognize abbreviations PDT/PST
+                # datetime doesn't recognize abbreviations PDT/PST
                 tzinfos = {
                     'PST': -8 * 3600,
                     'PDT': -7 * 3600,
                 }
-                date = dateutil.parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone(pytz.utc)
+                date = datetime.du_parser.parse(data.get('payment_date'), tzinfos=tzinfos).astimezone('UTC')
             except:
                 date = fields.Datetime.now()
             res.update(date=date)

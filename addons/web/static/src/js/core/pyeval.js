@@ -380,6 +380,57 @@ datetime.datetime = py.type('datetime', null, {
         }
         return py.PY_call(datetime.datetime, params);
     },
+    start_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, 1]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.datetime, [this.year, 1, 1]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, this.day, 23, 59, 59]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.datetime, [this.year, this.month, days_in_month(this.year, this.month), 23, 59, 59]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.datetime, [this.year, 12, 31, 23, 59, 59]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days,
+            'hours': args.hours,
+            'minutes': args.minutes,
+            'seconds': args.seconds
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+            ['hours', py.None], ['minutes', py.None], ['seconds', py.None],
+        ]);
+        var params = {};
+        for(var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : py.float.fromJSON(-asJS(args[key])));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
+    },
     strftime: function () {
         var self = this;
         var args = py.PY_parseArgs(arguments, 'format');
@@ -479,6 +530,26 @@ datetime.date = py.type('date', null, {
              && this.day === other.day)
             ? py.True : py.False;
     },
+    add: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        return py.PY_add(this, py.PY_call(relativedelta, {
+            'years': args.years,
+            'months': args.months,
+            'days': args.days
+        }));
+    },
+    subtract: function() {
+        var args = py.PY_parseArgs(arguments, [
+            ['years', py.None], ['months', py.None], ['days', py.None],
+        ]);
+        var params = {};
+        for(var key in args) {
+            params[key] = (args[key] === py.None ? args[key] : -asJS(args[key]));
+        }
+        return py.PY_add(this, py.PY_call(relativedelta, params));
+    },
     replace: function () {
         var args = py.PY_parseArgs(arguments, [
             ['year', py.None], ['month', py.None], ['day', py.None]
@@ -520,8 +591,37 @@ datetime.date = py.type('date', null, {
     weekday: function () {
         return  py.float.fromJSON((this.toordinal().toJSON()+6)%7);
     },
+    start_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.date, [this.year, this.month, 1]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.date, [this.year, 1, 1]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
+    end_of: function () {
+        var args = py.PY_parseArgs(arguments, 'unit');
+        var unit = args.unit.toJSON();
+        if (unit === "day") {
+            return py.PY_call(datetime.date, [this.year, this.month, this.day]);
+        } else if (unit === "month") {
+            return py.PY_call(datetime.date, [this.year, this.month, days_in_month(this.year, this.month)]);
+        } else if (unit === "year") {
+            return py.PY_call(datetime.date, [this.year, 12, 31]);
+        } else {
+            throw new Error('ValueError: ' + unit);
+        }
+    },
     fromJSON: function (year, month, day) {
         return py.PY_call(datetime.date, [year, month, day]);
+    },
+    toJSON: function () {
+        return _.str.sprintf('%04d-%02d-%02d', this.year, this.month, this.day);
     },
     today: py.classmethod.fromJSON(function () {
         var d = new Date ();
@@ -540,6 +640,8 @@ function context_today() {
     return py.PY_call(
         datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
 }
+
+datetime.context_today = context_today;
 
 datetime.time = py.type('time', null, {
     __init__: function () {
@@ -564,13 +666,15 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = _.map(('year month day '
-                + 'years months weeks days '
+var args = _.map(('year month day hour minute second '
+                + 'years months weeks days hours minutes seconds '
                 + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
     switch (arg) {
     case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
+        case 'hours':case 'minutes':case 'seconds':
         return [arg, zero];
     case 'year':case 'month':case 'day':case 'weekday':
+    case 'hour':case 'minute': case 'second':
     case 'yearday':case 'nlyearday':
         return [arg, null];
     default:
@@ -653,10 +757,13 @@ var relativedelta = py.type('relativedelta', null, {
         this._has_time = 0;
     },
     __add__: function (other) {
-        if (!py.PY_isInstance(other, datetime.date)) {
+        // TODO: test this whole mess
+        var withTime = false;
+        if (py.PY_isInstance(other, datetime.datetime)) {
+            withTime = true;
+        } else if (!py.PY_isInstance(other, datetime.date)) {
             return py.NotImplemented;
         }
-        // TODO: test this whole mess
         var year = (asJS(this.ops.year) || asJS(other.year)) + asJS(this.ops.years);
         var month = asJS(this.ops.month) || asJS(other.month);
         var months;
@@ -684,6 +791,12 @@ var relativedelta = py.type('relativedelta', null, {
             day: py.float.fromJSON(day)
         };
 
+        if (withTime) {
+            repl.hour = py.float.fromJSON(asJS(this.ops.hour) || asJS(other.hour));
+            repl.minute = py.float.fromJSON(asJS(this.ops.minute) || asJS(other.minute));
+            repl.second = py.float.fromJSON(asJS(this.ops.second) || asJS(other.second));
+        }
+
         var days = asJS(this.ops.days);
         if (py.PY_isTrue(this.ops.leapdays) && month > 2 && _utils.isleap(year)) {
             days += asJS(this.ops.leapdays);
@@ -692,7 +805,10 @@ var relativedelta = py.type('relativedelta', null, {
         var ret = py.PY_add(
             py.PY_call(py.PY_getAttr(other, 'replace'), repl),
             py.PY_call(datetime.timedelta, {
-                days: py.float.fromJSON(days)
+                days: py.float.fromJSON(days),
+                hours: this.ops.hours,
+                minutes: this.ops.minutes,
+                seconds: this.ops.seconds
             })
         );
 
@@ -730,13 +846,21 @@ var relativedelta = py.type('relativedelta', null, {
             months: py.PY_negative(this.ops.months),
             days: py.PY_negative(this.ops.days),
             leapdays: this.ops.leapdays,
+            hours: py.PY_negative(this.ops.hours),
+            minutes: py.PY_negative(this.ops.minutes),
+            seconds: py.PY_negative(this.ops.seconds),
             year: this.ops.year,
             month: this.ops.month,
             day: this.ops.day,
-            weekday: this.ops.weekday
+            weekday: this.ops.weekday,
+            hour: this.ops.hour,
+            minute: this.ops.minute,
+            second: this.ops.second
         });
     }
 });
+
+datetime.relativedelta = relativedelta;
 
 // recursively wraps JS objects passed into the context to attributedicts
 // which jsonify back to JS objects
@@ -953,13 +1077,13 @@ function eval_groupbys(contexts, evaluation_context) {
 
 
 function pycontext() {
+    datetime.current_date = py.PY_call(time.strftime, [py.str.fromJSON('%Y-%m-%d')]);
     return {
         datetime: datetime,
         context_today: context_today,
         time: time,
         relativedelta: relativedelta,
-        current_date: py.PY_call(
-            time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
+        current_date: datetime.current_date,
     };
 }
 

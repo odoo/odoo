@@ -3,9 +3,9 @@
 import base64
 import random
 import re
-from datetime import datetime, timedelta
 
 from odoo import api, fields, models, modules, tools
+from odoo.tools.datetime import datetime, timedelta
 
 class ImLivechatChannel(models.Model):
     """ Livechat Channel
@@ -92,7 +92,7 @@ class ImLivechatChannel(models.Model):
     @api.depends('channel_ids.rating_ids')
     def _compute_percentage_satisfaction(self):
         for record in self:
-            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
+            dt = datetime.utcnow() - timedelta(days=7)
             repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
             total = sum(repartition.values())
             if total > 0:

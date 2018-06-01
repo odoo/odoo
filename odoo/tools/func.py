@@ -112,3 +112,13 @@ class _ClassProperty(property):
 
 def classproperty(func):
     return _ClassProperty(classmethod(func))
+
+def monkey_patch(cls):
+    """ Return a method decorator to monkey-patch the given class. """
+    def decorate(func):
+        name = func.__name__
+        func.super = getattr(cls, name, None)
+        setattr(cls, name, func)
+        return func
+    return decorate
+

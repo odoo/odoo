@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
 import random
 
 import itertools
@@ -10,6 +9,7 @@ from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
+from odoo.tools.datetime import datetime
 
 
 class Blog(models.Model):
@@ -124,7 +124,7 @@ class BlogPost(models.Model):
         res = {}
         for blog_post in self:
             if blog_post.id:  # avoid to rank one post not yet saved and so withtout post_date in case of an onchange.
-                age = datetime.now() - fields.Datetime.from_string(blog_post.post_date)
+                age = datetime.now() - blog_post.post_date
                 res[blog_post.id] = blog_post.visits * (0.5 + random.random()) / max(3, age.days)
         return res
 
@@ -221,7 +221,7 @@ class BlogPost(models.Model):
         result = True
         for post in self:
             copy_vals = dict(vals)
-            if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
+            if 'website_published' in vals and 'published_date' not in vals and (not post.published_date or post.published_date <= fields.Datetime.now()):
                 copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
             result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)

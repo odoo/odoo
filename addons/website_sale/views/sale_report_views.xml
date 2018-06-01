@@ -8,20 +8,20 @@
                 <filter name="week" string="Last Week"
                         domain="[
                             '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(days=7)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                            ('date', '&gt;=', context_today()-datetime.relativedelta(days=7)),
+                            ('date', '&lt;=', context_today()),
                         ]"/>
                 <filter name="month" string="Last Month"
                         domain="[
                             '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(months=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                            ('date', '&gt;=', context_today()-datetime.relativedelta(months=1)),
+                            ('date', '&lt;=', context_today()),
                         ]"/>
                 <filter name="year" string="Last Year"
                         domain="[
                             '&amp;',
-                            ('date', '&gt;=', (context_today()-relativedelta(years=1)).strftime('%Y-%m-%d')),
-                            ('date', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                            ('date', '&gt;=', context_today()-datetime.relativedelta(years=1)),
+                            ('date', '&lt;=', context_today()),
                          ]"/>
             </search>
         </field>

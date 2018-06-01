@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
 
 from odoo.tests.common import SingleTransactionCase
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
+from odoo.tools.datetime import date
 
 
 class TestIrSequenceDateRangeStandard(SingleTransactionCase):
@@ -22,7 +21,7 @@ class TestIrSequenceDateRangeStandard(SingleTransactionCase):
     def test_ir_sequence_date_range_2_change_dates(self):
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d).strftime(DATE_FORMAT)
+        january = lambda d: date(year, 1, d)
 
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
         n = seq16.next_by_code('test_sequence_date_range')
@@ -63,7 +62,7 @@ class TestIrSequenceDateRangeNoGap(SingleTransactionCase):
     def test_ir_sequence_date_range_2_change_dates(self):
         """ Draw numbers to create a first subsequence then change its date range. Then, try to draw a new number adn check a new subsequence was correctly created. """
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d).strftime(DATE_FORMAT)
+        january = lambda d: date(year, 1, d)
 
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})
         n = seq16.next_by_code('test_sequence_date_range_2')
@@ -111,7 +110,7 @@ class TestIrSequenceDateRangeChangeImplementation(SingleTransactionCase):
     def test_ir_sequence_date_range_2_use(self):
         """ Make some use of the sequences to create some subsequences """
         year = date.today().year - 1
-        january = lambda d: date(year, 1, d).strftime(DATE_FORMAT)
+        january = lambda d: date(year, 1, d)
 
         seq = self.env['ir.sequence']
         seq16 = self.env['ir.sequence'].with_context({'ir_sequence_date': january(16)})

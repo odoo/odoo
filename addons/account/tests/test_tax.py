@@ -1,7 +1,7 @@
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
-import time
 from odoo.tests import tagged
 
+from odoo.tools.datetime import date
 
 @tagged('post_install', '-at_install')
 class TestTax(AccountTestUsers):

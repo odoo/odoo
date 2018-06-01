@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
 from odoo.addons import decimal_precision as dp
+from odoo.tools.datetime import datetime, timedelta
 
 from werkzeug.urls import url_encode
 
@@ -87,7 +86,7 @@ class SaleOrder(models.Model):
     def copy(self, default=None):
         if self.template_id and self.template_id.number_of_days > 0:
             default = dict(default or {})
-            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+            default['validity_date'] = datetime.now() + timedelta(self.template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
     @api.one
@@ -167,7 +166,7 @@ class SaleOrder(models.Model):
         self.options = option_lines
 
         if template.number_of_days > 0:
-            self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
+            self.validity_date = datetime.now() + timedelta(template.number_of_days)
 
         self.website_description = template.website_description
         self.require_payment = template.require_payment

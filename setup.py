@@ -28,10 +28,10 @@ def py2exe_datafiles():
     others = ['frontend.py', 'mofile.py']
     data_files['babel/messages'] = [join(dirname(babel.__file__), 'messages', f) for f in others]
 
-    import pytz
-    tzdir = dirname(pytz.__file__)
+    import pendulum
+    tzdir = dirname(pendulum.__file__)
     for root, _, filenames in os.walk(join(tzdir, 'zoneinfo')):
-        base = join('pytz', root[len(tzdir) + 1:])
+        base = join('pendulum', root[len(tzdir) + 1:])
         data_files[base] = [join(root, f) for f in filenames]
 
     import docutils
@@ -94,7 +94,6 @@ def py2exe_options():
                         'pydot',
                         'pyparsing',
                         'PyPDF2',
-                        'pytz',
                         'reportlab',
                         'requests',
                         'select',
@@ -155,7 +154,6 @@ setup(
         'pypdf2',
         'pyserial',
         'python-dateutil',
-        'pytz',
         'pyusb >= 1.0.0b1',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab

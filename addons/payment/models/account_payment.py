@@ -1,9 +1,8 @@
 # coding: utf-8
 
-import datetime
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import datetime
 
 
 class AccountPayment(models.Model):

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
 from odoo import fields
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, test_reports
+from odoo.tools.datetime import date, datetime
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
@@ -62,8 +61,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'TimeNotLimited',
             'limit': True,
             'validation_type': 'manager',
-            'validity_start': fields.Datetime.from_string('2017-01-01 00:00:00'),
-            'validity_stop': fields.Datetime.from_string('2017-06-01 00:00:00'),
+            'validity_start': date(2017, 1, 1),
+            'validity_stop': date(2017, 6, 1),
         })
 
         # --------------------------------------------------
@@ -77,7 +76,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'name': 'Hol10',
                 'employee_id': self.employee_hruser_id,
                 'holiday_status_id': self.holidays_status_1.id,
-                'date_from': (datetime.today() - relativedelta(days=1)),
+                'date_from': datetime.today().add(days=-1),
                 'date_to': datetime.today(),
                 'number_of_days_temp': 1,
             })
@@ -88,7 +87,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol11',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() - relativedelta(days=1)),
+            'date_from': datetime.today().add(days=-1),
             'date_to': datetime.today(),
             'number_of_days_temp': 1,
         })
@@ -110,8 +109,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol12',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_3.id,
-            'date_from': (datetime.today() + relativedelta(days=12)),
-            'date_to': (datetime.today() + relativedelta(days=13)),
+            'date_from': datetime.today().add(days=12),
+            'date_to': datetime.today().add(days=13),
             'number_of_days_temp': 1,
         })
         hol12_user_group = hol12_employee_group.sudo(self.user_hruser_id)
@@ -141,7 +140,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'name': 'Hol21',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_status_1.id,
-                'date_from': (datetime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
+                'date_from': datetime.today().add(days=-1),
                 'date_to': datetime.today(),
                 'number_of_days_temp': 1,
             })
@@ -152,8 +151,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_status_2.id,
-                'date_from': (datetime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
-                'date_to': (datetime.today() + relativedelta(days=2)),
+                'date_from': datetime.today().add(days=1),
+                'date_to': datetime.today().add(days=2),
                 'number_of_days_temp': 1,
             })
 
@@ -183,8 +182,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol22',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_2.id,
-            'date_from': (datetime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=3)),
+            'date_from': datetime.today().add(days=2),
+            'date_to': datetime.today().add(days=3),
             'number_of_days_temp': 1,
         })
         hol2_user_group = hol2.sudo(self.user_hruser_id)
@@ -228,8 +227,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
 
         # HrManager changes the date and put too much days -> crash when confirming
         hol2_manager_group.write({
-            'date_from': (datetime.today() + relativedelta(days=4)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=7)),
+            'date_from': datetime.today().add(days=4),
+            'date_to': datetime.today().add(days=7),
             'number_of_days_temp': 4,
         })
         with self.assertRaises(ValidationError):
@@ -242,8 +241,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         hol3 = Requests.create({
             'name': 'Sick Leave',
             'holiday_status_id': hol3_status.id,
-            'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
-            'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
+            'date_from': datetime.today().replace(day=10, hour=10),
+            'date_to': datetime.today().replace(day=11, hour=19),
             'employee_id': employee_id,
             'number_of_days_temp': 1,
         })
@@ -264,8 +263,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         Requests.create({
             'name': 'Sick Leave',
             'holiday_status_id': self.holiday_status_4.id,
-            'date_from': fields.Datetime.from_string('2017-03-03 06:00:00'),
-            'date_to': fields.Datetime.from_string('2017-03-11 19:00:00'),
+            'date_from': datetime(2017, 3, 3, 6, 0, 0),
+            'date_to': datetime(2017, 3, 11, 19, 0, 0),
             'employee_id': employee_id,
             'number_of_days_temp': 1,
         }).unlink()
@@ -274,8 +273,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             Requests.create({
                 'name': 'Sick Leave',
                 'holiday_status_id': self.holiday_status_4.id,
-                'date_from': fields.Datetime.from_string('2017-07-03 06:00:00'),
-                'date_to': fields.Datetime.from_string('2017-07-11 19:00:00'),
+                'date_from': datetime(2017, 7, 3, 6, 0, 0),
+                'date_to': datetime(2017, 7, 11, 19, 0, 0),
                 'employee_id': employee_id,
                 'number_of_days_temp': 1,
             })
@@ -284,8 +283,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol41',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=10)),
+            'date_from': datetime.today().add(days=9),
+            'date_to': datetime.today().add(days=10),
             'number_of_days_temp': 1,
         })
 
@@ -297,8 +296,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol41',
             'employee_id': self.employee_hrmanager_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() + relativedelta(days=9)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=10)),
+            'date_from': datetime.today().add(days=9),
+            'date_to': datetime.today().add(days=10),
             'number_of_days_temp': 1,
         })
 
@@ -319,8 +318,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol50',
             'employee_id': self.employee_hruser_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=16)),
+            'date_from': datetime.today().add(days=15),
+            'date_to': datetime.today().add(days=16),
             'number_of_days_temp': 1,
         })
 
@@ -332,8 +331,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol51',
             'employee_id': self.employee_hrmanager_2_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=16)),
+            'date_from': datetime.today().add(days=15),
+            'date_to': datetime.today().add(days=16),
             'number_of_days_temp': 1,
         })
 
@@ -344,8 +343,8 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'name': 'Hol52',
             'employee_id': self.employee_hrmanager_id,
             'holiday_status_id': self.holidays_status_1.id,
-            'date_from': (datetime.today() + relativedelta(days=15)).strftime('%Y-%m-%d %H:%M'),
-            'date_to': (datetime.today() + relativedelta(days=16)),
+            'date_from': datetime.today().add(days=15),
+            'date_to': datetime.today().add(days=16),
             'number_of_days_temp': 1,
         })
 
@@ -358,7 +357,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
-            'date_from': datetime.today().strftime('%Y-%m-01'),
+            'date_from': date.today().start_of('month'),
             'depts': [(6, 0, [self.ref('hr.dep_sales')])],
             'holiday_type': 'Approved'
         }
@@ -370,7 +369,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
             'active_ids': [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')]
         }
         data_dict = {
-            'date_from': datetime.today().strftime('%Y-%m-01'),
+            'date_from': date.today().start_of('month'),
             'emp': [(6, 0, [self.ref('hr.employee_root'), self.ref('hr.employee_qdp'), self.ref('hr.employee_al')])],
             'holiday_type': 'Approved'
         }

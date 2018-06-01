@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from dateutil.relativedelta import relativedelta
-
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools.datetime import relativedelta
 
 
 class FleetVehicle(models.Model):
@@ -120,10 +119,8 @@ class FleetVehicle(models.Model):
             name = ''
             for element in record.log_contracts:
                 if element.state in ('open', 'expired') and element.expiration_date:
-                    current_date_str = fields.Date.context_today(record)
-                    due_time_str = element.expiration_date
-                    current_date = fields.Date.from_string(current_date_str)
-                    due_time = fields.Date.from_string(due_time_str)
+                    current_date = fields.Date.context_today(record)
+                    due_time = element.expiration_date
                     diff_time = (due_time - current_date).days
                     if diff_time < 0:
                         overdue = True
@@ -153,8 +150,7 @@ class FleetVehicle(models.Model):
         else:
             search_operator = 'not in'
         today = fields.Date.context_today(self)
-        datetime_today = fields.Datetime.from_string(today)
-        limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+15))
+        limit_date = today.add(days=15)
         self.env.cr.execute("""SELECT cost.vehicle_id,
                         count(contract.id) AS contract_number
                         FROM fleet_vehicle_cost cost
@@ -298,9 +294,9 @@ class FleetVehicleOdometer(models.Model):
         for record in self:
             name = record.vehicle_id.name
             if not name:
-                name = record.date
+                name = str(record.date)
             elif record.date:
-                name += ' / ' + record.date
+                name += ' / ' + str(record.date)
             record.name = name
 
     @api.onchange('vehicle_id')

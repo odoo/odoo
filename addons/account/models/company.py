@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta, datetime
 import calendar
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.exceptions import UserError
+from odoo.tools.datetime import timedelta, datetime
 from odoo.tools.float_utils import float_round, float_is_zero
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
+from odoo.tools import date_utils
 
 
 class ResCompany(models.Model):
@@ -85,27 +84,24 @@ Best Regards,'''))
             * [Optionally] record: The fiscal year record.
         '''
         self.ensure_one()
-        date_str = current_date.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        current_date = datetime.from_string(current_date)
 
         # Search a fiscal year record containing the date.
         # If a record is found, then no need further computation, we get the dates range directly.
         fiscalyear = self.env['account.fiscal.year'].search([
             ('company_id', '=', self.id),
-            ('date_from', '<=', date_str),
-            ('date_to', '>=', date_str),
+            ('date_from', '<=', current_date),
+            ('date_to', '>=', current_date),
         ], limit=1)
         if fiscalyear:
             return {
-                'date_from': datetime.strptime(fiscalyear.date_from, DEFAULT_SERVER_DATE_FORMAT).date(),
-                'date_to': datetime.strptime(fiscalyear.date_to, DEFAULT_SERVER_DATE_FORMAT).date(),
+                'date_from': fiscalyear.date_from,
+                'date_to': fiscalyear.date_to,
                 'record': fiscalyear,
             }
 
         date_from, date_to = date_utils.get_fiscal_year(
             current_date, day=self.fiscalyear_last_day, month=self.fiscalyear_last_month)
-
-        date_from_str = date_from.strftime(DEFAULT_SERVER_DATE_FORMAT)
-        date_to_str = date_to.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         # Search for fiscal year records reducing the delta between the date_from/date_to.
         # This case could happen if there is a gap between two fiscal year records.
@@ -114,19 +110,19 @@ Best Regards,'''))
 
         fiscalyear_from = self.env['account.fiscal.year'].search([
             ('company_id', '=', self.id),
-            ('date_from', '<=', date_from_str),
-            ('date_to', '>=', date_from_str),
+            ('date_from', '<=', date_from),
+            ('date_to', '>=', date_from),
         ], limit=1)
         if fiscalyear_from:
-            date_from = datetime.strptime(fiscalyear_from.date_to, DEFAULT_SERVER_DATE_FORMAT).date() + timedelta(days=1)
+            date_from = fiscalyear_from.date_to + timedelta(days=1)
 
         fiscalyear_to = self.env['account.fiscal.year'].search([
             ('company_id', '=', self.id),
-            ('date_from', '<=', date_to_str),
-            ('date_to', '>=', date_to_str),
+            ('date_from', '<=', date_to),
+            ('date_to', '>=', date_to),
         ], limit=1)
         if fiscalyear_to:
-            date_to = datetime.strptime(fiscalyear_to.date_from, DEFAULT_SERVER_DATE_FORMAT).date() - timedelta(days=1)
+            date_to = fiscalyear_to.date_from - timedelta(days=1)
 
         return {'date_from': date_from, 'date_to': date_to}
 

@@ -3,7 +3,6 @@
 import ast
 import collections
 import copy
-import datetime
 import fnmatch
 import logging
 import os
@@ -11,7 +10,6 @@ import re
 import time
 
 import itertools
-from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import itemgetter
 
@@ -30,6 +28,7 @@ from odoo.tools import config, graph, ConstantMapping, SKIPPED_ELEMENT_TYPES, py
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools import datetime
 from odoo.tools.view_validation import valid_view
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 
@@ -1235,8 +1234,7 @@ actual arch.
             json=json,
             quote_plus=werkzeug.url_quote_plus,
             time=time,
-            datetime=datetime,
-            relativedelta=relativedelta,
+            datetime=datetime.DatetimeContext,
             xmlid=self.key,
             viewid=self.id,
             to_text=pycompat.to_text,

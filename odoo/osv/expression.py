@@ -1091,9 +1091,9 @@ class expression(object):
             else:
                 if field.type == 'datetime' and right and len(right) == 10:
                     if operator in ('>', '<='):
-                        right += ' 23:59:59'
+                        right = str(right) + ' 23:59:59'
                     else:
-                        right += ' 00:00:00'
+                        right = str(right) + ' 00:00:00'
                     push(create_substitution_leaf(leaf, (left, operator, right), model))
 
                 elif field.translate is True and right:

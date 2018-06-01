@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from odoo.tools.datetime import datetime
 from odoo.tests.common import TransactionCase
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class TestOnchangeProductId(TransactionCase):
     """Test that when an included tax is mapped by a fiscal position, the included tax must be
@@ -63,7 +62,7 @@ class TestOnchangeProductId(TransactionCase):
                     'product_qty': 1.0,
                     'product_uom': uom_id.id,
                     'price_unit': 121.0,
-                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                    'date_planned': datetime.today(),
                 })],
         }
         po = self.po_model.create(po_vals)

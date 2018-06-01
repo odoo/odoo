@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime, timedelta
 
 from odoo import models, api, fields
 from odoo.fields import Datetime as FieldDateTime
 from odoo.tools.translate import _
+from odoo.tools.datetime import datetime, timedelta
 from odoo.exceptions import UserError
 
 
@@ -128,8 +128,8 @@ class AccountClosing(models.Model):
             interval_from = date_stop.replace(year=year_target)
             name_interval = _('Annual Closing')
 
-        return {'interval_from': FieldDateTime.to_string(interval_from),
-                'date_stop': FieldDateTime.to_string(date_stop),
+        return {'interval_from': interval_from,
+                'date_stop': date_stop,
                 'name_interval': name_interval}
 
     @api.multi

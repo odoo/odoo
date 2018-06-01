@@ -100,7 +100,7 @@ class Pricelist(models.Model):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
-        If date in context: Date of the pricelist (%Y-%m-%d)
+        If date in context: Date of the pricelist (in default server format)
 
             :param products_qty_partner: list of typles products, quantity, partner
             :param datetime date: validity date

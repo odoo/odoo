@@ -2,31 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
-from datetime import datetime, time, timedelta
-from dateutil.rrule import rrule, DAILY
 from functools import partial
 from itertools import chain
-from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
+from odoo.tools.datetime import timedelta, rrule, datetime, time, DAILY
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
 # is not available.
 HOURS_PER_DAY = 8
-
-
-def string_to_datetime(value):
-    """ Convert the given string value to a datetime in UTC. """
-    return utc.localize(fields.Datetime.from_string(value))
-
-
-def datetime_to_string(dt):
-    """ Convert the given datetime (converted in UTC) to a string value. """
-    return fields.Datetime.to_string(dt.astimezone(utc))
 
 
 def float_to_time(hours):
@@ -193,7 +181,7 @@ class ResourceCalendar(models.Model):
         combine = datetime.combine
 
         # express all dates and times in the resource's timezone
-        tz = timezone((resource or self).tz)
+        tz = (resource or self).tz
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
 
@@ -210,8 +198,8 @@ class ResourceCalendar(models.Model):
 
             for day in rrule(DAILY, start, until=until, byweekday=weekday):
                 # attendance hours are interpreted in the resource's timezone
-                dt0 = tz.localize(combine(day, float_to_time(attendance.hour_from)))
-                dt1 = tz.localize(combine(day, float_to_time(attendance.hour_to)))
+                dt0 = combine(day, float_to_time(attendance.hour_from), tzinfo=tz)
+                dt1 = combine(day, float_to_time(attendance.hour_to), tzinfo=tz)
                 result.append((max(start_dt, dt0), min(end_dt, dt1), attendance))
 
         return Intervals(result)
@@ -230,18 +218,18 @@ class ResourceCalendar(models.Model):
         domain = domain + [
             ('calendar_id', '=', self.id),
             ('resource_id', 'in', resource_ids),
-            ('date_from', '<=', datetime_to_string(end_dt)),
-            ('date_to', '>=', datetime_to_string(start_dt)),
+            ('date_from', '<=', end_dt),
+            ('date_to', '>=', start_dt),
         ]
 
         # retrieve leave intervals in (start_dt, end_dt)
-        tz = timezone((resource or self).tz)
+        tz = (resource or self).tz
         start_dt = start_dt.astimezone(tz)
         end_dt = end_dt.astimezone(tz)
         result = []
         for leave in self.env['resource.calendar.leaves'].search(domain):
-            dt0 = string_to_datetime(leave.date_from).astimezone(tz)
-            dt1 = string_to_datetime(leave.date_to).astimezone(tz)
+            dt0 = leave.date_from.astimezone(tz)
+            dt1 = leave.date_to.astimezone(tz)
             result.append((max(start_dt, dt0), min(end_dt, dt1), leave))
 
         return Intervals(result)
@@ -268,9 +256,9 @@ class ResourceCalendar(models.Model):
         """
         # Set timezone in UTC if no timezone is explicitly given
         if not start_dt.tzinfo:
-            start_dt = start_dt.replace(tzinfo=utc)
+            start_dt = start_dt.replace(tzinfo='UTC')
         if not end_dt.tzinfo:
-            end_dt = end_dt.replace(tzinfo=utc)
+            end_dt = end_dt.replace(tzinfo='UTC')
 
         if compute_leaves:
             intervals = self._work_intervals(start_dt, end_dt, domain=domain)
@@ -294,7 +282,7 @@ class ResourceCalendar(models.Model):
         Return datetime after having planned hours
         """
         if not day_dt.tzinfo:
-            day_dt = day_dt.replace(tzinfo=utc)
+            day_dt = day_dt.replace(tzinfo='UTC')
 
         # which method to use for retrieving intervals
         if compute_leaves:
@@ -309,7 +297,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in get_intervals(dt, dt + delta):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (start + timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                        return start.add(hours=hours).replace(microsecond=0).astimezone(day_dt.tzinfo)
                     hours -= interval_hours
             return False
 
@@ -321,7 +309,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (stop - timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                        return stop.subtract(hours=hours).replace(microsecond=0).astimezone(day_dt.tzinfo)
                     hours -= interval_hours
             return False
 
@@ -340,7 +328,7 @@ class ResourceCalendar(models.Model):
         Returns the datetime of a days scheduling.
         """
         if not day_dt.tzinfo:
-            day_dt = day_dt.replace(tzinfo=utc)
+            day_dt = day_dt.replace(tzinfo='UTC')
 
         # which method to use for retrieving intervals
         if compute_leaves:

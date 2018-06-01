@@ -6,12 +6,12 @@ import uuid
 from functools import partial
 
 from lxml import etree
-from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import float_is_zero, float_compare, pycompat
 from odoo.tools.misc import formatLang
+from odoo.tools.datetime import relativedelta
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
 
@@ -1754,7 +1754,7 @@ class AccountPaymentTerm(models.Model):
 
     @api.one
     def compute(self, value, date_ref=False):
-        date_ref = date_ref or fields.Date.today()
+        date_ref = fields.Date.from_string(date_ref) or fields.Date.today()
         amount = value
         sign = value < 0 and -1 or 1
         result = []
@@ -1770,7 +1770,7 @@ class AccountPaymentTerm(models.Model):
             elif line.value == 'balance':
                 amt = currency.round(amount)
             if amt:
-                next_date = fields.Date.from_string(date_ref)
+                next_date = date_ref
                 if line.option == 'day_after_invoice_date':
                     next_date += relativedelta(days=line.days)
                     if line.day_of_the_month > 0:
@@ -1783,7 +1783,7 @@ class AccountPaymentTerm(models.Model):
                     next_date += relativedelta(day=line.days, months=1)
                 elif line.option == 'day_current_month':
                     next_date += relativedelta(day=line.days, months=0)
-                result.append((fields.Date.to_string(next_date), amt))
+                result.append((next_date, amt))
                 amount -= amt
         amount = sum(amt for _, amt in result)
         dist = currency.round(value - amount)

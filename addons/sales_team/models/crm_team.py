@@ -3,14 +3,12 @@
 
 
 from babel.dates import format_date
-from datetime import date, datetime
-from dateutil.relativedelta import relativedelta
 import json
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools.datetime import date, datetime, relativedelta
 
 
 class CrmTeam(models.Model):
@@ -228,7 +226,7 @@ class CrmTeam(models.Model):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
                 values.append({x_field: short_name, y_field: 0})
             for data_item in graph_data:
-                index = (datetime.strptime(data_item.get('x_value'), DF).date() - start_date).days
+                index = (date.from_string(data_item.get('x_value')) - start_date).days
                 values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'week':

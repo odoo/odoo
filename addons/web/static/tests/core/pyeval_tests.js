@@ -318,8 +318,37 @@ QUnit.module('core', function () {
 
     });
 
+    QUnit.test('date.start_of', function (assert) {
+        assert.expect(3);
+
+        var d = pyEval.context().datetime;
+        var a = d.date.fromJSON(2002, 3, 2);
+        var ctx = {a: a, date: d.date};
+        assert.ok(py.eval('a.start_of("day") == date(2002, 3, 2)', ctx));
+        assert.ok(py.eval('a.start_of("month") == date(2002, 3, 1)', ctx));
+        assert.ok(py.eval('a.start_of("year") == date(2002, 1, 1)', ctx));
+
+    });
+
+    QUnit.test('date.end_of', function (assert) {
+        assert.expect(6);
+
+        var d = pyEval.context().datetime;
+        var a = d.date.fromJSON(2002, 3, 2);
+        var b = d.date.fromJSON(2002, 2, 2);
+        var c = d.date.fromJSON(2004, 2, 2);
+        var ctx = {a: a, b: b, c: c, date: d.date};
+        assert.ok(py.eval('a.end_of("day") == date(2002, 3, 2)', ctx));
+        assert.ok(py.eval('a.end_of("month") == date(2002, 3, 31)', ctx));
+        assert.ok(py.eval('b.end_of("month") == date(2002, 2, 28)', ctx));
+        assert.ok(py.eval('c.end_of("month") == date(2004, 2, 29)', ctx));
+        assert.ok(py.eval('a.end_of("month") == date(2002, 3, 31)', ctx));
+        assert.ok(py.eval('a.end_of("year") == date(2002, 12, 31)', ctx));
+
+    });
+
     QUnit.test('relativedelta', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         assert.strictEqual(
             py.eval("(datetime.date(2012, 2, 15) + relativedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')",
@@ -341,8 +370,67 @@ QUnit.module('core', function () {
             py.eval("(datetime.date(2015,2,5)+relativedelta(days=-6,weekday=0)).strftime('%Y-%m-%d')",
                     pyEval.context()),
             '2015-02-02');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20) + relativedelta(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-02-01 16:07:30');
     });
 
+    QUnit.test('datetime.add', function (assert) {
+        assert.expect(3);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-02-01 16:07:30');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(months=3, hours=2, minutes=30)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-05-01 16:07:20');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).add(years=3)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2015-02-01 13:37:20');
+    });
+
+    QUnit.test('datetime.subtract', function (assert) {
+        assert.expect(3);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(hours=2, minutes=30, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2012-02-01 11:07:10');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(months=3, hours=2, minutes=30)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2011-11-01 11:07:20');
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 1, 13, 37, 20).subtract(years=3)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            '2009-02-01 13:37:20');
+    });
+
+    QUnit.test('date.add', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).add(months=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2012-05-01');
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).add(years=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2015-02-01');
+    });
+
+    QUnit.test('date.subtract', function (assert) {
+        assert.expect(2);
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).subtract(months=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2011-11-01');
+        assert.strictEqual(
+            py.eval("(datetime.date(2012, 2, 1).subtract(years=3)).strftime('%Y-%m-%d')",
+                    pyEval.context()),
+            '2009-02-01');
+    });
 
     QUnit.test('timedelta', function (assert) {
         assert.expect(4);
@@ -407,6 +495,50 @@ QUnit.module('core', function () {
             '   .strftime("%Y-%m-%d %H:%M:%S")',
             pyEval.context());
         assert.strictEqual(result, "2012-02-15 00:00:00");
+    });
+
+    QUnit.test('datetime.start_of', function (assert) {
+        assert.expect(3);
+
+        var d = pyEval.context().datetime;
+        var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
+        var ctx = {a: a, datetime: d.datetime};
+        assert.strictEqual(
+            py.eval('a.start_of("day").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-02 00:00:00");
+        assert.strictEqual(
+            py.eval('a.start_of("month").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-01 00:00:00");
+        assert.strictEqual(
+            py.eval('a.start_of("year").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-01-01 00:00:00");
+
+    });
+
+    QUnit.test('datetime.end_of', function (assert) {
+        assert.expect(5);
+
+        var d = pyEval.context().datetime;
+        var a = d.datetime.fromJSON(2002, 3, 2, 12, 0, 0);
+        var b = d.datetime.fromJSON(2002, 2, 2, 12, 0, 0);
+        var c = d.datetime.fromJSON(2004, 2, 2, 12, 0, 0);
+        var ctx = {a: a, b: b, c: c};
+        assert.strictEqual(
+            py.eval('a.end_of("day").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-02 23:59:59");
+        assert.strictEqual(
+            py.eval('a.end_of("month").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-03-31 23:59:59");
+        assert.strictEqual(
+            py.eval('b.end_of("month").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-02-28 23:59:59");
+        assert.strictEqual(
+            py.eval('c.end_of("month").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2004-02-29 23:59:59");
+        assert.strictEqual(
+            py.eval('a.end_of("year").strftime("%Y-%m-%d %H:%M:%S")', ctx),
+            "2002-12-31 23:59:59");
+
     });
 
     QUnit.module('pyeval (eval domain contexts)', {

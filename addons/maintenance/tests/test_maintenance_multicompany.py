@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError
+from odoo.tools.datetime import date
 
 
 class TestEquipmentMulticompany(TransactionCase):
@@ -108,7 +107,7 @@ class TestEquipmentMulticompany(TransactionCase):
             Equipment.sudo(user).create({
                 'name': 'Samsung Monitor 15',
                 'category_id': category_1.id,
-                'assign_date': time.strftime('%Y-%m-%d'),
+                'assign_date': date.today(),
                 'company_id': company_b.id,
                 'owner_user_id': user.id,
             })
@@ -116,7 +115,7 @@ class TestEquipmentMulticompany(TransactionCase):
         Equipment.sudo(equipment_manager).create({
                 'name': 'Acer Laptop',
                 'category_id': category_1.id,
-                'assign_date': time.strftime('%Y-%m-%d'),
+                'assign_date': date.today(),
                 'company_id': company_b.id,
                 'owner_user_id': user.id,
             })
@@ -125,7 +124,7 @@ class TestEquipmentMulticompany(TransactionCase):
         Equipment.sudo(equipment_manager).create({
             'name': 'HP Laptop',
             'category_id': category_1.id,
-            'assign_date': time.strftime('%Y-%m-%d'),
+            'assign_date': date.today(),
             'company_id': company_b.id,
             'owner_user_id': equipment_manager.id,
         })

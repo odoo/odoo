@@ -117,17 +117,15 @@ class AcquirerAdyen(models.Model):
     def adyen_form_generate_values(self, values):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         # tmp
-        import datetime
-        from dateutil import relativedelta
 
         if self.provider == 'adyen' and len(self.adyen_skin_hmac_key) == 64:
-            tmp_date = datetime.datetime.today() + relativedelta.relativedelta(days=1)
+            tmp_date = fields.Date.today().add(days=1)
 
             values.update({
                 'merchantReference': values['reference'],
                 'paymentAmount': '%d' % int(tools.float_round(values['amount'], 2) * 100),
                 'currencyCode': values['currency'] and values['currency'].name or '',
-                'shipBeforeDate': tmp_date.strftime('%Y-%m-%d'),
+                'shipBeforeDate': tmp_date,
                 'skinCode': self.adyen_skin_code,
                 'merchantAccount': self.adyen_merchant_account,
                 'shopperLocale': values.get('partner_lang', ''),
@@ -139,7 +137,7 @@ class AcquirerAdyen(models.Model):
             values['merchantSig'] = self._adyen_generate_merchant_sig_sha256('in', values)
 
         else:
-            tmp_date = datetime.date.today() + relativedelta.relativedelta(days=1)
+            tmp_date = fields.Date.today().add(days=1)
 
             values.update({
                 'merchantReference': values['reference'],

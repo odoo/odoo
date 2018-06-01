@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
@@ -249,7 +248,7 @@ class Project(models.Model):
 
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
-        domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
+        domain = [('create_date', '>=', fields.datetime.now().subtract(days=30))]
         for project in self:
             activity = project.tasks.rating_get_grades(domain)
             project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
@@ -265,7 +264,7 @@ class Project(models.Model):
     def _compute_rating_request_deadline(self):
         periods = {'daily': 1, 'weekly': 7, 'bimonthly': 15, 'monthly': 30, 'quarterly': 90, 'yearly': 365}
         for project in self:
-            project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
+            project.rating_request_deadline = fields.datetime.now().add(days=periods.get(project.rating_status_period, 0))
 
     @api.multi
     def map_tasks(self, new_project_id):
@@ -541,16 +540,16 @@ class Task(models.Model):
             lambda task: task.project_id.resource_calendar_id and task.create_date
         )
         for task in task_linked_to_calendar:
-            dt_create_date = fields.Datetime.from_string(task.create_date)
+            dt_create_date = task.create_date
 
             if task.date_assign:
-                dt_date_assign = fields.Datetime.from_string(task.date_assign)
+                dt_date_assign = task.date_assign
                 task.working_hours_open = task.project_id.resource_calendar_id.get_work_hours_count(
                         dt_create_date, dt_date_assign, compute_leaves=True)
                 task.working_days_open = task.working_hours_open / 24.0
 
             if task.date_end:
-                dt_date_end = fields.Datetime.from_string(task.date_end)
+                dt_date_end = task.date_end
                 task.working_hours_close = task.project_id.resource_calendar_id.get_work_hours_count(
                     dt_create_date, dt_date_end, compute_leaves=True)
                 task.working_days_close = task.working_hours_close / 24.0

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-import datetime
 import time
 
 from odoo import api, fields, models
 from odoo import tools
 from odoo.addons.bus.models.bus import TIMEOUT
-from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import datetime
 
 DISCONNECTION_TIMER = TIMEOUT + 5
 AWAY_TIMER = 1800  # 30 minutes
@@ -38,16 +37,16 @@ class BusPresence(models.Model):
         # compute last_presence timestamp
         last_presence = datetime.datetime.now() - datetime.timedelta(milliseconds=inactivity_period)
         values = {
-            'last_poll': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'last_poll': datetime.datetime.now(),
         }
         # update the presence or a create a new one
         if not presence:  # create a new presence for the user
             values['user_id'] = self._uid
-            values['last_presence'] = last_presence.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            values['last_presence'] = last_presence
             self.create(values)
         else:  # update the last_presence if necessary, and write values
-            if datetime.datetime.strptime(presence.last_presence, DEFAULT_SERVER_DATETIME_FORMAT) < last_presence:
-                values['last_presence'] = last_presence.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            if presence.last_presence < last_presence:
+                values['last_presence'] = last_presence
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
             with tools.mute_logger('odoo.sql_db'):
                 presence.write(values)

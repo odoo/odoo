@@ -20,7 +20,6 @@ import threading
 import time
 import unittest
 from contextlib import contextmanager
-from datetime import datetime, timedelta, date
 from pprint import pformat
 
 import requests
@@ -30,6 +29,7 @@ from lxml import etree, html
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain
 from odoo.tools import pycompat
+from odoo.tools.datetime import date, datetime, timedelta
 from odoo.tools.safe_eval import safe_eval
 
 try:
@@ -879,7 +879,7 @@ class Form(object):
             active_id=record_id,
             active_ids=[record_id] if record_id else [],
             active_model=self._model._name,
-            current_date=date.today().strftime("%Y-%m-%d"),
+            current_date=date.today(),
         )
         return safe_eval(c, ctx, {'context': ctx})
 

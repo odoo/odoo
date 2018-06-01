@@ -327,7 +327,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context">{'search_default_employee_id': [active_id], 'search_default_validated': True, 'search_default_gray': True}</field>
-        <field name="domain">[('date_from','&gt;=', context_today().strftime("%Y-%m-1")), ('date_from','&lt;', ((context_today() + relativedelta(months=1)).strftime('%Y-%m-1')) )]</field>
+        <field name="domain">[('date_from','&gt;=', context_today().start_of('month')), ('date_from','&lt;', ((context_today() + datetime.relativedelta(months=1)).start_of('month')))]</field>
         <field name="view_id" eval="view_allocation_tree_customize"/>
     </record>
 

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
 import time
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
+from odoo.tools.datetime import date
 
 
 class ReportPartnerLedger(models.AbstractModel):
@@ -35,7 +34,7 @@ class ReportPartnerLedger(models.AbstractModel):
         lang_id = lang._lang_get(lang_code)
         date_format = lang_id.date_format
         for r in res:
-            r['date'] = datetime.strptime(r['date'], DEFAULT_SERVER_DATE_FORMAT).strftime(date_format)
+            r['date'] = date.from_string(r['date']).strftime(date_format)
             r['displayed_name'] = '-'.join(
                 r[field_name] for field_name in ('move_name', 'ref', 'name')
                 if r[field_name] not in (None, '', '/')

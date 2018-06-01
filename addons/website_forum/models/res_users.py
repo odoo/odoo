@@ -3,11 +3,10 @@
 
 import hashlib
 
-from datetime import datetime
-
 from werkzeug import urls
 
 from odoo import api, fields, models
+from odoo.tools.datetime import datetime
 
 
 class Users(models.Model):

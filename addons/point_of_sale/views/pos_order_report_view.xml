@@ -33,7 +33,7 @@
                     <filter string="Invoiced" name="invoiced" domain="[('state','=',('invoiced'))]"/>
                     <filter string="Not Invoiced" name="not_invoiced" domain="[('state','=',('paid'))]"/>
                     <separator/>
-                    <filter string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS orders created during the current year"/>
+                    <filter string="Year" name="year" domain="[('date','&lt;=', datetime.date.today().end_of('year')),('date','&gt;=',datetime.date.today().start_of('year'))]" help="POS orders created during the current year"/>
                     <separator/>
                     <filter string="My Sales" name="my_sales" help="My Sales" domain="[('user_id','=',uid)]"/>
                     <field name="config_id"/>

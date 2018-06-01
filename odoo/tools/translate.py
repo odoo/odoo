@@ -12,13 +12,13 @@ import tarfile
 import tempfile
 import threading
 from collections import defaultdict
-from datetime import datetime
 from os.path import join
 
 from babel.messages import extract
 from lxml import etree, html
 
 import odoo
+from odoo.tools import datetime
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
 from .osutil import walksymlinks
@@ -619,7 +619,7 @@ class PoFile(object):
                           % { 'project': release.description,
                               'version': release.version,
                               'modules': ''.join("#\t* %s\n" % m for m in modules),
-                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
+                              'now': datetime.datetime.utcnow().to_pofile(),
                             }
                           )
 

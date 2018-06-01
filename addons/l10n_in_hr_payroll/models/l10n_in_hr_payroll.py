@@ -32,7 +32,7 @@ class HrPayrollAdvice(models.Model):
     _name = 'hr.payroll.advice'
 
     def _get_default_date(self):
-        return fields.Date.from_string(fields.Date.today())
+        return fields.Date.today()
 
     name = fields.Char(readonly=True, required=True, states={'draft': [('readonly', False)]})
     note = fields.Text(string='Description', default='Please make the payroll transfer from above account number to the below mentioned account numbers towards employee salaries:')
@@ -87,8 +87,8 @@ class HrPayrollAdvice(models.Model):
         for advice in self:
             if not advice.line_ids:
                 raise UserError(_('You can not confirm Payment advice without advice lines.'))
-            date = fields.Date.from_string(fields.Date.today())
-            advice_year = date.strftime('%m') + '-' + date.strftime('%Y')
+            date = fields.Date.today()
+            advice_year = date.strftime('%m-%Y')
             number = self.env['ir.sequence'].next_by_code('payment.advice')
             advice.write({
                 'number': 'PAY' + '/' + advice_year + '/' + number,

@@ -26,7 +26,7 @@
         </record>
 
         <record id="project_GAP" model="project.project">
-            <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
+            <field name="date_start" eval="datetime.today().replace(day=1, hour=10)"/>
             <field name="name">Internal - GAP Analysis</field>
             <field name="analytic_account_id" ref="account_analytic_account_project_gap"/>
             <field name="color">2</field>

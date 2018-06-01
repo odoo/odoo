@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import pytz
-import datetime
 import itertools
 import logging
 import hmac
@@ -19,6 +17,7 @@ from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, pycompat
+from odoo.tools import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -333,7 +332,7 @@ class Users(models.Model):
     @api.depends('tz')
     def _compute_tz_offset(self):
         for user in self:
-            user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
+            user.tz_offset = datetime.datetime.now(user.tz or 'GMT').strftime('%z')
 
     @api.onchange('login')
     def on_change_login(self):

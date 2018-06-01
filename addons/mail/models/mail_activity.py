@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
-import pytz
-
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
 
+from odoo.tools.datetime import date, datetime, timedelta
 
 class MailActivityType(models.Model):
     """ Activity Types are used to categorize activities. Each type is a different
@@ -128,11 +126,9 @@ class MailActivity(models.Model):
         for record in self.filtered(lambda activity: activity.date_deadline):
             today = today_default
             if record.user_id.tz:
-                today_utc = pytz.UTC.localize(datetime.utcnow())
-                today_tz = today_utc.astimezone(pytz.timezone(record.user_id.tz))
-                today = date(year=today_tz.year, month=today_tz.month, day=today_tz.day)
+                today = datetime.utcnow().astimezone(record.user_id.tz).date()
 
-            date_deadline = fields.Date.from_string(record.date_deadline)
+            date_deadline = record.date_deadline
             diff = (date_deadline - today)
             if diff.days == 0:
                 record.state = 'today'

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import io
 import itertools
 import logging
@@ -11,10 +10,10 @@ import os
 import re
 
 from odoo import api, fields, models
+from odoo.tools.datetime import datetime, date
 from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
-from odoo.tools.misc import ustr
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools.datetime import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
@@ -214,12 +213,8 @@ class Import(models.TransientModel):
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
                     # emulate xldate_as_datetime for pre-0.9.3
-                    dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
-                    values.append(
-                        dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                        if is_datetime
-                        else dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
-                    )
+                    dt = datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
+                    values.append(str(dt if is_datetime else dt.date()))
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
                 elif cell.ctype is xlrd.XL_CELL_ERROR:
@@ -335,7 +330,7 @@ class Import(models.TransientModel):
         except ValueError:
             pass
         # Try to see if all values are a date or datetime
-        dt = datetime.datetime
+        dt = datetime
         separator = [' ', '/', '-']
         date_format = ['%mr%dr%Y', '%dr%mr%Y', '%Yr%mr%d', '%Yr%dr%m']
         date_patterns = [options['date_format']] if options.get('date_format') else []
@@ -613,7 +608,7 @@ class Import(models.TransientModel):
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)
-                dt = datetime.datetime
+                dt = datetime
                 server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if options.get('%s_format' % field['type'], server_format) != server_format:

@@ -4,13 +4,13 @@
 import uuid
 
 from itertools import groupby
-from datetime import datetime, timedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import float_is_zero, float_compare
+from odoo.tools.datetime import datetime
 
 from odoo.tools.misc import formatLang
 
@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
     def _compute_is_expired(self):
         now = datetime.now()
         for order in self:
-            if order.validity_date and fields.Datetime.from_string(order.validity_date) < now:
+            if order.validity_date and order.validity_date < now:
                 order.is_expired = True
             else:
                 order.is_expired = False

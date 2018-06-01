@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tools import pycompat
+from odoo.tools import mute_logger
+from odoo.tools.datetime import datetime
 from .test_sale_common import TestCommonSaleNoChart
 
 

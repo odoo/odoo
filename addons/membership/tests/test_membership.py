@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo.addons.membership.tests.common import TestMembershipCommon
 from odoo.tests import tagged
+from odoo.tools.datetime import date
 
 
 @tagged('post_install', '-at_install')
@@ -12,8 +10,8 @@ class TestMembership(TestMembershipCommon):
 
     def test_old_membership(self):
         self.membership_1.write({
-            'membership_date_from': datetime.date.today() + relativedelta(years=-2),
-            'membership_date_to': datetime.date.today() + relativedelta(years=-1),
+            'membership_date_from': date.today().add(years=-2),
+            'membership_date_to': date.today().add(years=-1),
         })
 
         self.partner_1.create_membership_invoice(product_id=self.membership_1.id, datas={'amount': 75.0})
