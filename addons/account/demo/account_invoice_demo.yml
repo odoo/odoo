@@ -1,11 +1,6 @@
 -
    Set the context for customer invoices because the 'type' field is readonly in invoice form views, so it value won't be considered by the yaml import
 -
-  !record {model: account.account, id: demo_bank}:
-    code: X1000
-    name: Bank (demo)
-    user_type_id: account.data_account_type_liquidity
--
   !record {model: account.invoice, id: demo_invoice_1}:
     partner_id: base.res_partner_12
     user_id: base.user_demo
@@ -15,13 +10,9 @@
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - product_id: product.consu_delivery_02
-        account_id: demo_bank
-        name: foo
         price_unit: 642.0
         quantity: 5
       - product_id: product.consu_delivery_03
-        account_id: demo_bank
-        name: bar
         price_unit: 280.0
         quantity: 5.0
 -
@@ -34,13 +25,9 @@
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
       - product_id: product.consu_delivery_03
-        account_id: demo_bank
-        name: foo
         price_unit: 50.0
         quantity: 3
       - product_id: product.consu_delivery_01
-        account_id: demo_bank
-        name: bar
         price_unit: 25
         quantity: 20
 -
@@ -53,13 +40,9 @@
     date_invoice: !eval time.strftime('%Y-%m')+'-08'
     invoice_line_ids:
       - product_id: product.consu_delivery_01
-        name: foo
-        account_id: demo_bank
         price_unit: 90.0
         quantity: 5
       - product_id: product.consu_delivery_03
-        name: bar
-        account_id: demo_bank
         price_unit: 15.0
         quantity: 5.0
 -
@@ -77,13 +60,9 @@
     date_invoice: !eval (datetime.today() + timedelta(days=-15)).strftime('%Y-%m-%d')
     invoice_line_ids:
       - product_id: product.consu_delivery_02
-        account_id: demo_bank
-        name: foo
         price_unit: 642.0
         quantity: 5
       - product_id: product.consu_delivery_03
-        account_id: demo_bank
-        name: bar
         price_unit: 280.0
         quantity: 5.0
 -
@@ -104,14 +83,10 @@
     date_invoice: !eval time.strftime('%Y-%m')+'-01'
     invoice_line_ids:
       - price_unit: 10.0
-        name: foo
-        account_id: demo_bank
         quantity: 1.0
         product_id: product.product_delivery_01
         uom_id: product.product_uom_unit
       - price_unit: 4.0
-        name: bar
-        account_id: demo_bank
         quantity: 1.0
         product_id: product.product_order_01
         uom_id: product.product_uom_unit
