@@ -1826,8 +1826,8 @@ class TestRoutes(TestStockCommon):
 
         # create and get back the pick ship route
         self.wh.write({'delivery_steps': 'pick_ship'})
-        self.pick_ship_route = self.wh.route_ids.filtered(lambda r: 'Pick + Ship' in r.name)
         
+        self.pick_ship_route = self.wh.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
     def test_pick_ship_1(self):
         """ Enable the pick ship route, force a procurement group on the
         pick. When a second move is added, make sure the `partner_id` and

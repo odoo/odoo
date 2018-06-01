@@ -31,10 +31,14 @@
                         <notebook colspan="4" groups="stock.group_adv_location">
                             <page string="Warehouse Configuration" colspan="4">
                                 <group colspan="4">
-                                    <field name="reception_steps" widget='radio'/>
-                                    <field name="delivery_steps" widget='radio'/>
-                                    <field name="default_resupply_wh_id" widget='selection'/>
-                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    <group string="Shipments">
+                                        <field name="reception_steps" widget='radio'/>
+                                        <field name="delivery_steps" widget='radio'/>
+                                    </group>
+                                    <group string="Resupply">
+                                        <field name="default_resupply_wh_id" widget='selection'/>
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    </group>
                                 </group>
                             </page>
                             <page string="Technical Information" groups='base.group_no_one'>

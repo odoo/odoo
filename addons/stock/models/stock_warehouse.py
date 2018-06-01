@@ -36,16 +36,16 @@ class Warehouse(models.Model):
         'Routes', domain="[('warehouse_selectable', '=', True)]",
         help='Defaults routes through the warehouse')
     reception_steps = fields.Selection([
-        ('one_step', 'Receive goods directly in stock (1 step)'),
-        ('two_steps', 'Unload in input location then go to stock (2 steps)'),
-        ('three_steps', 'Unload in input location, go through a quality control before being admitted in stock (3 steps)')],
+        ('one_step', 'Receive goods directly (1 step)'),
+        ('two_steps', 'Receive goods in input and then stock (2 steps)'),
+        ('three_steps', 'Receive goods in input, then quality and then stock (3 steps)')],
         'Incoming Shipments', default='one_step', required=True,
         help="Default incoming route to follow")
     delivery_steps = fields.Selection([
-        ('ship_only', 'Ship directly from stock (Ship only)'),
-        ('pick_ship', 'Bring goods to output location before shipping (Pick + Ship)'),
-        ('pick_pack_ship', 'Make packages into a dedicated location, then bring them to the output location for shipping (Pick + Pack + Ship)')],
-        'Outgoing Shippings', default='ship_only', required=True,
+        ('ship_only', 'Deliver goods directly (1 step)'),
+        ('pick_ship', 'Send goods in output and then deliver (2 steps)'),
+        ('pick_pack_ship', 'Pack goods, send goods in output and then deliver (3 steps)')],
+        'Outgoing Shipments', default='ship_only', required=True,
         help="Default outgoing route to follow")
     wh_input_stock_loc_id = fields.Many2one('stock.location', 'Input Location')
     wh_qc_stock_loc_id = fields.Many2one('stock.location', 'Quality Control Location')
@@ -433,10 +433,10 @@ class Warehouse(models.Model):
         return customer_loc, supplier_loc
 
     def _get_route_name(self, route_type):
-        names = {'one_step': _('Receipt in 1 step'), 'two_steps': _('Receipt in 2 steps'),
-                 'three_steps': _('Receipt in 3 steps'), 'crossdock': _('Cross-Dock'),
-                 'ship_only': _('Ship Only'), 'pick_ship': _('Pick + Ship'),
-                 'pick_pack_ship': _('Pick + Pack + Ship')}
+        names = {'one_step': _('Receive in 1 step (stock)'), 'two_steps': _('Receive in 2 steps (input + stock)'),
+                 'three_steps': _('Receive in 3 steps (input + quality + stock)'), 'crossdock': _('Cross-Dock'),
+                 'ship_only': _('Deliver in 1 step (ship)'), 'pick_ship': _('Deliver in 2 steps (pick + ship)'),
+                 'pick_pack_ship': _('Deliver in 3 steps (pick + pack + ship)')}
         return names[route_type]
 
     def get_routes_dict(self):
