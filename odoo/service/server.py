@@ -107,7 +107,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
         args = list(args)
-        if self.qc_start and self.qc_stop:
+        if self.qc_stop :
             message += ' QUERY COUNT %s -'
             args.append(self.qc_stop - self.qc_start)
         message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
