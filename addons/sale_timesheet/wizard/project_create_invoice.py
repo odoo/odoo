@@ -12,12 +12,17 @@ class ProjectCreateInvoice(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super(ProjectCreateInvoice, self).default_get(fields)
+
+        active_model = self._context.get('active_model')
+        if active_model != 'project.project':
+            raise UserError(_('You can only apply this action from a project.'))
+
         active_id = self._context.get('active_id')
         if 'project_id' in fields and active_id:
             result['project_id'] = active_id
         return result
 
-    project_id = fields.Many2one('project.project', "Project", help="Project to make billable")
+    project_id = fields.Many2one('project.project', "Project", help="Project to make billable", required=True)
     sale_order_id = fields.Many2one('sale.order', string="Choose the Sales Order to invoice", required=True)
     amount_to_invoice = fields.Monetary("Amount to invoice", compute='_compute_amount_to_invoice', currency_field='currency_id', help="Total amount to invoice on the sales order, including all items (services, stockables, expenses, ...)")
     currency_id = fields.Many2one(related='sale_order_id.currency_id', readonly=True)
