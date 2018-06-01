@@ -210,8 +210,8 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
      * @param {MouseEvent} event
      * @private
      */
-    _onClickControlButton: function (event) {
-        var $target = $(event.target);
+    _onClickControlButton: function (ev) {
+        var $target = $(ev.target);
         var action_id = $target.data('action-id');
         var context = $target.data('context');
 

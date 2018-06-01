@@ -3,7 +3,7 @@
 from ast import literal_eval
 import babel
 from dateutil.relativedelta import relativedelta
-import simplejson as json
+import json
 
 from odoo import http, fields, _
 from odoo.http import request
