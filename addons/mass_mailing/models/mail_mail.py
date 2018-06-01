@@ -95,6 +95,8 @@ class MailMail(osv.Model):
         res = super(MailMail, self).send_get_email_dict(cr, uid, ids, partner, context=context)
         mail = self.browse(cr, uid, ids[0], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        if base_url.endswith('/'):
+            base_url = base_url.rstrip('/')
         if mail.mailing_id and res.get('body') and res.get('email_to'):
             emails = tools.email_split(res.get('email_to')[0])
             email_to = emails and emails[0] or False
