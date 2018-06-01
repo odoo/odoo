@@ -408,23 +408,9 @@ class SaleTimesheetController(http.Controller):
             if len(tasks.mapped('project_id')) == 1:
                 action['context']['default_project_id'] = tasks.mapped('project_id')[0].id
         elif res_model == 'sale.order':
-            action = {
-                'name': _('Sales Orders'),
-                'type': 'ir.actions.act_window',
-                'res_model': res_model,
-                'view_mode': 'tree,form',
-                'view_type': 'tree',
-                'views': [[False, 'list'], [False, 'form']],
-                'domain': domain,
-            }
+            action = request.env.ref('sale.action_orders').read()[0]
+            action['domain'] = domain
         elif res_model == 'account.invoice':
-            action = {
-                'name': _('Invoices'),
-                'type': 'ir.actions.act_window',
-                'res_model': res_model,
-                'view_mode': 'tree,form',
-                'view_type': 'tree',
-                'views': [[False, 'list'], [False, 'form']],
-                'domain': domain,
-            }
+            action = request.env.ref('account.action_invoice_tree1').read()[0]
+            action['domain'] = domain
         return action
