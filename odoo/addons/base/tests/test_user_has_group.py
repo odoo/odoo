@@ -8,25 +8,19 @@ class TestHasGroup(TransactionCase):
     def setUp(self):
         super(TestHasGroup, self).setUp()
 
-        group0 = self.env['ir.model.data']._update(
-            'res.groups', 'test_user_has_group',
-            {'name': 'group0'},
-            xml_id='group0'
-        )
         self.group0 = 'test_user_has_group.group0'
-        self.env['ir.model.data']._update(
-            'res.groups', 'test_user_has_group',
-            {'name': 'group1'},
-            xml_id='group1'
-        )
         self.group1 = 'test_user_has_group.group1'
+        group0, group1 = self.env['res.groups']._load_records([
+            dict(xml_id=self.group0, values={'name': 'group0'}),
+            dict(xml_id=self.group1, values={'name': 'group1'}),
+        ])
 
         self.test_user = self.env['res.users'].create({
             'login': 'testuser',
             'partner_id': self.env['res.partner'].create({
                 'name': "Strawman Test User"
             }).id,
-            'groups_id': [(4, group0, 0)]
+            'groups_id': [(4, group0.id, 0)]
         })
 
     def test_env_uid(self):
