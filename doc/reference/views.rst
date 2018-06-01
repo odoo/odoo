@@ -117,6 +117,21 @@ how the matched node should be altered:
       its ``name`` is removed from the matched node. If no such attribute
       exists, an error is raised
 
+Additionally, the ``position`` ``move`` can be used as a direct child of a spec
+with a ``inside``, ``replace``, ``after`` or ``before`` ``position`` attribute
+to move a node.
+
+.. code-block:: xml
+
+    <xpath expr="//@target" position="after">
+        <xpath expr="//@node" position="move"/>
+    </xpath>
+
+    <field name="target_field" position="after">
+        <field name="my_field" position="move"/>
+    </field>
+
+
 A view's specs are applied sequentially.
 
 .. _reference/views/list:
