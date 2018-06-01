@@ -30,10 +30,10 @@
         </record>
         <!-- Salesteam-related subtypes for messaging / Chatter -->
         <record id="mt_salesteam_lead" model="mail.message.subtype">
-            <field name="name">Lead Created</field>
+            <field name="name">Opportunity Created</field>
             <field name="sequence">10</field>
             <field name="res_model">crm.team</field>
-            <field name="default" eval="False"/>
+            <field name="default" eval="True"/>
             <field name="parent_id" eval="ref('mt_lead_create')"/>
             <field name="relation_field">team_id</field>
         </record>
