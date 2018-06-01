@@ -26,7 +26,7 @@ _test_logger = logging.getLogger('odoo.tests')
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,
-                      skip_modules=None, report=None, models_to_check=set()):
+                      skip_modules=None, report=None, models_to_check=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
        :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
@@ -97,6 +97,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if kind in ('demo', 'test'):
                 threading.currentThread().testing = False
 
+    if models_to_check is None:
+        models_to_check = set()
+
     processed_modules = []
     loaded_modules = []
     registry = odoo.registry(cr.dbname)
@@ -141,7 +144,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             registry.init_models(cr, model_names, {'module': package.name})
             cr.commit()
         elif package.state != 'to remove':
-            # no operation is performed on the module (install/upgrade/remove)
+            # The current module has simply been loaded. The models extended by this module
+            # and for which we updated the schema, must have their schema checked again.
+            # This is because the extension may have changed the model,
+            # e.g. adding required=True to an existing field, but the schema has not been
+            # updated by this module because it's not marked as 'to upgrade/to install'.
             models_to_check |= set(model_names) & models_updated
 
         idref = {}
@@ -238,9 +245,13 @@ def _check_module_names(cr, module_names):
             _logger.warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_marked_modules(cr, graph, states, force, progressdict, report,
-                        loaded_modules, perform_checks, models_to_check=set()):
+                        loaded_modules, perform_checks, models_to_check=None):
     """Loads modules marked with ``states``, adding them to ``graph`` and
        ``loaded_modules`` and returns a list of installed/upgraded modules."""
+
+    if models_to_check is None:
+        models_to_check = set()
+
     processed_modules = []
     while True:
         cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
@@ -427,9 +438,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.commit()
                 return registry
 
-        # STEP 5.5: verify extended fields on every model
+        # STEP 5.5: Verify extended fields on every model
+        # This will fix the schema of all models in a situation such as:
+        #   - module A is loaded and defines model M;
+        #   - module B is installed/upgraded and extends model M;
+        #   - module C is loaded and extends model M;
+        #   - module B and C depend on A but not on each other;
+        # The changes introduced by module C are not taken into account by the upgrade of B.
         if models_to_check:
-            registry.init_models(cr, list(models_to_check), {})
+            registry.init_models(cr, list(models_to_check), {'models_to_check': True})
 
         # STEP 6: verify custom views on every model
         if update_module:
