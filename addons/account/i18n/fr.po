@@ -25,12 +25,12 @@
 # Mickaël Audigane <maudigane@teclib.com>, 2015
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2015
 # Nancy Bolognesi <nb@microcom.ca>, 2015
-# Nicolas JEUDY <nicolas@sudokeys.com>, 2015
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2015
 # Nissar Chababy <funilrys@outlook.com>, 2015
 # Olivier Dony <odo@odoo.com>, 2015
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Patrick Strzempek <contact@3idata.nc>, 2015
-# Quentin THEURET <quentin@theuret.net>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
 # Sandro Botta <sbo@odoo.com>, 2015
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
 # Simon Jejcic <simon.jejcic@gmail.com>, 2016
@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-06-23 23:26+0000\n"
+"PO-Revision-Date: 2018-06-01 00:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: French (http://www.transifex.com/odoo/odoo-9/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -8223,6 +8223,35 @@ msgid ""
 msgstr "Il y a toujours des entrées non comptabilisées dans la période que vous souhaitez verrouiller. Vous devez les comptabiliser ou les supprimer."
 
 #. module: account
+#: code:addons/account/models/company.py:81
+#, python-format
+msgid "The lock date for advisors is irreversible and can't be removed."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:85
+#, python-format
+msgid ""
+"The new lock date for advisors must be set after the previous lock date."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:96
+#, python-format
+msgid ""
+"You cannot lock a period that is not finished yet. Please make sure that the"
+" lock date for advisors is not set after the last day of the previous month."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:107
+#, python-format
+msgid ""
+"You cannot define stricter conditions on advisors than on users. Please make"
+" sure that the lock date on advisor is set before the lock date for users."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:170
 #, python-format
 msgid ""
@@ -9261,6 +9290,14 @@ msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
 msgstr "Vous ne pouvez pas annuler une facture qui est partiellement payée. Vous devez d'abord annuler le lettrage des lignes de paiement correspondantes."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr "Vous ne pouvez pas modifier la devise de l'entreprise car certains articles de journal existent déjà"
 
 #. module: account
 #: code:addons/account/models/account.py:162

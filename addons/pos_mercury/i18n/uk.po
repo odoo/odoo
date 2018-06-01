@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2018-04-10 12:32+0000\n"
+"PO-Revision-Date: 2018-05-22 11:37+0000\n"
 "Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: pos_mercury
 #. openerp-web
@@ -49,7 +49,7 @@ msgstr "<i>Налаштування Mercury</i>визначте, який обл
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr ""
+msgstr "Перевищує суму в день"
 
 #. module: pos_mercury
 #. openerp-web
@@ -103,7 +103,7 @@ msgstr "Ім'я власника картки"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_tree
 msgid "Card Reader"
-msgstr ""
+msgstr "Card Reader"
 
 #. module: pos_mercury
 #. openerp-web
@@ -270,7 +270,7 @@ msgstr "ID"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
-msgstr ""
+msgstr "ID продавця, щоб підтвердити його на сервері постачальника послуг платежу"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -585,7 +585,7 @@ msgstr "Запис номеру Mercury "
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Mercury номер для посилань"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
@@ -687,7 +687,7 @@ msgstr "Номер платіжного доручення від Mercury Pay"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:406
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "Будь ласка, налаштуйте свій обліковий запис продавця Mercury."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -906,7 +906,7 @@ msgstr "Легке використання інтеграції Mercury в то
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:582
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "VoidSale вдалося"
 
 #. module: pos_mercury
 #. openerp-web
@@ -941,7 +941,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -951,9 +951,9 @@ msgstr "barcode.rule"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "pos_mercury.configuration"
-msgstr ""
+msgstr "pos_mercury.configuration"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "pos_mercury.mercury_transaction"
-msgstr ""
+msgstr "pos_mercury.mercury_transaction"

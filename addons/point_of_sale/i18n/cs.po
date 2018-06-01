@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-03 10:07+0000\n"
-"PO-Revision-Date: 2017-11-27 14:23+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2018-05-30 16:16+0000\n"
+"Last-Translator: Jiří P.\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr
@@ -28,7 +28,7 @@ msgstr "poč. řádků"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1288
 #, python-format
 msgid "% discount"
-msgstr ""
+msgstr "% sleva"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:732
@@ -253,7 +253,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>Produkt</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -269,7 +269,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Množství</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
@@ -314,7 +314,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_sessionsummary
 msgid "<strong>Status</strong>"
-msgstr ""
+msgstr "<strong>Stav</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_detailsofsales
@@ -375,7 +375,7 @@ msgstr "Celkem"
 #: model:ir.ui.view,arch_db:point_of_sale.report_payment
 #: model:ir.ui.view,arch_db:point_of_sale.report_saleslines
 msgid "<strong>Unit Price</strong>"
-msgstr ""
+msgstr "<strong>Jednotková cena</strong>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -391,14 +391,14 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "= Theoretical Closing Balance"
-msgstr ""
+msgstr "= Teoretický konečný zůstatek"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1854
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr ""
+msgstr "? Kliknutím na tlačítko Potvrdit platbu potvrdíte."
 
 #. module: point_of_sale
 #. openerp-web
@@ -411,7 +411,7 @@ msgstr "Zadejte jméno zákazníka"
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
-msgstr ""
+msgstr "Bezpečnostní kód PIN používaný k ochraně citlivých funkcí v místě prodeje"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -435,12 +435,12 @@ msgstr ""
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr ""
+msgstr "Pořadové číslo, které se zvyšuje pokaždé, když uživatel obnoví relaci POS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr ""
+msgstr "Pořadové číslo, které je navýšeno o každou objednávku"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -454,7 +454,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
 msgid "A session-unique sequence number for the order"
-msgstr ""
+msgstr "Sekvenční číslo jedinečné pro relaci objednávky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
@@ -492,7 +492,7 @@ msgstr "Účetní deník pro zapisování položek prodeje."
 #: model:product.product,name:point_of_sale.partner_product_5
 #: model:product.template,name:point_of_sale.partner_product_5_product_template
 msgid "Acsone.eu"
-msgstr ""
+msgstr "Acsone.eu"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
@@ -538,7 +538,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_reprint:0
 msgid "Allow cashier to reprint receipts"
-msgstr ""
+msgstr "Umožnit pokladní znovu vytisknout účtenku"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
@@ -611,7 +611,7 @@ msgstr "Aplikovat slevu"
 #: code:addons/point_of_sale/static/src/js/screens.js:1872
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr ""
+msgstr "Jste si jisti, že zákazník chce platit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_rescue
@@ -621,7 +621,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
 msgid "Automatic Receipt Printing"
-msgstr ""
+msgstr "Automatický tisk stvrzenky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
@@ -688,7 +688,7 @@ msgstr "Čtečka čárových kódů"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_barcode_nomenclature_id
 msgid "Barcodes"
-msgstr ""
+msgstr "Čárové kódy"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.belle_vue_kriek_25cl
@@ -760,7 +760,7 @@ msgstr "Zrušeno"
 #: code:addons/point_of_sale/static/src/js/screens.js:1835
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr ""
+msgstr "Drobné nelze vrátit bez způsobu platby v hotovosti"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.carotte
@@ -794,7 +794,7 @@ msgstr "Pokladny"
 #: code:addons/point_of_sale/point_of_sale.py:364
 #, python-format
 msgid "Cash control can only be applied to cash journals."
-msgstr ""
+msgstr "Kontrolu peněz lze uplatnit pouze v hotovostních účetních denících."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_cashdrawer
@@ -805,7 +805,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:1604
 #, python-format
 msgid "Cashier"
-msgstr ""
+msgstr "Pokladní"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -860,7 +860,7 @@ msgstr "Chaudfontaine Petillante 1.5l"
 #: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
+msgstr "Zkontrolujte, zda má být produkt zvážen pomocí zabudované váhy"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
@@ -891,7 +891,7 @@ msgstr "Zaškrtněte pokud chcete seskupit položky deníky podle výrobků při
 #: code:addons/point_of_sale/static/src/js/screens.js:1884
 #, python-format
 msgid "Check your internet connection and try again."
-msgstr ""
+msgstr "Zkontrolujte připojení k internetu a zkuste to znovu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_child_id
@@ -915,38 +915,38 @@ msgstr "Město"
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_template_action
 msgid "Click to add a new product."
-msgstr ""
+msgstr "Klepnutím přidat nový produkt."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
 msgid "Click to add a payment method."
-msgstr ""
+msgstr "Klepnutím přidat platební metodu."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Click to create a new PoS config."
-msgstr ""
+msgstr "Klepnutím vytvořte novou konfiguraci PoS."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_pos_form
 msgid "Click to create a new order."
-msgstr ""
+msgstr "Klepnutím vytvořit novou objednávku."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid "Click to define a new category."
-msgstr ""
+msgstr "Klepnutím definovat novou kategorii."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid "Click to start a new session."
-msgstr ""
+msgstr "Klepnutím spustit novou relaci."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1677
 #, python-format
 msgid "Client"
-msgstr ""
+msgstr "Klient"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1154,7 +1154,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.partner_product_7
 #: model:product.template,name:point_of_sale.partner_product_7_product_template
 msgid "Datalp.com"
-msgstr ""
+msgstr "Datalp.com"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_transaction_pos_date_create
@@ -1211,21 +1211,21 @@ msgstr "Ověření zpoždění"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1168
 #, python-format
 msgid "Delete Paid Orders"
-msgstr ""
+msgstr "Smazat placené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:260
 #, python-format
 msgid "Delete Paid Orders ?"
-msgstr ""
+msgstr "Smazat placené objednávky?"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1169
 #, python-format
 msgid "Delete Unpaid Orders"
-msgstr ""
+msgstr "Smazat neplacené objednávky"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1275,7 +1275,7 @@ msgstr "Rozdíl"
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr ""
+msgstr "Rozdíl mezi teoretickým konečným zůstatkem a reálnou konečnou bilancí."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1317,7 +1317,7 @@ msgstr "Sleva:"
 #: code:addons/point_of_sale/point_of_sale.py:1602
 #, python-format
 msgid "Discounted Product"
-msgstr ""
+msgstr "Zvýhodněný produkt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1406,7 +1406,7 @@ msgstr "Do"
 #: model:product.product,name:point_of_sale.partner_product_9
 #: model:product.template,name:point_of_sale.partner_product_9_product_template
 msgid "EGGS-solutions.fr"
-msgstr ""
+msgstr "EGGS-solutions.fr"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_3
@@ -1418,7 +1418,7 @@ msgstr ""
 #: model:product.product,name:point_of_sale.partner_product_4
 #: model:product.template,name:point_of_sale.partner_product_4_product_template
 msgid "Ekomurz.nl"
-msgstr ""
+msgstr "Ekomurz.nl"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1441,7 +1441,7 @@ msgstr "Email"
 #: code:addons/point_of_sale/static/src/js/screens.js:1806
 #, python-format
 msgid "Empty Order"
-msgstr ""
+msgstr "Prázdná objednávka"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -1488,7 +1488,7 @@ msgstr "Chyba ! Nemůžete vytvořit rekurzivní Kategorie."
 #: code:addons/point_of_sale/static/src/js/screens.js:1181
 #, python-format
 msgid "Error: Could not Save Changes"
-msgstr ""
+msgstr "Chyba: Nelze uložit změny"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1499,7 +1499,7 @@ msgid ""
 "of Sale. You are probably trying to load the point of sale as an "
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
-msgstr ""
+msgstr "Chyba: Uživatel Prodejního místa musí patřit do stejné společnosti jako prodejní místo. Pravděpodobně se pokoušíte načíst prodejní místo jako správce v nastavení více firem, účet administrátora nastaven na nesprávnou firmu."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.evian_50cl
@@ -1587,7 +1587,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Footer"
-msgstr ""
+msgstr "Zápatí"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_big_scrollbars
@@ -1597,7 +1597,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.fruits_vegetables
 msgid "Fruits and Vegetables"
-msgstr ""
+msgstr "Ovoce a zelenina"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_fullscreen
@@ -1694,7 +1694,7 @@ msgstr "Má pokladnu"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Header"
-msgstr ""
+msgstr "Záhlaví"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -1727,12 +1727,12 @@ msgstr "ID"
 #: code:addons/point_of_sale/static/src/js/popups.js:113
 #, python-format
 msgid "IMPORTANT: Bug Report From Odoo Point Of Sale"
-msgstr ""
+msgstr "DŮLEŽITÉ: Chybová hlášení z prodejního místa Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_proxy_ip
 msgid "IP Address"
-msgstr ""
+msgstr "IP adresa"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1752,7 +1752,7 @@ msgstr "Obrázek"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1176
 #, python-format
 msgid "Import Orders"
-msgstr ""
+msgstr "Import objednávek"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
@@ -1789,7 +1789,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/gui.js:264
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "Nesprávné heslo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_note
@@ -1854,7 +1854,7 @@ msgstr "Deníky"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_big_scrollbars
 msgid "Large Scrollbars"
-msgstr ""
+msgstr "Velké posuvníky"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category___last_update
@@ -2098,7 +2098,7 @@ msgstr "Nové sezení"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:650
 #, python-format
 msgid "Next Order"
-msgstr ""
+msgstr "Další objednávka"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:794
@@ -2180,7 +2180,7 @@ msgstr "Offline"
 #: code:addons/point_of_sale/static/src/js/gui.js:315
 #, python-format
 msgid "Offline Orders"
-msgstr ""
+msgstr "Offline objednávky"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2207,7 +2207,7 @@ msgstr "Cibule"
 #: code:addons/point_of_sale/static/src/js/screens.js:1219
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr ""
+msgstr "Podporovány jsou pouze formáty obrázků kompatibilní s webem, jako jsou .png nebo .jpeg"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -2309,7 +2309,7 @@ msgstr "Položky objednávky"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Order Month"
-msgstr ""
+msgstr "Měsíc objednání"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_order_id
@@ -2925,7 +2925,7 @@ msgstr "Odpovědný"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_restaurant
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurace"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_restaurant:0
@@ -3266,7 +3266,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Malý obrázek"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_small
