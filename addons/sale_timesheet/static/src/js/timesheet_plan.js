@@ -9,6 +9,7 @@ var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 
 var _t = core._t;
+var QWeb = core.qweb;
 
 var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
     events: {
@@ -76,7 +77,6 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
 
         return $.when(def1, def2).then(function(){
             self.searchview.do_search();
-            self._updateControlPanel();
         });
     },
 
@@ -89,7 +89,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
      */
     do_show: function () {
         this._super.apply(this, arguments);
-        this._updateControlPanel();
+        this.searchview.do_search();
         this.action_manager.do_push_state({
             action: this.action.id,
             active_id: this.action.context.active_id,
@@ -109,6 +109,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
     _refreshPlan: function (dom) {
         this.$el.html(dom);
     },
+
     /**
      * Call controller to get the html content
      *
@@ -123,13 +124,22 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
             params: {domain: domain},
         }).then(function(result){
             self._refreshPlan(result.html_content);
+            self._updateControlPanel(result.actions);
             self.project_ids = result.project_ids;
         });
     },
     /**
      * @private
      */
-    _updateControlPanel: function () {
+    _updateControlPanel: function (buttons) {
+        // set actions button
+        if (this.$buttons) {
+            this.$buttons.off().destroy();
+        }
+        var buttons = buttons || [];
+        this.$buttons = $(QWeb.render("project.plan.ControlButtons", {'buttons': buttons}));
+        this.$buttons.on('click', '.o_timesheet_plan_btn_action', this._onClickControlButton.bind(this));
+        // refresh control panel
         this.update_control_panel({
             cp_content: {
                 $buttons: this.$buttons,
@@ -192,6 +202,21 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
 
         this.do_action(action, {
             additional_context: context
+        });
+    },
+    /**
+     * Call the action of the action button from control panel, based on the data attribute on the button DOM
+     *
+     * @param {MouseEvent} event
+     * @private
+     */
+    _onClickControlButton: function (ev) {
+        var $target = $(ev.target);
+        var action_id = $target.data('action-id');
+        var context = $target.data('context');
+
+        return this.do_action(action_id, {
+            'additional_context': context,
         });
     },
     /**

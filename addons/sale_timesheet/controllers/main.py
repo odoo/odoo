@@ -3,6 +3,7 @@
 from ast import literal_eval
 import babel
 from dateutil.relativedelta import relativedelta
+import json
 
 from odoo import http, fields, _
 from odoo.http import request
@@ -24,6 +25,7 @@ class SaleTimesheetController(http.Controller):
         return {
             'html_content': view.render(values),
             'project_ids': projects.ids,
+            'actions': self._plan_prepare_actions(projects),
         }
 
     def _plan_prepare_values(self, projects):
@@ -300,12 +302,42 @@ class SaleTimesheetController(http.Controller):
 
     def _table_get_empty_so_lines(self, projects):
         """ get the Sale Order Lines having no timesheet but having generated a task or a project """
-        so_lines = projects.mapped('sale_line_id.order_id.order_line').filtered(lambda sol: sol.is_service)
+        so_lines = projects.sudo().mapped('sale_line_id.order_id.order_line').filtered(lambda sol: sol.is_service)
         return set(so_lines.ids), set(so_lines.mapped('order_id').ids)
 
     # --------------------------------------------------
     # Actions: Stat buttons, ...
     # --------------------------------------------------
+
+    def _plan_prepare_actions(self, projects):
+        actions = []
+        if len(projects) == 1:
+            if request.env.user.has_group('sales_team.group_sale_salesman'):
+                if not projects.sale_line_id and not projects.tasks.mapped('sale_line_id'):
+                    actions.append({
+                        'label': _("Create a Sales Order"),
+                        'type': 'action',
+                        'action_id': 'sale_timesheet.project_project_action_multi_create_sale_order',
+                        'context': json.dumps({'active_id': projects.id, 'active_model': 'project.project'}),
+                    })
+            if request.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+                sale_orders = projects.tasks.mapped('sale_line_id.order_id').filtered(lambda so: so.invoice_status == 'to invoice')
+                if sale_orders:
+                    if len(sale_orders) == 1:
+                        actions.append({
+                            'label': _("Create Invoice"),
+                            'type': 'action',
+                            'action_id': 'sale.action_view_sale_advance_payment_inv',
+                            'context': json.dumps({'active_ids': sale_orders.ids, 'active_model': 'project.project'}),
+                        })
+                    else:
+                        actions.append({
+                            'label': _("Create Invoice"),
+                            'type': 'action',
+                            'action_id': 'sale_timesheet.project_project_action_multi_create_invoice',
+                            'context': json.dumps({'active_id': projects.id, 'active_model': 'project.project'}),
+                        })
+        return actions
 
     def _plan_get_stat_button(self, projects):
         stat_buttons = []
@@ -322,6 +354,25 @@ class SaleTimesheetController(http.Controller):
             'domain': [('project_id', 'in', projects.ids)],
             'icon': 'fa fa-tasks',
         })
+        if request.env.user.has_group('sales_team.group_sale_salesman_all_leads'):
+            sale_orders = projects.mapped('sale_line_id.order_id') | projects.mapped('tasks.sale_order_id')
+            if sale_orders:
+                stat_buttons.append({
+                    'name': _('Sales Orders'),
+                    'count': len(sale_orders),
+                    'res_model': 'sale.order',
+                    'domain': [('id', 'in', sale_orders.ids)],
+                    'icon': 'fa fa-dollar',
+                })
+                invoices = sale_orders.mapped('invoice_ids').filtered(lambda inv: inv.type == 'out_invoice')
+                if invoices:
+                    stat_buttons.append({
+                        'name': _('Invoices'),
+                        'count': len(invoices),
+                        'res_model': 'account.invoice',
+                        'domain': [('id', 'in', invoices.ids), ('type', '=', 'out_invoice')],
+                        'icon': 'fa fa-pencil-square-o',
+                    })
         return stat_buttons
 
     @http.route('/timesheet/plan/action', type='json', auth="user")
@@ -356,4 +407,10 @@ class SaleTimesheetController(http.Controller):
             tasks = request.env['project.task'].sudo().search(literal_eval(domain))
             if len(tasks.mapped('project_id')) == 1:
                 action['context']['default_project_id'] = tasks.mapped('project_id')[0].id
+        elif res_model == 'sale.order':
+            action = request.env.ref('sale.action_orders').read()[0]
+            action['domain'] = domain
+        elif res_model == 'account.invoice':
+            action = request.env.ref('account.action_invoice_tree1').read()[0]
+            action['domain'] = domain
         return action

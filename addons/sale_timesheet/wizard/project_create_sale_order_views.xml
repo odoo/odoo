@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="project_create_sale_order_view_form" model="ir.ui.view">
+        <field name="name">project.create.sale.order.wizard.form</field>
+        <field name="model">project.create.sale.order</field>
+        <field name="arch" type="xml">
+            <form string="Create Sales Order from Project">
+                <group>
+                    <group>
+                        <field name="project_id" readonly="1"/>
+                        <field name="product_id" options="{'no_create_edit': True, 'no_create': True}"/>
+                        <field name="price_unit" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                        <field name="partner_id"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create Sales Order" type="object" name="action_create_sale_order" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel" type="object" class="btn btn-default oe_inline"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_project_action_multi_create_sale_order" model="ir.actions.act_window">
+        <field name="name">Create a Sales Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.create.sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_create_sale_order_view_form"/>
+        <field name="target">new</field>
+        <field name="multi" eval="False"/>
+        <field name="binding_model_id" ref="project.model_project_project"/>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+</odoo>
