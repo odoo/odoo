@@ -651,7 +651,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_field_widget[name=bank_statements_source] .o_radio_input[data-value="manual"]',
-    content: _t('Select manual import'),
+    content: _t('Select manual import'),//TODO OCO il va falloir retoucher cette portion du tour=> peut-être à totalement retirer, à cause de la synchro bancaire
     position: 'bottom',
 }, {
     trigger:  ".o_field_widget[name=bank_account_id] input",

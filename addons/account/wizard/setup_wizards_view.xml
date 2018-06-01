@@ -59,27 +59,42 @@
             </field>
         </record>
 
-        <record id="setup_bank_journal_form" model="ir.ui.view">
-            <field name="name">account.setup.bank.journal.form</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
-            <field name="mode">primary</field>
+        <record id="setup_bank_account_wizard" model="ir.ui.view">
+            <field name="name">account.online.sync.res.partner.bank.setup.form</field>
+            <field name="model">account.setup.bank.manual.config</field>
             <field name="arch" type="xml">
-                <xpath expr="//form/sheet" position="inside">
-                    <button type="object" name="setup_save_journal_and_create_more">You can define additional accounts here</button>
-                </xpath>
-                <xpath expr="//div[@name='advanced_info']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>
-                <xpath expr="//form/sheet" position="after">
+                <form>
+                    <sheet>
+                        <label string="Bank Account Name"/>
+
+                        <h1><field name="single_journal_name" placeholder="e.g Checking account"/></h1>
+
+                        <group>
+                            <group>
+                                <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                                <field name="bank_id" placeholder="e.g Bank of America"/>
+                                <field name="single_journal_code"/>
+                            </group>
+
+                            <group>
+                                <field name="wizard_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
+                            </group>
+                        </group>
+
+                        <field name="setup_journal_link_creation" widget="radio" options="{'horizontal': true}"/>
+
+                        <group>
+                            <group>
+                                <field name="single_journal_id" attrs="{'invisible': [('setup_journal_link_creation','!=','link')]}" domain="[('type','=','bank')]"/>
+                            </group>
+                        </group>
+                    </sheet>
+
                     <footer>
-                        <field name="account_setup_bank_data_done" invisible="True"/>
-                        <button string="Mark as done" type="object" name="mark_bank_setup_as_done_action" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('account_setup_bank_data_done','=',True)]}"/>
-                        <button string="Save" type="action" name="account.setup_wizard_close" class="oe_highlight" attrs="{'invisible': [('account_setup_bank_data_done','=',False)]}"/>
-                        <button string="Unmark as done" type="object" name="unmark_bank_setup_as_done_action" attrs="{'invisible': [('account_setup_bank_data_done','=',False)]}"/>
-                    </footer>
-                </xpath>
+                        <button string="Create" class="oe_highlight" type="action" name="account.setup_wizard_close"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer><!--TODO OCO ajouter mark as done, et vérifier l'actualisation du dashboard-->
+                </form>
             </field>
         </record>
 
