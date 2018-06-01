@@ -2,7 +2,7 @@
 <odoo>
 <data>
 <template id="report_mrprepairorder">
-        <t t-foreach="docs" t-as="o">
+        <t t-set="o" t-value="doc"/>
             <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang': o.partner_id.lang})" />
                 <div class="page">
@@ -155,7 +155,6 @@
                     <div class="oe_structure"/>
                 </div>
             </t>
-        </t>
 </template>
 
 <template id="report_mrprepairorder2">
