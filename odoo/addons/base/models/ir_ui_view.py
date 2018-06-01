@@ -165,6 +165,7 @@ def add_text_inside(node, text):
 def remove_element(node):
     """ Remove ``node`` but not its tail, from its XML tree. """
     add_text_before(node, node.tail)
+    node.tail = None
     node.getparent().remove(node)
 
 xpath_utils = etree.FunctionNamespace(None)
@@ -568,6 +569,22 @@ actual arch.
         # changes to apply to some parent architecture).
         specs = [specs_tree]
 
+        def extract(spec):
+            """
+            Utility function that locates a node given a specification, remove
+            it from the source and returns it.
+            """
+            if len(spec):
+                self.raise_view_error(_("Invalid specification for moved nodes: '%s'") %
+                                      etree.tostring(spec), inherit_id)
+            to_extract = self.locate_node(source, spec)
+            if to_extract is not None:
+                remove_element(to_extract)
+                return to_extract
+            else:
+                self.raise_view_error(_("Element '%s' cannot be located in parent view") %
+                                      etree.tostring(spec), inherit_id)
+
         while len(specs):
             spec = specs.pop(0)
             if isinstance(spec, SKIPPED_ELEMENT_TYPES):
@@ -586,6 +603,8 @@ actual arch.
                         source = copy.deepcopy(spec[0])
                     else:
                         for child in spec:
+                            if child.get('position') == 'move':
+                                child = extract(child)
                             node.addprevious(child)
                         node.getparent().remove(node)
                 elif pos == 'attributes':
@@ -614,6 +633,8 @@ actual arch.
                 elif pos == 'inside':
                     add_text_inside(node, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         node.append(child)
                 elif pos == 'after':
                     # add a sentinel element right after node, insert content of
@@ -622,11 +643,15 @@ actual arch.
                     node.addnext(sentinel)
                     add_text_before(sentinel, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         sentinel.addprevious(child)
                     remove_element(sentinel)
                 elif pos == 'before':
                     add_text_before(node, spec.text)
                     for child in spec:
+                        if child.get('position') == 'move':
+                            child = extract(child)
                         node.addprevious(child)
                 else:
                     self.raise_view_error(_("Invalid position attribute: '%s'") % pos, inherit_id)

@@ -385,6 +385,187 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
             ))
         )
 
+
+class TestApplyInheritanceMoveSpecs(ViewCase):
+    def setUp(self):
+        super(TestApplyInheritanceMoveSpecs, self).setUp()
+        self.base_arch = E.template(
+            E.div(E.p("Content", {'class': 'some'})),
+            E.div({'class': 'target'})
+        )
+        self.wrapped_arch = E.template(
+            E.div("aaaa", E.p("Content", {'class': 'some'}), "bbbb"),
+            E.div({'class': 'target'})
+        )
+
+    def apply_spec(self, arch, spec):
+        self.View.apply_inheritance_specs(arch, spec, None)
+
+    def test_move_replace(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="replace")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'})
+            )
+        )
+
+    def test_move_inside(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="inside")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div(E.p("Content", {'class': 'some'}), {'class': 'target'})
+            )
+        )
+
+    def test_move_before(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="before")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(""),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.p("Content", {'class': 'some'}),
+                E.div({'class': 'target'}),
+            )
+        )
+
+    def test_move_after(self):
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    def test_move_with_other_1(self):
+        # multiple elements with move in first position
+        spec = E.xpath(
+            E.xpath(expr="//p", position="move"),
+            E.p("Content2", {'class': 'new_p'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(),
+                E.div({'class': 'target'}),
+                E.p("Content", {'class': 'some'}),
+                E.p("Content2", {'class': 'new_p'}),
+            )
+        )
+
+    def test_move_with_other_2(self):
+        # multiple elements with move in last position
+        spec = E.xpath(
+            E.p("Content2", {'class': 'new_p'}),
+            E.xpath(expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.wrapped_arch, spec)
+        self.assertEqual(
+            self.wrapped_arch,
+            E.template(
+                E.div("aaaabbbb"),
+                E.div({'class': 'target'}),
+                E.p("Content2", {'class': 'new_p'}),
+                E.p("Content", {'class': 'some'}),
+            )
+        )
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_1(self):
+        # cannot move an inexisting element
+        spec = E.xpath(
+            E.xpath(expr="//p[@name='none']", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_incorrect_move_2(self):
+        # move xpath cannot contain any children
+        spec = E.xpath(
+            E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"),
+            expr="//div[@class='target']", position="after")
+
+        with self.assertRaises(ValueError):
+            self.apply_spec(self.base_arch, spec)
+
+    def test_incorrect_move_3(self):
+        # move won't be correctly applied if not a direct child of an xpath
+        spec = E.xpath(
+            E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            expr="//div[@class='target']", position="after")
+
+        self.apply_spec(self.base_arch, spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(
+                E.div(E.p("Content", {'class': 'some'})),
+                E.div({'class': 'target'}),
+                E.div(E.xpath(E.p("Content2", {'class': 'new_p'}), expr="//p", position="move"), {'class': 'wrapper'}),
+            )
+        )
+
+
 class TestApplyInheritedArchs(ViewCase):
     """ Applies a sequence of modificator archs to a base view
     """
