@@ -423,9 +423,10 @@ class AccountReconciliation(models.AbstractModel):
         """
 
         domain_reconciliation = [
-            '&', '&',
+            '&', '&', '&',
             ('statement_line_id', '=', False),
             ('account_id', 'in', aml_accounts),
+            ('date_maturity', '>=', st_line.journal_id.company_id.account_opening_date),
             ('payment_id', '<>', False)
         ]
 
@@ -643,6 +644,8 @@ class AccountReconciliation(models.AbstractModel):
         amount = st_line.amount_currency or st_line.amount
         company_currency = st_line.journal_id.company_id.currency_id
         st_line_currency = st_line.currency_id or st_line.journal_id.currency_id
+        account_opening_date = st_line.journal_id.company_id.account_opening_date
+        add_to_where =  " AND date_maturity >= '" + account_opening_date + "' " if account_opening_date else ""
         currency = (st_line_currency and st_line_currency != company_currency) and st_line_currency.id or False
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
         params = {'company_id': st_line.company_id.id,
@@ -657,7 +660,7 @@ class AccountReconciliation(models.AbstractModel):
             add_to_select = ", CASE WHEN aml.ref = %(ref)s THEN 1 ELSE 2 END as temp_field_order "
             add_to_from = " JOIN account_move m ON m.id = aml.move_id "
             select_clause, from_clause, where_clause = st_line._get_common_sql_query(overlook_partner=True, excluded_ids=excluded_ids, split=True)
-            sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause
+            sql_query = select_clause + add_to_select + from_clause + add_to_from + where_clause + add_to_where
             sql_query += " AND (aml.ref= %(ref)s or m.name = %(ref)s) \
                     ORDER BY temp_field_order, date_maturity desc, aml.id desc"
             self.env.cr.execute(sql_query, params)
@@ -670,7 +673,7 @@ class AccountReconciliation(models.AbstractModel):
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
         liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = st_line._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + ")) \
+                add_to_where + " AND (" + field + " = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND " + liquidity_field + " = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity desc, aml.id desc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
