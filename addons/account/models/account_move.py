@@ -222,7 +222,8 @@ class AccountMove(models.Model):
     # Do not forward port in >= saas-14
     def _reconcile_reversed_pair(self, move, reversed_move):
         amls_to_reconcile = (move.line_ids + reversed_move.line_ids).filtered(lambda l: not l.reconciled)
-        accounts_reconcilable = amls_to_reconcile.mapped('account_id').filtered(lambda a: a.reconcile)
+        # Do not forward port changes in this file in >= saas-14
+        accounts_reconcilable = amls_to_reconcile.mapped('account_id').filtered(lambda a: a.reconcile or a.internal_type == 'liquidity')
         for account in accounts_reconcilable:
             amls_for_account = amls_to_reconcile.filtered(lambda l: l.account_id.id == account.id)
             amls_for_account.reconcile()
@@ -804,6 +805,9 @@ class AccountMoveLine(models.Model):
     def _get_pair_to_reconcile(self):
         #field is either 'amount_residual' or 'amount_residual_currency' (if the reconciled account has a secondary currency set)
         field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        if not self[0].account_id.reconcile and self[0].account_id.internal_type == 'liquidity':
+            field = 'balance'
+
         rounding = self[0].company_id.currency_id.rounding
         if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
             #or if all lines share the same currency
@@ -904,7 +908,7 @@ class AccountMoveLine(models.Model):
             raise UserError(_('To reconcile the entries company should be the same for all entries!'))
         if len(set(all_accounts)) > 1:
             raise UserError(_('Entries are not of the same account!'))
-        if not all_accounts[0].reconcile:
+        if not (all_accounts[0].reconcile or all_accounts[0].internal_type == 'liquidity'):
             raise UserError(_('The account %s (%s) is not marked as reconciliable !') % (all_accounts[0].name, all_accounts[0].code))
 
         #reconcile everything that can be
