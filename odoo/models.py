@@ -840,36 +840,84 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         messages = []
         ModelData = self.env['ir.model.data']
         ModelData.clear_caches()
-        extracted = self._extract_records(fields, data, log=messages.append)
-        converted = self._convert_records(extracted, log=messages.append)
-        for id, xid, record, info in converted:
+
+        # list of (xid, vals, info) for records to be created in batch
+        batch = []
+        batch_xml_ids = set()
+
+        def flush(xml_id=None):
+            if not batch:
+                return
+            if xml_id and xml_id not in batch_xml_ids:
+                return
+
+            data_list = [
+                dict(xml_id=xid, values=vals, info=info, noupdate=noupdate)
+                for xid, vals, info in batch
+            ]
+            batch.clear()
+            batch_xml_ids.clear()
+
             try:
                 cr.execute('SAVEPOINT model_load_save')
             except psycopg2.InternalError as e:
                 # broken transaction, exit and hope the source error was
                 # already logged
                 if not any(message['type'] == 'error' for message in messages):
-                    messages.append(dict(info, type='error',message=u"Unknown database error: '%s'" % e))
-                break
+                    info = data_list[0]['info']
+                    messages.append(dict(info, type='error', message=u"Unknown database error: '%s'" % e))
+                return
+
+            # try to create in batch
             try:
-                ids.append(ModelData._update(self._name, current_module, record, mode=mode,
-                                             xml_id=xid, noupdate=noupdate, res_id=id))
+                recs = self._load_records(data_list, mode == 'update')
+                ids.extend(recs.ids)
                 cr.execute('RELEASE SAVEPOINT model_load_save')
-            except psycopg2.Warning as e:
-                messages.append(dict(info, type='warning', message=str(e)))
+                return
+            except Exception:
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
-            except psycopg2.Error as e:
-                messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
-                # Failed to write, log to messages, rollback savepoint (to
-                # avoid broken transaction) and keep going
-                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
-            except Exception as e:
-                message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
-                moreinfo = _('Resolve other errors first')
-                messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
-                # Failed for some reason, perhaps due to invalid data supplied,
-                # rollback savepoint and keep going
-                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+
+            # try again, this time record by record
+            for rec_data in data_list:
+                try:
+                    cr.execute('SAVEPOINT model_load_save')
+                    rec = self._load_records([rec_data], mode == 'update')
+                    ids.append(rec.id)
+                    cr.execute('RELEASE SAVEPOINT model_load_save')
+                except psycopg2.Warning as e:
+                    info = rec_data['info']
+                    messages.append(dict(info, type='warning', message=str(e)))
+                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                except psycopg2.Error as e:
+                    info = rec_data['info']
+                    messages.append(dict(info, type='error', **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+                    # Failed to write, log to messages, rollback savepoint (to
+                    # avoid broken transaction) and keep going
+                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                except Exception as e:
+                    info = rec_data['info']
+                    message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
+                    moreinfo = _('Resolve other errors first')
+                    messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
+                    # Failed for some reason, perhaps due to invalid data supplied,
+                    # rollback savepoint and keep going
+                    cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+
+        # make 'flush' available to the methods below, in the case where XMLID
+        # resolution fails, for instance
+        flush_self = self.with_context(import_flush=flush)
+        extracted = flush_self._extract_records(fields, data, log=messages.append)
+        converted = flush_self._convert_records(extracted, log=messages.append)
+
+        for id, xid, record, info in converted:
+            if xid:
+                xid = xid if '.' in xid else "%s.%s" % (current_module, xid)
+                batch_xml_ids.update(ModelData._generate_xmlids(xid, self))
+            elif id:
+                record['id'] = id
+            batch.append((xid, record, info))
+
+        flush()
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -3567,6 +3615,93 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr.execute(query.format(self._table), [prefix, tuple(self.ids)])
         modified_ids = {row[0] for row in cr.fetchall()}
         self.browse(modified_ids).modified(['parent_path'])
+
+    def _load_records(self, data_list, update=False):
+        """ Create or update records of this model, and assign XMLIDs.
+
+            :param data_list: list of dicts with keys `xml_id` (XMLID to
+                assign), `noupdate` (flag on XMLID), `values` (field values)
+            :param update: should be ``True`` when upgrading a module
+
+            :return: the records corresponding to ``data_list``
+        """
+        original_self = self.browse()
+        # records created during installation should not display messages
+        self = self.with_context(install_mode=True)
+        imd = self.env['ir.model.data'].sudo()
+
+        # The algorithm below partitions 'data_list' into three sets: the ones
+        # to create, the ones to update, and the others. For each set, we assign
+        # data['record'] for each data. All those records are then retrieved for
+        # the result.
+
+        # determine existing xml_ids
+        xml_ids = [data['xml_id'] for data in data_list if data.get('xml_id')]
+        existing = {
+            ("%s.%s" % row[1:3]): row
+            for row in imd._lookup_xmlids(xml_ids, self)
+        }
+
+        # determine which records to create and update
+        to_create = []                  # list of data
+        to_update = []                  # list of data
+
+        for data in data_list:
+            xml_id = data.get('xml_id')
+            if not xml_id:
+                vals = data['values']
+                if vals.get('id'):
+                    data['record'] = self.browse(vals['id'])
+                    to_update.append(data)
+                elif not update:
+                    to_create.append(data)
+                continue
+            row = existing.get(xml_id)
+            if not row:
+                to_create.append(data)
+                continue
+            d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
+            record = self.browse(d_res_id)
+            if update and d_noupdate:
+                data['record'] = record
+            elif r_id:
+                data['record'] = record
+                to_update.append(data)
+            else:
+                imd.browse(d_id).unlink()
+                to_create.append(data)
+
+        # update existing records
+        for data in to_update:
+            data['record'].write(data['values'])
+
+        # determine existing parents for new records
+        for parent_model, parent_field in self._inherits.items():
+            suffix = '_' + parent_model.replace('.', '_')
+            xml_ids_vals = {
+                (data['xml_id'] + suffix): data['values']
+                for data in to_create
+                if data.get('xml_id')
+            }
+            for row in imd._lookup_xmlids(xml_ids_vals, self.env[parent_model]):
+                d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
+                if r_id:
+                    xml_id = '%s.%s' % (d_module, d_name)
+                    xml_ids_vals[xml_id][parent_field] = r_id
+                else:
+                    imd.browse(d_id).unlink()
+
+        # create records
+        records = self.create([data['values'] for data in to_create])
+        for data, record in pycompat.izip(to_create, records):
+            data['record'] = record
+
+        # create or update XMLIDs
+        if to_create or to_update:
+            imd_data_list = [data for data in data_list if data.get('xml_id')]
+            imd._update_xmlids(imd_data_list, update)
+
+        return original_self.concat(*(data['record'] for data in data_list))
 
     # TODO: ameliorer avec NULL
     @api.model

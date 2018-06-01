@@ -4,6 +4,7 @@ from odoo.exceptions import AccessError
 from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 import logging
 
@@ -390,8 +391,35 @@ class AccountChartTemplate(models.Model):
         # xmlid is the concatenation of company_id and template_xml_id
         ir_model_data = self.env['ir.model.data']
         template_xmlid = ir_model_data.search([('model', '=', template._name), ('res_id', '=', template.id)])
-        new_xml_id = str(company.id)+'_'+template_xmlid.name
-        return ir_model_data._update(model, template_xmlid.module, vals, xml_id=new_xml_id, store=True, noupdate=True, mode='init', res_id=False)
+        xml_id = "%s.%s_%s" % (template_xmlid.module, company.id, template_xmlid.name)
+        data = dict(xml_id=xml_id, values=vals, noupdate=True)
+        record = self.env[model]._load_records([data])
+        return record.id
+
+    @api.model
+    def _load_records(self, data_list, update=False):
+        # When creating a chart template create, for the liquidity transfer account
+        #  - an account.account.template: this allow to define account.reconcile.model.template objects refering that liquidity transfer
+        #    account although it's not existing in any xml file
+        #  - an entry in ir_model_data: this allow to still use the method create_record_with_xmlid() and don't make any difference between
+        #    regular accounts created and that liquidity transfer account
+        records = super(AccountChartTemplate, self)._load_records(data_list, update)
+        account_data_list = []
+        for data, record in pycompat.izip(data_list, records):
+            # Create the transfer account only for leaf chart template in the hierarchy.
+            if record.parent_id:
+                continue
+            if data.get('xml_id'):
+                account_xml_id = data['xml_id'] + '_liquidity_transfer'
+                if not self.env.ref(account_xml_id, raise_if_not_found=False):
+                    account_vals = record._prepare_transfer_account_template()
+                    account_data_list.append(dict(
+                        xml_id=account_xml_id,
+                        values=account_vals,
+                        noupdate=data.get('noupdate'),
+                    ))
+        self.env['account.account.template']._load_records(account_data_list, update)
+        return records
 
     def _get_account_vals(self, company, account_template, code_acc, tax_template_ref):
         """ This method generates a dictionary of all the values for the account that will be created.
@@ -1036,28 +1064,3 @@ class AccountReconcileModelTemplate(models.Model):
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
-
-
-class IrModelData(models.Model):
-    _inherit = 'ir.model.data'
-
-    @api.model
-    def _update(self, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
-        record_id = super(IrModelData, self)._update(model, module, values, xml_id=xml_id, store=store, noupdate=noupdate, mode=mode, res_id=res_id)
-        # When creating a chart template create, for the liquidity transfer account
-        #  - an account.account.template: this allow to define account.reconcile.model.template objects refering that liquidity transfer
-        #    account although it's not existing in any xml file
-        #  - an entry in ir_model_data: this allow to still use the method create_record_with_xmlid() and don't make any difference between
-        #    regular accounts created and that liquidity transfer account
-        if model == 'account.chart.template' and xml_id and module:
-            chart_template = self.env[model].browse(record_id)
-
-            # Create the transfer account only for leaf chart template in the hierarchy.
-            if chart_template.parent_id:
-                return record_id
-
-            new_xml_id = xml_id + '_liquidity_transfer'
-            if not self.search([('model', '=', 'account.account.template'), ('module', '=', module), ('name', '=', new_xml_id)]):
-                vals = chart_template._prepare_transfer_account_template()
-                self._update('account.account.template', module, vals, xml_id=new_xml_id, store=True, noupdate=noupdate, mode=mode, res_id=False)
-        return record_id
