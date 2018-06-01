@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from .common import TestAccountBudgetCommon
 from odoo.tests import tagged
 from odoo.tools.datetime import date, datetime
-from unittest.mock import patch
 
 # ---------------------------------------------------------
 # Tests

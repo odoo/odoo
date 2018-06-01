@@ -5,99 +5,99 @@
         <!-- Optimistic -->
         <record id="crossovered_budget_budgetoptimistic0" model="crossovered.budget">
             <field eval="'Budget 1983: Optimistic'" name="name"/>
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
          <record id="budget_line_analytic_admin" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="planned_amount">-35000</field>
             <field name="analytic_account_id" ref="analytic.analytic_administratif"/>
         </record>
          <record id="budget_line_analytic_agrolait1" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 1, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 1, 31)" name="date_to"/>
             <field name="planned_amount">10000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait2" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 2, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 2, 28)" name="date_to"/>
+            <field eval="datetime.date(1983, 2, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 2, 28)" name="date_to"/>
             <field name="planned_amount">10000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait3" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 3, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 3, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 3, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 3, 31)" name="date_to"/>
             <field name="planned_amount">12000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait4" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 4, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 4, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 4, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 4, 30)" name="date_to"/>
             <field name="planned_amount">15000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait5" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 5, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 5, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 5, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 5, 31)" name="date_to"/>
             <field name="planned_amount">15000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait6" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 6, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 6, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 6, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 6, 30)" name="date_to"/>
             <field name="planned_amount">15000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait7" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 7, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 7, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 7, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 7, 31)" name="date_to"/>
             <field name="planned_amount">13000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait8" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 8, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 8, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 8, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 8, 31)" name="date_to"/>
             <field name="planned_amount">9000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait9" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 9, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 9, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 9, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 9, 30)" name="date_to"/>
             <field name="planned_amount">8000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait10" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 10, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 10, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 10, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 10, 31)" name="date_to"/>
             <field name="planned_amount">15000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait11" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 11, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 11, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 11, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 11, 30)" name="date_to"/>
             <field name="planned_amount">15000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait12" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetoptimistic0" />
-            <field eval="datetime.datetime(1983, 12, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 12, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="planned_amount">18000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
@@ -105,100 +105,100 @@
         <!-- pessimistic-->
         <record id="crossovered_budget_budgetpessimistic0" model="crossovered.budget">
             <field eval="'Budget 1983: Pessimistic'" name="name"/>
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
             <field eval="&quot;&quot;&quot;draft&quot;&quot;&quot;" name="state"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
 
          <record id="budget_line_analytic_admin_pessim" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="planned_amount">-55000</field>
             <field name="analytic_account_id" ref="analytic.analytic_administratif"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim1" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 1, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 1, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 1, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 1, 31)" name="date_to"/>
             <field name="planned_amount">9000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim2" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 2, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 2, 28)" name="date_to"/>
+            <field eval="datetime.date(1983, 2, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 2, 28)" name="date_to"/>
             <field name="planned_amount">8000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim3" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 3, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 3, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 3, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 3, 31)" name="date_to"/>
             <field name="planned_amount">10000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim4" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 4, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 4, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 4, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 4, 30)" name="date_to"/>
             <field name="planned_amount">14000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim5" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 5, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 5, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 5, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 5, 31)" name="date_to"/>
             <field name="planned_amount">16000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim6" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 6, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 6, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 6, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 6, 30)" name="date_to"/>
             <field name="planned_amount">13000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim7" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 7, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 7, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 7, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 7, 31)" name="date_to"/>
             <field name="planned_amount">10000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim8" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 8, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 8, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 8, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 8, 31)" name="date_to"/>
             <field name="planned_amount">8000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim9" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 9, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 9, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 9, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 9, 30)" name="date_to"/>
             <field name="planned_amount">7000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim10" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 10, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 10, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 10, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 10, 31)" name="date_to"/>
             <field name="planned_amount">12000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim11" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 11, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 11, 30)" name="date_to"/>
+            <field eval="datetime.date(1983, 11, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 11, 30)" name="date_to"/>
             <field name="planned_amount">17000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>
          <record id="budget_line_analytic_agrolait_pessim12" model="crossovered.budget.lines">
             <field name="crossovered_budget_id" ref="crossovered_budget_budgetpessimistic0" />
-            <field eval="datetime.datetime(1983, 12, 1)" name="date_from"/>
-            <field eval="datetime.datetime(1983, 12, 31)" name="date_to"/>
+            <field eval="datetime.date(1983, 12, 1)" name="date_from"/>
+            <field eval="datetime.date(1983, 12, 31)" name="date_to"/>
             <field name="planned_amount">17000</field>
             <field name="analytic_account_id" ref="analytic.analytic_agrolait"/>
         </record>

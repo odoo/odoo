@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestAccountBudgetCommon
+import logging
 try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
 
+from .common import TestAccountBudgetCommon
 from odoo.tests import tagged
-from odoo.tools.datetime import date as datelib, datetime, timedelta
-import logging
+from odoo.tools.datetime import date as datelib, datetime
 
 
 _logger = logging.getLogger(__name__)
+
 # ---------------------------------------------------------
 # Tests
 # ---------------------------------------------------------
@@ -82,9 +83,9 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
         test_list = [
             (datetime(1983, 1, 1), 0),
             (datetime(1983, 1, 2), 0),
-            (datetime(1983, 9, 8), 0),
-            (datetime(1983, 9, 9), -364),
+            (datetime(1983, 9, 9), 0),
             (datetime(1983, 9, 10), -364),
+            (datetime(1983, 9, 11), -364),
             (self.last_day_of_budget, -364),
         ]
         for date, expected_amount in test_list:

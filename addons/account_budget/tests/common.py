@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tools.datetime import datetime
-
 from unittest.mock import patch
-from odoo.tools.datetime import date as datelib, datetime, timedelta
+
+from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tools.datetime import date as datelib, datetime
 
 class TestAccountBudgetCommon(AccountingTestCase):
 
@@ -135,7 +134,7 @@ class TestAccountBudgetCommon(AccountingTestCase):
                 'analytic_account_id': self.ref('analytic.analytic_partners_camp_to_camp'),
                 'general_budget_id': self.account_budget_post_purchase0.id,
                 'date_from': datetime(1983, 2, 1),
-                'date_to': datetime(1983, 2, 1),
+                'date_to': datetime(1983, 2, 28),
                 'planned_amount': -250.0,
                 'crossovered_budget_id': self.ref('account_budget.crossovered_budget_budgetoptimistic0'),
             })

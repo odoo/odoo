@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools.datetime import datetime
 
 # ---------------------------------------------------------
 # Budgets
@@ -27,7 +26,7 @@ class AccountBudgetPost(models.Model):
         else:
             account_ids = self.account_ids
         if not account_ids:
-            raise ValidationError(_('The budget %s must have at least one account.' % self.display_name))
+            raise ValidationError(_('The budget %s must have at least one account.') % self.display_name)
 
     @api.model
     def create(self, vals):
@@ -239,8 +238,7 @@ class CrossoveredBudgetLines(models.Model):
     def _must_have_analytical_or_budgetary_or_both(self):
         if not self.analytic_account_id and not self.general_budget_id:
             raise ValidationError(
-                _("You have to enter at least a budgetary position or analytic account on a budget line for budget line %s." %
-                    self.diplay_name))
+                _("You have to enter at least a budgetary position or analytic account on budget line %s.") % self.diplay_name)
 
     @api.multi
     def action_open_budget_entries(self):
@@ -277,5 +275,5 @@ class CrossoveredBudgetLines(models.Model):
         if self.date_to:
             date_to = self.date_to
             if date_to < budget_date_from or date_to > budget_date_to:
-                raise ValidationError(_('"End Date" %s of the budget line %s should be included in the Period %s-%s of the budget') %(
+                raise ValidationError(_('"End Date" %s of the budget line %s should be included in the Period %s-%s of the budget') % (
                     str(date_to), self.display_name, str(budget_date_from), str(budget_date_to)))
