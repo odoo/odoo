@@ -107,7 +107,7 @@ class StockMove(models.Model):
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    buy_to_resupply = fields.Boolean('Purchase to resupply this warehouse', default=True,
+    buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('procurement.rule', 'Buy rule')
 
