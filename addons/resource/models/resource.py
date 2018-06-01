@@ -171,7 +171,7 @@ class ResourceCalendar(models.Model):
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
 
     @api.onchange('attendance_ids')
@@ -440,7 +440,7 @@ class ResourceResource(models.Model):
         help="Define the schedule of resource")
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        default=lambda self: self._context.get('tz') or self.env.user.tz,
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
         help="This field is used in order to define in which timezone the resources will work.")
 
     _sql_constraints = [
