@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.resource import Intervals
-from odoo.tools.datetime import datetime, date
-
 from odoo.addons.resource.tests.common import TestResourceCommon
 from odoo.tests.common import TransactionCase
+from odoo.tools.datetime import datetime, date
 
 
 class TestIntervals(TransactionCase):

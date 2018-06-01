@@ -2,12 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from odoo.tools.datetime import timedelta
-from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.tools import float_utils
-from odoo.tools.datetime import timedelta, timezone
 
 # This will generate quarter of days
 ROUNDING_FACTOR = 4
@@ -76,8 +73,8 @@ class ResourceMixin(models.AbstractModel):
 
         # total hours per day: retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
+        from_full = from_datetime.subtract(days=1)
+        to_full = to_datetime.add(days=1)
         intervals = calendar._attendance_intervals(from_full, to_full, resource)
         day_total = defaultdict(float)
         for start, stop, meta in intervals:
@@ -124,8 +121,8 @@ class ResourceMixin(models.AbstractModel):
 
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
-        from_full = from_datetime - timedelta(days=1)
-        to_full = to_datetime + timedelta(days=1)
+        from_full = from_datetime.subtract(days=1)
+        to_full = to_datetime.add(days=1)
         intervals = calendar._attendance_intervals(from_full, to_full, resource)
         day_total = defaultdict(float)
         for start, stop, meta in intervals:
