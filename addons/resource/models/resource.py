@@ -4,14 +4,12 @@
 import math
 from functools import partial
 from itertools import chain
-from operator import itemgetter
-from collections import namedtuple
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare, float_round
-from odoo.tools.datetime import timedelta, rrule, relativedelta, datetime, time, DAILY
+from odoo.tools.float_utils import float_round
+from odoo.tools.datetime import timedelta, rrule, datetime, time, DAILY
 
 # Default hour per day value. The one should
 # only be used when the one from the calendar
@@ -129,9 +127,6 @@ class ResourceCalendar(models.Model):
         if not res.get('name') and res.get('company_id'):
             res['name'] = _('Working Hours of %s') % self.env['res.company'].browse(res['company_id']).name
         return res
-
-    def _get_tz(self):
-        return self._context.get('tz') or self.env.user.tz
 
     def _get_default_attendance_ids(self):
         return [
@@ -302,7 +297,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in get_intervals(dt, dt + delta):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (start + relativedelta(hours=hours, microsecond=0)).astimezone(day_dt.tzinfo)
+                        return start.add(hours=hours).replace(microsecond=0).astimezone(day_dt.tzinfo)
                     hours -= interval_hours
             return False
 
@@ -314,7 +309,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (stop - relativedelta(hours=hours, microsecond=0)).astimezone(day_dt.tzinfo)
+                        return stop.subtract(hours=hours).replace(microsecond=0).astimezone(day_dt.tzinfo)
                     hours -= interval_hours
             return False
 
