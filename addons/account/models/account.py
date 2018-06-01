@@ -431,7 +431,7 @@ class AccountJournal(models.Model):
     # alias configuration for 'purchase' type journals
     alias_id = fields.Many2one('mail.alias', string='Alias')
     alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
-    alias_prefix = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.")
+    alias_name = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
@@ -557,16 +557,16 @@ class AccountJournal(models.Model):
 
     def _update_mail_alias(self, vals):
         self.ensure_one()
-        alias_values = self._get_alias_values(alias_name=vals.get('alias_prefix'))
+        alias_values = self._get_alias_values(alias_name=vals.get('alias_name'))
         if self.alias_id:
             self.alias_id.write(alias_values)
         else:
             self.alias_id = self.env['mail.alias'].with_context(alias_model_name='account.invoice',
                 alias_parent_model_name='account.journal').create(alias_values)
 
-        if vals.get('alias_prefix'):
-            # remove alias_prefix to avoid useless write on alias
-            del(vals['alias_prefix'])
+        if vals.get('alias_name'):
+            # remove alias_name to avoid useless write on alias
+            del(vals['alias_name'])
 
     @api.multi
     def write(self, vals):
@@ -718,7 +718,7 @@ class AccountJournal(models.Model):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
         journal = super(AccountJournal, self).create(vals)
         if journal.type == 'purchase':
-            # create a mail alias for purchase journals (always, deactivated if alias_prefix isn't set)
+            # create a mail alias for purchase journals (always, deactivated if alias_name isn't set)
             journal._update_mail_alias(vals)
 
         # Create the bank_account_id if necessary

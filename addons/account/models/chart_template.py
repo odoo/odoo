@@ -193,13 +193,6 @@ class AccountChartTemplate(models.Model):
         JournalObj = self.env['account.journal']
         for vals_journal in self._prepare_all_journals(acc_template_ref, company, journals_dict=journals_dict):
             journal = JournalObj.create(vals_journal)
-            if journal.type == 'purchase':
-                # Check if any journal already configured with vendor bill alias or not
-                journal_with_alias = JournalObj.search([
-                    ('type', '=', 'purchase'), ('alias_prefix', '!=', False), ('company_id', '=', journal.company_id.id)
-                ], limit=1)
-                if not journal_with_alias:
-                    journal.alias_id.alias_name = 'vendorbills'
             if vals_journal['type'] == 'general' and vals_journal['code'] == _('EXCH'):
                 company.write({'currency_exchange_journal_id': journal.id})
             if vals_journal['type'] == 'general' and vals_journal['code'] == _('CABA'):
