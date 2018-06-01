@@ -297,6 +297,10 @@ class IrFieldsConverter(models.AbstractModel):
                  warnings
         :rtype: (ID|None, unicode, list)
         """
+        # the function 'flush' comes from BaseModel.load(), and forces the
+        # creation/update of former records (batch creation)
+        flush = self._context.get('import_flush', lambda arg=None: None)
+
         id = None
         warnings = []
         action = {'type': 'ir.actions.act_window', 'target': 'new',
@@ -330,12 +334,11 @@ class IrFieldsConverter(models.AbstractModel):
                 xmlid = value
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
-            try:
-                id = self.env.ref(xmlid).id
-            except ValueError:
-                pass # leave id is None
+            flush(xmlid)
+            id = getattr(self.env.ref(xmlid, raise_if_not_found=False), 'id', None)
         elif subfield is None:
             field_type = _(u"name")
+            flush()
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
