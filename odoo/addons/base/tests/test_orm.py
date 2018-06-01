@@ -309,8 +309,7 @@ class TestInherits(TransactionCase):
     @mute_logger('odoo.models')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
-        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo', 'password': 'foo',
-                                                 'login_date': '2016-01-01', 'signature': 'XXX'})
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
         partner_bar = self.env['res.partner'].create({'name': 'Bar'})
 
         foo_before, = user_foo.read()
