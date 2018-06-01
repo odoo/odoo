@@ -86,6 +86,29 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
+
+    def handle(self):
+        self.times_start = os.times()
+        return super(RequestHandler, self).handle()
+
+    def send_response(self, *args, **kwargs):
+        self.times_stop = os.times()
+        return super(RequestHandler, self).send_response(*args, **kwargs)
+
+    def log(self, type, message, *args):
+        # here we can override the  log method to add custom fields in the
+        # werkzeug log line
+        args = list(args)
+        r = self.environ.get('werkzeug.request')
+        if hasattr(r,'query_count'):
+            message += ' QUERY COUNT %s -'
+            args.append(r.query_count)
+        message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
+        args.append(self.times_stop.system - self.times_start.system)
+        args.append(self.times_stop.user - self.times_start.user)
+        args.append(self.times_stop.elapsed - self.times_start.elapsed)
+        super(RequestHandler, self).log(type, message, *args)
+
     def setup(self):
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()

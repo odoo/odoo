@@ -285,6 +285,7 @@ class WebRequest(object):
             elif self.registry:
                 self.registry.reset_changes()
             self._cr.close()
+            self.httprequest.query_count = self._cr.sql_log_count
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None
