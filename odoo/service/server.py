@@ -98,15 +98,16 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
     def log(self, type, message, *args):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
-        args = list(args)
-        r = self.environ.get('werkzeug.request')
-        if hasattr(r,'query_count'):
-            message += ' QUERY COUNT %s -'
-            args.append(r.query_count)
-        message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
-        args.append(self.times_stop.system - self.times_start.system)
-        args.append(self.times_stop.user - self.times_start.user)
-        args.append(self.times_stop.elapsed - self.times_start.elapsed)
+        if hasattr(self, 'environ'):
+            args = list(args)
+            r = self.environ.get('werkzeug.request')
+            if hasattr(r,'query_count'):
+                message += ' QUERY COUNT %s -'
+                args.append(r.query_count)
+            message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
+            args.append(self.times_stop.system - self.times_start.system)
+            args.append(self.times_stop.user - self.times_start.user)
+            args.append(self.times_stop.elapsed - self.times_start.elapsed)
         super(RequestHandler, self).log(type, message, *args)
 
     def setup(self):
