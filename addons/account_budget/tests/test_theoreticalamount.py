@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestAccountBudgetCommon
+import logging
 try:
     from unittest.mock import patch
 except ImportError:
     from mock import patch
 
+from .common import TestAccountBudgetCommon
 from odoo.tests import tagged
-from odoo.tools.datetime import date as datelib, datetime, timedelta
-import logging
+from odoo.tools.datetime import date as datelib, datetime
 
 
 _logger = logging.getLogger(__name__)
+
 # ---------------------------------------------------------
 # Tests
 # ---------------------------------------------------------
