@@ -61,15 +61,15 @@
         <template id="portal_project_rating_progressbar">
             <div class="progress o_rating_progress">
                 <t t-set="percent_rating_10" t-value="(stats['rating_10'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
-                <div class="progress-bar progress-bar-success" t-attf-style="width: #{percent_rating_10}%;" title="Happy">
+                <div class="progress-bar bg-success" t-attf-style="width: #{percent_rating_10}%;" title="Happy">
                     <t t-esc="percent_rating_10"/>%
                 </div>
                 <t t-set="percent_rating_5" t-value="(stats['rating_5'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
-                <div class="progress-bar progress-bar-warning" t-attf-style="width: #{percent_rating_5}%;" title="Average">
+                <div class="progress-bar bg-warning" t-attf-style="width: #{percent_rating_5}%;" title="Average">
                     <t t-esc="percent_rating_5"/>%
                 </div>
                 <t t-set="percent_rating_1" t-value="(stats['rating_1'] / float(stats['total'])) * 100 if stats['total'] else 0.0"/>
-                <div class="progress-bar progress-bar-danger" t-attf-style="width: #{percent_rating_1}%;" title="Bad">
+                <div class="progress-bar bg-danger" t-attf-style="width: #{percent_rating_1}%;" title="Bad">
                     <t t-esc="percent_rating_1"/>%
                 </div>
             </div>
