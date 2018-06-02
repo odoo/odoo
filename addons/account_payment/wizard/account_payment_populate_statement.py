@@ -86,6 +86,7 @@ class account_payment_populate_statement(osv.osv_memory):
             'partner_id': payment_line.partner_id.id,
             'statement_id': statement.id,
             'ref': payment_line.communication,
+            'date': payment_line.ml_maturity_date,
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
