@@ -9,7 +9,7 @@ except ImportError:
 
 from .common import TestAccountBudgetCommon
 from odoo.tests import tagged
-from odoo.tools.datetime import date as datelib, datetime
+from odoo.tools.datetime import date, datetime
 
 
 _logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
     def setUp(self):
         #create the budgetary position
         with patch.object(datetime, 'now', lambda tzinfo=None: datetime(1983, 10, 30, 10, 0)), \
-             patch.object(datelib, 'today', lambda tzinfo=None: datelib(1983, 10, 30)):
+             patch.object(date, 'today', lambda tzinfo=None: date(1983, 10, 30)):
             super(TestTheoreticalAmount, self).setUp()
             user_type_id = self.ref('account.data_account_type_revenue')
             tag_id = self.ref('account.account_tag_operating')
@@ -59,7 +59,7 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
                 'date_from': first_january.date(),
                 'date_to': self.last_day_of_budget.date(),
                 'planned_amount': -364,
-                'paid_date': datelib(1983, 9, 9),
+                'paid_date': date(1983, 9, 9),
             })
 
     def test_theoritical_amount_without_paid_date(self):
@@ -71,10 +71,10 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
             (datetime(1983, 2, 20), -50),
             (self.last_day_of_budget, -364),
         ]
-        for date, expected_amount in test_list:
-            _logger.info("Checking theoritical amount for the date: " + str(date))
-            with patch.object(datetime, 'now', lambda tzinfo=None: date), \
-                 patch.object(datelib, 'today', lambda tzinfo=None: date.date()):
+        for dt, expected_amount in test_list:
+            _logger.info("Checking theoritical amount for the date: " + str(dt.date()))
+            with patch.object(datetime, 'now', lambda tzinfo=None: dt), \
+                 patch.object(date, 'today', lambda tzinfo=None: dt.date()):
                 self.assertAlmostEqual(self.line.theoritical_amount, expected_amount)
                 #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
                 self.line.invalidate_cache()
@@ -88,10 +88,10 @@ class TestTheoreticalAmount(TestAccountBudgetCommon):
             (datetime(1983, 9, 10), -364),
             (self.last_day_of_budget, -364),
         ]
-        for date, expected_amount in test_list:
-            _logger.info("Checking theoritical amount for the date: " + str(date))
-            with patch.object(datetime, 'now', lambda tzinfo=None: date), \
-                 patch.object(datelib, 'today', lambda tzinfo=None: date.date()):
+        for dt, expected_amount in test_list:
+            _logger.info("Checking theoritical amount for the date: " + str(dt.date()))
+            with patch.object(datetime, 'now', lambda tzinfo=None: dt), \
+                 patch.object(date, 'today', lambda tzinfo=None: dt.date()):
                 self.assertAlmostEqual(self.paid_date_line.theoritical_amount, expected_amount)
                 #invalidate the cache of the budget lines to recompute the theoritical amount at next iteration
                 self.paid_date_line.invalidate_cache()
