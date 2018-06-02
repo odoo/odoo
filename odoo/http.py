@@ -212,6 +212,7 @@ class WebRequest(object):
             threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
+        self.httprequest.query_count = self.cr.sql_log_count
 
     @property
     def cr(self):
@@ -285,7 +286,7 @@ class WebRequest(object):
             elif self.registry:
                 self.registry.reset_changes()
             self._cr.close()
-            self.httprequest.query_count = self._cr.sql_log_count
+            self.httprequest.query_count = self.cr.sql_log_count - self.httprequest.query_count
         # just to be sure no one tries to re-use the request
         self.disable_db = True
         self.uid = None

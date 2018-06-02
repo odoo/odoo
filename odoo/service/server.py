@@ -55,9 +55,6 @@ SLEEP_INTERVAL = 60     # 1 min
 
 class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
-    qc_start = 0
-    qc_stop = 0
-
     def get_query_count(self):
         if hasattr(self, 'environ'):
             r = self.environ.get('werkzeug.request')
@@ -65,17 +62,13 @@ class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
                 return r.query_count
         return 0
 
-    def run_wsgi(self):
-        super(essaiRequestHandler,self).run_wsgi()
-        self.qc_start = self.get_query_count()
-
     def handle(self):
         self.times_start = os.times()
         return super(essaiRequestHandler, self).handle()
 
     def send_response(self, *args, **kwargs):
         self.times_stop = os.times()
-        self.qc_stop = self.get_query_count()
+        self.query_count = self.get_query_count()
         return super(essaiRequestHandler, self).send_response(*args, **kwargs)
 
     def log(self, type, message, *args):
@@ -83,7 +76,7 @@ class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
         # werkzeug log line
         args = list(args)
         message += ' QUERY COUNT %s -'
-        args.append(self.qc_stop - self.qc_start)
+        args.append(self.query_count)
         message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
         args.append(self.times_stop.system - self.times_start.system)
         args.append(self.times_stop.user - self.times_start.user)
