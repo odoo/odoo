@@ -87,15 +87,20 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 
+    def __init__(self, *args, **kwargs):
+        self.qc_start = self.get_query_count()
+        self.qc_stop = 0
+        return super(RequestHandler, self).__init__(*args, **kwargs)
+
     def get_query_count(self):
         if hasattr(self, 'environ'):
             r = self.environ.get('werkzeug.request')
             if hasattr(r,'query_count'):
                 return r.query_count
+        return 0
 
     def handle(self):
         self.times_start = os.times()
-        self.qc_start = self.get_query_count()
         return super(RequestHandler, self).handle()
 
     def send_response(self, *args, **kwargs):
@@ -107,9 +112,8 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
         args = list(args)
-        if self.qc_stop :
-            message += ' QUERY COUNT %s -'
-            args.append(self.qc_stop - self.qc_start)
+        message += ' QUERY COUNT %s -'
+        args.append(self.qc_stop - self.qc_start)
         message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
         args.append(self.times_stop.system - self.times_start.system)
         args.append(self.times_stop.user - self.times_start.user)
