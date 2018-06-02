@@ -3,27 +3,28 @@
 # * project_issue
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
 # Rolandas <info@paninfo.lt>, 2016
 # Šarūnas Ažna <sarunas.azna@gmail.com>, 2016
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2016
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
-# Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017
+# digitouch UAB <digitouchagencyeur@gmail.com>, 2017
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Aiste Sutkute <digitouchagencyeur@gmail.com>, 2017\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_email
@@ -151,7 +152,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
-msgstr ""
+msgstr "Pagal atsakingą"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
@@ -528,7 +529,7 @@ msgstr "Mano problemos"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Reikalinga funkcinė ar techninė pagalba"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -569,7 +570,7 @@ msgstr "Įprasta"
 #: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
 msgid "Not validated"
-msgstr ""
+msgstr "Nepatvirtintas"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -672,7 +673,7 @@ msgstr "Paruošta kitam žingsniui"
 #. module: project_issue
 #: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
 msgid "Ready to reopen"
-msgstr ""
+msgstr "Paruošta pakartotiniam atidarymui"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter

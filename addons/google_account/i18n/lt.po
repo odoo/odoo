@@ -4,21 +4,22 @@
 # 
 # Translators:
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2016
+# Silvija Butko <silvija.butko@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: UAB \"Draugiški sprendimai\" <transifex@draugiskisprendimai.lt>, 2016\n"
+"Last-Translator: Silvija Butko <silvija.butko@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: google_account
 #: model:ir.model.fields,field_description:google_account.field_google_service_create_uid
@@ -59,7 +60,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #: code:addons/google_account/models/google_service.py:169
 #, python-format
 msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
-msgstr ""
+msgstr "Netinkamas metodas [%s] ne tarp [GET, POST, PUT, PATCH ar DELETE]!"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:117
@@ -68,6 +69,8 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid"
 msgstr ""
+"Įvyko klaida Jūsų požymio generavime. Galbūt Jūsų Autorizacijos kodas nėra "
+"tinkamas"
 
 #. module: google_account
 #: code:addons/google_account/models/google_service.py:52
@@ -94,4 +97,4 @@ msgstr ""
 #. module: google_account
 #: model:ir.model,name:google_account.model_google_service
 msgid "google.service"
-msgstr ""
+msgstr "google.service"
