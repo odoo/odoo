@@ -65,10 +65,9 @@ class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
                 return r.query_count
         return 0
 
-    def make_environ(self):
-        environ = super(essaiRequestHandler,self).make_environ()
+    def run_wsgi(self):
+        super(essaiRequestHandler,self).run_wsgi()
         self.qc_start = self.get_query_count()
-        return environ
 
     def handle(self):
         self.times_start = os.times()
