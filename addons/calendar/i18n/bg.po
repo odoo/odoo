@@ -9,13 +9,14 @@
 # kalatchev, 2016
 # Vladimir Dachev <v.dachev@dalkomotors.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Boris Stefanov <borkata@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Boris Stefanov <borkata@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,7 +294,7 @@ msgstr " [Аз]"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "${object.event_id.name} - Reminder"
-msgstr ""
+msgstr "${object.event_id.name} - Подсещане"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
@@ -312,6 +313,8 @@ msgid ""
 "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
+"%s в %s До\n"
+" %s в %s (%s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:637
@@ -451,7 +454,7 @@ msgstr "Кликни за насрочване на нова среща."
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
 msgid "Color index of creator"
-msgstr ""
+msgstr "Любим Цвят на потребителя"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
@@ -805,7 +808,7 @@ msgstr "Последно обновено на"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
-msgstr ""
+msgstr "Последно съобщение маркирано като прочетено в основният Календар"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_rrule_type
@@ -878,7 +881,7 @@ msgstr "Съобщение"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "Минута(и)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1196,6 +1199,9 @@ msgid ""
 "            other applications such as the employee holidays or the business\n"
 "            opportunities."
 msgstr ""
+"Този календар е споделен със служителите и напълно интегриран с \n"
+"            други приложения като отпуски, отчитане на времето или бизнес\n"
+"            възможности."
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1308,7 +1314,7 @@ msgstr "calendar.alarm_manager"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "calendar.contacts"
-msgstr ""
+msgstr "calendar.contacts"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form

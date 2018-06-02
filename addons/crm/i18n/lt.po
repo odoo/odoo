@@ -149,6 +149,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Sveiki ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>Su šia galimybe <strong>${object.name}</strong> nebuvo atlikta jokių veiksmų mažiausiai 5 dienas.</p>\n"
+"%if object.description:\n"
+"<p>Štai galimybės aprašymas : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Ačiū!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -185,6 +192,8 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
 msgstr ""
+"<b>Permeskite galimybes</b> tarp stulpelių kai jos progresuoja Jūsų "
+"pardavimo cikle."
 
 #. module: crm
 #. openerp-web
@@ -220,6 +229,9 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>Siųskite žinutes</b> galimam klientui ir jo atsakymai automatiškai bus"
+" prikabinti prie šios galimybės.Spauskite <i>'@'</i> norėdami prijungti "
+"žmones - tai tarsi cc funkcija el. laiškuose.</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -1284,7 +1296,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/tour.js:71
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Konfigūracijos pasirinktys pasiekiamos per nustatymų programėlę."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
