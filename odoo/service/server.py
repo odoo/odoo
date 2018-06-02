@@ -53,6 +53,46 @@ except ImportError:
 
 SLEEP_INTERVAL = 60     # 1 min
 
+class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
+
+    qc_start = 0
+    qc_stop = 0
+
+    def get_query_count(self):
+        if hasattr(self, 'environ'):
+            r = self.environ.get('werkzeug.request')
+            if hasattr(r,'query_count'):
+                return r.query_count
+        return 0
+
+    def make_environ(self):
+        environ = super(essaiRequestHandler,self).make_environ()
+        self.qc_start = self.get_query_count()
+        return environ
+
+    def handle(self):
+        self.times_start = os.times()
+        return super(essaiRequestHandler, self).handle()
+
+    def send_response(self, *args, **kwargs):
+        self.times_stop = os.times()
+        self.qc_stop = self.get_query_count()
+        return super(essaiRequestHandler, self).send_response(*args, **kwargs)
+
+    def log(self, type, message, *args):
+        # here we can override the  log method to add custom fields in the
+        # werkzeug log line
+        args = list(args)
+        message += ' QUERY COUNT %s -'
+        args.append(self.qc_stop - self.qc_start)
+        message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
+        args.append(self.times_stop.system - self.times_start.system)
+        args.append(self.times_stop.user - self.times_start.user)
+        args.append(self.times_stop.elapsed - self.times_start.elapsed)
+        super(essaiRequestHandler, self).log(type, message, *args)
+  
+werkzeug.serving.WSGIRequestHandler = essaiRequestHandler
+
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
     get_memory_info """
@@ -87,45 +127,11 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
 
 class RequestHandler(werkzeug.serving.WSGIRequestHandler):
 
-    def __init__(self, *args, **kwargs):
-        self.qc_start = self.get_query_count()
-        self.qc_stop = 0
-        return super(RequestHandler, self).__init__(*args, **kwargs)
-
-    def get_query_count(self):
-        if hasattr(self, 'environ'):
-            r = self.environ.get('werkzeug.request')
-            if hasattr(r,'query_count'):
-                return r.query_count
-        return 0
-
-    def handle(self):
-        self.times_start = os.times()
-        return super(RequestHandler, self).handle()
-
-    def send_response(self, *args, **kwargs):
-        self.times_stop = os.times()
-        self.qc_stop = self.get_query_count()
-        return super(RequestHandler, self).send_response(*args, **kwargs)
-
-    def log(self, type, message, *args):
-        # here we can override the  log method to add custom fields in the
-        # werkzeug log line
-        args = list(args)
-        message += ' QUERY COUNT %s -'
-        args.append(self.qc_stop - self.qc_start)
-        message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
-        args.append(self.times_stop.system - self.times_start.system)
-        args.append(self.times_stop.user - self.times_start.user)
-        args.append(self.times_stop.elapsed - self.times_start.elapsed)
-        super(RequestHandler, self).log(type, message, *args)
-
     def setup(self):
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
         me = threading.currentThread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
-
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
