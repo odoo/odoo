@@ -30,6 +30,12 @@ class TestDatetime(common.TransactionCase):
         self.assertEqual(copied.day, 2)
         self.assertNotEqual(id(copied), id(start))
 
+        converted = datetime(1932, 11, 2, 8, 42, 21).date()
+        self.assertEqual(converted.year, 1932)
+        self.assertEqual(converted.month, 11)
+        self.assertEqual(converted.day, 2)
+        self.assertNotEqual(id(converted), id(start))
+
         end = date.from_string('1932-11-10')
         self.assertEqual(end.year, 1932)
         self.assertEqual(end.month, 11)
@@ -251,6 +257,14 @@ class TestDatetime(common.TransactionCase):
         self._cmp_date(
             date(1932, 11, 2),
             date(1932, 11, 10),
+            datetimelib.date(1932, 11, 2),
+            datetimelib.date(1932, 11, 10),
+            '1932-11-2',
+            '1932-11-10'
+        )
+        self._cmp_date(
+            datetime(1932, 11, 2, 8, 42, 21).date(),
+            datetime(1932, 11, 10, 18, 42, 27).date(),
             datetimelib.date(1932, 11, 2),
             datetimelib.date(1932, 11, 10),
             '1932-11-2',
@@ -538,6 +552,12 @@ class TestDatetime(common.TransactionCase):
     def test_041_date_to_string(self):
         """ Test many ways to convert dates to string """
         end = date(1932, 11, 8)
+        self.assertEqual(hash(end), hash(datetimelib.date(1932, 11, 8)))
+        self.assertEqual(repr(end), '<date 1932-11-08>')
+        self.assertEqual(str(end), '1932-11-08')
+        self.assertEqual(end.to_isoformat(), '1932-11-08')
+
+        end = datetime(1932, 11, 8, 18, 42, 27).date()
         self.assertEqual(hash(end), hash(datetimelib.date(1932, 11, 8)))
         self.assertEqual(repr(end), '<date 1932-11-08>')
         self.assertEqual(str(end), '1932-11-08')
