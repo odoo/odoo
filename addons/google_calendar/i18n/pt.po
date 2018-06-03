@@ -45,6 +45,8 @@ msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
 msgstr ""
+"Todos os eventos FORAM desconectados da sua conta anterior. Agora você pode "
+"reiniciar a sincronização"
 
 #. module: google_calendar
 #. openerp-web
@@ -54,6 +56,8 @@ msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
 msgstr ""
+"Um administrador precisa configurar a Sincronização do Google antes que a "
+"possa usar!"
 
 #. module: google_calendar
 #. openerp-web
@@ -63,6 +67,8 @@ msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
 msgstr ""
+"Ocorreu um erro ao desconectar eventos da sua conta anterior. Por favor, "
+"tente novamente ou contate o administrador."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
@@ -92,12 +98,12 @@ msgstr "Segredo do Cliente"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
 msgid "Client_id"
-msgstr ""
+msgstr "Client_id"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
 msgid "Client_key"
-msgstr ""
+msgstr "Client_key"
 
 #. module: google_calendar
 #. openerp-web
@@ -141,7 +147,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr ""
+msgstr "Id do calendário google"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -153,7 +159,7 @@ msgstr ""
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
 msgid "Google ID should be unique!"
-msgstr ""
+msgstr "ID google deve ser único!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:687
@@ -177,6 +183,8 @@ msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
 msgstr ""
+"A fim de fazer isso, você primeiro precisa desligar todos os eventos "
+"existentes da conta antiga."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
@@ -184,6 +192,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"Última ID do calenário que foi sincronizado. Se ele for alterado, nós "
+"removemos todos os links entre GoogleID e Odoo Google Interno ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
@@ -193,12 +203,12 @@ msgstr "Última Modificação em"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr ""
+msgstr "Última data de sincronização"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr ""
+msgstr "Data da Sincronização Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
@@ -215,7 +225,7 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
 msgid "Refresh Token"
-msgstr ""
+msgstr "Actualizar Token"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
@@ -248,21 +258,23 @@ msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
 msgstr ""
+"A conta que você está tentando sincronizar (%s) não é a mesma que o último "
+"usou (%s)!"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
 msgid "Token Validity"
-msgstr ""
+msgstr "Validada do Token"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "URI for tuto"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "User token"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -275,6 +287,7 @@ msgstr "Utilizadores"
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
+"Você será redirecionado para o Google para autorizar o acesso à sua agenda!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_calendar.py:295

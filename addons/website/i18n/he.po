@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: website
 #. openerp-web
@@ -66,7 +66,7 @@ msgstr "&nbsp;"
 #: code:addons/website/static/src/xml/website.gallery.xml:51
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&פעמים;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
@@ -112,12 +112,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid ", author:"
-msgstr ""
+msgstr ", מחבר:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid ", updated:"
-msgstr ""
+msgstr ", עודכן:"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -171,12 +171,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "403: Forbidden"
-msgstr ""
+msgstr "403: פעולה אסורה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
 msgid "404: Page not found!"
-msgstr ""
+msgstr "404:  אופס, הדף לא קיים !"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -756,12 +756,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
 msgid "A Great Headline"
-msgstr ""
+msgstr "שורת כותרת לדוגמא"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
 msgid "A Punchy Headline"
-msgstr ""
+msgstr "שורת כותרת נוספת"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -811,7 +811,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.footer_default
 #: model:website.page,arch_db:website.aboutus_page
 msgid "About us"
-msgstr ""
+msgstr "קצת עלינו"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -849,12 +849,12 @@ msgstr "הוסף"
 #: code:addons/website/static/src/xml/website.contentMenu.xml:49
 #, python-format
 msgid "Add Menu Entry"
-msgstr ""
+msgstr "הוספת קישור לתפריט"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Add a great slogan"
-msgstr ""
+msgstr "סלוגן מעולה כאן"
 
 #. module: website
 #. openerp-web
@@ -921,6 +921,7 @@ msgid ""
 "All these icons are licensed under creative commons so that you can use "
 "them."
 msgstr ""
+"כל האיקונים למטה רשומים תחת זכויות יוצרים לשימוש ציבורי כך שמותר להשתמש בהם."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -944,7 +945,7 @@ msgstr "קרתה טעות בזמן טעינת תבנית העיצוב"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_title
 msgid "And a great subtitle too"
-msgstr ""
+msgstr "וגם שורת תת-כותרת נהדרת"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -955,7 +956,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Apply"
-msgstr ""
+msgstr "החל"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -982,7 +983,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment_website_url
 msgid "Attachment URL"
-msgstr ""
+msgstr "URL כתובת הקובץ להעלאה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -997,7 +998,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_published
 msgid "Available on the Website"
-msgstr ""
+msgstr "זמין באתר האינטרנט"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1030,7 +1031,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Beginner"
-msgstr ""
+msgstr "מתחילים"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1094,12 +1095,12 @@ msgstr "בטל"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Change Background"
-msgstr ""
+msgstr "החלפת רקע"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Change Icons"
-msgstr ""
+msgstr "החלפת סמל איקון"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1114,7 +1115,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_field_parent
 msgid "Child Field"
-msgstr ""
+msgstr "שדה ילד"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_child_id
@@ -1152,7 +1153,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Click on the icon to adapt it to your feature"
-msgstr ""
+msgstr "ליחצו על האייקון כדי להתאים אותו לתכונה המוצגת"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_banner
@@ -1209,7 +1210,7 @@ msgstr "חברה"
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
 msgid "Company name"
-msgstr ""
+msgstr "שם החברה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
@@ -1226,7 +1227,7 @@ msgstr "הגדרות"
 #: code:addons/website/static/src/js/editor/snippets.options.js:24
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "אישור"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -1266,7 +1267,7 @@ msgstr "צרו קשר"
 #: model:website.page,arch_db:website.website2_contactus_page
 #: model:website.page,arch_db:website.website2_homepage_page
 msgid "Contact us"
-msgstr ""
+msgstr "צרו עימנו קשר"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.contactus
@@ -1276,7 +1277,7 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "Contact us about anything related to our company or services."
-msgstr ""
+msgstr "צרו עימנו קשר בכל דבר הנוגע לחברה או לשירות שלנו"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_picture
@@ -1286,7 +1287,7 @@ msgstr "צרו קשר >>"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Content"
-msgstr ""
+msgstr "תוכן"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1299,7 +1300,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:26
 #, python-format
 msgid "Continue"
-msgstr ""
+msgstr "המשך"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -1316,7 +1317,7 @@ msgstr "צור תפריט"
 #. module: website
 #: model:ir.ui.view,arch_db:website.page_404
 msgid "Create Page"
-msgstr ""
+msgstr "דף חדש"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1357,7 +1358,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
-msgstr ""
+msgstr "התאמות"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -1371,7 +1372,7 @@ msgstr ""
 msgid ""
 "Customize any block through this menu. Try to change the background of the "
 "banner."
-msgstr ""
+msgstr "כל בלוק ניתן לערוך בעזרת תפריט זה. נסו לשנות את צבע הרקע לבאנר."
 
 #. module: website
 #: model:ir.actions.client,name:website.backend_dashboard
@@ -1382,7 +1383,7 @@ msgstr "לוח בקרה"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default"
-msgstr ""
+msgstr "ברירת מחדל"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1644,7 +1645,7 @@ msgstr "סוף"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Enterprise package"
-msgstr ""
+msgstr "חבילה עסקית"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -1654,7 +1655,7 @@ msgstr "שגיאה"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Examples"
-msgstr ""
+msgstr "דוגמאות"
 
 #. module: website
 #. openerp-web
@@ -1674,26 +1675,28 @@ msgid ""
 "Explain the benefits you offer. Don't write about products or\n"
 "            services here, write about solutions."
 msgstr ""
+"הכניסו תיאור היתרונות שאתם מציעים. אל תכתבו על מוצרים או \n"
+"            שירותים כאן, כתבו על פתרונות."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_xml_id
 msgid "External ID"
-msgstr ""
+msgstr "ID חיצוני"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Extra-Large"
-msgstr ""
+msgstr "גדול-מאד"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_social_facebook
 msgid "Facebook Account"
-msgstr ""
+msgstr "חשבון פייסבוק"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Fast"
-msgstr ""
+msgstr "מהיר"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_favicon
@@ -1703,12 +1706,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature One"
-msgstr ""
+msgstr "מאפיין א'"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature Three"
-msgstr ""
+msgstr "מאפיין ג'"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_panel
@@ -1718,7 +1721,7 @@ msgstr "כותרת למאפיין"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_three_columns
 msgid "Feature Two"
-msgstr ""
+msgstr "מאפיין ב'"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model_fields
@@ -1801,7 +1804,7 @@ msgstr "פנוי"
 msgid ""
 "From the main container, you can change the background to highlight "
 "features."
-msgstr ""
+msgstr "מהתיבה הראשית , ניתן לשנות צבע להדגשת המאפיינים"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -1962,14 +1965,14 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Great Value"
-msgstr ""
+msgstr "שווי נהדר"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
 #: model:website.page,arch_db:website.aboutus_page
 msgid "Great products for great people"
-msgstr ""
+msgstr "מוצרים נהדרים ואנשים נהדרים"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -1999,7 +2002,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_http
 msgid "HTTP routing"
-msgstr ""
+msgstr "ניתוב HTTP"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_cover
@@ -2025,7 +2028,7 @@ msgstr ""
 #: model:website.menu,name:website.menu_homepage
 #: model:website.menu,name:website.website2_menu_homepage
 msgid "Home"
-msgstr ""
+msgstr "בית"
 
 #. module: website
 #. openerp-web
@@ -2037,7 +2040,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.website_planner
 #, python-format
 msgid "Homepage"
-msgstr ""
+msgstr "דף הבית"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website2_homepage
@@ -2138,7 +2141,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Information about the"
-msgstr ""
+msgstr "מידע אודות ה"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_inherit_id
@@ -2153,7 +2156,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_base_language_install
 msgid "Install Language"
-msgstr ""
+msgstr "התקן שפה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2173,7 +2176,7 @@ msgstr "תוספים מותקנים"
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Modules"
-msgstr ""
+msgstr "מודולים מותקנים"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_company_team
@@ -2268,7 +2271,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Large"
-msgstr ""
+msgstr "גדול"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website___last_update
@@ -2330,7 +2333,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Left"
-msgstr ""
+msgstr "שמאל"
 
 #. module: website
 #. openerp-web
@@ -2401,7 +2404,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_id
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Main Menu"
-msgstr ""
+msgstr "תפריט ראשי"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -2460,7 +2463,7 @@ msgstr "תפריט"
 #: code:addons/website/static/src/js/menu/content.js:338
 #, python-format
 msgid "Menu Label"
-msgstr ""
+msgstr "תוית תפריט"
 
 #. module: website
 #: code:addons/website/models/website.py:243
@@ -2514,7 +2517,7 @@ msgstr "מודלים"
 #: code:addons/website/static/src/xml/website.seo.xml:58
 #, python-format
 msgid "Most searched topics related to your keywords, ordered by importance:"
-msgstr ""
+msgstr "עוד מושגים שמשוייכים למילות המפתח שלך, לפי סדר חשיבות"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2624,7 +2627,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Note: To hide this page, uncheck it from the top Customize menu."
-msgstr ""
+msgstr "הערה: להסתרת הדף הזה, בטלו את בחירתו בעריכת התפריט העליון."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings_language_count
@@ -2674,7 +2677,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
-msgstr ""
+msgstr "גרסת Odoo"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -2756,12 +2759,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Other Info"
-msgstr ""
+msgstr "מידע נוסף"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Our Offers"
-msgstr ""
+msgstr "ההצעה שלנו"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_default
@@ -2771,14 +2774,14 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_references
 msgid "Our References"
-msgstr ""
+msgstr "ההפניות שלנו"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
 #: model:ir.ui.view,arch_db:website.aboutus_page_ir_ui_view
 #: model:website.page,arch_db:website.aboutus_page
 msgid "Our Team"
-msgstr ""
+msgstr "הצוות שלנו"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.aboutus
@@ -2806,7 +2809,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page_page_ids
 #, python-format
 msgid "Page"
-msgstr ""
+msgstr "דף"
 
 #. module: website
 #: code:addons/website/models/website.py:213
@@ -2972,7 +2975,7 @@ msgstr "תצוגה מקדימה"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Professional"
-msgstr ""
+msgstr "מקצועי"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
@@ -3005,12 +3008,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_partner_id
 msgid "Public Partner"
-msgstr ""
+msgstr "שותף פומבי"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_user_id
 msgid "Public User"
-msgstr ""
+msgstr "משתמש פומבי"
 
 #. module: website
 #. openerp-web
@@ -3046,7 +3049,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.publish_short
 #, python-format
 msgid "Published"
-msgstr ""
+msgstr "פורסם"
 
 #. module: website
 #. openerp-web
@@ -3193,7 +3196,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Sample images"
-msgstr ""
+msgstr "תמונות לדוגמה"
 
 #. module: website
 #. openerp-web
@@ -3249,12 +3252,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid "Select and delete blocks to remove some features."
-msgstr ""
+msgstr "בחירה ומחיקה של בלוקים להסרת מאפיינים מסויימים"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
 msgid "Sell Online. Easily."
-msgstr ""
+msgstr "מכירה ברשת. בקלות."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -3284,7 +3287,7 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "Send us an email"
-msgstr ""
+msgstr "שילחו לנו דוא\"ל"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_sequence
@@ -3319,7 +3322,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_ir_ui_view_customize_show
 #: model:ir.model.fields,field_description:website.field_website_page_customize_show
 msgid "Show As Optional Inherit"
-msgstr ""
+msgstr "הצג כניתן להעברה בירושה"
 
 #. module: website
 #. openerp-web
@@ -3356,13 +3359,13 @@ msgstr "איטי"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Small"
-msgstr ""
+msgstr "קטן"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_company_form_inherit_website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Social Media"
-msgstr ""
+msgstr "מדיה חברתית"
 
 #. module: website
 #: code:addons/website/controllers/main.py:218
@@ -3379,7 +3382,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Square"
-msgstr ""
+msgstr "מרובע"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_image_text
@@ -3392,7 +3395,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Starter package"
-msgstr ""
+msgstr "חבילת מתחילים"
 
 #. module: website
 #. openerp-web
@@ -3404,17 +3407,17 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle"
-msgstr ""
+msgstr "כותרת משנה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle 2"
-msgstr ""
+msgstr "כותרת משנה 2"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.footer_custom
 msgid "Subtitle 3"
-msgstr ""
+msgstr "כותרת משנה 3"
 
 #. module: website
 #. openerp-web
@@ -3437,7 +3440,7 @@ msgstr "שם טכני:"
 #: model:ir.ui.view,arch_db:website.s_feature_grid
 msgid ""
 "Tell features the visitor would like to know, not what you'd like to say."
-msgstr ""
+msgstr "כיתבו על מאפיינים שהמבקרים ירצו לדעת, ולא דוקא מה שתרצו לאמר."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -3493,7 +3496,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "The error occured while rendering the template"
-msgstr ""
+msgstr "קרתה טעות בזמן טעינת התבנית עיצוב"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -3522,12 +3525,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_url
 msgid "The full URL to access the server action through the website."
-msgstr ""
+msgstr "הכתובת URL המלאה לגישה לפעולת שרת דרך האתר."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
 msgid "The page you were looking for could not be authorized."
-msgstr ""
+msgstr "הדף אותו חיפשת הוא ללא הרשאה"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.404
@@ -3536,6 +3539,9 @@ msgid ""
 "                        typed the address incorrectly, but it has most probably been removed due\n"
 "                        to the recent website reorganisation."
 msgstr ""
+"הדף אותו חיפשת לא נמצא. יתכן ש\n"
+"                       הקלדת כתובת לא נכונה, אך סביר שהדף הוסר \n"
+"                       בזמן סידור וארגון האתר מחדש."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500
@@ -3577,7 +3583,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
 msgid "Third Feature"
-msgstr ""
+msgstr "מאפיין ג'"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3648,12 +3654,12 @@ msgstr ""
 #: model:website.menu,name:website.website2_main_menu
 #, python-format
 msgid "Top Menu"
-msgstr ""
+msgstr "תפריט עליון"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
 msgid "Traceback"
-msgstr ""
+msgstr "מעקב"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3764,7 +3770,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_menu_url
 #: model:ir.ui.view,arch_db:website.edit_website_pages
 msgid "Url"
-msgstr ""
+msgstr "כתובת"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -3805,12 +3811,12 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Fast"
-msgstr ""
+msgstr "מהיר מאוד"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Very Slow"
-msgstr ""
+msgstr "איטי מאוד"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_view_id
@@ -3914,7 +3920,7 @@ msgstr ""
 #: model:website.page,arch_db:website.contactus_page
 #: model:website.page,arch_db:website.website2_contactus_page
 msgid "We'll do our best to get back to you as soon as possible."
-msgstr ""
+msgstr "נעשה את מיטב המאמצים לחזור אליך בהקדם האפשרי"
 
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website
@@ -3947,7 +3953,7 @@ msgstr ""
 #. module: website
 #: model:ir.actions.act_url,name:website.action_website_homepage
 msgid "Website Homepage"
-msgstr ""
+msgstr "דף הבית של האתר"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
@@ -3996,7 +4002,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
 msgid "Website Settings"
-msgstr ""
+msgstr "הגדרות אתר"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_module_theme
@@ -4043,7 +4049,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_tree
 msgid "Website menu"
-msgstr ""
+msgstr "פתריט אתר"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_blog_blog_website_meta_description
@@ -4135,7 +4141,7 @@ msgstr "אתרי אינטרנט"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_language_install_website_ids
 msgid "Websites to translate"
-msgstr ""
+msgstr "אתרים לתרגום"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4207,7 +4213,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_big_message
 msgid "Write one sentence to convince visitor about your message."
-msgstr ""
+msgstr "כתבו משפט אחד לשכנוע הקוראים לגבי המסר שלך"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_features
@@ -4362,7 +4368,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:41
 #, python-format
 msgid "describing your page content"
-msgstr ""
+msgstr "תיאור תוכן הדף"
 
 #. module: website
 #. openerp-web
@@ -4473,7 +4479,7 @@ msgstr "ir.qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_ui_view
 msgid "ir.ui.view"
-msgstr ""
+msgstr "ir.ui.view"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -4493,7 +4499,7 @@ msgstr "שם"
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "or Edit Master"
-msgstr ""
+msgstr "או עריכת מקור"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form

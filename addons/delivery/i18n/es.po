@@ -12,9 +12,9 @@
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # Antonio Trueba, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
 # Alejandro Die Sanchis <marketing@domatix.com>, 2017
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Amaia Bastida <amaiatrainer@gmail.com>, 2017
@@ -364,7 +364,7 @@ msgstr "Transportista"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr "Costo de envío"
+msgstr "Coste de envío"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -496,6 +496,7 @@ msgid "Fixed Price"
 msgstr "Precio fijo"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -684,10 +685,11 @@ msgstr "No hay transportista establecido para esta orden."
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"Ninguna regla de precio concordante con este pedido; los costos de envío no "
+"Ninguna regla de precio concordante con este pedido; los costes de envío no "
 "pueden ser calculados."
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_normal
 #: model:product.template,name:delivery.product_product_delivery_normal_product_template
 msgid "Normal Delivery Charges"
@@ -861,13 +863,13 @@ msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
 "%.2f %s"
 msgstr ""
-"Mercancía enviada al transportista %s con identificador %s<br/>Costo: %.2f "
+"Mercancía enviada al transportista %s con identificador %s<br/>Coste: %.2f "
 "%s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr "Costo de envío"
+msgstr "Coste de envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_shipping_weight
@@ -899,6 +901,7 @@ msgid "Stock Move"
 msgstr "Movimiento de stock"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"

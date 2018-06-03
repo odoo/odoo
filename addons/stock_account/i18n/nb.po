@@ -3,16 +3,17 @@
 # * stock_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2017
+# Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
+# Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Viktor Basso <viktor@voit.no>, 2017\n"
+"Last-Translator: Torvald Baade Bringsvor <bringsvor@bringsvor.com>, 2018\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Account Entry"
-msgstr ""
+msgstr "Konto Inngang."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
@@ -38,7 +39,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr ""
+msgstr "Regnskapspostene"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -147,7 +148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
 msgid "Costing Method"
-msgstr ""
+msgstr "Kostmetode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
@@ -196,6 +197,8 @@ msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
+"Hvis kostprisen økes, vil lager variasjon konto bli belastet og lager utgang konto vil bli kreditert med verdi = (forskjell på mengden * mengde tilgjengelig).\n"
+"Hvis kostprisen er redusert, vil lager variasjon kontoen creadited og lager innspill konto vil bli belastet."
 
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.product_valuation_action
@@ -226,7 +229,7 @@ msgstr "Lagersteder"
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_form_view
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "Lagerbeholdingverdi"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -241,7 +244,7 @@ msgstr "Fakturalinje"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings_module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Mottakskostnader"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
@@ -364,7 +367,7 @@ msgstr "Gjenstående verdi"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Returner Plukke"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
@@ -407,32 +410,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Lager Input-konto"
 
 #. module: stock_account
 #: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
-msgstr ""
+msgstr "Lagerjournal"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
 msgid "Stock Move"
-msgstr ""
+msgstr "Lagerflytting"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
 msgid "Stock Moves"
-msgstr ""
+msgstr "Lagerbevegelser"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Konto for utgående lager"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
@@ -444,17 +447,17 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Lager verdivurdering konto"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Lagervurderingskonto (innkommende)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Lagervurderingskonto (utgående)"
 
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
@@ -464,7 +467,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr ""
+msgstr "Maler for kontoplan"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:478
@@ -537,6 +540,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Brukes for ektetid beholdningsvurdering. Når sett på en virtuell plassering "
+"(ikke intern type), vil denne kontoen bli brukt til å holde verdien av "
+"produkter som blir flyttet fra en intern sted inn denne plasseringen, stedet"
+" for den generiske lager Utgang kontoen satt på produktet. Dette har ingen "
+"effekt for interne steder."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -547,6 +555,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Brukes for ektetid beholdningsvurdering. Når sett på en virtuell plassering "
+"(ikke intern type), vil denne kontoen bli brukt til å holde verdien av "
+"produkter som blir flyttet ut av denne plasseringen og inn i en intern "
+"beliggenhet, i stedet for den generiske Stock Output kontoen satt på "
+"produktet. Dette har ingen effekt for interne steder."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
@@ -575,6 +588,11 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"Når du gjør real-time beholdningsvurdering vil motpart journal elementer for"
+" alle innkommende aksjen beveger seg bli postet i denne kontoen, med mindre "
+"det er en konkret vurdering konto sett på kildeplasseringen. Dette er "
+"standardverdien for alle produkter i denne kategorien. Det kan også direkte "
+"settes på hvert produkt"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -585,6 +603,10 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Når du gjør ektetid beholdningsvurdering vil motpart journal elementer for "
+"alle innkommende aksjen beveger seg bli postet i denne kontoen, med mindre "
+"det er en konkret vurdering konto sett på kildeplasseringen. Når den ikke er"
+" satt på produktet, er en fra produktkategori brukes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -595,6 +617,11 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
+"Når du gjør ektetid beholdningsvurdering vil motpart journal elementer for "
+"alle utgående aksjen beveger seg bli postet i denne kontoen, med mindre det "
+"er en konkret vurdering konto sett på målplassering. Dette er "
+"standardverdien for alle produkter i denne kategorien. Det kan også direkte "
+"settes på hvert produkt."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -605,6 +632,10 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Når du gjør ektetid beholdningsvurdering vil motpart journal elementer for "
+"alle utgående aksjen beveger seg bli postet i denne kontoen, med mindre det "
+"er en konkret vurdering konto sett på målplassering. Når den ikke er satt på"
+" produktet, er en fra produktkategori brukes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
@@ -612,6 +643,8 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Når du gjør real-time beholdningsvurdering, er dette regnskap Journal som "
+"oppføringene vil bli automatisk lagt når aksjekursene trekk er behandlet."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -619,6 +652,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Når sanntid beholdningsvurdering er aktivert på et produkt, vil denne "
+"kontoen holde den aktuelle verdien av produktene."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:450
