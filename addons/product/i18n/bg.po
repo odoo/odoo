@@ -8,13 +8,15 @@
 # B Dochev, 2017
 # aleksandar ivanov, 2018
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Todor Mladenov <tmladenov@dir.bg>, 2018
+# Kaloyan Naumov <kaloyan@lumnus.net>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Kaloyan Naumov <kaloyan@lumnus.net>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -523,6 +525,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.view_product_price_list
 msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr ""
+"Изчисляване на цена на продукт за единица на база версия на ценова листа."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_purchase_ok
@@ -877,7 +880,7 @@ msgstr "Валута по подразбиране %(currency)s за ценов�
 #: model:ir.model.fields,help:product.field_product_product_uom_id
 #: model:ir.model.fields,help:product.field_product_template_uom_id
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "По подразбиране мерни единици, използвани за стокови операции"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_uom_po_id
@@ -886,6 +889,8 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"По подразбиране мер. ед. използвани при нареждане за закупуване. Трябва да "
+"бъде в същата категория като мер. ед. по подразбиране."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_delay
@@ -1509,7 +1514,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_left
 msgid "Left Parent"
-msgstr ""
+msgstr "Ляв родител"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
@@ -1758,7 +1763,7 @@ msgstr "Цена"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Computation"
-msgstr ""
+msgstr "Изчисляване на цена"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_price_discount
@@ -1989,7 +1994,7 @@ msgstr "Product UoM Categories"
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: selection:product.pricelist.item,applied_on:0
 msgid "Product Variant"
-msgstr ""
+msgstr "Варианти на продукт"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -2125,7 +2130,7 @@ msgstr "Поправка"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_parent_right
 msgid "Right Parent"
-msgstr ""
+msgstr "Подходящ партньор"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
@@ -2269,6 +2274,9 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"Определя цена, така че да е кратна на тази стойност.\n"
+"Закръгляване се прилага, след отстъпка и преди увеличение.\n"
+"За да са цените катот тази 9.99, определете закръгляване 10, доплащане -0,01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings_company_share_product
@@ -2775,7 +2783,7 @@ msgstr ""
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr ""
+msgstr "Единица"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_uom_id
@@ -2864,12 +2872,12 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
 msgid "Variant Image"
-msgstr ""
+msgstr "Изображение на Варианта"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "Информация за Варианта"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
@@ -2879,7 +2887,7 @@ msgstr ""
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Variant Prices"
-msgstr ""
+msgstr "Цени на Вариатите"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
@@ -2892,14 +2900,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:product.attribute_tree_view
 #: model:ir.ui.view,arch_db:product.variants_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "Стойности на Вариантите"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value_product_ids
 #: model:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr ""
+msgstr "Варианти"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_name
@@ -3112,12 +3120,12 @@ msgstr "дни"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "decimal.precision"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "пр. Лампи"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3142,17 +3150,17 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_floz
 msgid "fl oz"
-msgstr ""
+msgstr "теч. унции"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_foot
 msgid "foot(ft)"
-msgstr ""
+msgstr "фута"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gal
 msgid "gal(s)"
-msgstr ""
+msgstr "галона"
 
 #. module: product
 #: model:product.product,name:product.product_product_8
@@ -3215,7 +3223,7 @@ msgstr "км"
 #. module: product
 #: model:product.uom,name:product.product_uom_lb
 msgid "lb(s)"
-msgstr ""
+msgstr "паунда"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_mile
@@ -3225,32 +3233,32 @@ msgstr "миля(и)"
 #. module: product
 #: model:product.uom,name:product.product_uom_oz
 msgid "oz(s)"
-msgstr ""
+msgstr "унции"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_line
 msgid "product.attribute.line"
-msgstr ""
+msgstr "product.attribute.line"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_price
 msgid "product.attribute.price"
-msgstr ""
+msgstr "product.attribute.price"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
 msgid "product.attribute.value"
-msgstr ""
+msgstr "product.attribute.value"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_history
 msgid "product.price.history"
-msgstr ""
+msgstr "product.price.history"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_qt
 msgid "qt"
-msgstr ""
+msgstr "кварти"
 
 #. module: product
 #: model:product.product,description_sale:product.consu_delivery_02
@@ -3267,7 +3275,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "report.product.report_pricelist"
-msgstr ""
+msgstr "report.product.report_pricelist"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
