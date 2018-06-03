@@ -5,13 +5,16 @@
 # Translators:
 # Martin Trigaux, 2017
 # Paolo Valier, 2017
+# Giovanni Perteghella <giovanni@perteghella.org>, 2018
+# Luca Tralli, 2018
+# Massimo Bianchi <bianchi.massimo@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Paolo Valier, 2017\n"
+"Last-Translator: Massimo Bianchi <bianchi.massimo@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +35,7 @@ msgstr "# Fatturate in Vendite"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
-msgstr ""
+msgstr "# Acquistato"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -42,18 +45,18 @@ msgstr "Criteri di analisi"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "Prezzo Medio nelle Fatture Clienti."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Prezzo Medio nelle Fatture Fornitori"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_avg_price
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_avg_price
 msgid "Avg. Unit Price"
-msgstr ""
+msgstr "Prezzo unitario medio"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -89,32 +92,32 @@ msgstr "Bozza, Aperta e Pagata"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin
 msgid "Expected Margin"
-msgstr ""
+msgstr "Margine atteso"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr ""
+msgstr "Margine previsto (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sale_expected
 msgid "Expected Sale"
-msgstr ""
+msgstr "Vendita attesa"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "Vendita attesa - Costo normale"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sales_gap
 msgid "Expected Sale - Turn Over"
-msgstr ""
+msgstr "Vendita attesa - Ricambio"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr ""
+msgstr "Margine atteso * 100 / vendita attesa"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
@@ -155,12 +158,12 @@ msgstr "Ultima modifica il"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_from
 msgid "Margin Date From"
-msgstr ""
+msgstr "Margini Dalla Data"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_date_to
 msgid "Margin Date To"
-msgstr ""
+msgstr "Margini Alla Data"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -170,17 +173,17 @@ msgstr "Margini"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
-msgstr ""
+msgstr "Costo normale"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "Costo normale - costo totale"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
-msgstr ""
+msgstr "Margini Aperti"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -218,12 +221,12 @@ msgstr "Margini Prodotto"
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Properties categories"
-msgstr ""
+msgstr "Categorie proprietà"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_purchase_gap
 msgid "Purchase Gap"
-msgstr ""
+msgstr "Margine di acquisto"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -239,7 +242,7 @@ msgstr "Vendite"
 #: model:ir.model.fields,field_description:product_margin.field_product_product_sales_gap
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
-msgstr ""
+msgstr "Intervallo vendite"
 
 #. module: product_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -250,17 +253,22 @@ msgstr "Prezzo Standard"
 #: model:ir.model.fields,help:product_margin.field_product_product_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
+"Totale del prodotto del costo per la quantità nelle fatture di acquisto"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
+"Somma del Prodotto del prezzo di Vendita Fattura e quantità delle Fatture "
+"Clienti"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
+"Totale del prodotto del prezzo in fattura per la quantità nelle fatture di "
+"acquisto"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_expected
@@ -268,21 +276,23 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
+"Somma del Prodotto del prezzo di Vendita da Catalogo e quantità delle "
+"Fatture Clienti"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr ""
+msgstr "Somma della quantità nelle fatture clienti"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Somma della quantità nelle fatture di acquisto"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
-msgstr ""
+msgstr "A"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_cost
@@ -294,25 +304,25 @@ msgstr "Costo totale"
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
-msgstr ""
+msgstr "Margine totale"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin_rate
 msgid "Total Margin Rate(%)"
-msgstr ""
+msgstr "Tasso Totale Margine(%)"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin_rate
 msgid "Total margin * 100 / Turnover"
-msgstr ""
+msgstr "Margine totale * 100 / Ricambio"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_turnover
 #: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
-msgstr ""
+msgstr "Ricambio"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
-msgstr ""
+msgstr "Fatturato - Prezzo standard"

@@ -79,24 +79,24 @@ msgstr "<strong>Постачальник </strong>"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_date_end
 msgid "Agreement Deadline"
-msgstr ""
+msgstr "Кінцевий термін угоди"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_name
 msgid "Agreement Reference"
-msgstr ""
+msgstr "Довідка щодо угоди"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_exclusive
 msgid "Agreement Selection Type"
-msgstr ""
+msgstr "Тип вибору угоди"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_id_10513
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_name
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr ""
+msgstr "Тип угоди"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.res_config_settings_view_form
@@ -117,7 +117,7 @@ msgstr "Вибір пропозиції"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_single
 msgid "Blanket Order"
-msgstr ""
+msgstr "загальний порядок"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,name:purchase_requisition.action_report_purchase_requisitions
@@ -139,12 +139,12 @@ msgstr "Скасовано"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:82
 #, python-format
 msgid "Cancelled by the agreement associated to this quotation."
-msgstr ""
+msgstr "Скасовано угодою, пов'язаною з цією комерційною пропозицією."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Click to start a new purchase agreement."
-msgstr ""
+msgstr "Натисніть, щоб розпочати нову угоду про придбання."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_company_id
@@ -185,12 +185,12 @@ msgstr "Дата створення"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Data for new quotations"
-msgstr ""
+msgstr "Дані для нових комерційних пропозицій"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_schedule_date
 msgid "Delivery Date"
-msgstr ""
+msgstr "Дата доставки"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_description
@@ -207,7 +207,7 @@ msgstr "Назва для відображення"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Do not create RfQ lines automatically"
-msgstr ""
+msgstr "Не створюйте рядки RfQ автоматично"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -237,6 +237,8 @@ msgstr "Кінець місяця"
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
 msgstr ""
+"Приклади договорів купівлі-продажу включають в себе конкурси та загальні "
+"замовлення."
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -245,6 +247,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
 msgstr ""
+"Для загальних замовлень ви можете записати угоду на певний період "
+"(наприклад, рік), а ви замовляєте товари в рамках цієї угоди, отримуючи "
+"вигоду від узгоджених цін."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -266,11 +271,15 @@ msgid ""
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
 msgstr ""
+"Під час проведення тендеру ви можете записати товари, які вам потрібно придбати\n"
+"і генерувати створення RfQ для постачальників. Отримавши тендери\n"
+"ви зареєструвалися, їх можна переглянути та порівняти\n"
+"перевірити деякі та скасувати інші."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "In negotiation"
-msgstr ""
+msgstr "У переговорах"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition___last_update
@@ -306,7 +315,7 @@ msgstr "Декілька заявок"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "New Agreements"
-msgstr ""
+msgstr "Нові угоди"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -316,7 +325,7 @@ msgstr "Нова пропозиція"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_order_count
 msgid "Number of Orders"
-msgstr ""
+msgstr "Кількість замовлень"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_picking_type_id
@@ -326,7 +335,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_qty_ordered
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "Замовлені величини"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_ordering_date
@@ -380,12 +389,12 @@ msgstr "Створити тендер"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_requisition_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_requisition_id
 msgid "Purchase Agreement"
-msgstr ""
+msgstr "Угода про придбання"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_type
 msgid "Purchase Agreement Type"
-msgstr ""
+msgstr "Тип угоди про придбання"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.tender_type_action
@@ -393,7 +402,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_tree
 msgid "Purchase Agreement Types"
-msgstr ""
+msgstr "Типи угоди про придбання"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -402,7 +411,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_tree
 msgid "Purchase Agreements"
-msgstr ""
+msgstr "Угоди про придбання"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
@@ -437,7 +446,7 @@ msgstr "Рядок пошуку пропозицій"
 #. module: purchase_requisition
 #: model:purchase.requisition.type,name:purchase_requisition.type_multi
 msgid "Purchase Tender"
-msgstr ""
+msgstr "Тендер на придбання"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -447,7 +456,7 @@ msgstr "Замовлення на купівлю"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_quantity_copy
 msgid "Quantities"
-msgstr ""
+msgstr "Величини"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_product_qty
@@ -457,7 +466,7 @@ msgstr "Кількість"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr ""
+msgstr "RFQ/Замовлення"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.product_template_form_view_inherit
@@ -472,7 +481,7 @@ msgstr "Запит комерційної пропозиції"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_list
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Запит на комерційні пропозиції"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -503,7 +512,7 @@ msgstr "Запланована дата"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Search Purchase Agreements"
-msgstr ""
+msgstr "Шукати угоди про придбання"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,exclusive:0
@@ -522,6 +531,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
+"Виберіть лише один RFQ (ексклюзивний): після підтвердження замовлення на придбання скасуйте решту замовлення на купівлю.\n"
+"\n"
+"Виберіть кілька запитів за замовленням: дозволяє кілька замовлень на покупку. При підтвердженні замовлення на купівлю він не скасовує залишкові замовлення"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -531,7 +543,7 @@ msgstr "Послідовність"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Set quantities manually"
-msgstr ""
+msgstr "Встановіть кількість вручну"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -578,12 +590,12 @@ msgstr "Ціна одиниці"
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,line_copy:0
 msgid "Use lines of agreement"
-msgstr ""
+msgstr "Використовуйте рядки згоди"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition.type,quantity_copy:0
 msgid "Use quantities of agreement"
-msgstr ""
+msgstr "Використовуйте кількість угоди"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -604,7 +616,7 @@ msgstr "Склад"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:88
 #, python-format
 msgid "You cannot confirm call because there is no product line."
-msgstr ""
+msgstr "Ви не можете підтвердити дзвінок, оскільки немає рядка товарів."
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:105
@@ -613,6 +625,8 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
+"Ви повинні скасувати або підтвердити кожен RfQ перед тим, як закрити заявку "
+"на купівлю."
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

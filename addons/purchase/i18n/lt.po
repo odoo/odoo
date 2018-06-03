@@ -134,12 +134,12 @@ msgstr "${object.subject}"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "3-way matching"
-msgstr ""
+msgstr "3 dalių sutapimas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_account_3way_match
 msgid "3-way matching: purchases, receptions and bills"
-msgstr ""
+msgstr "3 dalių sutapimas: pirkimai, priėmimai ir sąskaitos"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.mail_template_data_notification_email_purchase_order
@@ -408,7 +408,7 @@ msgstr "Vidutinė kaina"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
 msgid "Bill Control"
-msgstr ""
+msgstr "Sąskaitų valdymas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_invoice_lines
@@ -456,7 +456,7 @@ msgstr "Pirkimas"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
 msgid "Buy rule"
-msgstr ""
+msgstr "Pirkimo taisyklė"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -670,6 +670,8 @@ msgid ""
 "Depicts the date where the Quotation should be validated and converted into "
 "a purchase order."
 msgstr ""
+"Parodo datą, kada komercinis pasiūlymas turėtų būti patvirtintas ir "
+"paverstas į pirkimo užsakymą."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_name
@@ -716,12 +718,12 @@ msgstr "Pirkimo užklausos juodraštis"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
 msgid "Drop Ship Address"
-msgstr ""
+msgstr "Tiesioginio pristatymo adresas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Tiesioginis pristatymas"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -766,12 +768,12 @@ msgstr "Ateities veiklos"
 #. module: purchase
 #: selection:res.company,po_double_validation:0
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
+msgstr "Gauti 2 lygių patikrinimus užsakymo patvirtinimui"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Get warnings in orders for products or vendors"
-msgstr ""
+msgstr "Gauti perspėjimus dėl produktų ar pardavėjų užsakymuose"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_weight
@@ -808,11 +810,13 @@ msgid ""
 "If enabled, activates 3-way matching on vendor bills : the items must be "
 "received in order to pay the invoice."
 msgstr ""
+"Jei įjungta, aktyvuoja 3 dalių sutapimą pardavėjo sąskaitose: prekės turi "
+"būti gautos, kad būtų galima apmokėti sąskaitą."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Import vendor pricelists"
-msgstr ""
+msgstr "Importuoti pardavėjo kainoraščius"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:206
@@ -868,7 +872,7 @@ msgstr "Sąskaitos išrašymas"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
 msgid "Is Shipped"
-msgstr ""
+msgstr "Yra išsiųsta"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_is_installed_sale
@@ -1320,7 +1324,7 @@ msgstr "Pirkimų analizė"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase Bills"
-msgstr ""
+msgstr "Pirkimo sąskaitos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
@@ -1409,7 +1413,7 @@ msgstr "Pirkimų užsakymai"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr ""
+msgstr "Pirkimų užsakymai #"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1555,6 +1559,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"Dokumento numeris, pagal kurį sugeneruotas šis pirkimo užsakymas (pvz. "
+"pardavimo užsakymas)."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_partner_ref
@@ -1746,7 +1752,7 @@ msgstr "Mokesčiai:"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Techninis laukas, naudojamas tiesioginio pristatymo adreso rodymui"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_notes
@@ -1765,6 +1771,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"Produkto formoje yra detali informacija pardavimo proceso\n"
+"pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
+"galimi pardavėjai ir kt."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1773,6 +1782,9 @@ msgid ""
 "            purchase process: prices, procurement logistics, accounting data,\n"
 "            available vendors, etc."
 msgstr ""
+"Produkto formoje yra detali informacija pardavimo proceso\n"
+"pagerinimui: kainos, įsigijimo logistika, buhalteriniai duomenys,\n"
+"galimi pardavėjai ir kt."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:649
@@ -1816,6 +1828,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"Ši sąskaita bus naudojama įvertinti kainų skirtumus tarp pirkimo kainos ir "
+"buhalterinės kainos."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product_property_account_creditor_price_difference
@@ -1849,6 +1863,7 @@ msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Pirkimams iš esamo partnerio vietoje numatytosios valiutos bus naudojama ši"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_default_purchase_method
@@ -1857,11 +1872,13 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Ši numatytoji vertė yra pritaikoma bet kuriam naujai sukurtam produktui. Tai"
+" galite pakeisti produkto informacijos formoje."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note will show up on purchase orders."
-msgstr ""
+msgstr "Ši pastaba bus rodoma pirkimo užsakymuose."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:203
@@ -1885,7 +1902,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "Tai nustatys įeinančio pristatymo operacijos tipą"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1934,6 +1951,8 @@ msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
 "done."
 msgstr ""
+"Negalima atšaukti pirkimo užsakymo %s , nes kai kurie priėmimai jau buvo "
+"atlikti."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:365

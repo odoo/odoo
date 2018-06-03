@@ -446,7 +446,7 @@ msgstr "Поточний тип відпустки"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Current Year"
-msgstr ""
+msgstr "Поточний рік"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -727,6 +727,7 @@ msgstr "Запит на відпустку потрібно підтвердит
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
+"Запит на відпустку має бути підтверджений або підтверджений для відмови."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:422
@@ -744,6 +745,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
 msgstr ""
+"Стан запиту на відпустку має бути \"Відмовлено\" або \"Затвердити\", щоб "
+"повернутися до Чернетки."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -858,7 +861,7 @@ msgstr "Відпустки/Бронювання підтверджено"
 #. module: hr_holidays
 #: model:mail.message.subtype,name:hr_holidays.mt_department_holidays_first_validated
 msgid "Leaves/Allocations First Approval"
-msgstr ""
+msgstr "Відпустка/Бронювання перше затвердження"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
@@ -1039,6 +1042,8 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
+"Лише менеджер відділу кадрів або зацікавлений працівник може встановити до "
+"чернетки."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:428
@@ -1246,6 +1251,8 @@ msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
 " You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
 msgstr ""
+"Функцію позаду поля \"Інші відпустки\" можна використовувати лише тоді, коли є лише один тип відпустки, а параметр \"Дозволити перевизначення ліміту\" не буде позначено.(%s Знайдено). В іншому випадку оновлення неоднозначне, оскільки ми не можемо визначитися, який тип відпустки потрібно оновити.\n"
+"Ви можете скористатися класичним меню \"Запити про відмову\" та \"Запити про розподіл\", що містяться в додатку Відпустки, щоб керувати робочими днями працівників, якщо налаштування не дозволяє використовувати це поле."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1297,6 +1304,8 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting > Leaves "
 "by Department."
 msgstr ""
+"Цей колір буде використано у підсумку відпустки, розташованому у розділі "
+"Звітування > Відпустки за відділом."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -1469,7 +1478,7 @@ msgstr ""
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
-msgstr ""
+msgstr "Ви повинні вибрати принаймні один департамент. І спробуйте ще раз."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new

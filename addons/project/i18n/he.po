@@ -5,19 +5,26 @@
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Yves Goldberg <admin@ygol.com>, 2018
+# Mor Kir <morki@013.net.il>, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
+# Leandro Noijovich <eliel.sorcerer@gmail.com>, 2018
+# yizhaq agronov <yizhaq@gmail.com>, 2018
+# ilan kl <ilan@qaroads.co.il>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"Last-Translator: ilan kl <ilan@qaroads.co.il>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_module_install_project
@@ -542,7 +549,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>תאריך:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -559,7 +566,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Description</strong>"
-msgstr ""
+msgstr "<strong>תיאור</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -825,7 +832,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "אשר קבלת אי-מייל מ "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -866,7 +873,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr ""
+msgstr "הוסף תיאור..."
 
 #. module: project
 #. openerp-web
@@ -887,7 +894,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
 msgid "Advanced"
-msgstr ""
+msgstr "מתקדם"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_id
@@ -976,7 +983,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr ""
+msgstr "תאריך המחאה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -986,12 +993,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr ""
+msgstr "משימות ששויכו"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_user_id
 msgid "Assigned To"
-msgstr ""
+msgstr "משוייך ל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_user_id
@@ -999,7 +1006,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
-msgstr ""
+msgstr "משויך ל"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
@@ -1017,7 +1024,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Attachment"
-msgstr ""
+msgstr "קובץ מצורף"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
@@ -1029,7 +1036,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_my_task
 #, python-format
 msgid "Attachments"
-msgstr ""
+msgstr "קבצים מצורפים"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1060,7 +1067,7 @@ msgstr "מאזן"
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
 msgid "Basic"
-msgstr ""
+msgstr "בסיסי"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1102,7 +1109,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
-msgstr ""
+msgstr "חסומה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1264,7 +1271,7 @@ msgstr "הגדרות תצורה"
 #: code:addons/project/static/src/js/tour.js:90
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "הגדרות זמינות באפליקציית ההגדרות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1491,7 +1498,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customization"
-msgstr ""
+msgstr "התאמה אישית"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_projects
@@ -1501,13 +1508,13 @@ msgstr "לוח בקרה"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr ""
+msgstr "ימים"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_deadline
 msgid "Deadline"
-msgstr ""
+msgstr "תאריך יעד"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_debit
@@ -1565,7 +1572,7 @@ msgstr "תיאור"
 #: code:addons/project/static/src/js/web_planner_project.js:18
 #, python-format
 msgid "Development"
-msgstr ""
+msgstr "פיתוח"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1684,12 +1691,12 @@ msgstr "שיוך דוא\"ל"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "תבנית דוא\"ל"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Emails"
-msgstr ""
+msgstr "הודעות דוא\"ל"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1700,7 +1707,7 @@ msgstr "סוף"
 #: model:ir.model.fields,field_description:project.field_project_task_date_end
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_end
 msgid "Ending Date"
-msgstr ""
+msgstr "תאריך סיום"
 
 #. module: project
 #: sql_constraint:project.project:0
@@ -1731,7 +1738,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
-msgstr ""
+msgstr "דוגמאות"
 
 #. module: project
 #. openerp-web
@@ -1743,7 +1750,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "תאריך פג תוקף"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
@@ -1755,7 +1762,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "סינון מתקדם"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -1892,7 +1899,7 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Green"
-msgstr ""
+msgstr "ירוק"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
@@ -1940,7 +1947,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "גבוה"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
@@ -2005,7 +2012,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:96
 #, python-format
 msgid "Ideas"
-msgstr ""
+msgstr "רעיונות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2122,14 +2129,14 @@ msgstr "בתהליך עיבוד"
 #: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "In progress"
-msgstr ""
+msgstr "בתהליך"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:80
 #, python-format
 msgid "Incoming"
-msgstr ""
+msgstr "נכנס"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
@@ -2154,7 +2161,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr ""
+msgstr "גרסת הפנייה"
 
 #. module: project
 #. openerp-web
@@ -2253,7 +2260,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Last Message"
-msgstr ""
+msgstr "הודעה אחרונה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project___last_update
@@ -2333,7 +2340,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "נמוך"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
@@ -2427,7 +2434,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "המשימות שלי"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:31
@@ -2492,19 +2499,19 @@ msgstr ""
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 #: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
 msgid "Next Activities"
-msgstr ""
+msgstr "פעילויות הבאות"
 
 #. module: project
 #: code:addons/project/models/project.py:775
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "ללא נושא"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Normal"
-msgstr ""
+msgstr "רגיל"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_1
@@ -2525,7 +2532,7 @@ msgstr "הערות"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Notifications"
-msgstr ""
+msgstr "התראות"
 
 #. module: project
 #. openerp-web
@@ -2547,7 +2554,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
-msgstr ""
+msgstr "מספר מסמכים מצורפים"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2588,7 +2595,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Or"
-msgstr ""
+msgstr "או"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2751,7 +2758,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr ""
+msgstr "מנהל פרוייקט"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2760,12 +2767,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Name"
-msgstr ""
+msgstr "שם הפרוייקט"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Project Settings"
-msgstr ""
+msgstr "הגדרות פרוייקט"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2776,23 +2783,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project_task_graph
 #: model:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
-msgstr ""
+msgstr "משימות הפרוייקט"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Project Time Unit"
-msgstr ""
+msgstr "יחידת זמן בפרוייקט"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr ""
+msgstr "משימת פרוייקט"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr ""
+msgstr "משימות הפרוייקט"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
@@ -2813,7 +2820,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
-msgstr ""
+msgstr "פרוייקטים"
 
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
@@ -2868,7 +2875,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "מוכן לשלב הבא"
 
 #. module: project
 #. openerp-web
@@ -2924,7 +2931,7 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Red"
-msgstr ""
+msgstr "אדום"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
@@ -2951,7 +2958,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_remaining_hours
 msgid "Remaining Hours"
-msgstr ""
+msgstr "שעות שנותרו"
 
 #. module: project
 #. openerp-web
@@ -3026,7 +3033,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Search Project"
-msgstr ""
+msgstr "חפש פרוייקט"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:96
@@ -3139,7 +3146,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:16
 #, python-format
 msgid "Specification"
-msgstr ""
+msgstr "איפיון"
 
 #. module: project
 #. openerp-web
@@ -3207,7 +3214,7 @@ msgstr "שלבים"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
-msgstr ""
+msgstr "מסומן בכוכב"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
@@ -3227,7 +3234,7 @@ msgstr "תאריך התחלה"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
 msgid "Starting Date"
-msgstr ""
+msgstr "תאריך התחלה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_subtask_project_id
@@ -3279,7 +3286,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr ""
+msgstr "משימה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -3289,13 +3296,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
 msgid "Task Activities"
-msgstr ""
+msgstr "פעילויות משימה"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr ""
+msgstr "המשימה חסומה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3324,12 +3331,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.task_type_edit
 #: model:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr ""
+msgstr "שלב המשימה"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr ""
+msgstr "שלב המשימה השתנה"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3345,7 +3352,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr ""
+msgstr "המשימה חסומה"
 
 #. module: project
 #. openerp-web
@@ -3400,7 +3407,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr ""
+msgstr "משימות"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3410,13 +3417,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "ניתוח משימות"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
 #: model:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr ""
+msgstr "שלבי המשימות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3431,7 +3438,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "משימות לפי משתמש ולפי פרוייקט"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
@@ -3457,7 +3464,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Testing"
-msgstr ""
+msgstr "בדיקות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3538,7 +3545,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_email_from
 msgid "These people will receive email."
-msgstr ""
+msgstr "האנשים הבאים יקבלו דוא\"ל."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3603,7 +3610,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
-msgstr ""
+msgstr "הערכת זמן על משימות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3650,7 +3657,7 @@ msgstr "כותרת"
 #: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "To Do"
-msgstr ""
+msgstr "מטלה לביצוע"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3823,7 +3830,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc
 msgid "Watchers Emails"
-msgstr ""
+msgstr "מיילים של הצופים בפניה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3907,7 +3914,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
 msgid "Working Time"
-msgstr ""
+msgstr "זמן עבודה"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
@@ -4056,7 +4063,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
-msgstr ""
+msgstr "וכ'ו..."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -4071,7 +4078,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4082,12 +4089,12 @@ msgstr "שלח לנו דואר אלקטרוני"
 #: code:addons/project/models/project.py:595
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "משימות"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "to describe<br/> your experience or to suggest improvements !"
-msgstr ""
+msgstr "לתאר <br/> הניסיון שלך או להציע שיפורים !"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all

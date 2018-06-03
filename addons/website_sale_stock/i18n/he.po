@@ -4,19 +4,22 @@
 # 
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Moshe Flam <pashute@gmail.com>, 2018
+# ExcaliberX <excaliberx@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
@@ -24,6 +27,8 @@ msgid ""
 "<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
 "times\"/> Cancelled</span>"
 msgstr ""
+"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> בוטל</span>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
@@ -31,6 +36,8 @@ msgid ""
 "<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Preparation</span>"
 msgstr ""
+"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> הכנה</span>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
@@ -38,6 +45,8 @@ msgid ""
 "<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
 "truck\"/> Shipped</span>"
 msgstr ""
+"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/>נשלח</span>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
@@ -45,11 +54,13 @@ msgid ""
 "<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
 "clock-o\"/> Partially Available</span>"
 msgstr ""
+"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-clock-o\"/> זמין חלקית\n"
+"</span>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
 msgid "<strong>Delivery Orders</strong>"
-msgstr ""
+msgstr "<strong>משלוח הזמנות</strong>"
 
 #. module: website_sale_stock
 #: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
@@ -136,12 +147,12 @@ msgstr "תבנית לפריט"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
 msgid "Quotation"
-msgstr ""
+msgstr "הצעת מחיר"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "שורת הזמנה"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -211,7 +222,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
 #, python-format
 msgid "all"
-msgstr ""
+msgstr "הכל"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -231,4 +242,4 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
