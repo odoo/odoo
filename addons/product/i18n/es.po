@@ -8,7 +8,6 @@
 # Martin Trigaux, 2017
 # Nicolás Broggi <rnbroggi@gmail.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Many Feathers <many-feathers@hotmail.com>, 2017
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Antonio Trueba, 2017
@@ -16,6 +15,7 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Many Feathers <many-feathers@hotmail.com>, 2017
 # Olar Alca [Vauxoo] <oszckar@gmail.com>, 2017
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
@@ -161,8 +161,8 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 "<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Precio Público  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Costo  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Otra Lista de Precios  -  </span>"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Precio de coste  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Otra tarifa  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
@@ -469,8 +469,8 @@ msgid ""
 msgstr ""
 "Precio base para el cálculo.\n"
 "Precio Público: El precio base será la Venta / Precio Público.\n"
-"Precio de costo: El precio base será el precio de costo.\n"
-"Otras tarifas: Cálculo del precio base basado en otra lista de precios."
+"Precio de coste: El precio base será el precio de coste.\n"
+"Otra tarifa: Cálculo del precio base basado en otra tarifa."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_list_price
@@ -805,7 +805,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_standard_price
 #: selection:product.pricelist.item,base:0
 msgid "Cost"
-msgstr "Costo"
+msgstr "Precio de coste"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
@@ -814,9 +814,9 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product."
 msgstr ""
-"Costo utilizado para la valuación de acciones en precio estándar y como "
-"primer precio para establecer en promedio/fifo. También se utiliza como "
-"precio base para las listas de precios. Expresado en la unidad de medida "
+"Precio de coste utilizado para la valoración de existencias en precio "
+"estándar y como primer precio para establecer en promedio/fifo. También se "
+"utiliza como precio base para las tarifas. Expresado en la unidad de medida "
 "predeterminada del producto."
 
 #. module: product
@@ -826,16 +826,16 @@ msgid ""
 "in average/fifo. Also used as a base price for pricelists. Expressed in the "
 "default unit of measure of the product. "
 msgstr ""
-"Costo utilizado para la valuación de acciones en precio estándar y como "
-"primer precio para establecer en promedio/fifo. También se utiliza como "
-"precio base para las listas de precios. Expresado en la unidad de medida "
+"Precio de coste utilizado para la valoración de existencias en precio "
+"estándar y como primer precio para establecer en promedio/fifo. También se "
+"utiliza como precio base para las tarifas. Expresado en la unidad de medida "
 "predeterminada del producto."
 
 #. module: product
 #: model:product.product,name:product.service_delivery
 #: model:product.template,name:product.service_delivery_product_template
 msgid "Cost-plus Contract"
-msgstr "Contrato de mayor costo"
+msgstr "Contrato de mayor coste"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -1188,7 +1188,7 @@ msgstr "Ejemplo de producto a facturar en pedido."
 #: model:product.product,description:product.service_cost_01
 #: model:product.template,description:product.service_cost_01_product_template
 msgid "Example of products to invoice based on cost."
-msgstr "Ejemplo de productos a facturar basado en el costo."
+msgstr "Ejemplo de productos a facturar basado en el coste."
 
 #. module: product
 #: model:product.product,description:product.product_product_1

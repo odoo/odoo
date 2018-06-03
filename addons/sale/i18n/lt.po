@@ -1658,7 +1658,7 @@ msgstr "Pirkimai"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Užsakymai pajamavimui"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1743,12 +1743,12 @@ msgstr "Kainos mažinimas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Kainos mažinimas be mokesčių"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "Kainos mažinimas su mokesčiais"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
@@ -1758,7 +1758,7 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "Price computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Kaina, suskaičiuota pagal formules (nuolaidos, maržos, apvalinimai)"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_pricelist
@@ -1786,7 +1786,7 @@ msgstr "Kainoraščiai"
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
 msgid "Prices computed from formulas (discounts, margins, roundings)"
-msgstr ""
+msgstr "Kainos, suskaičiuotos pagal formules (nuolaidos, maržos, apvalinimai)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2165,7 +2165,7 @@ msgstr "Pardavimų užsakymų statistika"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "Sales price"
-msgstr ""
+msgstr "Pardavimų kaina"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:94
@@ -2244,12 +2244,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "Siųsti IŠANKSTINĘ sąskaitą"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is paid"
-msgstr ""
+msgstr "Išsiųsti el. laišką apie produktą, kai sąskaita apmokėta"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2327,7 +2327,7 @@ msgstr "Pristatymas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Pristatymo kaštai"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2379,7 +2379,7 @@ msgstr "Parašas"
 #: code:addons/sale/controllers/portal.py:211
 #, python-format
 msgid "Signature is missing."
-msgstr ""
+msgstr "Trūksta parašo."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2441,12 +2441,12 @@ msgstr "Mokesčių rodymas B2C"
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Excluded Prices"
-msgstr ""
+msgstr "Kainos be mokesčių"
 
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Included Prices"
-msgstr ""
+msgstr "Kainos su mokesčiais"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2470,7 +2470,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_note
 msgid "Terms & Conditions"
-msgstr ""
+msgstr "Naudojimosi sąlygos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -2485,6 +2485,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
 msgstr ""
+"Pardavimų užsakymas %s , susietas su analitikos paskyra, turi būti "
+"patvirtintas prieš registruojant išlaidas."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
@@ -2504,6 +2506,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Marža yra skaičiuojama iš produkto pardavimo kainos atėmus nustatytą jų "
+"kaštų kainą"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:149
@@ -2576,6 +2580,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Ši numatytoji vertė yra pritaikoma bet kuriam naujai sukurtam produktui. Tai"
+" galite pakeisti produkto informacijos formoje."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2655,7 +2661,7 @@ msgstr "Iš viso, įskaitant mokesčius"
 #: model:ir.model.fields,field_description:sale.field_product_product_service_type
 #: model:ir.model.fields,field_description:sale.field_product_template_service_type
 msgid "Track Service"
-msgstr ""
+msgstr "Sekimo paslauga"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
@@ -2683,7 +2689,7 @@ msgstr "Kaina"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr ""
+msgstr "Vieneto kaina:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom
@@ -2820,7 +2826,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:229
 #, python-format
 msgid "Your Order has been confirmed."
-msgstr ""
+msgstr "Jūsų užsakymas buvo patvirtintas."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
