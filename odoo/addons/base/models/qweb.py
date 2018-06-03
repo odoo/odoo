@@ -329,6 +329,7 @@ class QWeb(object):
             raise e
         except Exception as e:
             path = _options['last_path_node']
+            element, document = self.get_template(template, options)
             node = element.getroottree().xpath(path)
             raise QWebException("Error when compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
