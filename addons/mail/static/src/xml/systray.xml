@@ -3,7 +3,7 @@
 
     <t t-name="mail.chat.MessagingMenu">
         <li class="o_mail_navbar_item">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#" aria-label="Conversations" role="button">
                 <i class="fa fa-comments"/> <span class="o_notification_counter badge"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
@@ -14,24 +14,24 @@
                 </li>
                 <li t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
                     <div>
-                        <button type="button" class="btn btn-sm o_filter_button active"> All </button>
-                        <button type="button" class="btn btn-sm o_filter_button" data-filter='chat'> Chat </button>
-                        <button type="button" class="btn btn-sm o_filter_button" data-filter='channels'> Channels </button>
+                        <button type="button" class="btn btn-sm o_filter_button active" role="tab"> All </button>
+                        <button type="button" class="btn btn-sm o_filter_button" data-filter='chat' role="tab"> Chat </button>
+                        <button type="button" class="btn btn-sm o_filter_button" data-filter='channels' role="tab"> Channels </button>
                     </div>
                     <button type="button" class="btn btn-sm o_new_message"> New message </button>
                 </li>
                 <li class="o_mail_navbar_dropdown_channels"/>
                 <li t-if="widget.isMobile">
                     <div class="o_mail_mobile_tabs">
-                        <div class="o_mail_mobile_tab o_filter_button active">
+                        <div class="o_mail_mobile_tab o_filter_button active" role="tab">
                             <span class="fa fa-envelope"/>
                             <span class="o_tab_title">All</span>
                         </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat'>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='chat' role="tab">
                             <span class="fa fa-user"/>
                             <span class="o_tab_title">Chat</span>
                         </div>
-                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels'>
+                        <div class="o_mail_mobile_tab o_filter_button" data-filter='channels' role="tab">
                             <span class="fa fa-users"/>
                             <span class="o_tab_title">Channels</span>
                         </div>
@@ -84,7 +84,7 @@
 
     <t t-name="mail.chat.ActivityMenu">
         <li class="o_mail_navbar_item">
-            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#" aria-label="Activities" role="button">
                 <i class="fa fa-clock-o"/> <span class="o_notification_counter badge"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
