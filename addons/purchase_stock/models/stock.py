@@ -82,18 +82,6 @@ class StockMove(models.Model):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})
 
-    def _action_done(self, cancel_backorder=False):
-        res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
-        self.mapped('purchase_line_id').sudo()._update_received_qty()
-        return res
-
-    def write(self, vals):
-        res = super(StockMove, self).write(vals)
-        if 'product_uom_qty' in vals:
-            self.filtered(lambda m: m.state == 'done' and m.purchase_line_id).mapped(
-                'purchase_line_id').sudo()._update_received_qty()
-        return res
-
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
             return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
