@@ -545,9 +545,7 @@ class datetime(pendulum.Pendulum, date):
         return result
 
     def date(self):
-        result = date.from_date(super(datetime, self).date())
-        result.dateformat = self.dateformat
-        return result
+        return date.from_date(super(datetime, self).date())
 
     def get_dateformat(self):
         """ Get date format """
