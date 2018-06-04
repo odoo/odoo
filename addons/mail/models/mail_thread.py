@@ -1752,7 +1752,7 @@ class MailThread(models.AbstractModel):
 
             email_address = email_address[0]
             # Escape special SQL characters in email_address to avoid invalid matches
-            email_address = tools.escape_special_sql_char(email_address)
+            email_address = tools.email_escape_char(email_address)
 
             # first try: check in document's followers
             partner_id = next((partner.id for partner in followers if partner.email == email_address), False)

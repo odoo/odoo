@@ -501,7 +501,7 @@ def email_split_and_format(text):
                 if addr[1]
                 if '@' in addr[1]]
 
-def escape_special_sql_char(email_address):
+def email_escape_char(email_address):
     """ Escape problematic characters in the given email address string"""
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
 

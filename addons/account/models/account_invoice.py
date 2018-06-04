@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import email_re, email_split, float_is_zero, float_compare, pycompat
+from odoo.tools import email_re, email_split, email_escape_char, float_is_zero, float_compare, pycompat
 from odoo.tools.misc import formatLang
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
@@ -622,7 +622,7 @@ class AccountInvoice(models.Model):
         # Detection of the partner_id of the invoice:
         # 1) check if the email_from correspond to a supplier
         email_from = msg_dict.get('from') or ''
-        email_from = email_split(email_from)[0]
+        email_from = email_escape_char(email_split(email_from)[0])
         partner_id = self._search_on_partner(email_from, extra_domain=[('supplier', '=', True)])
 
         # 2) otherwise, if the email sender is from odoo internal users then it is likely that the vendor sent the bill
@@ -675,7 +675,7 @@ class AccountInvoice(models.Model):
                     email = format(journal.alias_id.alias_name) + "@" + format(journal.alias_domain)
                     links += "<a id='o_mail_test' href='mailto:{}'>{}</a>".format(email, email) + ", "
                 if links:
-                    help_message = _('%s Or share the email %s to your vendors: bills will be created automatically upon mail reception.') % (help_message, links[:-2])
+                    help_message = _('%s Or share the email(s) %s to your vendors: bills will be created automatically upon mail reception.') % (help_message, links[:-2])
                 else:
                     help_message = _('''%s Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
                                                   '''to allow draft vendor bills to be created upon reception of an email.''') % (help_message, journals[0].id, journals[0].id)
