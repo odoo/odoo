@@ -678,7 +678,7 @@ class AccountInvoice(models.Model):
                     help_message = _('%s Or share the email %s to your vendors: bills will be created automatically upon mail reception.') % (help_message, links[:-2])
                 else:
                     help_message = _('''%s Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
-                                                  '''to allow draft vendor bills to be created through sending an email.''') % (help_message, journals[0].id, journals[0].id)
+                                                  '''to allow draft vendor bills to be created upon reception of an email.''') % (help_message, journals[0].id, journals[0].id)
             else:
                 help_message += _('<p>You can control the invoice from your vendor based on what you purchased or received.</p>')
         return super(AccountInvoice, self).get_empty_list_help(help_message)

@@ -523,7 +523,7 @@ class AccountJournal(models.Model):
 
     @api.multi
     def _get_alias_values(self, alias_name=None):
-        if alias_name is None:
+        if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
                 alias_name += '-' + str(self.company_id.name)
