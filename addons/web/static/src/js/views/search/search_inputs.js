@@ -429,11 +429,13 @@ var ManyToOneField = CharField.extend({
             }
         }
         return this._rpc({
-                model: this.attrs.relation,
-                method: 'name_search',
+                model: this.searchview.dataset.model,
+                method: 'complete_field',
                 kwargs: {
-                    name: needle,
-                    args: args,
+                    field: this.attrs.name,
+                    key: needle,
+                    field_domain: args,
+                    parent_domain: this.searchview.action.domain,
                     limit: 8,
                     context: context
                 },

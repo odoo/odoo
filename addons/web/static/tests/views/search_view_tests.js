@@ -1036,5 +1036,59 @@ QUnit.module('Search View', {
         form.destroy();
     });
 
+    QUnit.module('Complete M2o field');
+
+    QUnit.test('autocompletion the Many2one field based on parent model using complete_field', function (assert) {
+        assert.expect(1);
+        // added a new m2o field in the model
+        this.data.partner.fields['user'] = {string: "User", type: "many2one", relation: 'pony'};
+        // added a new search view for test complete_field method
+        this.archs['partner,9,search'] = '<search>'+
+            '<field name="foo"/>' +
+            '<field name="user"/>' +
+            '<field name="date_field"/>' +
+            '<field name="birthday"/>' +
+            '<field name="bar"/>' +
+            '<field name="float_field"/>' +
+            '<filter string="Date Field Filter" name="positive" date="date_field"/>' +
+            '<filter string="Date Field Groupby" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+        '</search>';
+        // added a new action with new search view
+        this.actions.push({
+            id: 11,
+            name: 'Partners Action 11',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'pivot']],
+            search_view_id: [9, 'search'],
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'complete_field') {
+                    assert.ok(args.model === 'partner', "complete_field method is called on model of searchview not m2o comodel");
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        actionManager.doAction(11);
+
+        var $searchInput = $('.o_searchview input');
+        $searchInput.trigger($.Event('keypress', {which: 97}));
+        $searchInput.trigger($.Event('keydown', {
+            which: $.ui.keyCode.DOWN,
+        }));
+        $searchInput.trigger($.Event('keydown', {
+            which: $.ui.keyCode.RIGHT,
+            keyCode: $.ui.keyCode.RIGHT,
+        }));
+        actionManager.destroy();
+    });
+
 });
 });
