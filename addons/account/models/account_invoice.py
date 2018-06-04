@@ -622,22 +622,22 @@ class AccountInvoice(models.Model):
         # Detection of the partner_id of the invoice:
         # 1) check if the email_from correspond to a supplier
         email_from = msg_dict.get('from') or ''
+        email_from = email_split(email_from)[0]
         partner_id = self._search_on_partner(email_from, extra_domain=[('supplier', '=', True)])
 
         # 2) otherwise, if the email sender is from odoo internal users then it is likely that the vendor sent the bill
         # by mail to the internal user who, inturn, forwarded that email to the alias to automatically generate the bill
         # on behalf of the vendor.
         if not partner_id:
-            user_id = self._search_on_user(email_from)
-            if user_id and user_id in self.env.ref('base.group_user').users.ids:
+            user_partner_id = self._search_on_user(email_from)
+            if user_partner_id and user_partner_id in self.env.ref('base.group_user').users.mapped('partner_id').ids:
                 # In this case, we will look for the vendor's email address in email's body and assume if will come first
                 email_addresses = email_re.findall(msg_dict.get('body'))
                 if email_addresses:
                     partner_ids = [pid for pid in self._find_partner_from_emails([email_addresses[0]], force_create=False) if pid]
                     partner_id = partner_ids and partner_ids[0]
-            else:
-                # fallback on the partner_id found for the authorship of the mail.message
-                partner_id = msg_dict.get('author_id')
+            # otherwise, there's no fallback on the partner_id found for the regular author of the mail.message as we want
+            # the partner_id to stay empty
 
         # If the partner_id can be found, subscribe it to the bill, otherwise it's left empty to be manually filled
         if partner_id:
