@@ -57,6 +57,7 @@ class MailComposeMessage(models.TransientModel):
 
             blacklist = self._context.get('mass_mailing_blacklist')
             seen_list = self._context.get('mass_mailing_seen_list')
+            mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
@@ -74,6 +75,8 @@ class MailComposeMessage(models.TransientModel):
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id
                 }
+                if mail_values.get('body_html') and mass_mail_layout:
+                    mail_values['body_html'] = mass_mail_layout.render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
                 # propagate exception state to stat when still-born
                 if mail_values.get('state') == 'cancel':
                     stat_vals['exception'] = fields.Datetime.now()

@@ -306,20 +306,6 @@ td {
     border-collapse:separate;
 }
 
-// ===== Mobile =====
-@media screen and (max-width: $o-mm-def-body-bobile) {
-    .o_mail_col_mv {
-        display: block!important;
-        max-width: $o-mm-def-body-bobile!important;
-        width: 100%!important;
-    }
-
-    .o_mail_table_styles {
-        max-width: $o-mm-def-body-bobile!important;
-        width: 100%!important;
-    }
-}
-
 // Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
 // instead of margins before the introduction of pb/pt classes. As thoses mb/mt
 // classes may remain on clients' templates, <td/> are forced to 0 margin to
