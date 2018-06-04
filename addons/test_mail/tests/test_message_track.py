@@ -116,3 +116,18 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
             self.record.message_ids[1],
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
+
+    def test_message_track_sequence(self):
+        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their track_sequence"""
+        self.record.write({
+            'name': 'Zboub',
+            'customer_id': self.user_admin.partner_id.id,
+            'user_id': self.user_admin.id,
+            'umbrella_id': self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({'name': 'Umbrella'}).id
+        })
+        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+
+        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        self.assertEqual(tracking_values[0].track_sequence, 1)
+        self.assertEqual(tracking_values[1].track_sequence, 2)
+        self.assertEqual(tracking_values[2].track_sequence, 100)

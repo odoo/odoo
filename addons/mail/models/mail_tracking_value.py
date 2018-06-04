@@ -9,6 +9,7 @@ from odoo import api, fields, models, tools
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
+    _order = 'track_sequence asc'
 
     # TDE CLEANME: why not a m2o to ir model field ?
     field = fields.Char('Changed Field', required=True, readonly=1)
@@ -31,10 +32,12 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
+    track_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
+
     @api.model
-    def create_tracking_values(self, initial_value, new_value, col_name, col_info):
+    def create_tracking_values(self, initial_value, new_value, col_name, col_info, track_sequence):
         tracked = True
-        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type']}
+        values = {'field': col_name, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'track_sequence': track_sequence}
 
         if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
             values.update({
