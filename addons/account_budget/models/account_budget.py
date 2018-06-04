@@ -208,7 +208,7 @@ class CrossoveredBudgetLines(models.Model):
         today = fields.Date.today()
         for line in self:
             if line.paid_date:
-                if today <= line.paid_date:
+                if today < line.paid_date:
                     theo_amt = 0.00
                 else:
                     theo_amt = line.planned_amount
