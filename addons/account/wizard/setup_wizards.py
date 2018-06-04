@@ -55,7 +55,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     setup_journal_link_creation = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
     single_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_single_journal_id', inverse='set_single_journal_id')
     single_journal_name = fields.Char(compute='compute_single_journal_related_data', inverse='set_single_journal_id', required=True)
-    single_journal_code = fields.Char(compute='compute_single_journal_related_data', inverse='set_single_journal_id', required=True)
+    single_journal_code = fields.Char(string="Journal Code", compute='compute_single_journal_related_data', inverse='set_single_journal_id', required=True)
 
     wizard_acc_type = fields.Selection(string="Account Type", selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_wizard_acc_type')
 

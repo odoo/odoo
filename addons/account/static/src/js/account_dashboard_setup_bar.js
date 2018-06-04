@@ -160,6 +160,14 @@ var AccountSetupBarController = KanbanController.extend({
         company_button_action: '_triggerCompanyButtonAction',
     }),
 
+    start: function () {
+        this._super();
+        var self = this;
+        core.bus.on('refresh_account_dashboard', this, function (){
+            self.trigger_up('reload')
+        });
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
