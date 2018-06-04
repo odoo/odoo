@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Yihya Hugirat <hugirat@gmail.com>, 2017
+# Zvika Rap <zvikara@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2017
 # Martin Trigaux, 2018
 # Moshe Flam <pashute@gmail.com>, 2018
@@ -154,7 +155,7 @@ msgstr "חשבון כללי"
 #: code:addons/account/models/account.py:539
 #, python-format
 msgid ": Refund"
-msgstr ": החזר"
+msgstr "זיכוי"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -349,7 +350,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
 "                                        <strong>ייבא קובץ</strong><br/>\n"
-"                                        <span class=\"small\">ממולץ אם יש יותר מ &gt;100 מוצרים</span>\n"
+"                                        <span class=\"small\">מומלץ אם יש יותר מ-100 מוצרים</span>\n"
 "                                    </span>"
 
 #. module: account
@@ -364,7 +365,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
 "                                        <strong>ייבא</strong><br/>\n"
-"                                        <span class=\"small\">&gt; 200 אנשי קשר</span>\n"
+"                                        <span class=\"small\">מעל 200 אנשי קשר</span>\n"
 "                                    </span>"
 
 #. module: account
@@ -379,7 +380,7 @@ msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
 "                                        <strong> צור באופן ידני</strong><br/>\n"
-"                                        <span class=\"small\">&lt; 200 אנשי קשר</span>\n"
+"                                        <span class=\"small\">פחות מ-200 אנשי קשר</span>\n"
 "                                    </span>"
 
 #. module: account
@@ -393,8 +394,8 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <span class=\"fa\" data-icon=\"\"/>\n"
-"                                        <strong> צור ידני</strong><br/>\n"
-"                                        <span class=\"small\"> ממולץ אם &lt;100 מוצרים</span>\n"
+"                                        <strong> צור באופן ידני</strong><br/>\n"
+"                                        <span class=\"small\"> מומלץ לעד 100 מוצרים</span>\n"
 "                                    </span>"
 
 #. module: account
@@ -405,7 +406,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>מנהל חשבונות</strong> (Advanced access)\n"
+"                                        מנהל חשבונות</strong> (גישה מתקדמת)\n"
 "                                    </span>"
 
 #. module: account
@@ -449,7 +450,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        תשלום חשבונית ב צ'יק</strong>\n"
+"                                        <strong>תשלום חשבונית בצ'ק</strong>\n"
 "                                    </span>"
 
 #. module: account
@@ -471,7 +472,7 @@ msgid ""
 "                                    </span>"
 msgstr ""
 "<span class=\"panel-title\">\n"
-"                                        <strong>שלם את החובות שלך</strong>\n"
+"                                        <strong>שלם את החשבוניות שלך</strong>\n"
 "                                    </span>"
 
 #. module: account
@@ -509,12 +510,12 @@ msgstr "<span title=\"Latest Statement\">הצהרה אחרונה</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> From </span>"
-msgstr "מ"
+msgstr "<span> מ</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
 msgid "<span> To </span>"
-msgstr "ל"
+msgstr "<span> עד</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -524,27 +525,27 @@ msgstr "<span>רשומות יומן</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Bill</span>"
-msgstr "חוב חדש"
+msgstr "<span>חיוב חדש</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Invoice</span>"
-msgstr "חשבונית חדשה"
+msgstr "<span>חשבונית חדשה</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New</span>"
-msgstr "חדש"
+msgstr "<span>חדש</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr ""
+msgstr "<span>לא לפירעון</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
-msgstr "פעולות"
+msgstr "<span>פעולות</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -554,12 +555,12 @@ msgstr "<span>התאמה</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "דווח"
+msgstr "<span>דוחות</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr "הצג"
+msgstr "<span>הצג</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -579,7 +580,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr ""
+msgstr "<strong>סכום לתשלום</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -605,8 +606,7 @@ msgstr "<strong>מאזן:</strong>"
 msgid ""
 "<strong>Banking interface:</strong> with live bank feed synchronization and "
 "bank statement import."
-msgstr ""
-"<strong>ממשק בנקאות:</strong> עם סנכרון עדכוני  בנק חי וייבוא דוח בנק."
+msgstr "<strong>ממשק בנקאות:</strong> עם סנכרון עדכוני בנק וייבוא דפי חשבון."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -614,6 +614,8 @@ msgid ""
 "<strong>Cash transactions</strong><br/> (for which there is no invoice or "
 "bill), should be entered directly into your Cash Registers bank account."
 msgstr ""
+"<strong>עסקאות מזומן</strong><br/> (כאשר אין חיוב או חשבונית), נדרש להפקיד "
+"ישירות לחשבון בנק מזומן."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -635,6 +637,8 @@ msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
 msgstr ""
+"<strong>חשבוניות מעוצבות:</strong> חשבוניות פונקציונליות, בעיצוב נקי ופשוטות"
+" ליצירה."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -645,7 +649,7 @@ msgstr "<strong>חברה:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>הסכמים ומנויים</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -712,12 +716,12 @@ msgstr "<strong>תאור:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Display Account:</strong>"
-msgstr ""
+msgstr "<strong>הצג חשבון:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Display Account</strong>"
-msgstr ""
+msgstr "<strong>הצג חשבון</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
