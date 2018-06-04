@@ -75,9 +75,8 @@ class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
         args = list(args)
-        message += ' QUERY COUNT %s -'
+        message += ' %d/%.4f/%.4f/%.4f'
         args.append(self.query_count)
-        message += ' SYSTEM TIME: %.3f sec - USER TIME: %.3f sec - ELAPSED TIME: %.3f sec'
         args.append(self.times_stop.system - self.times_start.system)
         args.append(self.times_stop.user - self.times_start.user)
         args.append(self.times_stop.elapsed - self.times_start.elapsed)
