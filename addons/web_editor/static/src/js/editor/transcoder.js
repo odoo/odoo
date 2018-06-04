@@ -37,7 +37,6 @@ function getMatchedCSSRules(a) {
                             selectorText.indexOf(':active') === -1 &&
                             selectorText.indexOf(':link') === -1 &&
                             selectorText.indexOf('::') === -1 &&
-                            selectorText.indexOf('"') === -1 &&
                             selectorText.indexOf("'") === -1) {
                         var st = selectorText.split(/\s*,\s*/);
                         for (k = 0 ; k < st.length ; k++) {

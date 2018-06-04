@@ -1567,6 +1567,8 @@ class MailThread(models.AbstractModel):
                         body = html
                     else:
                         body = tools.append_content_to_html(body, html, plaintext=False)
+                    # we only strip_classes here everything else will be done in by html field of mail.message
+                    body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
                     attachments.append(self._Attachment(filename or 'attachment', part.get_payload(decode=True), {}))

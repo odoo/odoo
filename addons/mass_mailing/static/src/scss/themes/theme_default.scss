@@ -162,7 +162,7 @@ td {
     }
 }
 
-.o_mail_block_steps {
+.o_mail_block_steps .o_mail_snippet_general{
     background-color: $o-mm-def-color-alpha;
 }
 
@@ -304,20 +304,6 @@ td {
 .o_mail_table_styles {
     width: 100%;
     border-collapse:separate;
-}
-
-// ===== Mobile =====
-@media screen and (max-width: $o-mm-def-body-bobile) {
-    .o_mail_col_mv {
-        display: block!important;
-        max-width: $o-mm-def-body-bobile!important;
-        width: 100%!important;
-    }
-
-    .o_mail_table_styles {
-        max-width: $o-mm-def-body-bobile!important;
-        width: 100%!important;
-    }
 }
 
 // Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
