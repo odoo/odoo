@@ -34,6 +34,7 @@ class ResConfigSettings(models.TransientModel):
         ], string="Pricelists", config_parameter='sale.sale_pricelist_setting')
     group_proforma_sales = fields.Boolean(string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
+    group_sale_order_dates = fields.Boolean("Delivery Date", implied_group='sale.group_sale_order_dates')
     default_invoice_policy = fields.Selection([
         ('order', 'Invoice what is ordered'),
         ('delivery', 'Invoice what is delivered')

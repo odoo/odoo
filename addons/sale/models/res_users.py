@@ -26,3 +26,8 @@ class ResUsers(models.Model):
         "Pro-forma Invoices",
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='sale.group_proforma_sales')
+
+    has_group_sale_order_dates = fields.Boolean(
+        "Sale Order Dates",
+        compute='_compute_groups_id', inverse='_inverse_groups_id',
+        group_xml_id='sale.group_sale_order_dates')
