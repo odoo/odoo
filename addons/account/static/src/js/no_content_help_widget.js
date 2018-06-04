@@ -4,9 +4,9 @@ var BasicRenderer = require('web.BasicRenderer');
 var Widget = require('web.Widget');
 
 var noContentHelpWidget = Widget.extend({
-    events: {
-        "click a": "onClickEmailAlias",
-    },
+    events: _.extend({}, Widget.prototype.events, {
+        "click a": "onClickUrl",
+    }),
     init: function (parent, params) {
         this._super.apply(this, arguments);
         this.modelName = 'account.invoice';
@@ -31,10 +31,10 @@ var noContentHelpWidget = Widget.extend({
             .html(this.noContentHelp).addClass('o_nocontent_help');
         return this._super.apply(this, arguments);
     },
-    onClickEmailAlias: function (event) {
-        event.preventDefault();
+    onClickUrl: function (event) {
         var id = $(event.target).data('oe-id');
         if (id) {
+            event.preventDefault();
             this.trigger_up('redirect', {
                 res_id: id,
                 res_model: $(event.target).data('oe-model'),
