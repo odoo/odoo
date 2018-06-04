@@ -12,7 +12,6 @@
     'depends': ['stock_account', 'purchase'],
     'data': [
         'security/ir.model.access.csv',
-        'security/purchase_stock_security.xml',
         'data/purchase_stock_data.xml',
         'data/mail_data.xml',
         'views/purchase_views.xml',
