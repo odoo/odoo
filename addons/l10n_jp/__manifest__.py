@@ -28,7 +28,7 @@ need to use these at all under normal circumstances.
     """,
     'author': 'Quartile Limited',
     'website': 'https://www.odoo-asia.com/',
-    'depends': ['account'],
+    'depends': ['l10n_base_jp', 'account'],
     'data': [
         'data/l10n_jp_chart_data.xml',
         'data/account.account.template.csv',

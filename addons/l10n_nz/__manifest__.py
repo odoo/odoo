@@ -19,7 +19,7 @@ Also:
     """,
     'author': 'Richard deMeester - Willow IT',
     'website': 'http://www.willowit.com',
-    'depends': ['account'],
+    'depends': ['l10n_base_nz', 'account'],
     'data': [
              'data/l10n_nz_chart_data.xml',
              'data/account.account.template.csv',

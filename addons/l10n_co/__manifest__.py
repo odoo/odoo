@@ -16,6 +16,7 @@
     'author': 'David Arnold (XOE Solutions)',
     'website': 'https://xoe.solutions',
     'depends': [
+        'l10n_base_co',
         'account',
     ],
     'data': [

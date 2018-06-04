@@ -5,6 +5,7 @@
     'name': 'Italy - Accounting',
     'version': '0.2',
     'depends': [
+        'l10n_base_it',
         'account',
         'base_iban',
         'base_vat',
