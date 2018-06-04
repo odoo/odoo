@@ -63,23 +63,23 @@ class Lead(models.Model):
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
-    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', index=True,
+    partner_id = fields.Many2one('res.partner', string='Customer', track_visibility='onchange', track_sequence=1, index=True,
         help="Linked partner (optional). Usually created when converting the lead.")
     active = fields.Boolean('Active', default=True)
     date_action_last = fields.Datetime('Last Action', readonly=True)
-    email_from = fields.Char('Email', help="Email address of the contact", index=True)
+    email_from = fields.Char('Email', help="Email address of the contact", track_visibility='onchange', track_sequence=4, index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
     team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
-    description = fields.Text('Notes')
+    description = fields.Text('Notes', track_visibility='onchange', track_sequence=6)
     create_date = fields.Datetime('Create Date', readonly=True)
     write_date = fields.Datetime('Update Date', readonly=True)
     tag_ids = fields.Many2many('crm.lead.tag', 'crm_lead_tag_rel', 'lead_id', 'tag_id', string='Tags', help="Classify and analyze your lead/opportunity categories like: Training, Service")
-    contact_name = fields.Char('Contact Name')
-    partner_name = fields.Char("Customer Name", index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
+    contact_name = fields.Char('Contact Name', track_visibility='onchange', track_sequence=3)
+    partner_name = fields.Char("Customer Name", track_visibility='onchange', track_sequence=2, index=True, help='The name of the future partner company that will be created while converting the lead into opportunity')
     opt_out = fields.Boolean(string='Opt-Out', oldname='optout',
         help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
              "Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing.")
@@ -124,7 +124,7 @@ class Lead(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
-    phone = fields.Char('Phone')
+    phone = fields.Char('Phone', track_visibility='onchange', track_sequence=5)
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
