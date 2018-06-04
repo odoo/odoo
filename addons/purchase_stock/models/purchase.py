@@ -221,9 +221,34 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+    qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')])
+
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
+
+    @api.multi
+    def _compute_qty_received_method(self):
+        super(PurchaseOrderLine, self)._compute_qty_received_method()
+        for line in self:
+            if line.product_id.type in ['consu', 'product']:
+                line.qty_received_method = 'stock_moves'
+
+    @api.multi
+    @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    def _compute_qty_received(self):
+        super(PurchaseOrderLine, self)._compute_qty_received()
+        for line in self:
+            if line.qty_received_method == 'stock_moves':
+                total = 0.0
+                for move in line.move_ids:
+                    if move.state == 'done':
+                        if move.location_dest_id.usage == "supplier":
+                            if move.to_refund:
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                        else:
+                            total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                line.qty_received = total
 
     @api.model
     def create(self, values):
@@ -353,18 +378,6 @@ class PurchaseOrderLine(models.Model):
             for val in line._prepare_stock_moves(picking):
                 done += moves.create(val)
         return done
-
-    def _update_received_qty(self):
-        for line in self:
-            total = 0.0
-            for move in line.move_ids:
-                if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
-                        if move.to_refund:
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    else:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-            line.qty_received = total
 
     def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         """ This function purpose is to be override with the purpose to forbide _run_buy  method
