@@ -670,11 +670,15 @@ class AccountInvoice(models.Model):
 
         if journals:
             links = ''
+            alias_count = 0
             for journal in journals.filtered(lambda j: j.alias_domain and j.alias_id.alias_name):
                 email = format(journal.alias_id.alias_name) + "@" + format(journal.alias_domain)
                 links += "<a id='o_mail_test' href='mailto:{}'>{}</a>".format(email, email) + ", "
-            if links:
-                help_message = _('Or share the email(s) %s to your vendors: bills will be created automatically upon mail reception.') % (links[:-2])
+                alias_count += 1
+            if links and alias_count == 1:
+                help_message = _('Or share the email %s to your vendors: bills will be created automatically upon mail reception.') % (links[:-2])
+            elif links:
+                help_message = _('Or share the emails %s to your vendors: bills will be created automatically upon mail reception.') % (links[:-2])
             else:
                 help_message = _('''Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
                                               '''to allow draft vendor bills to be created upon reception of an email.''') % (journals[0].id, journals[0].id)
