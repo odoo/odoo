@@ -32,3 +32,13 @@ class AccountJournal(models.Model):
         # Note: this drops action['context'], which is a dict stored as a string, which is not easy to update
         action.update({'context': (u"{'journal_id': " + str(self.id) + u"}")})
         return action
+
+    def get_journal_dashboard_datas(self):
+        """ Overridden to change the conditions for 'create' to appear so that
+        it always comes with 'import'.
+        """
+        rslt = super(AccountJournal, self).get_journal_dashboard_datas()
+
+        rslt['allow_statements_creation'] = self.type == 'bank' and self.bank_statements_source == 'file_import'
+
+        return rslt

@@ -211,6 +211,7 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
+            'allow_statements_creation': self.type == 'bank',
         }
 
     def _get_open_bills_to_pay_query(self):
@@ -411,7 +412,6 @@ class account_journal(models.Model):
     @api.multi
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
-        self.bank_statements_source = 'manual'
         action = self.env.ref('account.action_bank_statement_tree').read()[0]
         action.update({
             'views': [[False, 'form']],

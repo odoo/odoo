@@ -224,14 +224,9 @@
                                 <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
                             </t>
                             <t t-if="journal_type == 'bank'">
-                                <div name="bank_journal_default_cta" t-if="dashboard.bank_statements_source == 'undefined'">
-                                    <!--For extension by submodules-->
-                                </div>
-                                <div name="bank_journal_cta" t-if="dashboard.bank_statements_source != 'undefined'">
-                                    <t t-if="dashboard.bank_statements_source == 'manual'">
-                                        <button t-if="dashboard.number_to_reconcile == 0" type="object" name="create_bank_statement" class="btn btn-primary btn-sm">New Statement</button>
-                                        <a t-if="dashboard.number_to_reconcile > 0" type="object" name="create_bank_statement" class="oe_inline">New Statement</a>
-                                    </t>
+                                <div name="bank_journal_cta">
+                                    <button t-if="dashboard.bank_statements_source == 'undefined'" name="action_configure_bank_journal" type="object" class="btn btn-primary btn-sm">Configure</button>
+                                    <a t-if="dashboard.allow_statements_creation" type="object" name="create_bank_statement" class="oe_inline">Create</a>
                                 </div>
                             </t>
                             <t t-if="dashboard.number_to_reconcile > 0">

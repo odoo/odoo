@@ -85,15 +85,15 @@
 
                         <group>
                             <group>
-                                <field name="single_journal_id" attrs="{'invisible': [('setup_journal_link_creation','!=','link')]}" domain="[('type','=','bank')]"/>
+                                <field name="single_journal_id" attrs="{'invisible': [('setup_journal_link_creation','!=','link')], 'required': [('setup_journal_link_creation','=','link')]}" domain="[('type','=','bank')]"/>
                             </group>
                         </group>
                     </sheet>
 
                     <footer>
-                        <button string="Create" class="oe_highlight" type="action" name="account.setup_wizard_close"/>
+                        <button string="Create" class="oe_highlight" type="object" name="validate"/>
                         <button string="Cancel" special="cancel"/>
-                    </footer><!--TODO OCO ajouter mark as done, et vérifier l'actualisation du dashboard-->
+                    </footer>
                 </form>
             </field>
         </record>

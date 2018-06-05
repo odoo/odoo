@@ -640,7 +640,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_default_cta] > a[data-name=action_choose_institution], div[name=bank_journal_default_cta] > a[data-name=action_choose_institution]',
+    trigger: 'div[name=bank_journal_default_cta] > a[data-name=action_choose_institution], div[name=bank_journal_default_cta] > a[data-name=action_choose_institution]', //TODO OCO bank_journal_default_cta supprimé
     content: _t('Configure Bank Journal'),
     position: 'bottom',
 }, {
@@ -667,7 +667,7 @@ tour.register('main_flow_tour', {
     content: _t('Save'),
     position: 'bottom',
 }, {
-    edition: "enterprise",
+    edition: "enterprise", //TODO OCO ça aussi, ça va probablement péter !
     trigger: 'div[name=bank_journal_default_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',

@@ -50,7 +50,7 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
 class SetupBarBankConfigWizard(models.TransientModel):
     _inherits = {'res.partner.bank': 'res_partner_bank_id'}
-    _name='account.setup.bank.manual.config'
+    _name = 'account.setup.bank.manual.config'
 
     setup_journal_link_creation = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
     single_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_single_journal_id', inverse='set_single_journal_id')
@@ -99,8 +99,14 @@ class SetupBarBankConfigWizard(models.TransientModel):
 
             record.journal_id = [(6, False, selected_journal.ids)]
 
+    def validate(self):
+        """ Called by the validation button of this wizard. Serves as an
+        extension hook.
+        """
+        pass
 
-class OpeningAccountMoveWizard(models.TransientModel):
+
+class OpeningAccountMoveWizard(models.TransientModel): #TODO OCO à supprimer, non ?
     _name = 'account.opening'
 
     company_id = fields.Many2one(comodel_name='res.company', required=True)

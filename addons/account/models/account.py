@@ -359,7 +359,7 @@ class AccountJournal(models.Model):
         return self.env.ref('account.account_payment_method_manual_out')
 
     def _get_bank_statements_available_sources(self):
-        return [('undefined', _('Undefined Yet')),('manual', _('Encode Manually'))]
+        return [('undefined', _('Undefined Yet'))]
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
@@ -783,14 +783,12 @@ class AccountJournal(models.Model):
             journal.at_least_one_inbound = bool(len(journal.inbound_payment_method_ids))
             journal.at_least_one_outbound = bool(len(journal.outbound_payment_method_ids))
 
-    def setup_save_journal_and_create_more(self):
-        """ This function is triggered by the button allowing to create more
-        bank accounts, displayed in the "Bank Accounts" wizard of the setup bar.
-
-        Button execution is done in Python, so that the model is validated and saved
-        before executing the action.
+    def action_configure_bank_journal(self):
+        """ This function is called by the "configure" button of bank journals,
+        visible on dashboard if no bank statement source has been defined yet
         """
-        return self.env.ref('account.action_account_bank_journal_form').read()[0]
+        # We simply call the setup bar function.
+        return self.env['res.company'].setting_init_bank_account_action()
 
 
 class ResPartnerBank(models.Model):
