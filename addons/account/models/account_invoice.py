@@ -369,11 +369,24 @@ class AccountInvoice(models.Model):
     #fields use to set the sequence, on the first invoice of the journal
     sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_number_next", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number Prefix', compute="_get_sequence_prefix")
+
+    #fields related to vendor bills automated creation by email
     source_email = fields.Char(string='Source Email', track_visibility='onchange')
+    vendor_display_name = fields.Char(compute='_get_vendor_display_info', store=True)  # store=True to enable sorting on that column
+    invoice_icon = fields.Char(compute='_get_vendor_display_info', store=False)
 
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    @api.depends('partner_id', 'source_email')
+    def _get_vendor_display_info(self):
+        for invoice in self:
+            vendor_display_name = invoice.partner_id.name
+            if not vendor_display_name and invoice.source_email:
+                vendor_display_name = _('From: ') + invoice.source_email
+            invoice.vendor_display_name = vendor_display_name
+            invoice.invoice_icon = invoice.source_email and '@' or ''
 
     # Load all Vendor Bill lines
     @api.onchange('vendor_bill_id')
