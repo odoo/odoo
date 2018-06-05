@@ -20,7 +20,7 @@ import odoo
 odoo.multi_process = True # Nah!
 
 # Equivalent of --load command-line option
-odoo.conf.server_wide_modules = ['web']
+odoo.conf.server_wide_modules = ['base', 'web']
 conf = odoo.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for

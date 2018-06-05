@@ -178,7 +178,7 @@ def module_installed_bypass_session(dbname):
     return {}
 
 def module_boot(db=None):
-    server_wide_modules = odoo.conf.server_wide_modules or ['web']
+    server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
     serverside = []
     dbside = []
     for i in server_wide_modules:
