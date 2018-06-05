@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, api
+from odoo import models
 
 class Partner(models.Model):
     """ Update partner to add blacklist fields that can be used

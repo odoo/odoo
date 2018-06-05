@@ -108,11 +108,11 @@ class MailBlackListMixin(models.Model):
             blacklist_rec = blacklist.sudo().search([('email', '=', email)])
             if blacklist_rec.email:
                 blacklist_rec.sudo().unlink()
-                return False
+                return [self.id, False]
             else:
                 blacklist.sudo().create({
                     'email': email,
                     'reason': "%s has blacklisted the recipient from %s" % (self.env['res.users'].browse(self._uid).name, self._description)
                 })
-                return True
-        return 'not_found'
+                return [self.id, True]
+        return [self.id, 'not_found']

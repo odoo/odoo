@@ -152,6 +152,8 @@ class TestAccessRights(common.TransactionCase):
         self.assertEqual(self.mass_mailing.ignored, 0,
             'Opt Out ignored email number incorrect, should be equals to 0')
 
+class TestOnResPartner(common.TransactionCase):
+
     def test_mass_mail_on_res_partner(self):
         Partners = self.env['res.partner']
         MassMailing = self.env['mail.mass_mailing']
@@ -201,3 +203,4 @@ class TestAccessRights(common.TransactionCase):
         # if user is opt_out on One list but not on another, send the mail anyway
         self.assertEqual(self.mass_mailing.ignored, 2,
             'Opt Out ignored email number incorrect, should be equals to 2')
+

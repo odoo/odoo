@@ -38,7 +38,7 @@
         'views/snippets_themes_options.xml',
         'views/mail_blacklist_views.xml',
         'views/res_users_views.xml',
-
+        'views/mail_channel_partners_view.xml',
     ],
     'demo': [
         'data/mass_mailing_demo.xml',

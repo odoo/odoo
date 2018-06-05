@@ -11,3 +11,4 @@ from . import mass_mailing_report
 from . import link_tracker
 from . import res_users
 from . import res_partner
+from . import mail_channel_partner
