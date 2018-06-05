@@ -429,13 +429,21 @@ class Report(osv.Model):
                 head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
                 temporary_files.append(head_file_path)
                 with closing(os.fdopen(head_file_fd, 'w')) as head_file:
-                    head_file.write(headers[index])
+                    try:
+                        header = headers[index]
+                    except IndexError:
+                        header = headers[0]
+                    head_file.write(header)
                 local_command_args.extend(['--header-html', head_file_path])
             if footers:
                 foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
                 temporary_files.append(foot_file_path)
                 with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
-                    foot_file.write(footers[index])
+                    try:
+                        footer = footers[index]
+                    except IndexError:
+                        footer = footers[0]
+                    foot_file.write(footer)
                 local_command_args.extend(['--footer-html', foot_file_path])
 
             # Body stuff
