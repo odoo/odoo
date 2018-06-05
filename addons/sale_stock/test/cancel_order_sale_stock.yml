@@ -57,6 +57,7 @@
 -
   !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in shipping exception}:
     - state == "shipping_except"
+    - shipped == False
 -
   Now I regenerate shipment.
 -
@@ -92,3 +93,4 @@
 -
   !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be In progress state}:
     - state == 'progress'
+    - shipped == False

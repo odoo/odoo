@@ -1,0 +1,98 @@
+-
+  create a so similar to sale.sale_order_8
+-
+  !record {model: sale.order, id: sale_order_8}:
+     partner_id: base.res_partner_15
+     partner_invoice_id: base.res_partner_address_25
+     partner_shipping_id: base.res_partner_address_25
+     user_id: base.user_demo
+     pricelist_id: product.list0
+     order_policy: manual
+     section_id: sales_team.crm_case_section_1
+     order_line:
+     - name: Laptop Customized
+       product_id: product.product_product_27
+       product_uom_qty: 2
+       product_uos_qty: 2
+       product_uom: product.product_uom_unit
+       price_unit: 3645.00
+     - name: Mouse, Wireless
+       product_id: product.product_product_12
+       product_uom_qty: 2
+       product_uos_qty: 2
+       product_uom: product.product_uom_unit
+       price_unit: 12.50
+-
+  In order to test the cancel sale order with that user which have salesman rights.
+  First I confirm order.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
+-
+  I do a partial delivery order as a stock user.
+-
+  !context
+    uid: 'res_stock_user'
+-
+  !python {model: stock.picking}: |
+    so_name = self.pool['sale.order'].browse(cr, 1, ref('sale_order_8')).name
+    domain = [('origin', '=', so_name)]
+    picks = self.search(cr, uid, domain, context=context)
+    pick = self.browse(cr, uid, picks[-1], context=context)
+    self.pool.get('stock.pack.operation').create(cr, uid, {
+        'picking_id': pick.id,
+        'product_id': ref('product.product_product_27'),
+        'product_uom_id': ref('product.product_uom_unit'),
+        'product_qty': 1,
+        'location_id': pick.location_id.id,
+        'location_dest_id': pick.location_dest_id.id,
+    })
+    pick.do_transfer()
+-
+  I test that I have two pickings, one done and one backorder to do
+-
+  !python {model: stock.picking}: |
+    so_name = self.pool['sale.order'].browse(cr, 1, ref('sale_order_8')).name
+    picks = self.search(cr, uid, [('origin','=',so_name)])
+    print picks
+    assert len(picks)>1, 'Only one picking, partial picking may have failed!'
+    picks = self.search(cr, uid, [('origin','=',so_name), ('state','=','done')])
+    assert len(picks)==1, 'You should have one delivery order which is done!'
+    picks = self.search(cr, uid, [('origin','=',so_name), ('backorder_id','=',picks[0])])
+    assert len(picks)==1, 'You should have one backorder to process!'
+-
+  I cancel the backorder
+-
+  !python {model: stock.picking}: |
+    so_name = self.pool['sale.order'].browse(cr, 1, ref('sale_order_8')).name
+    picks = self.search(cr, uid, [('origin','=',so_name),('backorder_id','<>',False)])
+    self.action_cancel(cr, uid, picks)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+
+     self.run_scheduler(cr, uid)
+-
+  Salesman can also check order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  I check order status in "Ship Exception".
+-
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in shipping exception}:
+    - state == "shipping_except"
+    - shipped == False
+-
+  Now I say shipping was corrected
+-
+  !workflow {model: sale.order, action: ship_corrected, ref: sale_order_8}
+-
+  I check state of order in 'To Invoice' and SO is shipped
+-
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In Progress state}:
+    - state == 'manual'
+    - shipped == True
