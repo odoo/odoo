@@ -23,16 +23,23 @@ var EventRegistrationForm = Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         var $form = $(ev.currentTarget).closest('form');
+        var $button = $(ev.currentTarget).closest('[type="submit"]');
         var post = {};
         $("#registration_form select").each(function() {
             post[$(this).attr('name')] = $(this).val();
         });
         return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
+            // Only needed for 9.0 up to saas-14
+            if (modal === false) {
+                $button.prop('disabled', false);
+                return;
+            }
             var $modal = $(modal);
             $modal.find('.modal-body > div').removeClass('container'); // retrocompatibility - REMOVE ME in master / saas-19
-            $modal.after($form).modal();
+            $modal.insertAfter($form).modal();
             $modal.on('click', '.js_goto_event', function () {
                 $modal.modal('hide');
+                $button.prop('disabled', false);
             });
         });
     },

@@ -308,6 +308,8 @@ class Registry(Mapping):
         """
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
+        elif context.get('models_to_check', False):
+            _logger.info("verifying fields for every extended model")
 
         context = dict(context, todo=[])
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
