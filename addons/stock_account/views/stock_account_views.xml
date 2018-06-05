@@ -44,7 +44,7 @@
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
-                    <field name="to_refund" widget="boolean_toggle"/>
+                    <field name="to_refund"/>
                 </xpath>
             </field>
         </record>

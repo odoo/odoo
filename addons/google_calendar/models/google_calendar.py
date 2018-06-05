@@ -842,7 +842,7 @@ class GoogleCalendar(models.AbstractModel):
                         try:
                             # if already deleted from gmail or never created
                             recs.delete_an_event(current_event[0])
-                        except Exception as e:
+                        except requests.exceptions.HTTPError as e:
                             if e.response.status_code in (401, 410,):
                                 pass
                             else:
