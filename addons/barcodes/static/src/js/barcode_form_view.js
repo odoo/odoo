@@ -91,6 +91,10 @@ FormController.include({
     _barcodePagerFirst: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             self.pager.updateState({
                 current_min: 1,
             }, {notifyChange: true});
@@ -102,6 +106,10 @@ FormController.include({
     _barcodePagerLast: function () {
         var self = this;
         return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
             var state = self.model.get(self.handle, {raw: true});
             self.pager.updateState({
                 current_min: state.count,
@@ -112,13 +120,27 @@ FormController.include({
      * @private
      */
     _barcodePagerNext: function () {
-        return this.mutex.exec(function () {}).then(this.pager.next.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.next();
+        });
     },
     /**
      * @private
      */
     _barcodePagerPrevious: function () {
-        return this.mutex.exec(function () {}).then(this.pager.previous.bind(this.pager));
+        var self = this;
+        return this.mutex.exec(function () {}).then(function () {
+            if (!self.pager) {
+                self.do_warn(_t('Error: Pager not available'));
+                return;
+            }
+            self.pager.previous();
+        });
     },
     /**
      * Returns true iff the given barcode matches the given record (candidate).
