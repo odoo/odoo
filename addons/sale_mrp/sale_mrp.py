@@ -19,7 +19,7 @@ class MrpProduction(models.Model):
     @api.multi
     def _compute_sale_name_sale_ref(self):
         for production in self:
-            move = production._get_parent_move(production.move_finished_ids[0])
+            move = production._get_parent_move(production.move_finished_ids[:1])
             production.sale_name = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.name or False
             production.sale_ref = move.procurement_id and move.procurement_id.sale_line_id and move.procurement_id.sale_line_id.order_id.client_order_ref or False
 
