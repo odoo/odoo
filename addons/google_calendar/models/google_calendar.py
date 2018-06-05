@@ -677,7 +677,7 @@ class GoogleCalendar(models.AbstractModel):
             try:
                 all_event_from_google = self.get_event_synchro_dict(lastSync=lastSync)
             except requests.HTTPError as e:
-                if e.response.code == 410:  # GONE, Google is lost.
+                if e.response.status_code == 410:  # GONE, Google is lost.
                     # we need to force the rollback from this cursor, because it locks my res_users but I need to write in this tuple before to raise.
                     self.env.cr.rollback()
                     self.env.user.write({'google_calendar_last_sync_date': False})
