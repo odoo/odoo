@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import date
+import pytz
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 from unittest.mock import DEFAULT
@@ -77,10 +77,14 @@ class TestMailActivity(BaseFunctionalTest):
         with self.sudoAs('ernest'):
             self.assertEqual(self.test_record.env.user, self.user_employee)
 
+            today_utc = pytz.UTC.localize(datetime.utcnow())
+            today_tz_admin = today_utc.astimezone(pytz.timezone(self.user_admin.tz))
+            today_admin = date(year=today_tz_admin.year, month=today_tz_admin.month, day=today_tz_admin.day)
+
             # Test various scheduling of activities
             act1 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
-                today + relativedelta(days=1),
+                today_admin + relativedelta(days=1),
                 user_id=self.user_admin.id)
             self.assertEqual(act1.automated, True)
 
