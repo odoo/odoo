@@ -708,7 +708,7 @@
                   parent="menu_finance_receivables_documents"
                   sequence="1"/>
 
-        <record id="action_invoice_tree2" model="ir.actions.act_window">
+        <record id="action_vendor_bill_template" model="ir.actions.act_window">
             <field name="name">Vendor Bills</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
@@ -723,19 +723,33 @@
               </p>
             </field>
         </record>
+        <!--
+            server action opening the vendor bills and returning the right help tooltip
+        -->
+        <record id="action_invoice_tree2" model="ir.actions.server">
+            <field name="name">Vendor Bills</field>
+            <field name="model_id" ref="model_account_invoice"/>
+            <field name="state">code</field>
+            <field name="code">
+action_values = env.ref('account.action_vendor_bill_template').read()[0]
+new_help = model.complete_empty_list_help()
+action_values.update({'help': action_values.get('help', '') + new_help})
+action = action_values
+            </field>
+        </record>
 
         <record id="action_invoice_supplier_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="invoice_supplier_tree"/>
-            <field name="act_window_id" ref="action_invoice_tree2"/>
+            <field name="act_window_id" ref="action_vendor_bill_template"/>
         </record>
 
         <record id="action_invoice__supplier_tree1_view2" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="invoice_supplier_form"/>
-            <field name="act_window_id" ref="action_invoice_tree2"/>
+            <field name="act_window_id" ref="action_vendor_bill_template"/>
         </record>
 
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables_documents" sequence="1"/>

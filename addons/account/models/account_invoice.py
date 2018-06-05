@@ -663,25 +663,24 @@ class AccountInvoice(models.Model):
         return invoice
 
     @api.model
-    def get_empty_list_help(self, help_message):
-        if self.env.context.get('force_reload_help') and self.env.context.get('type') == 'in_invoice':
-            # add help message about email alias in vendor bills empty lists
-            Journal = self.env['account.journal']
-            journals = Journal.browse(self._context.get('default_journal_id')) or Journal.search([('type', '=', 'purchase')])
+    def complete_empty_list_help(self):
+        # add help message about email alias in vendor bills empty lists
+        Journal = self.env['account.journal']
+        journals = Journal.browse(self._context.get('default_journal_id')) or Journal.search([('type', '=', 'purchase')])
 
-            if journals:
-                links = ''
-                for journal in journals.filtered(lambda j: j.alias_domain and j.alias_id.alias_name):
-                    email = format(journal.alias_id.alias_name) + "@" + format(journal.alias_domain)
-                    links += "<a id='o_mail_test' href='mailto:{}'>{}</a>".format(email, email) + ", "
-                if links:
-                    help_message = _('%s Or share the email(s) %s to your vendors: bills will be created automatically upon mail reception.') % (help_message, links[:-2])
-                else:
-                    help_message = _('''%s Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
-                                                  '''to allow draft vendor bills to be created upon reception of an email.''') % (help_message, journals[0].id, journals[0].id)
+        if journals:
+            links = ''
+            for journal in journals.filtered(lambda j: j.alias_domain and j.alias_id.alias_name):
+                email = format(journal.alias_id.alias_name) + "@" + format(journal.alias_domain)
+                links += "<a id='o_mail_test' href='mailto:{}'>{}</a>".format(email, email) + ", "
+            if links:
+                help_message = _('Or share the email(s) %s to your vendors: bills will be created automatically upon mail reception.') % (links[:-2])
             else:
-                help_message += _('<p>You can control the invoice from your vendor based on what you purchased or received.</p>')
-        return super(AccountInvoice, self).get_empty_list_help(help_message)
+                help_message = _('''Or set an <a data-oe-id=%s data-oe-model="account.journal" href=#id=%s&model=account.journal>email alias</a> '''
+                                              '''to allow draft vendor bills to be created upon reception of an email.''') % (journals[0].id, journals[0].id)
+        else:
+            help_message = _('<p>You can control the invoice from your vendor based on what you purchased or received.</p>')
+        return help_message
 
     @api.multi
     def compute_taxes(self):
