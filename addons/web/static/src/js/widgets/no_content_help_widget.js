@@ -9,14 +9,13 @@ var noContentHelpWidget = Widget.extend({
     }),
     init: function (parent, params) {
         this._super.apply(this, arguments);
-        this.modelName = 'account.invoice';
+        this.modelName = params.model;
         this.initialNoContentHelp = params.initialNoContentHelp;
         this.context = params.context;
     },
     willStart: function () {
         var self = this;
         var $noContent = '';
-        var ctx = _.extend(this.context, {'force_reload_help': true})
         return this._rpc({
             model: this.modelName,
             method: 'get_empty_list_help',
@@ -43,20 +42,5 @@ var noContentHelpWidget = Widget.extend({
     },
 });
 
-BasicRenderer.include({
-    _renderNoContentHelper: function () {
-        if (this.state.model === "account.invoice") {
-            var noContentHelp = new noContentHelpWidget(this, {
-                initialNoContentHelp: this.noContentHelp,
-                context: this.state.context,
-            });
-            var $noContentHelp = $('<div>')
-            .addClass('o_view_nocontent');
-            noContentHelp.appendTo($noContentHelp);
-            return $noContentHelp;
-        } else {
-            return this._super();
-        }
-    },
-});
+return noContentHelpWidget;
 });
