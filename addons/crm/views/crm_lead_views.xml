@@ -807,6 +807,12 @@ for rec in records:
             action="base.action_partner_form"
             sequence="2"/>
 
+        <menuitem id="sales_team_menu_report_crm"
+            name="Sales Channel Dashboard"
+            parent="crm_menu_pipeline"
+            action="sales_team.crm_team_salesteams_act"
+            sequence="10"/>
+
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
             <field name="name">Leads</field>

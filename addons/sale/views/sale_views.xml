@@ -17,7 +17,7 @@
         <menuitem id="res_partner_menu"
             parent="sale_order_menu"
             action="base.action_partner_form"
-            sequence="3" groups="sales_team.group_sale_salesman"/>
+            sequence="4" groups="sales_team.group_sale_salesman"/>
 
         <menuitem id="menu_sale_config"
             name="Configuration"
@@ -51,7 +51,7 @@
 
         <menuitem id="report_sales_team"
             name="Sales Channel Dashboard"
-            parent="menu_sale_report"
+            parent="sale_order_menu"
             action="sales_team.crm_team_salesteams_act"
             sequence="3"/>
 
