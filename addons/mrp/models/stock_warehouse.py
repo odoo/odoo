@@ -8,7 +8,7 @@ class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     manufacture_to_resupply = fields.Boolean(
-        'Manufacture in this Warehouse', default=True,
+        'Manufacture to Resupply', default=True,
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
         'procurement.rule', 'Manufacture Rule')
