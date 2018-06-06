@@ -324,7 +324,7 @@ class account_journal(models.Model):
             elif self.type == 'sale':
                 action_name = 'action_invoice_tree1'
             elif self.type == 'purchase':
-                action_name = 'action_invoice_tree2'
+                action_name = 'action_vendor_bill_template'
             else:
                 action_name = 'action_move_journal_line'
 
@@ -354,11 +354,14 @@ class account_journal(models.Model):
         action['context'] = ctx
         action['domain'] = self._context.get('use_domain', [])
         account_invoice_filter = self.env.ref('account.view_account_invoice_filter', False)
-        if action_name in ['action_invoice_tree1', 'action_invoice_tree2']:
+        if action_name in ['action_invoice_tree1', 'action_vendor_bill_template']:
             action['search_view_id'] = account_invoice_filter and account_invoice_filter.id or False
         if action_name in ['action_bank_statement_tree', 'action_view_bank_statement_tree']:
             action['views'] = False
             action['view_id'] = False
+        if self.type == 'purchase':
+            new_help = self.env['account.invoice'].with_context(ctx).complete_empty_list_help()
+            action.update({'help': action.get('help', '') + new_help})
         return action
 
     @api.multi

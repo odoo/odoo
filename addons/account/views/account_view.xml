@@ -333,6 +333,18 @@
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <field name="show_on_dashboard" groups="base.group_no_one"/>
                                     </group>
+                                    <group name="group_alias" string="Email your Vendor Bills" attrs="{'invisible': [('type', '!=',  'purchase')]}">
+                                        <label string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                        <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                            <field name="alias_id" class="oe_read_only oe_inline"/>
+                                            <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                            </div>
+                                        </div>
+                                        <div class="content-group" attrs="{'invisible': [('alias_domain', '!=', False)]}">
+                                            <a type='action' name='%(action_open_settings)d' class="btn btn-sm btn-link"><i class="fa fa-fw o_button_icon fa-arrow-right"/> Configure Email Servers</a>
+                                    </div>
+                                    </group>
                                 </group>
                             </page>
                             <page name="bank_account" string="Bank Account" attrs="{'invisible': [('type', '!=', 'bank')]}">

@@ -2,6 +2,15 @@
 <odoo>
     <data noupdate="1">
 
+        <!-- Open Settings from Purchase Journal to configure mail servers -->
+        <record id="action_open_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context" eval="{'module': 'general_settings'}"/>
+        </record>
+
         <!-- TAGS FOR CASH FLOW STATEMENT -->
 
         <record id="account_tag_operating" model="account.account.tag">
