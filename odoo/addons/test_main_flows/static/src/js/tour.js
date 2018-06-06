@@ -640,7 +640,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_default_cta] > a[data-name=action_choose_institution], div[name=bank_journal_default_cta] > a[data-name=action_choose_institution]', //TODO OCO bank_journal_default_cta supprimé
+    trigger: 'div[name=bank_journal_cta] > button[data-name=action_cofigure_bank_journal], div[name=bank_journal_cta] > button[data-name=action_configure_bank_journal]',
     content: _t('Configure Bank Journal'),
     position: 'bottom',
 }, {
@@ -650,25 +650,34 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_field_widget[name=bank_statements_source] .o_radio_input[data-value="manual"]',
-    content: _t('Select manual import'),//TODO OCO il va falloir retoucher cette portion du tour=> peut-être à totalement retirer, à cause de la synchro bancaire
+    trigger: '.o_field_widget[name=setup_journal_link_creation] .o_radio_input[data-value="link"]',
+    content: _t('Link to existing journal'),
     position: 'bottom',
 }, {
-    trigger:  ".o_field_widget[name=bank_account_id] input",
-    extra_trigger: ".modal-dialog",
-    content: _t('Select an account'),
-    position: 'top',
-    run: "text the_flow.account",
+    edition: "enterprise",
+    trigger: ".o_field_widget[name=acc_number]",
+    content: _t("Enter an account number"),
+    position: "right",
+    run: "text 867656544",
 }, {
-    trigger: ".ui-menu-item > a:contains('the_flow.account')",
-    in_modal: false,
+    edition: "enterprise",
+    trigger: ".o_field_widget[name=single_journal_id] input",
+    extra_trigger: ".modal-dialog",
+    content: _t("Select Journal"),
+    position: "bottom",
+    run: 'text Bank',
+}, {
+    edition: "enterprise",
+    trigger: ".ui-menu-item > a",
+    auto: true,
+    in_modal:false,
 }, {
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
 }, {
-    edition: "enterprise", //TODO OCO ça aussi, ça va probablement péter !
-    trigger: 'div[name=bank_journal_default_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
+    edition: "enterprise",
+    trigger: 'div[name=bank_journal_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
 }, {
