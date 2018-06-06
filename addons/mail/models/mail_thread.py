@@ -360,7 +360,7 @@ class MailThread(models.AbstractModel):
         if add_arrow:
             return "<p class='oe_view_nocontent_create'>%(dyn_help)s</p>%(static_help)s" % {
                 'static_help': help or '',
-                'dyn_help': _("Click here to add new %s" % document_name),
+                'dyn_help': '%s %s' % (_("Click here to add new"), document_name),
                 }
 
         return help
