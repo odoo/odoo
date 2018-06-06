@@ -195,7 +195,7 @@ class Holidays(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
         help="Choose 'Leave Request' if someone wants to take an off-day. "
              "\nChoose 'Allocation Request' if you want to increase the number of leaves available for someone")
-    parent_id = fields.Many2one('hr.holidays', string='Parent')
+    parent_id = fields.Many2one('hr.holidays', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.holidays', 'parent_id', string='Linked Requests')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
