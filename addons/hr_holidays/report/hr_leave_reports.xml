@@ -46,12 +46,13 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <tree create="0" edit="0" delete="0">
-                <field name="type"/>
-                <field name="name"/>
+                <field name="employee_id"/>
                 <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="state"/>
+                <field name="type"/>
+                <field name="name"/>
             </tree>
         </field>
     </record>

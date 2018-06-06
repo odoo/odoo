@@ -30,6 +30,9 @@ class ResCompany(models.Model):
             if company._is_accounting_unalterable():
                 sequence_fields = ['l10n_fr_secure_sequence_id']
                 company._create_secure_sequence(sequence_fields)
+        # fiscalyear_lock_date can't be set to a prior date
+        if 'fiscalyear_lock_date' in vals or 'period_lock_date' in vals:
+            self._check_lock_dates(vals)
         return res
 
     def _create_secure_sequence(self, sequence_fields):
