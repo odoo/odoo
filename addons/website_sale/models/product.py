@@ -6,6 +6,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.tools import pycompat
 from odoo.tools.translate import html_translate
 from odoo.tools import float_is_zero
+from odoo.exceptions import ValidationError
 
 
 class ProductStyle(models.Model):
@@ -19,7 +20,11 @@ class ProductPricelist(models.Model):
     _inherit = "product.pricelist"
 
     def _default_website(self):
-        return self.env['website'].search([], limit=1)
+        return self.env['website'].search([
+            '|',
+            ('company_id', '=', self.env.user.company_id.id),
+            ('company_id', '=', False)
+        ], order='company_id DESC', limit=1)
 
     website_id = fields.Many2one('website', string="website", default=_default_website)
     code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
@@ -49,6 +54,22 @@ class ProductPricelist(models.Model):
         res = super(ProductPricelist, self).unlink()
         self.clear_cache()
         return res
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        return self.company_id \
+            and {'domain': {
+                'website_id': [('company_id', '=', self.company_id.id)]
+            }} \
+            or {'domain': {'website_id': []}}
+
+    @api.constrains('company_id', 'website_id')
+    def _check_websites_in_company(self):
+        for record in self:
+            website_company = record.website_id.company_id
+            if record.company_id and website_company != record.company_id:
+                raise ValidationError(_("Error! Only the company's websites are allowed. \
+                    Leave the Company field empty or select corresponding company"))
 
 
 class ProductPublicCategory(models.Model):
