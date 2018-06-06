@@ -53,6 +53,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
             'name': 'vendor bill',
             'type': 'in_invoice',
             'date_invoice': '2017-12-31',
+            'date': '2017-12-31',
             'account_id': account_receivable.id,
         })
         rslt.purchase_order_change()
