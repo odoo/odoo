@@ -50,6 +50,8 @@ var ListView = BasicView.extend({
                 'hasSelectors' in params ? params.hasSelectors : true;
         this.rendererParams.editable = params.readonly ? false : this.arch.attrs.editable;
         this.rendererParams.selectedRecords = selectedRecords;
+        this.rendererParams.addCreateLine = false;
+        this.rendererParams.addCreateLineInGroups = this.rendererParams.editable && this.controllerParams.activeActions.create;
 
         this.loadParams.limit = this.loadParams.limit || 80;
         this.loadParams.type = 'list';

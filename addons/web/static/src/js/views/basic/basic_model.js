@@ -88,8 +88,10 @@ var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
+var fieldUtils = require('web.field_utils');
 var session = require('web.session');
 var utils = require('web.utils');
+var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 
@@ -178,7 +180,7 @@ var BasicModel = AbstractModel.extend({
     addDefaultRecord: function (listID, options) {
         var self = this;
         var list = this.localData[listID];
-        var context = this._getContext(list);
+        var context = _.extend({}, this._getDefaultContext(list), this._getContext(list));
 
         var position = (options && options.position) || 'top';
         var params = {
@@ -3331,6 +3333,27 @@ var BasicModel = AbstractModel.extend({
             }
         });
         return toFetch;
+    },
+    /**
+     * Given a dataPoint of type list (that may be a group), returns an object
+     * with 'default_' keys to be used to create new records in that group.
+     *
+     * @private
+     * @param {Object} dataPoint
+     * @returns {Object}
+     */
+    _getDefaultContext: function (dataPoint) {
+        var defaultContext = {};
+        while (dataPoint.parentID) {
+            var parent = this.localData[dataPoint.parentID];
+            var groupByField = parent.groupedBy[0].split(':')[0];
+            var value = viewUtils.getGroupValue(dataPoint, groupByField);
+            if (value) {
+                defaultContext['default_' + groupByField] = value;
+            }
+            dataPoint = parent;
+        }
+        return defaultContext;
     },
     /**
      * Some records are associated to a/some domain(s). This method allows to

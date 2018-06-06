@@ -24,6 +24,7 @@ var ListController = BasicController.extend({
      */
     buttons_template: 'ListView.buttons',
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
         edit_line: '_onEditLine',
@@ -128,8 +129,8 @@ var ListController = BasicController.extend({
 
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
             this.$buttons.find('.o_list_button_add').tooltip({
-                delay: {show: 200, hide:0},
-                title: function(){
+                delay: {show: 200, hide: 0},
+                title: function () {
                     return qweb.render('CreateButton.tooltip');
                 },
                 trigger: 'manual',
@@ -230,17 +231,19 @@ var ListController = BasicController.extend({
         }
     },
     /**
-     * Adds a record to the list.
+     * Adds a new record to the a dataPoint of type 'list'.
      * Disables the buttons to prevent concurrent record creation or edition.
      *
      * @todo make record creation a basic controller feature
      * @private
+     * @param {string} dataPointId a dataPoint of type 'list' (may be grouped)
+     * @return {Promise}
      */
-    _addRecord: function () {
+    _addRecord: function (dataPointId) {
         var self = this;
         this._disableButtons();
         return this.renderer.unselectRow().then(function () {
-            return self.model.addDefaultRecord(self.handle, {
+            return self.model.addDefaultRecord(dataPointId, {
                 position: self.editable,
             });
         }).then(function (recordID) {
@@ -366,6 +369,19 @@ var ListController = BasicController.extend({
         this._archive(this.selectedRecords, archive);
     },
     /**
+     * Hide the create button in non-empty grouped editable list views, as an
+     * 'Add an item' link is available in each group.
+     *
+     * @private
+     */
+    _toggleCreateButton: function () {
+        if (this.$buttons) {
+            var state = this.model.get(this.handle);
+            var createHidden = this.editable && state.groupedBy.length && state.data.length;
+            this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
+        }
+    },
+    /**
      * Display the sidebar (the 'action' menu in the control panel) if we have
      * some selected records.
      */
@@ -380,8 +396,9 @@ var ListController = BasicController.extend({
      */
     _update: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function() {
+        return this._super.apply(this, arguments).then(function () {
             self._toggleSidebar();
+            self._toggleCreateButton();
         });
     },
     /**
@@ -401,15 +418,29 @@ var ListController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add a record to the list
+     * Triggered when navigating with TAB, when the end of the list has been
+     * reached. Go back to the first row in that case.
      *
      * @private
      * @param {OdooEvent} ev
      */
+    _onActivateNextWidget: function (ev) {
+        ev.stopPropagation();
+        this.renderer.editFirstRecord();
+    },
+    /**
+     * Add a record to the list
+     *
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} [ev.data.groupId=this.handle] the id of a dataPoint of
+     *   type list to which the record must be added (default: main list)
+     */
     _onAddRecord: function (ev) {
         ev.stopPropagation();
+        var dataPointId = ev.data.groupId || this.handle;
         if (this.activeActions.create) {
-            this._addRecord();
+            this._addRecord(dataPointId);
         } else if (ev.data.onFail) {
             ev.data.onFail();
         }
@@ -441,7 +472,7 @@ var ListController = BasicController.extend({
         }
         var state = this.model.get(this.handle, {raw: true});
         if (this.editable && !state.groupedBy.length) {
-            this._addRecord();
+            this._addRecord(this.handle);
         } else {
             this.trigger_up('switch_view', {view_type: 'form', res_id: undefined});
         }
@@ -473,9 +504,7 @@ var ListController = BasicController.extend({
         ev.stopPropagation();
         this.trigger_up('mutexify', {
             action: function () {
-                var record = self.model.get(self.handle);
-                var editedRecord = record.data[ev.data.index];
-                self._setMode('edit', editedRecord.id)
+                self._setMode('edit', ev.data.recordId)
                     .then(ev.data.onSuccess);
             },
         });
