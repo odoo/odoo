@@ -1922,6 +1922,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'hour': 'hh:00 dd MMM',
                 'day': 'dd MMM yyyy', # yyyy = normal year
                 'week': "'W'w YYYY",  # w YYYY = ISO week-year
+                'week_sunday': "'W'w'(s)' YYYY",  # w YYYY = ISO week-year
                 'month': 'MMMM yyyy',
                 'quarter': 'QQQ yyyy',
                 'year': 'yyyy',
@@ -1930,13 +1931,24 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 'hour': dateutil.relativedelta.relativedelta(hours=1),
                 'day': dateutil.relativedelta.relativedelta(days=1),
                 'week': datetime.timedelta(days=7),
+                'week_sunday': datetime.timedelta(days=7),
                 'month': dateutil.relativedelta.relativedelta(months=1),
                 'quarter': dateutil.relativedelta.relativedelta(months=3),
                 'year': dateutil.relativedelta.relativedelta(years=1)
             }
             if tz_convert:
                 qualified_field = "timezone('%s', timezone('UTC',%s))" % (self._context.get('tz', 'UTC'), qualified_field)
-            qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
+            if gb_function == 'week_sunday':
+                # postgres's date_trunc supports only weeks starting with Monday
+                # So, make this hack to support weeks starting with Sunday
+                if field_type == 'date':
+                    # interger must be used to don't convert DATE to TIMESTAMP
+                    interval_day = "integer '1'"
+                else:
+                    interval_day = "interval '1 day'"
+                qualified_field = "date_trunc('week', (%s  + %s)::timestamp)" % (qualified_field, interval_day)
+            else:
+                qualified_field = "date_trunc('%s', %s::timestamp)" % (gb_function or 'month', qualified_field)
         if field_type == 'boolean':
             qualified_field = "coalesce(%s,false)" % qualified_field
         return {
@@ -1990,6 +2002,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if ftype == 'many2one':
                     value = value[0]
                 elif ftype in ('date', 'datetime'):
+                    if ':week_sunday' in gb['groupby']:
+                        # postgres's date_trunc supports only weeks starting with Monday
+                        # So, make this hack to support weeks starting with Sunday
+                        value -= dateutil.relativedelta.relativedelta(days=1)
                     locale = self._context.get('lang') or 'en_US'
                     fmt = DEFAULT_SERVER_DATETIME_FORMAT if ftype == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                     tzinfo = None
