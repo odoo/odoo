@@ -364,7 +364,7 @@
     </template>
 
     <template id="pager" name="Pager">
-        <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
+        <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination m-0 #{_classes}" t-att-style="style or None">
             <li t-attf-class="page-item #{'disabled' if pager['page']['num'] == 1 else ''}">
                 <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None" class="page-link">Prev</a>
             </li>

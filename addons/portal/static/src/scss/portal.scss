@@ -120,12 +120,28 @@ hr {
 }
 
 // Bootstrap hacks
-.container .container {
-    padding-left: 0;
+%o-double-container-no-padding {
     padding-right: 0;
+    padding-left: 0;
+}
+.container {
+    .container, .container-fluid {
+        @extend %o-double-container-no-padding;
+    }
+}
+.container-fluid .container-fluid {
+    @extend %o-double-container-no-padding;
 }
 [class^="col-lg-"] {
     min-height: 24px;
+}
+.input-group {
+    flex-flow: row nowrap;
+}
+
+// Force table to their minimum width for fitting their col-*-auto parent
+.table.o_table_column_fit {
+    width: 1px;
 }
 
 // Images spacing
