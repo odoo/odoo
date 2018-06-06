@@ -930,11 +930,15 @@ class StockMove(models.Model):
                 if not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
                         continue
+                    # If we don't need any quantity, consider the move assigned.
+                    need = move.product_qty - move.reserved_availability
+                    if float_is_zero(need, precision_rounding=move.product_id.uom_id.rounding):
+                        assigned_moves |= move
+                        continue
                     # Reserve new quants and create move lines accordingly.
                     available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id)
                     if available_quantity <= 0:
                         continue
-                    need = move.product_qty - move.reserved_availability
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
                         continue

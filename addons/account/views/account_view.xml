@@ -1166,7 +1166,8 @@
                         <group>
                             <field name="name"/>
                             <field name="partner_id"
-                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                attrs="{'readonly': [('parent_state', '=', 'posted')]}"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Information">

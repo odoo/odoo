@@ -97,6 +97,7 @@ class AccountAnalyticAccount(models.Model):
             domain=domain + [('amount', '>=', 0.0)],
             fields=['account_id', 'currency_id', 'amount'],
             groupby=['account_id', 'currency_id'],
+            lazy=False,
         )
         data_credit = defaultdict(float)
         for l in credit_groups:
@@ -106,6 +107,7 @@ class AccountAnalyticAccount(models.Model):
             domain=domain + [('amount', '<', 0.0)],
             fields=['account_id', 'currency_id', 'amount'],
             groupby=['account_id', 'currency_id'],
+            lazy=False,
         )
         data_debit = defaultdict(float)
         for l in debit_groups:

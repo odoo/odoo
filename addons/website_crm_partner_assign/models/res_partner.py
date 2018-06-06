@@ -34,11 +34,11 @@ class ResPartnerActivation(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    partner_weight = fields.Integer('Level Weight', default=lambda *args: 0,
+    partner_weight = fields.Integer('Level Weight', default=0, track_visibility='onchange',
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
-    grade_id = fields.Many2one('res.partner.grade', 'Level')
+    grade_id = fields.Many2one('res.partner.grade', 'Level', track_visibility='onchange')
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
-    activation = fields.Many2one('res.partner.activation', 'Activation', index=True)
+    activation = fields.Many2one('res.partner.activation', 'Activation', index=True, track_visibility='onchange')
     date_partnership = fields.Date('Partnership Date')
     date_review = fields.Date('Latest Partner Review')
     date_review_next = fields.Date('Next Partner Review')

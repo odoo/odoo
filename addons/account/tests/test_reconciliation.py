@@ -42,6 +42,12 @@ class TestReconciliation(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
+        self.inbound_payment_method = self.env['account.payment.method'].create({
+            'name': 'inbound',
+            'code': 'IN',
+            'payment_type': 'inbound',
+        })
+
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
@@ -708,6 +714,49 @@ class TestReconciliation(AccountingTestCase):
         # Unreconcile invoice and check residual
         credit_aml.with_context(invoice_id=inv.id).remove_move_reconcile()
         self.assertAlmostEquals(inv.residual, 111)
+
+    def test_revert_payment_and_reconcile(self):
+        payment = self.env['account.payment'].create({
+            'payment_method_id': self.inbound_payment_method.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+            'partner_id': self.partner_agrolait_id,
+            'journal_id': self.bank_journal_usd.id,
+            'payment_date': '2018-06-04',
+            'amount': 666,
+        })
+        payment.post()
+
+        self.assertEqual(len(payment.move_line_ids), 2)
+
+        bank_line = payment.move_line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.default_debit_account_id.id)
+        customer_line = payment.move_line_ids - bank_line
+
+        self.assertEqual(len(bank_line), 1)
+        self.assertEqual(len(customer_line), 1)
+        self.assertNotEqual(bank_line.id, customer_line.id)
+
+        self.assertEqual(bank_line.move_id.id, customer_line.move_id.id)
+        move = bank_line.move_id
+
+        # Reversing the payment's move
+        reversed_move_list = move.reverse_moves('2018-06-04')
+        self.assertEqual(len(reversed_move_list), 1)
+        reversed_move = self.env['account.move'].browse(reversed_move_list[0])
+
+        self.assertEqual(len(reversed_move.line_ids), 2)
+
+        # Testing the reconciliation matching between the move lines and their reversed counterparts
+        reversed_bank_line = reversed_move.line_ids.filtered(lambda l: l.account_id.id == self.bank_journal_usd.default_debit_account_id.id)
+        reversed_customer_line = reversed_move.line_ids - reversed_bank_line
+
+        self.assertEqual(len(reversed_bank_line), 1)
+        self.assertEqual(len(reversed_customer_line), 1)
+        self.assertNotEqual(reversed_bank_line.id, reversed_customer_line.id)
+        self.assertEqual(reversed_bank_line.move_id.id, reversed_customer_line.move_id.id)
+
+        self.assertEqual(reversed_bank_line.full_reconcile_id.id, bank_line.full_reconcile_id.id)
+        self.assertEqual(reversed_customer_line.full_reconcile_id.id, customer_line.full_reconcile_id.id)
 
     def test_partial_reconcile_currencies_02(self):
         ####

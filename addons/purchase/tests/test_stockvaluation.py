@@ -184,7 +184,7 @@ class TestStockValuation(TransactionCase):
             'company_id': po1.company_id.id,
         })
         eur_currency._compute_current_rate()
-        price_unit_usd_new_rate = po1.currency_id.compute(po1.order_line.price_unit, po1.company_id.currency_id, round=True)
+        price_unit_usd_new_rate = po1.currency_id.compute(po1.order_line.price_unit, po1.company_id.currency_id, round=False)
 
         # the new price_unit is lower than th initial because of the rate's change
         self.assertLess(price_unit_usd_new_rate, price_unit_usd)
@@ -198,7 +198,7 @@ class TestStockValuation(TransactionCase):
         wizard.process()
 
         # the unit price of the stock move has been updated to the latest value
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate, places=2)
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate)
 
         self.assertAlmostEqual(self.product1.stock_value, price_unit_usd_new_rate * 10, delta=0.1)
 
@@ -412,4 +412,3 @@ class TestStockValuationWithCOA(AccountingTestCase):
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
         self.assertEqual(price_diff_entry.credit, 100)
-

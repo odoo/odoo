@@ -87,8 +87,6 @@ class SurveyMailComposeMessage(models.TransientModel):
             #set url
             url = wizard.survey_id.public_url
 
-            url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
-
             if token:
                 url = url + '/' + token
 
