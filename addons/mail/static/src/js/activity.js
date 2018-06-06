@@ -169,6 +169,7 @@ var Activity = AbstractActivityField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this._activities = this.record.specialData[this.name];
+        this._draftFeedback = {};
     },
 
     //------------------------------------------------------------
@@ -303,6 +304,13 @@ var Activity = AbstractActivityField.extend({
             .then(this._reload.bind(this, {activity: true}));
     },
     /**
+     * Called when marking an activity as done from the Chatter.
+     *
+     * It lets the current user write a feedback in a popup menu.
+     * After writing the feedback and confirm mark as done
+     * is sent, it marks this activity as done for good with the feedback linked
+     * to it.
+     *
      * @private
      * @param {MouseEvent} ev
      */
@@ -319,6 +327,7 @@ var Activity = AbstractActivityField.extend({
                 trigger:'click',
                 content : function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', { 'previous_activity_type_id': previousActivityTypeID }));
+                    $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
                     $popover.on('click', '.o_activity_popover_done_next', function () {
                         var feedback = _.escape($popover.find('#activity_feedback').val());
                         var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
@@ -347,6 +356,7 @@ var Activity = AbstractActivityField.extend({
                     // outside click of popover hide the popover
                     // e.relatedTarget is the element receiving the focus
                     if (!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
+                        self._draftFeedback[activityID] = $popover.find('#activity_feedback').val();
                         $popover.popover('hide');
                     }
                 });
