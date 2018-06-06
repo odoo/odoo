@@ -91,8 +91,7 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     confirmChange: function (state, id, fields, ev) {
         this.state = state;
-
-        var record = state.id === id ? state : _.findWhere(state.data, {id: id});
+        var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
         }
@@ -349,6 +348,19 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     _getModifiersData: function (node) {
         return _.findWhere(this.allModifiersData, {node: node});
+    },
+    /**
+     * This function is meant to be overriden in renderers. It takes a dataPoint
+     * id (for a dataPoint of type record), and should return the corresponding
+     * dataPoint.
+     *
+     * @abstract
+     * @private
+     * @param {string} [recordId]
+     * @returns {Object|null}
+     */
+    _getRecord: function (recordId) {
+        return null;
     },
     /**
      * @private
