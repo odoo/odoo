@@ -1691,6 +1691,26 @@ class MailThread(models.AbstractModel):
                 obj._message_add_suggested_recipient(result, partner=obj.user_id.partner_id, reason=self._fields['user_id'].string)
         return result
 
+    def _search_on_user(self, email_address, extra_domain=[]):
+        Users = self.env['res.users'].sudo()
+        email_brackets = "<%s>" % email_address
+        # exact, case-insensitive match
+        partners = Users.search([('email', '=ilike', email_address)], limit=1).mapped('partner_id')
+        if not partners:
+            # if no match with addr-spec, attempt substring match within name-addr pair
+            partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
+        return partners.id
+
+    def _search_on_partner(self, email_address, extra_domain=[]):
+        Partner = self.env['res.partner'].sudo()
+        email_brackets = "<%s>" % email_address
+        # exact, case-insensitive match
+        partners = Partner.search([('email', '=ilike', email_address)] + extra_domain, limit=1)
+        if not partners:
+            # if no match with addr-spec, attempt substring match within name-addr pair
+            partners = Partner.search([('email', 'ilike', email_brackets)] + extra_domain, limit=1)
+        return partners.id
+
     @api.multi
     def _find_partner_from_emails(self, emails, res_model=None, res_id=None, check_followers=True, force_create=False, exclude_aliases=True):
         """ Utility method to find partners from email addresses. The rules are :
@@ -1718,8 +1738,6 @@ class MailThread(models.AbstractModel):
             if hasattr(record, 'message_partner_ids'):
                 followers = record.message_partner_ids
 
-        Partner = self.env['res.partner'].sudo()
-        Users = self.env['res.users'].sudo()
         partner_ids = []
 
         for contact in emails:
@@ -1733,28 +1751,17 @@ class MailThread(models.AbstractModel):
                 continue
 
             email_address = email_address[0]
+            # Escape special SQL characters in email_address to avoid invalid matches
+            email_address = tools.email_escape_char(email_address)
+
             # first try: check in document's followers
             partner_id = next((partner.id for partner in followers if partner.email == email_address), False)
-
             # second try: check in partners that are also users
-            # Escape special SQL characters in email_address to avoid invalid matches
-            email_address = (email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_'))
-            email_brackets = "<%s>" % email_address
             if not partner_id:
-                # exact, case-insensitive match
-                partners = Users.search([('email', '=ilike', email_address)], limit=1).mapped('partner_id')
-                if not partners:
-                    # if no match with addr-spec, attempt substring match within name-addr pair
-                    partners = Users.search([('email', 'ilike', email_brackets)], limit=1).mapped('partner_id')
-                partner_id = partners.id
+                partner_id = self._search_on_user(email_address)
             # third try: check in partners
             if not partner_id:
-                # exact, case-insensitive match
-                partners = Partner.search([('email', '=ilike', email_address)], limit=1)
-                if not partners:
-                    # if no match with addr-spec, attempt substring match within name-addr pair
-                    partners = Partner.search([('email', 'ilike', email_brackets)], limit=1)
-                partner_id = partners.id
+                partner_id = self._search_on_partner(email_address)
             if not partner_id and force_create:
                 partner_id = self.env['res.partner'].name_create(contact)[0]
             partner_ids.append(partner_id)

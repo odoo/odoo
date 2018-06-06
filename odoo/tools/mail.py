@@ -501,6 +501,10 @@ def email_split_and_format(text):
                 if addr[1]
                 if '@' in addr[1]]
 
+def email_escape_char(email_address):
+    """ Escape problematic characters in the given email address string"""
+    return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
+
 def email_references(references):
     ref_match, model, thread_id, hostname, is_private = False, False, False, False, False
     if references:
