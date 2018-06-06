@@ -148,6 +148,7 @@ var Activity = AbstractActivityField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.activities = this.record.specialData[this.name];
+        this.draftFeedback = {};
     },
     _render: function () {
         _.each(this.activities, function (activity) {
@@ -249,6 +250,7 @@ var Activity = AbstractActivityField.extend({
                 trigger:'click',
                 content : function() {
                     var $popover = $(QWeb.render("mail.activity_feedback_form", {'previous_activity_type_id': previous_activity_type_id}));
+                    $popover.find('#activity_feedback').val(self.draftFeedback[activity_id]);
                     $popover.on('click', '.o_activity_popover_done_next', function () {
                         var feedback = _.escape($popover.find('#activity_feedback').val());
                         var previous_activity_type_id = $popover_el.data('previous-activity-type-id');
@@ -277,6 +279,7 @@ var Activity = AbstractActivityField.extend({
                     // outside click of popover hide the popover
                     // e.relatedTarget is the element receiving the focus
                     if(!$popover.is(e.relatedTarget) && !$popover.find(e.relatedTarget).length) {
+                        self.draftFeedback[activity_id] = $popover.find('#activity_feedback').val();
                         $popover.popover('hide');
                     }
                 });
