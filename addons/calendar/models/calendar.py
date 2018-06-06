@@ -929,9 +929,13 @@ class Meeting(models.Model):
     def _check_closing_date(self):
         for meeting in self:
             if meeting.start_datetime and meeting.stop_datetime and meeting.stop_datetime < meeting.start_datetime:
-                raise ValidationError(_('Ending datetime cannot be set before starting datetime.'))
+                raise ValidationError(_('Ending datetime cannot be set before starting datetime.') + "\n" +
+                                      _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_datetime, meeting.stop_datetime)
+                    )
             if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
-                raise ValidationError(_('Ending date cannot be set before starting date.'))
+                raise ValidationError(_('Ending date cannot be set before starting date.') + "\n" +
+                                      _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_date, meeting.stop_date)
+                    )
 
     @api.onchange('start_datetime', 'duration')
     def _onchange_duration(self):
