@@ -2551,6 +2551,58 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldOne2Many');
 
+    QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', function (assert) {
+        assert.expect(3);
+
+        // Needed to have two new records in a single stroke
+        this.data.partner.onchanges = {
+            foo: function(obj) {
+                obj.p = [
+                            [5],
+                            [0, 0, {trululu: false}],
+                            [0, 0, {trululu: false}],
+                ]
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo" />' +
+                    '<field name="p">' +
+                        '<tree editable="bottom" default_order="int_field">' +
+                            '<field name="int_field" widget="handle"/>' +
+                            '<field name="trululu"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            viewOptions: {
+                mode: 'create',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method + ' ' + args.model)
+                return this._super(route, args);
+            },
+        });
+
+        // change the int_field through drag and drop
+        // that way, we'll trigger the sorting and the name_get
+        // of the lines of "p"
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        // Only those two should have been called
+        // name_get on trululu would trigger an traceback
+        assert.verifySteps(['default_get partner', 'onchange partner']);
+
+        form.destroy();
+    });
+
     QUnit.test('O2M List with pager, decoration and default_order: add and cancel adding', function (assert) {
         assert.expect(3);
 
