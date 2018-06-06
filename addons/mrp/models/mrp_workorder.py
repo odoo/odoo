@@ -318,6 +318,7 @@ class MrpWorkorder(models.Model):
                     move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
                     if move_lot:
                         move_lot.quantity += self.qty_producing
+                        move_lot.quantity_done += self.qty_producing
                     else:
                         move_lot.create({'move_id': production_move.id,
                                          'lot_id': self.final_lot_id.id,
