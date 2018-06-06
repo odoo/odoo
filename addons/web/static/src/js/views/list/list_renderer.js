@@ -472,6 +472,27 @@ var ListRenderer = BasicRenderer.extend({
             .append($cells);
     },
     /**
+     * Render the content of a given opened group.
+     *
+     * @private
+     * @param {Object} group
+     * @param {integer} groupLevel the nesting level (0 for root groups)
+     * @returns {jQueryElement} a <tr> element
+     */
+    _renderGroup: function (group, groupLevel) {
+        var self = this;
+        if (group.groupedBy.length) {
+            // the opened group contains subgroups
+            return this._renderGroups(group.data, groupLevel + 1);
+        } else {
+            // the opened group contains records
+            var $records = _.map(group.data, function (record) {
+                return self._renderRow(record);
+            });
+            return [$('<tbody>').append($records)];
+        }
+    },
+    /**
      * Render all groups in the view.  We assume that the view is in grouped
      * mode.
      *
@@ -495,17 +516,7 @@ var ListRenderer = BasicRenderer.extend({
             $tbody.append(self._renderGroupRow(group, groupLevel));
             if (group.data.length) {
                 result.push($tbody);
-                // render an opened group
-                if (group.groupedBy.length) {
-                    // the opened group contains subgroups
-                    result = result.concat(self._renderGroups(group.data, groupLevel + 1));
-                } else {
-                    // the opened group contains records
-                    var $records = _.map(group.data, function (record) {
-                        return self._renderRow(record);
-                    });
-                    result.push($('<tbody>').append($records));
-                }
+                result = result.concat(self._renderGroup(group, groupLevel));
                 $tbody = null;
             }
         });
@@ -594,7 +605,7 @@ var ListRenderer = BasicRenderer.extend({
         });
 
         var $tr = $('<tr/>', { class: 'o_data_row' })
-            .data('id', record.id)
+            .attr('data-id', record.id)
             .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));

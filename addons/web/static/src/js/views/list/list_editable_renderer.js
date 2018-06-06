@@ -24,6 +24,7 @@ ListRenderer.include({
     }),
     events: _.extend({}, ListRenderer.prototype.events, {
         'click .o_field_x2many_list_row_add a': '_onAddRecord',
+        'click .o_group_field_row_add a': '_onAddRecordToGroup',
         'keydown .o_field_x2many_list_row_add a': '_onKeyDownAddRecord',
         'click tbody td.o_data_cell': '_onCellClick',
         'click tbody tr:not(.o_data_row)': '_onEmptyRowClick',
@@ -34,15 +35,19 @@ ListRenderer.include({
      * @override
      * @param {Object} params
      * @param {boolean} params.addCreateLine
+     * @param {boolean} params.addCreateLineInGroups
      * @param {boolean} params.addTrashIcon
+     * @param {boolean} params.isMany2Many
      */
     init: function (parent, state, params) {
         var self = this;
         this._super.apply(this, arguments);
 
-        // if addCreateLine is true, the renderer will add a 'Add a line' link
-        // at the bottom of the list view
+        // if addCreateLine (resp. addCreateLineInGroups) is true, the renderer
+        // will add a 'Add a line' link at the bottom of the list view (resp.
+        // at the bottom of each group)
         this.addCreateLine = params.addCreateLine;
+        this.addCreateLineInGroups = params.addCreateLineInGroups;
 
         // Controls allow overriding "add a line" by custom controls.
 
@@ -90,19 +95,14 @@ ListRenderer.include({
 
         this.currentRow = null;
         this.currentFieldIndex = null;
+        this.allRecordsIds = null; // flat array of records ids used by navigation
     },
     /**
      * @override
      * @returns {Promise}
      */
     start: function () {
-        // deliberately use the 'editable' attribute instead of '_isEditable'
-        // function, because the groupBy must not be taken into account to
-        // enable the '_onWindowClicked' handler (otherwise, an editable grouped
-        // list which is reloaded without groupBy wouldn't have this handler
-        // bound, and edited rows couldn't be left by clicking outside the list)
         if (this.editable) {
-            this.$el.css({height: '100%'}); // seems useless: to remove in master
             core.bus.on('click', this, this._onWindowClicked.bind(this));
         }
         return this._super();
@@ -139,15 +139,13 @@ ListRenderer.include({
      *
      * @override
      */
-    confirmChange: function (state, id) {
+    confirmChange: function (state, recordID) {
         var self = this;
         return this._super.apply(this, arguments).then(function (widgets) {
             if (widgets.length) {
-                var rowIndex = _.findIndex(state.data, function (r) {
-                    return r.id === id;
-                });
-                var $row = self.$('.o_data_row:nth(' + rowIndex + ')');
-                self._setDecorationClasses(state.data[rowIndex], $row);
+                var $row = self._getRow(recordID);
+                var record = self._getRecord(recordID);
+                self._setDecorationClasses(record, $row);
                 self._updateFooter();
             }
             return widgets;
@@ -177,75 +175,87 @@ ListRenderer.include({
     confirmUpdate: function (state, id, fields, ev) {
         var self = this;
 
-        // store the cursor position to restore it once potential onchanges have
-        // been applied
-        var currentRowID, currentWidget, focusedElement, selectionRange;
-        if (this.currentRow !== null) {
-            currentRowID = this.state.data[this.currentRow].id;
-            currentWidget = this.allFieldWidgets[currentRowID][this.currentFieldIndex];
-            if (currentWidget) {
-                focusedElement = currentWidget.getFocusableElement().get(0);
-                if (currentWidget.formatType !== 'boolean') {
-                    selectionRange = dom.getSelectionRange(focusedElement);
-                }
-            }
-        }
-
         var oldData = this.state.data;
         this.state = state;
         return this.confirmChange(state, id, fields, ev).then(function () {
             // If no record with 'id' can be found in the state, the
             // confirmChange method will have rerendered the whole view already,
             // so no further work is necessary.
-            var record = _.findWhere(state.data, {id: id});
+            var record = self._getRecord(id);
             if (!record) {
                 return;
             }
-            var oldRowIndex = _.findIndex(oldData, {id: id});
-            var $row = self.$('.o_data_row:nth(' + oldRowIndex + ')');
-            $row.nextAll('.o_data_row').remove();
-            $row.prevAll().remove();
+
             _.each(oldData, function (rec) {
                 if (rec.id !== id) {
                     self._destroyFieldWidgets(rec.id);
                 }
             });
-            var newRowIndex = _.findIndex(state.data, {id: id});
-            var $lastRow = $row;
-            var defs = [];
-            self.defs = defs;
-            state.data.forEach(function (record, index) {
-                if (index === newRowIndex) {
-                    return;
-                }
-                // FIXME: as we are manipulating the DOM directly, it will
-                // flicker if there is an async widget in the row
-                var $newRow = self._renderRow(record);
-                if (index < newRowIndex) {
-                    $newRow.insertBefore($row);
-                } else {
-                    $newRow.insertAfter($lastRow);
-                    $lastRow = $newRow;
-                }
-            });
+
+            // re-render whole body (outside the dom)
+            self.defs = [];
+            var $newBody = self._renderBody();
+            var defs = self.defs;
             delete self.defs;
+
             return Promise.all(defs).then(function () {
+                // update registered modifiers to edit 'mode' because the call to
+                // _renderBody set baseModeByRecord as 'readonly'
+                _.each(self.columns, function (node) {
+                    self._registerModifiers(node, record, null, {mode: 'edit'});
+                });
+
+                // store the selection range to restore it once the table will
+                // be re-rendered, and the current cell re-selected
+                var currentRowID, currentWidget, focusedElement, selectionRange;
                 if (self.currentRow !== null) {
-                    self.currentRow = newRowIndex;
-                    return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true});
-                }
-            }).then(function () {
-                // restore the cursor position
-                currentRowID = self.state.data[newRowIndex].id;
-                currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
-                if (currentWidget) {
-                    focusedElement = currentWidget.getFocusableElement().get(0);
-                    if (selectionRange) {
-                        dom.setSelectionRange(focusedElement, selectionRange);
+                    currentRowID = self._getRecordID(self.currentRow);
+                    currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
+                    if (currentWidget) {
+                        focusedElement = currentWidget.getFocusableElement().get(0);
+                        if (currentWidget.formatType !== 'boolean') {
+                            selectionRange = dom.getSelectionRange(focusedElement);
+                        }
                     }
+                }
+
+                // remove all rows except the one being edited, and insert rows
+                // of the re-rendered body before and after it
+                var $editedRow = self._getRow(id);
+                $editedRow.nextAll().remove();
+                $editedRow.prevAll().remove();
+                var $newRow = $newBody.find('.o_data_row[data-id="' + id + '"]');
+                var $tbody = self.$('tbody');
+                $newRow.prevAll().each(function (i, prevRow) {
+                    $tbody.prepend($(prevRow));
+                });
+                $newRow.nextAll().each(function (i, nextRow) {
+                    $tbody.append($(nextRow));
+                });
+
+                if (self.currentRow !== null) {
+                    var newRowIndex = $editedRow.prop('rowIndex') - 1;
+                    self.currentRow = newRowIndex;
+                    return self._selectCell(newRowIndex, self.currentFieldIndex, {force: true})
+                        .then(function () {
+                            // restore the selection range
+                            currentWidget = self.allFieldWidgets[currentRowID][self.currentFieldIndex];
+                            if (currentWidget) {
+                                focusedElement = currentWidget.getFocusableElement().get(0);
+                                if (selectionRange) {
+                                    dom.setSelectionRange(focusedElement, selectionRange);
+                                }
+                            }
+                        });
                 }
             });
         });
+    },
+    /**
+     * Edit the first record in the list
+     */
+    editFirstRecord: function () {
+        this._selectCell(this._getFirstDataRowIndex(), 0);
     },
     /**
      * Edit a given record in the list
@@ -253,7 +263,8 @@ ListRenderer.include({
      * @param {string} recordID
      */
     editRecord: function (recordID) {
-        var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        var $row = this._getRow(recordID);
+        var rowIndex = $row.prop('rowIndex') - 1;
         this._selectCell(rowIndex, 0);
     },
     /**
@@ -264,7 +275,7 @@ ListRenderer.include({
      */
     getEditableRecordID: function () {
         if (this.currentRow !== null) {
-            return this.state.data[this.currentRow].id;
+            return this._getRecordID(this.currentRow);
         }
         return null;
     },
@@ -276,19 +287,18 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
-        var rowIndex = _.findIndex(this.state.data, {id: recordID});
         this.state = state;
-        if (rowIndex === -1) {
+        var $row = this._getRow(recordID);
+        if ($row.length === 0) {
             return;
         }
-        if (rowIndex === this.currentRow) {
+        if ($row.prop('rowIndex') - 1 === this.currentRow) {
             this.currentRow = null;
         }
 
         // destroy widgets first
         this._destroyFieldWidgets(recordID);
         // remove the row
-        var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
         if (this.state.count >= 4) {
             $row.remove();
         } else {
@@ -305,35 +315,14 @@ ListRenderer.include({
      */
     setRowMode: function (recordID, mode) {
         var self = this;
-
-        // find the record and its row index (handles ungrouped and grouped cases
-        // as even if the grouped list doesn't support edition, it may contain
-        // a widget allowing the edition in readonly (e.g. priority), so it
-        // should be able to update a record as well)
-        var record;
-        var rowIndex;
-        if (this.state.groupedBy.length) {
-            rowIndex = -1;
-            var count = 0;
-            utils.traverse_records(this.state, function (r) {
-                if (r.id === recordID) {
-                    record = r;
-                    rowIndex = count;
-                }
-                count++;
-            });
-        } else {
-            rowIndex = _.findIndex(this.state.data, {id: recordID});
-            record = this.state.data[rowIndex];
-        }
-
-        if (rowIndex < 0) {
+        var record = self._getRecord(recordID);
+        if (!record) {
             return Promise.resolve();
         }
-        var editMode = (mode === 'edit');
 
-        this.currentRow = editMode ? rowIndex : null;
-        var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
+        var editMode = (mode === 'edit');
+        var $row = this._getRow(recordID);
+        this.currentRow = editMode ? $row.prop('rowIndex') - 1 : null;
         var $tds = $row.children('.o_data_cell');
         var oldWidgets = _.clone(this.allFieldWidgets[record.id]);
 
@@ -416,14 +405,13 @@ ListRenderer.include({
         if (this.currentRow === null) {
             return Promise.resolve();
         }
-
-        var record = this.state.data[this.currentRow];
-        var recordWidgets = this.allFieldWidgets[record.id];
+        var recordID = this._getRecordID(this.currentRow);
+        var recordWidgets = this.allFieldWidgets[recordID];
         toggleWidgets(true);
 
         var prom = new Promise(function (resolve, reject) {
             self.trigger_up('save_line', {
-                recordID: record.id,
+                recordID: recordID,
                 onSuccess: resolve,
                 onFailure: reject,
             });
@@ -459,6 +447,30 @@ ListRenderer.include({
         }
     },
     /**
+     *
+     * @returns {integer}
+     */
+    _getFirstDataRowIndex: function () {
+        return this.$('.o_data_row:first').prop('rowIndex') - 1;
+    },
+    /**
+     * Given a table row inside a group, returns the index of the first data
+     * row of the next group (if any).
+     *
+     * @param {jQuery} $row this row must be inside a group
+     * @returns {integer|null}
+     */
+    _getNextGroupFirstRowIndex: function ($row) {
+        var $nextBody = $row.closest('tbody').next();
+        while ($nextBody.length && !$nextBody.find('.o_data_row').length) {
+            $nextBody = $nextBody.next();
+        }
+        if ($nextBody.find('.o_data_row').length) {
+            return $nextBody.find('.o_data_row:first').prop('rowIndex') - 1;
+        }
+        return null;
+    },
+    /**
      * Returns the current number of columns.  The editable renderer may add a
      * trash icon on the right of a record, so we need to take this into account
      *
@@ -473,49 +485,170 @@ ListRenderer.include({
         return n;
     },
     /**
-     * Returns true iff the list is editable, i.e. if it isn't grouped and if
-     * the editable attribute is set on the root node of its arch.
+     * Traverse this.state to find and return the record with given dataPoint id
+     * (for grouped list views, the record could be deep down in state tree).
      *
+     * @override
      * @private
-     * @returns {boolean}
      */
-    _isEditable: function () {
-        return !this.state.groupedBy.length && this.editable;
+    _getRecord: function (recordId) {
+        var record;
+        utils.traverse_records(this.state, function (r) {
+            if (r.id === recordId) {
+                record = r;
+            }
+        });
+        return record;
     },
     /**
-     * Move the cursor on the end of the previous line, if possible.
-     * If there is no previous line, then we create a new record.
+     * Retrieve the record dataPoint id from a rowIndex as the row DOM element
+     * stores the record id in data.
+     *
+     * @private
+     * @param {integer} rowIndex
+     * @returns {string} record dataPoint id
+     */
+    _getRecordID: function (rowIndex) {
+        var $tr = this.$('table.o_list_view > tbody tr').eq(rowIndex);
+        return $tr.data('id');
+    },
+    /**
+     * Return the jQuery tr element corresponding to the given record dataPoint
+     * id.
+     *
+     * @private
+     * @param {string} [recordId]
+     * @returns {jQueryElement}
+     */
+    _getRow: function (recordId) {
+        return this.$('.o_data_row[data-id="' + recordId + '"]');
+    },
+    /**
+     * Move the cursor on the end of the previous line (or of the last line if
+     * we are on the first one).
      *
      * @private
      */
     _moveToPreviousLine: function () {
-        if (this.currentRow > 0) {
-            this._selectCell(this.currentRow - 1, this.columns.length - 1);
-        } else {
-            this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+        var self = this;
+        if (!this.allRecordsIds) {
+            // compute the flat array of all records ids only once
+            this.allRecordIds = [];
+            utils.traverse_records(this.state, function (data) {
+                self.allRecordIds.push(data.id);
+            });
         }
+        var curRecordId = this._getRecordID(this.currentRow);
+        var curRecordIndex = this.allRecordIds.indexOf(curRecordId);
+        var prevRecordIndex = curRecordIndex === 0 ? this.allRecordIds.length - 1 : curRecordIndex - 1;
+        this.commitChanges(curRecordId).then(function () {
+            var $prevRow = self._getRow(self.allRecordIds[prevRecordIndex]);
+            var prevRowIndex = $prevRow.prop('rowIndex') - 1;
+            self._selectCell(prevRowIndex, self.columns.length - 1);
+        });
     },
     /**
      * Move the cursor on the beginning of the next line, if possible.
-     * If there is no next line, then we create a new record.
+     * If we are on the last line (of a group in the grouped case) and the list
+     * is editable="bottom", we create a new record, otherwise, we move the
+     * cursor to the first line (of the next group in the grouped case).
      *
      * @private
+     * @param {Object} [options]
+     * @param {boolean} [options.forceCreate=false] typically set to true when
+     *   navigating with ENTER ; in this case, if the next row is the 'Add a
+     *   line' row, always create a new record (never skip it, like TAB does
+     *   under some conditions)
      */
-    _moveToNextLine: function () {
+    _moveToNextLine: function (options) {
         var self = this;
-        var record = this.state.data[this.currentRow];
-        this.commitChanges(record.id).then(function () {
-            var fieldNames = self.canBeSaved(record.id);
-            if (fieldNames.length) {
+        options = options || {};
+        var recordID = this._getRecordID(this.currentRow);
+        var record = this._getRecord(recordID);
+
+        this.commitChanges(recordID).then(function () {
+            var fieldNames = self.canBeSaved(recordID);
+            if (fieldNames.length && (record.isDirty() || options.forceCreate)) {
+                // the current row is invalid, we only leave it if it is not dirty
+                // (we didn't make any change on this row, which is a new one) and
+                // we are navigating with TAB (forceCreate=false)
                 return;
             }
 
-            if (self.currentRow < self.state.data.length - 1) {
-                self._selectCell(self.currentRow + 1, 0);
+            // compute the index of the next (record) row to select, if any
+            var nextRowIndex = null;
+            var groupId;
+            if (!self.isGrouped) {
+                // ungrouped case
+                if (self.currentRow < self.state.data.length - 1) {
+                    nextRowIndex = self.currentRow + 1;
+                } else if (!options.forceCreate && !record.isDirty()) {
+                    self.trigger_up('discard_changes', {
+                        recordID: recordID,
+                        onSuccess: function () {
+                            self.trigger_up('activate_next_widget');
+                        },
+                    });
+                    return;
+                }
+            } else {
+                // grouped case
+                var $currentRow = self._getRow(recordID);
+                var $nextRow = $currentRow.next();
+                if ($nextRow.hasClass('o_data_row')) {
+                    // the next row is a record row (in same group), select it
+                    nextRowIndex = self.currentRow + 1;
+                } else if ($nextRow.hasClass('o_add_record_row') && self.editable === "bottom") {
+                    // the next row is the 'Add a line' row (i.e. the current one is the last record
+                    // row of the group)
+                    if (options.forceCreate || record.isDirty()) {
+                        // if we modified the current record, add a row to create a new record
+                        groupId = $nextRow.data('groupID');
+                    } else {
+                        // if we didn't change anything to the current line (e.g. we pressed TAB on
+                        // each cell without modifying/entering any data), we discard that line (if
+                        // it was a new one) and move to the first record of the next group
+                        nextRowIndex = self._getNextGroupFirstRowIndex($currentRow);
+                        self.trigger_up('discard_changes', {
+                            recordID: recordID,
+                            onSuccess: function () {
+                                if (nextRowIndex !== null) {
+                                    if (!record.res_id) {
+                                        // the current record was a new one, so we decrement
+                                        // nextRowIndex as that row has been removed meanwhile
+                                        nextRowIndex--;
+                                    }
+                                    self._selectCell(nextRowIndex, 0);
+                                } else {
+                                    // we were in the last group, so go back to the top
+                                    self._selectCell(self._getFirstDataRowIndex(), 0, {});
+                                }
+                            },
+                        });
+                        return;
+                    }
+                } else {
+                    // there is no 'Add a line' row (i.e. the create feature is disabled), or the
+                    // list is editable="top", we focus the first record of the next group if any
+                    nextRowIndex = self._getNextGroupFirstRowIndex($currentRow);
+                    if (nextRowIndex === null) {
+                        // we were on the last group, so we go back to the top of the list
+                        nextRowIndex = self._getFirstDataRowIndex();
+                    }
+                }
+            }
+
+            // if there is a (record) row to select, select it, otherwise, add a new record (in the
+            // correct group, if the view is grouped)
+            if (nextRowIndex !== null) {
+                self._selectCell(nextRowIndex, 0);
             } else {
                 self.unselectRow().then(function () {
+                    // if for some reason (e.g. create feature is disabled) we can't add a new
+                    // record, select the first record row
                     self.trigger_up('add_record', {
-                        onFail: self._selectCell.bind(self, 0, 0, {}),
+                        groupId: groupId,
+                        onFail: self._selectCell.bind(self, self._getFirstDataRowIndex(), 0, {}),
                     });
                 });
             }
@@ -529,6 +662,31 @@ ListRenderer.include({
         this.currentRow = null;
         this.currentFieldIndex = null;
         return this._super.apply(this, arguments);
+    },
+    /**
+     * Override to add the 'Add an item' link to the end of last-level opened
+     * groups.
+     *
+     * @override
+     * @private
+     */
+    _renderGroup: function (group) {
+        var result = this._super.apply(this, arguments);
+        if (!group.groupedBy.length && this.addCreateLineInGroups) {
+            var $groupBody = result[0];
+            var $a = $('<a href="#" role="button">')
+                .text(_t("Add a line"))
+                .data('groupID', group.id);
+            var $td = $('<td>')
+                        .attr('colspan', this._getNumberOfCols())
+                        .addClass('o_group_field_row_add')
+                        .append($a);
+            var $tr = $('<tr>', {class: 'o_add_record_row'})
+                        .data('groupID', group.id)
+                        .append($td);
+            $groupBody.append($tr.prepend($('<td>').html('&nbsp;')));
+        }
+        return result;
     },
     /**
      * The renderer needs to support reordering lines.  This is only active in
@@ -618,8 +776,9 @@ ListRenderer.include({
     _renderView: function () {
         var self = this;
         this.currentRow = null;
+        this.allRecordsIds = null;
         return this._super.apply(this, arguments).then(function () {
-            if (self._isEditable()) {
+            if (self.editable) {
                 self.$('table').addClass('o_editable_list');
             }
         });
@@ -635,7 +794,7 @@ ListRenderer.include({
         var self = this;
         var movedRecordID = ui.item.data('id');
         var rows = this.state.data;
-        var row = _.findWhere(rows, {id: movedRecordID});
+        var row = self._getRecord(movedRecordID);
         var index0 = rows.indexOf(row);
         var index1 = ui.item.index();
         var lower = Math.min(index0, index1);
@@ -714,7 +873,8 @@ ListRenderer.include({
         // Select the row then activate the widget in the correct cell
         var self = this;
         return this._selectRow(rowIndex).then(function () {
-            var record = self.state.data[rowIndex];
+            var recordID = self._getRecordID(rowIndex);
+            var record = self._getRecord(recordID);
             if (fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return Promise.reject();
             }
@@ -746,11 +906,11 @@ ListRenderer.include({
         if (rowIndex === this.currentRow) {
             return Promise.resolve();
         }
-
+        var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
         return this.unselectRow().then(function () {
-            if (self.state.data.length <= rowIndex) {
+            if (!recordId) {
                 // The row to selected doesn't exist anymore (probably because
                 // an onchange triggered when unselecting the previous one
                 // removes rows)
@@ -759,7 +919,7 @@ ListRenderer.include({
             // Notify the controller we want to make a record editable
             return new Promise(function (resolve) {
                 self.trigger_up('edit_line', {
-                    index: rowIndex,
+                    recordId: recordId,
                     onSuccess: resolve,
                 });
             });
@@ -771,9 +931,30 @@ ListRenderer.include({
     //--------------------------------------------------------------------------
 
     /**
+     * This method is called when we click on the 'Add a line' button in a groupby
+     * list view.
+     *
+     * @param {MouseEvent} ev
+     */
+    _onAddRecordToGroup: function (ev) {
+        ev.preventDefault();
+        // we don't want the click to cause other effects, such as unselecting
+        // the row that we are creating, because it counts as a click on a tr
+        ev.stopPropagation();
+
+        var self = this;
+        var groupId = $(ev.target).data('groupID');
+        this.unselectRow().then(function () {
+            self.trigger_up('add_record', {
+                groupId: groupId,
+            });
+        });
+    },
+    /**
      * This method is called when we click on the 'Add a line' button in a sub
      * list such as a one2many in a form view.
      *
+     * @private
      * @param {MouseEvent} ev
      */
     _onAddRecord: function (ev) {
@@ -799,12 +980,12 @@ ListRenderer.include({
     _onCellClick: function (event) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!this._isEditable() || $(event.target).prop('special_click')) {
+        if (!this.editable || $(event.target).prop('special_click')) {
             return;
         }
         var $td = $(event.currentTarget);
         var $tr = $td.parent();
-        var rowIndex = this.$('.o_data_row').index($tr);
+        var rowIndex = $tr.prop('rowIndex') - 1;
         var fieldIndex = Math.max($tr.find('.o_data_cell').not('.o_list_button').index($td), 0);
         this._selectCell(rowIndex, fieldIndex, {event: event});
     },
@@ -822,11 +1003,11 @@ ListRenderer.include({
     _onFooterClick: function () {
         this.unselectRow();
     },
-   /**
-    * @param {KeyDownEvent} e
-    * @private
-    */
-    _onKeyDownAddRecord: function(e) {
+    /**
+     * @private
+     * @param {KeyDownEvent} e
+     */
+    _onKeyDownAddRecord: function (e) {
         switch(e.keyCode) {
             case $.ui.keyCode.ENTER:
                 e.stopPropagation();
@@ -842,8 +1023,8 @@ ListRenderer.include({
      * @returns {Class} Widget returns last widget
      */
     _getLastWidget: function () {
-        var record = this.state.data[this.currentRow];
-        var recordWidgets = this.allFieldWidgets[record.id];
+        var recordID = this._getRecordID(this.currentRow);
+        var recordWidgets = this.allFieldWidgets[recordID];
         var lastWidget = _.chain(recordWidgets).filter(function (widget) {
             var isLast =
                 widget.$el.is(':visible') &&
@@ -856,7 +1037,6 @@ ListRenderer.include({
         }).last().value();
         return lastWidget;
     },
-
     /**
      * Handles the keyboard navigation according to events triggered by field
      * widgets.
@@ -885,23 +1065,10 @@ ListRenderer.include({
                 }
                 break;
             case 'next':
-                // When navigating with the keyboard, we want to get out of the list editable if the
-                // entire line is left unmodified and we are on the next line.
                 var column = this.columns[this.currentFieldIndex];
                 var lastWidget = this._getLastWidget();
                 if (column.attrs.name === lastWidget.name) {
-                    if (this.currentRow + 1 < this.state.data.length) {
-                        this._selectCell(this.currentRow+1, 0, {wrap:false})
-                            .guardedCatch(this._moveToNextLine.bind(this));
-                    } else {
-                        var currentRowData = this.state.data[this.currentRow];
-                        if (currentRowData.isDirty(currentRowData.id)) {
-                            this._moveToNextLine();
-                        }
-                        else {
-                            this.trigger_up('activate_next_widget');
-                        }
-                    }
+                    this._moveToNextLine();
                 } else {
                     if (this.currentFieldIndex + 1 < this.columns.length) {
                         this._selectCell(this.currentRow, this.currentFieldIndex + 1, {wrap: false})
@@ -912,7 +1079,7 @@ ListRenderer.include({
                  }
                 break;
             case 'next_line':
-                this._moveToNextLine();
+                this._moveToNextLine({forceCreate: true});
                 break;
             case 'cancel':
                 // stop the original event (typically an ESCAPE keydown), to
@@ -922,7 +1089,7 @@ ListRenderer.include({
                 this.trigger_up('discard_changes', {
                     recordID: ev.target.dataPointID,
                     onSuccess: function () {
-                        self.$('.o_field_x2many_list_row_add a:first').focus();
+                        self.$('.o_field_x2many_list_row_add a:first').focus(); // FIXME
                     }
                 });
                 break;
@@ -955,7 +1122,7 @@ ListRenderer.include({
      * @private
      */
     _onRowClicked: function () {
-        if (!this._isEditable()) {
+        if (!this.editable) {
             this._super.apply(this, arguments);
         }
     },

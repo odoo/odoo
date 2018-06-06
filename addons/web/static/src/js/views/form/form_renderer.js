@@ -349,6 +349,13 @@ var FormRenderer = BasicRenderer.extend({
      * @override
      * @private
      */
+    _getRecord: function (recordId) {
+        return this.state.id === recordId ? this.state : null;
+    },
+    /**
+     * @override
+     * @private
+     */
     _postProcessField: function (widget, node) {
         this._super.apply(this, arguments);
         this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));

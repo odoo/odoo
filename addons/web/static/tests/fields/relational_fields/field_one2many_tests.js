@@ -3022,11 +3022,11 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // edit mode, then click on Add an item, then click elsewhere
+            // edit mode, then click on Add an item, then press enter
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'enter');
-            assert.hasClass(form.$('input[name="turtle_foo"]'),'o_field_invalid',
+            assert.hasClass(form.$('input[name="turtle_foo"]'), 'o_field_invalid',
                 "input should be marked invalid");
             assert.verifySteps(['read', 'default_get']);
             form.destroy();
