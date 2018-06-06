@@ -153,7 +153,7 @@ class Channel(models.Model):
     @api.constrains('moderator_ids', 'channel_partner_ids', 'channel_last_seen_partner_ids')
     def _check_moderator_is_member(self):
         for channel in self:
-            if not (channel.mapped('moderator_ids.partner_id') <= channel.channel_partner_ids):
+            if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
                 raise ValidationError("Moderators should be members of the channel they moderate.")
 
     @api.constrains('moderation', 'email_send')
@@ -549,6 +549,7 @@ class Channel(models.Model):
                 'moderation': channel.moderation,
                 'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
+                'create_uid': channel.create_uid.id,
             }
             if extra_info:
                 info['info'] = extra_info

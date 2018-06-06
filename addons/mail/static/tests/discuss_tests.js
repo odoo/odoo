@@ -580,5 +580,45 @@ QUnit.test('do not crash when destroyed between start en end of _renderSearchVie
     testUtils.unpatch(SearchView);
 });
 
+QUnit.test('confirm dialog when administrator leave (not chat) channel', function (assert) {
+    assert.expect(2);
+    var done = assert.async();
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "MyChannel",
+                create_uid: 3,
+            }],
+        },
+    };
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            uid: 3,
+        },
+    })
+    .then(function (discuss) {
+        // Unsubscribe on MyChannel as administrator
+        discuss.$('.o_mail_partner_unpin').click();
+
+        assert.strictEqual($('.modal-dialog').length, 1,
+            "should display a dialog");
+        assert.strictEqual($('.modal-body').text(),
+            "You are the administrator of this channel. Are you sure you want to unsubscribe?",
+            "Warn user that he will be unsubscribed from channel as admin.");
+        discuss.destroy();
+        done();
+    });
+
+});
+
 });
 });
