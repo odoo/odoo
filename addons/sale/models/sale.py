@@ -160,6 +160,7 @@ class SaleOrder(models.Model):
     amount_by_group = fields.Binary(string="Taxe amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always', track_sequence=6)
+    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), readonly=True, help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
@@ -182,6 +183,11 @@ class SaleOrder(models.Model):
                                        string='Transactions', copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many('payment.transaction', compute='_compute_authorized_transaction_ids',
                                                   string='Authorized Transactions', copy=False, readonly=True)
+
+    @api.depends('pricelist_id', 'date_order', 'company_id')
+    def _compute_currency_rate(self):
+        for order in self:
+            order.currency_rate = order.currency_id._get_rates(order.company_id, order.date_order).get(order.currency_id.id, 1.0)
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
