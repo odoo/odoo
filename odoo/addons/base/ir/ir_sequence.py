@@ -245,6 +245,9 @@ class IrSequence(models.Model):
 
     def _next(self):
         """ Returns the next number in the preferred sequence in all the ones given in self."""
+        if self._context.get('import_dryrun'):
+            seq_id = "%03d" % self.id
+            return _predict_nextval(self, seq_id)
         if not self.use_date_range:
             return self._next_do()
         # date mode
