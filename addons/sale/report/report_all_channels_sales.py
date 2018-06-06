@@ -27,7 +27,6 @@ class PosSaleReport(models.Model):
 
     def _so(self):
         so_str = """
-            WITH currency_rate as (%s)
                 SELECT sol.id AS id,
                     so.name AS name,
                     so.partner_id AS partner_id,
@@ -37,10 +36,10 @@ class PosSaleReport(models.Model):
                     so.user_id AS user_id,
                     pt.categ_id AS categ_id,
                     so.company_id AS company_id,
-                    sol.price_total / COALESCE(cr.rate, 1.0) AS price_total,
+                    sol.price_total / CASE COALESCE(so.currency_rate, 0) WHEN 0 THEN 1.0 ELSE so.currency_rate END AS price_total,
                     so.pricelist_id AS pricelist_id,
                     rp.country_id AS country_id,
-                    sol.price_subtotal / COALESCE (cr.rate, 1.0) AS price_subtotal,
+                    sol.price_subtotal / CASE COALESCE(so.currency_rate, 0) WHEN 0 THEN 1.0 ELSE so.currency_rate END AS price_subtotal,
                     (sol.product_uom_qty / u.factor * u2.factor) as product_qty,
                     so.analytic_account_id AS analytic_account_id,
                     so.team_id AS team_id
@@ -51,14 +50,10 @@ class PosSaleReport(models.Model):
                     JOIN res_partner rp ON (so.partner_id = rp.id)
                     LEFT JOIN product_template pt ON (pro.product_tmpl_id = pt.id)
                     LEFT JOIN product_pricelist pp ON (so.pricelist_id = pp.id)
-                    LEFT JOIN currency_rate cr ON (cr.currency_id = pp.currency_id AND
-                        cr.company_id = so.company_id AND
-                        cr.date_start <= COALESCE(so.date_order, now()) AND
-                        (cr.date_end IS NULL OR cr.date_end > COALESCE(so.date_order, now())))
                     LEFT JOIN uom_uom u on (u.id=sol.product_uom)
                     LEFT JOIN uom_uom u2 on (u2.id=pt.uom_id)
             WHERE so.state != 'cancel'
-        """ % self.env['res.currency']._select_companies_rates()
+        """
         return so_str
 
     def _from(self):

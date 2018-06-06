@@ -14,7 +14,7 @@ class SaleReport(models.Model):
                                             ('invoiced', 'Invoiced')], string='Status', readonly=True)
 
     def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
-        with_clause += ''', pol_tax AS (SELECT line_tax.pos_order_line_id AS pol_id,sum(tax.amount/100) AS amount
+        with_clause += '''pol_tax AS (SELECT line_tax.pos_order_line_id AS pol_id,sum(tax.amount/100) AS amount
                        FROM account_tax_pos_order_line_rel line_tax
                          JOIN account_tax tax ON line_tax.account_tax_id = tax.id
                       GROUP BY line_tax.pos_order_line_id)'''
@@ -58,7 +58,7 @@ class SaleReport(models.Model):
                left join product_template t on (p.product_tmpl_id=t.id)
                left join uom_uom u on (u.id=t.uom_id)) AS volume,
             l.discount as discount,
-            sum((l.price_unit * l.discount / 100.0 / COALESCE(cr.rate, 1.0))) as discount_amount,
+            sum((l.price_unit * l.discount / 100.0 / CASE COALESCE(pos.currency_rate, 0) WHEN 0 THEN 1.0 ELSE pos.currency_rate END)) as discount_amount,
             NULL as order_id
         '''
 
@@ -76,10 +76,6 @@ class SaleReport(models.Model):
                     LEFT JOIN pos_session session ON (session.id = pos.session_id)
                     LEFT JOIN pos_config config ON (config.id = session.config_id)
                 left join product_pricelist pp on (pos.pricelist_id = pp.id)
-                left join currency_rate cr on (cr.currency_id = pp.currency_id and
-                    cr.company_id = pos.company_id and
-                    cr.date_start <= coalesce(pos.date_order, now()) and
-                    (cr.date_end is null or cr.date_end > coalesce(pos.date_order, now())))
         '''
 
         groupby_ = '''
