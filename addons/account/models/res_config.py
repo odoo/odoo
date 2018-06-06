@@ -99,7 +99,7 @@ class AccountConfigSettings(models.TransientModel):
             ], "Warning", implied_group='account.group_warning_account')
     currency_exchange_journal_id = fields.Many2one('account.journal',
         related='company_id.currency_exchange_journal_id',
-        string="Rate Difference Journal",)
+        string="Rate Difference Journal", domain="[('company_id', '=', company_id)]")
     module_account_asset = fields.Boolean(string='Assets management',
         help='Asset management: This allows you to manage the assets owned by a company or a person. '
                  'It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.\n\n'
