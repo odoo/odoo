@@ -1324,6 +1324,7 @@ var ChatManager =  AbstractService.extend({
         };
         if (channel.type === "channel") {
             channel.type = data.public !== "private" ? "public" : "private";
+            channel.create_uid = data.create_uid;
         }
         if (_.size(data.direct_partner) > 0) {
             channel.type = "dm";

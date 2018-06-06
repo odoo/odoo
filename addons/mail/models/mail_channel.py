@@ -549,6 +549,7 @@ class Channel(models.Model):
                 'moderation': channel.moderation,
                 'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
+                'create_uid': channel.create_uid.id,
             }
             if extra_info:
                 info['info'] = extra_info

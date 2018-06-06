@@ -1245,9 +1245,27 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onUnpinChannel: function (event) {
         event.stopPropagation();
+        var self = this;
+        var session = this.getSession();
         var channelID = $(event.target).data("channel-id");
         var channel = this.call('chat_manager', 'getChannel', channelID);
-        this.call('chat_manager', 'unsubscribe', channel);
+        if (session.uid === channel.create_uid && channel.server_type === 'channel') {
+            Dialog.confirm(self, _t("You are the administrator of this channel. Are you sure you want to unsubscribe?"), {
+                buttons: [{
+                    text: _t("UNSUBSCRIBE"),
+                    classes: 'btn btn-primary',
+                    close: true,
+                    click: function () {
+                        self.call('chat_manager', 'unsubscribe', channel);
+                    }
+                }, {
+                    text: _t("DISCARD"),
+                    close: true,
+                }]
+            })
+        } else {
+            self.call('chat_manager', 'unsubscribe', channel);
+        }
     },
     /**
      * @private
