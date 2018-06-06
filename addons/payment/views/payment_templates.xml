@@ -22,7 +22,7 @@
             - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
             - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
         -->
-        <form t-if="s2s_acquirers or pms or form_acquirers" method="post" class="o_payment_form"
+        <form t-if="s2s_acquirers or pms or form_acquirers" method="post" class="o_payment_form mt-3 clearfix"
                 t-att-action="form_action if form_action else '#'"
                 t-att-data-success-url="success_url or ''"
                 t-att-data-error-url="error_url or ''"
@@ -140,13 +140,13 @@
                     </div>
                 </t>
             </div>
-            <div t-if='back_button_txt' class="float-left">
+            <div t-if='back_button_txt' class="float-left mt-2">
                 <a role="button" t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-secondary'">
                     <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
                     <t t-esc="back_button_txt"/>
                 </a>
             </div>
-            <div class="float-right">
+            <div class="float-right mt-2">
                 <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
                     <t t-if="submit_txt">
                         <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
