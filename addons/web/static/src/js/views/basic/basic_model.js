@@ -1986,7 +1986,9 @@ var BasicModel = AbstractModel.extend({
     },
     _fetchNameGets: function (list, fieldName) {
         var self = this;
-        var model;
+        // We first get the model this way because if list.data is empty
+        // the _.each below will not make it.
+        var model = list.fields[fieldName].relation;
         var records = [];
         var ids = [];
         list = this._applyX2ManyOperations(list);
@@ -1999,8 +2001,11 @@ var BasicModel = AbstractModel.extend({
             var many2oneRecord = self.localData[many2oneId];
             records.push(many2oneRecord);
             ids.push(many2oneRecord.res_id);
+            // We need to calcualte the model this way too because
+            // field .relation is not set for a reference field.
             model = many2oneRecord.model;
         });
+
         if (!ids.length) {
             return $.when();
         }

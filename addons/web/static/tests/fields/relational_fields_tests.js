@@ -113,6 +113,7 @@ QUnit.module('relational_fields', {
                         ["product", "Product"], ["partner", "Partner"]]},
                     product_id: {string: "Product", type: "many2one", relation: 'product', required: true},
                     partner_ids: {string: "Partner", type: "many2many", relation: 'partner'},
+                    not_required_product_id: {string: "Product", type: "many2one", relation: 'product'},
                 },
                 records: [{
                     id: 1,
@@ -9069,6 +9070,66 @@ QUnit.module('relational_fields', {
         form.$('.o_list_record_remove:first button').click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange id2from onchange id3',
             'onchange has been properly applied');
+        form.destroy();
+    });
+
+    QUnit.test('one2many with sequence field, fetch name_get from empty list', function (assert) {
+        // There was a bug where a RPC would fail because no route was set.
+        // The scenario is:
+        // - create a new parent model, which has a one2many
+        // - add at least 2 one2many lines which have:
+        //     - a handle field
+        //     - a many2one, which is not required, and we will leave it empty
+        // - reorder the lines with the handle
+        // -> This will call a resequence, which calls a name_get.
+        // -> With the bug that would fail, if it's ok the test will pass.
+        assert.expect(4);
+
+        this.data.turtle.fields.turtle_int.default = 10;
+        this.data.turtle.fields.product_id.default = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="not_required_product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // starting condition
+        assert.strictEqual($('.o_data_cell:nth-child(2)').text(), "");
+
+        var inputText1 = 'relax';
+        var inputText2 = 'max';
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input[name="turtle_foo"]').val(inputText1).trigger('input');
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input[name="turtle_foo"]').val(inputText2).trigger('input');
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual($('.o_data_cell:nth-child(2)').text(), inputText1 + inputText2);
+
+        var $handles = form.$('.ui-sortable-handle');
+
+        assert.equal($handles.length, 3, 'There should be 3 sequence handlers');
+
+        testUtils.dragAndDrop($handles.eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.strictEqual($('.o_data_cell:nth-child(2)').text(), inputText2 + inputText1);
+
         form.destroy();
     });
 
