@@ -776,7 +776,8 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     },
 
     _check_css_flags: function() {
-        var show_translate = (!this.get('effective_readonly') && this.field_manager.get('actual_mode') !== "create");
+        var isResConfig = typeof this.field_manager.model === 'string' && this.field_manager.model.match('.*\.config\.settings');
+        var show_translate = (!this.get('effective_readonly') && (this.field_manager.get('actual_mode') !== "create" || isResConfig));
         this.$translate.toggleClass('o_translate_active', !!show_translate);
 
         this.$el.add(this.$label)
