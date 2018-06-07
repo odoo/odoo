@@ -34,13 +34,13 @@
 
                     <p t-if="not partners">No result found</p>
                     <t t-foreach="partners" t-as="partner">
-                        <div class="media">
-                            <a class="float-left" t-attf-href="/customers/#{slug(partner)}"
+                        <div class="media mt-3">
+                            <a t-attf-href="/customers/#{slug(partner)}"
                                t-field="partner.image_small"
-                               t-options='{"widget": "image", "class": "media-object"}'
+                               t-options='{"widget": "image"}'
                             ></a>
                             <div class="media-body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/customers/#{slug(partner)}">
+                                <a t-attf-href="/customers/#{slug(partner)}">
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <t t-if="partner.industry_id">
@@ -215,13 +215,13 @@
 <template id="references_block" name="Partner References Block">
         <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
             <h3 id="references">References</h3>
-            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
+            <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media mt-3">
               <t t-if="reference.website_published">
-                <a class="float-left" t-attf-href="/customers/#{slug(reference)}">
+                <a t-attf-href="/customers/#{slug(reference)}">
                     <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
                 </a>
                 <div class="media-body" style="min-height: 64px;">
-                    <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
+                    <a t-attf-href="/customers/#{slug(reference)}">
                         <span t-field="reference.self"/>
                     </a>
                     <t t-if="reference.industry_id">

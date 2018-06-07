@@ -635,7 +635,7 @@
                         <div role="tabpanel" id="related" class="tab-pane active mt4">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-12">
                                 <div class="card">
-                                    <ul class="media-list card-body">
+                                    <ul class="list-unstyled card-body">
                                         <t t-set="related_slides_list" t-value="list(related_slides)"/>
                                         <t t-if="not related_slides_list">
                                             No presentation available.
@@ -650,7 +650,7 @@
                         <div role="tabpanel" id="most_viewed" class="tab-pane  mt4">
                             <div class="col-xl-12 col-lg-12 col-md-12 col-12">
                                 <div class="card">
-                                    <ul class="media-list card-body">
+                                    <ul class="list-unstyled card-body">
                                         <t t-set="most_viewed_slides_list" t-value="list(most_viewed_slides)"/>
                                         <t t-if="not list(most_viewed_slides_list)">
                                             No presentation available.
@@ -672,11 +672,11 @@
 <!-- Slide sub-template: display an item in a list of related slides (Related, Most Viewed, ...) -->
 <template id="related_slides" name="Related Slide">
     <li class="media">
-        <a class="media-left float-left" t-attf-href="/slides/slide/#{slug(slide)}">
-                <img class="media-object oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
+        <a t-attf-href="/slides/slide/#{slug(slide)}">
+            <img class="oe_slides_apart_small" t-attf-src="/web/image/slide.slide/#{slide.id}/image_thumb" alt="slide.name"/>
         </a>
         <div class="media-body">
-            <a t-attf-href="/slides/slide/#{slug(slide)}"><h5 class="media-heading" t-esc="slide.name"/></a>
+            <a t-attf-href="/slides/slide/#{slug(slide)}"><h5 t-esc="slide.name"/></a>
             <small class="text-muted">
                 <t t-esc="slide.total_views"/> Views . <timeago class="timeago" t-att-datetime="slide.create_date"></timeago>
             </small>

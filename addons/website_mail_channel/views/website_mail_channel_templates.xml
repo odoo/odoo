@@ -199,10 +199,10 @@
                         </h4>
                     </div>
                     <div class="media">
-                        <img class="rounded float-left mt0 media-object o_mg_avatar" alt="Avatar"
-                            t-att-src="website.image_url(message, 'author_avatar')"/>
+                        <img class="rounded mt0 o_mg_avatar"
+                            t-att-src="website.image_url(message, 'author_avatar')"  alt="Avatar"/>
                         <div class="media-body">
-                            <h4 class="media-heading" t-esc="message.description"/>
+                            <h4 t-esc="message.description"/>
                             <small>
                                 by
                                 <t t-if="message.author_id">
@@ -258,12 +258,12 @@
 
 <template id="messages_short">
     <div>
-        <ul class="media-list">
-            <li t-foreach="messages" t-as="thread" class="media">
-                <img class="rounded float-left mt0 media-object o_mg_avatar" alt="Avatar"
+        <ul class="list-unstyled">
+            <li t-foreach="messages" t-as="thread" class="media mt-3">
+                <img class="rounded mt-0 o_mg_avatar" alt="Avatar"
                     t-att-src="website.image_url(thread, 'author_avatar')"/>
                 <div class="media-body">
-                    <h4 class="media-heading">
+                    <h4>
                         <a t-attf-href="/groups/#{slug(group)}/#{slug(thread)}?mode=#{mode}&amp;date_begin=#{date_begin}&amp;date_end=#{date_end}" t-esc="thread.description"/>
                     </h4>
                     <small>
