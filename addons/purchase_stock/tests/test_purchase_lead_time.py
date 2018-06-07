@@ -99,8 +99,10 @@ class TestPurchaseLeadTime(TestPurchase):
         self.warehouse_1.write({'reception_steps': 'three_steps'})
 
         # Set delay on push rule
-        for push_rule in self.warehouse_1.reception_route_id.push_ids:
+        for push_rule in self.warehouse_1.reception_route_id.rule_ids:
             push_rule.write({'delay': 2})
+
+        rule_delay = sum(self.warehouse_1.reception_route_id.rule_ids.mapped('delay'))
 
         date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
@@ -118,29 +120,25 @@ class TestPurchaseLeadTime(TestPurchase):
         purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         po_order_date = fields.Datetime.to_string(order_date)
-        self.assertEqual(purchase.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
+        self.assertEqual(purchase.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time(supplier and pull rules).')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay + rule_delay)
         po_schedule_date = fields.Datetime.to_string(schedule_date)
-        self.assertEqual(date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time(supplier and pull rules).')
 
         # Check the picking crated or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
-        # Check scheduled date of In Type shipment
-        incoming_shipment = purchase.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.in_type_id and r.location_dest_id == self.warehouse_1.wh_input_stock_loc_id)
-        self.assertEqual(incoming_shipment.scheduled_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
-
         # Check scheduled date of Internal Type shipment
         incoming_shipment1 = self.env['stock.picking'].search([('move_lines.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
-        incoming_shipment1_date = schedule_date + timedelta(days=incoming_shipment1.move_lines[0].push_rule_id.delay)
+        incoming_shipment1_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         incoming_shipment1_schedule_date = fields.Datetime.to_string(incoming_shipment1_date)
         self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_schedule_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
 
         incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
-        incoming_shipment2_date = incoming_shipment1_date + timedelta(days=incoming_shipment2.move_lines[0].push_rule_id.delay)
+        incoming_shipment2_date = schedule_date - timedelta(days=incoming_shipment2.move_lines[0].rule_id.delay)
         incoming_shipment2_schedule_date = fields.Datetime.to_string(incoming_shipment2_date)
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_schedule_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')

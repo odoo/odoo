@@ -148,12 +148,7 @@ class Route(models.Model):
     name = fields.Char('Route Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
-    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True, 
-        help="The demand represented by a procurement from e.g. a sale order, a reordering rule, another move, needs to be solved by applying a procurement rule. Depending on the action on the procurement rule,"\
-        "this triggers a purchase order, manufacturing order or another move. This way we create chains in the reverse order from the endpoint with the original demand to the starting point. "\
-        "That way, it is always known where we need to go and that is why they are preferred over push rules.")
-    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True, 
-        help="When a move is foreseen to a location, the push rule will automatically create a move to a next location after. This is mainly only needed when creating manual operations e.g. 2/3 step manual purchase order or 2/3 step finished product manual manufacturing order. In other cases, it is important to use pull rules where you know where you are going based on a demand.")
+    rule_ids = fields.One2many('procurement.rule', 'route_id', 'Rules', copy=True)
     product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ")
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
@@ -167,13 +162,15 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    def write(self, values):
-        '''when a route is deactivated, deactivate also its pull and push rules'''
-        res = super(Route, self).write(values)
-        if 'active' in values:
-            self.mapped('push_ids').filtered(lambda path: path.active != values['active']).write({'active': values['active']})
-            self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
-        return res
+    @api.onchange('warehouse_selectable')
+    def _onchange_warehouse_selectable(self):
+        if not self.warehouse_selectable:
+            self.warehouse_ids = []
+
+    def toggle_active(self):
+        for route in self:
+            route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
+        super(Route, self).toggle_active()
 
     def view_product_ids(self):
         return {
@@ -194,70 +191,3 @@ class Route(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('route_ids', 'in', self.ids)],
         }
-
-
-class PushedFlow(models.Model):
-    _name = "stock.location.path"
-    _description = "Pushed Flow"
-    _order = "sequence, name"
-
-    name = fields.Char('Operation Name', required=True)
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('stock.location.path'), index=True)
-    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
-    location_from_id = fields.Many2one(
-        'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
-        help="This rule can be applied when a move is confirmed that has this location as destination location")
-    location_dest_id = fields.Many2one(
-        'stock.location', 'Destination Location', index=True, ondelete='cascade', required=True,
-        help="The new location where the goods need to go")
-    delay = fields.Integer('Delay (days)', default=0, help="Number of days needed to transfer the goods")
-    picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation Type', required=True,
-        help="This is the operation type that will be put on the stock moves")
-    auto = fields.Selection([
-        ('manual', 'Manual Operation'),
-        ('transparent', 'Automatic No Step Added')], string='Automatic Move',
-        default='manual', index=True, required=True,
-        help="The 'Manual Operation' value will create a stock move after the current one. "
-             "With 'Automatic No Step Added', the location is replaced in the original move.")
-    propagate = fields.Boolean('Propagate cancel and split', default=True, help='If checked, when the previous move is cancelled or split, the move generated by this move will too')
-    active = fields.Boolean('Active', default=True)
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse')
-    route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
-    sequence = fields.Integer('Sequence')
-
-    def _apply(self, move):
-        new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if self.auto == 'transparent':
-            move.write({
-                'date': new_date,
-                'date_expected': new_date,
-                'location_dest_id': self.location_dest_id.id})
-            # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_dest_id != move.location_dest_id:
-                # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
-        else:
-            new_move_vals = self._prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
-            move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
-
-    def _prepare_move_copy_values(self, move_to_copy, new_date):
-        new_move_vals = {
-                'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
-                'location_id': move_to_copy.location_dest_id.id,
-                'location_dest_id': self.location_dest_id.id,
-                'date': new_date,
-                'date_expected': new_date,
-                'company_id': self.company_id.id,
-                'picking_id': False,
-                'picking_type_id': self.picking_type_id.id,
-                'propagate': self.propagate,
-                'push_rule_id': self.id,
-                'warehouse_id': self.warehouse_id.id,
-            }
-
-        return new_move_vals

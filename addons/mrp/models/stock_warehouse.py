@@ -25,7 +25,7 @@ class StockWarehouse(models.Model):
     def get_routes_dict(self):
         result = super(StockWarehouse, self).get_routes_dict()
         for warehouse in self:
-            result[warehouse.id]['manufacture'] = [self.Routing(warehouse.lot_stock_id, warehouse.lot_stock_id, warehouse.int_type_id)]
+            result[warehouse.id]['manufacture'] = [self.Routing(warehouse.lot_stock_id, warehouse.lot_stock_id, warehouse.int_type_id, 'manufacture')]
         return result
 
     def _get_manufacture_route_id(self):
@@ -39,7 +39,7 @@ class StockWarehouse(models.Model):
     def _get_manufacture_pull_rules_values(self, route_values):
         if not self.manu_type_id:
             self._create_manufacturing_picking_type()
-        dummy, pull_rules_list = self._get_push_pull_rules_values(route_values, pull_values={
+        pull_rules_list = self._get_rule_values(route_values, values={
             'name': self._format_routename(_(' Manufacture')),
             'location_src_id': False,  # TDE FIXME
             'action': 'manufacture',
