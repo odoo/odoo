@@ -83,12 +83,12 @@
                             <t t-set="last_grade" t-value="partner.grade_id.id"/>
                         </t>
                         <div class="media">
-                            <a class="float-left" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
+                            <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image_medium"
-                               t-options='{"widget": "image", "class": "media-object"}'
+                               t-options='{"widget": "image"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
-                                <a class="media-heading" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
+                                <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <div t-field="partner.website_short_description"/>
@@ -167,11 +167,11 @@
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-as="reference" class="media">
           <t t-if="reference.website_published">
-            <a class="float-left" t-attf-href="/customers/#{slug(reference)}">
+            <a t-attf-href="/customers/#{slug(reference)}">
                 <span t-field="reference.image_small" t-options='{"widget": "image", "class": "d-block mx-auto"}'/>
             </a>
             <div class="media-body" style="min-height: 64px;">
-                <a class="media-heading" t-attf-href="/customers/#{slug(reference)}">
+                <a t-attf-href="/customers/#{slug(reference)}">
                     <span t-field="reference.self"/>
                 </a>
                 <div t-field='reference.website_short_description'/>

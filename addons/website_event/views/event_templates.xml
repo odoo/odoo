@@ -44,10 +44,10 @@
                         <h1>No event found</h1>
                         <p groups="event.group_event_manager">Use the top menu <i>'Content'</i> to create your first event.</p>
                     </div>
-                    <ul class="media-list">
-                        <li t-foreach="event_ids" t-as="event" class="media">
+                    <ul class="list-unstyled">
+                        <li t-foreach="event_ids" t-as="event" t-attf-class="media#{' mt-3' if event_index else ''}">
                             <div itemscope="itemscope" itemtype="http://schema.org/Event" class="media-body">
-                                <h4 class="media-heading">
+                                <h4>
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="badge badge-info">Participating</small>
                                     <small t-if="event.is_online" class="badge badge-info">Online</small>
@@ -311,8 +311,8 @@
             <hr/>
             <div itemprop="description" t-field="event.description"></div>
             <div class="clearfix"/>
-            <ul class="media-list" id="comment">
-                <li t-foreach="event.website_message_ids" t-as="comment" class="media">
+            <ul class="list-unstyled" id="comment">
+                <li t-foreach="event.website_message_ids" t-as="comment" class="media mt-3">
                     <div class="media-body">
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="comment"/>

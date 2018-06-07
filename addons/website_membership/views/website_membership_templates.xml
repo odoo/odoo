@@ -52,13 +52,13 @@
                             <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
                             <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
                                 <t t-set="partner" t-value="partners[partner_id]"/>
-                                <div class="media">
-                                    <a class="float-left" t-attf-href="/members/#{slug(partner)}"
+                                <div class="media mt-3">
+                                    <a t-attf-href="/members/#{slug(partner)}"
                                        t-field="partner.image_small"
                                        t-options='{"widget": "image", "class": "media-object"}'
                                     ></a>
                                     <div class="media-body" style="min-height: 64px;">
-                                        <a class="media-heading" t-attf-href="/members/#{slug(partner)}">
+                                        <a t-attf-href="/members/#{slug(partner)}">
                                             <span t-field="partner.display_name"/>
                                         </a>
                                         <div t-field="partner.website_short_description"/>
