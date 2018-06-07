@@ -212,9 +212,15 @@ class Registry(Mapping):
         if self._fields_by_model is None:
             # Query manual fields for all models at once
             self._fields_by_model = dic = defaultdict(dict)
+            id2name = {}
             cr.execute('SELECT * FROM ir_model_fields WHERE state=%s', ('manual',))
             for field in cr.dictfetchall():
                 dic[field['model']][field['name']] = field
+                id2name[field['id']] = field['name']
+            # compute the attribute 'sparse'
+            for fields in dic.values():
+                for name, field in fields.items():
+                    field['sparse'] = id2name.get(field['serialization_field_id'])
         return self._fields_by_model[model_name]
 
     def do_parent_store(self, cr):
