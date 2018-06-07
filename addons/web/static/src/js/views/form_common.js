@@ -791,8 +791,22 @@ var AbstractField = FormWidget.extend(FieldInterface, {
     },
     on_translate: function() {
         var self = this;
+        function determineModel () {
+            var model = {};
+            model.name = self.view.model;
+            model.id = self.view.datarecord.id;
+            if (self.field.related) {
+                var fieldRelation = self.field.related[0];
+                model.name = self.field_manager.fields[fieldRelation].field.relation;
+                model.id = self.view.datarecord[fieldRelation];
+            }
+            return model;
+        }
+
+        var model = determineModel();
+
         var trans = new data.DataSet(this, 'ir.translation');
-        return trans.call_button('translate_fields', [this.view.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).done(function(r) {
+        return trans.call_button('translate_fields', [model.name, model.id, this.name, this.view.dataset.get_context()]).done(function(r) {
             self.do_action(r);
         });
     },
