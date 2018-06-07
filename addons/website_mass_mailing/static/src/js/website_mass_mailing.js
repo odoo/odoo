@@ -218,23 +218,6 @@ odoo.define('mass_mailing.unsubscribed', function (require) {
         }
     });
 
-    $('#button_send_feedback').click(function (e) {
-        e.preventDefault();
-        var feedback = $("textarea[name='opt_out_feedback']").val();
-        ajax.jsonRpc('/mail/mailing/feedback', 'call', {'mailing_id': mailing_id, 'email': email, 'feedback': feedback})
-            .then(function (result) {
-                 $('#div_subscription_message').html(_t('Thank you! Your feedback have been sent successfully.'))
-                 .removeClass('alert-warning').removeClass('alert-info')
-                 .addClass('alert-success');
-                 $("#div_feedback").hide();
-            })
-            .fail(function () {
-                $('#div_subscription_message').html(_t('An error occured. Please try again later or contact us.'))
-                .removeClass('alert-info').removeClass('alert-success')
-                .addClass('alert-warning');
-            });
-    });
-
     //  ==================
     //      Blacklist
     //  ==================
@@ -244,6 +227,14 @@ odoo.define('mass_mailing.unsubscribed', function (require) {
 
     $('#button_remove_blacklist').click(function (e) {
         call_remove_from_blacklist(ajax, e, email);
+    });
+
+    // ==================
+    //      Feedback
+    // ==================
+    $('#button_feedback').click(function (e) {
+        var feedback = $("textarea[name='opt_out_feedback']").val();
+        send_feedback(ajax, e, mailing_id, email, feedback);
     });
 });
 
@@ -282,38 +273,17 @@ odoo.define('mass_mailing.mailing_list_subcription', function (require) {
               unchecked_ids[i] = parseInt($(this).val());
             });
 
-            var feedback = $("textarea[name='opt_out_feedback']").val();
-
             ajax.jsonRpc('/mail/mailing/unsubscribe', 'call', {'opt_in_ids': checked_ids, 'opt_out_ids': unchecked_ids, 'email': email, 'mailing_id': mailing_id})
                 .then(function (result) {
-                    var feedback = $("textarea[name='opt_out_feedback']").val();
-                    if (feedback){
-                        ajax.jsonRpc('/mail/mailing/feedback', 'call', {'mailing_id': mailing_id, 'email': email, 'feedback': feedback})
-                            .then(function (result) {
-                                 $('#subscription_info').html(_t('Thank you for your feedback! Your changes have been saved successfully.'))
-                                 .removeClass('alert-warning').removeClass('alert-info')
-                                 .addClass('alert-success');
-                                 $("#div_feedback").hide();
-                            })
-                            .fail(function () {
-                                $('#subscription_info').html(_t('An error occured. Please try again later or contact us.'))
-                                .removeClass('alert-info').removeClass('alert-success')
-                                .addClass('alert-warning');
-                            });
-                    }
-                    else
-                    {
-                        $('#subscription_info').html(_t('Your changes have been saved successfully.'))
-                             .removeClass('alert-warning').removeClass('alert-info')
-                             .addClass('alert-success');
-                    }
+                    $('#subscription_info').html(_t('Your changes have been saved successfully.'))
+                         .removeClass('alert-warning').removeClass('alert-info')
+                         .addClass('alert-success');
                 })
                 .fail(function () {
                     $('#subscription_info').html(_t('Your changes have not been saved, try again later.')).removeClass('alert-info').addClass('alert-warning');
                 });
 
             check_blacklist_state(ajax, email, function(){
-                $("textarea[name='opt_out_feedback']").attr('disabled',true);
                 $('[name="button_subscription"]').attr('disabled',true).removeClass('clickable');
             });
         }
@@ -321,7 +291,6 @@ odoo.define('mass_mailing.mailing_list_subcription', function (require) {
 
     $(".mail_list_checkbox").click(function (){
         $('#subscription_info').html(_t('Choose your mailing subscriptions.')).removeClass('alert-success').addClass('alert-info');
-        $("textarea[name='opt_out_feedback']").attr('disabled',false);
         $('[name="button_subscription"]').attr('disabled',false).addClass('clickable');
     });
 
@@ -336,6 +305,14 @@ odoo.define('mass_mailing.mailing_list_subcription', function (require) {
     $('#button_remove_blacklist_subscription').click(function (e) {
         call_remove_from_blacklist(ajax, e, email);
         $('#subscription_info').html(_t('Choose your mailing subscriptions.')).removeClass('alert-success').addClass('alert-info');
+    });
+
+    // ==================
+    //      Feedback
+    // ==================
+    $('#button_feedback_subscription').click(function (e) {
+        var feedback = $("textarea[name='opt_out_feedback_subscription']").val();
+        send_feedback(ajax, e, mailing_id, email, feedback);
     });
 });
 
@@ -470,5 +447,20 @@ function check_blacklist_state(ajax, email, callback){
             $('#div_error').show();
             $('#div_removed_blacklist').hide();
             $('#div_confirm_blacklisted').hide();
+        });
+}
+
+function send_feedback(ajax, e, mailing_id, email, feedback){
+    e.preventDefault();
+    ajax.jsonRpc('/mail/mailing/feedback', 'call', {'mailing_id': mailing_id, 'email': email, 'feedback': feedback})
+        .then(function (result) {
+             $('#div_feedback_confirmation').show();
+             $("#div_feedback").hide();
+        })
+        .fail(function () {
+            $('#div_feedback_confirmation').html(_t('An error occured. Please try again later or contact us.'))
+            .removeClass('alert-info').removeClass('alert-success')
+            .addClass('alert-warning');
+             $('#div_feedback_confirmation').show();
         });
 }

@@ -10,11 +10,11 @@ class MailBlackList(models.Model):
     """ Model of blacklisted email addresses to stop sending emails."""
     _name = 'mail.mass_mailing.blacklist'
     _description = 'Mail Blacklist'
+    _rec_name = 'email'
 
     name = fields.Char(string='Name')
     email = fields.Char(string='Email Address', required=True, index=True)
     reason = fields.Char()
-    company_id = fields.Many2one('res.company', string='Company Name')
 
     _sql_constraints = [
         ('unique_email', 'unique (email)', 'Email address already exists!')
@@ -22,21 +22,33 @@ class MailBlackList(models.Model):
 
     @api.model
     def create(self, vals):
-        partner_ids = self.env['res.partner'].search([('email', '=ilike', vals['email'])])
+        partners = self.env['res.partner'].search([('email', '=ilike', vals['email'])])
+        mass_mail_contact = self.env['mail.mass_mailing.contact'].search([('email', '=ilike', vals['email'])])
         message = 'The email address %s has been blacklisted.' % vals['email']
-        if 'reason' in vals:
-            message += ' %s' % vals['reason']
-        partner_ids.sudo().message_post(body=_(message))
+        if 'reason' in vals and vals['reason']:
+            if 'The email address %s has been blacklisted' % vals['email'] in vals['reason']:
+                message = vals['reason']
+            else:
+                message += ' %s' % vals['reason']
+        for partner in partners:
+            partner.sudo().message_post(body=_(message))
+        if mass_mail_contact:
+            mass_mail_contact.sudo().message_post(body=_(message))
         return super(MailBlackList, self).create(vals)
 
     @api.multi
     def unlink(self):
-        # Better but the =ilike is lost
         partner_ids = self.env['res.partner'].search([('email', 'in', [rec.email for rec in self])])
+        mass_mail_contacts_ids = self.env['mail.mass_mailing.contact'].search([('email', 'in', [rec.email for rec in self])])
         for rec in self:
             partners = partner_ids.filtered(lambda r: r.email == rec.email)
+            mass_mail_contact = mass_mail_contacts_ids.filtered(lambda r: r.email == rec.email)
+            message = 'The email address %s has been removed from blacklist.' % (rec.email,)
             if partners:
-                partners.sudo().message_post(body=_('The email address %s has been removed from blacklist.') % (rec.email,))
+                for partner in partners:
+                    partner.sudo().message_post(body=_(message))
+            if mass_mail_contact:
+                mass_mail_contact.sudo().message_post(body=_(message))
         return super(MailBlackList, self).unlink()
 
 
@@ -112,7 +124,7 @@ class MailBlackListMixin(models.Model):
             else:
                 blacklist.sudo().create({
                     'email': email,
-                    'reason': "%s has blacklisted the recipient from %s" % (self.env['res.users'].browse(self._uid).name, self._description)
+                    'reason': "The email address %s has been blacklisted by %s from %s." % (email, self.env['res.users'].browse(self._uid).name, self._description)
                 })
                 return [self.id, True]
         return [self.id, 'not_found']

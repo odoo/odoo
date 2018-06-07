@@ -50,11 +50,10 @@ class MassMailingOptOutContactList(models.Model):
     _table = 'mass_mailing_list_contact_rel'
     _rec_name = 'contact_id'
 
-    contact_id = fields.Many2one('mail.mass_mailing.contact', string='Contact', ondelete='cascade')
-    list_id = fields.Many2one('mail.mass_mailing.list', string='Mailing List', ondelete='cascade')
+    contact_id = fields.Many2one('mail.mass_mailing.contact', required=True, string='Contact', ondelete='cascade')
+    list_id = fields.Many2one('mail.mass_mailing.list', required=True, string='Mailing List', ondelete='cascade')
     opt_out = fields.Boolean(default=False)
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    creation_date = fields.Datetime(related='list_id.create_date', store=False)
     contact_count = fields.Integer(related='list_id.contact_nbr', store=False)
     message_bounce = fields.Integer(related='contact_id.message_bounce', store=False)
     is_blacklisted = fields.Boolean(related='contact_id.is_blacklisted', store=False)
@@ -102,9 +101,11 @@ class MassMailingList(models.Model):
     contact_ids = fields.Many2many(
         'mail.mass_mailing.contact', 'mass_mailing_list_contact_rel', 'list_id', 'contact_id',
         string='Contact Lists')
-    opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Opted-out Contacts')
+    opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Mailing Contact')
 
     # Compute number of contacts non opt-out, blacklisted and not invalid for a mailing list
+    #  NOPE ! Temporarilly take evething because result is wrong due to bug with init opt_out value (null is some case).
+    # And we will change anyway the opt out behaviour (adding the double opt in functionality.
     def _compute_contact_nbr(self):
         self.env.cr.execute('''
             select
@@ -112,10 +113,6 @@ class MassMailingList(models.Model):
             from
                 mass_mailing_list_contact_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
-            where
-                r.opt_out <> true
-                AND c.email NOT IN (select email from mail_mass_mailing_blacklist where email like c.email)
-                AND substring(c.email, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             group by
                 list_id
         ''')
@@ -188,6 +185,26 @@ class MassMailingList(models.Model):
             (src_lists - self).write({'active': False})
 
     @api.multi
+    def action_view_recipients_from_list(self):
+        domain = [('list_id', 'in', [self.id])]
+        context = {'search_default_valid_recipients': 1, 'default_list_id': self.id}
+        action = {
+            'name': _("%s Recipients") % self.name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form,graph',
+            'view_id': False,
+            'res_model': 'mail.mass_mailing.list_contact_rel',
+            'target': 'current',
+            'domain': domain,
+            'context': context,
+            'help': _("""<p class='o_view_nocontent_smiling_face'>Create a contact in your address book</p><p>
+                            Odoo helps you to easily track all activities related to a customer.
+                        </p>""")
+        }
+        return action
+
+    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
@@ -211,7 +228,7 @@ class MassMailingContact(models.Model):
     list_ids = fields.Many2many(
         'mail.mass_mailing.list', 'mass_mailing_list_contact_rel',
         'contact_id', 'list_id', string='Mailing Lists')
-    opt_out_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'contact_id', string='Opted-out Lists')
+    opt_out_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'contact_id', string='Mailing List')
     message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')

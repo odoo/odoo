@@ -104,7 +104,7 @@ class MassMailController(MassMailController):
             if not record.email:
                 request.env['mail.mass_mailing.blacklist'].sudo().create({
                     'email': email,
-                    'reason': "The recipient has added himself in the blacklist using the unsubscription page"
+                    'reason': "The recipient has added himself in the blacklist using the unsubscription page."
                 })
                 return 'success'
             return 'found'

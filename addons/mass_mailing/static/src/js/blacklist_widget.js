@@ -26,7 +26,7 @@ odoo.define('mail.mass_mailing.blacklist.fields', function (require) {
                 // If the widget is visible twice on the screen (ex in list + in wizard form)
                 // The original value is not recomputed and kept in the cache so we have to store the value on client side
                 var is_blacklisted = false;
-                if (this.res_id in blacklist_state){
+                if (document.getElementsByClassName('toggle_blacklist_' + this.res_id).length > 1 && this.res_id in blacklist_state){
                     is_blacklisted = blacklist_state[this.res_id];
                 }
                 else {
@@ -46,9 +46,10 @@ odoo.define('mail.mass_mailing.blacklist.fields', function (require) {
                     }));
                 }
             },
-            _onClick: function() {
-                if (this.viewType == 'form'){
-                    return this._rpc({
+            _onClick: function(event) {
+                if (this.model != 'mail.mass_mailing.list_contact_rel'){
+                    event.stopPropagation();
+                    this._rpc({
                             model: this.model,
                             method: 'toggle_blacklist',
                             args: [this.res_id],

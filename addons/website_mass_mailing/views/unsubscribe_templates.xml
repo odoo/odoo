@@ -30,7 +30,7 @@
                             </ul>
 
                             <div class="text-center mb16">
-                                <input type="submit" id="send_form" class="btn btn-primary" value="Update my subscriptions"/>
+                                <input type="submit" id="send_form" class="btn btn-primary" value="Update my preferences"/>
                             </div>
                         </t>
 
@@ -58,11 +58,9 @@
                     <div id="div_opt_out"  class="col-md-6 col-md-offset-3">
                         <h1 class="page-header">Mailing Subscriptions</h1>
 
-                        <!--<div id="div_subscription_message">-->
-                            <div id="div_subscription_message" class="alert alert-success text-center">
-                                <p>You have been successfully <strong>unsubscribed</strong>!</p>
-                            </div>
-                        <!--</div>-->
+                        <div id="div_subscription_message" class="alert alert-success text-center">
+                            <p>You have been successfully <strong>unsubscribed</strong>!</p>
+                        </div>
 
                         <div id="div_unsubscribed">
                             <div class="text-center mb16">
@@ -76,13 +74,6 @@
                                 <p>You didn't want to re-subscribe? You can unsubscribe here :</p>
                                 <div class="btn btn-primary" name="button_subscription" id="button_unsubscribe">Unsubscribe</div>
                             </div>
-                        </div>
-
-                        <div id="div_feedback" class="text-center mb16">
-                            <h2>Feedback</h2>
-                            <p>Your feedback is really important to us to improve our service.</p>
-                            <textarea name="opt_out_feedback" cols="60" rows="5"></textarea>
-                            <div class="btn btn-primary" id="button_send_feedback">Send Feedback</div>
                         </div>
                     </div>
 
@@ -131,6 +122,24 @@
                             <div class="btn btn-primary" id="button_remove_blacklist">Come back</div>
                         </div>
                     </div>
+
+                    <div class="col-md-6 col-md-offset-3">
+                        <h1 class="page-header">Feedback</h1>
+                        <div class="text-center mb16">
+                            <div id="div_feedback_confirmation" class="alert alert-success text-center" style="display:none">
+                                <p>Thank you! Your feedback has been sent successfully!</p>
+                            </div>
+
+                            <div id="div_feedback">
+                                <p>Your feedback is really important to us to improve our service.</p>
+                                <textarea name="opt_out_feedback" cols="60" rows="5"></textarea>
+
+                                <div class="text-center mb16">
+                                    <div class="btn btn-primary" id="button_feedback">Send</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -166,13 +175,7 @@
                             </ul>
 
                             <div class="text-center mb16">
-                                <h2>Feedback</h2>
-                                <p>Your feedback is really important to us to improve our service.</p>
-                                <textarea name="opt_out_feedback" cols="60" rows="5"></textarea>
-                            </div>
-
-                            <div class="text-center mb16">
-                                <div class="btn btn-primary" name="button_subscription" id="button_update_subscription">Update my subscriptions</div>
+                                <div class="btn btn-primary" name="button_subscription" id="button_update_subscription">Update my preferences</div>
                             </div>
                         </t>
                     </div>
@@ -220,6 +223,23 @@
                         <div id="div_blacklist_remove" class="text-center mb16" style="display:none">
                             <p>We would be very pleased if you changed your mind and you still want to receive news from us.</p>
                             <div class="btn btn-primary" id="button_remove_blacklist_subscription">Come back</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-md-offset-3">
+                        <h1 class="page-header">Feedback</h1>
+                        <div class="text-center mb16">
+                            <div id="div_feedback_confirmation" class="alert alert-success text-center" style="display:none">
+                                <p>Thank you! Your feedback has been sent successfully!</p>
+                            </div>
+                            <div id="div_feedback">
+                                <p>Your feedback is really important to us to improve our service.</p>
+                                <textarea name="opt_out_feedback_subscription" cols="60" rows="5"></textarea>
+
+                                <div class="text-center mb16">
+                                    <div class="btn btn-primary" id="button_feedback_subscription">Send</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

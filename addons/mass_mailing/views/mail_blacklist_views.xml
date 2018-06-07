@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <record id="action_view_blacklist_res_partner" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="target">current</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a contact in your address book
+          </p><p>
+            Odoo helps you to easily track all activities related to a customer.
+          </p>
+        </field>
+    </record>
+
     <record id="mail_mass_mailing_blacklist_view_tree" model="ir.ui.view">
         <field name="name">mail.mass_mailing.blacklist.tree</field>
         <field name="model">mail.mass_mailing.blacklist</field>
@@ -7,7 +25,6 @@
             <tree string="Email Blacklist">
                 <field name="create_date" string="Blacklist Date"/>
                 <field name="name"/>
-                <field name="company_id"/>
                 <field name="email"/>
                 <field name="reason"/>
             </tree>
@@ -29,7 +46,6 @@
                     <group>
                         <group>
                             <field name="email"/>
-                            <field name="company_id"/>
                             <field name="reason"/>
                         </group>
                         <group>
@@ -58,6 +74,11 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="mail_mass_mailing_blacklist_view_tree"/>
         <field name="search_view_id" ref="mail_mass_mailing_blacklist_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add an email address in the blacklist
+          </p>
+        </field>
     </record>
 
     <!-- Technical Menu: -->

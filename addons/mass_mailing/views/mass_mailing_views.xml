@@ -12,30 +12,14 @@
             parent="mass_mailing_menu_root" sequence="100"/>
 
         <!--  MAILING LIST CONTACT (REL) -->
-
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_contact_rel_tree">
-            <field name="name">mail.mass_mailing.list_contact_rel.tree</field>
-            <field name="model">mail.mass_mailing.list_contact_rel</field>
-            <field name="arch" type="xml">
-                <tree string="Mailing Lists">
-                    <field name="list_id"/>
-                    <field name="creation_date"/>
-                    <field name="contact_count"/>
-                    <field name="unsubscription_date"/>
-                    <field name="opt_out"/>
-                </tree>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_mail_mass_mailing_list_contact_rel_list_contact_tree">
             <field name="name">mail.mass_mailing.list_contact_rel.list_contact.tree</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="arch" type="xml">
-                <tree string="Mailing Lists">
+                <tree string="Mailing Lists" editable="bottom">
                     <field name="contact_id"/>
-                    <field name="creation_date"/>
-                    <field name="unsubscription_date"/>
                     <field name="opt_out"/>
+                    <field name="unsubscription_date" readonly="True"/>
                     <field name="message_bounce"/>
                     <field name="is_blacklisted" widget="blacklist_widget"/>
                     <button name="action_open_mailing_list_contact" string="Open Contact" type="object" icon="fa-user"/>
@@ -53,10 +37,9 @@
                         <group>
                             <field name="list_id"/>
                             <field name="contact_id"/>
-                            <field name="creation_date"/>
                             <field name="contact_count"/>
-                            <field name="unsubscription_date"/>
                             <field name="opt_out"/>
+                            <field name="unsubscription_date" readonly="True"/>
                         </group>
                     </sheet>
                 </form>
@@ -71,18 +54,11 @@
                     <field name="contact_id"/>
                     <field name="opt_out"/>
                     <field name="list_id"/>
-                    <separator/>
+                    <filter string="Valid Recipents" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False)]"/>
                     <filter string="Exclude Opt Out" name="not_opt_out" domain="[('opt_out', '=', False)]"/>
-                    <separator/>
                     <filter string="Exclude Blacklisted" name="not_blacklisted" domain="[('contact_id.is_blacklisted', '=', False)]"/>
                     <separator/>
-                    <filter string="Valid Recipents" name="valid_recipients" domain="[('opt_out', '=', False), ('contact_id.is_blacklisted', '=', False)]"/>
-                    <separator/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Creation Date" name="group_create_date"
-                            context="{'group_by': 'create_date'}"/>
-                    </group>
                 </search>
             </field>
         </record>
@@ -99,6 +75,7 @@
                     <field name="tag_ids"/>
                     <field name="list_ids"/>
                     <filter string="Exclude Bounced" name="not_bounced" domain="[('message_bounce', '&lt;', 3)]"/>
+                    <filter string="Without Mailing List" name="no_list" domain="[('list_ids', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Creation Date" name="group_create_date"
                             context="{'group_by': 'create_date'}"/>
@@ -141,12 +118,14 @@
                                             <t t-esc="record.name.value"/>
                                         </strong>
                                     </div>
-                                    <span class="badge" title="Number of bounced email.">
-                                        <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <t t-esc="record.message_bounce.value" title=""/>
-                                    </span>
+                                    <t t-if="record.message_bounce.value > 0">
+                                        <span class="badge" title="Number of bounced email.">
+                                            <i class="fa fa-exclamation-triangle"/> <t t-esc="record.message_bounce.value" title=""/>
+                                        </span>
+                                    </t>
                                 </div>
                                 <div class="o_kanban_record_body">
-                                    <field name="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
@@ -178,8 +157,8 @@
                                 <field name="name" placeholder="e.g. John Smith"/>
                             </h1>
                             <label for="tag_ids" class="oe_edit_only"/>
-                            <div>
-                                <field name="tag_ids" widget="many2many_tags" style="width: 100%%"/>
+                            <div class="o_kanban_record_body">
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </div>
                         </div>
                         <group>
@@ -201,10 +180,10 @@
                                 <field name="is_blacklisted" widget="blacklist_widget"/>
                             </group>
                         </group>
-                        <field name="opt_out_list_ids">
+                        <field name="opt_out_list_ids" context="{'default_contact_id': active_id}">
                             <tree>
+                                <field name="contact_id" invisible="1"/>
                                 <field name="list_id"/>
-                                <field name="creation_date"/>
                                 <field name="contact_count"/>
                                 <field name="unsubscription_date"/>
                                 <field name="opt_out"/>
@@ -257,14 +236,13 @@
             </field>
         </record>
 
-    <!--New-->
         <record model="ir.actions.act_window" id="action_view_mass_mailing_contacts_from_list">
             <field name="name">Recipients</field>
             <field name="res_model">mail.mass_mailing.list_contact_rel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('list_id', 'in', [active_id])]</field>
-            <field name="context">{'search_default_valid_recipients': 1, 'default_list_ids': [(4,active_id)]}</field>
+            <field name="context">{'search_default_valid_recipients': 1, 'default_list_id': active_id}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new recipient
@@ -330,7 +308,6 @@
                                 <field name="name" placeholder="e.g. Consumer Newsletter"/>
                             </h1>
                         </div>
-                        <field name="contact_ids"/>
                     </sheet>
                 </form>
             </field>
@@ -403,7 +380,7 @@
                                     </div>
                                 </div>
                                 <div class="o_mailing_list_kanban_boxes">
-                                    <a class="o_project_kanban_box" name="%(action_view_mass_mailing_contacts_from_list)d" type="action">
+                                    <a class="o_project_kanban_box" name="action_view_recipients_from_list" type="object">
                                         <div>
                                             <span class="badge">
                                                 <i class="fa fa-user" role="img" aria-label="Contacts" title="Contacts"/>
