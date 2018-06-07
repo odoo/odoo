@@ -263,11 +263,3 @@ class StockMove(models.Model):
                 return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
 
-class PushedFlow(models.Model):
-    _inherit = "stock.location.path"
-
-    def _prepare_move_copy_values(self, move_to_copy, new_date):
-        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
-        new_move_vals['production_id'] = False
-
-        return new_move_vals
