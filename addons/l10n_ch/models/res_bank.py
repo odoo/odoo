@@ -44,7 +44,7 @@ class ResPartnerBank(models.Model):
         if _is_l10n_ch_postal(acc_number):
             return 'postal'
         else:
-            return super(ResPartnerBank, record).retrieve_acc_type(acc_number)
+            return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
     @api.onchange('acc_number')
     def _onchange_set_l10n_ch_postal(self):
