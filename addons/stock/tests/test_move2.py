@@ -1837,8 +1837,8 @@ class TestRoutes(TestStockCommon):
 
         # create a procurement group and set in on the pick procurement rule
         procurement_group0 = self.env['procurement.group'].create({})
-        pick_rule = self.pick_ship_route.pull_ids.filtered(lambda rule: 'Stock -> Output' in rule.name)
-        push_rule = self.pick_ship_route.pull_ids - pick_rule
+        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
+        push_rule = self.pick_ship_route.rule_ids - pick_rule
         pick_rule.write({
             'group_propagation_option': 'fixed',
             'group_id': procurement_group0.id,
@@ -1939,10 +1939,12 @@ class TestRoutes(TestStockCommon):
         # TODO: maybe add a new type on the "applicable on" fields?
         route = self.env['stock.location.route'].create({
             'name': 'new route',
-            'push_ids': [(0, False, {
+            'rule_ids': [(0, False, {
                 'name': 'create a move to push location',
-                'location_from_id': stock_location.id,
-                'location_dest_id': push_location.id,
+                'location_src_id': stock_location.id,
+                'location_id': push_location.id,
+                'company_id': self.env.user.company_id.id,
+                'action': 'push',
                 'auto': 'manual',
                 'picking_type_id': self.env.ref('stock.picking_type_in').id,
             })],

@@ -298,7 +298,7 @@ class SaleOrderLine(models.Model):
     def _action_launch_procurement_rule(self):
         """
         Launch procurement group run method with required/custom fields genrated by a
-        sale order line. procurement group will launch '_run_move', '_run_buy' or '_run_manufacture'
+        sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -390,7 +390,7 @@ class SaleOrderLine(models.Model):
 
         # Check Drop-Shipping
         if not is_available:
-            for pull_rule in product_routes.mapped('pull_ids'):
+            for pull_rule in product_routes.mapped('rule_ids'):
                 if pull_rule.picking_type_id.sudo().default_location_src_id.usage == 'supplier' and\
                         pull_rule.picking_type_id.sudo().default_location_dest_id.usage == 'customer':
                     is_available = True

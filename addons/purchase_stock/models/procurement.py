@@ -13,6 +13,22 @@ class ProcurementRule(models.Model):
 
     action = fields.Selection(selection_add=[('buy', 'Buy')])
 
+    def _get_message_dict(self):
+        message_dict = super(ProcurementRule, self)._get_message_dict()
+        dummy, destination, dummy = self._get_message_values()
+        message_dict.update({
+            'buy': _('When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.') % (destination)
+        })
+        return message_dict
+
+    @api.onchange('action')
+    def _onchange_action(self):
+        domain = {'picking_type_id': []}
+        if self.action == 'buy':
+            self.location_src_id = False
+            domain = {'picking_type_id': [('code', '=', 'incoming')]}
+        return {'domain': domain}
+
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         cache = {}
@@ -20,8 +36,7 @@ class ProcurementRule(models.Model):
             .filtered(lambda r: (not r.company_id or r.company_id == values['company_id']) and (not r.product_id or r.product_id == product_id))
         if not suppliers:
             msg = _('There is no vendor associated to the product %s. Please define a vendor for this product.') % (product_id.display_name,)
-            raise UserError(msg)
-
+            raise UserError(msg)   
         supplier = self._make_po_select_supplier(values, suppliers)
         partner = supplier.name
         # we put `supplier_info` in values for extensibility purposes

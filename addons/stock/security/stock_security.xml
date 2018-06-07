@@ -120,13 +120,6 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-      <record model="ir.rule" id="stock_location_path_comp_rule">
-        <field name="name">stock_location_path multi-company</field>
-        <field name="model_id" ref="model_stock_location_path"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
-    </record>
-
     <!-- Stock Portal Access Rules -->
     <record id="stock_picking_rule_portal" model="ir.rule">
         <field name="name">Portal Follower Pickings</field>

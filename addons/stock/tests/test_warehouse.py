@@ -259,7 +259,7 @@ class TestWarehouse(TestStockCommon):
         # select one randomly between them and if it select the resupply it is
         # 'make to stock' and it will not create the picking between stock and
         # dist warehouses.
-        route_dist_to_shop.pull_ids.write({'procure_method': 'make_to_order'})
+        route_dist_to_shop.rule_ids.write({'procure_method': 'make_to_order'})
 
         product = self.env['product.product'].create({
             'name': 'Fakir',

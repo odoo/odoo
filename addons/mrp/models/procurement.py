@@ -11,6 +11,24 @@ class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
     action = fields.Selection(selection_add=[('manufacture', 'Manufacture')])
 
+    def _get_message_dict(self):
+        message_dict = super(ProcurementRule, self)._get_message_dict()
+        source, destination, operation = self._get_message_values()
+        manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.') % (destination)
+        if self.location_src_id:
+            manufacture_message += _(' <br/><br/> The components will be taken from <b>%s</b>.') % (source)
+        message_dict.update({
+            'manufacture': manufacture_message
+        })
+        return message_dict
+
+    @api.onchange('action')
+    def _onchange_action_operation(self):
+        domain = {'picking_type_id': []}
+        if self.action == 'manufacture':
+            domain = {'picking_type_id': [('code', '=', 'mrp_operation')]}
+        return {'domain': domain}
+
     @api.multi
     def _run_manufacture(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         Production = self.env['mrp.production']
@@ -65,3 +83,8 @@ class ProcurementRule(models.Model):
         date_planned = format_date_planned - relativedelta(days=product_id.produce_delay or 0.0)
         date_planned = date_planned - relativedelta(days=values['company_id'].manufacturing_lead)
         return date_planned
+
+    def _push_prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(ProcurementRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+        return new_move_vals

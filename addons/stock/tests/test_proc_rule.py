@@ -13,9 +13,9 @@ class TestProcRule(TransactionCase):
         product_route = self.env['stock.location.route'].create({
             'name': 'Stock -> output route',
             'product_selectable': True,
-            'pull_ids': [(0, 0, {
+            'rule_ids': [(0, 0, {
                 'name': 'Stock -> output rule',
-                'action': 'move',
+                'action': 'pull',
                 'picking_type_id': self.ref('stock.picking_type_internal'),
                 'location_src_id': self.ref('stock.stock_location_stock'),
                 'location_id': self.ref('stock.stock_location_output'),
