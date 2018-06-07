@@ -57,7 +57,7 @@ class AccountInvoice(models.Model):
                         valuation_price_unit = po_currency._convert(
                             i_line.purchase_line_id.product_uom._compute_price(i_line.purchase_line_id.price_unit, i_line.uom_id),
                             inv.currency_id,
-                            company=po_company, date=inv.date, round=False,
+                            company=po_company, date=inv.date_invoice, round=False,
                         )
                         stock_move_obj = self.env['stock.move']
                         valuation_stock_move = stock_move_obj.search([
@@ -90,7 +90,7 @@ class AccountInvoice(models.Model):
                             # In this condition, we have a real price-valuated product which has not yet been received
                             valuation_price_unit = po_currency._convert(
                                 i_line.purchase_line_id.price_unit, inv.currency_id,
-                                company=po_company, date=inv.date, round=False,
+                                company=po_company, date=inv.date_invoice, round=False,
                             )
 
                     interim_account_price = valuation_price_unit * line_quantity
