@@ -576,12 +576,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
-            order.message_subscribe([order.partner_id.id])
-        self.write({
-            'state': 'sale',
-            'confirmation_date': fields.Datetime.now()
-        })
+        """ Implementation of additionnal mecanism of Sales Order confirmation.
+            This method should be extended when the confirmation should generated
+            other documents. In this method, the SO are in 'sale' state (not yet 'done').
+        """
         if self.env.context.get('send_email'):
             self.force_quotation_send()
 
@@ -594,6 +592,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
+            order.message_subscribe([order.partner_id.id])
+        self.write({
+            'state': 'sale',
+            'confirmation_date': fields.Datetime.now()
+        })
         self._action_confirm()
         if self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'):
             self.action_done()
