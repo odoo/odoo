@@ -67,7 +67,6 @@ regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
-onchange_v7 = re.compile(r"^(\w+)\((.*)\)$")
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
 
@@ -4955,39 +4954,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 else:
                     result['warning'] = res['warning']
 
-        # onchange V8
         if onchange in ("1", "true"):
             for method in self._onchange_methods.get(field_name, ()):
                 method_res = method(self)
                 process(method_res)
             return
-
-        # onchange V7
-        match = onchange_v7.match(onchange)
-        if match:
-            method, params = match.groups()
-
-            class RawRecord(object):
-                def __init__(self, record):
-                    self._record = record
-                def __getitem__(self, name):
-                    record = self._record
-                    field = record._fields[name]
-                    return field.convert_to_write(record[name], record)
-                def __getattr__(self, name):
-                    return self[name]
-
-            # evaluate params -> tuple
-            global_vars = {'context': self._context, 'uid': self._uid}
-            if self._context.get('field_parent'):
-                record = self[self._context['field_parent']]
-                global_vars['parent'] = RawRecord(record)
-            field_vars = RawRecord(self)
-            params = safe_eval("[%s]" % params, global_vars, field_vars, nocopy=True)
-
-            # invoke onchange method
-            method_res = getattr(self._origin, method)(*params)
-            process(method_res)
 
     @api.multi
     def onchange(self, values, field_name, field_onchange):

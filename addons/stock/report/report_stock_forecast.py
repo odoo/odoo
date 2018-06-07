@@ -66,7 +66,7 @@ class ReportStockForecat(models.Model):
             LEFT JOIN
             stock_location source_location ON sm.location_id = source_location.id
             WHERE
-            sm.state IN ('confirmed','assigned','waiting') and
+            sm.state IN ('confirmed','partially_available','assigned','waiting') and
             source_location.usage != 'internal' and dest_location.usage = 'internal'
             GROUP BY sm.date_expected,sm.product_id, sm.company_id
             UNION ALL
@@ -88,7 +88,7 @@ class ReportStockForecat(models.Model):
             LEFT JOIN
                stock_location dest_location ON sm.location_dest_id = dest_location.id
             WHERE
-                sm.state IN ('confirmed','assigned','waiting') and
+                sm.state IN ('confirmed','partially_available','assigned','waiting') and
             source_location.usage = 'internal' and dest_location.usage != 'internal'
             GROUP BY sm.date_expected,sm.product_id, sm.company_id)
          as MAIN

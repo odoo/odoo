@@ -2255,7 +2255,7 @@ $.summernote.pluginEvents.backColor = function (event, editor, layoutInfo, backC
 };
 
 options.onCreateLink = function (sLinkUrl) {
-    if (sLinkUrl.indexOf('mailto:') === 0) {
+    if (sLinkUrl.indexOf('mailto:') === 0 || sLinkUrl.indexOf('tel:') === 0) {
       // pass
     } else if (sLinkUrl.indexOf('@') !== -1 && sLinkUrl.indexOf(':') === -1) {
       sLinkUrl =  'mailto:' + sLinkUrl;

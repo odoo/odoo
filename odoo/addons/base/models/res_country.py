@@ -92,16 +92,6 @@ class Country(models.Model):
         self.ensure_one()
         return re.findall(r'\((.+?)\)', self.address_format)
 
-    @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if args is None:
-            args = []
-        country_ids = self._search([('code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        if not country_ids:
-            search_domain = [('name', operator, name)]
-            country_ids = self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return [(country.id, country.display_name) for country in self.browse(country_ids)]
-
 
 class CountryGroup(models.Model):
     _description = "Country Group"
@@ -132,8 +122,8 @@ class CountryState(models.Model):
             args = []
         if self.env.context.get('country_id'):
             args = args + [('country_id', '=', self.env.context.get('country_id'))]
-        state_ids = self._search([('code', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        if not state_ids:
-            search_domain = [('name', operator, name)]
-            state_ids = self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
+        first_state_ids = self._search([('code', '=ilike', name)] + args, limit=limit, access_rights_uid=name_get_uid)
+        search_domain = [('name', operator, name)]
+        search_domain.append(('id', 'not in', first_state_ids))
+        state_ids = first_state_ids + self._search(search_domain + args, limit=limit, access_rights_uid=name_get_uid)
         return [(state.id, state.display_name) for state in self.browse(state_ids)]
