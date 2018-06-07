@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo> 
     <data>
 
         <!-- Partner Titles -->
@@ -65,7 +65,7 @@
                     <field name="type" invisible="1"/>
                     <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
                     <div class="oe_title">
-                        <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"/>
+                        <field name="company_type" options="{'horizontal': true}" class="oe_edit_only" widget="radio"  groups="base.group_no_one"/>
                         <h1>
                             <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
@@ -75,7 +75,7 @@
                             attrs="{'invisible': [('is_company','=', True)]}"/>
                     </div>
                     <group>
-                        <field name="function" placeholder="e.g. Sales Director"/>
+                        <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}"/>
                         <field name="user_ids" invisible="1"/>
                         <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
                         <field name="phone" widget="phone"/>
@@ -191,7 +191,7 @@
         <record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
-            <field name="priority" eval="1"/>
+            <field name="priority" eval="18"/>
             <field name="arch" type="xml">
                 <form string="Partners">
                 <sheet>
@@ -245,8 +245,7 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
-                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
-                        </group>
+                           </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
@@ -258,6 +257,7 @@
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang"/>
+                            <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                     </group>
 
@@ -371,11 +371,11 @@
                         </page>
                         <page name='sales_purchases' string="Sales &amp; Purchases">
                             <group name="container_row_2">
-                                <group string="Sale" name="sale">
+                                <group string="Sales" name="sale" priority="1">
                                     <field name="customer"/>
                                     <field name="user_id"/>
                                 </group>
-                                <group string="Purchase" name="purchase">
+                                <group string="Purchase" name="purchase" priority="2">
                                     <field name="supplier"/>
                                 </group>
                                 <group string="Misc">
@@ -443,10 +443,10 @@
                 <search string="Search Partner">
                    <field name="name"
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
-                   <filter name="filter_my_partners" help="My Partners"
+                   <filter name="filter_my_partners" help="My Contacts"
                            domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
+                   <filter string="Individuals" name="type_person" domain="[('is_company','=',0)]"/>
                    <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1), ('parent_id', '=', False)]"/>

@@ -2,7 +2,7 @@
 <odoo>
         <!-- wizard action on res.partner -->
         <act_window id="partner_wizard_action"
-            name="Portal Access Management"
+            name="Grant Portal Access"
             src_model="res.partner"
             res_model="portal.wizard"
             view_type="form" view_mode="form"
@@ -11,10 +11,10 @@
 
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
-            <field name="name">Portal Access Management</field>
+            <field name="name">Grant Portal Access</field>
             <field name="model">portal.wizard</field>
             <field name="arch" type="xml">
-                <form string="Portal Access Management">
+                <form string="Grant Portal Access">
                     <div>
                         Select which contacts should belong to the portal in the list below.
                         The email address of each selected contact must be valid and unique.

@@ -6,7 +6,7 @@
             <field name="name">res.partner.task.buttons</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="priority" eval="50"/>
+            <field name="priority" eval="7"/>
             <field name="groups_id" eval="[(4, ref('project.group_project_user'))]"/>
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
