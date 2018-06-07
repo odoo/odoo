@@ -1876,7 +1876,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {
-                this.prevColors[id] = currentColor
+                this.prevColors[id] = currentColor;
             } else {
                 color = this.prevColors[id] ? this.prevColors[id] : 1;
             }

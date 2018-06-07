@@ -430,14 +430,14 @@ QUnit.module('Views', {
         var $td = form.$('.o_data_cell').first();
         var $td2 = form.$('.o_data_cell').eq(1);
         assert.ok($td.hasClass("o_readonly_modifier"), "first field must be readonly");
-        assert.ok($td2.hasClass("o_boolean_toggle_cell"), "second field must be not activable but updatable on click (boolean toggle in this case)"); 
+        assert.ok($td2.hasClass("o_boolean_toggle_cell"), "second field must be not activable but updatable on click (boolean toggle in this case)");
         $td.click(); //select row first
         var $slider = $td2.find('.slider').first();
         try {
             $slider.click(); //toggle boolean
             assert.ok(true);
         }
-        catch(e) {
+        catch (e) {
             assert.ok(false, "should not crash when clicking on the slider");
         }
         form.destroy();
@@ -2386,6 +2386,8 @@ QUnit.module('Views', {
     QUnit.test('inputs are disabled when unselecting rows', function (assert) {
         assert.expect(1);
 
+        var $input;
+
         var list = createView({
             View: ListView,
             model: 'foo',
@@ -2401,7 +2403,7 @@ QUnit.module('Views', {
         });
 
         list.$('td:contains(gnap)').click();
-        var $input = list.$('tr.o_selected_row input[name="foo"]');
+        $input = list.$('tr.o_selected_row input[name="foo"]');
         $input.val('lemon').trigger('input');
         $input.trigger({type: 'keydown', which: $.ui.keyCode.DOWN});
         list.destroy();

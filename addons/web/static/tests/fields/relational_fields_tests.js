@@ -1686,7 +1686,7 @@ QUnit.module('relational_fields', {
                 }
                 return this._super.apply(this, arguments);
             },
-        }).then(function(form) {
+        }).then(function (form) {
             form.$buttons.find('.o_form_button_edit').click();
             form.$('.o_data_cell').click();
             form.$('.o_external_button').click();
@@ -2129,7 +2129,7 @@ QUnit.module('relational_fields', {
         var $input = form.$('.o_field_many2one input');
         $input.val("Something that does not exist").trigger('input');
         $('.ui-autocomplete .ui-menu-item a:contains(Create and)').trigger('mouseenter');
-        concurrency.delay(0).then(function() {
+        concurrency.delay(0).then(function () {
             $input.trigger($.Event('keydown', {
                 which: $.ui.keyCode.ENTER,
                 keyCode: $.ui.keyCode.ENTER,
@@ -2142,7 +2142,7 @@ QUnit.module('relational_fields', {
                 which: $.ui.keyCode.ENTER,
                 keyCode: $.ui.keyCode.ENTER,
             }));
-            concurrency.delay(0).then(function() {
+            concurrency.delay(0).then(function () {
                 $input.blur();
                 assert.strictEqual($('.modal').length, 1,
                     "should have one modal in body");
@@ -2541,7 +2541,7 @@ QUnit.module('relational_fields', {
         $modal.find('thead input[type=checkbox]').click();
 
         $modal.find('.btn.btn-sm.btn-primary.o_select_button').click();
-        
+
         pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
         assert.equal(pager_limit.text(), '51',
             'We should have 51 records in the m2m field');
@@ -2679,7 +2679,7 @@ QUnit.module('relational_fields', {
                 'turtle,false,form': '<form><field name="parent_id" domain="[(\'id\', \'in\', parent.turtles)]"/></form>',
             },
 
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/turtle/name_search') {
                     // We are going to pass twice here
                     // First time, we really have nothing
@@ -3100,7 +3100,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.deepEqual(_.map(this.data.turtle.records, function(turtle) {
+        assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
             return _.pick(turtle, 'id', 'turtle_foo', 'turtle_int');
         }), [
             {id: 1, turtle_foo: "yop", turtle_int: 1},
@@ -4107,7 +4107,7 @@ QUnit.module('relational_fields', {
                     var nbLinkCommands = _.filter(args.args[1].p, function (command) {
                         return command[0] === 4;
                     }).length;
-                    switch(saveCount) {
+                    switch (saveCount) {
                         case 1:
                             assert.strictEqual(nbCommands, 46,
                                 "should send 46 commands (one for each record)");
@@ -6120,8 +6120,6 @@ QUnit.module('relational_fields', {
 
         this.data.partner.records[0].p = [];
 
-        var rpcCount = 0;
-
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -6143,7 +6141,6 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                rpcCount++;
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [[0, args.args[1].p[0][1], {
                         foo: false, int_field: 123, product_id: 41,
@@ -12081,7 +12078,7 @@ QUnit.module('relational_fields', {
                 'partner,false,form': '<form>' +
                                         '<field name="display_name"/>' +
                                     '</form>'},
-            mockRPC: function(route, args) {
+            mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/write') {
                     args.args[1].p[0][2].datetime = '2018-04-05 12:00:00';
                 }
@@ -12263,7 +12260,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add>a')[0],
                             document.activeElement,
                             "after tab, the focus should be on the many2one on the add new line"));
-           
+
         form.destroy();
     });
 
@@ -12308,7 +12305,7 @@ QUnit.module('relational_fields', {
        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
                            document.activeElement,
                            "after tab, the focus should be on the many2one"));
-          
+
        form.destroy();
    });
 
@@ -12316,7 +12313,7 @@ QUnit.module('relational_fields', {
         assert.expect(3);
 
         this.data.partner.records[0].turtles = [];
-       
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -12360,7 +12357,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(assert.strictEqual(form.$el.find('input[name="foo"]')[0],
                             document.activeElement,
                             "after tab, the focus should be on the many2one"));
-            
+
         form.destroy();
     });
 
@@ -12368,7 +12365,7 @@ QUnit.module('relational_fields', {
         assert.expect(4);
 
         this.data.partner.records[0].turtles = [];
-       
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -12422,7 +12419,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual($.find('input[name="turtle_foo"]')[0],
             document.activeElement,
             "after enter, the focus should be in the popup, in the first input field");
-        
+
         $('input[name="turtle_foo"]').trigger($.Event('keydown', {
             which: $.ui.keyCode.ESCAPE,
             keyCode: $.ui.keyCode.ESCAPE,
@@ -12431,7 +12428,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add a')[0],
             document.activeElement,
             "after escape, the focus should be back on the add new line link");
-        
+
         form.destroy();
     });
 

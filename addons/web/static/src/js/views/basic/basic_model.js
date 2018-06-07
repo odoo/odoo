@@ -1608,7 +1608,7 @@ var BasicModel = AbstractModel.extend({
         // inner function that adds a record (based on its res_id) to a list
         // dataPoint (used for onchanges that return commands 4 (LINK TO) or
         // commands 6 (REPLACE WITH))
-        function linkRecord (list, resID) {
+        function linkRecord(list, resID) {
             rec = self.localData[list._cache[resID]];
             if (rec) {
                 // modifications done on a record are discarded if the onchange
@@ -1896,7 +1896,7 @@ var BasicModel = AbstractModel.extend({
 
         // recursively generates the onchange specs for fields in fieldsInfo,
         // and their subviews
-        function generateSpecs (fieldsInfo, fields, prefix) {
+        function generateSpecs(fieldsInfo, fields, prefix) {
             prefix = prefix || '';
             _.each(Object.keys(fieldsInfo), function (name) {
                 var field = fields[name];
@@ -4153,7 +4153,7 @@ var BasicModel = AbstractModel.extend({
             for (var k = 0; k < list.orderedResIDs.length; k++) {
                 orderedResIDs[list.orderedResIDs[k]] = k;
             }
-            utils.stableSort(list.res_ids, function compareResIdIndexes (resId1, resId2) {
+            utils.stableSort(list.res_ids, function compareResIdIndexes(resId1, resId2) {
                 if (!(resId1 in orderedResIDs) && !(resId2 in orderedResIDs)) {
                     return 0;
                 }
@@ -4168,10 +4168,10 @@ var BasicModel = AbstractModel.extend({
         } else if (list.orderedBy.length) {
             // sort records according to ordered_by[0]
             var compareRecords = function (resId1, resId2, level) {
-                if(!level) {
+                if (!level) {
                     level = 0;
                 }
-                if(list.orderedBy.length < level + 1) {
+                if (list.orderedBy.length < level + 1) {
                     return 0;
                 }
                 var order = list.orderedBy[level];

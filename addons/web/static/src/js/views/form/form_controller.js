@@ -140,7 +140,7 @@ var FormController = BasicController.extend({
             this._assignSaveCancelKeyboardBehavior(this.$buttons.find('.o_form_buttons_edit'));
             this.$buttons.find('.o_form_buttons_edit').tooltip({
                 delay: {show: 200, hide:0},
-                title: function(){
+                title: function () {
                     return qweb.render('SaveCancelButton.tooltip');
                 },
                 trigger: 'manual',
@@ -257,8 +257,8 @@ var FormController = BasicController.extend({
      */
     _assignSaveCancelKeyboardBehavior: function ($saveCancelButtonContainer) {
         var self = this;
-        $saveCancelButtonContainer.children().on('keydown', function(e) {
-            switch(e.which) {
+        $saveCancelButtonContainer.children().on('keydown', function (e) {
+            switch (e.which) {
                 case $.ui.keyCode.ENTER:
                     e.preventDefault();
                     self.saveRecord.apply(self);
@@ -438,7 +438,8 @@ var FormController = BasicController.extend({
 
         this._disableButtons();
 
-        function saveAndExecuteAction () {
+        var attrs;
+        function saveAndExecuteAction() {
             return self.saveRecord(self.handle, {
                 stayInEdit: true,
             }).then(function () {
@@ -449,7 +450,7 @@ var FormController = BasicController.extend({
                 return self._callButtonAction(attrs, record);
             });
         }
-        var attrs = event.data.attrs;
+        attrs = event.data.attrs;
         if (attrs.confirm) {
             var d = $.Deferred();
             Dialog.confirm(this, attrs.confirm, {
@@ -506,7 +507,7 @@ var FormController = BasicController.extend({
         var callback = event.data.on_success || function () {};
         event.data.on_success = function () {
             callback();
-            function isDialog (widget) {
+            function isDialog(widget) {
                 return (widget instanceof Dialog);
             }
             _.invoke(self.getChildren().filter(isDialog), 'destroy');
@@ -555,7 +556,7 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onFocusControlButton:function(e) {
+    _onFocusControlButton: function (e) {
         if (this.$buttons) {
             e.stopPropagation();
             this.$buttons.find('.btn-primary:visible:first()').focus();
@@ -567,7 +568,7 @@ var FormController = BasicController.extend({
      * @private
      * @param {OdooEvent} event
      */
-    _onFormDialogDiscarded: function(e) {
+    _onFormDialogDiscarded: function (e) {
         e.stopPropagation();
         this.renderer.focusLastActivatedWidget();
     },

@@ -134,7 +134,7 @@ var KanbanRenderer = BasicRenderer.extend({
     addQuickCreate: function () {
         return this.widgets[0].addQuickCreate();
     },
-    giveFocus:function() {
+    giveFocus: function () {
         this.$('.o_kanban_record:first').focus();
     },
     /**
@@ -233,7 +233,7 @@ var KanbanRenderer = BasicRenderer.extend({
     * @private
     * @param {DOMElement} currentColumn
     */
-    _focusOnNextCard: function(currentCardElement) {
+    _focusOnNextCard: function (currentCardElement) {
         var nextCard = currentCardElement.nextElementSibling;
         if (nextCard) {
             nextCard.focus();
@@ -243,7 +243,7 @@ var KanbanRenderer = BasicRenderer.extend({
     * @private
     * @param {DOMElement} currentColumn
     */
-    _focusOnPreviousCard: function(currentCardElement) {
+    _focusOnPreviousCard: function (currentCardElement) {
         var previousCard = currentCardElement.previousElementSibling;
         if (previousCard && previousCard.classList.contains("o_kanban_record")) { //previous element might be column title
             previousCard.focus();
@@ -284,7 +284,7 @@ var KanbanRenderer = BasicRenderer.extend({
         });
 
         // remove previous sorting
-        if(this.$el.sortable('instance') !== undefined) {
+        if (this.$el.sortable('instance') !== undefined) {
             this.$el.sortable('destroy');
         }
         if (this.groupedByM2O) {
@@ -434,7 +434,7 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {DOMElement} eventTarget  the target of the keydown event
      * @param {string} direction  contains either 'LEFT' or 'RIGHT'
      */
-    _focusOnCardInColumn: function(eventTarget, direction) {
+    _focusOnCardInColumn: function (eventTarget, direction) {
         var currentColumn = eventTarget.parentElement;
         var hasSelectedACard = false;
         var cannotSelectAColumn = false;
@@ -487,8 +487,8 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      * @param {KeyboardEvent} e
      */
-    _onRecordKeyDown: function(e) {
-        switch(e.which) {
+    _onRecordKeyDown: function (e) {
+        switch (e.which) {
             case $.ui.keyCode.DOWN:
                 this._focusOnNextCard(e.currentTarget);
                 e.stopPropagation();

@@ -121,7 +121,7 @@ var ListController = BasicController.extend({
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
             this.$buttons.find('.o_list_button_add').tooltip({
                 delay: {show: 200, hide:0},
-                title: function(){
+                title: function () {
                     return qweb.render('CreateButton.tooltip');
                 },
                 trigger: 'manual',
@@ -241,11 +241,11 @@ var ListController = BasicController.extend({
      *
      * @param {jQueryElement} $createButton  The create button itself
      */
-    _assignCreateKeyboardBehavior: function($createButton) {
+    _assignCreateKeyboardBehavior: function ($createButton) {
         var self = this;
-        $createButton.on('keydown', function(e) {
+        $createButton.on('keydown', function (e) {
             $createButton.tooltip('hide');
-            switch(e.which) {
+            switch (e.which) {
                 case $.ui.keyCode.ENTER:
                     e.preventDefault();
                     self._onCreateRecord.apply(self);
@@ -472,7 +472,7 @@ var ListController = BasicController.extend({
         this.trigger_up('mutexify', {
             action: function () {
                 var state = self.model.get(self.handle);
-                var resIDs = _.map(event.data.rowIDs, function(rowID) {
+                var resIDs = _.map(event.data.rowIDs, function (rowID) {
                     return _.findWhere(state.data, {id: rowID}).res_id;
                 });
                 var options = {

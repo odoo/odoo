@@ -345,7 +345,7 @@ ListRenderer.include({
 
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
-        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id)
+        $row.find('.o_list_record_selector input').prop('disabled', !record.res_id);
 
         return $.when.apply($, defs);
     },
@@ -758,7 +758,7 @@ ListRenderer.include({
                 break;
         }
     },
-    /** 
+    /**
      * It will returns the first visible widget that is editable
      *
      * @private
@@ -768,9 +768,9 @@ ListRenderer.include({
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
         var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst = widget.$el.is(':visible') && 
+            var isFirst = widget.$el.is(':visible') &&
                                 (widget.$el.has('input').length > 0 ||
-                                widget.tagName== 'input') && 
+                                widget.tagName== 'input') &&
                             !widget.$el.hasClass('o_readonly_modifier');
             return isFirst;
         });

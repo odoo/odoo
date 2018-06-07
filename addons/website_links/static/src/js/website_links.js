@@ -88,7 +88,7 @@ if (!$('.o_website_links_create_tracked_url').length) {
         events: {
             'click .btn_shorten_url_clipboard':'toggle_copy_button',
             'click .o_website_links_edit_code':'edit_code',
-            'click .o_website_links_ok_edit':function (e) {
+            'click .o_website_links_ok_edit': function (e) {
                 e.preventDefault();
                 this.submit_code();
             },

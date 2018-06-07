@@ -159,7 +159,7 @@ var GengoApiConfigDialog = Widget.extend({
         'click button[data-action=set_config]': 'set_config'
     }),
     template: 'website.GengoApiConfigDialog',
-    init:function (company_id){
+    init: function (company_id) {
         this.company_id =  company_id;
         return this._super.apply(this, arguments);
     },

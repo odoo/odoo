@@ -215,7 +215,7 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Account Journal">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence' widget="handle"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="belongs_to_company" invisible="1"/>
@@ -370,7 +370,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Account Journal">
-                    <field name='sequence' widget='handle'/>
+                    <field name='sequence' widget="handle"/>
                     <field name="name"/>
                     <field name="bank_acc_number"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -1564,7 +1564,7 @@
                             <group>
                                 <field name="auto_reverse" attrs="{'readonly':[('reverse_entry_id', '!=', False)]}"/>
                                 <field name="reverse_date" attrs="{'invisible':[('auto_reverse', '=', False)], 'required':[('auto_reverse', '=', True)],'readonly':[('reverse_entry_id', '!=', False)]}"/>
-                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>    
+                                <field name="reverse_entry_id" attrs="{'invisible':True}"/>
                             </group>
                         </page>
                     </notebook>
