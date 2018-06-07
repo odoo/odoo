@@ -27,7 +27,7 @@ class PortalWizard(models.TransientModel):
     """
 
     _name = 'portal.wizard'
-    _description = 'Portal Access Management'
+    _description = 'Grant Portal Access'
 
     def _default_user_ids(self):
         # for each partner, determine corresponding portal.wizard.user records

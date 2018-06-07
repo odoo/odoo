@@ -168,13 +168,6 @@
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" groups="account.group_account_user" sequence="0"/>
 
         <act_window
-            id="account.action_all_partner_invoices"
-            name="All Invoices"
-            res_model="account.invoice"
-            domain="[('partner_id', 'child_of', active_id)]"
-            src_model="res.partner"/>
-
-        <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
@@ -205,8 +198,7 @@
             id="action_move_line_select_by_partner"
             name="Journal Items"
             context="{'search_default_partner_id': [active_id]}"
-            res_model="account.move.line"
-            src_model="res.partner"/>
+            res_model="account.move.line"/>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">

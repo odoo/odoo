@@ -418,15 +418,6 @@
             </field>
         </record>
 
-        <act_window
-            id="act_register_event_partner"
-            name="Subscribe"
-            res_model="event.registration"
-            src_model="res.partner"
-            view_mode="tree,form,calendar,graph"
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            view_type="form"/>
-
         <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="event.event_main_menu" />
         <menuitem name="Events"
             id="event_event_menu_pivot_report"
