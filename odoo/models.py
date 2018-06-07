@@ -2021,7 +2021,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
             m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(m2o_records.name_get())
+            data_dict = dict(m2o_records.sudo().name_get())
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 
