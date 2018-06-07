@@ -23,9 +23,7 @@
             </t>
             <t t-if="widget.options['display_composer']">
                 <div class="media">
-                    <div class="media-left">
-                        <img alt="Avatar" class="o_portal_chatter_avatar float-left" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
-                    </div>
+                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_small/50x50"/>
                     <div class="media-body">
                         <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
                             <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
@@ -53,15 +51,11 @@
         <div class="o_portal_chatter_messages">
             <t t-foreach="widget.get('messages')" t-as="message">
                 <div class="media o_portal_chatter_message" t-att-id="'message-' + message.id">
-                    <div class="media-left">
-                        <img class="media-object o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
-                    </div>
+                    <img class="o_portal_chatter_avatar" t-att-src="message.author_avatar_url" alt="avatar"/>
                     <div class="media-body">
 
                         <div class="o_portal_chatter_message_title">
-                            <h5 class="media-heading">
-                                <t t-esc="message.author_id[1]"/>
-                            </h5>
+                            <h5><t t-esc="message.author_id[1]"/></h5>
                             <p class="o_portal_chatter_puslished_date"><t t-esc="message.published_date_str"/></p>
                         </div>
                         <t t-raw="message.body"/>

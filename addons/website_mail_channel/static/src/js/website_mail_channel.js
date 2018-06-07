@@ -33,7 +33,7 @@ $(document).ready(function () {
             if (! data) {
                 return true;
             }
-            var $thread_container = $link.parents('.o_mg_replies').first().find('ul.media-list');
+            var $thread_container = $link.parents('.o_mg_replies').first().find('ul.list-unstyled');
             if ($thread_container) {
                 var $last_msg = $thread_container.find('li.media').last();
                 $(data).find('li.media').insertAfter($last_msg);
