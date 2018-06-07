@@ -224,6 +224,69 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         else:
             yield
 
+    def assertRecordsEqual(self, records, expected_values):
+        ''' Compare a recordset with a list of dictionaries representing the expected results.
+
+        Note that:
+          - The order of candidates doesn't matter.
+          - Comparison between falsy values is supported: False match with None.
+          - Comparison between monetary field is also treated according the currency's rounding.
+
+        :param records:               The records to compare.
+        :param expected_values:       List of dicts expected to be exactly matched in records
+        :return:                      True if all is equivalent, False otherwise.
+        '''
+
+        def _compare_candidate(record, record_values, candidate):
+            ''' return True if the candidate matches the given record '''
+            for field_name in candidate.keys():
+                record_value = record_values[field_name]
+                candidate_value = candidate[field_name]
+                if field_name in monetary_field_names:
+                    # Compare monetary field.
+                    currency_field_name = record._fields[field_name]._related_currency_field
+                    record_currency = record[currency_field_name]
+                    if record_currency.compare_amounts(candidate_value, record_value)\
+                            if record_currency else candidate_value != record_value:
+                        return
+                elif (candidate_value or record_value) and record_value != candidate_value:
+                    # Compare others fields if not both interpreted as falsy values.
+                    return
+            return True
+
+        def _get_matching_candidate_index(record, record_values, expected_values):
+            ''' Search for a dict in expected_values matching the given record and its values. '''
+            for index, candidate in enumerate(expected_values):
+                match = _compare_candidate(record, record_values, candidate)
+                if match:
+                    return index
+            return False
+
+        # if the length or both things to compare is different, we can already tell they're not equal
+        if len(records) != len(expected_values):
+            self.fail('Wrong number of records to compare: %d != %d.' % (len(records), len(expected_values)))
+
+        # monetary fields are special cases, as value read by the ORM isn't rounded (it is rounded on the write
+        # but, in some case, the stored value might be different than what's given to write()). We thus need to
+        monetary_fields = records.env['ir.model.fields'].search([
+            ('model', '=', records._name), ('ttype', '=', 'monetary')
+        ])
+        monetary_field_names = monetary_fields.mapped('name')
+
+        # Perform a read to compare relational fields more easily.
+        all_records_values = records.read(list({n for c in expected_values for n in c}), load=False)
+        for index, record in enumerate(records):
+            record_values = all_records_values[index]
+            # Search for matching values in expected_values.
+            matching_index = _get_matching_candidate_index(record, record_values, expected_values)
+            if matching_index is not False:
+                del expected_values[matching_index]
+            else:
+                self.fail('Unexpected record found: %s.' % record_values)
+
+        # by design, expected_values should always be empty 
+        return True
+
     def shortDescription(self):
         doc = self._testMethodDoc
         return doc and ' '.join(l.strip() for l in doc.splitlines() if not l.isspace()) or None
