@@ -3,6 +3,7 @@
 
 from . import common
 from odoo.exceptions import UserError
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 
 class TestVariantsSearch(TransactionCase):
@@ -461,3 +462,65 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
         self.assertEqual(len(toto.attribute_line_ids.mapped('attribute_id')), 10)
         self.assertEqual(len(toto.attribute_line_ids.mapped('value_ids')), 100)
         self.assertEqual(len(toto.product_variant_ids), 0)
+
+class TestVariantBarcodes(common.TestProductCommon):
+
+    def setUp(self):
+        res = super(TestVariantBarcodes, self).setUp()
+        prod_att_value = self.env['product.attribute.value']
+        self.color_attr = self.env['product.attribute'].create({'name': 'Color'})
+        self.color_attr_black = prod_att_value.create({'name': 'Black', 'attribute_id': self.color_attr.id})
+        self.color_attr_red = prod_att_value.create({'name': 'Red', 'attribute_id': self.color_attr.id})
+        self.color_attr_green = prod_att_value.create({'name': 'Green', 'attribute_id': self.color_attr.id})
+        return res
+
+    def test_variant_barcodes(self):
+        """ Testcase for multiple variants having same barcodes """
+        product_shirt_template = self.env['product.template'].create({
+            'name': 'Shirt',
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': self.color_attr.id,
+                    'value_ids': [(4, self.color_attr_black.id), (4, self.color_attr_red.id)],
+                }),
+            ]
+        })
+        pro_variant_blue = self.env['product.product'].search([('product_tmpl_id', '=', product_shirt_template.id), ('attribute_value_ids', '=', self.color_attr_black.id)])
+        pro_variant_blue.write({'barcode': 123456789})
+        pro_variant_red = self.env['product.product'].search([('product_tmpl_id', '=', product_shirt_template.id), ('attribute_value_ids', '=', self.color_attr_red.id)])
+        with self.assertRaises(ValidationError):
+            pro_variant_red.write({'barcode': 123456789})
+
+    def test_product_barcodes_with_multicompanies(self):
+        """ Testcase for barcode of generic product shared among multi companies """
+        self.env.user.has_group_multi_company = True  # Enable multi companies
+        self.main_company_id = self.ref('base.main_company')
+        # Generic product for all companies
+        self.env['product.template'].create({
+            'name': 'Carrot',
+            'barcode': 12312312312
+        })
+        # Raises warning, as we have same barcode for the generic product
+        with self.assertRaises(ValidationError):
+            self.env['product.template'].create({
+                'name': 'Tomato',
+                'company_id': self.main_company_id,
+                'barcode': 12312312312
+            })
+
+    def _test_product_barcode_on_change_company(self):
+        """ Testcase for having similar barcodes but different company, and when we change company it will raise warning. """
+        company_test = self.env['res.company'].create({'name': 'Testcompany'})
+        self.env['product.template'].create({
+                'name': 'Chair',
+                'company_id': self.ref('base.main_company'),
+                'barcode': 543982671252
+            })
+        prod_table = self.env['product.template'].create({
+                'name': 'Table',
+                'company_id': company_test.id,
+                'barcode': 543982671252
+            })
+        # Raises warning, as we have same barcode and same company for the product
+        with self.assertRaises(ValidationError):
+            prod_table.write({'company_id': self.main_company_id})
