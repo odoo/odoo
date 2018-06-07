@@ -75,9 +75,9 @@ class SaleOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        super(SaleOrder, self)._action_confirm()
         for order in self:
             order.order_line._action_launch_stock_rule()
+        super(SaleOrder, self)._action_confirm()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
