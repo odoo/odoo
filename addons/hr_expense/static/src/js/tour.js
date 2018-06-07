@@ -16,19 +16,18 @@ tour.register('hr_expense_tour' ,
     content: _t("Want to manage your expenses? It starts here."),
     position: 'bottom',
 }, {
-    trigger: '.o_list_button_add',
-    extra_trigger: ".o_expense_tree",
-    content: _t('<p>Let’s start by creating your first expense.</p>'),
-    position: 'bottom'
-}, {
     trigger: '.o_form_button_save',
-    extra_trigger: ".o_expense_sheet",
-    content: _t("<p>Once your <b>Expense report</b> is ready, you can save it and wait for the approval from your manager.</p>"),
+    content: _t("<p>Once your <b> Expense </b> is ready, you can save it.</p>"),
     position: 'bottom',
 }, {
-    trigger: '.o_expense_form .o_chatter_button_new_message',
+    trigger: '.o_attach_document',
     content: _t("Attach your receipt here."),
-    position: 'top',
+    position: 'bottom',
+}, {
+    trigger: '.o_expense_submit',
+    extra_triggger: ".o_expense_form",
+    content: _t('<p>Click on <b> Create Report </b> to create the report.</p>'),
+    position: 'right',
 }, {
     trigger: '.o_expense_tree .o_checkbox > input[type=checkbox]',
     content: _t('<p>Select expenses to submit them to your manager</p>'),
@@ -36,11 +35,15 @@ tour.register('hr_expense_tour' ,
 }, {
     trigger: '.o_dropdown_toggler_btn',
     extra_trigger: ".o_expense_tree",
-    content: _t('<p>Click on <b> Action Submit To Manager </b> to submit selected expenses to your manager</p>'),
+    content: _t('<p>Click on <b> Action Create Report </b> to submit selected expenses to your manager</p>'),
     position: 'right',
+},  {
+    trigger: '.o_expense_sheet_submit',
+    content: _t('Once your <b>Expense report</b> is ready, you can submit it to your manager and wait for the approval from your manager.'),
+    position: 'bottom',
 }, {
     trigger: '.o_expense_sheet_approve',
-    content: _t("<p>Approve the sheet here.</p><p>Tip: if you refuse, don’t forget to give the reason thanks to the hereunder message tool</p>"),
+    content: _t("<p>Approve the report here.</p><p>Tip: if you refuse, don’t forget to give the reason thanks to the hereunder message tool</p>"),
     position: 'bottom',
 }, {
     trigger: '.o_expense_sheet_post',
