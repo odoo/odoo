@@ -13,6 +13,7 @@
 <p>You will be prompted with Stripe Payment page for payment information.</p>]]></field>
             <field name="stripe_secret_key">dummy</field>
             <field name="stripe_publishable_key">dummy</field>
+            <field name="payment_method_ids" eval="[(4, ref('stripe_payment_method_card'))]"/>
         </record>
     </data>
 </odoo>

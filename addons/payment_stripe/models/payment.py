@@ -4,10 +4,10 @@ import logging
 import requests
 import pprint
 
+from werkzeug import urls
+
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
@@ -35,31 +35,37 @@ class PaymentAcquirerStripe(models.Model):
         help="A relative or absolute URL pointing to a square image of your "
              "brand or product. As defined in your Stripe profile. See: "
              "https://stripe.com/docs/checkout")
+    payment_method_ids = fields.Many2many(
+        'stripe.payment.method', string="Payment Method",
+        required_if_provider="stripe", default=lambda self: self.env.ref('payment_stripe.stripe_payment_method_card'))
 
     @api.multi
     def stripe_form_generate_values(self, tx_values):
         self.ensure_one()
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         stripe_tx_values = dict(tx_values)
         temp_stripe_tx_values = {
-            'company': self.company_id.name,
             'amount': tx_values['amount'],  # Mandatory
             'currency': tx_values['currency'].name,  # Mandatory anyway
-            'currency_id': tx_values['currency'].id,  # same here
-            'address_line1': tx_values.get('partner_address'),  # Any info of the partner is not mandatory
-            'address_city': tx_values.get('partner_city'),
-            'address_country': tx_values.get('partner_country') and tx_values.get('partner_country').name or '',
+            'line1': tx_values.get('partner_address'),
+            'city': tx_values.get('partner_city'),
+            'state': tx_values.get('partner_state').code,
+            'country': tx_values.get('partner_country').code,
+            'postal_code': tx_values.get('partner_zip'),
             'email': tx_values.get('partner_email'),
-            'address_zip': tx_values.get('partner_zip'),
             'name': tx_values.get('partner_name'),
-            'phone': tx_values.get('partner_phone'),
+            'reference': tx_values.get('reference'),
+            'return_url': tx_values.get('return_url'),
+            'redirect_url': urls.url_join(base_url, '/payment/stripe/return?acquirer_id=' + str(self.id)),
         }
 
+        temp_stripe_tx_values['returndata'] = stripe_tx_values.pop('return_url', '')
         stripe_tx_values.update(temp_stripe_tx_values)
         return stripe_tx_values
 
     @api.model
     def _get_stripe_api_url(self):
-        return 'api.stripe.com/v1'
+        return 'https://api.stripe.com/v1'
 
     @api.model
     def stripe_s2s_form_process(self, data):
@@ -99,12 +105,17 @@ class PaymentAcquirerStripe(models.Model):
         res['tokenize'].append('stripe')
         return res
 
+    def get_stripe_url(self):
+        return self._get_stripe_api_url()
+
 
 class PaymentTransactionStripe(models.Model):
     _inherit = 'payment.transaction'
 
-    def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
-        api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
+    stripe_payment_type = fields.Char(string='Stripe Payment Type', groups='base.group_user')
+
+    def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None, source=None):
+        api_url_charge = '%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
             'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
             'currency': self.currency_id.name,
@@ -117,6 +128,8 @@ class PaymentTransactionStripe(models.Model):
             charge_params['card'] = str(tokenid)
         if email:
             charge_params['receipt_email'] = email.strip()
+        if source:
+            charge_params['source'] = source
 
         _logger.info('_create_stripe_charge: Sending values to URL %s, values:\n%s', api_url_charge, pprint.pformat(charge_params))
         r = requests.post(api_url_charge,
@@ -135,7 +148,7 @@ class PaymentTransactionStripe(models.Model):
 
 
     def _create_stripe_refund(self):
-        api_url_refund = 'https://%s/refunds' % (self.acquirer_id._get_stripe_api_url())
+        api_url_refund = '%s/refunds' % (self.acquirer_id._get_stripe_api_url())
 
         refund_params = {
             'charge': self.acquirer_reference,
@@ -192,25 +205,33 @@ class PaymentTransactionStripe(models.Model):
         if self.state != 'draft':
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
-
         status = tree.get('status')
-        if status == 'succeeded':
+        if status in ['succeeded', 'consumed']:
             self.write({
                 'date': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
+                'stripe_payment_type': tree.get('type')
             })
             self._set_transaction_done()
             self.execute_callback()
             if self.payment_token_id:
                 self.payment_token_id.verified = True
             return True
+        elif status in ['pending', 'chargeable']:
+            self.write({
+                'date': fields.datetime.now(),
+                'acquirer_reference': tree.get('id'),
+                'stripe_payment_type': tree.get('type')
+            })
+            self._set_transaction_pending()
         else:
-            error = tree['error']['message']
+            error = tree.get('error', {}).get('message')
             _logger.warn(error)
             self.sudo().write({
                 'state_message': error,
                 'acquirer_reference': tree.get('id'),
                 'date': fields.datetime.now(),
+                'stripe_payment_type': tree.get('type')
             })
             self._set_transaction_cancel()
             return False
@@ -238,7 +259,7 @@ class PaymentTokenStripe(models.Model):
         payment_acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
         # when asking to create a token on Stripe servers
         if values.get('cc_number'):
-            url_token = 'https://%s/tokens' % payment_acquirer._get_stripe_api_url()
+            url_token = '%s/tokens' % payment_acquirer._get_stripe_api_url()
             payment_params = {
                 'card[number]': values['cc_number'].replace(' ', ''),
                 'card[exp_month]': str(values['cc_expiry'][:2]),
@@ -281,7 +302,7 @@ class PaymentTokenStripe(models.Model):
             raise Exception('We are unable to process your credit card information.')
 
         payment_acquirer = self.env['payment.acquirer'].browse(acquirer_id or self.acquirer_id.id)
-        url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()
+        url_customer = '%s/customers' % payment_acquirer._get_stripe_api_url()
 
         customer_params = {
             'source': token['id'],
@@ -304,3 +325,10 @@ class PaymentTokenStripe(models.Model):
         }
 
         return values
+
+
+class PaymentMethodStripe(models.Model):
+    _name = 'stripe.payment.method'
+
+    name = fields.Char(string="Payment Name")
+    country_ids = fields.Many2many('res.country', string="Country")

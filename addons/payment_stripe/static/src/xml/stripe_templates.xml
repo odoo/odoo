@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="stripe.error">
-    <div role="dialog" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <header class="modal-header">
-                    <h4 class="modal-title">Error</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
-                </header>
-                <main class="modal-body">
-                    <t t-esc="msg"></t>
-                </main>
-                <footer class="modal-footer">
-                    <a role="button" href="#" class="btn btn-link btn-sm" data-dismiss="modal">Close</a>
-                </footer>
+
+    <t t-name="stripe.payment.element">
+        <div role="dialog" class="modal fade" id="payment-element-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/payment/stripe/create_charge" id="payment-form">
+                        <header class="modal-header">
+                            <t t-if="type == 'card'">
+                                <h5 class="modal-title">Card Details</h5>
+                            </t>
+                            <t t-if="type =='sepa_debit'">
+                                <h5 class="modal-title">IBAN Number</h5>
+                            </t>
+                            <t t-if="type =='wechat'">
+                                <h5 class="modal-title">Wechat QR Code</h5>
+                            </t>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                        </header>
+                        <div class="modal-body">
+                            <div id="card-errors" class="m-3 text-danger text-center"/>
+                            <div id="card-element" class="m-3">
+                                <center t-if="type == 'wechat'">
+                                    <span class="d-block">Scan to pay</span>
+                                    <img t-att-src="'data:image/png;base64,'  + qr_image"/>
+                                </center>
+                            </div>
+                        </div>
+                        <footer class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close" t-if="type == 'wechat'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" t-else="">Pay Now</button>
+                        </footer>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</t>
+    </t>
+
 </templates>

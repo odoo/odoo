@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="stripe_payment_method_alipay" model="stripe.payment.method">
+        <field name="name">Alipay</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.cn"), ref("base.hk"), ref("base.sg"), ref("base.jp")])]'/>
+    </record>
+    <record id="stripe_payment_method_bancontact" model="stripe.payment.method">
+        <field name="name">Bancontact</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.be")])]'/>
+    </record>
+    <record id="stripe_payment_method_card" model="stripe.payment.method">
+        <field name="name">Card</field>
+    </record>
+    <record id="stripe_payment_method_eps" model="stripe.payment.method">
+        <field name="name">EPS</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.at")])]'/>
+    </record>
+    <record id="stripe_payment_method_giropay" model="stripe.payment.method">
+        <field name="name">Giropay</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.de")])]'/>
+    </record>
+    <record id="stripe_payment_method_ideal" model="stripe.payment.method">
+        <field name="name">Ideal</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.nl")])]'/>
+    </record>
+    <record id="stripe_payment_method_multibanco" model="stripe.payment.method">
+        <field name="name">Multibanco</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.pt")])]'/>
+    </record>
+    <record id="stripe_payment_method_p24" model="stripe.payment.method">
+        <field name="name">P24</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.pl")])]'/>
+    </record>
+    <record id="stripe_payment_method_sepa_debit" model="stripe.payment.method">
+        <field name="name">Sepa Debit</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.fr"), ref("base.de"), ref("base.es"), ref("base.be"), ref("base.nl"), ref("base.lu"), ref("base.it"), ref("base.pt"), ref("base.at"), ref("base.ie")])]'/>
+    </record>
+    <record id="stripe_payment_method_sofort" model="stripe.payment.method">
+        <field name="name">Sofort</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.at"), ref("base.be"), ref("base.de"), ref("base.nl"), ref("base.es"), ref("base.it")])]'/>
+    </record>
+    <record id="stripe_payment_method_wechat" model="stripe.payment.method">
+        <field name="name">Wechat</field>
+        <field name="country_ids" eval='[(6, 0, [ref("base.cn"), ref("base.hk"), ref("base.sg"), ref("base.jp")])]'/>
+    </record>
+
+</odoo>
