@@ -367,7 +367,7 @@ class PurchaseOrder(models.Model):
         This function returns an action that display existing vendor bills of given purchase order ids.
         When only one found, show the vendor bill immediately.
         '''
-        action = self.env.ref('account.action_invoice_tree2')
+        action = self.env.ref('account.action_vendor_bill_template')
         result = action.read()[0]
 
         # override the context to get rid of the default filtering
@@ -385,6 +385,10 @@ class PurchaseOrder(models.Model):
             res = self.env.ref('account.invoice_supplier_form', False)
             result['views'] = [(res and res.id or False, 'form')]
             result['res_id'] = self.invoice_ids.id
+
+        # complete the help tooltip
+        new_help = self.env['account.invoice'].complete_empty_list_help()
+        result['help'] = result.get('help', '') + new_help
         return result
 
     @api.multi
