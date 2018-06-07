@@ -85,7 +85,7 @@ bus.Bus = Widget.extend({
         }
         var data = {channels: self.channels, last: self.last, options: options};
         // The backend has a maximum cycle time of 50 seconds so give +10 seconds
-        this._pollRpc = session.rpc(this.pollRoute, data, {shadow : true, timeout: 60000});
+        this._pollRpc = this.session.rpc(this.pollRoute, data, {shadow : true, timeout: 60000});
         this._pollRpc.then(function (result) {
             self._pollRpc = false;
             self.on_notification(result);
