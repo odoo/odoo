@@ -195,7 +195,7 @@ var Chatter = Widget.extend({
             if (old_composer) {
                 old_composer.destroy();
             }
-            if (!config.device.touch) {
+            if (!config.device.isMobile) {
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
