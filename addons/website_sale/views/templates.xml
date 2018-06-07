@@ -609,7 +609,7 @@
         <input type="hidden" t-if="len(product.product_variant_ids) == 1" name="product_id" t-att-value="product.product_variant_id.id"/>
         <t t-if="len(product.product_variant_ids) &gt; 1">
           <label label-default="label-default" class="radio" t-foreach="product.product_variant_ids" t-as="variant_id">
-            <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else ''" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
+            <input type="radio" name="product_id" class="js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-att-value="variant_id.id" t-att-data-lst_price="compute_currency(variant_id.lst_price)" t-att-data-price="variant_id.price"/>
             <span t-esc="variant_id.name_get()[0][1]"/>
             <t t-set="diff_price" t-value="variant_id.price - variant_id.product_tmpl_id.price"/>
             <span class="badge" t-if="diff_price != 0">
