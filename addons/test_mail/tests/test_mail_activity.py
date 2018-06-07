@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import date
+import pytz
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 from unittest.mock import DEFAULT
@@ -76,11 +76,16 @@ class TestMailActivity(BaseFunctionalTest):
         today = date.today()
         with self.sudoAs('ernest'):
             self.assertEqual(self.test_record.env.user, self.user_employee)
-
+            self.assertTrue(self.user_admin.tz)
+            today_utc = pytz.UTC.localize(datetime.utcnow())
+            today_tz_admin = today_utc.astimezone(pytz.timezone(self.user_admin.tz))
+            today_admin = date(year=today_tz_admin.year, month=today_tz_admin.month, day=today_tz_admin.day)
+            self.assertFalse(self.user_employee.tz)  # adapt today_employe if a timezone is set on user_employee
+            today_employe = today
             # Test various scheduling of activities
             act1 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
-                today + relativedelta(days=1),
+                today_admin + relativedelta(days=1),
                 user_id=self.user_admin.id)
             self.assertEqual(act1.automated, True)
 
@@ -91,13 +96,13 @@ class TestMailActivity(BaseFunctionalTest):
 
             act2 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_meeting',
-                today + relativedelta(days=-1))
+                today_employe + relativedelta(days=-1))
             self.assertEqual(self.test_record.activity_state, 'overdue')
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
 
             act3 = self.test_record.activity_schedule(
                 'test_mail.mail_act_test_todo',
-                today + relativedelta(days=3),
+                today_employe + relativedelta(days=3),
                 user_id=self.user_employee.id)
             self.assertEqual(self.test_record.activity_state, 'overdue')
             self.assertEqual(self.test_record.activity_user_id, self.user_employee)
@@ -116,7 +121,7 @@ class TestMailActivity(BaseFunctionalTest):
             self.assertEqual(self.test_record.activity_state, 'overdue')
             self.test_record.activity_reschedule(
                 ['test_mail.mail_act_test_meeting', 'test_mail.mail_act_test_todo'],
-                date_deadline=today + relativedelta(days=3)
+                date_deadline=today_employe + relativedelta(days=3)
             )
             self.assertEqual(self.test_record.activity_state, 'planned')
 
