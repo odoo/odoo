@@ -1478,8 +1478,6 @@ class AccountInvoice(models.Model):
         else:
             payment_method = self.env.ref('account.account_payment_method_manual_out')
             journal_payment_methods = pay_journal.outbound_payment_method_ids
-        if payment_method not in journal_payment_methods:
-            raise UserError(_('No appropriate payment method enabled on journal %s') % pay_journal.name)
 
         communication = self.type in ('in_invoice', 'in_refund') and self.reference or self.number
         if self.origin:

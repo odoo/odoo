@@ -203,7 +203,7 @@ class TestStockValuation(TransactionCase):
         wizard.process()
 
         # the unit price of the stock move has been updated to the latest value
-        self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate, places=2)
+        self.assertAlmostEqual(move1.price_unit, price_unit_usd_new_rate)
 
         self.assertAlmostEqual(self.product1.stock_value, price_unit_usd_new_rate * 10, delta=0.1)
 
@@ -417,4 +417,3 @@ class TestStockValuationWithCOA(AccountingTestCase):
         # check the anglo saxon entries
         price_diff_entry = self.env['account.move.line'].search([('account_id', '=', price_diff_account.id)])
         self.assertEqual(price_diff_entry.credit, 100)
-

@@ -57,7 +57,7 @@ class AccountInvoice(models.Model):
         taxes = line.taxes_id
         invoice_line_tax_ids = line.order_id.fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
         invoice_line = self.env['account.invoice.line']
-        date = self.date_invoice
+        date = self.date
         data = {
             'purchase_line_id': line.id,
             'name': line.order_id.name + ': ' + line.name,
@@ -113,7 +113,7 @@ class AccountInvoice(models.Model):
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                date = self.date_invoice or fields.Date.today()
+                date = self.date or fields.Date.today()
                 company = self.company_id
                 line.price_unit = line.purchase_id.currency_id._convert(
                     line.purchase_line_id.price_unit, self.currency_id, company, date, round=False)
