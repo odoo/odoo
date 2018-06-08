@@ -613,7 +613,7 @@ var ImageWidget = MediaWidget.extend({
      */
     _onSearchInput: function (ev) {
         var $input = $(ev.currentTarget);
-        var $button = $input.next('button');
+        var $button = $input.next('.input-group-append').children();
         var emptyValue = ($input.val() === '');
         $button.toggleClass('btn-secondary', emptyValue).toggleClass('btn-primary', !emptyValue)
                .prop('disabled', emptyValue);
@@ -1104,7 +1104,7 @@ var MediaDialog = Dialog.extend({
     events : _.extend({}, Dialog.prototype.events, {
         'input input#icon-search': '_onSearchInput',
         'shown.bs.tab a[data-toggle="tab"]': '_onTabChange',
-        'click .pager > li > a:not(.disabled)': '_onPagerClick',
+        'click .previous:not(.disabled), .next:not(.disabled)': '_onPagerClick',
     }),
     custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
         save_request: '_onSaveRequest',
@@ -1274,9 +1274,9 @@ var MediaDialog = Dialog.extend({
     _updateControlPanel: function () {
         var cpConfig = this.active.getControlPanelConfig();
         this.$('li.search').toggleClass('d-none', !cpConfig.searchEnabled);
-        this.$('li.previous, li.next').toggleClass('d-none', !cpConfig.pagerEnabled);
-        this.$('li.previous > a').toggleClass("disabled", !cpConfig.pagerLeftEnabled);
-        this.$('li.next > a').toggleClass("disabled", !cpConfig.pagerRightEnabled);
+        this.$('.previous, .next').toggleClass('d-none', !cpConfig.pagerEnabled);
+        this.$('.previous').toggleClass("disabled", !cpConfig.pagerLeftEnabled);
+        this.$('.next').toggleClass("disabled", !cpConfig.pagerRightEnabled);
     },
 
     //--------------------------------------------------------------------------
@@ -1287,7 +1287,7 @@ var MediaDialog = Dialog.extend({
      * @private
      */
     _onPagerClick: function (ev) {
-        this.active.goToPage(this.active.page + ($(ev.currentTarget).parent().hasClass('previous') ? -1 : 1));
+        this.active.goToPage(this.active.page + ($(ev.currentTarget).hasClass('previous') ? -1 : 1));
         this._updateControlPanel();
     },
     /**
