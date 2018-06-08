@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 
 class ProductionLot(models.Model):
     _name = 'stock.production.lot'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread','mail.activity.mixin']
     _description = 'Lot/Serial'
 
     name = fields.Char(

@@ -55,3 +55,56 @@ class StockProductionLot(models.Model):
         dates_dict = self._get_dates()
         for field, value in dates_dict.items():
             setattr(self, field, value)
+
+
+    def _alert_date_exceeded(self):
+        # Run by a cron
+        # if the alert_date is in the past, log a next activity on the next.production.lot 
+        alert_lot_ids = self.env['stock.production.lot'].search([('alert_date', '<=', fields.Date.today())] )
+        mail_activity_type =self.env.ref('product_expiry.mail_activity_alert_date_reached').id
+        stock_quants = self.env['stock.quant'].search([
+            ('lot_id', 'in', alert_lot_ids.ids),
+            ('quantity', '>', 0)]).filtered(lambda quant: quant.location_id.usage == 'internal' )
+
+        # only for the products that do not have already an activity
+        stock_quants = stock_quants.filtered(lambda quant: 
+            self.env['mail.activity'].search_count([
+                ('res_model', '=', 'stock.production.lot'),
+                ('res_id', '=', quant.lot_id.id),
+                ('activity_type_id','=',mail_activity_type)]) == 0 )
+
+        # when an activity is deleted, it goes into message
+        stock_quants = stock_quants.filtered(lambda quant: 
+            self.env['mail.message'].search_count([
+                ('model', '=', 'stock.production.lot'),
+                ('res_id', '=', quant.lot_id.id),
+                ('subtype_id', '=', 3),
+                ('mail_activity_type_id','=',mail_activity_type)]) == 0 )
+        stock_quants.mapped('lot_id')._log_next_activity_alert_date_reached( 'The alert date has been reached for this lot/serial number' )
+            
+    def _log_next_activity_alert_date_reached(self, note):
+        for lot in self:
+            # If the user deleted todo activity type.
+            try:
+                activity_type_id =self.env.ref('product_expiry.mail_activity_alert_date_reached').id
+            except:
+                activity_type_id = False
+            product_id = self.env['product.product'].search([('id', '=', lot.product_id._ids[0])])
+            self.env['mail.activity'].create({
+                'activity_type_id': activity_type_id,
+                'note': note,
+                'user_id': product_id.responsible_id.id,
+                'res_model_id': self.env.ref('stock.model_stock_production_lot').id,
+                'res_id': lot.id,
+            })
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
+        super(ProcurementGroup, self)._run_scheduler_tasks(use_new_cursor=use_new_cursor, company_id=company_id)
+        self.env['stock.production.lot']._alert_date_exceeded()
+        if use_new_cursor:
+            self._cr.commit() 
