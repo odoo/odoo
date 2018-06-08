@@ -19,6 +19,8 @@
                         <group>
                             <field name="category" invisible="1"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
+                            <field name="res_model_change" invisible="1"/>
+                            <field name="initial_res_model_id" invisible="1"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
@@ -31,8 +33,13 @@
                         <group>
                             <field name="next_type_ids" widget="many2many_tags"
                                 context="{'default_res_model_id': res_model_id}"/>
+                            <field name="mail_template_ids" widget="many2many_tags"
+                                domain="[('model_id', '=', res_model_id)]"
+                                attrs="{'invisible': [('res_model_id', '=', False)]}"
+                                context="{'default_model_id': res_model_id}"/>
                         </group>
                     </group>
+                    <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
         </field>

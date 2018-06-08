@@ -97,6 +97,19 @@
                 margin: 2px 0 5px;
             }
 
+            .o_mail_template {
+                display: inline-block;
+                margin: 0px 0px 4px 4px;
+                padding: 1px 6px;
+                color: $o-brand-primary;
+                border: 1px solid $o-brand-primary;
+                cursor: pointer;
+                &:hover:not(.active) {
+                    color: darken($o-brand-primary, 15%);
+                    border-color: darken($o-brand-primary, 15%);
+                }
+            }
+
             .o_thread_message_tools {
                 .o_activity_link {
                     padding: 0 $input-btn-padding-x;

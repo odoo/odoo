@@ -189,9 +189,10 @@ class MailComposer(models.TransientModel):
     # action buttons call with positionnal arguments only, so we need an intermediary function
     # to ensure the context is passed correctly
     @api.multi
-    def send_mail_action(self):
-        # TDE/ ???
-        return self.send_mail()
+    def action_send_mail(self):
+        self.send_mail()
+        return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
+
 
     @api.multi
     def send_mail(self, auto_commit=False):
@@ -259,8 +260,6 @@ class MailComposer(models.TransientModel):
 
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails.send(auto_commit=auto_commit)
-
-        return {'type': 'ir.actions.act_window_close'}
 
     @api.multi
     def get_mail_values(self, res_ids):
