@@ -10,7 +10,7 @@ class ResPartner(models.Model):
 
     def _compute_event_count(self):
         for partner in self:
-            partner.event_count = self.env['event.event'].search_count([('registration_ids.partner_id', 'child_of', partner.ids)])
+            partner.event_count = self.env['event.event'].sudo().search_count([('registration_ids.partner_id', 'child_of', partner.ids)])
 
     @api.multi
     def action_event_view(self):
