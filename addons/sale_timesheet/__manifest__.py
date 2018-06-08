@@ -30,4 +30,5 @@ have real delivered quantities in sales orders.
         'data/sale_service_demo.xml',
     ],
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook',
 }
