@@ -4,7 +4,7 @@ import re
 
 import collections
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import pycompat
 
@@ -61,7 +61,7 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def get_supported_account_types(self):
-        return [('bank', 'Normal')]
+        return [('bank', _('Normal'))]
 
     acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
     acc_number = fields.Char('Account Number', required=True)

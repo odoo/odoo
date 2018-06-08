@@ -51,7 +51,7 @@ class ResPartnerBank(models.Model):
     @api.model
     def get_supported_account_types(self):
         rslt = super(ResPartnerBank, self).get_supported_account_types()
-        rslt.append(('iban', 'IBAN'))
+        rslt.append(('iban', _('IBAN')))
         return rslt
 
     @api.model

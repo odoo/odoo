@@ -3,7 +3,7 @@
 
 import re
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
 
 
@@ -33,7 +33,7 @@ class ResPartnerBank(models.Model):
     @api.model
     def get_supported_account_types(self):
         rslt = super(ResPartnerBank, self).get_supported_account_types()
-        rslt.append(('postal', 'Postal'))
+        rslt.append(('postal', _('Postal')))
         return rslt
 
     @api.model
