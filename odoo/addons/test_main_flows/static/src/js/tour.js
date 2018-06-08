@@ -677,7 +677,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'div[name=bank_journal_cta] > a[data-name=create_bank_statement], div[name=bank_journal_cta] > a[data-name=create_bank_statement]',
+    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
     position: 'bottom',
 }, {
