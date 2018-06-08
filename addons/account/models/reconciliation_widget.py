@@ -743,7 +743,7 @@ class AccountReconciliation(models.AbstractModel):
                 if writeoff_currency != company_currency:
                     mv_line_dict['debit'] = writeoff_currency._convert(mv_line_dict['debit'], company_currency, company, date)
                     mv_line_dict['credit'] = writeoff_currency._convert(mv_line_dict['credit'], company_currency, company, date)
-                writeoff_lines += account_move_line._create_writeoff(mv_line_dict)
+                writeoff_lines += account_move_line._create_writeoff([mv_line_dict])
 
             (account_move_line + writeoff_lines).reconcile()
         else:
