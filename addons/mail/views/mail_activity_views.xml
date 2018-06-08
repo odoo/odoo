@@ -75,6 +75,11 @@
       parent="base.menu_email"
     />
 
+    <record id="mail_activity_done_schedule_next_action" model="ir.actions.client">
+        <field name="name">Done &amp; Schedule Next</field>
+        <field name="tag">activity_done_schedule_next</field>
+    </record>
+
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.view.form.popup</field>
         <field name="model">mail.activity</field>
@@ -115,7 +120,7 @@
                             type="object" class="btn-primary"/>
                         <button string="Mark as Done" name="action_done"
                             type="object" class="btn-default"/>
-                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next" type="object" class="btn-default"/>
+                        <button string="Done &amp; Schedule Next" name="%(mail.mail_activity_done_schedule_next_action)d" type="action" class="btn-default"/>
                         <button string="Discard" class="btn-default" special="cancel" />
                     </footer>
                 </sheet>
