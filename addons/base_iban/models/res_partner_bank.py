@@ -49,8 +49,8 @@ class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
     @api.model
-    def get_supported_account_types(self):
-        rslt = super(ResPartnerBank, self).get_supported_account_types()
+    def _get_supported_account_types(self):
+        rslt = super(ResPartnerBank, self)._get_supported_account_types()
         rslt.append(('iban', _('IBAN')))
         return rslt
 

@@ -31,8 +31,8 @@ class ResPartnerBank(models.Model):
     l10n_ch_postal = fields.Char(string='ISR reference', help='The ISR number of the company within the bank')
 
     @api.model
-    def get_supported_account_types(self):
-        rslt = super(ResPartnerBank, self).get_supported_account_types()
+    def _get_supported_account_types(self):
+        rslt = super(ResPartnerBank, self)._get_supported_account_types()
         rslt.append(('postal', _('Postal')))
         return rslt
 

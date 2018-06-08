@@ -61,6 +61,10 @@ class ResPartnerBank(models.Model):
 
     @api.model
     def get_supported_account_types(self):
+        return self._get_supported_account_types()
+
+    @api.model
+    def _get_supported_account_types(self):
         return [('bank', _('Normal'))]
 
     acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
