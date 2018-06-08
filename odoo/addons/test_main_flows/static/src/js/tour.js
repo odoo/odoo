@@ -650,7 +650,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: '.o_field_widget[name=setup_journal_link_creation] .o_radio_input[data-value="link"]',
+    trigger: '.o_field_widget[name=create_or_link_option] .o_radio_input[data-value="link"]',
     content: _t('Link to existing journal'),
     position: 'bottom',
 }, {
@@ -661,7 +661,7 @@ tour.register('main_flow_tour', {
     run: "text 867656544",
 }, {
     edition: "enterprise",
-    trigger: ".o_field_widget[name=single_journal_id] input",
+    trigger: ".o_field_widget[name=linked_journal_id] input",
     extra_trigger: ".modal-dialog",
     content: _t("Select Journal"),
     position: "bottom",
