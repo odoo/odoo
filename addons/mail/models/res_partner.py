@@ -85,7 +85,7 @@ class Partner(models.Model):
             'signature': signature,
             'website_url': website_url,
             'company': company,
-            'model_name': model_name,
+            'model_description': model_name,
             'record': record,
             'record_name': record_name,
             'tracking_values': tracking,
