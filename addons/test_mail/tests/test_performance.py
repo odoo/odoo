@@ -4,9 +4,11 @@
 from email.utils import formataddr
 
 from odoo.tests.common import TransactionCase, users, warmup
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_performance')
 class TestMailPerformance(TransactionCase):
 
     def setUp(self):
@@ -113,6 +115,7 @@ class TestMailPerformance(TransactionCase):
             })
 
 
+@tagged('mail_performance')
 class TestAdvMailPerformance(TransactionCase):
 
     def setUp(self):
@@ -295,6 +298,7 @@ class TestAdvMailPerformance(TransactionCase):
             record.message_subscribe(partner_ids=self.user_test.partner_id.ids, subtype_ids=subtype_ids)
 
 
+@tagged('mail_performance')
 class TestHeavyMailPerformance(TransactionCase):
 
     def setUp(self):

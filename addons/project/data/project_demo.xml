@@ -21,20 +21,6 @@
             <field name="name">Usability</field>
         </record>
 
-        <!-- Email templates -->
-        <record id="mail_template_data_project_task" model="mail.template">
-            <field name="name">Task: Reception Acknowledgment</field>
-            <field name="subject">Reception of ${object.name}</field>
-            <field name="model_id" ref="project.model_project_task"/>
-            <field name="use_default_to" eval="True"/>
-            <field name="body_html"><![CDATA[
-<p>Dear ${object.partner_id.name or 'customer'},</p>
-<p>Thank you for your enquiry.<br /></p>
-<p>If you have any questions, please let us know.</p>
-<p>Best regards,</p>]]></field>
-            <field name="auto_delete" eval="True"/>
-        </record>
-
         <!-- Stages -->
         <record id="project_stage_0" model="project.task.type">
             <field name="sequence">1</field>

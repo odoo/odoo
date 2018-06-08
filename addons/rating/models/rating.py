@@ -213,12 +213,33 @@ class RatingMixin(models.AbstractModel):
         return rating.access_token
 
     @api.multi
-    def rating_send_request(self, template, lang=False, force_send=True):
+    def rating_send_request(self, template, lang=False, subtype_id=False, force_send=True, composition_mode='comment', notif_layout=None):
         """ This method send rating request by email, using a template given
-        in parameter. """
-        lang = lang or 'en_US'
+        in parameter.
+
+         :param template: a mail.template record used to compute the message body;
+         :param lang: optional lang; it can also be specified directly on the template
+           itself in the lang field;
+         :param subtype_id: optional subtype to use when creating the message; is
+           a note by default to avoid spamming followers;
+         :param force_send: whether to send the request directly or use the mail
+           queue cron (preferred option);
+         :param composition_mode: comment (message_post) or mass_mail (template.send_mail);
+         :param notif_layout: layout used to encapsulate the content when sending email;
+        """
+        if lang:
+            template = template.with_context(lang=lang)
+        if subtype_id is False:
+            subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
+        if force_send:
+            self = self.with_context(mail_notify_force_send=True)
         for record in self:
-            template.with_context(lang=lang).send_mail(record.id, force_send=force_send)
+            record.message_post_with_template(
+                template.id,
+                composition_mode=composition_mode,
+                notif_layout=notif_layout if notif_layout is not None else 'mail.mail_notification_light',
+                subtype_id=subtype_id
+            )
 
     @api.multi
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
