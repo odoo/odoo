@@ -7,8 +7,8 @@ class SetupBarBankConfigWizard(models.TransientModel):
     _inherit = 'account.setup.bank.manual.config'
 
     def validate(self):
-        """ Overridden so that we set the configured bank journal as using file
-        import as it bank statements source.
+        """ Default the bank statement source of new bank journals as 'file_import'
         """
         super(SetupBarBankConfigWizard, self).validate()
-        self.single_journal_id.bank_statements_source = 'file_import'
+        if self.create_or_link_option == 'new':
+            self.linked_journal_id.bank_statements_source = 'file_import'

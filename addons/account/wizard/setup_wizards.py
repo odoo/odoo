@@ -104,6 +104,6 @@ class SetupBarBankConfigWizard(models.TransientModel):
 
     def validate(self):
         """ Called by the validation button of this wizard. Serves as an
-        extension hook.
+        extension hook in account_bank_statement_import.
         """
         pass
