@@ -411,7 +411,6 @@ class account_journal(models.Model):
     @api.multi
     def create_bank_statement(self):
         """return action to create a bank statements. This button should be called only on journals with type =='bank'"""
-        self.bank_statements_source = 'manual'
         action = self.env.ref('account.action_bank_statement_tree').read()[0]
         action.update({
             'views': [[False, 'form']],

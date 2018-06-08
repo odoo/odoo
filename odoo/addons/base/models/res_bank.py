@@ -4,7 +4,7 @@ import re
 
 import collections
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import pycompat
 
@@ -59,7 +59,15 @@ class ResPartnerBank(models.Model):
     _description = 'Bank Accounts'
     _order = 'sequence'
 
-    acc_type = fields.Selection([('bank', 'Normal')], compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
+    @api.model
+    def get_supported_account_types(self):
+        return self._get_supported_account_types()
+
+    @api.model
+    def _get_supported_account_types(self):
+        return [('bank', _('Normal'))]
+
+    acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
     acc_number = fields.Char('Account Number', required=True)
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder")
@@ -80,10 +88,16 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.sanitized_acc_number = sanitize_account_number(bank.acc_number)
 
-    @api.multi
+    @api.depends('acc_number')
     def _compute_acc_type(self):
         for bank in self:
-            bank.acc_type = 'bank'
+            bank.acc_type = self.retrieve_acc_type(bank.acc_number)
+
+    @api.model
+    def retrieve_acc_type(self, acc_number):
+        """ To be overridden by subclasses in order to support other account_types.
+        """
+        return 'bank'
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):

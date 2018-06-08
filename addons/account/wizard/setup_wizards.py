@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class FinancialYearOpeningWizard(models.TransientModel):
@@ -48,47 +48,60 @@ class FinancialYearOpeningWizard(models.TransientModel):
         return super(FinancialYearOpeningWizard, self).write(vals)
 
 
-class OpeningAccountMoveWizard(models.TransientModel):
-    _name = 'account.opening'
+class SetupBarBankConfigWizard(models.TransientModel):
+    _inherits = {'res.partner.bank': 'res_partner_bank_id'}
+    _name = 'account.setup.bank.manual.config'
 
-    company_id = fields.Many2one(comodel_name='res.company', required=True)
-    opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', related='company_id.account_opening_move_id')
-    currency_id = fields.Many2one(comodel_name='res.currency', related='opening_move_id.currency_id')
-    opening_move_line_ids = fields.One2many(string='Opening Journal Items', related="opening_move_id.line_ids")
-    journal_id = fields.Many2one(string='Journal', comodel_name='account.journal', required=True, related='opening_move_id.journal_id')
-    date = fields.Date(string='Opening Date', required=True, related='opening_move_id.date')
+    setup_journal_link_creation = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
+    single_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_single_journal_id', inverse='set_single_journal_id')
+    single_journal_name = fields.Char(compute='compute_single_journal_related_data', inverse='set_single_journal_id', required=True)
+
+    wizard_acc_type = fields.Selection(string="Account Type", selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_wizard_acc_type')
+
+    @api.depends('acc_number')
+    def _compute_wizard_acc_type(self):
+        for record in self:
+            record.wizard_acc_type = self.env['res.partner.bank'].retrieve_acc_type(record.acc_number)
+
+    @api.model
+    def create(self, vals):
+        """ This wizard is only used to setup an account for the current active
+        company, so we always inject the corresponding partner when creating
+        the model.
+        """
+        vals['partner_id'] = self.env.user.company_id.partner_id.id
+        return super(SetupBarBankConfigWizard, self).create(vals)
+
+    @api.depends('single_journal_id')
+    def compute_single_journal_related_data(self):
+        for record in self:
+            if record.single_journal_id:
+                record.single_journal_name = record.single_journal_id.name
+
+    @api.depends('journal_id')  # Despite its name, journal_id is actually a One2many field
+    def compute_single_journal_id(self):
+        for record in self:
+            record.single_journal_id = record.journal_id and record.journal_id[0] or None
+
+    def set_single_journal_id(self):
+        """ Called when saving the wizard.
+        """
+        for record in self:
+            selected_journal = record.single_journal_id
+            if record.setup_journal_link_creation == 'new':
+                company = self.env['res.company']._company_default_get('account.journal')
+                bank_journal_count = self.env['account.journal'].search_count([('company_id','=',company.id), ('type','=','bank')])
+                selected_journal = self.env['account.journal'].create({
+                    'name': record.single_journal_name,
+                    'code': 'BNK' + str(bank_journal_count + 1),
+                    'type': 'bank',
+                    'company_id': company.id,
+                })
+
+            record.journal_id = [(6, False, selected_journal.ids)]
 
     def validate(self):
-        self.opening_move_id.post()
-        return {
-            "effect": {
-                'fadeout': 'slow',
-                'img_url': '/web/static/src/img/smile.svg',
-                'message': _("Well done! The configuration steps have been done successfully."),
-                'type': "rainbow_man"
-            }
-        }
-
-    @api.onchange('opening_move_line_ids')
-    def opening_move_line_ids_changed(self):
-        debit_diff, credit_diff = self.company_id.get_opening_move_differences(self.opening_move_line_ids)
-
-        unaffected_earnings_account = self.company_id.get_unaffected_earnings_account()
-        balancing_line = self.opening_move_line_ids.filtered(lambda x: x.account_id == unaffected_earnings_account)
-
-        if balancing_line:
-            if not self.opening_move_line_ids == balancing_line and (debit_diff or credit_diff):
-                balancing_line.debit = credit_diff
-                balancing_line.credit = debit_diff
-            else:
-                self.opening_move_line_ids -= balancing_line
-        elif debit_diff or credit_diff:
-            balancing_line = self.env['account.move.line'].new({
-                        'name': _('Automatic Balancing Line'),
-                        'move_id': self.company_id.account_opening_move_id.id,
-                        'account_id': unaffected_earnings_account.id,
-                        'debit': credit_diff,
-                        'credit': debit_diff,
-                        'company_id': self.company_id,
-                    })
-            self.opening_move_line_ids += balancing_line
+        """ Called by the validation button of this wizard. Serves as an
+        extension hook.
+        """
+        pass
