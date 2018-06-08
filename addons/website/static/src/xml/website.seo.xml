@@ -124,4 +124,39 @@
             </div>
         </li>
     </t>
+
+    <div t-name="website.seo_meta_image_selector" class="o_seo_og_image">
+        <t t-call="website.og_image_body"/>
+    </div>
+
+    <t t-name="website.og_image_body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="mt16 mb4">Image for Social Share</h5>
+                <div class="text-muted mb32">Select an image to use in social share.</div>
+                <t t-foreach="widget.images" t-as="image">
+                    <div t-attf-class="o_meta_img mt4 #{image === widget.activeMetaImg and ' o_active_image' or ''}">
+                        <img t-att-src="image"/>
+                    </div>
+                </t>
+                <div t-if="widget.customImgUrl" t-attf-class="o_meta_img mt4 #{widget.customImgUrl === widget.activeMetaImg and ' o_active_image' or ''}">
+                    <span class="o-custom-label w-100 text-white text-center">Custom</span>
+                    <img t-att-src="widget.customImgUrl"/>
+                </div>
+                <div class="o_meta_img_upload mt4" title="Click to choose more images">
+                    <i class="fa fa-upload"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h6 class="mt16">Preview <small>how your page will be displayed on social media</small></h6>
+                <div class="card p-0">
+                    <img class="card-img-top o_meta_active_img" t-att-src="widget.activeMetaImg"/>
+                    <div class="card-body px-3 py-2">
+                        <h6 class="text-alpha card-title mb0"><t t-esc="widget.metaTitle"/></h6>
+                        <small class="card-subtitle text-muted"><t t-esc="widget.serverUrl"/></small>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>
