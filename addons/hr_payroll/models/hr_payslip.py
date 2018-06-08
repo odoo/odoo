@@ -47,7 +47,7 @@ class HrPayslip(models.Model):
                 \n* When user cancel payslip the status is \'Rejected\'.""")
     line_ids = fields.One2many('hr.payslip.line', 'slip_id', string='Payslip Lines', readonly=True,
         states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, copy=False,
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, copy=False,
         default=lambda self: self.env['res.company']._company_default_get(),
         states={'draft': [('readonly', False)], 'verify': [('readonly', False)]})
     worked_days_line_ids = fields.One2many('hr.payslip.worked_days', 'payslip_id',
