@@ -23,8 +23,11 @@ class HrAttendance(models.Model):
         """Links the attendance to the corresponding sheet
         """
         for attendance in self:
+            att_tz_date_str = attendance._get_attendance_employee_tz(
+                attendance.employee_id.id, attendance.check_in)
             corresponding_sheet = self.env['hr_timesheet_sheet.sheet'].search(
-                [('date_to', '>=', attendance.check_in), ('date_from', '<=', attendance.check_in),
+                [('date_to', '>=', att_tz_date_str),
+                 ('date_from', '<=', att_tz_date_str),
                  ('employee_id', '=', attendance.employee_id.id),
                  ('state', 'in', ['draft', 'new'])], limit=1)
             if corresponding_sheet:
@@ -35,14 +38,21 @@ class HrAttendance(models.Model):
         assert operator == 'in'
         ids = []
         for ts in self.env['hr_timesheet_sheet.sheet'].browse(value):
+            local_tz = timezone(ts.employee_id.user_id.partner_id.tz or 'utc')
+            local_date_from_dt = local_tz.localize(datetime.strptime(
+                ts.date_from, DEFAULT_SERVER_DATE_FORMAT))
+            local_date_to_dt = local_tz.localize(datetime.strptime(
+                ts.date_to, DEFAULT_SERVER_DATE_FORMAT))
+            utc_date_from_dt = local_date_from_dt.astimezone(pytz.utc)
+            utc_date_to_dt = local_date_to_dt.astimezone(pytz.utc)
             self._cr.execute("""
                     SELECT a.id
                         FROM hr_attendance a
                     WHERE %(date_to)s >= a.check_in
                         AND %(date_from)s <= a.check_in
                         AND %(employee_id)s = a.employee_id
-                    GROUP BY a.id""", {'date_from': ts.date_from,
-                                       'date_to': ts.date_to,
+                    GROUP BY a.id""", {'date_from': utc_date_from_dt,
+                                       'date_to': utc_date_to_dt,
                                        'employee_id': ts.employee_id.id, })
             ids.extend([row[0] for row in self._cr.fetchall()])
         return [('id', 'in', ids)]
