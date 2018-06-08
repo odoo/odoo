@@ -154,15 +154,22 @@
                 and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
             <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
-
-            <!-- OpenGraph tags for Facebook sharing -->
-            <meta property="og:title" t-att-content="additional_title" />
-            <meta property="og:site_name" t-att-content="res_company.name" />
-            <t t-if="main_object and 'plain_content' in main_object and main_object.plain_content">
-                <t t-set="og_description" t-value="main_object.plain_content[0:500]"/>
-                <meta property="og:description" t-att-content="og_description" />
-                <meta property='og:image' t-att-content="request.httprequest.url_root+'logo.png'"/>
-                <meta property='og:url' t-att-content="request.httprequest.url_root+request.httprequest.path[1:end]"/>
+            <t t-if="main_object">
+                <t t-set="website_meta" t-value="main_object.get_website_meta()"/>
+                <!-- OpenGraph tags for Facebook sharing -->
+                <t t-set="opengraph_meta" t-value="website_meta.get('opengraph_meta')"/>
+                <t t-if="opengraph_meta">
+                    <t t-foreach="opengraph_meta" t-as="og_meta">
+                        <meta t-att-property="og_meta" t-att-content="opengraph_meta[og_meta]"/>
+                    </t>
+                </t>
+                <!-- Twitter tags for sharing -->
+                <t t-set="twitter_meta" t-value="website_meta.get('twitter_meta')"/>
+                <t t-if="opengraph_meta">
+                    <t t-foreach="twitter_meta" t-as="t_meta">
+                        <meta t-att-name="t_meta" t-att-content="twitter_meta[t_meta]"/>
+                    </t>
+                </t>
             </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
@@ -173,10 +180,6 @@
             </t>
 
             <script type="text/javascript">
-                <t groups="website.group_website_publisher">
-                    odoo.snippetsURL = '/website/snippets';
-                </t>
-
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
@@ -185,6 +188,10 @@
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
                     user_id: <t t-esc="json.dumps(request.env.user.id)" />
                 };
+                <t groups="website.group_website_publisher">
+                    odoo.snippetsURL = '/website/snippets';
+                    odoo.session_info.website_company_id = <t t-esc="json.dumps(request.website.company_id.id)" />;
+                </t>
             </script>
 
             <t t-call-assets="web.assets_common" t-js="false"/>
