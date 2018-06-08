@@ -373,3 +373,28 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         subtask.write({'project_id': self.project_global.id})
 
         self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
+
+    def test_change_ordered_qty(self):
+        """ Changing the ordered quantity of a SO line that have created a task should update the planned hours of this task """
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'name': self.product_delivery_timesheet2.name,
+            'product_id': self.product_delivery_timesheet2.id,
+            'product_uom_qty': 50,
+            'product_uom': self.product_delivery_timesheet2.uom_id.id,
+            'price_unit': self.product_delivery_timesheet2.list_price
+        })
+
+        self.sale_order.action_confirm()
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
+
+        sale_order_line.write({'product_uom_qty': 20})
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
+
+        self.sale_order.action_cancel()
+        sale_order_line.write({'product_uom_qty': 30})
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
+
+        self.sale_order.action_done()
+        with self.assertRaises(UserError):
+            sale_order_line.write({'product_uom_qty': 20})
