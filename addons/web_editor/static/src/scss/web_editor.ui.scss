@@ -1332,7 +1332,7 @@ body.editor_enable {
 body .modal {
     // SELECT MEDIA
     .o_select_media_dialog {
-        width: 80%;
+        max-width: 80%;
 
         .modal-body {
             .nav-tabs .active > a[href="#editor-media-icon"] {
@@ -1340,9 +1340,6 @@ body .modal {
             }
 
             li.search {
-                ul.pager li:last-child{
-                    margin-left: 2px;
-                }
                 .form-group {
                     position: relative;
                     margin: 0 10px 0 0;
@@ -1359,6 +1356,8 @@ body .modal {
             .card {
                 border-color: gray('200');
                 border-top-width: 0;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
             }
 
             .o_existing_attachment_cell {

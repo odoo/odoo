@@ -47,30 +47,26 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link active#{widget.noImages ? ' d-none' : ''}">Image</a></li>
+            <li class="nav-item"><a role="tab" href="#editor-media-image" aria-controls="editor-media-image" data-toggle="tab" t-attf-class="nav-link#{widget.noImages ? ' d-none' : ''}">Image</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-document" aria-controls="editor-media-document" data-toggle="tab" t-attf-class="nav-link#{widget.noDocuments ? ' d-none' : ''}">Document</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-icon" aria-controls="editor-media-icon" data-toggle="tab" t-attf-class="nav-link#{widget.noIcons ? ' d-none' : ''}">Pictogram</a></li>
             <li class="nav-item"><a role="tab" href="#editor-media-video" aria-controls="editor-media-video" data-toggle="tab" t-attf-class="nav-link#{widget.noVideos ? ' d-none' : ''}">Video</a></li>
-            <li class="nav-item search float-right">
-                <ul class="pager mb0 mt0">
-                    <li class="previous">
-                        <a role="button" class="btn btn-secondary disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
-                    </li>
-                    <li class="next">
-                        <a role="button" class="btn btn-secondary disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item search float-right">
+            <li class="nav-item ml-auto search">
                 <div class="form-group">
                     <input class="form-control" id="icon-search" type="search"/>
                     <span class="fa fa-search" title="Search" role="img" aria-label="Search"/>
                 </div>
             </li>
+            <li class="nav-item search">
+                <div class="btn-group">
+                    <a role="button" class="btn btn-secondary disabled previous" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
+                    <a role="button" class="btn btn-secondary disabled next" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
+                </div>
+            </li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane fade in active" id="editor-media-image"/>
+            <div role="tabpanel" class="tab-pane fade" id="editor-media-image"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-document"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-icon"/>
             <div role="tabpanel" class="tab-pane fade" id="editor-media-video"/>
@@ -90,26 +86,26 @@
             <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group float-left">
+                    <div class="form-inline">
                         <input type="file" class="d-none" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
                         <input type="hidden" name="disable_optimization" value=""/>
                         <div class="btn-group">
                             <button class="btn btn-primary o_upload_image_button" type="button">Upload an image</button>
-                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" type="button">
                                 <span class="sr-only">Alternate Upload</span>
                             </button>
                             <div class="dropdown-menu" role="menu">
                                 <a role="menuitem" class="dropdown-item o_upload_image_button_no_optimization">Upload image without optimization</a>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-muted">— or —</span>
-                    <label for="imageurl">Add an image URL</label>
-                    <div class="form-group btn-group">
-                        <input type="text" class="form-control url float-left" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 250px;"/>
-                        <button type="button" class="btn btn-secondary o_upload_image_url_button" disabled="disabled">Add</button>
+                        <span class="text-muted">— or —</span>
+                        <label for="imageurl">Add an image URL</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control url" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 250px;"/>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-secondary o_upload_image_url_button" disabled="disabled">Add</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
