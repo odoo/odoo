@@ -43,6 +43,7 @@ except ImportError:
     import xmlrpclib
 
 import odoo
+import pprint
 from odoo import api
 from odoo.service import security
 
@@ -226,66 +227,61 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
 
     def assertRecordsEqual(self, records, expected_values):
         ''' Compare a recordset with a list of dictionaries representing the expected results.
+        This method performs a comparison element by element based on their index.
+        Then, the order of the expected values is extremely important.
 
         Note that:
-          - The order of candidates doesn't matter.
           - Comparison between falsy values is supported: False match with None.
           - Comparison between monetary field is also treated according the currency's rounding.
+          - Comparison between x2many field is done by ids. Then, empty expected ids must be [].
+          - Comparison between many2one field id done by id. Empty comparison can be done using any falsy value.
 
         :param records:               The records to compare.
         :param expected_values:       List of dicts expected to be exactly matched in records
-        :return:                      True if all is equivalent, False otherwise.
         '''
 
-        def _compare_candidate(record, record_values, candidate):
-            ''' return True if the candidate matches the given record '''
+        def _compare_candidate(record, candidate):
+            ''' Return True if the candidate matches the given record '''
             for field_name in candidate.keys():
-                record_value = record_values[field_name]
+                record_value = record[field_name]
                 candidate_value = candidate[field_name]
-                if field_name in monetary_field_names:
+                field_type = record._fields[field_name].type
+                if field_type == 'monetary':
                     # Compare monetary field.
                     currency_field_name = record._fields[field_name]._related_currency_field
                     record_currency = record[currency_field_name]
                     if record_currency.compare_amounts(candidate_value, record_value)\
                             if record_currency else candidate_value != record_value:
-                        return
+                        return False
+                elif field_type in ('one2many', 'many2many'):
+                    # Compare x2many relational fields.
+                    # Empty comparison must be an empty list to be True.
+                    return record_value.ids == candidate_value
+                elif field_type == 'many2one':
+                    # Compare many2one relational fields.
+                    # Every falsy value is allowed to compare with an empty record.
+                    return record_value.id == candidate_value if (record_value or candidate_value) else True
                 elif (candidate_value or record_value) and record_value != candidate_value:
                     # Compare others fields if not both interpreted as falsy values.
-                    return
+                    return False
             return True
 
-        def _get_matching_candidate_index(record, record_values, expected_values):
-            ''' Search for a dict in expected_values matching the given record and its values. '''
-            for index, candidate in enumerate(expected_values):
-                match = _compare_candidate(record, record_values, candidate)
-                if match:
-                    return index
-            return False
+        def _format_message(records, expected_values):
+            ''' Return a formatted representation of records/expected_values. '''
+            all_records_values = records.read(expected_values[0].keys(), load=False)
+            msg1 = '\n'.join(pprint.pformat(dic) for dic in all_records_values)
+            msg2 = '\n'.join(pprint.pformat(dic) for dic in expected_values)
+            return 'Current values:\n\n%s\n\nExpected values:\n\n%s' % (msg1, msg2)
 
         # if the length or both things to compare is different, we can already tell they're not equal
         if len(records) != len(expected_values):
-            self.fail('Wrong number of records to compare: %d != %d.' % (len(records), len(expected_values)))
+            msg = 'Wrong number of records to compare: %d != %d.\n\n' % (len(records), len(expected_values))
+            self.fail(msg + _format_message(records, expected_values))
 
-        # monetary fields are special cases, as value read by the ORM isn't rounded (it is rounded on the write
-        # but, in some case, the stored value might be different than what's given to write()). We thus need to
-        monetary_fields = records.env['ir.model.fields'].search([
-            ('model', '=', records._name), ('ttype', '=', 'monetary')
-        ])
-        monetary_field_names = monetary_fields.mapped('name')
-
-        # Perform a read to compare relational fields more easily.
-        all_records_values = records.read(list({n for c in expected_values for n in c}), load=False)
         for index, record in enumerate(records):
-            record_values = all_records_values[index]
-            # Search for matching values in expected_values.
-            matching_index = _get_matching_candidate_index(record, record_values, expected_values)
-            if matching_index is not False:
-                del expected_values[matching_index]
-            else:
-                self.fail('Unexpected record found: %s.' % record_values)
-
-        # by design, expected_values should always be empty 
-        return True
+            if not _compare_candidate(record, expected_values[index]):
+                msg = 'Unexpected record found at index %d.\n\n' % index
+                self.fail(msg + _format_message(records, expected_values))
 
     def shortDescription(self):
         doc = self._testMethodDoc
