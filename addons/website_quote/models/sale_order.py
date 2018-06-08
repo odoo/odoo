@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
 from odoo.addons import decimal_precision as dp
+from odoo.exceptions import ValidationError
 
 from werkzeug.urls import url_encode
 
@@ -51,16 +52,19 @@ class SaleOrder(models.Model):
         template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
         return template and template.active and template or False
 
-    def _get_default_online_payment(self):
+    def _get_default_require_signature(self):
         default_template = self._get_default_template()
-        if self.template_id:
-            return self.template_id.require_payment
-        elif default_template:
-            return default_template.require_payment
-        elif self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay':
-            return 1
+        if default_template:
+            return default_template.require_signature
         else:
-            return 0
+            return False
+
+    def _get_default_require_payment(self):
+        default_template = self._get_default_template()
+        if default_template:
+            return default_template.require_payment
+        else:
+            return False
 
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
@@ -75,12 +79,12 @@ class SaleOrder(models.Model):
     amount_undiscounted = fields.Float(
         'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
-    require_payment = fields.Selection([
-        (0, 'Online Signature'),
-        (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
-        help="Choose how you want to confirm an order to launch the delivery process. You can either "
-             "request a digital signature or an upfront payment. With a digital signature, you can "
-             "request the payment when issuing the invoice.")
+    require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature,
+                                       states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
+                                       help='Request a digital signature to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,
+                                     states={'sale': [('readonly', True)], 'done': [('readonly', True)]},
+                                     help='Request an electronic payment to the customer in order to confirm orders automatically.')
 
     @api.multi
     @api.returns('self', lambda value: value.id)
@@ -113,6 +117,8 @@ class SaleOrder(models.Model):
     @api.onchange('template_id')
     def onchange_template_id(self):
         if not self.template_id:
+            self.require_signature = False
+            self.require_payment = False
             return
         template = self.template_id.with_context(lang=self.partner_id.lang)
 
@@ -170,10 +176,17 @@ class SaleOrder(models.Model):
             self.validity_date = fields.Date.to_string(datetime.now() + timedelta(template.number_of_days))
 
         self.website_description = template.website_description
+        self.require_signature = template.require_signature
         self.require_payment = template.require_payment
 
         if template.note:
             self.note = template.note
+
+    @api.constrains('template_id', 'require_signature', 'require_payment')
+    def _check_portal_confirmation(self):
+        for order in self.sudo().filtered('template_id'):
+            if not order.require_signature and not order.require_payment:
+                raise ValidationError(_('Please select a confirmation mode in Other Information: Digital Signature, Electronic Payment or both.'))
 
     @api.multi
     def open_quotation(self):
@@ -209,9 +222,22 @@ class SaleOrder(models.Model):
 
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
-        if self.require_payment is not None or self.require_payment is not False:
-            return 'pay' if self.require_payment == 1 else 'sign'
+        if self.template_id:
+            if self.require_signature and not self.signature:
+                return 'sign'
+            elif self.require_payment:
+                return 'pay'
+            else:
+                return 'none'
         return super(SaleOrder, self).get_portal_confirmation_action()
+
+    def has_to_be_signed(self):
+        res = super(SaleOrder, self).has_to_be_signed()
+        return self.require_signature if self.template_id else res
+
+    def has_to_be_paid(self):
+        res = super(SaleOrder, self).has_to_be_paid()
+        return self.require_payment if self.template_id else res
 
     @api.multi
     def action_confirm(self):
