@@ -172,6 +172,9 @@ MockServer.include({
         if (args.method === 'message_format') {
             return $.when(this._mockMessageFormat(args));
         }
+        if (args.method === 'activity_format') {
+            return $.when(this._mockRead(args.model, args.args, args.kwargs));
+        }
         if (args.method === 'set_message_done') {
             return $.when();
         }
