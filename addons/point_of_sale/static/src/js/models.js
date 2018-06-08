@@ -1405,6 +1405,7 @@ exports.Orderline = Backbone.Model.extend({
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
             this.order.fix_tax_included_price(this);
         }
+        this.trigger('change', this);
     },
     // return the quantity of product
     get_quantity: function(){
