@@ -55,7 +55,8 @@ SLEEP_INTERVAL = 60     # 1 min
 
 class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
-    def get_query_count(self):
+    @property
+    def query_count(self):
         if hasattr(self, 'environ'):
             r = self.environ.get('werkzeug.request')
             if hasattr(r,'query_count'):
@@ -68,7 +69,6 @@ class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
     def send_response(self, *args, **kwargs):
         self.times_stop = os.times()
-        self.query_count = self.get_query_count()
         return super(essaiRequestHandler, self).send_response(*args, **kwargs)
 
     def log(self, type, message, *args):
