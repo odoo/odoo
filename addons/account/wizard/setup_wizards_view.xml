@@ -65,29 +65,30 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <label string="Bank Account Name"/>
-
-                        <h1><field name="single_journal_name" placeholder="e.g Checking account"/></h1>
-
+                         <field name="create_or_link_option" widget="radio" options="{'horizontal': true}"/>
+                        <group attrs="{'invisible': [('create_or_link_option','!=','link')]}">
+                           <group>
+                            <field name="linked_journal_id" attrs="{'required': [('create_or_link_option','=','link')]}" domain="[('type','=','bank'), ('bank_account_id', '=', False)]"/>
+                          </group>
+                          <group>
+                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                           </group>
+                        </group>
+                        <div attrs="{'invisible': [('create_or_link_option', '=', 'link')]}" class="oe_title">
+                            <label for="new_journal_name" class="oe_edit_only"/>
+                            <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="acc_number" placeholder="e.g BE15001559627230"/>
                                 <field name="bank_id" placeholder="e.g Bank of America"/>
+                                <field name="new_journal_code" attrs="{'invisible': [('create_or_link_option', '=', 'link')]}"/>
                             </group>
-
                             <group>
-                                <field name="wizard_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
-                                <field name="single_journal_code"/>
+                                <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
                             </group>
                         </group>
 
-                        <field name="setup_journal_link_creation" widget="radio" options="{'horizontal': true}"/>
-
-                        <group>
-                            <group>
-                                <field name="single_journal_id" attrs="{'invisible': [('setup_journal_link_creation','!=','link')], 'required': [('setup_journal_link_creation','=','link')]}" domain="[('type','=','bank')]"/>
-                            </group>
-                        </group>
                     </sheet>
 
                     <footer>
