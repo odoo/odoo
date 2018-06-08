@@ -197,7 +197,6 @@ class account_journal(models.Model):
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
 
         difference = currency.round(last_balance-account_sum) + 0.0
-        #import pdb; pdb.set_trace()
         return {
             'number_to_reconcile': number_to_reconcile,
             'account_balance': formatLang(self.env, currency.round(account_sum) + 0.0, currency_obj=currency),
@@ -212,7 +211,6 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
-            'allow_statements_creation': self.type == 'bank',
         }
 
     def _get_open_bills_to_pay_query(self):

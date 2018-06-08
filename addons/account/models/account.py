@@ -358,8 +358,11 @@ class AccountJournal(models.Model):
     def _default_outbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_out')
 
-    def _get_bank_statements_available_sources(self):
+    def __get_bank_statements_available_sources(self):
         return [('undefined', _('Undefined Yet'))]
+
+    def _get_bank_statements_available_sources(self):
+        return self.__get_bank_statements_available_sources()
 
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")

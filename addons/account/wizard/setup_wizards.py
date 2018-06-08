@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class FinancialYearOpeningWizard(models.TransientModel):
@@ -69,7 +69,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
         company, so we always inject the corresponding partner when creating
         the model.
         """
-        vals['partner_id'] = self.env['res.company']._company_default_get().partner_id.id
+        vals['partner_id'] = self.env.user.company_id.partner_id.id
         return super(SetupBarBankConfigWizard, self).create(vals)
 
     @api.depends('single_journal_id')
@@ -78,7 +78,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
             if record.single_journal_id:
                 record.single_journal_name = record.single_journal_id.name
 
-    @api.depends('journal_id') # Despite its name, journal_id is actually a One2many field
+    @api.depends('journal_id')  # Despite its name, journal_id is actually a One2many field
     def compute_single_journal_id(self):
         for record in self:
             record.single_journal_id = record.journal_id and record.journal_id[0] or None
