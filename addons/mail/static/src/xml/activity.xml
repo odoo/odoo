@@ -61,6 +61,13 @@
                         <div t-if="activity.note" t-attf-class="o_thread_message_#{activity.activity_decoration ? activity.activity_decoration : 'note'} #{activity.activity_decoration ? 'alert alert-' + activity.activity_decoration : ''} small">
                             <t t-raw="activity.note"/>
                         </div>
+                        <t t-if="activity.mail_template_ids">
+                            <div t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]"><b>Email:</b>
+                                <t t-foreach="activity.mail_template_ids" t-as="mail_template">
+                                    <span class="o_mail_template" t-att-data-template-id="mail_template.id"><t t-esc="mail_template.name"/></span>
+                                </t>
+                            </div>
+                        </t>
                         <div class="o_thread_message_tools btn-group">
                             <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_done o_activity_link mr8" t-att-data-activity-id="activity.id" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" data-toggle="popover">
                                 <i class="fa fa-check"/> Mark Done

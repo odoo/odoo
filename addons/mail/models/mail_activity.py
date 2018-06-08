@@ -54,6 +54,21 @@ class MailActivityType(models.Model):
         ('default', 'Other')], default='default',
         string='Category',
         help='Categories may trigger specific behavior like opening calendar view')
+    mail_template_ids = fields.Many2many('mail.template', string='Mails templates')
+
+    #Fields for display purpose only
+    initial_res_model_id = fields.Many2one('ir.model', 'Initial model', compute="_compute_initial_res_model_id", store=False,
+            help='Technical field to keep trace of the model at the beginning of the edition for UX related behaviour')
+    res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
+
+    @api.onchange('res_model_id')
+    def _onchange_res_model_id(self):
+        self.mail_template_ids = self.mail_template_ids.filtered(lambda template: template.model_id == self.res_model_id)
+        self.res_model_change = self.initial_res_model_id and self.initial_res_model_id != self.res_model_id
+
+    def _compute_initial_res_model_id(self):
+        for activity_type in self:
+            activity_type.initial_res_model_id = activity_type.res_model_id
 
 
 class MailActivity(models.Model):
@@ -119,6 +134,7 @@ class MailActivity(models.Model):
         'Next activities available',
         compute='_compute_has_recommended_activities',
         help='Technical field for UX purpose')
+    mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids')
 
     @api.multi
     @api.onchange('previous_activity_type_id')
@@ -340,6 +356,16 @@ class MailActivity(models.Model):
     @api.multi
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    @api.multi
+    def activity_format(self):
+        activities = self.read()
+        mail_template_ids = set([template_id for activity in activities for template_id in activity["mail_template_ids"]])
+        mail_template_info = self.env["mail.template"].browse(mail_template_ids).read(['id', 'name'])
+        mail_template_dict = dict([(mail_template['id'], mail_template) for mail_template in mail_template_info])
+        for activity in activities:
+            activity['mail_template_ids'] = [mail_template_dict[mail_template_id] for mail_template_id in activity['mail_template_ids']]
+        return activities
 
 
 class MailActivityMixin(models.AbstractModel):

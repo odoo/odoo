@@ -31,7 +31,7 @@ function _readActivities(self, ids) {
     }
     return self._rpc({
         model: 'mail.activity',
-        method: 'read',
+        method: 'activity_format',
         args: [ids],
         context: (self.record && self.record.getContext()) || self.getSession().user_context,
     }).then(function (activities) {
@@ -110,19 +110,38 @@ var AbstractActivityField = AbstractField.extend({
     //------------------------------------------------------------
 
     /**
+     * Send a feedback and reload page in order to mark activity as done
+     *
      * @private
-     * @param {integer} id
-     * @param {string} feedback
-     * @return {$.Promise}
+     * @param {Object} params
+     * @param {integer} params.activityID
+     * @param {string} params.feedback
      */
-    _markActivityDone: function (id, feedback) {
-        return this._rpc({
-                model: 'mail.activity',
-                method: 'action_feedback',
-                args: [[id]],
-                kwargs: {feedback: feedback},
-                context: this.record.getContext(),
-            });
+    _markActivityDone: function(params) {
+        var activityID = params.activityID;
+        var feedback = params.feedback;
+
+        this._sendActivityFeedback(activityID, feedback)
+            .then(this._reload.bind(this, { activity: true, thread: true }));
+    },
+    /**
+     * Send a feedback and proposes to schedule next activity
+     * previousActivityTypeID will be given to new activity to propose activity
+     * type based on recommended next activity
+     *
+     * @private
+     * @param {Object} params
+     * @param {integer} params.activityID
+     * @param {integer} params.activityTypeID
+     * @param {string} params.feedback
+     */
+    _markActivityDoneAndScheduleNext: function(params) {
+        var activityID = params.activityID;
+        var activityTypeID = params.activityTypeID;
+        var feedback = params.feedback;
+
+        this._sendActivityFeedback(activityID, feedback)
+            .then(this.scheduleActivity.bind(this, activityTypeID));
     },
     /**
      * @private
@@ -148,6 +167,21 @@ var AbstractActivityField = AbstractField.extend({
         };
         return this.do_action(action, { on_close: callback });
     },
+    /**
+     * @private
+     * @param {integer} activityID
+     * @param {string} feedback
+     * @return {$.Promise}
+     */
+    _sendActivityFeedback: function (activityID, feedback) {
+        return this._rpc({
+                model: 'mail.activity',
+                method: 'action_feedback',
+                args: [[activityID]],
+                kwargs: {feedback: feedback},
+                context: this.record.getContext(),
+            });
+    },
 });
 
 // -----------------------------------------------------------------------------
@@ -160,6 +194,7 @@ var Activity = AbstractActivityField.extend({
         'click .o_activity_edit': '_onEditActivity',
         'click .o_activity_unlink': '_onUnlinkActivity',
         'click .o_activity_done': '_onMarkActivityDone',
+        'click .o_mail_template': '_onClickMailTemplate',
     },
     specialData: '_fetchSpecialActivity',
 
@@ -241,6 +276,28 @@ var Activity = AbstractActivityField.extend({
     // Handlers
     //------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickMailTemplate: function (ev) {
+        var templateID = $(ev.target).data('template-id');
+        var action = {
+            name: _t('Compose Email'),
+            type: 'ir.actions.act_window',
+            res_model: 'mail.compose.message',
+            views: [[false, 'form']],
+            target: 'new',
+            context: {
+                default_res_id: this.res_id,
+                default_model: this.model,
+                default_use_template: true,
+                default_template_id: templateID,
+                force_email: true,
+            },
+        };
+        return this.do_action(action, { on_close: function(){}});
+    },
     /**
      * @private
      * @param {MouseEvent} ev
@@ -330,16 +387,18 @@ var Activity = AbstractActivityField.extend({
                 content : function () {
                     var $popover = $(QWeb.render('mail.activity_feedback_form', { 'previous_activity_type_id': previousActivityTypeID }));
                     $popover.find('#activity_feedback').val(self._draftFeedback[activityID]);
-                    $popover.on('click', '.o_activity_popover_done_next', function () {
-                        var feedback = _.escape($popover.find('#activity_feedback').val());
-                        var previousActivityTypeID = $popoverElement.data('previous-activity-type-id');
-                        self._markActivityDone(activityID, feedback)
-                            .then(self.scheduleActivity.bind(self, previousActivityTypeID));
-                    });
                     $popover.on('click', '.o_activity_popover_done', function () {
-                        var feedback = _.escape($popover.find('#activity_feedback').val());
-                        self._markActivityDone(activityID, feedback)
-                            .then(self._reload.bind(self, { activity: true, thread: true }));
+                        self._markActivityDone({
+                            activityID: activityID,
+                            feedback: _.escape($popover.find('#activity_feedback').val()),
+                        });
+                    });
+                    $popover.on('click', '.o_activity_popover_done_next', function () {
+                        self._markActivityDoneAndScheduleNext({
+                            activityID: activityID,
+                            activityTypeID: $popoverElement.data('previous-activity-type-id'),
+                            feedback: _.escape($popover.find('#activity_feedback').val()),
+                        });
                     });
                     $popover.on('click', '.o_activity_popover_discard', function () {
                         $popoverElement.popover('hide');
@@ -466,7 +525,7 @@ var KanbanActivity = AbstractActivityField.extend({
     _onMarkActivityDone: function (ev) {
         ev.stopPropagation();
         var activityID = $(ev.currentTarget).data('activity-id');
-        this._markActivityDone(activityID).then(this._reload.bind(this));
+        this._sendActivityFeedback(activityID).then(this._reload.bind(this));
     },
     /**
      * @private
