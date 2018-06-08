@@ -60,7 +60,7 @@ FormController.include({
      */
     _barcodeAddX2MQuantity: function (barcode, activeBarcode) {
         if (this.mode === 'readonly') {
-            this.do_warn(_t('Error : Document not editable'),
+            this.do_warn(_t('Error: Document not editable'),
                 _t('To modify this document, please first start edition.'));
             return new $.Deferred().reject();
         }
@@ -323,7 +323,7 @@ FormController.include({
                 }
             }
             if (prefixed && !hasCommand) {
-                self.do_warn(_t('Error : Barcode command is undefined'), barcode);
+                self.do_warn(_t('Error: Barcode command is undefined'), barcode);
             }
             return self.alive($.when.apply($, defs)).then(function () {
                 if (!prefixed) {
@@ -359,7 +359,7 @@ FormController.include({
         }
 
         if (!_.compact(_.pluck(barcodeInfos, 'candidate')).length) {
-            return this.do_warn(_t('Error : No last scanned barcode'),
+            return this.do_warn(_t('Error: No last scanned barcode'),
                 _t('To set the quantity please scan a barcode first.'));
         }
 
