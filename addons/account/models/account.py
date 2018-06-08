@@ -885,6 +885,12 @@ class AccountTax(models.Model):
         default = dict(default or {}, name=_("%s (Copy)") % self.name)
         return super(AccountTax, self).copy(default=default)
 
+    @api.depends('name', 'type_tax_use')
+    def name_get(self):
+        if not self._context.get('append_type_to_tax_name'):
+            return super(AccountTax, self).name_get()
+        return [(tax.id, '%s (%s)' % (tax.name, tax.type_tax_use)) for tax in self]
+
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         """ Returns a list of tuples containing id, name, as internally it is called {def name_get}
