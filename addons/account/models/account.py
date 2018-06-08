@@ -688,6 +688,16 @@ class AccountJournal(models.Model):
         }
 
     @api.model
+    def get_next_bank_cash_default_code(self, journal_type, company_id):
+        journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
+        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
+        for num in range(1, 100):
+            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+            journal_code = journal_code_base + str(num)
+            if journal_code not in journals.mapped('code'):
+                return journal_code
+
+    @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
         if vals.get('type') in ('bank', 'cash'):
@@ -697,15 +707,8 @@ class AccountJournal(models.Model):
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
-                journal_code_base = (vals['type'] == 'cash' and 'CSH' or 'BNK')
-                journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
-                for num in range(1, 100):
-                    # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-                    journal_code = journal_code_base + str(num)
-                    if journal_code not in journals.mapped('code'):
-                        vals['code'] = journal_code
-                        break
-                else:
+                vals['code'] = self.get_next_bank_cash_default_code(vals['type'], company_id)
+                if not vals['code']:
                     raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
             # Create a default debit/credit account if not given

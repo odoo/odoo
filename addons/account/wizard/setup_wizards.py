@@ -55,6 +55,7 @@ class SetupBarBankConfigWizard(models.TransientModel):
     setup_journal_link_creation = fields.Selection(selection=[('new', 'Create new journal'), ('link', 'Link to an existing journal')], default='new')
     single_journal_id = fields.Many2one(string="Journal", comodel_name='account.journal', compute='compute_single_journal_id', inverse='set_single_journal_id')
     single_journal_name = fields.Char(compute='compute_single_journal_related_data', inverse='set_single_journal_id', required=True)
+    single_journal_code = fields.Char(string="Code", required=True)
 
     wizard_acc_type = fields.Selection(string="Account Type", selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_wizard_acc_type')
 
@@ -83,6 +84,13 @@ class SetupBarBankConfigWizard(models.TransientModel):
         for record in self:
             record.single_journal_id = record.journal_id and record.journal_id[0] or None
 
+    @api.onchange('setup_journal_link_creation', 'single_journal_id')
+    def onchange_setup_journal_link_creation(self):
+        if self.single_journal_id and self.setup_journal_link_creation == 'link':
+            self.single_journal_code = self.single_journal_id.code
+        else:
+            self.single_journal_code = self.single_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env['res.company']._company_default_get('account.journal').id)
+
     def set_single_journal_id(self):
         """ Called when saving the wizard.
         """
@@ -90,10 +98,9 @@ class SetupBarBankConfigWizard(models.TransientModel):
             selected_journal = record.single_journal_id
             if record.setup_journal_link_creation == 'new':
                 company = self.env['res.company']._company_default_get('account.journal')
-                bank_journal_count = self.env['account.journal'].search_count([('company_id','=',company.id), ('type','=','bank')])
                 selected_journal = self.env['account.journal'].create({
                     'name': record.single_journal_name,
-                    'code': 'BNK' + str(bank_journal_count + 1),
+                    'code': record.single_journal_code,
                     'type': 'bank',
                     'company_id': company.id,
                 })
