@@ -3,7 +3,7 @@
 
 import re
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.misc import mod10r
 
 
@@ -28,19 +28,23 @@ class ResBank(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    acc_type = fields.Selection(selection_add=[("postal", "Postal")])
     l10n_ch_postal = fields.Char(string='ISR reference', help='The ISR number of the company within the bank')
 
-    @api.depends('acc_number')
-    def _compute_acc_type(self):
+    @api.model
+    def _get_supported_account_types(self):
+        rslt = super(ResPartnerBank, self)._get_supported_account_types()
+        rslt.append(('postal', _('Postal')))
+        return rslt
+
+    @api.model
+    def retrieve_acc_type(self, acc_number):
         """ Overridden method enabling the recognition of swiss postal bank
         account numbers.
         """
-        for record in self:
-            if _is_l10n_ch_postal(record.acc_number):
-                record.acc_type = 'postal'
-            else:
-                super(ResPartnerBank, record)._compute_acc_type()
+        if _is_l10n_ch_postal(acc_number):
+            return 'postal'
+        else:
+            return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
     @api.onchange('acc_number')
     def _onchange_set_l10n_ch_postal(self):

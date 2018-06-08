@@ -358,6 +358,12 @@ class AccountJournal(models.Model):
     def _default_outbound_payment_methods(self):
         return self.env.ref('account.account_payment_method_manual_out')
 
+    def __get_bank_statements_available_sources(self):
+        return [('undefined', _('Undefined Yet'))]
+
+    def _get_bank_statements_available_sources(self):
+        return self.__get_bank_statements_available_sources()
+
     name = fields.Char(string='Journal Name', required=True)
     code = fields.Char(string='Short Code', size=5, required=True, help="The journal entries of this journal will be named using this prefix.")
     active = fields.Boolean(default=True, help="Set active to false to hide the Journal without removing it.")
@@ -405,12 +411,12 @@ class AccountJournal(models.Model):
     refund_sequence = fields.Boolean(string='Dedicated Credit Note Sequence', help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal", default=False)
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
-        domain=[('payment_type', '=', 'inbound')], string='Debit Methods', default=lambda self: self._default_inbound_payment_methods(),
+        domain=[('payment_type', '=', 'inbound')], string='For Incoming Payments', default=lambda self: self._default_inbound_payment_methods(),
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"\
              "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"\
              "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings.")
     outbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_outbound_payment_method_rel', 'journal_id', 'outbound_payment_method',
-        domain=[('payment_type', '=', 'outbound')], string='Payment Methods', default=lambda self: self._default_outbound_payment_methods(),
+        domain=[('payment_type', '=', 'outbound')], string='For Outgoing Payments', default=lambda self: self._default_outbound_payment_methods(),
         help="Manual:Pay bill by cash or any other method outside of Odoo.\n"\
              "Check:Pay bill by check and print it from Odoo.\n"\
              "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings.")
@@ -424,7 +430,7 @@ class AccountJournal(models.Model):
     # Bank journals fields
     company_partner_id = fields.Many2one('res.partner', related='company_id.partner_id', string='Account Holder', readonly=True, store=False)
     bank_account_id = fields.Many2one('res.partner.bank', string="Bank Account", ondelete='restrict', copy=False, domain="[('partner_id','=', company_partner_id)]")
-    bank_statements_source = fields.Selection([('undefined', 'Undefined'),('manual', 'Record Manually')], string='Bank Feeds', default='undefined')
+    bank_statements_source = fields.Selection(selection=_get_bank_statements_available_sources, string='Bank Feeds', default='undefined', help="Defines how the bank statements will be registered")
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
@@ -682,6 +688,16 @@ class AccountJournal(models.Model):
         }
 
     @api.model
+    def get_next_bank_cash_default_code(self, journal_type, company_id):
+        journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
+        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
+        for num in range(1, 100):
+            # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
+            journal_code = journal_code_base + str(num)
+            if journal_code not in journals.mapped('code'):
+                return journal_code
+
+    @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.env.user.company_id.id)
         if vals.get('type') in ('bank', 'cash'):
@@ -691,15 +707,8 @@ class AccountJournal(models.Model):
 
             # If no code provided, loop to find next available journal code
             if not vals.get('code'):
-                journal_code_base = (vals['type'] == 'cash' and 'CSH' or 'BNK')
-                journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company_id)])
-                for num in range(1, 100):
-                    # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
-                    journal_code = journal_code_base + str(num)
-                    if journal_code not in journals.mapped('code'):
-                        vals['code'] = journal_code
-                        break
-                else:
+                vals['code'] = self.get_next_bank_cash_default_code(vals['type'], company_id)
+                if not vals['code']:
                     raise UserError(_("Cannot generate an unused journal code. Please fill the 'Shortcode' field."))
 
             # Create a default debit/credit account if not given
@@ -780,14 +789,12 @@ class AccountJournal(models.Model):
             journal.at_least_one_inbound = bool(len(journal.inbound_payment_method_ids))
             journal.at_least_one_outbound = bool(len(journal.outbound_payment_method_ids))
 
-    def setup_save_journal_and_create_more(self):
-        """ This function is triggered by the button allowing to create more
-        bank accounts, displayed in the "Bank Accounts" wizard of the setup bar.
-
-        Button execution is done in Python, so that the model is validated and saved
-        before executing the action.
+    def action_configure_bank_journal(self):
+        """ This function is called by the "configure" button of bank journals,
+        visible on dashboard if no bank statement source has been defined yet
         """
-        return self.env.ref('account.action_account_bank_journal_form').read()[0]
+        # We simply call the setup bar function.
+        return self.env['res.company'].setting_init_bank_account_action()
 
 
 class ResPartnerBank(models.Model):
