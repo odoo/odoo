@@ -13,7 +13,7 @@ class ActivityReport(models.Model):
     _rec_name = 'id'
 
     date = fields.Datetime('Date', readonly=True)
-    author_id = fields.Many2one('res.partner', 'Created By', readonly=True)
+    create_uid = fields.Many2one('res.users', 'Created By', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Lead", readonly=True)
@@ -37,7 +37,7 @@ class ActivityReport(models.Model):
                 m.id,
                 m.subtype_id,
                 m.mail_activity_type_id,
-                m.author_id,
+                m.create_uid,
                 m.date,
                 m.subject,
                 l.id as lead_id,
