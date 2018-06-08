@@ -1507,6 +1507,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <field name="tax_type_domain" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box">
                             <button name="action_view_reverse_entry"
@@ -1543,6 +1544,7 @@
                             <field name="line_ids" widget="one2many_list"
                               context="{'line_ids': line_ids, 'journal_id': journal_id }">
                                 <tree editable="bottom" string="Journal Items">
+                                    <field name="tax_line_id" invisible="1"/>
                                     <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                                     <field name="partner_id"
                                         domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
@@ -1555,7 +1557,13 @@
                                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
+                                    <field name="tax_ids" string="Taxes Applied" widget="many2many_tags"
+                                           domain="[('type_tax_use', '=?', parent.tax_type_domain)]"
+                                           context="{'append_type_to_tax_name': not parent.tax_type_domain}"
+                                           options="{'no_create': True}"/>
                                     <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
+                                    <field name="recompute_tax_line" invisible="1" readonly="1"/>
+                                    <field name="tax_line_grouping_key" invisible="1" readonly="1"/>
                                 </tree>
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
