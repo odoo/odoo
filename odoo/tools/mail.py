@@ -253,7 +253,11 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
-    return cleaned
+    # this regex checks if the cleaned content is an empty tag tree
+    if len(re.sub(r"(<(\/)?(p|strong|h\d|br|b|font|\\n)[^>]*>)|(&nbsp;)", "", cleaned).strip()) == 0:
+        return ""
+    else:
+        return cleaned
 
 #----------------------------------------------------------
 # HTML/Text management
