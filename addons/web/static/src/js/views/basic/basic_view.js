@@ -209,6 +209,18 @@ var BasicView = AbstractView.extend({
         var self = this;
         attrs.Widget = this._getFieldWidgetClass(viewType, field, attrs);
 
+        // process decoration attributes
+        _.each(attrs, function (value, key) {
+            var splitKey = key.split('-');
+            if (splitKey[0] === 'decoration') {
+                attrs.decorations = attrs.decorations || [];
+                attrs.decorations.push({
+                    className: 'text-' + splitKey[1],
+                    expression: py.parse(py.tokenize(value))
+                });
+            }
+        });
+
         if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
             attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
         }
