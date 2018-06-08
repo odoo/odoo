@@ -246,26 +246,15 @@ Best Regards,'''))
     @api.model
     def setting_init_bank_account_action(self):
         """ Called by the 'Bank Accounts' button of the setup bar."""
-        company = self.env.user.company_id
-        view_id = self.env.ref('account.setup_bank_journal_form').id
-
-        res = {
-            'type': 'ir.actions.act_window',
-            'name': _('Bank Account'),
-            'view_mode': 'form',
-            'res_model': 'account.journal',
-            'target': 'new',
-            'views': [[view_id, 'form']],
+        view_id = self.env.ref('account.setup_bank_account_wizard').id
+        return {'type': 'ir.actions.act_window',
+                'name': _('Create a Bank Account'),
+                'res_model': 'account.setup.bank.manual.config',
+                'target': 'new',
+                'view_mode': 'form',
+                'view_type': 'form',
+                'views': [[view_id, 'form']],
         }
-
-        # If some bank journal already exists, we open it in the form, so the user can edit it.
-        # Otherwise, we just open the form in creation mode.
-        bank_journal = self.env['account.journal'].search([('company_id','=', company.id), ('type','=','bank')], limit=1)
-        if bank_journal:
-            res['res_id'] = bank_journal.id
-        else:
-            res['context'] = {'default_type': 'bank'}
-        return res
 
     @api.model
     def setting_init_fiscal_year_action(self):

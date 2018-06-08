@@ -622,9 +622,6 @@ class AccountMoveLine(models.Model):
         help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
     parent_state = fields.Char(compute="_compute_parent_state", help="State of the parent account.move")
 
-    #Needed for setup, as a decoration attribute needs to know that for a tree view in one of the popups, and there's no way to reference directly a xml id from there
-    is_unaffected_earnings_line = fields.Boolean(string="Is Unaffected Earnings Line", compute="_compute_is_unaffected_earnings_line", help="Tells whether or not this line belongs to an unaffected earnings account")
-
     recompute_tax_line = fields.Boolean(store=False, help="Technical field used to know if the tax_ids field has been modified in the UI.")
     tax_line_grouping_key = fields.Char(store=False, string='Old Taxes', help="Technical field used to store the old values of fields used to compute tax lines (in account.move form view) between the moment the user changed it and the moment the ORM reflects that change in its one2many")
 
@@ -730,7 +727,7 @@ class AccountMoveLine(models.Model):
             multiple_currency = True
         else:
             currency = list(currency)[0]
-        # Get the sum(debit, credit, amount_currency) of all amls involved 
+        # Get the sum(debit, credit, amount_currency) of all amls involved
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
@@ -802,7 +799,7 @@ class AccountMoveLine(models.Model):
             amount_reconcile = min(debit_move[field], -credit_move[field])
 
             #Remove from recordset the one(s) that will be totally reconciled
-            # For optimization purpose, the creation of the partial_reconcile are done at the end, 
+            # For optimization purpose, the creation of the partial_reconcile are done at the end,
             # therefore during the process of reconciling several move lines, there are actually no recompute performed by the orm
             # and thus the amount_residual are not recomputed, hence we have to do it manually.
             if amount_reconcile == debit_move[field]:
@@ -836,7 +833,7 @@ class AccountMoveLine(models.Model):
                 'currency_id': currency,
             })
 
-        part_rec = self.env['account.partial.reconcile']        
+        part_rec = self.env['account.partial.reconcile']
         index = 0
         with self.env.norecompute():
             for partial_rec_dict in to_create:
