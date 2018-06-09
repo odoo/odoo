@@ -297,6 +297,7 @@ class StockMove(models.Model):
         debit_value = self.company_id.currency_id.round(valuation_amount * qty)
 
         # check that all data is correct
+        #La siguiente línea fue modificada por TRESCLOUD
         if self.company_id.currency_id.is_zero(debit_value) and not self.env.context.get('generate_accounting_entry_price_zero', False):
             if self.product_id.cost_method == 'standard':
                 raise UserError(_("The found valuation amount for product %s is zero. Which means there is probably a configuration error. Check the costing method and the standard price") % (self.product_id.name,))
