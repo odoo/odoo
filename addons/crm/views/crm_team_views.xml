@@ -61,10 +61,9 @@
 
        <record id="action_report_crm_lead_salesteam" model="ir.actions.act_window">
            <field name="name">Leads Analysis</field>
-           <field name="res_model">crm.opportunity.report</field>
+           <field name="res_model">crm.lead</field>
            <field name="context">{"search_default_month":1}</field>
-           <field name="view_mode">graph,pivot</field>
-           <field name="view_id" ref="crm.crm_opportunity_report_view_pivot_lead"/>
+           <field name="view_mode">graph,pivot,tree,form</field>
            <field name="domain">[('type', '=', 'lead'),('team_id', '=', active_id)]</field>
            <field name="context">{'active_test': True}</field>
            <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
@@ -72,9 +71,8 @@
 
        <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
             <field name="name">Pipeline Analysis</field>
-            <field name="res_model">crm.opportunity.report</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="view_id" ref="crm.crm_opportunity_report_view_pivot"/>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">graph,pivot,tree,form</field>
             <field name="domain">[('type', '=', 'opportunity'), ('team_id', '=', active_id)]</field>
             <field name="context">{'active_test': True}</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline.</field>
@@ -113,16 +111,16 @@
                             attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
                    </xpath>
                     <field name="dashboard_graph_period" position="attributes">
-                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.lead')]}</attribute>
                     </field>
                     <field name="dashboard_graph_period" position="after">
-                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
+                        <field name="dashboard_graph_period_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.lead')]}"/>
                     </field>
                     <field name="dashboard_graph_group" position="attributes">
-                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.opportunity.report')]}</attribute>
+                        <attribute name="attrs">{'invisible': [('dashboard_graph_model', '=', 'crm.lead')]}</attribute>
                     </field>
                     <field name="dashboard_graph_group" position="after">
-                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.opportunity.report')]}"/>
+                        <field name="dashboard_graph_group_pipeline" attrs="{'invisible': [('dashboard_graph_model', '!=', 'crm.lead')]}"/>
                     </field>
                 </field>
             </record>

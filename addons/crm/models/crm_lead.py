@@ -107,6 +107,7 @@ class Lead(models.Model):
     # Only used for type opportunity
     probability = fields.Float('Probability', group_operator="avg", default=lambda self: self._default_probability())
     planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', track_visibility='always')
+    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
     date_deadline = fields.Date('Expected Closing', help="Estimate of the date on which the opportunity will be won.")
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
@@ -163,6 +164,11 @@ class Lead(models.Model):
                 else:
                     kanban_state = 'red'
             lead.kanban_state = kanban_state
+
+    @api.depends('planned_revenue', 'probability')
+    def _compute_expected_revenue(self):
+        for lead in self:
+            lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
 
     @api.depends('date_open')
     def _compute_day_open(self):
