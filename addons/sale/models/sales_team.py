@@ -118,7 +118,6 @@ class CrmTeam(models.Model):
         if self.team_type == 'sales':
             self.use_quotations = True
             self.use_invoices = True
-            # do not override dashboard_graph_model 'crm.opportunity.report' if crm is installed
             if not self.dashboard_graph_model:
                 self.dashboard_graph_model = 'sale.report'
         else:
