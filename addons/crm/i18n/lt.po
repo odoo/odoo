@@ -1686,6 +1686,8 @@ msgid ""
 "Description that will be added in the message posted for this subtype. If "
 "void, the name will be added instead."
 msgstr ""
+"Aprašymas, kuris bus pridėtas žinutėje, paskelbtoje šiam potipiui. Jei "
+"tuščia, bus pridedamas vardas."
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
@@ -1945,6 +1947,9 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
+"Laukas, kuris naudojamas susieti susijusį modelį su potipio modeliu, kai "
+"susijusiam dokumentui naudojama automatinė prenumerata. Šis laukas taip pat "
+"naudojamas suskaičiuoti getattr(related_document.relation_field)."
 
 #. module: crm
 #. openerp-web
@@ -2777,6 +2782,11 @@ msgid ""
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
+"Žinutės potipis žinutei suteikia tikslesnį tipą, ypatingai sistemos "
+"pranešimams. Pavyzdžiui, tai gali būti pranešimas, susijęs su nauju įrašu "
+"(Naujas) ar su stadijos pasikeitimu procese (Stadijos pasikeitimas). Žinučių"
+" potipiai leidžia tiksliai nustatyti, kokius pranešimus vartotojas nori "
+"matyti savo sienoje."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_internal
@@ -2784,6 +2794,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
+"Žinutės su vidiniais potipiais bus matomi tik darbuotoju, t.y., base_user "
+"grupės nariams"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_line_min_id
@@ -2810,6 +2822,8 @@ msgstr "Modelis"
 msgid ""
 "Model the subtype applies to. If False, this subtype applies to all models."
 msgstr ""
+"Modelis, kuriam taikomas šis potipis. Jei False, šis potipis taikomas "
+"visiems modeliams."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -4095,6 +4109,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Įrašų, sukuriamų gaunant laiškus šiuo vardu, šeimininkas. Jei šis laukas "
+"nėra nustatytas, sistema bandys surasti tikrąjį šeimininką pagal siuntėjo "
+"(nuo) adresą arba naudos administratoriaus paskyrą, jei tam adresui "
+"sistemoje nerandamas vartotojas."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
