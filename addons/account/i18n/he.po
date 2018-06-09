@@ -15,19 +15,20 @@
 # Mor Kir <morki@013.net.il>, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # שהאב חוסיין <shhab89@gmail.com>, 2018
+# Zvika Rap <zvikara@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: שהאב חוסיין <shhab89@gmail.com>, 2018\n"
+"Last-Translator: Zvika Rap <zvikara@gmail.com>, 2018\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -537,7 +538,7 @@ msgstr "<span>חדש</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<span>Not due</span>"
-msgstr ""
+msgstr "<span>לתשלום לא לפני</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -607,6 +608,8 @@ msgid ""
 "<strong>Cash transactions</strong><br/> (for which there is no invoice or "
 "bill), should be entered directly into your Cash Registers bank account."
 msgstr ""
+"<strong>עסקאות מזומן</strong><br/> (כאשר אין חיוב או חשבונית), נדרש להפקיד "
+"ישירות לחשבון בנק מזומן."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -628,6 +631,8 @@ msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
 msgstr ""
+"<strong>חשבוניות מעוצבות:</strong> חשבוניות פונקציונליות, בעיצוב נקי ופשוטות"
+" ליצירה."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -643,7 +648,7 @@ msgstr "<strong>חברה:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>הסכמים ומנויים</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -698,12 +703,12 @@ msgstr "<strong>תאור:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Display Account:</strong>"
-msgstr ""
+msgstr "<strong>הצג חשבון:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Display Account</strong>"
-msgstr ""
+msgstr "<strong>הצג חשבון</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
