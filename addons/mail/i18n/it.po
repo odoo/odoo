@@ -12,7 +12,7 @@
 # Manuela Feliciani <mfeliciani@alice.it>, 2018
 # Luigi Di Naro <gigidn@gmail.com>, 2018
 # David Minneci <david@numeko.it>, 2018
-# Efraim Biffi <eab@odoo.com>, 2018
+# efraimbiffi <eab@odoo.com>, 2018
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2018
 # Giovanni Perteghella <giovanni@perteghella.org>, 2018
 # Simone Bernini <simone@aperturelabs.it>, 2018
@@ -23,13 +23,14 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2018
 # Christian <chris@effeci.info>, 2018
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Fabio Genovese <ing.fabiogenovese@gmail.com>, 2018\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -161,7 +162,7 @@ msgstr "%d Messaggi"
 #: code:addons/mail/static/src/js/activity.js:32
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "%d giorni di ritardo"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:248
@@ -201,6 +202,8 @@ msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
+"* I smiley sono solo usati per visualizzare un'immagine in HTML * Il testo "
+"(valore predefinito) è usato per sostituire un testo da un altro"
 
 #. module: mail
 #. openerp-web
@@ -247,6 +250,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Per menzionare qualcuno, scrivi <b>@nome utente</b> per richiamare la sua attenzione.<br>\n"
+"            Per menzionare un canale, scrivi <b>#canale</b>.<br>\n"
+"            Per eseguire un comando, scrivi <b>/comando</b>.<br>\n"
+"            Per inserire risposte predefinite nel tuo messaggio, scrivi <b>:scorciatoia</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:584
@@ -357,6 +365,12 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
+"                                    Per inviarlo per tutti i record che corrispondono al vostro criterio di ricerca, seleziona questa casella: \n"
+"                                </span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
+"                                    Per usare soltanto i record selezionati, deseleziona questa casella:\n"
+"                                </span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -364,6 +378,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Aggiungere</span>\n"
+"                                    <span class=\"o_stat_text\">Azione contestuale</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -371,6 +387,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                    <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">eliminare</span>\n"
+"                                    <span class=\"o_stat_text\">Azione contestuale</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -382,11 +400,17 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                    Tutti i record che corrispondono al tuo filtro di ricerca attuale saranno inviati per Email,\n"
+"                                    non solo gli ID selezionati nella visualizzazione elenco.\n"
+"                                </strong><br/>\n"
+"                                Il messaggio email sarà inviato per tutti i record selezionati nell'elenco.<br/>\n"
+"                                La conferma di questa procedura guidata richiederà probabilmente alcuni minuti e bloccherà il tuo navigatore."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
-msgstr ""
+msgstr "<strong> Feedback</strong>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -394,11 +418,13 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Solo i record selezionati nell'elenco saranno usati</strong><br/>\n"
+"                                Il messaggio email sarà inviato per tutti i record selezionati nell'elenco."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>Attività Raccomandate</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -418,6 +444,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
+"Un shortcode è una scorciatoia. Ad esempio, se scrivi #gm, sarà trasformato "
+"in \"Good Morning\" (Buongiorno)."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_groups
@@ -550,7 +578,7 @@ msgstr "Attività"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Combinazione di attività"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -570,7 +598,7 @@ msgstr "Tipi di Attività"
 #: code:addons/mail/static/src/xml/activity.xml:37
 #, python-format
 msgid "Activity type"
-msgstr ""
+msgstr "Tipo di attività"
 
 #. module: mail
 #. openerp-web
@@ -626,7 +654,7 @@ msgstr "Aggiungi un canale privato"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 msgid "Add channels to notify..."
-msgstr ""
+msgstr "Aggiungere canali per notificare..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -732,6 +760,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Le risposte non vanno nel thread di discussione. Questo incide sul messaggio"
+" ID generato. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -777,11 +807,13 @@ msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
 msgstr ""
+"Gli allegati sono legati a un documento con model / res_id e al messaggio "
+"via questo campo. "
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Authenticated Employees"
-msgstr ""
+msgstr "Impiegati identificati"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0

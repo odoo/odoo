@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Весел Карастоянов <vesel@abv.bg>, 2017
 # kirily <kiril@teracomp.eu>, 2017
 # B Dochev, 2017
 # Ivan Ivanov, 2017
@@ -125,7 +126,7 @@ msgstr ", ако счетоводство или поръчки са инста�
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "- The Odoo Team"
-msgstr "- Системният отбор"
+msgstr "- Odoo екипът"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -142,8 +143,7 @@ msgid ""
 "<span class=\"label label-default text-center "
 "odoo_purple\">'Available'</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">На "
-"разположение</span>"
+"<span class=\"label label-default text-center odoo_purple\">Налично</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -179,7 +179,7 @@ msgid ""
 "Sale</span>"
 msgstr ""
 "<span class=\"label label-default text-center odoo_purple\">Потвърдете "
-"поръчката</span>"
+"продажба</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -205,8 +205,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">Валидирай "
-"доставката</span>"
+"<span class=\"label label-default text-center odoo_purple\">Потвърди "
+"доставка</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1554,7 +1554,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Create an Inventory Adjustment"
-msgstr ""
+msgstr "Създайте нова Ревизия"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3045,14 +3045,14 @@ msgstr "Наличност"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr ""
+msgstr "Ревизия"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustments"
-msgstr ""
+msgstr "Ревизии"
 
 #. module: stock
 #: model:web.planner,tooltip_planner:stock.planner_inventory
@@ -3131,7 +3131,7 @@ msgstr "Оценка на Наличността"
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory adjustment"
-msgstr ""
+msgstr "Ревизия"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -3139,6 +3139,8 @@ msgid ""
 "Inventory adjustments will be made by comparing the theoretical and the "
 "checked quantities."
 msgstr ""
+"Ревизизията на стоки ще бъде направена въз основа на наличните по програма "
+"стокови количества и реално преброените такива."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history_date
@@ -4074,7 +4076,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:106
 #, python-format
 msgid "One product category"
-msgstr ""
+msgstr "Една продуктова категория"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:111
@@ -4086,7 +4088,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:107
 #, python-format
 msgid "One product only"
-msgstr ""
+msgstr "Един продукт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -4792,7 +4794,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Product Moves"
-msgstr ""
+msgstr "Движения по продукт"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
@@ -5276,7 +5278,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 msgid "Reporting"
-msgstr "Отчитане"
+msgstr "Справки"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings_use_propagation_minimum_delta
@@ -5522,6 +5524,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
+"Бракуването на продукт ще го премахне от инвентара ви. В меню Справки остава"
+" история, къде точно е бракуван продукта."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5557,7 +5561,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:108
 #, python-format
 msgid "Select products manually"
-msgstr ""
+msgstr "Избрани продукти"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -5877,7 +5881,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr ""
+msgstr "Нова Ревизия"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_state
@@ -7509,7 +7513,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr ""
+msgstr "пример: Годишна ревизия"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
