@@ -120,11 +120,11 @@ msgstr ""
 "% if object.origin:\n"
 "    (SdP origen: ${object.origin})\n"
 "% endif\n"
-"con un monto de <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"con un monto de <strong>${format_amount(object.amount_total,object.currency_id.name)}</strong>\n"
 "de ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p>Si tiene alguna duda, puede responder este email.</p>\n"
+"<p>Si tiene alguna duda, comuniquese con nosotros.</p>\n"
 "<p>Gracias,</p>\n"
 
 #. module: purchase

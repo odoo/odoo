@@ -79,7 +79,7 @@ msgstr ""
 #: code:addons/website/models/website.py:743
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(копіювати)"
 
 #. module: website
 #. openerp-web
@@ -2241,6 +2241,9 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Якщо це поле порожнє, то представлення даних застосовується до всіх "
+"користувачів. В іншому випадку представлення даних застосовується лише до "
+"користувачів цих груп."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page_active
@@ -2250,6 +2253,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Якщо цей вид успадковується,\n"
+"* якщо Правильно, то вид завжди розширює свій батьківський\n"
+"* якщо Помилково, то в даний час представлення даних не поширюється на його батьківський статус, але його можна активувати"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2895,6 +2901,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Використовується лише у тому випадку, якщо це представлення успадковує від іншого (inherit_id не False / Null).\n"
+"\n"
+"* якщо розширення (за замовчуванням), якщо для цього виду запитується найближчий основний вид\n"
+"шукається (через inherit_id), потім всі погляди, що успадковують від нього, з цією\n"
+"моделлю виду застосовується\n"
+"* якщо первинний, найближчий первинний вид повністю вирішено (навіть якщо він використовує\n"
+"інша модель, ніж ця), то специфікації успадкування цього виду\n"
+"(<xpath/>) застосовуються, і результат використовується так, наче це була фактича арка\n"
+"цього виду.\n"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
