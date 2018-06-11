@@ -421,6 +421,11 @@ class Post(models.Model):
             if content_match:
                 raise KarmaError('User karma not sufficient to post an image or link.')
         return content
+    
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('You cannot create recursive Forum Posts.'))
 
     @api.model
     def create(self, vals):
