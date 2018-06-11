@@ -279,6 +279,13 @@ function classToStyle($editable) {
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
             var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
+            // align table with element
+            switch ($target.parent().css('text-align')) {
+                case "center":
+                    $hack.css({'margin-right': 'auto'});
+                case "right":
+                    $hack.css({'margin-left': 'auto'});
+            }
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({
