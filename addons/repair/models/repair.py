@@ -78,6 +78,7 @@ class Repair(models.Model):
         'stock.production.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id)]",
         help="Products repaired are all belonging to this lot", oldname="prodlot_id")
+    owner_id = fields.Many2one('res.partner', 'Owner')
     guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
     operations = fields.One2many(
         'repair.line', 'repair_id', 'Parts',
@@ -200,11 +201,9 @@ class Repair(models.Model):
     def action_validate(self):
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
-        available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
-        for available_qty in [available_qty_owner, available_qty_noown]:
-            if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
-                return self.action_repair_confirm()
+        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.owner_id, strict=True)
+        if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+            return self.action_repair_confirm()
         else:
             return {
                 'name': _('Insufficient Quantity'),
@@ -431,15 +430,8 @@ class Repair(models.Model):
         if self.filtered(lambda repair: not repair.repaired):
             raise UserError(_("Repair must be repaired in order to make the product moves."))
         res = {}
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         Move = self.env['stock.move']
         for repair in self:
-            # Try to create move with the appropriate owner
-            owner_id = False
-            available_qty_owner = self.env['stock.quant']._get_available_quantity(repair.product_id, repair.location_id, repair.lot_id, owner_id=repair.partner_id, strict=True)
-            if float_compare(available_qty_owner, repair.product_qty, precision_digits=precision) >= 0:
-                owner_id = repair.partner_id.id
-
             moves = self.env['stock.move']
             for operation in repair.operations:
                 move = Move.create({
@@ -457,7 +449,6 @@ class Repair(models.Model):
                                            'qty_done': operation.product_uom_qty,
                                            'package_id': False,
                                            'result_package_id': False,
-                                           'owner_id': owner_id,
                                            'location_id': operation.location_id.id, #TODO: owner stuff
                                            'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
@@ -472,6 +463,7 @@ class Repair(models.Model):
                 'product_uom_qty': repair.product_qty,
                 'partner_id': repair.address_id.id,
                 'location_id': repair.location_id.id,
+                'restrict_partner_id': repair.owner_id.id,
                 'location_dest_id': repair.location_id.id,
                 'move_line_ids': [(0, 0, {'product_id': repair.product_id.id,
                                            'lot_id': repair.lot_id.id, 
@@ -480,8 +472,8 @@ class Repair(models.Model):
                                            'qty_done': repair.product_qty,
                                            'package_id': False,
                                            'result_package_id': False,
-                                           'owner_id': owner_id,
-                                           'location_id': repair.location_id.id, #TODO: owner stuff
+                                           'location_id': repair.location_id.id,
+                                           'owner_id': repair.owner_id.id,
                                            'location_dest_id': repair.location_id.id,})],
                 'repair_id': repair.id,
                 'origin': repair.name,
