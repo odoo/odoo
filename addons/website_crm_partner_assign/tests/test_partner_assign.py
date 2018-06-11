@@ -137,7 +137,7 @@ class TestPartnerLeadPortal(TestCrmCases):
             'contact_name': 'Renaud Rutten',
         })
         opportunity = self.env['crm.lead'].browse(data['id'])
-        salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.portal_user.user_id.id)
+        salesmanteam = self.env['crm.team']._get_default_team(user_id=self.portal_user.user_id).id
 
         self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
         self.assertEqual(opportunity.partner_assigned_id, self.portal_partner, 'Assigned Partner of created opportunity is the (portal) creator.')

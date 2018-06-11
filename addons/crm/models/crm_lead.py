@@ -59,7 +59,7 @@ class Lead(models.Model):
         return 10
 
     def _default_stage_id(self):
-        team = self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid)
+        team = self.env['crm.team'].sudo()._get_default_team(user_id=self.env.user)
         return self._stage_find(team_id=team.id, domain=[('fold', '=', False)]).id
 
     name = fields.Char('Opportunity', required=True, index=True)
@@ -69,7 +69,7 @@ class Lead(models.Model):
     date_action_last = fields.Datetime('Last Action', readonly=True)
     email_from = fields.Char('Email', help="Email address of the contact", index=True)
     website = fields.Char('Website', index=True, help="Website of the contact")
-    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
+    team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team(user_id=self.env.user).id,
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
         string='Kanban State', compute='_compute_kanban_state')
@@ -240,30 +240,19 @@ class Lead(models.Model):
         values = self._onchange_partner_id_values(self.partner_id.id if self.partner_id else False)
         self.update(values)
 
-    @api.model
-    def _onchange_user_values(self, user_id):
-        """ returns new values when user_id has changed """
-        if user_id and self._context.get('team_id'):
-            team = self.env['crm.team'].browse(self._context['team_id'])
-            if user_id in team.member_ids.ids:
-                return {}
-        team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
-        return {'team_id': team_id}
-
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
-        values = self._onchange_user_values(self.user_id.id)
-        self.update(values)
+        # Keep team if commercial belongs to it
+        if self.user_id <= (self.team_id.member_ids | self.team_id.user_id):
+            return
+        self.team_id = self.env['crm.team']._get_default_team(self.user_id)
 
     @api.constrains('user_id')
     @api.multi
     def _valid_team(self):
         for lead in self:
-            if lead.user_id:
-                values = lead.with_context(team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
-                if values:
-                    lead.update(values)
+            lead._onchange_user_id()
 
     @api.onchange('state_id')
     def _onchange_state(self):

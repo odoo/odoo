@@ -10,7 +10,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _get_default_team(self):
-        return self.env['crm.team']._get_default_team_id()
+        return self.env['crm.team']._get_default_team()
 
     def _default_comment(self):
         invoice_type = self.env.context.get('type', 'out_invoice')

@@ -20,35 +20,57 @@ class CrmTeam(models.Model):
     _order = "name"
 
     @api.model
-    @api.returns('self', lambda value: value.id if value else False)
-    def _get_default_team_id(self, user_id=None):
-        if not user_id:
-            user_id = self.env.uid
-        company_id = self.sudo(user_id).env.user.company_id.id
-        team_id = self.env['crm.team'].sudo().search([
-            '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
-            '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
-        ], limit=1)
-        if not team_id and 'default_team_id' in self.env.context:
-            team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
-        if not team_id:
-            default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
-            if default_team_id and (self.env.context.get('default_type') != 'lead' or default_team_id.use_leads):
-                team_id = default_team_id
-        return team_id
+    def _get_default_team(self, user=None):
+        """Get deafult team for :param:`user`.
+
+        :param recordset user:
+            User to search. If empty, we get it from env.
+
+        :return recordset:
+            Default `crm.team`; can be empty.
+        """
+        if not user:
+            user = self.env.user
+        Team = self.env["crm.team"]
+
+        def _choices():
+            # Team from context
+            yield Team.browse(self.env.context.get("default_team_id"))
+            # Default user's team
+            yield user.team_id
+            # Random team where user is leader
+            yield Team.search([
+                ("user_id", "=", user.id),
+                '|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]),
+            ], limit=1)
+            # Random team where user is member
+            yield Team.search([
+                ("member_ids", "=", user.id),
+                '|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id]),
+            ], limit=1)
+            # Default team for everybody
+            sales_dpt = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
+            if sales_dpt and (self.env.context.get('default_type') != 'lead' or sales_dpt.use_leads):
+                yield sales_dpt
+
+        for team in _choices():
+            if team and user <= (team.member_ids | team.user_id):
+                return team
+        # No team
+        return Team
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    name = fields.Char('Sales Channel', required=True, translate=True)
-    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the sales channel without removing it.")
+    name = fields.Char('Sales Team', required=True, translate=True)
+    active = fields.Boolean(default=True, help="If the active field is set to false, it will allow you to hide the sales team without removing it.")
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env['res.company']._company_default_get('crm.team'))
     currency_id = fields.Many2one(
         "res.currency", related='company_id.currency_id',
         string="Currency", readonly=True)
-    user_id = fields.Many2one('res.users', string='Channel Leader')
-    member_ids = fields.One2many('res.users', 'sale_team_id', string='Channel Members')
+    user_id = fields.Many2one('res.users', string='Team Leader')
+    member_ids = fields.Many2many('res.users', string='Team Members')
     favorite_user_ids = fields.Many2many(
         'res.users', 'team_favorite_user_rel', 'team_id', 'user_id',
         string='Favorite Members',

@@ -8,8 +8,14 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     sale_team_id = fields.Many2one(
-        'crm.team', 'Sales Team',
-        help='Sales Channel the user is member of. Used to compute the members of a sales channel through the inverse one2many')
+        'crm.team',
+        string='Default Sales Team',
+    )
+
+    def _assign_users_to_teams(self):
+        """Make sure the user belongs to its default team."""
+        for user in self.filtered("sale_team_id"):
+            user.sale_team_id.member_ids |= user
 
     group_sales_team_user = fields.Selection(
         selection=lambda self: self._get_group_selection('base.module_category_sales_management'),
@@ -25,4 +31,12 @@ class ResUsers(models.Model):
             teams = self.env['crm.team'].search([('team_type', '=', 'sales')])
             if len(teams.ids) == 1:
                 user.sale_team_id = teams.id
+        # Make sure the user belongs to its default team
+        user._assign_users_to_teams()
         return user
+
+    def write(self, vals):
+        # Make sure the user belongs to its default team
+        result = super().write(vals)
+        self._assign_users_to_teams()
+        return result
