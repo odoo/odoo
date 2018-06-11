@@ -45,7 +45,6 @@ class TestPayment(AccountingTestCase):
         """ Returns an open invoice """
         invoice = self.invoice_model.create({
             'partner_id': partner or self.partner_agrolait.id,
-            'reference_type': 'none',
             'currency_id': currency_id or self.currency_eur_id,
             'name': type,
             'account_id': account_id or self.account_receivable.id,

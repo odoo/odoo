@@ -49,7 +49,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
     def _create_invoice_for_so(self, sale_order, product):
         rslt = self.env['account.invoice'].create({
             'partner_id': self.test_partner.id,
-            'reference_type': 'none',
             'currency_id': self.currency_two.id,
             'name': 'customer invoice',
             'type': 'out_invoice',

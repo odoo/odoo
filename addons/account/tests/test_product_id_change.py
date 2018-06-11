@@ -55,7 +55,6 @@ class TestProductIdChange(AccountingTestCase):
 
         out_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to client',
             'account_id': self.account_receivable.id,
             'type': 'out_invoice',
@@ -73,7 +72,6 @@ class TestProductIdChange(AccountingTestCase):
 
         in_invoice = self.invoice_model.create({
             'partner_id': partner.id,
-            'reference_type': 'none',
             'name': 'invoice to supplier',
             'account_id': self.account_receivable.id,
             'type': 'in_invoice',

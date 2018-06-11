@@ -48,7 +48,6 @@ class TestAccountCustomerInvoice(AccountTestUsers):
 
         self.account_invoice_customer0 = self.account_invoice_obj.sudo(self.account_user.id).create(dict(
             name="Test Customer Invoice",
-            reference_type="none",
             payment_term_id=self.payment_term.id,
             journal_id=self.journalrec.id,
             partner_id=self.partner3.id,
