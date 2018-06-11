@@ -20,13 +20,17 @@ class WebsiteLivechat(http.Controller):
     @http.route('/livechat/channel/<model("im_livechat.channel"):channel>', type='http', auth='public', website=True)
     def channel_rating(self, channel, **kw):
         # get the last 100 ratings and the repartition per grade
-        ratings = request.env['rating.rating'].search([('res_model', '=', 'mail.channel'), ('res_id', 'in', channel.sudo().channel_ids.ids)], order='create_date desc', limit=100)
-        repartition = channel.sudo().channel_ids.rating_get_grades()
+        domain = [
+            ('res_model', '=', 'mail.channel'), ('res_id', 'in', channel.sudo().channel_ids.ids),
+            ('consumed', '=', True), ('rating', '>=', 1),
+        ]
+        ratings = request.env['rating.rating'].search(domain, order='create_date desc', limit=100)
+        repartition = channel.sudo().channel_ids.rating_get_grades(domain=domain)
 
         # compute percentage
         percentage = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for grade in repartition:
-            percentage[grade] = repartition[grade] * 100 / sum(repartition.values()) if sum(repartition.values()) else 0
+            percentage[grade] = round(repartition[grade] * 100.0 / sum(repartition.values()), 1) if sum(repartition.values()) else 0
 
         # the value dict to render the template
         values = {

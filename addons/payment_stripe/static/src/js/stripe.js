@@ -79,6 +79,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                 })
                 handler.open({
                     name: $("input[name='merchant']").val(),
+                    email: $("input[name='email']").val(),
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
                     amount: _.contains(int_currencies, currency) ? amount : amount * 100,
@@ -94,6 +95,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                 $form.html(data);
                 handler.open({
                     name: $("input[name='merchant']").val(),
+                    email: $("input[name='email']").val(),
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
                     amount: _.contains(int_currencies, currency) ? amount : amount * 100,
