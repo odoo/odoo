@@ -20,6 +20,8 @@ from odoo.tools import html2text, ustr
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
+SMTP_TIMEOUT = 60
+
 
 class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
@@ -205,9 +207,9 @@ class IrMailServer(models.Model):
             if not 'SMTP_SSL' in smtplib.__all__:
                 raise UserError(_("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
                                   "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
-            connection = smtplib.SMTP_SSL(host, port)
+            connection = smtplib.SMTP_SSL(host, port, timeout=SMTP_TIMEOUT)
         else:
-            connection = smtplib.SMTP(host, port)
+            connection = smtplib.SMTP(host, port, timeout=SMTP_TIMEOUT)
         connection.set_debuglevel(smtp_debug)
         if encryption == 'starttls':
             # starttls() will perform ehlo() if needed first
