@@ -97,7 +97,7 @@ class StockMove(models.Model):
         digits=dp.get_precision('Product Unit of Measure'))
     move_lot_ids = fields.One2many('stock.move.lots', 'move_id', string='Lots')
     active_move_lot_ids = fields.One2many('stock.move.lots', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
-    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
+    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', ondelete='restrict')
     unit_factor = fields.Float('Unit Factor')
     is_done = fields.Boolean(
         'Done', compute='_compute_is_done',
