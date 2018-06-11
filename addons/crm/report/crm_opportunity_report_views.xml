@@ -126,8 +126,8 @@
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <separator orientation="vertical" />
-                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline" help="Expiration Closing Month"/>
+                        <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
+                        <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline"/>
                         <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>

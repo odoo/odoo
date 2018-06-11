@@ -303,7 +303,7 @@
                 <field name="category_id" string="Asset Category"/>
                 <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                 <group expand="0" string="Group By...">
-                        <filter string="Month" name="month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Date" name="month" domain="[]" context="{'group_by':'date'}"/>
                         <filter string="Asset Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                 </group>
             </search>
