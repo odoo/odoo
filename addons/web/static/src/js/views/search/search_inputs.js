@@ -514,6 +514,9 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      *
      * @param {Array<instance.web.search.Filter>} filters elements of the group
      * @param {instance.web.SearchView} parent parent in which the filters are contained
+     * @param {Object} intervalMapping, a key is a field name and the corresponding value
+     *                   is the current interval used
+     *                   (necessarily the field is of type 'date' or 'datetime')
      */
     init: function (filters, parent, intervalMapping) {
         // If all filters are group_by and we're not initializing a GroupbyGroup,
@@ -701,6 +704,11 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
             };
         }));
     },
+    /*
+     * private
+     *
+     * @param {Object} intervalMapping
+     */
     updateIntervalMapping: function (intervalMapping) {
         this.intervalMapping = intervalMapping;
     }
