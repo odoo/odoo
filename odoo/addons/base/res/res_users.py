@@ -745,6 +745,9 @@ class GroupsView(models.Model):
         # exist but we are already creating some basic groups.
         view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
         if view and view.exists() and view._name == 'ir.ui.view':
+            if not view.check_access_rights('write',  raise_exception=False):
+                if self.env.user.has_group('base.group_erp_manager'):
+                    view = view.sudo()
             group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
             xml1.append(E.separator(string=_('Application'), colspan="2"))
