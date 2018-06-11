@@ -187,6 +187,13 @@ var FacetView = Widget.extend({
             }
         }
     },
+    /*
+     * @param {Widget} parent
+     * @param {Object} model
+     * @param {Object} intervalMapping, a key is a field name and the corresponding value
+     *                   is the current interval used
+     *                   (necessarily the field is of type 'date' or 'datetime')
+     */
     init: function (parent, model, intervalMapping) {
         this._super(parent);
         this.model = model;
@@ -218,6 +225,13 @@ var FacetView = Widget.extend({
 
 var FacetValueView = Widget.extend({
     template: 'SearchView.FacetView.Value',
+    /*
+     * @param {Widget} parent
+     * @param {Object} model
+     * @param {Object} interval (optional) is used in case the facet value
+     *                  corresponds to a groupby with an associated 'date'
+     *                  'datetime' field.
+     */
     init: function (parent, model, interval) {
         this._super(parent);
         this.model = model;
@@ -275,10 +289,10 @@ var SearchView = Widget.extend({
         },
     },
     custom_events: {
-        'menu_item_toggled': '_onItemToggled',
-        'item_option_changed': '_onItemOptionChanged',
-        'new_groupby': '_onNewGroupby',
-        'new_filter': '_onNewFilter',
+        menu_item_toggled: '_onItemToggled',
+        item_option_changed: '_onItemOptionChanged',
+        new_groupby: '_onNewGroupby',
+        new_filter: '_onNewFilter',
     },
     defaults: _.extend({}, Widget.prototype.defaults, {
         hidden: false,
@@ -832,7 +846,7 @@ var SearchView = Widget.extend({
                         groupId: groupId,
                         defaultOptionId: defaultOptionId,
                     });
-                    if (self._fieldIsDate(fieldName)) {
+                    if (_.contains(['date', 'datetime'], self.fields[fieldName].type)) {
                         self.intervalMapping.push({groupby: groupby, interval: defaultOptionId || 'month'});
 
                     }
@@ -844,15 +858,6 @@ var SearchView = Widget.extend({
         });
         return new GroupByMenu(this, groupbys, this.fields);
     },
-
-
-    _fieldIsDate: function (fieldName) {
-        if (_.contains(['date', 'datetime'], this.fields[fieldName].type)) {
-            return true;
-        }
-        return false;
-    },
-
     /**
      * Processes a fieldsView in place. In particular, parses its arch.
      *
@@ -869,8 +874,12 @@ var SearchView = Widget.extend({
         return fv;
     },
     /**
+     * This function ask the groupby menu to deactive all groupbys with
+     * corresponding groupId in the list selectedGroupIds.
+     * (TO DO: simplify method... actually there is only one group of groupbys)
+     *
      * @private
-     * @param {string[]]} selectedGroupIds
+     * @param {string[]]} selectedGroupIds list of group ids to deactivate
      */
     _unsetUnusedGroupbys: function (selectedGroupIds) {
         var groupIds = this.selectedGroupIds.groupByCategory.reduce(
@@ -886,6 +895,9 @@ var SearchView = Widget.extend({
         this.groupby_menu.unsetGroups(groupIds);
     },
     /**
+     * This function ask the filters menu to deactive all filters with
+     * corresponding groupId in the list selectedGroupIds.
+     *
      * @private
      * @param {string[]]} selectedGroupIds
      */
@@ -909,6 +921,11 @@ var SearchView = Widget.extend({
 
     /**
      *
+     * this function is called in response to an event 'on_item_toggled'.
+     * this kind of event is triggered by the filters menu or the groupby menu
+     * when a user has clicked on a item (a filter or a groupby).
+     * The query is modified accordingly to the new state (active or not) of that item
+     *
      * @private
      * @param {OdooEvent} event
      */
@@ -931,16 +948,19 @@ var SearchView = Widget.extend({
         }
     },
     /**
+     * this function is called when a new groupby has been added to the groupby menu
+     * via the 'Add Custom Groupby' submenu. The query is modified with the new groupby
+     * added to it as active. The communication betwenn the groupby menu and the search view
+     * is maintained by properly updating the mappings.
      * @private
      * @param {OdooEvent} event
      */
     _onNewGroupby: function (event) {
         var attrs = {
-                context:"{'group_by':'" + event.data.fieldName + "''}",
-                name: event.data.description,
-                fieldName: event.data.fieldName,
-            };
-
+            context:"{'group_by':'" + event.data.fieldName + "''}",
+            name: event.data.description,
+            fieldName: event.data.fieldName,
+        };
         var groupby = new search_inputs.Filter({attrs: attrs}, this);
         if (event.data.optionId) {
             var interval = event.data.optionId;
@@ -959,7 +979,11 @@ var SearchView = Widget.extend({
             category: 'Group By',
         });
     },
-        /**
+    /**
+     * this function is called when a new filter has been added to the filters menu
+     * via the 'Add Custom Filter' submenu. The query is modified with the new filter
+     * added to it as active. The communication betwenn the filters menu and the search view
+     * is maintained by properly updating the mappings.
      * @private
      * @param {OdooEvent} event
      */
@@ -970,25 +994,23 @@ var SearchView = Widget.extend({
         var groupId;
 
         _.each(event.data, function (filterDescription) {
-                filter = new search_inputs.Filter(filterDescription.filter, this);
-                filters.push(filter);
-                self.filtersMapping.push({
-                    filterId: filterDescription.itemId,
-                    filter: filter,
-                    groupId: filterDescription.groupId,
-                });
-                // filters belong to the same group
-                if (!groupId) {
-                    groupId = filterDescription.groupId;
-                }
+            filter = new search_inputs.Filter(filterDescription.filter, this);
+            filters.push(filter);
+            self.filtersMapping.push({
+                filterId: filterDescription.itemId,
+                filter: filter,
+                groupId: filterDescription.groupId,
             });
+            // filters belong to the same group
+            if (!groupId) {
+                groupId = filterDescription.groupId;
+            }
+        });
         var group = new search_inputs.FilterGroup(filters, this, this.intervalMapping);
         filters.forEach(function (filter) {
             group.toggle(filter, {silent: true});
         });
         this.query.trigger('reset');
-
-
         this.groupsMapping.push({
             groupId: groupId,
             group: group,
@@ -996,6 +1018,8 @@ var SearchView = Widget.extend({
         });
     },
     /**
+     * this function is called when the option related to an item (filter or groupby) has been
+     * changed by the user. The query is modified appropriately.
      *
      * @private
      * @param {OdooEvent} event
