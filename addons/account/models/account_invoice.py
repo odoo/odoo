@@ -96,8 +96,8 @@ class AccountInvoice(models.Model):
         return journal.currency_id or journal.company_id.currency_id or self.env.user.company_id.currency_id
 
     @api.model
-    def _get_reference_type(self):
-        return [('none', _('Free Reference'))]
+    def _get_reference_types(self):
+        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Partner')), ('none', _('Free Communication'))]
 
     @api.one
     @api.depends(
@@ -253,11 +253,11 @@ class AccountInvoice(models.Model):
     move_name = fields.Char(string='Journal Entry Name', readonly=False,
         default=False, copy=False,
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
-    reference = fields.Char(string='Vendor Reference', copy=False,
+    reference = fields.Char(string='Payment Ref.', copy=False,
         help="The partner reference of this invoice.", readonly=True, states={'draft': [('readonly', False)]})
-    reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
+    reference_type = fields.Selection('_get_reference_types', string='Payment Ref. Type',
         required=True, readonly=True, states={'draft': [('readonly', False)]},
-        default='none')
+        default=lambda self: self.env.user.company_id.invoice_reference_type)
     comment = fields.Text('Additional Information', readonly=True, states={'draft': [('readonly', False)]})
 
     state = fields.Selection([
@@ -387,6 +387,17 @@ class AccountInvoice(models.Model):
                 vendor_display_name = _('From: ') + invoice.source_email
             invoice.vendor_display_name = vendor_display_name
             invoice.invoice_icon = invoice.source_email and '@' or ''
+
+    @api.multi
+    def _get_computed_reference(self):
+        if self.reference_type == 'invoice_number':
+            trailing_digits_str = re.match('.*?([0-9]+)$', self.number).group(1)
+            digits = len(trailing_digits_str)
+            trailing_digits = int(trailing_digits_str)
+            magical_modulo = 97
+            return '%s-%s' % (self.number, str(trailing_digits % magical_modulo).rjust(digits, '0'))
+        if self.reference_type == 'partner':
+            return 'CUST/%d' % self.partner_id.id
 
     # Load all Vendor Bill lines
     @api.onchange('vendor_bill_id')
@@ -1303,7 +1314,12 @@ class AccountInvoice(models.Model):
     def invoice_validate(self):
         for invoice in self.filtered(lambda invoice: invoice.partner_id not in invoice.message_partner_ids):
             invoice.message_subscribe([invoice.partner_id.id])
+
+            # Auto-compute reference.
+            if invoice.reference_type != 'none' and invoice.type == 'out_invoice':
+                invoice.reference = invoice._get_computed_reference()
         self._check_duplicate_supplier_reference()
+
         return self.write({'state': 'open'})
 
     @api.model

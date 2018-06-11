@@ -15,6 +15,9 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    def _get_invoice_reference_types(self):
+        return self.env['account.invoice']._get_reference_types()
+
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
@@ -66,6 +69,8 @@ Best Regards,'''))
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
+    invoice_reference_type = fields.Selection(string='Default Invoice Reference Type', selection='_get_invoice_reference_types',
+                                              default='none', help='Default Reference Type on Invoices.')
 
     @api.multi
     def _check_lock_dates(self, vals):

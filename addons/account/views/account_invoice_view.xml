@@ -431,6 +431,9 @@
                             <field name="date_invoice"/>
                             <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state', 'in', ['open', 'paid'])]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
+                            <field name="reference_type" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="reference" nolabel="1"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="reference"/>
                             <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
