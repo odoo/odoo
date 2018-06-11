@@ -321,6 +321,10 @@ class ThreadedServer(CommonServer):
             self.stop()
             return rc
 
+        # allows a parent to pause or wait on the server being ready, SIGCONT
+        # not available on windows
+        if hasattr(signal, 'SIGCONT'):
+            os.kill(os.getppid(), signal.SIGCONT)
         self.cron_spawn()
 
         # Wait for a first signal to be handled. (time.sleep will be interrupted
