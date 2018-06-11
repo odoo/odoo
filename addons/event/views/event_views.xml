@@ -383,7 +383,7 @@
                         <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
                         <filter string="Event Category" name="event_type_id" context="{'group_by':'event_type_id'}"/>
                         <filter string="Status" name="status" context="{'group_by':'state'}"/>
-                        <filter string="Start Month" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
+                        <filter string="Start Date" name="date_begin" domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
             </field>
@@ -539,8 +539,7 @@
                         <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Event" name="group_event" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Registration Day" name="createday" domain="[]" context="{'group_by': 'create_date:day'}"/>
-                        <filter string="Registration Month" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
+                        <filter string="Registration Date" name="createmonth" domain="[]" context="{'group_by': 'create_date:month'}"/>
                    </group>
                 </search>
             </field>
