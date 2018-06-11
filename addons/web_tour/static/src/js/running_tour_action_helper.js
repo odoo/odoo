@@ -2,7 +2,10 @@ odoo.define('web_tour.RunningTourActionHelper', function(require) {
 "use strict";
 
 var core = require('web.core');
+var utils = require('web_tour.utils');
 var Tip = require('web_tour.Tip');
+
+var get_first_visible_element = utils.get_first_visible_element;
 
 var RunningTourActionHelper = core.Class.extend({
     init: function (tip_widget) {
