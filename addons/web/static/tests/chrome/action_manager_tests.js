@@ -93,6 +93,9 @@ QUnit.module('ActionManager', {
             name: 'A Client Action',
             tag: 'ClientAction',
             type: 'ir.actions.client',
+        }, {
+            id: 10,
+            type: 'ir.actions.act_window_close',
         }];
 
         this.archs = {
@@ -2846,6 +2849,31 @@ QUnit.module('ActionManager', {
             'load_views',
             'default_get',
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('chained action on_close', function (assert) {
+        assert.expect(3);
+
+        function on_close() {
+            assert.step('Close Action');
+        };
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(5, {on_close: on_close});
+
+        // a target=new action shouldn't activate the on_close
+        actionManager.doAction(5);
+        assert.verifySteps([]);
+
+        // An act_window_close should trigger the on_close
+        actionManager.doAction(10);
+        assert.verifySteps(['Close Action']);
 
         actionManager.destroy();
     });

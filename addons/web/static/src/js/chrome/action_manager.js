@@ -388,10 +388,13 @@ var ActionManager = Widget.extend({
         }
 
         return this._startController(controller).then(function (controller) {
+            var prevDialogOnClose;
             if (self.currentDialogController) {
+                prevDialogOnClose = self.currentDialogController.onClose;
                 self._closeDialog(true);
             }
 
+            controller.onClose = prevDialogOnClose || options.on_close;
             var dialog = new Dialog(self, _.defaults({}, options, {
                 buttons: [],
                 dialogClass: controller.className,
@@ -402,7 +405,7 @@ var ActionManager = Widget.extend({
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
                 if (silent !== true) {
-                    options.on_close();
+                    controller.onClose();
                 }
             });
             controller.dialog = dialog;
