@@ -101,3 +101,18 @@ class StockPicking(models.Model):
         self._log_activity(_render_note_exception_quantity, documents)
 
         return super(StockPicking, self)._log_less_quantities_than_expected(moves)
+
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    sale_order_ids = fields.Many2many('sale.order', string="Sales Orders", compute='_compute_sale_order_ids')
+
+    @api.depends('name')
+    def _compute_sale_order_ids(self):
+        for lot in self:
+            stock_moves = self.env['stock.move.line'].search([
+                ('lot_id', '=', lot.id),
+                ('state', '=', 'done')
+            ]).mapped('move_id').filtered(
+                lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
+            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
