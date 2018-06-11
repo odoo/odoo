@@ -100,6 +100,8 @@ class SetupBarBankConfigWizard(models.TransientModel):
                     'company_id': company.id,
                     'bank_account_id': record.res_partner_bank_id.id,
                 })
+            else:
+                selected_journal.bank_account_id = record.res_partner_bank_id.id
 
     def validate(self):
         """ Called by the validation button of this wizard. Serves as an
