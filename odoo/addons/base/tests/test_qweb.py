@@ -465,6 +465,24 @@ class TestQWebNS(TransactionCase):
             expected_result
         )
 
+    def test_render_dynamic_xml_with_code_error(self):
+        """ Test that, when rendering a template containing a namespaced node
+            that evaluates code with errors, the proper exception is raised
+        """
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <Invoice xmlns:od="http://odoo.com/od">
+                        <od:name t-att-test="'a' + 1"/>
+                    </Invoice>
+                </t>
+            """
+        })
+        error_msg = "Can't convert 'int' object to str implicitly"
+        with self.assertRaisesRegexp(QWebException, error_msg):
+            view1.render()
 
 from copy import deepcopy
 class FileSystemLoader(object):
