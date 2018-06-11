@@ -7,6 +7,7 @@ var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
 var utils = require('mail.utils');
+var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -124,6 +125,7 @@ var AbstractActivityField = AbstractField.extend({
                 default_res_id: this.res_id,
                 default_res_model: this.model,
                 default_previous_activity_type_id: previous_activity_type_id,
+                on_close_callback : callback,
             },
             res_id: id || false,
         };
@@ -361,6 +363,48 @@ var KanbanActivity = AbstractActivityField.extend({
         return this._scheduleActivity(activity_id, false, this._reload.bind(this));
     },
 });
+
+// I recommend changing the logic of this functionality in master
+var activityDoneScheduleNextAction = Widget.extend({
+
+    init: function(parent, action, options) {
+        this._super.apply(this, arguments);
+        this.action = action;
+    },
+
+    _findRootAction: function() {
+        var parent = this.getParent();
+        var action;
+        if (parent) {
+            var actionJSID = parent.currentDialogController && parent.currentDialogController.actionID;
+            action = actionJSID && parent.actions[actionJSID];
+        }
+        return action;
+    },
+
+    start: function() {
+        var active_ids = this.action.context.active_ids;
+        var self = this;
+        var newActionOptions = {};
+
+        var rootAction = this._findRootAction();
+
+        if (rootAction && rootAction.context && rootAction.context.on_close_callback) {
+            newActionOptions.on_close = rootAction.context.on_close_callback;
+        }
+
+        return this._rpc({
+                model: 'mail.activity',
+                method: 'action_done_schedule_next',
+                args: [active_ids],
+            }).then(function (action) {
+                action.context.on_close_callback = newActionOptions.on_close;
+                return self.do_action(action, newActionOptions);
+            });
+    },
+});
+
+core.action_registry.add('activity_done_schedule_next', activityDoneScheduleNextAction);
 
 field_registry
     .add('mail_activity', Activity)
