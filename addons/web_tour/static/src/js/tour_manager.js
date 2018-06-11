@@ -4,6 +4,7 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
+var utils = require('web_tour.utils');
 var RainbowMan = require('web.RainbowMan');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
@@ -14,43 +15,11 @@ var _t = core._t;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 
-function get_step_key(name) {
-    return 'tour_' + name + '_step';
-}
-function get_running_key() {
-    return 'running_tour';
-}
-function get_running_delay_key() {
-    return get_running_key() + "_delay";
-}
-
-function get_first_visible_element($elements) {
-    for (var i = 0 ; i < $elements.length ; i++) {
-        var $i = $elements.eq(i);
-        if ($i.is(':visible:hasVisibility')) {
-            return $i;
-        }
-    }
-    return $();
-}
-
-function do_before_unload(if_unload_callback, if_not_unload_callback) {
-    if_unload_callback = if_unload_callback || function () {};
-    if_not_unload_callback = if_not_unload_callback || if_unload_callback;
-
-    var old_before = window.onbeforeunload;
-    var reload_timeout;
-    window.onbeforeunload = function () {
-        clearTimeout(reload_timeout);
-        window.onbeforeunload = old_before;
-        if_unload_callback();
-        if (old_before) return old_before.apply(this, arguments);
-    };
-    reload_timeout = _.defer(function () {
-        window.onbeforeunload = old_before;
-        if_not_unload_callback();
-    });
-}
+var get_step_key = utils.get_step_key;
+var get_running_key = utils.get_running_key;
+var get_running_delay_key = utils.get_running_delay_key;
+var get_first_visible_element = utils.get_first_visible_element;
+var do_before_unload = utils.do_before_unload;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     init: function(parent, consumed_tours) {
