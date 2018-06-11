@@ -468,9 +468,15 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
+        var datepicker_options;
+        try {
+            datepicker_options = this.attrs.options.datepicker;
+        } catch (error) {
+            datepicker_options = {};
+        }
         return new datepicker.DateWidget(
             this,
-            _.defaults(this.attrs.options || {}, {defaultDate: this.value})
+            _.defaults(datepicker_options, {defaultDate: this.value})
         );
     },
 
