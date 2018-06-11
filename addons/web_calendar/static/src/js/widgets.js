@@ -214,7 +214,7 @@ var SidebarFilter = Widget.extend({
         var self = this;
         _.forEach(self.view.all_filters, function(o) {
             if (_.contains(self.view.now_filter_ids, o.value)) {
-                self.$('div.o_calendar_responsible input[value=' + o.value + ']').prop('checked',o.is_checked);
+                self.$('div.o_calendar_responsible input[value="' + o.value + '"]').prop('checked',o.is_checked);
             }
         });
     },
