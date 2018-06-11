@@ -85,11 +85,11 @@ var Followers = AbstractField.extend({
     // private
     _displayButtons: function () {
         if (this.is_follower) {
-            this.$('button.o_followers_follow_button').removeClass('o_followers_notfollow').addClass('o_followers_following');
+            this.$('button.o_followers_follow_button').removeClass('o_followers_notfollow').addClass('o_followers_following').attr("aria-pressed", "true");
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', false);
             this.$('.o_followers_actions .dropdown-toggle').addClass('o_followers_following');
         } else {
-            this.$('button.o_followers_follow_button').removeClass('o_followers_following').addClass('o_followers_notfollow');
+            this.$('button.o_followers_follow_button').removeClass('o_followers_following').addClass('o_followers_notfollow').attr("aria-pressed", "false");
             this.$('.o_subtypes_list > .dropdown-toggle').attr('disabled', true);
             this.$('.o_followers_actions .dropdown-toggle').removeClass('o_followers_following');
         }
@@ -100,7 +100,8 @@ var Followers = AbstractField.extend({
         this.$('.o_followers_title_box > button').prop('disabled', true);
         this.$('.o_followers_count')
             .html(this.value.res_ids.length)
-            .parent().attr("title", this._formatFollowers(this.value.res_ids.length));
+            .parent().attr("title", this._formatFollowers(this.value.res_ids.length))
+            .attr("aria-label", this._formatFollowers(this.value.res_ids.length));
     },
     _displayFollowers: function () {
         var self = this;
@@ -129,7 +130,8 @@ var Followers = AbstractField.extend({
         this.$('.o_followers_title_box > button').prop('disabled', !$followers_list.children().length);
         this.$('.o_followers_count')
             .html(this.value.res_ids.length)
-            .parent().attr("title", this._formatFollowers(this.value.res_ids.length));
+            .parent().attr("title", this._formatFollowers(this.value.res_ids.length))
+            .attr("aria-label", this._formatFollowers(this.value.res_ids.length));
     },
     _displaySubtypes:function (data, dialog, display_warning) {
         var old_parent_model;

@@ -10,6 +10,7 @@ var Widget = require('web.Widget');
 var chat_manager = require('mail.chat_manager');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 /**
  * Menu item appended in the systray part of the navbar
@@ -46,6 +47,7 @@ var MessagingMenu = Widget.extend({
     update_counter: function () {
         var counter =  chat_manager.get_needaction_counter() + chat_manager.get_unread_conversation_counter();
         this.$('.o_notification_counter').text(counter);
+        this.$('.dropdown-toggle').attr("aria-label", counter + _t(' conversations'));
         this.$el.toggleClass('o_no_notification', !counter);
         if (this.is_open()) {
             this.update_channels_preview();
@@ -185,6 +187,8 @@ var ActivityMenu = Widget.extend({
             self.activities = data;
             self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
+            self.$('.dropdown-toggle').attr(
+                "aria-label", self.activityCounter + _t(' activities'));
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
         });
     },
