@@ -22,10 +22,12 @@
                     </group>
                     <group>
                         <field name="produce_line_ids" attrs="{'invisible': [('produce_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_lot_id': lot_id}">
-                            <tree editable="top" delete="0">
-                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" domain="[('tracking', '!=', 'none'), ('id', '!=', parent.product_id)]" force_save="1"/>
-                                <field name="lot_id" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]"/>
+                            <tree editable="top" delete="0" decoration-danger="(qty_to_consume &lt; qty_done) or (qty_done &gt; qty_reserved)">
+                                <field name="product_id" attrs="{'readonly': [('move_id', '!=', False)]}" required="1" domain="[('id', '!=', parent.product_id)]" force_save="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="lot_id" attrs="{'readonly': [('product_tracking', '=', 'none')]}" context="{'default_product_id': product_id}" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
                                 <field name="qty_to_consume" readonly="1"/>
+                                <field name="qty_reserved" readonly="1"/>
                                 <field name="qty_done"/>
                                 <field name="product_uom_id" readonly="1" force_save="1" groups="uom.group_uom"/>
                                 <field name="move_id" invisible="1"/>

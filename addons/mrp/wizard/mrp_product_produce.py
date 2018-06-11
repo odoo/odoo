@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import Counter
 from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 
 class MrpProductProduce(models.TransientModel):
@@ -19,8 +18,11 @@ class MrpProductProduce(models.TransientModel):
         if self._context and self._context.get('active_id'):
             production = self.env['mrp.production'].browse(self._context['active_id'])
             serial_finished = (production.product_id.tracking == 'serial')
+            todo_uom = production.product_uom_id.id
             if serial_finished:
                 todo_quantity = 1.0
+                if production.product_uom_id.uom_type != 'reference':
+                    todo_uom = self.env['uom.uom'].search([('category_id', '=', production.product_uom_id.category_id.id), ('uom_type', '=', 'reference')]).id
             else:
                 main_product_moves = production.move_finished_ids.filtered(lambda x: x.product_id.id == production.product_id.id)
                 todo_quantity = production.product_qty - sum(main_product_moves.mapped('quantity_done'))
@@ -30,52 +32,11 @@ class MrpProductProduce(models.TransientModel):
             if 'product_id' in fields:
                 res['product_id'] = production.product_id.id
             if 'product_uom_id' in fields:
-                res['product_uom_id'] = production.product_uom_id.id
+                res['product_uom_id'] = todo_uom
             if 'serial' in fields:
                 res['serial'] = bool(serial_finished)
             if 'product_qty' in fields:
                 res['product_qty'] = todo_quantity
-            if 'produce_line_ids' in fields:
-                lines = []
-                for move in production.move_raw_ids.filtered(lambda x: (x.product_id.tracking != 'none') and x.state not in ('done', 'cancel') and x.bom_line_id):
-                    qty_to_consume = float_round(todo_quantity / move.bom_line_id.bom_id.product_qty * move.bom_line_id.product_qty,
-                                                 precision_rounding=move.product_uom.rounding, rounding_method="UP")
-                    for move_line in move.move_line_ids:
-                        if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
-                            break
-                        if move_line.lot_produced_id or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
-                            continue
-                        to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
-                        lines.append({
-                            'move_id': move.id,
-                            'qty_to_consume': to_consume_in_line,
-                            'qty_done': 0.0,
-                            'lot_id': move_line.lot_id.id,
-                            'product_uom_id': move.product_uom.id,
-                            'product_id': move.product_id.id,
-                        })
-                        qty_to_consume -= to_consume_in_line
-                    if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                        if move.product_id.tracking == 'serial':
-                            while float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                                lines.append({
-                                    'move_id': move.id,
-                                    'qty_to_consume': 1,
-                                    'qty_done': 0.0,
-                                    'product_uom_id': move.product_uom.id,
-                                    'product_id': move.product_id.id,
-                                })
-                                qty_to_consume -= 1
-                        else:
-                            lines.append({
-                                'move_id': move.id,
-                                'qty_to_consume': qty_to_consume,
-                                'qty_done': 0.0,
-                                'product_uom_id': move.product_uom.id,
-                                'product_id': move.product_id.id,
-                            })
-
-                res['produce_line_ids'] = [(0, 0, x) for x in lines]
         return res
 
     serial = fields.Boolean('Requires Serial')
@@ -93,15 +54,6 @@ class MrpProductProduce(models.TransientModel):
         quantity = self.product_qty
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_("The production order for '%s' has no quantity specified.") % self.product_id.display_name)
-        for move in self.production_id.move_raw_ids:
-            # TODO currently not possible to guess if the user updated quantity by hand or automatically by the produce wizard.
-            if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel') and move.unit_factor:
-                rounding = move.product_uom.rounding
-                if self.product_id.tracking != 'none':
-                    qty_to_add = float_round(quantity * move.unit_factor, precision_rounding=rounding)
-                    move._generate_consumed_move_line(qty_to_add, self.lot_id)
-                else:
-                    move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)
         for move in self.production_id.move_finished_ids:
             if move.product_id.tracking == 'none' and move.state not in ('done', 'cancel'):
                 rounding = move.product_uom.rounding
@@ -128,15 +80,16 @@ class MrpProductProduce(models.TransientModel):
             if existing_move_line:
                 if self.product_id.tracking == 'serial':
                     raise UserError(_('You cannot produce the same serial number twice.'))
-                existing_move_line.product_uom_qty += self.product_qty
-                existing_move_line.qty_done += self.product_qty
+                produced_qty = self.product_uom_id._compute_quantity(self.product_qty, existing_move_line.product_uom_id)
+                existing_move_line.product_uom_qty += produced_qty
+                existing_move_line.qty_done += produced_qty
             else:
                 vals = {
                   'move_id': produce_move.id,
                   'product_id': produce_move.product_id.id,
                   'production_id': self.production_id.id,
                   'product_uom_qty': self.product_qty,
-                  'product_uom_id': produce_move.product_uom.id,
+                  'product_uom_id': self.product_uom_id.id,
                   'qty_done': self.product_qty,
                   'lot_id': self.lot_id.id,
                   'location_id': produce_move.location_id.id,
@@ -146,11 +99,11 @@ class MrpProductProduce(models.TransientModel):
 
         for pl in self.produce_line_ids:
             if pl.qty_done:
-                if not pl.lot_id:
-                    raise UserError(_('Please enter a lot or serial number for %s !' % pl.product_id.name))
+                if pl.product_id.tracking != 'none' and not pl.lot_id:
+                    raise UserError(_('Please enter a lot or serial number for %s !' % pl.product_id.display_name))
                 if not pl.move_id:
                     # Find move_id that would match
-                    move_id = self.production_id.move_raw_ids.filtered(lambda x: x.product_id == pl.product_id and x.state not in ('done', 'cancel'))
+                    move_id = self.production_id.move_raw_ids.filtered(lambda m: m.product_id == pl.product_id and m.state not in ('done', 'cancel'))
                     if move_id:
                         pl.move_id = move_id
                     else:
@@ -169,6 +122,49 @@ class MrpProductProduce(models.TransientModel):
                 pl.move_id._generate_consumed_move_line(pl.qty_done, self.lot_id, lot=pl.lot_id)
         return True
 
+    @api.onchange('product_qty')
+    def _onchange_product_qty(self):
+        lines = []
+        qty_todo = self.product_uom_id._compute_quantity(self.product_qty, self.production_id.product_uom_id, round=False)
+        for move in self.production_id.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.bom_line_id):
+            qty_to_consume = float_round(qty_todo * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            for move_line in move.move_line_ids:
+                if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) <= 0:
+                    break
+                if move_line.lot_produced_id or float_compare(move_line.product_uom_qty, move_line.qty_done, precision_rounding=move.product_uom.rounding) <= 0:
+                    continue
+                to_consume_in_line = min(qty_to_consume, move_line.product_uom_qty)
+                lines.append({
+                    'move_id': move.id,
+                    'qty_to_consume': to_consume_in_line,
+                    'qty_done': to_consume_in_line,
+                    'lot_id': move_line.lot_id.id,
+                    'product_uom_id': move.product_uom.id,
+                    'product_id': move.product_id.id,
+                    'qty_reserved': min(to_consume_in_line, move_line.product_uom_qty),
+                })
+                qty_to_consume -= to_consume_in_line
+            if float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                if move.product_id.tracking == 'serial':
+                    while float_compare(qty_to_consume, 0.0, precision_rounding=move.product_uom.rounding) > 0:
+                        lines.append({
+                            'move_id': move.id,
+                            'qty_to_consume': 1,
+                            'qty_done': 1,
+                            'product_uom_id': move.product_uom.id,
+                            'product_id': move.product_id.id,
+                        })
+                        qty_to_consume -= 1
+                else:
+                    lines.append({
+                        'move_id': move.id,
+                        'qty_to_consume': qty_to_consume,
+                        'qty_done': qty_to_consume,
+                        'product_uom_id': move.product_uom.id,
+                        'product_id': move.product_id.id,
+                    })
+
+        self.produce_line_ids = [(0, 0, x) for x in lines]
 
 class MrpProductProduceLine(models.TransientModel):
     _name = "mrp.product.produce.line"
@@ -176,11 +172,13 @@ class MrpProductProduceLine(models.TransientModel):
 
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
+    product_tracking = fields.Selection(related="product_id.tracking")
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
-    qty_done = fields.Float('Done', digits=dp.get_precision('Product Unit of Measure'))
+    qty_done = fields.Float('Consumed')
     move_id = fields.Many2one('stock.move')
+    qty_reserved = fields.Float('Reserved')
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):
@@ -198,7 +196,7 @@ class MrpProductProduceLine(models.TransientModel):
         help him. This onchange will warn him if he set `qty_done` to a non-supported value.
         """
         res = {}
-        if self.product_id.tracking == 'serial':
+        if self.product_id.tracking == 'serial' and self.qty_done:
             if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
                 message = _('You can only process 1.0 %s of products with unique serial number.') % self.product_id.uom_id.name
                 res['warning'] = {'title': _('Warning'), 'message': message}
