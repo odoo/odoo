@@ -3822,15 +3822,19 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if not any(item[0] == 'active' for item in domain):
                 domain = [('active', '=', 1)] + domain
 
+        joins = {}
         if domain:
             e = expression.expression(domain, self)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = [where_clause] if where_clause else []
+            joins = e.joins
         else:
             where_clause, where_params, tables = [], [], ['"%s"' % self._table]
 
-        return Query(tables, where_clause, where_params)
+        query = Query(tables, where_clause, where_params)
+        query.joins = joins
+        return query
 
     def _check_qorder(self, word):
         if not regex_order.match(word):

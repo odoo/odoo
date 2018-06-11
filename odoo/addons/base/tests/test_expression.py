@@ -683,6 +683,7 @@ class TestAutoJoin(TransactionCase):
         # Create demo data: partners and bank object
         p_a = partner_obj.create({'name': 'test__A', 'state_id': states[0].id})
         p_b = partner_obj.create({'name': 'test__B', 'state_id': states[1].id})
+        p_c = partner_obj.create({'name': 'test__C', 'state_id': False})
         p_aa = partner_obj.create({'name': 'test__AA', 'parent_id': p_a.id, 'state_id': states[0].id})
         p_ab = partner_obj.create({'name': 'test__AB', 'parent_id': p_a.id, 'state_id': states[1].id})
         p_ba = partner_obj.create({'name': 'test__BA', 'parent_id': p_b.id, 'state_id': states[0].id})
@@ -760,8 +761,8 @@ class TestAutoJoin(TransactionCase):
         expected = "%s like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect where condition")
-        
-        self.assertIn('"res_partner"."id"="res_partner__bank_ids"."partner_id"', sql_query[1],
+
+        self.assertIn('ON ("res_partner"."id" = "res_partner__bank_ids"."partner_id")', sql_query[0],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join condition")
         self.assertIn('%' + name_test + '%', sql_query[2],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect parameter")
@@ -804,9 +805,9 @@ class TestAutoJoin(TransactionCase):
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join")
         self.assertIn('"res_partner__child_ids__bank_ids"."id" in (%s,%s)', sql_query[1],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect where condition")
-        self.assertIn('"res_partner"."id"="res_partner__child_ids"."parent_id"', sql_query[1],
+        self.assertIn('ON ("res_partner"."id" = "res_partner__child_ids"."parent_id")', sql_query[0],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
-        self.assertIn('"res_partner__child_ids"."id"="res_partner__child_ids__bank_ids"."partner_id"', sql_query[1],
+        self.assertIn('ON ("res_partner__child_ids"."id" = "res_partner__child_ids__bank_ids"."partner_id")', sql_query[0],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
         self.assertLessEqual(set(bank_ids), set(sql_query[2][-2:]),
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect parameter")
@@ -830,9 +831,11 @@ class TestAutoJoin(TransactionCase):
         patch_auto_join(partner_obj, 'state_id', True)
         self._reinit_mock()
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
-        # Test result: at least our added data + demo data
+        # Test result: at least our added data + demo data but not the partner without state_id
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
+        self.assertNotIn(p_c, partners,
+             "_auto_join on for state_id: partner without state_id incorrectly included in results")
         # Test produced queries
         self.assertEqual(len(self.query_list), 2,
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') should produce 2 query")
@@ -853,8 +856,13 @@ class TestAutoJoin(TransactionCase):
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join")
         self.assertIn('"res_partner__state_id"."country_id" in (%s)', sql_query[1],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect where condition")
-        self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
+        self.assertIn('ON ("res_partner"."state_id" = "res_partner__state_id"."id")', sql_query[0],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join condition")
+
+        partners = partner_obj.search(['|', ('state_id', '=', False), ('state_id.country_id.code', 'like', name_test)])
+        # Test result: at least our added data + demo data and the partner without state_id
+        self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba + p_c, partners,
+            "_auto_join on for state_id: partner without auto_joined field set is not found in combined query")
 
         # Do: many2one with 1 _auto_join on the second many2one
         patch_auto_join(partner_obj, 'state_id', False)
@@ -878,7 +886,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn(expected, sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
         
-        self.assertIn('"res_country_state"."country_id"="res_country_state__country_id"."id"', sql_query[1],
+        self.assertIn('ON ("res_country_state"."country_id" = "res_country_state__country_id"."id")', sql_query[0],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect parameter")
@@ -912,9 +920,9 @@ class TestAutoJoin(TransactionCase):
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
         
-        self.assertIn('"res_partner"."state_id"="res_partner__state_id"."id"', sql_query[1],
+        self.assertIn('ON ("res_partner"."state_id" = "res_partner__state_id"."id")', sql_query[0],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
-        self.assertIn('"res_partner__state_id"."country_id"="res_partner__state_id__country_id"."id"', sql_query[1],
+        self.assertIn('ON ("res_partner__state_id"."country_id" = "res_partner__state_id__country_id"."id")', sql_query[0],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
         self.assertIn('%' + name_test + '%', sql_query[2],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect parameter")

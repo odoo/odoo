@@ -562,24 +562,27 @@ class ExtendedLeaf(object):
         alias, alias_statement = generate_table_alias(self._models[0]._table, links)
         return alias
 
-    def add_join_context(self, model, lhs_col, table_col, link):
+    def add_join_context(self, model, lhs_col, table_col, link, join_type='JOIN'):
         """ See above comments for more details. A join context is a tuple like:
                 ``(lhs, model, lhs_col, col, link)``
 
             After adding the join, the model of the current leaf is updated.
         """
-        self.join_context.append((self.model, model, lhs_col, table_col, link))
+        self.join_context.append((self.model, model, lhs_col, table_col, link, join_type))
         self._models.append(model)
         self.model = model
 
-    def get_join_conditions(self):
-        conditions = []
+    def fetch_join_contexts(self, contexts):
+        """ Collect the join contexts into the contexts dictionary in a format
+        compatible with osv.query.Query """
         alias = self._models[0]._table
         for context in self.join_context:
             previous_alias = alias
             alias += '__' + context[4]
-            conditions.append('"%s"."%s"="%s"."%s"' % (previous_alias, context[2], alias, context[3]))
-        return conditions
+            table_joins = contexts.setdefault(previous_alias, [])
+            join = (alias, context[2], context[3], context[5])
+            if join not in table_joins:
+                table_joins.append(join)
 
     def get_tables(self):
         tables = set()
@@ -660,7 +663,7 @@ class expression(object):
                 and prepared
         """
         self._unaccent = get_unaccent_wrapper(model._cr)
-        self.joins = []
+        self.joins = {}
         self.root_model = model
 
         # normalize and prepare the expression for parsing
@@ -881,12 +884,12 @@ class expression(object):
 
             elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
-                leaf.add_join_context(comodel, path[0], 'id', path[0])
+                leaf.add_join_context(comodel, path[0], 'id', path[0], 'LEFT JOIN')
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
 
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
-                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0])
+                leaf.add_join_context(comodel, 'id', field.inverse_name, path[0], 'LEFT JOIN')
                 domain = field.domain(model) if callable(field.domain) else field.domain
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
                 if domain:
@@ -1161,10 +1164,8 @@ class expression(object):
         # -> generate joins
         # ----------------------------------------
 
-        joins = set()
         for leaf in self.result:
-            joins |= set(leaf.get_join_conditions())
-        self.joins = list(joins)
+            leaf.fetch_join_contexts(self.joins)
 
     def __leaf_to_sql(self, eleaf):
         model = eleaf.model
@@ -1297,9 +1298,6 @@ class expression(object):
 
         assert len(stack) == 1
         query = stack[0]
-        joins = ' AND '.join(self.joins)
-        if joins:
-            query = '(%s) AND %s' % (joins, query)
 
         params.reverse()
         return query, params
