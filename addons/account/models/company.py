@@ -15,6 +15,9 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, date_utils
 class ResCompany(models.Model):
     _inherit = "res.company"
 
+    def _get_invoice_reference_types(self):
+        return [('invoice_number', _('Based on Invoice Number')), ('partner', _('Based on Partner')), ('none', _('Free Communication'))]
+
     #TODO check all the options/fields are in the views (settings + company form view)
     fiscalyear_last_day = fields.Integer(default=31, required=True)
     fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], default=12, required=True)
@@ -54,6 +57,11 @@ If you have any queries regarding your account, Please contact us.
 Thank you in advance for your cooperation.
 Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
+    
+    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
+        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
+    invoice_reference_type = fields.Selection(string='Default Communication Type', selection='_get_invoice_reference_types',
+                                              default='none', help='You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.')
 
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
@@ -66,8 +74,6 @@ Best Regards,'''))
     account_setup_fy_data_done = fields.Boolean('Financial Year Setup Marked As Done', help="Technical field holding the status of the financial year setup step.")
     account_setup_coa_done = fields.Boolean(string='Chart of Account Checked', help="Technical field holding the status of the chart of account setup step.")
     account_setup_bar_closed = fields.Boolean(string='Setup Bar Closed', help="Technical field set to True when setup bar has been closed by the user.")
-    incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
-        help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
 
     # account invoice onboarding
     account_invoice_onboarding_closed = fields.Boolean(

@@ -52,7 +52,6 @@ class TestReconciliation(AccountingTestCase):
     def create_invoice(self, type='out_invoice', invoice_amount=50, currency_id=None):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
-            'reference_type': 'none',
             'currency_id': currency_id,
             'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,
@@ -530,7 +529,6 @@ class TestReconciliation(AccountingTestCase):
 
         # Preparing Invoices (from vendor)
         invoice_a = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
-            'reference_type': 'none',
             'currency_id': self.currency_usd_id,
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
@@ -546,7 +544,6 @@ class TestReconciliation(AccountingTestCase):
         })
 
         invoice_b = self.account_invoice_model.create({'partner_id': self.partner_agrolait_id,
-            'reference_type': 'none',
             'currency_id': self.currency_usd_id,
             'name': 'invoice to vendor',
             'account_id': self.account_rsa.id,
@@ -766,7 +763,6 @@ class TestReconciliation(AccountingTestCase):
     def create_invoice_partner(self, type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False):
         #we create an invoice in given currency
         invoice = self.account_invoice_model.create({'partner_id': partner_id,
-            'reference_type': 'none',
             'currency_id': currency_id,
             'name': type == 'out_invoice' and 'invoice to client' or 'invoice to vendor',
             'account_id': self.account_rcv.id,

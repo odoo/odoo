@@ -48,7 +48,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         rslt = self.env['account.invoice'].create({
             'purchase_id': purchase_order.id,
             'partner_id': self.test_partner.id,
-            'reference_type': 'none',
             'currency_id': self.currency_two.id,
             'name': 'vendor bill',
             'type': 'in_invoice',

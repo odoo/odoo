@@ -585,6 +585,7 @@
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="incoterm_id" options="{'no_create': True}"/>
                                     <field name="name"/>
+                                    <field name="reference" attrs="{'readonly':[('state','!=','draft')]}"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
