@@ -904,6 +904,7 @@ class AccountReconcileModelTemplate(models.Model):
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    tax_include = fields.Boolean(string='Tax Include')
     tax_id = fields.Many2one('account.tax.template', string='Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_account_id = fields.Many2one('account.account.template', string='Second Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     second_label = fields.Char(string='Second Journal Item Label')
@@ -912,4 +913,5 @@ class AccountReconcileModelTemplate(models.Model):
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_tax_include = fields.Boolean(string='Second Tax Include')
     second_tax_id = fields.Many2one('account.tax.template', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])

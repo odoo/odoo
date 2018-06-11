@@ -975,11 +975,14 @@ class AccountTax(models.Model):
                 return math.copysign(quantity, base_amount) * self.amount
             else:
                 return quantity * self.amount
-        if (self.amount_type == 'percent' and not self.price_include) or (self.amount_type == 'division' and self.price_include):
+
+        price_include = self.price_include or self._context.get('force_price_include')
+
+        if (self.amount_type == 'percent' and not price_include) or (self.amount_type == 'division' and price_include):
             return base_amount * self.amount / 100
-        if self.amount_type == 'percent' and self.price_include:
+        if self.amount_type == 'percent' and price_include:
             return base_amount - (base_amount / (1 + self.amount / 100))
-        if self.amount_type == 'division' and not self.price_include:
+        if self.amount_type == 'division' and not price_include:
             return base_amount / (1 - self.amount / 100) - base_amount
 
     @api.multi
@@ -1055,6 +1058,10 @@ class AccountTax(models.Model):
         # depending on the context. This domain might filter out some taxes from self, e.g. in the
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
+            # Allow forcing price_include/include_base_amount through the context for the reconciliation widget.
+            # See task 24014.
+            price_include = self._context.get('force_price_include') or tax.price_include
+
             if tax.amount_type == 'group':
                 children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)
@@ -1071,7 +1078,7 @@ class AccountTax(models.Model):
             else:
                 tax_amount = currency.round(tax_amount)
 
-            if tax.price_include:
+            if price_include:
                 total_excluded -= tax_amount
                 base -= tax_amount
             else:
@@ -1136,6 +1143,8 @@ class AccountReconcileModel(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
         ], required=True, default='percentage')
+    tax_price_include = fields.Boolean(string='Is Tax Price Include', related='tax_id.price_include')
+    tax_include = fields.Boolean(string='Tax Include')
     amount = fields.Float(digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
@@ -1148,6 +1157,8 @@ class AccountReconcileModel(models.Model):
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of amount')
         ], string="Second Amount type",required=True, default='percentage')
+    second_tax_price_include = fields.Boolean(string='Is Second Tax Price Include', related='second_tax_id.price_include')
+    second_tax_include = fields.Boolean(string='Second Tax Include')
     second_amount = fields.Float(string='Second Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
@@ -1156,3 +1167,13 @@ class AccountReconcileModel(models.Model):
     @api.onchange('name')
     def onchange_name(self):
         self.label = self.name
+
+    @api.onchange('tax_id')
+    def _onchange_tax_id(self):
+        if self.tax_id:
+            self.tax_include = self.tax_id.price_include
+
+    @api.onchange('second_tax_price_include')
+    def _onchange_second_tax_id(self):
+        if self.second_tax_id:
+            self.second_tax_include = self.second_tax_id.price_include

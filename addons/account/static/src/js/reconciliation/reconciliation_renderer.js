@@ -471,6 +471,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     });
                 });
             });
+            if(state.createForm.tax_id){
+                // Set the 'Tax Include' field editable or not depending of the price_include's account.tax value.
+                this.$('.create_tax_include input').attr('disabled', state.createForm.tax_id.price_include);
+            }
         }
         this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
@@ -546,6 +550,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             type: 'many2many',
             name: 'analytic_tag_ids',
         }, {
+            type: 'boolean',
+            name: 'tax_include',
+        }, {
             type: 'char',
             name: 'label',
         }, {
@@ -566,13 +573,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 'journal_id', record, {mode: 'edit'});
 
             self.fields.tax_id = new relational_fields.FieldMany2One(self,
-                'tax_id', record, {mode: 'edit'});
+                'tax_id', record, {mode: 'edit', additionalContext: {append_type_to_tax_name: true}});
 
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
             self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
                 'analytic_tag_ids', record, {mode: 'edit'});
+
+            self.fields.tax_include = new basic_fields.FieldBoolean(self,
+                'tax_include', record, {mode: 'edit'});
 
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
@@ -587,6 +597,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
             self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
+            self.fields.tax_include.appendTo($create.find('.create_tax_include .o_td_field'))
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
