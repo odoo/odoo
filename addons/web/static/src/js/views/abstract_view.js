@@ -76,6 +76,7 @@ var AbstractView = Class.extend({
      * @param {string[]} params.domain
      * @param {string[]} params.groupBy
      * @param {number} [params.currentId]
+     * @param {boolean} params.isEmbedded
      * @param {number[]} [params.ids]
      * @param {boolean} [params.withControlPanel]
      * @param {boolean} [params.action.flags.headless]
@@ -99,6 +100,10 @@ var AbstractView = Class.extend({
         }
         this.fields = this.fieldsView.viewFields;
         this.arch = this.fieldsView.arch;
+        // the boolean parameter 'isEmbedded' determines if the view should be considered
+        // as a subview. For now this is only used by the graph controller that appends a
+        // 'Group By' button beside the 'Measures' button when the graph view is embedded.
+        this.isEmbedded = params.isEmbedded || false;
 
         this.rendererParams = {
             arch: this.arch,
@@ -114,6 +119,7 @@ var AbstractView = Class.extend({
                 duplicate: this.arch.attrs.duplicate ? JSON.parse(this.arch.attrs.duplicate) : true,
             },
             groupable: this.groupable,
+            isEmbedded: this.isEmbedded,
             controllerID: params.controllerID,
         };
         // AAB: these params won't be necessary as soon as the ControlPanel will

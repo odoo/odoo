@@ -5,7 +5,7 @@ var AutoComplete = require('web.AutoComplete');
 var config = require('web.config');
 var core = require('web.core');
 var FavoriteMenu = require('web.FavoriteMenu');
-var FilterMenu = require('web.FilterMenu');
+var FiltersMenu = require('web.FiltersMenu');
 var GroupByMenu = require('web.GroupByMenu');
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
@@ -167,7 +167,8 @@ var FacetView = Widget.extend({
     template: 'SearchView.FacetView',
     events: {
         'focus': function () { this.trigger('focused', this); },
-        'blur': function () { this.trigger('blurred', this); },
+        'blur': function () {
+            this.trigger('blurred', this); },
         'click': function (e) {
             if ($(e.target).hasClass('o_facet_remove')) {
                 this.model.destroy();
@@ -186,9 +187,10 @@ var FacetView = Widget.extend({
             }
         }
     },
-    init: function (parent, model) {
+    init: function (parent, model, intervalMapping) {
         this._super(parent);
         this.model = model;
+        this.intervalMapping = intervalMapping;
         this.model.on('change', this.model_changed, this);
     },
     destroy: function () {
@@ -203,7 +205,9 @@ var FacetView = Widget.extend({
                 if (index > 0) {
                     $('<span/>', {html: self.model.get('separator') || _t(" or ")}).addClass('o_facet_values_sep').appendTo($e);
                 }
-                return new FacetValueView(self, value).appendTo($e);
+                var couple = _.findWhere(self.intervalMapping, {groupby: value.attributes.value});
+                var interval = couple ? couple.interval : undefined;
+                return new FacetValueView(self, value, interval).appendTo($e);
             }));
         });
     },
@@ -214,9 +218,22 @@ var FacetView = Widget.extend({
 
 var FacetValueView = Widget.extend({
     template: 'SearchView.FacetView.Value',
-    init: function (parent, model) {
+    init: function (parent, model, interval) {
         this._super(parent);
         this.model = model;
+
+        var intervalDescription = {
+            day: 'Day',
+            week: 'Week',
+            month: 'Month',
+            quarter: 'Quarter',
+            year: 'Year',
+        };
+        // to do: put a test on interval
+        if (interval) {
+            var intervalLabel = intervalDescription[interval];
+            this.intervalLabel = _t(intervalLabel);
+        }
         this.model.on('change', this.model_changed, this);
     },
     destroy: function () {
@@ -257,6 +274,12 @@ var SearchView = Widget.extend({
             }
         },
     },
+    custom_events: {
+        'menu_item_toggled': '_onItemToggled',
+        'item_option_changed': '_onItemOptionChanged',
+        'new_groupby': '_onNewGroupby',
+        'new_filter': '_onNewFilter',
+    },
     defaults: _.extend({}, Widget.prototype.defaults, {
         hidden: false,
         disable_filters: false,
@@ -288,6 +311,16 @@ var SearchView = Widget.extend({
         this.title = this.options.action && this.options.action.name;
         this.action = this.options.action || {};
         this.search_fields = [];
+
+        this.selectedGroupIds = {
+            groupByCategory: [],
+            filterCategory: []
+        };
+        this.groupsMapping = [];
+        this.groupbysMapping = [];
+        this.filtersMapping = [];
+        this.intervalMapping = [];
+
         this.filters = [];
         this.groupbys = [];
         var visibleSearchMenu = this.call('local_storage', 'getItem', 'visible_search_menu');
@@ -297,7 +330,7 @@ var SearchView = Widget.extend({
         this.headless = this.options.hidden &&  _.isEmpty(this.search_defaults);
         this.$buttons = this.options.$buttons;
 
-        this.filter_menu = undefined;
+        this.filters_menu = undefined;
         this.groupby_menu = undefined;
         this.favorite_menu = undefined;
     },
@@ -312,6 +345,7 @@ var SearchView = Widget.extend({
         return $.when(this._super(), def);
     },
     start: function () {
+        var self= this;
         if (this.headless) {
             this.do_hide();
         }
@@ -324,24 +358,29 @@ var SearchView = Widget.extend({
         this.$('.o_searchview_more')
             .toggleClass('fa-search-minus', this.visible_filters)
             .toggleClass('fa-search-plus', !this.visible_filters);
-        var menu_defs = [];
+        var def;
         this.prepare_search_inputs();
         var $buttons = this._getButtonsElement();
         if ($buttons) {
-            if (!this.options.disable_filters) {
-                this.filter_menu = new FilterMenu(this, this.filters, this.fields);
-                menu_defs.push(this.filter_menu.appendTo($buttons));
-            }
-            if (!this.options.disable_groupby) {
-                this.groupby_menu = new GroupByMenu(this, this.groupbys, this.fields);
-                menu_defs.push(this.groupby_menu.appendTo($buttons));
-            }
             if (!this.options.disable_favorites) {
                 this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action, this.favorite_filters);
-                menu_defs.push(this.favorite_menu.appendTo($buttons));
+                def = this.favorite_menu.appendTo($buttons);
             }
         }
-        return $.when.apply($, menu_defs).then(this.set_default_filters.bind(this));
+        return $.when(def)
+            .then(this.set_default_filters.bind(this))
+            .then(function ()  {
+                var menu_defs = [];
+                if (!self.options.disable_groupby) {
+                    self.groupby_menu = self._createGroupByMenu();
+                    menu_defs.push(self.groupby_menu.prependTo($buttons));
+                }
+                if (!self.options.disable_filters) {
+                    self.filters_menu = self._createFiltersMenu();
+                    menu_defs.push(self.filters_menu.prependTo($buttons));
+                }
+                return $.when.apply($, menu_defs);
+            });
     },
     on_attach_callback: function () {
         this._focusInput();
@@ -416,10 +455,18 @@ var SearchView = Widget.extend({
                 groupbys.push.apply(groupbys, group_by);
             }
         });
+        var intervalMappingNormalized = {};
+
+        _.each(this.intervalMapping, function (couple) {
+            var fieldName = couple.groupby.fieldName;
+            var interval = couple.interval;
+            intervalMappingNormalized[fieldName] = interval;
+        });
         return {
             domains: domains,
             contexts: contexts,
             groupbys: groupbys,
+            intervalMapping: intervalMappingNormalized,
         };
     },
     toggle_visibility: function (is_visible) {
@@ -517,21 +564,56 @@ var SearchView = Widget.extend({
                 .$el.focus();
     },
     /**
-     * @param {openerp.web.search.SearchQuery | undefined} collection Undefined if event is change
-     * @param {openerp.web.search.Facet} model
-     * @param {Object} [options]
      */
-    renderFacets: function (collection, model, options) {
+    renderFacets: function () {
         var self = this;
         var started = [];
         _.invoke(this.input_subviews, 'destroy');
         this.input_subviews = [];
 
+        var selectedGroupIds = {
+            groupByCategory: [],
+            filterCategory: [],
+        };
+
         this.query.each(function (facet) {
-            var f = new FacetView(this, facet);
+
+            if (facet.attributes.cat === "groupByCategory") {
+                selectedGroupIds.groupByCategory = selectedGroupIds.groupByCategory.concat(
+                    _.compact(
+                        _.uniq(
+                            _.map(facet.attributes.values, function (value) {
+                                var groupby = value.value;
+                                var groupbyDescription = _.findWhere(self.groupbysMapping, {groupby: groupby});
+                                if (groupbyDescription) {
+                                    return groupbyDescription.groupId;
+                                }
+                            })
+                        )
+                    )
+                );
+            }
+            if (facet.attributes.cat === "filterCategory") {
+                selectedGroupIds.filterCategory = selectedGroupIds.filterCategory.concat(
+                    _.uniq(
+                        _.compact(
+                            _.map(facet.attributes.values, function (value) {
+                                var filter = value.value;
+                                var filterDescription = _.findWhere(self.filtersMapping, {filter: filter});
+                                if (filterDescription) {
+                                    return filterDescription.groupId;
+                                }
+                            })
+                        )
+                    )
+                );
+            }
+
+            var f = new FacetView(this, facet, this.intervalMapping);
             started.push(f.appendTo(self.$('.o_searchview_input_container')));
             self.input_subviews.push(f);
         }, this);
+
         var i = new InputView(this);
         started.push(i.appendTo(self.$('.o_searchview_input_container')));
         self.input_subviews.push(i);
@@ -546,6 +628,12 @@ var SearchView = Widget.extend({
                 // input, because it opens up the integrated keyboard, which is
                 // not what you expect when you just selected a filter.
                 _.last(self.input_subviews).$el.focus();
+            }
+            if (self.groupby_menu) {
+                self._unsetUnusedGroupbys(selectedGroupIds.groupByCategory);
+            }
+            if (self.filters_menu) {
+                self._unsetUnusedFilters(selectedGroupIds.filterCategory);
             }
         });
     },
@@ -584,6 +672,8 @@ var SearchView = Widget.extend({
                     var context = pyeval.eval('context', item.attrs.context);
                     if (context.group_by) {
                         category = 'group_by';
+                        item.attrs.fieldName = context.group_by.split(':')[0];
+                        item.attrs.defaultInterval = context.group_by.split(':')[1];
                     }
                 } catch (e) {}
             }
@@ -601,7 +691,7 @@ var SearchView = Widget.extend({
                 return current_group.push(new search_inputs.Filter(filter.item, self));
             }
             if (current_group.length) {
-                var group = new search_inputs.FilterGroup(current_group, self);
+                var group = new search_inputs.FilterGroup(current_group, self, self.intervalMapping);
                 categories[current_category].push(group);
                 current_group = [];
             }
@@ -652,12 +742,12 @@ var SearchView = Widget.extend({
                 attrs: {domain: filter.domain, help: filter.help},
             };
             var filterWidget = new search_inputs.Filter(filter);
-            var filterGroup = new search_inputs.FilterGroup([filterWidget], self);
+            var filterGroup = new search_inputs.FilterGroup([filterWidget], self, self.intervalMapping);
             var facet = filterGroup.make_facet([filterGroup.make_value(filter)]);
             self.query.add([facet], {silent: true});
 
             return _.last(self.query.models);
-        })
+        });
 
         _.each(filtersToRemove, function (filter) {
             self.query.remove(filter, {silent: true});
@@ -685,6 +775,85 @@ var SearchView = Widget.extend({
         return this.$buttons;
     },
     /**
+     * Create a groupby menu.  Note that this method has a side effect: it
+     * builds a mapping from a filter name to a 'search filter'.
+     *
+     * @private
+     * @returns {Widget} the processed fieldsView
+     */
+    _createFiltersMenu: function () {
+        var self = this;
+        var filters = [];
+
+        this.filters.forEach(function (group) {
+            var groupId = _.uniqueId('__group__');
+            group.filters.forEach(function (filter) {
+                if (!filter.attrs.invisible) {
+                    var filterId = _.uniqueId('__filter__');
+                    filters.push({
+                        isActive: !!self.search_defaults[filter.attrs.name],
+                        description: filter.attrs.string || filter.attrs.help || filter.attrs.name || filter.attrs.domain || 'Ω',
+                        itemId: filterId,
+                        domain: filter.attrs.domain,
+                        groupId: groupId,
+                    });
+                    self.filtersMapping.push({filterId: filterId, filter: filter, groupId: groupId});
+                }
+            });
+            self.groupsMapping.push({groupId: groupId, group: group, category: 'Filters'});
+        });
+
+        return new FiltersMenu(self, filters, self.fields);
+    },
+
+    /**
+     * Create a groupby menu.  Note that this method has a side effect: it
+     * builds a mapping from a filter name to a 'search filter'.
+     *
+     * @private
+     * @returns {Widget} the processed fieldsView
+     */
+    _createGroupByMenu: function () {
+        var self = this;
+        var groupbys = [];
+
+        this.groupbys.forEach(function (group) {
+            var groupId = _.uniqueId('__group__');
+            group.filters.forEach(function (groupby) {
+                if (!groupby.attrs.invisible) {
+                    var fieldName = groupby.attrs.fieldName;
+                    var defaultOptionId = groupby.attrs.defaultInterval;
+                    var groupbyId = _.uniqueId('__groupby__');
+                    groupbys.push({
+                        isActive: !!self.search_defaults[groupby.attrs.name],
+                        description: groupby.attrs.string,
+                        itemId: groupbyId,
+                        fieldName: fieldName,
+                        groupId: groupId,
+                        defaultOptionId: defaultOptionId,
+                    });
+                    if (self._fieldIsDate(fieldName)) {
+                        self.intervalMapping.push({groupby: groupby, interval: defaultOptionId || 'month'});
+
+                    }
+                    self.groupbysMapping.push({groupbyId: groupbyId, groupby: groupby, groupId: groupId});
+                }
+            });
+            self.groupsMapping.push({groupId: groupId, group: group, category: 'Group By'});
+            group.updateIntervalMapping(self.intervalMapping);
+        });
+        return new GroupByMenu(this, groupbys, this.fields);
+    },
+
+
+    _fieldIsDate: function (fieldName) {
+        if (_.contains(['date', 'datetime'], this.fields[fieldName].type)) {
+            return true;
+        }
+        return false;
+    },
+
+    /**
      * Processes a fieldsView in place. In particular, parses its arch.
      *
      * @todo: this function is also defined in AbstractView ; this code
@@ -698,6 +867,154 @@ var SearchView = Widget.extend({
         var doc = $.parseXML(fv.arch).documentElement;
         fv.arch = utils.xml_to_json(doc, true);
         return fv;
+    },
+    /**
+     * @private
+     * @param {string[]]} selectedGroupIds
+     */
+    _unsetUnusedGroupbys: function (selectedGroupIds) {
+        var groupIds = this.selectedGroupIds.groupByCategory.reduce(
+            function (acc, id) {
+                if (!_.contains(selectedGroupIds, id)) {
+                    acc.push(id);
+                }
+                return acc;
+            },
+            []
+        );
+        this.selectedGroupIds.groupByCategory = selectedGroupIds;
+        this.groupby_menu.unsetGroups(groupIds);
+    },
+    /**
+     * @private
+     * @param {string[]]} selectedGroupIds
+     */
+    _unsetUnusedFilters: function (selectedGroupIds) {
+        var groupIds = this.selectedGroupIds.filterCategory.reduce(
+            function (acc, id) {
+                if (!_.contains(selectedGroupIds, id)) {
+                    acc.push(id);
+                }
+                return acc;
+            },
+            []
+        );
+        this.selectedGroupIds.filterCategory = selectedGroupIds;
+        this.filters_menu.unsetGroups(groupIds);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onItemToggled: function (event) {
+        var group;
+        if (event.data.category === 'groupByCategory') {
+            var groupby = _.findWhere(this.groupbysMapping, {groupbyId: event.data.itemId}).groupby;
+            group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
+            if (event.data.optionId) {
+                var interval = event.data.optionId;
+                _.findWhere(this.intervalMapping, {groupby: groupby}).interval = interval;
+                group.updateIntervalMapping(this.intervalMapping);
+            }
+            group.toggle(groupby);
+        }
+        if (event.data.category === 'filterCategory') {
+            var filter = _.findWhere(this.filtersMapping, {filterId: event.data.itemId}).filter;
+            group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
+            group.toggle(filter);
+        }
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onNewGroupby: function (event) {
+        var attrs = {
+                context:"{'group_by':'" + event.data.fieldName + "''}",
+                name: event.data.description,
+                fieldName: event.data.fieldName,
+            };
+
+        var groupby = new search_inputs.Filter({attrs: attrs}, this);
+        if (event.data.optionId) {
+            var interval = event.data.optionId;
+            this.intervalMapping.push({groupby: groupby, interval: interval});
+        }
+        var group = new search_inputs.FilterGroup([groupby], this, this.intervalMapping);
+        group.toggle(groupby);
+        this.groupbysMapping.push({
+            groupbyId: event.data.itemId,
+            groupby: groupby,
+            groupId: event.data.groupId,
+        });
+        this.groupsMapping.push({
+            groupId: event.data.groupId,
+            group: group,
+            category: 'Group By',
+        });
+    },
+        /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onNewFilter: function (event) {
+        var self= this;
+        var filter;
+        var filters = [];
+        var groupId;
+
+        _.each(event.data, function (filterDescription) {
+                filter = new search_inputs.Filter(filterDescription.filter, this);
+                filters.push(filter);
+                self.filtersMapping.push({
+                    filterId: filterDescription.itemId,
+                    filter: filter,
+                    groupId: filterDescription.groupId,
+                });
+                // filters belong to the same group
+                if (!groupId) {
+                    groupId = filterDescription.groupId;
+                }
+            });
+        var group = new search_inputs.FilterGroup(filters, this, this.intervalMapping);
+        filters.forEach(function (filter) {
+            group.toggle(filter, {silent: true});
+        });
+        this.query.trigger('reset');
+
+
+        this.groupsMapping.push({
+            groupId: groupId,
+            group: group,
+            category: 'Filters',
+        });
+    },
+    /**
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onItemOptionChanged: function (event) {
+        var group;
+        if (event.data.category === 'groupByCategory') {
+            var groupby = _.findWhere(this.groupbysMapping, {groupbyId: event.data.itemId}).groupby;
+            var interval = event.data.optionId;
+            _.findWhere(this.intervalMapping, {groupby: groupby}).interval = interval;
+            group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
+            group.updateIntervalMapping(this.intervalMapping);
+            this.query.trigger('reset');
+        }
+        if (event.data.category === 'filterCategory') {
+            var filter = _.findWhere(this.filtersMapping, {filterId: event.data.itemId}).filter;
+            group = _.findWhere(this.groupsMapping, {groupId: event.data.groupId}).group;
+            group.toggle(filter);
+        }
     },
 });
 

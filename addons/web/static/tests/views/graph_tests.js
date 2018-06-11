@@ -248,7 +248,7 @@ QUnit.module('Views', {
         });
     });
 
-    QUnit.test('getContext correctly returns mode, measure and groupbys', function (assert) {
+    QUnit.test('getContext correctly returns mode, measure, groupbys and interval mapping', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
@@ -265,6 +265,7 @@ QUnit.module('Views', {
                 graph_mode: 'bar',
                 graph_measure: '__count__',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.$buttons.find('li[data-field="foo"] a').click(); // change measure
@@ -275,6 +276,7 @@ QUnit.module('Views', {
                 graph_mode: 'bar',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.$buttons.find('button[data-mode="line"]').click(); // change mode
@@ -285,6 +287,7 @@ QUnit.module('Views', {
                 graph_mode: 'line',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
@@ -295,6 +298,7 @@ QUnit.module('Views', {
                 graph_mode: 'line',
                 graph_measure: 'foo',
                 graph_groupbys: ['product_id', 'color_id'],
+                graph_intervalMapping: {},
             }, "context should be correct");
 
             graph.destroy();

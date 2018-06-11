@@ -16,6 +16,9 @@ var GraphRenderer = require('web.GraphRenderer');
 var _t = core._t;
 var _lt = core._lt;
 
+var GROUPABLE_TYPES =
+    ['many2one', 'char', 'boolean', 'selection', 'date', 'datetime'];
+
 var GraphView = AbstractView.extend({
     display_name: _lt('Graph'),
     icon: 'fa-bar-chart',
@@ -43,18 +46,22 @@ var GraphView = AbstractView.extend({
         var measure;
         var groupBys = [];
         var measures = {__count__: {string: _t("Count"), type: "integer"}};
+        var groupableFields = {};
+        var intervalMapping = {};
         this.fields.__count__ = {string: _t("Count"), type: "integer"};
 
         this.arch.children.forEach(function (field) {
-            var name = field.attrs.name;
-            if (field.attrs.interval) {
-                name += ':' + field.attrs.interval;
+            var fieldName = field.attrs.name;
+            var interval = field.attrs.interval;
+            if (interval) {
+                intervalMapping[fieldName] = interval;
+                fieldName = fieldName + ':' + interval;
             }
             if (field.attrs.type === 'measure') {
-                measure = name;
-                measures[name] = self.fields[name];
+                measure = fieldName;
+                measures[fieldName] = self.fields[fieldName];
             } else {
-                groupBys.push(name);
+                groupBys.push(fieldName);
             }
         });
 
@@ -64,15 +71,20 @@ var GraphView = AbstractView.extend({
                     _.contains(params.additionalMeasures, name)) {
                         measures[name] = field;
                 }
+                if (_.contains(GROUPABLE_TYPES, field.type)) {
+                    groupableFields[name] = field;
+                }
             }
         });
 
         this.controllerParams.measures = measures;
+        this.controllerParams.groupableFields = groupableFields;
         this.rendererParams.stacked = this.arch.attrs.stacked !== "False";
 
         this.loadParams.mode = this.arch.attrs.type || 'bar';
         this.loadParams.measure = measure || '__count__';
         this.loadParams.groupBys = groupBys || [];
+        this.loadParams.intervalMapping = intervalMapping;
         this.loadParams.fields = this.fields;
     },
 });
