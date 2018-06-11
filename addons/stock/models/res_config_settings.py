@@ -18,8 +18,6 @@ class ResConfigSettings(models.TransientModel):
         implied_group='stock.group_production_lot')
     group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers", 
         implied_group='stock.group_lot_on_delivery_slip')
-    group_expiration_date_on_delivery_slip = fields.Boolean("Display Expiration Dates",
-        implied_group='stock.group_expiration_date_on_delivery_slip')
     group_stock_tracking_lot = fields.Boolean("Delivery Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
@@ -54,12 +52,6 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_stock_production_lot(self):
         if not self.group_stock_production_lot:
             self.group_lot_on_delivery_slip = False
-            self.group_expiration_date_on_delivery_slip = False
-    
-    @api.onchange('group_lot_on_delivery_slip')
-    def _onchange_group_lot_on_delivery_slip(self):
-        if not self.group_lot_on_delivery_slip:
-            self.group_expiration_date_on_delivery_slip = False
     
     @api.onchange('use_propagation_minimum_delta')
     def _onchange_use_propagation_minimum_delta(self):

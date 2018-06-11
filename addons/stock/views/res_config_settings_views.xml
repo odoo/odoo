@@ -207,7 +207,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}">
+                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('group_stock_production_lot', '=', False)]}" id="group_lot_on_delivery_slip">
                                 <div class="o_setting_left_pane">
                                     <field name="group_lot_on_delivery_slip"/>
                                 </div>
@@ -215,17 +215,6 @@
                                     <label for="group_lot_on_delivery_slip"/>
                                     <div class="text-muted">
                                         Lots &amp; Serial numbers will appear on the delivery slip
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': ['|', ('module_product_expiry', '=', False), ('group_lot_on_delivery_slip', '=', False)]}">
-                                <div class="o_setting_left_pane">
-                                    <field name="group_expiration_date_on_delivery_slip"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_expiration_date_on_delivery_slip"/>
-                                    <div class="text-muted">
-                                        Expiration dates will appear on the delivery slip
                                     </div>
                                 </div>
                             </div>

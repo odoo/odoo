@@ -53,7 +53,7 @@
                     <!-- Checks if there is any lot or serial number to display, if not the column won't be displayed-->
                     <t groups="stock.group_lot_on_delivery_slip" t-set="any_SN_LN" t-value="any([ml.lot_id for ml in o.move_line_ids])"/>
                     <!-- Checks if there is any expiration date to display, if not the column won't be displayed-->
-                    <t groups="stock.group_expiration_date_on_delivery_slip" t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
+                    <t groups="product_expiry.group_expiration_date_on_delivery_slip" t-set="any_expiration_date" t-value="any([env['stock.production.lot'].search([('id', '=', ml.lot_id.id)]).use_date for ml in o.move_line_ids])"/>
 
                     <!-- of the following 3 tables, only one of them is displayed at a time  -->
                     <table class="table table-condensed mt48" t-if="not o.move_line_ids and o.state!='done'">
@@ -80,7 +80,7 @@
                             <tr>
                                 <th><strong>Product</strong></th>
                                 <th groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN"><strong>Lot/Serial Number</strong></th>
-                                <th groups="stock.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
+                                <th groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
                                 <th><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -91,7 +91,7 @@
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
                                     <span t-else="">N/A</span>
                                 </td>
-                                <td groups="stock.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
+                                <td groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
                                     <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
                                     <span t-if="expiration_date" t-esc="expiration_date"/>
                                     <span t-else="">N/A</span>
@@ -109,7 +109,7 @@
                             <tr>
                                 <th><strong>Product</strong></th>
                                 <th groups="stock.group_lot_on_delivery_slip" t-if="any_SN_LN"><strong>Lot/Serial Number</strong></th>
-                                <th groups="stock.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
+                                <th groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date"><strong>Expiration Date</strong></th>
                                 <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -128,7 +128,7 @@
                                     <span t-if="move_line.lot_id" t-field="move_line.lot_id"/>
                                     <span t-else="">N/A</span>
                                 </td>
-                                <td groups="stock.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
+                                <td groups="product_expiry.group_expiration_date_on_delivery_slip" t-if="any_expiration_date">
                                     <t t-set="expiration_date" t-value="env['stock.production.lot'].search([('id', '=', move_line.lot_id.id)]).use_date"/>
                                     <span t-if="expiration_date" t-esc="expiration_date"/>
                                     <span t-else="">N/A</span>
