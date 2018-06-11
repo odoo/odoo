@@ -32,6 +32,7 @@
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                         <field name="ref"/>
+                        <field name="warranty_expiration_date"/>
                     </group>
                 </group>
                 </sheet>
@@ -59,6 +60,7 @@
                     <group name="main_group">
                         <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <field name="ref"/>
+                        <field name="warranty_expiration_date"/>
                     </group>
                 </sheet>
             </form>

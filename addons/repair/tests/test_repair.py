@@ -43,7 +43,7 @@ class TestRepair(AccountingTestCase):
             'product_id': product_to_repair.id,
             'product_uom': product_to_repair.uom_id.id,
             'address_id': partner.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'warranty_limit': datetime.today().strftime('%Y-%m-%d'),
             'invoice_method': invoice_method,
             'partner_invoice_id': partner.id,
             'location_id': self.env.ref('stock.stock_location_stock').id,
