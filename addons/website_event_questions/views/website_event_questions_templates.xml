@@ -10,24 +10,18 @@
 <template id="registration_attendee_details_questions" inherit_id="website_event.registration_attendee_details" name="Registration Attendee Details with questions">
     <data>
         <!-- Attendee specific questions -->
-        <xpath expr="//t[@name='attendee_loop']" position="inside">
-            <t t-if="event.specific_question_ids">
-                <div class="mb16 mt16">
-                    <div t-foreach='event.specific_question_ids' t-as='question'>
-                        <div class="row mb4">
-                            <span class="col-md-7 mt4 text-right"><t t-esc="question.title"/></span>
-                            <div class="col-md-5">
-                                <select t-attf-name="#{counter}-answer_ids-#{question.id}" class="o_specific_answer" required="true">
-                                    <t t-foreach='question.answer_ids' t-as="answer">
-                                        <option t-esc='answer.name' t-att-value='answer.id'/>
-                                    </t>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </t>
-        </xpath>
+            <xpath expr="//tr[@name='attendee_head']" position="inside">
+                <th t-foreach='event.specific_question_ids' t-as='question'><t t-esc="question.title"/></th>
+            </xpath>
+            <xpath expr="//tr[@name='attendee_loop']" position="inside">
+                <td t-foreach='event.specific_question_ids' t-as='question'>
+                    <select t-attf-name="#{counter}-answer_ids-#{question.id}" class="o_specific_answer" required="true">
+                    <t t-foreach='question.answer_ids' t-as="answer">
+                        <option t-esc='answer.name' t-att-value='answer.id'/>
+                    </t>
+                    </select>
+               </td>
+            </xpath>
 
         <!-- Generic questions -->
         <xpath expr="//div[hasclass('modal-body')]/div/t[last()]" position="after">
