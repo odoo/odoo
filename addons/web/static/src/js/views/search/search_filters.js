@@ -16,7 +16,12 @@ var ExtendedSearchProposition = Widget.extend(/** @lends instance.web.search.Ext
         'change .o_searchview_extended_prop_op': 'operator_changed',
         'click .o_searchview_extended_delete_prop': function (e) {
             e.stopPropagation();
-            this.getParent().remove_proposition(this);
+            this.trigger_up('remove_proposition');
+        },
+        'keyup .o_searchview_extended_prop_value': function (ev) {
+            if (ev.which === $.ui.keyCode.ENTER) {
+                this.trigger_up('confirm_proposition');
+            }
         },
     },
     /**

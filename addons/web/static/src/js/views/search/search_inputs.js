@@ -515,7 +515,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      * @param {Array<instance.web.search.Filter>} filters elements of the group
      * @param {instance.web.SearchView} parent parent in which the filters are contained
      */
-    init: function (filters, parent) {
+    init: function (filters, parent, intervalMapping) {
         // If all filters are group_by and we're not initializing a GroupbyGroup,
         // create a GroupbyGroup instead of the current FilterGroup
         if (!(this instanceof GroupbyGroup) &&
@@ -523,11 +523,12 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
                   if (!f.attrs.context) { return false; }
                   var c = pyeval.eval('context', f.attrs.context);
                   return !_.isEmpty(c.group_by);})) {
-            return new GroupbyGroup(filters, parent);
+            return new GroupbyGroup(filters, parent, intervalMapping);
         }
         this._super(parent);
         this.filters = filters;
         this.searchview = parent;
+        this.intervalMapping = intervalMapping;
         this.searchview.query.on('add remove change reset', this.proxy('search_change'));
     },
     start: function () {
@@ -560,6 +561,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
     },
     make_facet: function (values) {
         return {
+            cat: 'filterCategory',
             category: _t("Filter"),
             icon: this.icon,
             separator: _t(" or "),
@@ -610,8 +612,23 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      * @return {Array} enabled filters in this group
      */
     get_groupby: function (facet) {
+        var self = this;
         return  facet.values.chain()
-            .map(function (f) { return f.get('value').attrs.context; })
+            .map(function (f) {
+                var fieldName = f.get('value').attrs.fieldName;
+                var defaultInterval = f.get('value').attrs.defaultInterval;
+                var couple = _.findWhere(self.intervalMapping, {groupby: f.get('value')});
+                var interval = couple ? couple.interval: undefined;
+                var context = _.clone(f.get('value').attrs.context);
+                if (context && interval) {
+                    if (defaultInterval) {
+                        context = context.replace(defaultInterval, interval);
+                    } else if (fieldName){
+                        context = context.replace(fieldName, fieldName + ':' + interval);
+                    }
+                }
+                return context;
+            })
             .without('{}')
             .reject(_.isEmpty)
             .value();
@@ -683,14 +700,18 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
                 facet: self.make_facet([facet_value])
             };
         }));
+    },
+    updateIntervalMapping: function (intervalMapping) {
+        this.intervalMapping = intervalMapping;
     }
+
 });
 
 var GroupbyGroup = FilterGroup.extend({
     icon: 'fa-bars',
     completion_label: _lt("Group by: %s"),
     init: function (filters, parent) {
-        this._super(filters, parent);
+        this._super.apply(this, arguments);
         this.searchview = parent;
         // Not flanders: facet unicity is handled through the
         // (category, field) pair of facet attributes. This is all well and
@@ -713,6 +734,7 @@ var GroupbyGroup = FilterGroup.extend({
     },
     make_facet: function (values) {
         return {
+            cat: 'groupByCategory',
             category: _t("Group By"),
             icon: this.icon,
             separator: " > ",
