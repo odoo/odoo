@@ -32,6 +32,7 @@ class SaleOrder(models.Model):
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Pickings')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    partner_shipping_id = fields.Many2one('res.partner', domain="[('property_stock_customer.usage', '=', 'customer')]")
 
     @api.multi
     def _action_confirm(self):
