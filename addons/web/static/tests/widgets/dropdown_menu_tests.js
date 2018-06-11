@@ -13,25 +13,24 @@ function createDropdownMenu(dropdownTitle, groups, params) {
     return menu;
 }
 
-
 QUnit.module('Web', {
     beforeEach: function () {
         this.items = [
-                {
-                    isActive: false,
-                    isOpen: false,
-                    description: 'Some Item',
-                    itemId: 1,
-                    groupId: 1,
-                },
-                {
-                    isActive: true,
-                    description: 'Some other Item',
-                    itemId: 2,
-                    options: [],
-                    isRemovable: true,
-                    groupId: 2,
-                },
+            {
+                isActive: false,
+                isOpen: false,
+                description: 'Some Item',
+                itemId: 1,
+                groupId: 1,
+            },
+            {
+                isActive: true,
+                description: 'Some other Item',
+                itemId: 2,
+                options: [],
+                isRemovable: true,
+                groupId: 2,
+            },
         ];
         this.dropdownHeader = {
             title: "Menu",
@@ -196,6 +195,5 @@ QUnit.module('Web', {
         assert.strictEqual(dropdownMenu.$('li').length, 2);
         dropdownMenu.destroy();
     });
-
 });
 });
