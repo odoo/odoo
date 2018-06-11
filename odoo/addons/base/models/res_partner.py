@@ -705,7 +705,7 @@ class Partner(models.Model):
         if (name or order_by_rank) and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             self.check_access_rights('read')
             where_query = self._where_calc(args)
-            self._apply_ir_rules(where_query, 'read')
+            where_query = self._apply_ir_rules(where_query, 'read')
             from_clause, where_clause, where_clause_params = where_query.get_sql()
             from_str = from_clause if from_clause else 'res_partner'
             where_str = where_clause and (" WHERE %s AND " % where_clause) or ' WHERE '

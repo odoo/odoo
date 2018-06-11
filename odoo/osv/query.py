@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from copy import deepcopy
 
 
 
@@ -147,7 +148,6 @@ class Query(object):
 
         def add_joins_for_table(lhs):
             for (rhs, lhs_col, rhs_col, join) in self.joins.get(lhs, []):
-                tables_to_process.remove(alias_mapping[rhs])
                 from_clause.append(' %s %s ON ("%s"."%s" = "%s"."%s"' % \
                     (join, alias_mapping[rhs], lhs, lhs_col, rhs, rhs_col))
                 extra = self.extras.get((lhs, (rhs, lhs_col, rhs_col, join)))
@@ -160,15 +160,52 @@ class Query(object):
                 from_clause.append(')')
                 add_joins_for_table(rhs)
 
-        for pos, table in enumerate(tables_to_process):
+        joined_aliases = [
+            join[0]
+            for joined_table in self.joins.values()
+            for join in joined_table]
+        pos = 0
+        for table in tables_to_process:
+            table_alias = get_alias_from_query(table)[1]
+            if table_alias in joined_aliases:
+                continue
             if pos > 0:
                 from_clause.append(',')
             from_clause.append(table)
-            table_alias = get_alias_from_query(table)[1]
+            pos += 1
             if table_alias in self.joins:
                 add_joins_for_table(table_alias)
 
         return "".join(from_clause), " AND ".join(self.where_clause), from_params + self.where_clause_params
+
+    def combine(self, query):
+        """ Combine self with another query """
+        # Tables is a list of tables. Prevent duplicates
+        tables = list(set(self.tables + query.tables))
+
+        # concatenate where_clause and where_clause_params lists
+        where_clause = self.where_clause + query.where_clause
+        where_clause_params = self.where_clause_params + query.where_clause_params
+
+        # Joins is a mapping of table to list. Append if key already exists.
+        joins = deepcopy(self.joins)
+        for join_table in query.joins:
+            self.joins.setdefault(join_table, [])
+            for join in query.joins[join_table]:
+                if join not in joins[join_table]:
+                    joins[join_table].append(join)
+
+        # Extras is a mapping of tuple to tuple. Overwrite if key already exists
+        extras = dict(self.extras)
+        for key, value in query.extras.items():
+            extras[key] = value
+
+        return Query(tables=tables, where_clause=where_clause,
+                     where_clause_params=where_clause_params, joins=joins, extras=extras)
+
+    def __and__(self, query):
+        """ Dunder wrapper around self.combine """
+        return self.combine(query)
 
     def __str__(self):
         return '<osv.Query: "SELECT ... FROM %s WHERE %s" with params: %r>' % self.get_sql()

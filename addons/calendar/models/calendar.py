@@ -1129,8 +1129,8 @@ class Meeting(models.Model):
                 if arg[0] == 'id' and arg[1] in ('in', 'not in'):
                     arg = (arg[0], arg[1], [calendar_id2real_id(id) for id in arg[2]])
                 if not arg[0] in ('start', 'stop', 'final_date', '&', '|'):
-                    e = expression.expression([arg], self)
-                    where_clause, where_params = e.to_sql()  # CAUTION, wont work if field is autojoin, not supported
+                    # CAUTION, wont work if field is autojoin, not supported
+                    _tables, where_clause, where_params = expression.expression([arg], self).to_query().get_sql()
                     select_fields.append("%s as \"%s\"" % (where_clause, str(pos)))
                     where_params_list += where_params
             if len(select_fields) > 1:

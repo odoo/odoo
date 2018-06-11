@@ -2153,7 +2153,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         order = orderby or ','.join([g for g in groupby_list])
         groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
 
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
             gb_field = self._fields[gb].base_field
@@ -2983,7 +2983,7 @@ Fields:
         # make a query object for selecting ids, and apply security rules to it
         param_ids = object()
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
 
         # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [
@@ -3265,10 +3265,10 @@ Record ids: %(records)s
             self._cr.execute(query, (tuple(self.ids), self._uid))
             return self.browse([row[0] for row in self._cr.fetchall()])
 
-        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-        if not where_clause:
+        query = self.env['ir.rule'].domain_get(self._name, operation)
+        if not query.where_clause:
             return self
-
+        table = '"%s"' % self._table
         # detemine ids in database that satisfy ir.rules
         # TODO: we should add a flush here, based on domain's arguments
         valid_ids = set()
@@ -4102,14 +4102,8 @@ Record ids: %(records)s
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            e = expression.expression(domain, self)
-            tables = e.get_tables()
-            where_clause, where_params = e.to_sql()
-            where_clause = [where_clause] if where_clause else []
-        else:
-            where_clause, where_params, tables = [], [], ['"%s"' % self._table]
-
-        return Query(tables, where_clause, where_params)
+            return expression.expression(domain, self).to_query()
+        return Query(['"%s"' % self._table])
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
@@ -4118,39 +4112,44 @@ Record ids: %(records)s
 
     @api.model
     def _apply_ir_rules(self, query, mode='read'):
-        """Add what's missing in ``query`` to implement all appropriate ir.rules
-          (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
+        """Return a new Query object including what's missing in ``query`` to implement all
+           appropriate ir.rules (using the ``model_name``'s rules or the current model's rules
+           if ``model_name`` is None)
 
            :param query: the current query object
+           :rtype: new Query object
         """
         if self.env.su:
-            return
+            return query
 
-        def apply_rule(clauses, params, tables, parent_model=None):
+        def apply_rule(query, rule_query, parent_model=None):
             """ :param parent_model: name of the parent model, if the added
                     clause comes from a parent model
             """
-            if clauses:
+            if rule_query.where_clause:
                 if parent_model:
                     # as inherited rules are being applied, we need to add the
                     # missing JOIN to reach the parent table (if not JOINed yet)
-                    parent_table = '"%s"' % self.env[parent_model]._table
-                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
+                    parent_table_unescaped = self.env[parent_model]._table
+                    parent_table = '"%s"' % parent_table_unescaped
+                    parent_alias_unescaped = self._inherits_join_add(self, parent_model, query)
+                    parent_alias = '"%s"' % parent_alias_unescaped
                     # inherited rules are applied on the external table, replace
                     # parent_table by parent_alias
-                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
+                    rule_query.where_clause = [
+                        clause.replace(parent_table, parent_alias) for clause in rule_query.where_clause]
                     # replace parent_table by parent_alias, and introduce
                     # parent_alias if needed
-                    tables = [
+                    rule_query.tables = [
                         (parent_table + ' as ' + parent_alias) if table == parent_table \
                             else table.replace(parent_table, parent_alias)
-                        for table in tables
+                        for table in rule_query.tables
                     ]
-                query.where_clause += clauses
-                query.where_clause_params += params
-                for table in tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
+                    if parent_table_unescaped in query.joins:
+                        rule_query.joins[parent_alias_unescaped] = rule_query.joins.pop(parent_table_unescaped)
+                return query & rule_query
+
+            return query
 
         if self._transient:
             # One single implicit access rule for transient models: owner only!
@@ -4158,18 +4157,18 @@ Record ids: %(records)s
             # log_access enabled, so that 'create_uid' is always there.
             domain = [('create_uid', '=', self._uid)]
             tquery = self._where_calc(domain, active_test=False)
-            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
-            return
+            return apply_rule(query, tquery)
 
         # apply main rules on the object
         Rule = self.env['ir.rule']
-        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
-        apply_rule(where_clause, where_params, tables)
+        rule_query = Rule.domain_get(self._name, mode)
+        query = apply_rule(query, rule_query)
 
         # apply ir.rules from the parents (through _inherits)
         for parent_model in self._inherits:
-            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
-            apply_rule(where_clause, where_params, tables, parent_model)
+            rule_query = Rule.domain_get(parent_model, mode)
+            query = apply_rule(query, rule_query, parent_model)
+        return query
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):
@@ -4365,7 +4364,7 @@ Record ids: %(records)s
         self._flush_search(args, order=order)
 
         query = self._where_calc(args)
-        self._apply_ir_rules(query, 'read')
+        query = self._apply_ir_rules(query, 'read')
         order_by = self._generate_order_by(order, query)
         from_clause, where_clause, where_clause_params = query.get_sql()
 

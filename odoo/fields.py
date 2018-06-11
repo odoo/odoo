@@ -3249,7 +3249,7 @@ class Many2many(_RelationalMulti):
         comodel = records.env[self.comodel_name].with_context(**context)
         domain = self.get_domain_list(records)
         wquery = comodel._where_calc(domain)
-        comodel._apply_ir_rules(wquery, 'read')
+        wquery = comodel._apply_ir_rules(wquery, 'read')
         order_by = comodel._generate_order_by(None, wquery)
         from_c, where_c, where_params = wquery.get_sql()
         query = """ SELECT {rel}.{id1}, {rel}.{id2} FROM {rel}, {from_c}
