@@ -28,7 +28,8 @@
     <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
         <xpath expr="//header//ul[@id='top_menu']/li[@id='my_cart']" position="after">
             <t t-if="request.env.ref('website_sale_wishlist.add_to_wishlist').active">
-                <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+                <t t-set='wishcount'
+                   t-value="len(request.env['product.wishlist'].current())"/>
                 <li id="my_wish" t-att-style="not wishcount and 'display:none;'">
                     <a href="/shop/wishlist">
                         <i class="fa fa-heart"></i>
