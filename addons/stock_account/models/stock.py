@@ -89,8 +89,7 @@ class StockQuant(models.Model):
         if move.product_id.type != 'product' or move.product_id.valuation != 'real_time':
             # no stock valuation for consumable products
             return False
-        if any(quant.owner_id or quant.qty <= 0 for quant in self):
-            # if the quant isn't owned by the company, we don't make any valuation en
+        if any(quant.qty <= 0 for quant in self):
             # we don't make any stock valuation for negative quants because the valuation is already made for the counterpart.
             # At that time the valuation will be made at the product cost price and afterward there will be new accounting entries
             # to make the adjustments when we know the real cost price.
@@ -124,9 +123,13 @@ class StockQuant(models.Model):
             self.with_context(force_company=move.company_id.id)._create_account_move_line(move, acc_src, acc_dest, journal_id)
 
     def _create_account_move_line(self, move, credit_account_id, debit_account_id, journal_id):
+        # If there ar no quants with no owner (= company's quants), return None immediately
+        if not self.filtered(lambda q: not(q.owner_id)):
+            return
         # group quants by cost
         quant_cost_qty = defaultdict(lambda: 0.0)
-        for quant in self:
+        # if the quant isn't owned by the company, we don't make any valuation for this quant
+        for quant in self.filtered(lambda q: not(q.owner_id)):
             quant_cost_qty[quant.cost] += quant.qty
 
         AccountMove = self.env['account.move']
