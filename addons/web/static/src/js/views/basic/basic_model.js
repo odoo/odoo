@@ -175,6 +175,7 @@ var BasicModel = AbstractModel.extend({
             fields: list.fields,
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
+            position: position,
             viewType: list.viewType,
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
@@ -295,6 +296,104 @@ var BasicModel = AbstractModel.extend({
         return this._applyOnChange(record._rawChanges, record, viewType).then(function () {
             return record.id;
         });
+    },
+    /**
+     * Compute the default value that the handle field should take.
+     * We need to compute this in order for new lines to be added at the correct position.
+     *
+     * @private
+     * @param {Object} listID
+     * @param {string} position
+     * @return {Object} empty object if no overrie has to be done, or:
+     *  field: the name of the field to override,
+     *  value: the value to use for that field
+     */
+    _computeOverrideDefaultFields: function (listID, position) {
+        var list = this.localData[listID];
+        var handleField;
+
+        // Here listID is actually just parentID, it's not yet confirmed
+        // to be a list.
+        // If we are not in the case that interests us,
+        // listID will be undefined and this check will work.
+        if (!list) {
+            return {};
+        }
+
+        position = position || 'bottom';
+
+        // Let's find if there is a field with handle.
+        if (!list.fieldsInfo) {
+            return {};
+        }
+        for (var field in list.fieldsInfo.list) {
+            if (list.fieldsInfo.list[field].widget === 'handle') {
+                handleField = field;
+                break;
+                // If there are 2 handle fields on the same list,
+                // we take the first one we find.
+                // And that will be alphabetically on the field name...
+            }
+        }
+
+        if (!handleField) {
+            return {};
+        }
+
+        // We don't want to override the default value
+        // if the list is not ordered by the handle field.
+        var isOrderedByHandle = list.orderedBy
+            && list.orderedBy.length
+            && list.orderedBy[0].asc === true
+            && list.orderedBy[0].name === handleField;
+
+        if (!isOrderedByHandle) {
+            return {};
+        }
+
+        // We compute the list (get) to apply the pending changes before doing our work,
+        // otherwise new lines might not be taken into account.
+        // We use raw: true because we only need to load the first level of relation.
+        var computedList = this.get(list.id, {raw: true});
+
+        // We don't need to worry about the position of a new line if the list is empty.
+        if (!computedList || !computedList.data || !computedList.data.length) {
+            return {};
+        }
+
+        // If there are less elements in the list than the limit of
+        // the page then take the index of the last existing line.
+
+        // If the button is at the top, we want the new element on
+        // the first line of the page.
+
+        // If the button is at the bottom, we want the new element
+        // after the last line of the page
+        // (= theorically it will be the first element of the next page).
+
+        // We ignore list.offset because computedList.data
+        // will only have the current page elements.
+
+        var index = Math.min(
+            computedList.data.length - 1,
+            position !== 'top' ? list.limit - 1 : 0
+        );
+
+        // This positioning will almost be correct. There might just be
+        // an issue if several other lines have the same handleFieldValue.
+
+        // TODO ideally: if there is an element with the same handleFieldValue,
+        // that one and all the following elements must be incremented
+        // by 1 (at least until there is a gap in the numbering).
+
+        // We don't do it now because it's not an important case.
+        var handleFieldValue = computedList.data[index].data[handleField];
+        handleFieldValue = position !== 'top' ? handleFieldValue : handleFieldValue - 1;
+
+        return {
+            field: handleField,
+            value: handleFieldValue,
+        };
     },
     /**
      * Delete a list of records, then, if the records have a parent, reload it.
@@ -1233,15 +1332,16 @@ var BasicModel = AbstractModel.extend({
      */
     _addX2ManyDefaultRecord: function (list, options) {
         var self = this;
+        var position = options && options.position || 'top';
         var params = {
             context: this._getContext(list),
             fields: list.fields,
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
+            position: position,
             viewType: list.viewType,
         };
         return this._makeDefaultRecord(list.model, params).then(function (id) {
-            var position = options && options.position || 'top';
             list._changes.push({operation: 'ADD', id: id, position: position, isNew: true});
             var record = self.localData[id];
             list._cache[record.res_id] = id;
@@ -3395,7 +3495,7 @@ var BasicModel = AbstractModel.extend({
     _makeDefaultRecord: function (modelName, params) {
         var self = this;
 
-        var determineExtraFields = function() {
+        var determineExtraFields = function () {
             // Fields that are present in the originating view, that need to be initialized
             // Hence preventing their value to crash when getting back to the originating view
             var parentRecord = self.localData[params.parentID];
@@ -3405,12 +3505,12 @@ var BasicModel = AbstractModel.extend({
                 return [];
 
             var fieldsFromOrigin = _.filter(Object.keys(originView[parentRecord.viewType]),
-                function(fieldname) {
+                function (fieldname) {
                     return params.fields[fieldname] !== undefined;
                 });
 
             return fieldsFromOrigin;
-        }
+        };
 
         var fieldNames = Object.keys(params.fieldsInfo[params.viewType]);
         var fields_key = _.without(fieldNames, '__last_update');
@@ -3424,6 +3524,7 @@ var BasicModel = AbstractModel.extend({
                 context: params.context,
             })
             .then(function (result) {
+
                 var record = self._makeDataPoint({
                     modelName: modelName,
                     fields: params.fields,
@@ -3433,6 +3534,20 @@ var BasicModel = AbstractModel.extend({
                     res_ids: params.res_ids,
                     viewType: params.viewType,
                 });
+
+                // We want to overwrite the default value of the handle field (if any),
+                // in order for new lines to be added at the correct position.
+                // -> This is a rare case where the defaul_get from the server
+                //    will be ignored by the view for a certain field (usually "sequence").
+
+                var overrideDefaultFields = self._computeOverrideDefaultFields(
+                    params.parentID,
+                    params.position
+                );
+
+                if (overrideDefaultFields) {
+                    result[overrideDefaultFields.field] = overrideDefaultFields.value;
+                }
 
                 return self.applyDefaultValues(record.id, result, {fieldNames: _.union(fieldNames, extraFields)})
                     .then(function () {

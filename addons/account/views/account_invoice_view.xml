@@ -73,6 +73,13 @@
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
+                            <!--
+                                We need the sequence field to be here
+                                because we want to be able to overwrite the default sequence value in the JS
+                                in order for new lines to be added at the correct position.
+                                NOTE: at some point we want to fix this in the framework so that an invisible field is not required.
+                            -->
+                            <field name="sequence" invisible="1"/>
                         </group>
                         <group>
                             <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>

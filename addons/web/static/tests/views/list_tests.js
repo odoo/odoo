@@ -3765,6 +3765,137 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('list view on a "noCache" model', function (assert) {
+        assert.expect(8);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['foo']),
+        });
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (_.contains(['create', 'unlink', 'write'], args.method)) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+        core.bus.on('clear_cache', list, assert.step.bind(assert, 'clear_cache'));
+
+        // create a new record
+        list.$buttons.find('.o_list_button_add').click();
+        list.$('.o_selected_row .o_field_widget').val('some value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // edit an existing record
+        list.$('.o_data_cell:first').click();
+        list.$('.o_selected_row .o_field_widget').val('new value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // delete a record
+        list.$('.o_data_row:first .o_list_record_selector input').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('footer.modal-footer .btn-primary').click(); // confirm
+
+        assert.verifySteps([
+            'create',
+            'clear_cache',
+            'write',
+            'clear_cache',
+            'unlink',
+            'clear_cache',
+        ]);
+
+        list.destroy();
+        testUtils.unpatch(BasicModel);
+    });
+
+    QUnit.test('list should ask to scroll to top on page changes', function (assert) {
+        assert.expect(10);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree limit="3">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            intercepts: {
+                scrollTo: function (ev) {
+                    assert.strictEqual(ev.data.top, 0,
+                        "should ask to scroll to top");
+                    assert.step('scroll');
+                },
+            },
+        });
+
+        // switch pages (should ask to scroll)
+        list.pager.$('.o_pager_next').click();
+        list.pager.$('.o_pager_previous').click();
+
+        assert.verifySteps(['scroll', 'scroll'],
+            "should ask to scroll when switching pages");
+
+        // change the limit (should not ask to scroll)
+        list.pager.$('.o_pager_value').click();
+        list.pager.$('.o_pager_value input').val('1-2').blur();
+        assert.strictEqual(list.pager.$('.o_pager_value').text(), '1-2',
+            "should have changed the limit");
+
+        assert.verifySteps(['scroll', 'scroll'],
+            "should not ask to scroll when changing the limit");
+
+        // switch pages again (should still ask to scroll)
+        list.pager.$('.o_pager_next').click();
+
+        assert.verifySteps(['scroll', 'scroll', 'scroll'],
+            "this is still working after a limit change");
+
+        list.destroy();
+    });
+
+    QUnit.test('list with handle field, override default_get, bottom when inline', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.fields.int_field.default = 10;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch:
+                '<tree editable="bottom" default_order="int_field">'
+                    + '<field name="int_field" widget="handle"/>'
+                    + '<field name="foo"/>'
+                +'</tree>',
+        });
+
+        // starting condition
+        assert.strictEqual($('.o_data_cell').text(), "blipblipyopgnap");
+
+        // click add a new line
+        // save the record
+        // check line is at the correct place
+
+        var inputText = 'ninja';
+        $('.o_list_button_add').click();
+        list.$('.o_input[name="foo"]').val(inputText).trigger('input');
+        $('.o_list_button_add').click();
+
+        assert.strictEqual($('.o_data_cell').text(), "blipblipyopgnap" + inputText);
+
+        list.destroy();
+    });
 });
 
 });
