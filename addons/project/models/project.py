@@ -886,7 +886,7 @@ class Task(models.Model):
 
         groups = [new_group] + groups
         for group_name, group_method, group_data in groups:
-            if group_name in ['customer', 'portal']:
+            if group_name == 'customer':
                 continue
             group_data['has_button_access'] = True
 

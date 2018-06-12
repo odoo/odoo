@@ -789,6 +789,11 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
+            if not view.check_access_rights('write',  raise_exception=False):
+                # erp manager has the rights to update groups/users but not
+                # to modify ir.ui.view
+                if self.env.user.has_group('base.group_erp_manager'):
+                    view = view.sudo()
 
             new_context = dict(view._context)
             new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
