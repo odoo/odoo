@@ -38,8 +38,8 @@ class PosSession(models.Model):
                             paid=order.amount_paid,
                         ))
                 order.action_pos_order_done()
-            orders = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'])
-            orders.sudo()._reconcile_payments()
+            orders_to_reconcile = session.order_ids.filtered(lambda order: order.state in ['invoiced', 'done'] and order.partner_id)
+            orders_to_reconcile.sudo()._reconcile_payments()
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
