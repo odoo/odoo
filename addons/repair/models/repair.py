@@ -200,9 +200,11 @@ class Repair(models.Model):
     def action_validate(self):
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        available_qty = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
-        if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
-            return self.action_repair_confirm()
+        available_qty_owner = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, owner_id=self.partner_id, strict=True)
+        available_qty_noown = self.env['stock.quant']._get_available_quantity(self.product_id, self.location_id, self.lot_id, strict=True)
+        for available_qty in [available_qty_owner, available_qty_noown]:
+            if float_compare(available_qty, self.product_qty, precision_digits=precision) >= 0:
+                return self.action_repair_confirm()
         else:
             return {
                 'name': _('Insufficient Quantity'),
@@ -428,8 +430,15 @@ class Repair(models.Model):
         if self.filtered(lambda repair: not repair.repaired):
             raise UserError(_("Repair must be repaired in order to make the product moves."))
         res = {}
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         Move = self.env['stock.move']
         for repair in self:
+            # Try to create move with the appropriate owner
+            owner_id = False
+            available_qty_owner = self.env['stock.quant']._get_available_quantity(repair.product_id, repair.location_id, repair.lot_id, owner_id=repair.partner_id, strict=True)
+            if float_compare(available_qty_owner, repair.product_qty, precision_digits=precision) >= 0:
+                owner_id = repair.partner_id.id
+
             moves = self.env['stock.move']
             for operation in repair.operations:
                 move = Move.create({
@@ -447,6 +456,7 @@ class Repair(models.Model):
                                            'qty_done': operation.product_uom_qty,
                                            'package_id': False,
                                            'result_package_id': False,
+                                           'owner_id': owner_id,
                                            'location_id': operation.location_id.id, #TODO: owner stuff
                                            'location_dest_id': operation.location_dest_id.id,})],
                     'repair_id': repair.id,
@@ -469,6 +479,7 @@ class Repair(models.Model):
                                            'qty_done': repair.product_qty,
                                            'package_id': False,
                                            'result_package_id': False,
+                                           'owner_id': owner_id,
                                            'location_id': repair.location_id.id, #TODO: owner stuff
                                            'location_dest_id': repair.location_id.id,})],
                 'repair_id': repair.id,

@@ -1753,16 +1753,27 @@ class StockMove(TransactionCase):
         backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
         backorder_wizard.with_context(debug=True).process()
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pack_cust.id)])
-        backordered_ml = backorder.move_line_ids
-        quant_lot3 = self.env['stock.quant'].search([('lot_id', '=', backordered_ml.lot_id.id)])
+        backordered_move = backorder.move_lines
 
         # due to the rounding, the backordered quantity is 0.999 ; we shoudln't be able to reserve
         # 0.999 on a tracked by serial number quant
-        self.assertEqual(backordered_ml.product_uom_qty, 0)
-        self.assertTrue(backordered_ml.lot_id)
+        backordered_move._action_assign()
+        self.assertEqual(backordered_move.reserved_availability, 0)
 
         # force the serial number and validate
-        backordered_ml.qty_done = 1
+        lot3 = self.env['stock.production.lot'].search([('name', '=', "lot3")])
+        backorder.write({'move_line_ids': [(0, 0, {
+            'product_id': self.product2.id,
+            'product_uom_id': self.uom_unit.id,
+            'qty_done': 1,
+            'product_uom_qty': 0,
+            'lot_id': lot3.id,
+            'package_id': False,
+            'result_package_id': False,
+            'location_id': backordered_move.location_id.id,
+            'location_dest_id': backordered_move.location_dest_id.id,
+            'move_id': backordered_move.id,
+        })]})
 
         overprocessed_wizard = backorder.button_validate()
         overprocessed_wizard = self.env['stock.overprocessed.transfer'].browse(overprocessed_wizard['res_id'])

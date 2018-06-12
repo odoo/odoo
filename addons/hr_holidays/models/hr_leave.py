@@ -59,7 +59,7 @@ class HolidaysRequest(models.Model):
     number_of_days = fields.Float('Number of Days', compute='_compute_number_of_days', store=True, track_visibility='onchange')
     meeting_id = fields.Many2one('calendar.event', string='Meeting')
 
-    parent_id = fields.Many2one('hr.leave', string='Parent')
+    parent_id = fields.Many2one('hr.leave', string='Parent', copy=False)
     linked_request_ids = fields.One2many('hr.leave', 'parent_id', string='Linked Requests')
     department_id = fields.Many2one('hr.department', string='Department', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True,
