@@ -277,11 +277,12 @@ function classToStyle($editable) {
         }
 
         // Outlook
-        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
+        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
+            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({
+                    'text-align': $target.parent().css('text-align'),
                     'margin': $target.css('padding'),
                     'border-radius': $target.css('border-radius'),
                     'background-color': $target.css('background-color'),
