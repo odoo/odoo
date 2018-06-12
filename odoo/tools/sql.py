@@ -120,17 +120,13 @@ def drop_not_null(cr, tablename, columnname):
 
 def constraint_definition(cr, tablename, constraintname):
     """ Return the given constraint's definition. """
-    cr.execute('SELECT pg_get_constraintdef(c.oid) FROM pg_constraint c '
-               'JOIN pg_class t ON t.oid = c.conrelid '
-               'WHERE t.relname = %s AND conname=%s', (tablename, constraintname,))
-    return cr.fetchone()[0] if cr.rowcount else None
-
-def constraint_comment(cr, tablename, constraintname):
-    """ Return the given constraint's comment. """
-    cr.execute('SELECT d.description FROM pg_description d '
-               'JOIN pg_constraint c ON c.oid = d.objoid '
-               'JOIN pg_class t ON t.oid = c.conrelid '
-               'WHERE t.relname = %s AND conname = %s;', (tablename, constraintname,))
+    query = """
+        SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
+        FROM pg_constraint c
+        JOIN pg_class t ON t.oid = c.conrelid
+        LEFT JOIN pg_description d ON c.oid = d.objoid
+        WHERE t.relname = %s AND conname = %s;"""
+    cr.execute(query, (tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
 
 def add_constraint(cr, tablename, constraintname, definition):
@@ -145,7 +141,7 @@ def add_constraint(cr, tablename, constraintname, definition):
     except Exception:
         msg = "Table %r: unable to add constraint %r!\n" \
               "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, constraintname, query, exc_info=True)
+        _schema.warning(msg, tablename, constraintname, query1, exc_info=True)
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
