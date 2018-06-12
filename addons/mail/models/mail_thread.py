@@ -230,8 +230,22 @@ class MailThread(models.AbstractModel):
         # subscribe uid unless asked not to
         if not self._context.get('mail_create_nosubscribe'):
             message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
-            message_follower_ids += self.env['mail.followers']._add_follower_command(self._name, [], {self.env.user.partner_id.id: None}, {}, force=True)[0]
-            values['message_follower_ids'] = message_follower_ids
+            new_message_follower_ids = self.env['mail.followers']._add_follower_command(self._name, [], {self.env.user.partner_id.id: None}, {}, force=True)[0]
+            # Add the duplicates to the original array that haven't been overridden in _add_follower_command()'s return value.
+            # Is this an overkill?
+            for message_follower_id in message_follower_ids:
+                for new_message_follower_id in new_message_follower_ids:
+                    if len(message_follower_id)  >= 3 and len(new_message_follower_id) >= 3:
+                        partner_id = message_follower_id[2].get("partner_id", None)
+                        new_partner_id = new_message_follower_id[2].get("partner_id", None)
+                        channel_id = message_follower_id[2].get("channel_id", None)
+                        new_channel_id = new_message_follower_id[2].get("channel_id", None)
+                        if partner_id and new_partner_id and partner_id==new_partner_id:
+                            continue
+                        if channel_id and new_channel_id and channel_id==new_channel_id:
+                            continue
+                new_message_follower_ids.append(message_follower_id)
+            values['message_follower_ids'] = new_message_follower_ids
         thread = super(MailThread, self).create(values)
 
         # automatic logging unless asked not to (mainly for various testing purpose)
