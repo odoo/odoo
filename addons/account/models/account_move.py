@@ -1206,7 +1206,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
-        if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
+        if any(key in vals for key in ('partner_id', 'account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             self._update_check()
         if not self._context.get('allow_amount_currency') and any(key in vals for key in ('amount_currency', 'currency_id')):
             #hackish workaround to write the amount_currency when assigning a payment to an invoice through the 'add' button
