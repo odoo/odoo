@@ -88,6 +88,35 @@
         ids = self.search(cr, uid, [('id', 'parent_of',[ref('categ_root')])])
         assert len(ids) == 1, ids
 -
+    Assign user to main_partner
+-
+    !record {model: res.users, id: company_user}:
+        partner_id: main_partner
+        name: YourCompany
+        login: company_user
+-
+    Assign user to res_partner_main1
+-
+    !record {model: res.users, id: user_res_partner_main1}:
+        partner_id: res_partner_main1
+        name: Mark Davis
+        login: mark.davis
+-
+    Assign user to res_partner_main2
+-
+    !record {model: res.users, id: user_res_partner_main2}:
+        partner_id: res_partner_main2
+        name: Roger Scott
+        login: roger.scott
+-
+    Test child_of with hierarchy inherited by delegation
+-
+    !python {model: res.users}: |
+        ids = self.search(cr, uid, [('id', 'child_of', [ref('company_user')])])
+        assert ref('company_user') in ids
+        assert ref('user_res_partner_main1') in ids
+        assert ref('user_res_partner_main2') in ids
+-
     Testing that some domain expressions work
 -
     !python {model: res.partner }: |

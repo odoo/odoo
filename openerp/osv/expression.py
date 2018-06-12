@@ -727,12 +727,31 @@ class expression(object):
                     return [(left, 'in', left_model.search(cr, uid, doms, context=context))]
                 return doms
             else:
+                parent = parent or left_model._parent_name
+                model = left_model
+                if parent in left_model._inherit_fields:
+                    delegate_model = left_model.pool[
+                        left_model._inherit_fields[parent][0]]
+                    delegate_field = left_model._inherit_fields[parent][1]
+                    ids = [
+                        x[delegate_field]
+                        for x in
+                        left_model.read(
+                            cr, uid, ids, [delegate_field],
+                            load='_classic_write', context=context)
+                    ]
+                    model = delegate_model
                 def recursive_children(ids, model, parent_field):
                     if not ids:
                         return []
                     ids2 = model.search(cr, uid, [(parent_field, 'in', ids)], context=context)
                     return ids + recursive_children(ids2, model, parent_field)
-                return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
+                ids = recursive_children(ids, model, parent)
+                if parent in left_model._inherit_fields:
+                    ids = left_model.search(
+                        cr, uid, [(delegate_field, 'in', ids)],
+                        context=context)
+                return [(left, 'in', ids)]
 
         def parent_of_domain(left, ids, left_model, parent=None, prefix='', context=None):
             """ Return a domain implementing the parent_of operator for [(left,parent_of,ids)],
