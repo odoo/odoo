@@ -2058,10 +2058,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     def _read_group_resolve_many2one_fields(self, data, fields):
         many2onefields = {field['field'] for field in fields if field['type'] == 'many2one'}
+        no_name_get = self.env.context.get('no_name_get', False)
         for field in many2onefields:
             ids_set = {d[field] for d in data if d[field]}
-            m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
-            data_dict = dict(m2o_records.name_get())
+            if no_name_get:
+                data_dict = dict({(x,'') for x in ids_set})
+            else:
+                m2o_records = self.env[self._fields[field].comodel_name].browse(ids_set)
+                data_dict = dict(m2o_records.name_get())
             for d in data:
                 d[field] = (d[field], data_dict[d[field]]) if d[field] else False
 
