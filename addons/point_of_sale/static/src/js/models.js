@@ -292,7 +292,7 @@ exports.PosModel = Backbone.Model.extend({
         loaded: function(self, locations){ self.shop = locations[0]; },
     },{
         model:  'product.pricelist',
-        fields: ['name', 'display_name'],
+        fields: ['name', 'display_name', 'discount_policy'],
         domain: function(self) { return [['id', 'in', self.config.available_pricelist_ids]]; },
         loaded: function(self, pricelists){
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
@@ -1286,6 +1286,51 @@ exports.Product = Backbone.Model.extend({
         // pricelist that have base == 'pricelist'.
         return price;
     },
+    get_view_pricelist_discount: function(pricelist){
+        return pricelist.discount_policy;
+    },
+    get_pricelist_discount: function(pricelist, product, quantity){
+
+        var price = product.lst_price;
+        var pricelist_discount_detail = {}
+        var category_ids = [];
+        var date = moment().startOf('day');
+        var category = product.categ;
+        while (category) {
+            category_ids.push(category.id);
+            category = category.parent;
+        }
+
+        var pricelist_items = _.filter(pricelist.items, function (item) {
+            return (! item.product_tmpl_id || item.product_tmpl_id[0] === product.product_tmpl_id) &&
+                   (! item.product_id || item.product_id[0] === product.id) &&
+                   (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+                   (! item.date_start || moment(item.date_start).isSameOrBefore(date)) &&
+                   (! item.date_end || moment(item.date_end).isSameOrAfter(date));
+        });
+
+        _.find(pricelist_items, function (rule) {
+            if (rule.min_quantity && quantity < rule.min_quantity) {
+                return false;
+            }
+
+            pricelist_discount_detail.compute_price = rule.compute_price;
+            if (rule.compute_price === 'fixed') {
+                pricelist_discount_detail.compute_price = rule.compute_price;
+                return true;
+            } else if (rule.compute_price === 'percentage') {
+                pricelist_discount_detail.pricelist_discount = rule.percent_price;
+                return true;
+            } else {
+                pricelist_discount_detail.pricelist_discount = rule.price_discount;
+                pricelist_discount_detail.price_surcharge = rule.price_surcharge;
+                return true;
+            }
+
+        });
+
+        return pricelist_discount_detail;
+    },
 });
 
 var orderline_id = 1;
@@ -1755,6 +1800,12 @@ exports.Orderline = Backbone.Model.extend({
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
+    },
+    display_view_pricelist_discount: function(){
+        return this.product.get_view_pricelist_discount(this.order.pricelist);
+    },
+    display_pricelist_discount: function(){
+        return this.product.get_pricelist_discount(this.order.pricelist, this.product, this.quantity);
     },
 });
 
@@ -2240,7 +2291,7 @@ exports.Order = Backbone.Model.extend({
     set_pricelist: function (pricelist) {
         var self = this;
         this.pricelist = pricelist;
-
+        
         var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
             return ! line.price_manually_set;
         });

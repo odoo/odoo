@@ -1286,13 +1286,24 @@
                         <t t-esc="line.get_unit().name" />
                     </li>
                 </t>
+                <t t-if="line.display_view_pricelist_discount() == 'without_discount'">
+                    <t t-if="line.display_pricelist_discount().compute_price != 'fixed'">
+                        <li class="info">
+                            With a 
+                            <em>
+                                <t t-esc='line.display_pricelist_discount().pricelist_discount'/>%
+                            </em>
+                            pricelist discount
+                        </li>
+                    </t>
+                </t>
                 <t t-if="line.get_discount_str() !== '0'">
                     <li class="info">
                         With a 
                         <em>
                             <t t-esc="line.get_discount_str()" />%
                         </em>
-                        discount
+                        manually discount
                     </li>
                 </t>
             </ul>
@@ -1471,8 +1482,15 @@
                         <t t-esc="orderline.get_product().display_name"/>
                          <t t-if="orderline.get_discount() > 0">
                             <div class="pos-disc-font">
-                                With a <t t-esc="orderline.get_discount()"/>% discount
+                                With a <t t-esc="orderline.get_discount()"/>% manually discount
                             </div>
+                        </t>
+                        <t t-if="orderline.display_view_pricelist_discount() == 'without_discount'">
+                            <t t-if="orderline.display_pricelist_discount().compute_price != 'fixed'">
+                                <div class="pos-disc-font">
+                                    With a <t t-esc='orderline.display_pricelist_discount().pricelist_discount'/>% pricelist discount
+                                </div>
+                            </t>
                         </t>
                     </td>
                     <td class="pos-right-align">
