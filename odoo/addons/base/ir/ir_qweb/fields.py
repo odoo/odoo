@@ -172,6 +172,11 @@ class DateConverter(models.AbstractModel):
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
+        if len(value) > 10:
+            value = fields.Datetime.from_string(value)
+            value = fields.Datetime.context_timestamp(self, value)
+            value = fields.Datetime.to_string(value)
+
         if isinstance(value, basestring):
             if len(value) > 10:  # datetime to be displayed as date
                 value = fields.Datetime.from_string(value)
