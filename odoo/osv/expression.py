@@ -357,6 +357,10 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         return '%s' % alias, '%s' % _quote(alias)
     for link in joined_tables:
         alias += '__' + link[1]
+    alias = truncate_alias(alias)
+    return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
+
+def truncate_alias(alias):
     # Use an alternate alias scheme if length exceeds the PostgreSQL limit
     # of 63 characters.
     if len(alias) >= 64:
@@ -367,8 +371,7 @@ def generate_table_alias(src_table_alias, joined_tables=[]):
         ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
         alias = "%s_%s" % (
             alias[:ALIAS_PREFIX_LENGTH], alias_hash)
-    return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
-
+    return alias
 
 def get_alias_from_query(from_query):
     """ :param string from_query: is something like :
@@ -578,7 +581,7 @@ class ExtendedLeaf(object):
         alias = self._models[0]._table
         for context in self.join_context:
             previous_alias = alias
-            alias += '__' + context[4]
+            alias = truncate_alias(alias + '__' + context[4])
             table_joins = contexts.setdefault(previous_alias, [])
             join = (alias, context[2], context[3], context[5])
             if join not in table_joins:
