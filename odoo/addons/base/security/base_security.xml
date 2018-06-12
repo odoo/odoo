@@ -152,7 +152,7 @@
             <field name="name">res.partner.rule.private.employee</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="domain_force">
-                [('type', '!=', 'private')]
+                ['|', ('type', '!=', 'private'), ('type', '=', False)]
             </field>
             <field name="groups" eval="[
                 (4, ref('base.group_user')),
