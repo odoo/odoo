@@ -1695,14 +1695,11 @@ class stock_picking(models.Model):
                     self.do_recompute_remaining_quantities(cr, uid, [picking.id], context=context)
 
                 #split move lines if needed
-                toassign_move_ids = []
                 for move in picking.move_lines:
                     remaining_qty = move.remaining_qty
                     if move.state in ('done', 'cancel'):
                         #ignore stock moves cancelled or already done
                         continue
-                    elif move.state == 'draft':
-                        toassign_move_ids.append(move.id)
                     if float_compare(remaining_qty, 0,  precision_rounding = move.product_id.uom_id.rounding) == 0:
                         if move.state in ('draft', 'assigned', 'confirmed'):
                             todo_move_ids.append(move.id)
@@ -1710,8 +1707,6 @@ class stock_picking(models.Model):
                                 float_compare(remaining_qty, move.product_qty, precision_rounding = move.product_id.uom_id.rounding) < 0:
                         new_move = stock_move_obj.split(cr, uid, move, remaining_qty, context=notrack_context)
                         todo_move_ids.append(move.id)
-                        #Assign move as it was assigned before
-                        toassign_move_ids.append(new_move)
                 todo_move_ids = list(set(todo_move_ids))
                 if todo_move_ids and not context.get('do_only_split'):
                     self.pool.get('stock.move').action_done(cr, uid, todo_move_ids, context=context)
