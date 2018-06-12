@@ -165,7 +165,7 @@ var ReinitializeFieldMixin =  _.extend({}, ReinitializeWidgetMixin, {
 
 /**
     A mixin containing some useful methods to handle completion inputs.
-    
+
     The widget containing this option can have these arguments in its widget options:
     - no_quick_create: if true, it will disable the quick create
 */
@@ -896,7 +896,7 @@ var FormViewDialog = ViewDialog.extend({
         var self = this;
         self._super();
         self.init_dataset();
-        
+
         if (self.res_id) {
             self.dataset.ids = [self.res_id];
             self.dataset.index = 0;
@@ -958,8 +958,11 @@ var SelectCreateDialog = ViewDialog.extend({
 
         _.defaults(this.options, { initial_view: "search" });
         this.initial_ids = this.options.initial_ids;
+        if (parent.options.no_create==true){
+            this.options.no_create=true
+        }
     },
-    
+
     open: function() {
         this._super();
         this.init_dataset();
@@ -1071,7 +1074,7 @@ var DomainEditorDialog = SelectCreateDialog.extend({
                 get_groupby: function () { return []; },
                 get_domain: function () { return options.default_domain; },
             },
-            values: [{label: _t("Selected domain"), value: null}],            
+            values: [{label: _t("Selected domain"), value: null}],
         }});
 
         this._super(parent, options);
