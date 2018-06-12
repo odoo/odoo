@@ -9074,6 +9074,137 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with sequence field, override default_get, bottom when inline', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+
+        this.data.turtle.fields.turtle_int.default = 10;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // starting condition
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa");
+
+        // click add a new line
+        // save the record
+        // check line is at the correct place
+
+        var inputText = 'ninja';
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
+        form.destroy();
+    });
+
+    QUnit.test('one2many with sequence field, override default_get, top when inline', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+
+        this.data.turtle.fields.turtle_int.default = 10;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // starting condition
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa");
+
+        // click add a new line
+        // save the record
+        // check line is at the correct place
+
+        var inputText = 'ninja';
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual($('.o_data_cell').text(), inputText + "blipyopkawa");
+        form.destroy();
+    });
+
+    QUnit.test('one2many with sequence field, override default_get, bottom when popup', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+
+        this.data.turtle.fields.turtle_int.default = 10;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            // NOTE: at some point we want to fix this in the framework so that an invisible field is not required.
+                            '<field name="turtle_int" invisible="1"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // starting condition
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa");
+
+        // click add a new line
+        // save the record
+        // check line is at the correct place
+
+        var inputText = 'ninja';
+        $('.o_field_x2many_list_row_add a').click();
+        $('.o_input[name="turtle_foo"]').val(inputText).trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click();
+
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
+
+        $('.o_form_button_save').click();
+        assert.strictEqual($('.o_data_cell').text(), "blipyopkawa" + inputText);
+        form.destroy();
+    });
+
     QUnit.test('one2many with sequence field, fetch name_get from empty list', function (assert) {
         // There was a bug where a RPC would fail because no route was set.
         // The scenario is:
