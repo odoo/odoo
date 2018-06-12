@@ -391,7 +391,7 @@ class AlarmManager(models.AbstractModel):
                     if at_least_one and not last_found:  # if the precedent event had an alarm but not this one, we can stop the search for this event
                         break
             else:
-                in_date_format = datetime.strptime(meeting.start, DEFAULT_SERVER_DATETIME_FORMAT)
+                in_date_format = meeting.start
                 last_found = self.do_check_alarm_for_one_date(in_date_format, meeting, max_delta, 0, 'email', after=last_notif_mail, missing=True)
                 for alert in last_found:
                     self.do_mail_reminder(alert)

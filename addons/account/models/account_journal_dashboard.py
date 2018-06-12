@@ -76,7 +76,7 @@ class account_journal(models.Model):
                         """
         self.env.cr.execute(query, (self.id, last_month, today))
         for val in self.env.cr.dictfetchall():
-            date = datetime.strptime(val['date'], DF)
+            date = val['date']
             if val['date'] != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
             amount -= val['amount']
@@ -92,7 +92,7 @@ class account_journal(models.Model):
     @api.multi
     def get_bar_graph_datas(self):
         data = []
-        today = datetime.strptime(fields.Date.context_today(self), DF)
+        today = fields.Date.context_today(self)
         data.append({'label': _('Past'), 'value':0.0, 'type': 'past'})
         day_of_week = int(format_datetime(today, 'e', locale=self._context.get('lang') or 'en_US'))
         first_day_of_week = today + timedelta(days=-day_of_week+1)

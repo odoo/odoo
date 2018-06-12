@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 import odoo.tests
+from odoo import fields
 
 from datetime import datetime
 
@@ -19,10 +19,10 @@ class TestFiscalPosition(AccountingTestCase):
         :param expected_date_from: The expected date_from after computation.
         :param expected_date_to: The expected date_to after computation.
         '''
-        current_date = datetime.strptime(date, DEFAULT_SERVER_DATE_FORMAT)
+        current_date = fields.Date.from_string(date)
         res = company.compute_fiscalyear_dates(current_date)
-        self.assertEqual(res['date_from'].strftime(DEFAULT_SERVER_DATE_FORMAT), expected_date_from)
-        self.assertEqual(res['date_to'].strftime(DEFAULT_SERVER_DATE_FORMAT), expected_date_to)
+        self.assertEqual(res['date_from'], fields.Date.from_string(expected_date_from))
+        self.assertEqual(res['date_to'], fields.Date.from_string(expected_date_to))
 
     def test_default_fiscal_year(self):
         '''Basic case with a fiscal year xxxx-01-01 - xxxx-12-31.'''

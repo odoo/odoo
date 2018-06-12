@@ -43,11 +43,11 @@ class BusPresence(models.Model):
         # update the presence or a create a new one
         if not presence:  # create a new presence for the user
             values['user_id'] = self._uid
-            values['last_presence'] = last_presence.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            values['last_presence'] = last_presence
             self.create(values)
         else:  # update the last_presence if necessary, and write values
-            if datetime.datetime.strptime(presence.last_presence, DEFAULT_SERVER_DATETIME_FORMAT) < last_presence:
-                values['last_presence'] = last_presence.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            if presence.last_presence < last_presence:
+                values['last_presence'] = last_presence
             # Hide transaction serialization errors, which can be ignored, the presence update is not essential
             with tools.mute_logger('odoo.sql_db'):
                 presence.write(values)
