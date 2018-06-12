@@ -58,6 +58,20 @@ class test_search(common.TransactionCase):
         id_desc_active_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], id_desc_active_desc, "Search with 'ID DESC, ACTIVE DESC' order failed.")
 
+        # Parent store is updated according to changes in _parent_order fields
+        init = self.registry._init  # Don't circumvent parent store computation at this point
+        self.registry._init = False
+        self.patch_order('ir.ui.menu', 'parent_left', parent_order='name')
+        menu_obj = self.env['ir.ui.menu'].with_context({'ir.ui.menu.full_list': True})
+        parent = menu_obj.create({'name': 'Top'})
+        child_a = menu_obj.create({'name': 'A', 'parent_id': parent.id})
+        child_b = menu_obj.create({'name': 'B', 'parent_id': parent.id})
+        ids = [parent.id, child_a.id, child_b.id]
+        self.assertEqual(ids, menu_obj.search([('id', 'in', ids)]).ids, 'Unexpected order after creating a menu hierarchy')
+        child_a.write({'name': 'Z'})
+        self.assertEqual([parent.id, child_b.id, child_a.id], menu_obj.search([('id', 'in', ids)]).ids, 'Unexpected order after changing a menu name')
+        self.registry._init = init
+
     def test_10_inherits_m2order(self):
         registry, cr, uid = self.registry, self.cr, self.uid
         users_obj = registry('res.users')

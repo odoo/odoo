@@ -153,17 +153,23 @@ class TransactionCase(BaseCase):
             self.cr.rollback()
             self.cr.close()
 
-    def patch_order(self, model, order):
+    def patch_order(self, model, order, parent_order=None):
         m_e = self.env[model]
         m_r = self.registry(model)
 
         old_order = m_e._order
+        if parent_order is not None:
+            old_parent_order = m_e._parent_order
 
         @self.addCleanup
         def cleanup():
             m_r._order = type(m_e)._order = old_order
+            if parent_order is not None:
+                m_r._parent_order = type(m_e)._parent_order = old_parent_order
 
         m_r._order = type(m_e)._order = order
+        if parent_order is not None:
+            m_r._parent_order = type(m_e)._parent_order = parent_order
 
 
 class SingleTransactionCase(BaseCase):
