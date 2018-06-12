@@ -125,7 +125,7 @@ class LunchOrder(models.Model):
         """
         date_order = self.date
         date_today = fields.Date.context_today(self)
-        if (date_order < date_today):
+        if date_order < date_today:
             raise ValidationError(_('The date of your order is in the past.'))
 
     @api.one
