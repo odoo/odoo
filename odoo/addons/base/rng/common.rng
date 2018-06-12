@@ -383,5 +383,27 @@
 
         </rng:element>
     </rng:define>
+<!--
+    <rng:define name="control">
+        <rng:element name="control">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:oneOrMore>
+                <rng:ref name="create"/>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
 
+    <rng:define name="create">
+        <rng:element name="create">
+            <rng:ref name="overload"/>
+            <rng:ref name="access_rights"/>
+            <rng:ref name="modifiable"/>
+            <rng:attribute name="string"/>
+            <rng:attribute name="context"/>
+            <rng:optional><rng:attribute name="always-show-dialog"/></rng:optional>
+        </rng:element>
+    </rng:define>
+ -->
 </rng:grammar>

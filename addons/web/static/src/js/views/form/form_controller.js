@@ -585,14 +585,17 @@ var FormController = BasicController.extend({
      */
     _onOpenOne2ManyRecord: function (event) {
         event.stopPropagation();
-        var data = event.data;
+        var data = event.data || {};
         var record;
+        var titleExtend = data.titleExtend || '';
+        var disable_multiple_selection = data.disable_multiple_selection ? true : false;
         if (data.id) {
             record = this.model.get(data.id, {raw: true});
         }
 
         new dialogs.FormViewDialog(this, {
             context: data.context,
+            disable_multiple_selection: disable_multiple_selection,
             domain: data.domain,
             fields_view: data.fields_view,
             model: this.model,
@@ -603,7 +606,7 @@ var FormController = BasicController.extend({
             res_id: record && record.res_id,
             res_model: data.field.relation,
             shouldSaveLocally: true,
-            title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
+            title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string) + titleExtend,
         }).open();
     },
     /**

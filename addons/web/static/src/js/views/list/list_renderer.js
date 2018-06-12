@@ -184,6 +184,9 @@ var ListRenderer = BasicRenderer.extend({
         self.hasHandle = false;
         self.handleField = null;
         this.columns = _.reject(this.arch.children, function (c) {
+            if (c.tag === 'control') {
+                return true;
+            }
             var reject = c.attrs.modifiers.column_invisible;
             // If there is an evaluated domain for the field we override the node
             // attribute to have the evaluated modifier value.

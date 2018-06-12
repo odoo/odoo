@@ -1268,9 +1268,14 @@ var FieldOne2Many = FieldX2Many.extend({
      * @param {Object} params
      */
     _openFormDialog: function (params) {
+        var context = this.record.getContext(this.recordParams);
+        // We allow additional context, this is used for example to define
+        // default values when adding new lines to a one2many
+        // with control/create tags.
+        context = _.extend({}, context, params.contextExtend);
         this.trigger_up('open_one2many_record', _.extend(params, {
             domain: this.record.getDomain(this.recordParams),
-            context: this.record.getContext(this.recordParams),
+            context: context,
             field: this.field,
             fields_view: this.attrs.views && this.attrs.views.form,
             parentID: this.value.id,
@@ -1293,9 +1298,10 @@ var FieldOne2Many = FieldX2Many.extend({
      */
     _onAddRecord: function (ev) {
         var self = this;
+        var data = ev.data || {};
         // we don't want interference with the components upstream.
         ev.stopPropagation();
-        if (this.editable) {
+        if (this.editable && !data.alwaysShowDialog) {
             if (!this.activeActions.create) {
                 if (ev.data.onFail) {
                     ev.data.onFail();
@@ -1312,9 +1318,11 @@ var FieldOne2Many = FieldX2Many.extend({
             }
         } else {
             this._openFormDialog({
+                contextExtend: data.contextExtend,
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },
+                titleExtend: data.titleExtend,
             });
         }
     },
