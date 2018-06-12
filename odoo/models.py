@@ -2445,11 +2445,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         def process(key, definition):
             conname = '%s_%s' % (self._table, key)
-            has_definition = tools.constraint_definition(cr, self._table, conname)
-            if not has_definition:
+            current_definition = tools.constraint_definition(cr, self._table, conname)
+            if not current_definition:
                 # constraint does not exists
                 tools.add_constraint(cr, self._table, conname, definition)
-            elif tools.constraint_comment(cr, self._table, conname) != definition:
+            elif current_definition != definition:
                 # constraint exists but its definition may have changed
                 tools.drop_constraint(cr, self._table, conname)
                 tools.add_constraint(cr, self._table, conname, definition)
