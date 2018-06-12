@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- Tax template for VAT -->
+        <record id="sale_tax_template_vat20" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">10</field>
+            <field name="name">Реалізація з ПДВ 20%</field>
+            <field name="description">ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+        </record>
+        <record id="sale_tax_template_vat7" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">11</field>
+            <field name="name">Реалізація з ПДВ 7%</field>
+            <field name="description">ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+        </record>
+        <record id="sale_tax_template_vat0" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">12</field>
+            <field name="name">Реалізація з ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+        </record>
+        <record id="sale_tax_template_vat_free" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">13</field>
+            <field name="name">Реалізація звільнена від ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+        </record>
+        <record id="sale_tax_template_vat_not" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">14</field>
+            <field name="name">Реалізація не є об’єктом ПДВ</field>
+            <field name="description">Не є ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">sale</field>
+            <field name="account_id" ref="ua_ias_1204"/>
+            <field name="refund_account_id" ref="ua_ias_1204"/>
+        </record>
+
+        <record id="purchase_tax_template_vat20" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">20</field>
+            <field name="name">Придбання з ПДВ 20%</field>
+            <field name="description">ПДВ 20%</field>
+            <field name="amount">20</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+        </record>
+        <record id="purchase_tax_template_vat7" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">21</field>
+            <field name="name">Придбання з ПДВ 7%</field>
+            <field name="description">ПДВ 7%</field>
+            <field name="amount">7</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+        </record>
+        <record id="purchase_tax_template_vat0" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">22</field>
+            <field name="name">Придбання з ПДВ 0%</field>
+            <field name="description">ПДВ 0%</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+        </record>
+        <record id="purchase_tax_template_vat_free" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">23</field>
+            <field name="name">Придбання звільнене від ПДВ</field>
+            <field name="description">Звільнено від ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+        </record>
+        <record id="purchase_tax_template_vat_not" model="account.tax.template">
+            <field name="chart_template_id" ref="l10n_ua_ias_chart_template"/>
+            <field name="sequence">24</field>
+            <field name="name">Придбання не є об’єктом ПДВ</field>
+            <field name="description">Не є ПДВ</field>
+            <field name="amount">0</field>
+            <field name="type_tax_use">purchase</field>
+            <field name="account_id" ref="ua_ias_1140"/>
+            <field name="refund_account_id" ref="ua_ias_1140"/>
+        </record>
+    </data>
+</openerp>
