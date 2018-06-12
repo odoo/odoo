@@ -14,6 +14,7 @@ odoo.define('web.AbstractController', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var AbstractAction = require('web.AbstractAction');
@@ -372,7 +373,8 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             return $();
         }
 
-        var $switchButtons = $(QWeb.render('ControlPanel.SwitchButtons', {
+        var template = config.device.isMobile ? 'ControlPanel.SwitchButtons.Mobile' : 'ControlPanel.SwitchButtons';
+        var $switchButtons = $(QWeb.render(template, {
             views: views,
         }));
         // create bootstrap tooltips
@@ -380,10 +382,17 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             $switchButtons.filter('.o_cp_switch_' + view.type).tooltip();
         });
         // add onclick event listener
-        $switchButtons.filter('button').click(_.debounce(function (event) {
+        var $switchButtonsFiltered = config.device.isMobile ? $switchButtons.find('button') : $switchButtons.filter('button');
+        $switchButtonsFiltered.click(_.debounce(function (event) {
             var viewType = $(event.target).data('view-type');
             self.trigger_up('switch_view', {view_type: viewType});
         }, 200, true));
+
+        if (config.device.isMobile) {
+            // set active view's icon as view switcher button's icon
+            var activeView = _.findWhere(views, {type: this.viewType});
+            $switchButtons.find('.o_switch_view_button_icon').addClass('fa fa-lg ' + activeView.icon);
+        }
 
         return $switchButtons;
     },
