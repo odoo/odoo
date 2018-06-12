@@ -795,7 +795,7 @@ class WebsiteSale(http.Controller):
            did go to a payment.acquirer website but closed the tab without
            paying / canceling
         """
-        order = request.website.sale_get_order()
+        order = request.website.with_context(checkout_complete=True).sale_get_order()
         redirection = self.checkout_redirection(order)
         if redirection:
             return redirection
@@ -830,7 +830,7 @@ class WebsiteSale(http.Controller):
         elif so_id:
             order = request.env['sale.order'].search([('id', '=', so_id)])
         else:
-            order = request.website.sale_get_order()
+            order = request.website.with_context(checkout_complete=True).sale_get_order()
         if not order or not order.order_line or acquirer_id is None:
             return False
 
@@ -851,7 +851,7 @@ class WebsiteSale(http.Controller):
 
         :param int pm_id: id of the payment.token that we want to use to pay.
         """
-        order = request.website.sale_get_order()
+        order = request.website.with_context(checkout_complete=True).sale_get_order()
         # do not crash if the user has already paid and try to pay again
         if not order:
             return request.redirect('/shop/?error=no_order')
@@ -908,7 +908,7 @@ class WebsiteSale(http.Controller):
             tx = request.env['payment.transaction'].browse(transaction_id)
 
         if sale_order_id is None:
-            order = request.website.sale_get_order()
+            order = request.website.with_context(checkout_complete=True).sale_get_order()
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
