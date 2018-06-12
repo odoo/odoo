@@ -703,7 +703,6 @@ class expression(object):
                 :var obj comodel: relational model of field (field.comodel)
                     (res_partner.bank_ids -> res.partner.bank)
         """
-
         def to_ids(value, comodel, context=None, limit=None):
             """ Normalize a single id or name, or a list of those, into a list of ids
                 :param {int,long,basestring,list,tuple} value:
@@ -818,7 +817,7 @@ class expression(object):
 
             elif left == 'id' and operator == 'child_of':
                 ids2 = to_ids(right, model, context)
-                dom = child_of_domain(left, ids2, model)
+                dom = child_of_domain(left, ids2, model, context=context)
                 for dom_leaf in reversed(dom):
                     new_leaf = create_substitution_leaf(leaf, dom_leaf, model)
                     push(new_leaf)
@@ -938,9 +937,11 @@ class expression(object):
             elif column._type == 'one2many' and operator == 'child_of':
                 ids2 = to_ids(right, comodel, context)
                 if column._obj != model._name:
-                    dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                    dom = child_of_domain(left, ids2, comodel,
+                                          prefix=column._obj, context=context)
                 else:
-                    dom = child_of_domain('id', ids2, model, parent=left)
+                    dom = child_of_domain('id', ids2, model, parent=left,
+                                          context=context)
                 for dom_leaf in reversed(dom):
                     push(create_substitution_leaf(leaf, dom_leaf, model))
 
@@ -994,7 +995,7 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     ids2 = to_ids(right, comodel, context)
-                    dom = child_of_domain('id', ids2, comodel)
+                    dom = child_of_domain('id', ids2, comodel, context=context)
                     ids2 = comodel.search(cr, uid, dom, context=context)
                     if comodel == model:
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
@@ -1038,9 +1039,11 @@ class expression(object):
                 if operator == 'child_of':
                     ids2 = to_ids(right, comodel, context)
                     if column._obj != model._name:
-                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj,
+                                              context=context)
                     else:
-                        dom = child_of_domain('id', ids2, model, parent=left)
+                        dom = child_of_domain('id', ids2, model, parent=left,
+                                              context=context)
                     for dom_leaf in reversed(dom):
                         push(create_substitution_leaf(leaf, dom_leaf, model))
                 else:
