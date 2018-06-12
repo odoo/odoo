@@ -171,18 +171,27 @@ root can have the following attributes:
         replaced by ``decoration-{$name}``
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
-    record's attributes.
+    record's attributes. For example,
 
-    Values are Python expressions. For each record, the expression is evaluated
+    .. code-block:: xml
+
+        <tree
+            string="Idea Categories"
+            decoration-text-info="[('state', '=', 'draft')]"
+            decoration-text-danger="[('state', '=', 'trashed')]"
+        >
+            <field name="name"/>
+            <field name="state"/>
+        </tree>
+
+    Values are domains. For each record, the domain is evaluated
     with the record's attributes as context values and if ``true``, the
     corresponding style is applied to the row. Other context values are
     ``uid`` (the id of the current user) and ``current_date`` (the current date
     as a string of the form ``yyyy-MM-dd``).
 
-    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any `bootstrap contextual color
-    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
-    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
+    ``{$name}`` can be any string that is both accepted as an XML attribute and as a CSS class. Each decoration *decoration-X* will be mapped to a CSS class *X*.
+
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
     corresponding attribute to ``false``

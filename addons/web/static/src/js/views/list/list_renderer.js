@@ -8,20 +8,9 @@ var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
+var Domain = require('web.Domain');
 
 var _t = core._t;
-
-// Allowed decoration on the list's rows: bold, italic and bootstrap semantics classes
-var DECORATIONS = [
-    'decoration-bf',
-    'decoration-it',
-    'decoration-danger',
-    'decoration-info',
-    'decoration-muted',
-    'decoration-primary',
-    'decoration-success',
-    'decoration-warning'
-];
 
 var FIELD_CLASSES = {
     float: 'o_list_number',
@@ -29,6 +18,8 @@ var FIELD_CLASSES = {
     monetary: 'o_list_number',
     text: 'o_list_text',
 };
+
+var DECORATION_PREFIX = 'decoration-';
 
 var ListRenderer = BasicRenderer.extend({
     events: {
@@ -53,12 +44,17 @@ var ListRenderer = BasicRenderer.extend({
         this.hasHandle = false;
         this.handleField = 'sequence';
         this._processColumns(params.columnInvisibleFields || {});
-        this.rowDecorations = _.chain(this.arch.attrs)
-            .pick(function (value, key) {
-                return DECORATIONS.indexOf(key) >= 0;
-            }).mapObject(function (value) {
-                return py.parse(py.tokenize(value));
-            }).value();
+
+        var self = this;
+        _.each(this.arch.attrs, function (value, key) {
+            if (key.startsWith(DECORATION_PREFIX)) {
+                self.decorations = self.decorations || [];
+                self.decorations.push({
+                    className: key.replace(DECORATION_PREFIX, ''),
+                    expression: value,
+                });
+            }
+        });
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
@@ -589,7 +585,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
-        this._setDecorationClasses(record, $tr);
+        if (this.decorations) {
+            this._setDecorationClasses(record, $tr);
+        }
         return $tr;
     },
     /**
@@ -678,21 +676,31 @@ var ListRenderer = BasicRenderer.extend({
         return this._super();
     },
     /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
+     * Each line can be decorated. The arch description of the list may have
+     * several decoration- attributes with a domain as value.
+     *
+     * Then, for each record, we check if the expression matches
+     * for the record, and add the css class to the element.
+     * This method is concerned with the computation of the list of css classes
+     * for a given record.
+     *
+     * The class name will be the attribute
+     * name after removing the decoration- prefix.
      *
      * @private
      * @param {Object} record a basic model record
      * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
      */
     _setDecorationClasses: function (record, $tr) {
-        _.each(this.rowDecorations, function (expr, decoration) {
-            var cssClass = decoration.replace('decoration', 'text');
-            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+        this.decorations.forEach(function (dec) {
+            var isToggled;
+            if (dec.expression === undefined || dec.expression === false || dec.expression === true) {
+                isToggled = !!dec.expression;
+            } else {
+                isToggled = new Domain(dec.expression, record.evalContext)
+                    .compute(record.evalContext);
+            }
+            $tr.toggleClass(dec.className, isToggled);
         });
     },
     /**
@@ -728,9 +736,9 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to 
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
-     * 
+     *
      * @private
      * @param {KeyboardEvent} e
      */
@@ -744,8 +752,8 @@ var ListRenderer = BasicRenderer.extend({
                 case $.ui.keyCode.UP:
                     $(e.currentTarget).prev().find('input').focus();
                     e.preventDefault();
-                    break; 
-                case $.ui.keyCode.ENTER: 
+                    break;
+                case $.ui.keyCode.ENTER:
                     e.preventDefault();
                     var id = $(e.currentTarget).data('id');
                     if (id) {

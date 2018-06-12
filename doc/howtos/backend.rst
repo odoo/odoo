@@ -991,26 +991,26 @@ behavior:
 
 ``decoration-{$name}``
     allow changing the style of a row's text based on the corresponding
-    record's attributes.
+    record's attributes. For example,
 
-    Values are Python expressions. For each record, the expression is evaluated
+    .. code-block:: xml
+
+        <tree
+            string="Idea Categories"
+            decoration-text-info="[('state', '=', 'draft')]"
+            decoration-text-danger="[('state', '=', 'trashed')]"
+        >
+            <field name="name"/>
+            <field name="state"/>
+        </tree>
+
+    Values are domains. For each record, the domain is evaluated
     with the record's attributes as context values and if ``true``, the
     corresponding style is applied to the row. Other context values are
     ``uid`` (the id of the current user) and ``current_date`` (the current date
     as a string of the form ``yyyy-MM-dd``).
 
-    ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
-    (``font-style: italic``), or any `bootstrap contextual color
-    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
-    ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
-
-    .. code-block:: xml
-
-        <tree string="Idea Categories" decoration-info="state=='draft'"
-            decoration-danger="state=='trashed'">
-            <field name="name"/>
-            <field name="state"/>
-        </tree>
+    ``{$name}`` can be any string that is both accepted as an XML attribute and as a CSS class. Each decoration *decoration-X* will be mapped to a CSS class *X*.
 
 ``editable``
     Either ``"top"`` or ``"bottom"``. Makes the tree view editable in-place
@@ -1460,7 +1460,7 @@ for editing and merging PO/POT files.
          | - pt_BR.po # Brazilian Portuguese translation
          | (...)
 
-.. tip:: 
+.. tip::
 
    By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
@@ -1509,7 +1509,7 @@ Printed reports
 ---------------
 
 Odoo 11.0 uses a report engine based on :ref:`reference/qweb`,
-`Twitter Bootstrap`_ and Wkhtmltopdf_. 
+`Twitter Bootstrap`_ and Wkhtmltopdf_.
 
 A report is a combination two elements:
 
