@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="remove_external_snippets" inherit_id="website.external_snippets">
-    <xpath expr="//t[@t-install='mass_mailing']" position="replace"/>
-</template>
-
-<template id="snippets" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
-        <t groups="website_mass_mailing.group_website_popup_on_exit">
-            <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_popup.png"/>
-        </t>
-    </xpath>
-
-    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
-    </xpath>
-</template>
-
 <template id="s_newsletter_subscribe_form" name="Newsletter">
     <div class="oe_snippet_body input-group js_subscribe" data-list-id="0">
         <input type="email" name="email" class="js_subscribe_email form-control" placeholder="your email..."/>
@@ -48,6 +32,22 @@
             </div>
         </div>
     </div>
+</template>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='mass_mailing']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+        <t groups="website_mass_mailing.group_website_popup_on_exit">
+            <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_popup.png"/>
+        </t>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+    </xpath>
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">

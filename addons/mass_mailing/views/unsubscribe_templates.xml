@@ -145,7 +145,7 @@
         </div>
     </template>
 
-    <template id="mailing_list_subcription">
+    <template id="mailing_list_subscription">
         <div class="container mt8">
             <div class="row">
                 <form action="/mail/mailing/unsubscribe" method="POST" id="mailing_list_subscription_form">
@@ -248,20 +248,53 @@
     </template>
 
     <template id="page_unsubscribe" name="Unsubscribe">
-        <t t-call="website.layout">
-            <t t-call="website_mass_mailing.unsubscribe"/>
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribe"/>
         </t>
     </template>
 
     <template id="page_unsubscribed" name="Unsubscribed">
-        <t t-call="website.layout">
-            <t t-call="website_mass_mailing.unsubscribed"/>
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.unsubscribed"/>
         </t>
     </template>
 
     <template id="page_list_subscription" name="Mailing List Subscription">
-        <t t-call="website.layout">
-            <t t-call="website_mass_mailing.mailing_list_subcription"/>
+        <t t-call="mass_mailing.layout">
+            <t t-call="mass_mailing.mailing_list_subscription"/>
+        </t>
+    </template>
+
+        <!-- new layout for mass_mailing -->
+    <template id="mass_mailing.layout" name="Mass Mailing Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="mass_mailing.assets_backend"/>
+            </t>
+            <body class="o_white_body">
+                <header>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo"/>
+                    </div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <xpath expr="//footer" position="replace">
+                <div class="container mt16 mb8">
+                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                    </div>
+                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                    </div>
+                </div>
+            </xpath>
         </t>
     </template>
 </odoo>

@@ -12,7 +12,6 @@ Add a snippet in the website builder to subscribe a mass_mailing list
     'data': [
         'security/mass_mailing_security.xml',
         'views/website_mass_mailing_templates.xml',
-        'views/unsubscribe_templates.xml',
         'views/snippets_templates.xml',
         'views/mass_mailing_view.xml',
         'views/res_config_settings_views.xml',
