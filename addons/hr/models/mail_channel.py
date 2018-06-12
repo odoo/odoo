@@ -11,10 +11,15 @@ class Channel(models.Model):
     def _subscribe_users(self):
         super(Channel, self)._subscribe_users()
         for mail_channel in self:
-            mail_channel.write(
-                {'channel_partner_ids':
-                     [(4, pid) for pid in
-                      mail_channel.department_id.mapped('member_ids').mapped('user_id').mapped('partner_id').ids]})
+            if mail_channel.public == 'department':
+                # Remove partners that are not in selected department
+                mail_channel.write(
+                    {'channel_partner_ids':
+                        [(3, pid) for pid in [pid for pid in mail_channel.channel_partner_ids.ids if pid not in mail_channel.department_id.mapped('member_ids').mapped('user_id').mapped('partner_id').ids]]})
+                # Add partners that are in selected department
+                mail_channel.write(
+                    {'channel_partner_ids':
+                        [(4, pid) for pid in mail_channel.department_id.mapped('member_ids').mapped('user_id').mapped('partner_id').ids]})
 
     def write(self, vals):
         res = super(Channel, self).write(vals)
