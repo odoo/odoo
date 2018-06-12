@@ -33,9 +33,9 @@ QUnit.module('core', function () {
     QUnit.test('simple arithmetic', function(assert) {
         assert.expect(2);
 
-        var result = pyEval.py_eval("1 + 2");
+        var result = pyUtils.py_eval("1 + 2");
         assert.strictEqual(result, 3, "should properly evaluate sum");
-        result = pyEval.py_eval("42 % 5");
+        result = pyUtils.py_eval("42 % 5");
         assert.strictEqual(result, 2, "should properly evaluate modulo operator");
     });
 
@@ -1209,9 +1209,10 @@ QUnit.module('core', function () {
     };
 
     QUnit.test("assemble domains", function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         assert.checkAssemble([], '&', "[]");
+        assert.checkAssemble(["[('a', '=', 1)]"], null, "[('a', '=', 1)]");
         assert.checkAssemble(
             ["[('a', '=', '1'), ('b', '!=', 2)]"],
             'AND',
@@ -1238,7 +1239,5 @@ QUnit.module('core', function () {
             "[('user_id', '=', uid)]"
         );
     });
-
 });
-
 });
