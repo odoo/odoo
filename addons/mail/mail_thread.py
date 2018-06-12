@@ -1943,6 +1943,11 @@ class mail_thread(osv.AbstractModel):
                 context=context
             )
             for header_follower in follower_obj.browse(cr, SUPERUSER_ID, header_follower_ids, context=context):
+                if not any(
+                    p.res_model == self._name
+                    for p in header_follower.subtype_ids.mapped('parent_id')
+                ):
+                    continue
                 for subtype in header_follower.subtype_ids:
                     if subtype.parent_id and subtype.parent_id.res_model == self._name:
                         new_followers.setdefault(header_follower.partner_id.id, set()).add(subtype.parent_id.id)
