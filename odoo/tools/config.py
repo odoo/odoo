@@ -105,7 +105,7 @@ class configmanager(object):
         group.add_option("-c", "--config", dest="config", help="specify alternate config file")
         group.add_option("-s", "--save", action="store_true", dest="save", default=False,
                           help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
-        group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for base module), requires -d")
+        group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list) or reinitialize one or more modules (comma-separated list, use \"all\" to reinitialize all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
