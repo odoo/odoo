@@ -93,14 +93,22 @@ QUnit.module('GroupByMenu', {
         groupByMenu.destroy();
     });
 
-    QUnit.test('click on groupby filter should activate it', function (assert) {
+    QUnit.test('click on a groupby filter (not of date type) should activate it', function (assert) {
         assert.expect(5);
 
-        var groupByMenu = createGroupByMenu(this.groupbys,
-            {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}}, {
+        this.groupbys = [{
+            isActive: false,
+            description: 'another group by',
+            fieldName: 'float_field',
+            itemId: 'green',
+            groupId: 1,
+        }];
+        this.fields = {float_field: {sortable: true, string: 'Super Float', type: 'float'}};
+
+        var groupByMenu = createGroupByMenu(this.groupbys, this.fields, {
             intercepts: {
                 menu_item_toggled: function(ev) {
-                    assert.strictEqual(ev.data.itemId, 'red');
+                    assert.strictEqual(ev.data.itemId, 'green');
                     assert.strictEqual(ev.data.isActive, true);
                 },
             },
@@ -111,7 +119,21 @@ QUnit.module('GroupByMenu', {
         assert.ok(groupByMenu.$('.o_menu_item:first').hasClass('selected'));
         assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
             'group by filter should still be visible');
+        groupByMenu.destroy();
+    });
 
+    QUnit.test('click on a groupby filter of date type should open menu option', function (assert) {
+        assert.expect(4);
+
+        var groupByMenu = createGroupByMenu(this.groupbys,
+            {fieldname: {sortable: true, string: 'Super Date', type: 'date', isDate: true}});
+        groupByMenu.$('button:first').click();
+        assert.ok(!groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        groupByMenu.$('.o_menu_item a').first().click();
+        assert.ok(!groupByMenu.$('.o_menu_item:first').hasClass('selected'));
+        assert.ok(groupByMenu.$('.o_menu_item:first').is(':visible'),
+            'group by filter should still be visible');
+        assert.ok(groupByMenu.$('.o_item_option').length, 5);
         groupByMenu.destroy();
     });
 

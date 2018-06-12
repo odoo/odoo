@@ -444,6 +444,14 @@ datetime.datetime = py.type('datetime', null, {
                 throw new Error('ValueError: No known conversion for ' + m);
             }));
     },
+    to_utc: function () {
+        var d = new Date(this.year, this.month, this.day, this.hour, this.minute, this.second);
+        var offset = d.getTimezoneOffset();
+        var kwargs = {minutes: py.float.fromJSON(offset)};
+        var timedelta = py.PY_call(py.extras.datetime.timedelta,[],kwargs);
+        var s = tmxxx(this.year, this.month, this.day + timedelta.days, this.hour, this.minute, this.second + timedelta.seconds);
+        return datetime.datetime.fromJSON(s.year, s.month, s.day, s.hour, s.minute, s.second);
+    },
     now: py.classmethod.fromJSON(function () {
         var d = new Date();
         return py.PY_call(datetime.datetime, [
@@ -462,6 +470,7 @@ datetime.datetime = py.type('datetime', null, {
              d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(),
              d.getUTCMilliseconds() * 1000]);
     }),
+
     combine: py.classmethod.fromJSON(function () {
         var args = py.PY_parseArgs(arguments, 'date time');
         return py.PY_call(datetime.datetime, [
