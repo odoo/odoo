@@ -80,8 +80,10 @@ class sale_order_line_make_invoice(osv.osv_memory):
                  @return:
 
             """
+            inv_obj = self.pool.get('account.invoice')
             inv = self._prepare_invoice(cr, uid, order, lines)
-            inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+            inv_id = inv_obj.create(cr, uid, inv)
+            inv_obj.button_reset_taxes(cr, uid, inv_id)
             return inv_id
 
         sales_order_line_obj = self.pool.get('sale.order.line')
