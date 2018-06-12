@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
 from odoo.exceptions import UserError
+import ast
 
 
 class SaleOrder(models.Model):
@@ -57,6 +58,10 @@ class SaleOrder(models.Model):
         view, if there is only one delivery order to show.
         '''
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
+
+        ctx = ast.literal_eval(action['context'].strip()) if 'context' in action else dict()
+        ctx.update({'default_origin': self.name})
+        action['context'] = str(ctx)
 
         pickings = self.mapped('picking_ids')
         if len(pickings) > 1:
