@@ -145,7 +145,11 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <tree
+                    string="Sales Orders"
+                    decoration-text-bf="[('message_needaction', '=', True)]"
+                    decoration-text-muted="[('state', '=', 'cancel')]"
+                >
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Order Number"/>
                     <field name="confirmation_date" string="Confirmation Date"/>
@@ -164,7 +168,12 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" class="o_sale_order" decoration-bf="message_needaction==True" decoration-muted="state=='cancel'">
+                <tree
+                    string="Quotation"
+                    class="o_sale_order"
+                    decoration-text-bf="[('message_needaction', '=', True)]"
+                    decoration-text-muted="[('state', '=', 'cancel')]"
+                >
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Quotation Number"/>
                     <field name="date_order" string="Quotation Date"/>
@@ -236,8 +245,8 @@
                             <field name="order_line"  mode="tree,kanban"
                                 attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
                                 <form string="Sales Order Lines" >
-                                    <group attrs="{'invisible': [('line_type', '=', 'section')]}">
-                                        <group>
+                                    <group>
+                                        <group attrs="{'invisible': [('line_type', '!=', 'product')]}">
                                             <field name="product_updatable" invisible="1"/>
                                             <field name="product_id"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
@@ -273,7 +282,7 @@
                                                 <field name="discount" class="oe_inline"/> %%
                                             </div>
                                         </group>
-                                        <group>
+                                        <group attrs="{'invisible': [('line_type', '!=', 'product')]}">
                                             <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
                                                 attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
@@ -288,53 +297,107 @@
                                         <field name="state" invisible="1"/>
                                         <label for="name"/>
                                         <field name="name"/>
-                                        <div groups="base.group_no_one" colspan='8'>
+                                        <div groups="base.group_no_one" colspan='8' attrs="{'invisible': [('line_type', '!=', 'product')]}">
                                             <label for="invoice_lines"/>
                                             <field name="invoice_lines"/>
                                         </div>
-                                    </group>
-                                    <group attrs="{'invisible': [('line_type', '!=', 'section')]}">
-                                        <group>
-                                            <field name="name" widget="char" string="Section Name" placeholder="Materials,Services"/>
+                                        <group attrs="{'invisible': [('line_type', '!=', 'section')]}">
                                             <field name="line_pagebreak"/>
                                             <field name="line_subtotal"/>
                                         </group>
                                     </group>
                                 </form>
-                                <tree string="Sales Order Lines" section_line="true" editable="bottom"
-                                    decoration-info="invoice_status=='to invoice'" decoration-danger="line_type == 'section'">
-                                    <field name="sequence" widget="handle"/>
+                                <tree
+                                    string="Sales Order Lines"
+                                    editable="bottom"
+                                    addLineCustomField="line_type"
+
+                                    decoration-text-info="[('invoice_status', '=', 'to invoice')]"
+
+                                    decoration-is-section="[('line_type', '=', 'section')]"
+                                    decoration-is-note="[('line_type', '=', 'note')]"
+                                >
+                                    <!-- if it is defined, it overrides the default button -->
+                                    <control>
+                                        <create string="Add a product" context="{'default_line_type': 'product'}" />
+                                        <create string="Add a section" context="{'default_line_type': 'section'}" always-show-dialog="1" />
+                                        <create string="Add a note" context="{'default_line_type': 'note'}" always-show-dialog="1" />
+                                    </control>
+
+
+                                    <field name="sequence" widget="handle" />
+                                    <!-- We do not display the type because we don't want the user to be bothered with that information if he has no section or note. -->
+                                    <field name="line_type" invisible="1"/>
                                     <field name="product_updatable" invisible="1"/>
-                                    <field name="product_id"
+                                    <field
+                                        name="product_id"
                                         attrs="{'readonly': [('product_updatable', '=', False)]}"
                                         force_save="1"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id,
-                                        'default_lst_price': price_unit, 'default_description_sale': name}"
-                                       />
-                                    <field name="line_type" invisible="1"/>
-                                    <field name="name" class="product_name"/>
-                                    <field name="product_uom_qty"
-                                        string="Ordered Qty"
-                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                        context="{
+                                            'partner_id': parent.partner_id,
+                                            'quantity': product_uom_qty,
+                                            'pricelist': parent.pricelist_id,
+                                            'uom':product_uom,
+                                            'company_id': parent.company_id,
+                                            'default_lst_price': price_unit,
+                                            'default_description_sale': name
+                                        }"
                                     />
-                                    <field name="qty_delivered"
-                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
+                                    <field name="name" class="product_name" />
+                                    <field
+                                        name="product_uom_qty"
+                                        string="Ordered Qty"
+                                        context="{
+                                            'partner_id': parent.partner_id,
+                                            'quantity': product_uom_qty,
+                                            'pricelist': parent.pricelist_id,
+                                            'uom': product_uom,
+                                            'company_id': parent.company_id
+                                        }"
+                                    />
+                                    <field
+                                        name="qty_delivered"
+                                        attrs="{
+                                            'column_invisible': [('parent.state', 'not in', ['sale', 'done'])],
+                                            'readonly': [('qty_delivered_method', '!=', 'manual')]
+                                        }"
+                                    />
                                     <field name="qty_delivered_manual" invisible="1"/>
                                     <field name="qty_delivered_method" invisible="1"/>
-                                    <field name="qty_invoiced"
-                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
+                                    <field
+                                        name="qty_invoiced"
+                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
+                                    />
                                     <field name="qty_to_invoice" invisible="1"/>
-                                    <field name="product_uom"
+                                    <field
+                                        name="product_uom"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
-                                        groups="uom.group_uom" options='{"no_open": True}'/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                    <field name="price_unit"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
-                                    <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
+                                        groups="uom.group_uom"
+                                        options='{"no_open": True}'
+                                    />
+                                    <field
+                                        name="analytic_tag_ids"
+                                        groups="analytic.group_analytic_tags"
+                                        widget="many2many_tags"
+                                    />
+                                    <field
+                                        name="price_unit"
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                                    />
+                                    <field
+                                        name="tax_id"
+                                        widget="many2many_tags"
+                                        options="{'no_create': True}"
+                                        domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                        attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
+                                    />
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                    <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
+                                    <field
+                                        name="price_subtotal"
+                                        widget="monetary"
+                                        groups="sale.group_show_price_subtotal"
+                                    />
                                     <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
@@ -414,18 +477,6 @@
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
-            </field>
-        </record>
-
-        <record id="layout_view_invoice_form" model="ir.ui.view">
-            <field name="name">account.invoice.form</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form" />
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
-                    <attribute name="section_line">true</attribute>
-                    <attribute name="decoration-danger">line_type == 'section'</attribute>
-                </xpath>
             </field>
         </record>
 

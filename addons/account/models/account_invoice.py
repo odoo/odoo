@@ -1608,6 +1608,8 @@ class AccountInvoiceLine(models.Model):
     line_pagebreak = fields.Boolean('Add pagebreak')
     line_subtotal = fields.Boolean('Add subtotal', default=True)
 
+    # TODO SHT : do here also what is done on sale order.
+
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         res = super(AccountInvoiceLine, self).fields_view_get(

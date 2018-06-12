@@ -712,6 +712,16 @@ class SaleOrder(models.Model):
 
         return groups
 
+    def _recompute_parent_line_id(self):
+        current_parent_id = False
+
+        for line in self.order_line:
+            if line.line_type == 'section':
+                line.parent_line_id = False
+                current_parent_id = line
+            else:
+                line.parent_line_id = current_parent_id
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
@@ -901,7 +911,7 @@ class SaleOrderLine(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
+    ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
     price_unit = fields.Float('Unit Price', digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
@@ -963,9 +973,12 @@ class SaleOrderLine(models.Model):
         'Delivery Lead Time', default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
 
-    line_type = fields.Selection([('section', 'Section'), ('note', 'Note'), ('product', 'Product')], default="product")
+    line_type = fields.Selection([('product', 'Product'), ('section', 'Section'), ('note', 'Note')], default="product")
     line_pagebreak = fields.Boolean('Add pagebreak')
     line_subtotal = fields.Boolean('Add subtotal', default=True)
+
+    parent_line_id = fields.Many2one('sale.order.line', index=True, string='Parent Line')
+    children_line_ids = fields.One2many('sale.order.line', 'parent_line_id', string='Children Lines')
 
     @api.multi
     @api.depends('state', 'is_expense')
@@ -1062,9 +1075,11 @@ class SaleOrderLine(models.Model):
         :param qty: float quantity to invoice
         """
         self.ensure_one()
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         res = {}
         account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
-        if not account and self.line_type != 'section':
+
+        if not account and self.line_type == 'product':
             raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') %
                 (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
@@ -1101,7 +1116,7 @@ class SaleOrderLine(models.Model):
         invoice_lines = self.env['account.invoice.line']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            if not float_is_zero(qty, precision_digits=precision) or line.line_type == 'section':
+            if not float_is_zero(qty, precision_digits=precision) or line.line_type != 'product':
                 vals = line._prepare_invoice_line(qty=qty)
                 vals.update({'invoice_id': invoice_id, 'sale_line_ids': [(6, 0, [line.id])]})
                 invoice_lines |= self.env['account.invoice.line'].create(vals)
@@ -1120,6 +1135,7 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
         base_price, currency = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
@@ -1133,6 +1149,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         if not self.product_id:
             return {'domain': {'product_uom': []}}
 
@@ -1179,13 +1196,9 @@ class SaleOrderLine(models.Model):
 
         return result
 
-    @api.onchange('line_type')
-    def product_line_type_change(self):
-        if not self.id:
-            self.sequence = max(self.order_id.order_line.mapped('sequence')) + 1
-
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return
@@ -1279,6 +1292,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         self.discount = 0.0
         if not (self.product_id and self.product_uom and
                 self.order_id.partner_id and self.order_id.pricelist_id and

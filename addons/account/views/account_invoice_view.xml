@@ -426,6 +426,7 @@
                     <notebook colspan="4">
                         <page string="Invoice Lines">
                             <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
+                                <!-- TODO SHT: also add decoration like on sale order for notes. -->
                                 <tree string="Invoice Lines"
                                     decoration-text-danger="line_type == 'section'" editable="bottom">
                                     <field name="sequence" widget="handle"/>
