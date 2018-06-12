@@ -255,6 +255,6 @@ class WebsiteEventController(http.Controller):
                 Attendees._prepare_attendee_values(registration))
 
         return request.render("website_event.registration_complete", {
-            'attendees': Attendees,
+            'attendees': Attendees.sudo(),
             'event': event,
         })
