@@ -222,12 +222,17 @@ class Employee(models.Model):
 
     @api.onchange('department_id')
     def _onchange_department(self):
-        self.parent_id = self.department_id.manager_id
+        if self.department_id:
+            self.parent_id = self.department_id.manager_id
+            # Auto-subscribe to channels
+            self.env['mail.channel'].search([('department_id', '=', self.department_id.id)])._subscribe_users()
 
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:
             self.update(self._sync_user(self.user_id))
+            # Auto-subscribe to channels
+            self.env['mail.channel'].search([('department_id', '=', self.department_id.id)])._subscribe_users()
 
     @api.onchange('user_id', 'resource_calendar_id')
     def _onchange_timezone(self):
