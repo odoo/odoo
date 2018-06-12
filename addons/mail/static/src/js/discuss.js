@@ -1,8 +1,9 @@
-odoo.define('mail.chat_discuss', function (require) {
+odoo.define('mail.Discuss', function (require) {
 "use strict";
 
-var ChatThread = require('mail.ChatThread');
-var composer = require('mail.composer');
+var BasicComposer = require('mail.composer.Basic');
+var ExtendedComposer = require('mail.composer.Extended');
+var ThreadWidget = require('mail.widget.Thread');
 
 var AbstractAction = require('web.AbstractAction');
 var config = require('web.config');
@@ -26,24 +27,24 @@ var _t = core._t;
  * validated.
  */
 var PartnerInviteDialog = Dialog.extend({
-    dialog_title: _t('Invite people'),
-    template: "mail.PartnerInviteDialog",
+    dialog_title: _t("Invite people"),
+    template: 'mail.PartnerInviteDialog',
 
     /**
      * @override
      * @param {integer|string} channelID id of the channel,
-     *      a string for static channels (e.g. 'channel_inbox').
+     *      a string for static channels (e.g. 'mailbox_inbox').
      */
     init: function (parent, title, channelID) {
-        this.channelID = channelID;
+        this._channelID = channelID;
 
         this._super(parent, {
             title: title,
-            size: "medium",
+            size: 'medium',
             buttons: [{
                 text: _t("Invite"),
                 close: true,
-                classes: "btn-primary",
+                classes: 'btn-primary',
                 click: this._addChannel.bind(this),
             }],
         });
@@ -53,17 +54,17 @@ var PartnerInviteDialog = Dialog.extend({
      */
     start: function () {
         var self = this;
-        this.$input = this.$('.o_mail_chat_partner_invite_input');
+        this.$input = this.$('.o_mail_discuss_partner_invite_input');
         this.$input.select2({
             width: '100%',
             allowClear: true,
             multiple: true,
             formatResult: function (item) {
-                var status = QWeb.render('mail.chat.UserStatus', {status: item.im_status});
+                var status = QWeb.render('mail.UserStatus', { status: item.im_status });
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('chat_manager', 'searchPartner', query.term, 20)
+                self.call('mail_service', 'searchPartner', query.term, 20)
                     .then(function (partners) {
                         query.callback({
                             results: _.map(partners, function (partner) {
@@ -91,16 +92,20 @@ var PartnerInviteDialog = Dialog.extend({
             return this._rpc({
                     model: 'mail.channel',
                     method: 'channel_invite',
-                    args: [this.channelID],
+                    args: [this._channelID],
                     kwargs: {partner_ids: _.pluck(data, 'id')},
                 }).then(function () {
                     var names = _.escape(_.pluck(data, 'text').join(', '));
-                    var notification = _.str.sprintf(_t('You added <b>%s</b> to the conversation.'), names);
-                    self.do_notify(_t('New people'), notification);
-                    // Clear the membersDeferred to fetch again the partner
-                    // when getMentionPartnerSuggestions from the chatManager is triggered
-                    var channel = self.call('chat_manager', 'getChannel', self.channelID);
-                    delete channel.membersDeferred;
+                    var notification =
+                        _.str.sprintf(
+                            _t("You added <b>%s</b> to the conversation."),
+                            names
+                        );
+                    self.do_notify(_t("New people"), notification);
+                    // Update list of members with the invited user, so that
+                    // we can mention this user in this channel right away.
+                    var channel = self.call('mail_service', 'getChannel', self._channelID);
+                    channel.forceFetchMembers();
                 });
         }
     },
@@ -113,7 +118,7 @@ var PartnerInviteDialog = Dialog.extend({
  * This let the moderator provide a reason for rejecting the messages.
  */
 var ModeratorRejectMessageDialog = Dialog.extend({
-    template: "mail.ModeratorRejectMessageDialog",
+    template: 'mail.ModeratorRejectMessageDialog',
 
     /**
      * @override
@@ -135,12 +140,12 @@ var ModeratorRejectMessageDialog = Dialog.extend({
         this._messageIDs = params.messageIDs;
         this._proceedReject = params.proceedReject;
         this._super(parent, {
-            title: _t('Send explanation to author'),
-            size: "medium",
+            title: _t("Send explanation to author"),
+            size: 'medium',
             buttons: [{
                 text: _t("Send"),
                 close: true,
-                classes: "btn-primary",
+                classes: 'btn-primary',
                 click: _.bind(this._onSendClicked, this),
             }],
         });
@@ -175,14 +180,14 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         update_moderation_buttons: '_onUpdateModerationButtons',
     },
     events: {
-        'blur .o_mail_add_channel input': '_onAddChannelBlur',
+        'blur .o_mail_add_thread input': '_onAddThreadBlur',
         'click .o_mail_annoying_notification_bar .fa-close': '_onCloseNotificationBar',
-        'click .o_mail_chat_channel_item': '_onChannelClicked',
+        'click .o_mail_discuss_item': '_onDiscussItemClicked',
         'click .o_mail_open_channels': '_onPublicChannelsClick',
         'click .o_mail_partner_unpin': '_onUnpinChannel',
         'click .o_mail_channel_settings': '_onChannelSettingsClicked',
         'click .o_mail_request_permission': '_onRequestNotificationPermission',
-        'click .o_mail_sidebar_title .o_add': '_onAddChannel',
+        'click .o_mail_sidebar_title .o_add': '_onAddThread',
         'keydown': '_onKeydown',
     },
 
@@ -191,71 +196,92 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     init: function (parent, action, options) {
         this._super.apply(this, arguments);
+
+        this.action = action;
         this.action_manager = parent;
         this.dataset = new data.DataSetSearch(this, 'mail.message');
+        this.displayNotificationBar = (
+            window.Notification &&
+            window.Notification.permission === 'default'
+        );
         this.domain = [];
-        this.action = action;
         this.options = options || {};
-        this.channelsScrolltop = {};
-        this.throttledUpdateChannels = _.throttle(this._updateChannels.bind(this), 100, { leading: false });
-        this.notification_bar = (window.Notification && window.Notification.permission === "default");
-        this.selected_message = null;
-        this.composerStates = {};
-        this.defaultChannelID = this.options.active_id ||
-                                 this.action.context.active_id ||
-                                 this.action.params.default_active_id ||
-                                 'channel_inbox';
+
+        this._threadsScrolltop = {};
+        this._composerStates = {};
+        this._defaultThreadID = this.options.active_id ||
+                                this.action.context.active_id ||
+                                this.action.params.default_active_id ||
+                                'mailbox_inbox';
+        this._selectedMessage = null;
+        this._throttledUpdateThreads = _.throttle(
+            this._updateThreads.bind(this), 100, { leading: false });
     },
     /**
      * @override
      */
     willStart: function () {
         var self = this;
-        var viewID = this.action && this.action.search_view_id && this.action.search_view_id[0];
+        var viewID = this.action &&
+                        this.action.search_view_id &&
+                        this.action.search_view_id[0];
         var def = this
             .loadFieldView(this.dataset, viewID, 'search')
-            .then(function (fields_view) {
-                self.fields_view = fields_view;
+            .then(function (fieldsView) {
+                self.fields_view = fieldsView;
             });
-        return $.when(this._super(), this.call('chat_manager', 'isReady'), def);
+        return $.when(this._super(), this.call('mail_service', 'isReady'), def);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-        var defaultChannel = this.call('chat_manager', 'getChannel', this.defaultChannelID) ||
-                                this.call('chat_manager', 'getChannel', 'channel_inbox');
 
-        this.basicComposer = new composer.BasicComposer(this, {mention_partners_restricted: true});
-        this.extendedComposer = new composer.ExtendedComposer(this, {mention_partners_restricted: true});
-        this.basicComposer.on('post_message', this, this._onPostMessage);
-        this.basicComposer.on('input_focused', this, this._onComposerFocused);
-        this.extendedComposer.on('post_message', this, this._onPostMessage);
-        this.extendedComposer.on('input_focused', this, this._onComposerFocused);
+        this._basicComposer = new BasicComposer(this,
+            { mentionPartnersRestricted: true }
+        );
+        this._extendedComposer = new ExtendedComposer(this,
+            { mentionPartnersRestricted: true }
+        );
+        this._basicComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
+        this._extendedComposer
+            .on('post_message', this, this._onPostMessage)
+            .on('input_focused', this, this._onComposerFocused);
         this._renderButtons();
 
         var defs = [];
-        defs.push(this._renderThread());
-        defs.push(this.basicComposer.appendTo(this.$('.o_mail_chat_content')));
-        defs.push(this.extendedComposer.appendTo(this.$('.o_mail_chat_content')));
+        defs.push(
+            this._renderThread()
+        );
+        defs.push(
+            this._basicComposer.appendTo(this.$('.o_mail_discuss_content')));
+        defs.push(
+            this._extendedComposer.appendTo(this.$('.o_mail_discuss_content')));
         defs.push(this._renderSearchView());
 
         return this.alive($.when.apply($, defs))
             .then(function () {
-                return self.alive(self._setChannel(defaultChannel));
+                return self.alive(self._setThread(self._defaultThreadID));
             })
             .then(function () {
-                self._updateChannels();
+                self._updateThreads();
                 self._startListening();
-                self.thread.$el.on("scroll", null, _.debounce(function () {
-                    if (self.thread.get_scrolltop() < 20 &&
-                        !self.thread.$('.o_mail_no_content').length &&
-                        !self.call('chat_manager', 'isAllHistoryLoaded', self.channel, self.domain)) {
+                self._threadWidget.$el.on('scroll', null, _.debounce(function () {
+                    if (
+                        self._threadWidget.getScrolltop() < 20 &&
+                        !self._threadWidget.$('.o_mail_no_content').length &&
+                        !self._thread.isAllHistoryLoaded(self.domain)
+                    ) {
                         self._loadMoreMessages();
                     }
-                    if (self.thread.is_at_bottom()) {
-                        self.call('chat_manager', 'markChannelAsSeen', self.channel);
+                    if (
+                        self._threadWidget.isAtBottom() &&
+                        self._thread.getType() !== 'mailbox'
+                    ) {
+                        self._thread.markAsRead();
                     }
                 }, 100));
             });
@@ -268,7 +294,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this._updateControlPanel();
         this.action_manager.do_push_state({
             action: this.action.id,
-            active_id: this.channel.id,
+            active_id: this._thread.getID(),
         });
     },
     /**
@@ -284,9 +310,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @override
      */
     on_attach_callback: function () {
-        this.call('chat_manager', 'getChatBus').trigger('discuss_open', true);
-        if (this.channel) {
-            this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
+        this.call('mail_service', 'getMailBus').trigger('discuss_open', true);
+        if (this._thread) {
+            this._threadWidget.scrollToPosition(this._threadsScrolltop[this._thread.getID()]);
         }
         this._loadEnoughMessages();
     },
@@ -294,8 +320,8 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @override
      */
     on_detach_callback: function () {
-        this.call('chat_manager', 'getChatBus').trigger('discuss_open', false);
-        this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
+        this.call('mail_service', 'getMailBus').trigger('discuss_open', false);
+        this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
     },
 
     //--------------------------------------------------------------------------
@@ -312,9 +338,12 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _banAuthorsFromMessageIDs: function (messageIDs) {
         var self = this;
         var emailList = _.map(messageIDs, function (messageID) {
-            return self.call('chat_manager', 'getMessage', messageID).email_from;
+            return self.call('mail_service', 'getMessage', messageID).getEmailFrom();
         }).join(", ");
-        var text = _.str.sprintf(_t("You are going to ban: %s. Do you confirm the action?"), emailList);
+        var text = _.str.sprintf(
+            _t("You are going to ban: %s. Do you confirm the action?"),
+            emailList
+        );
         var options = {
             confirm_callback: function () {
                 self._moderateMessages(messageIDs, 'ban');
@@ -334,7 +363,10 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         var num = messageIDs.length;
         var text;
         if (num > 1) {
-            text = _.str.sprintf(_t("You are going to discard %s messages. Do you confirm the action?"), num);
+            text = _.str.sprintf(
+                _t("You are going to discard %s messages. Do you confirm the action?"),
+                num
+            );
         } else if (num === 1) {
             text = _t("You are going to discard 1 message. Do you confirm the action?");
         }
@@ -351,42 +383,51 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _fetchAndRenderThread: function () {
         var self = this;
-        return this.call('chat_manager', 'getMessages', {
-                channelID: this.channel.id,
-                domain: this.domain
-            }).then(function (messages) {
-                self.thread.render(messages, self._getThreadRenderingOptions(messages));
+        return this._thread.getMessages(this.domain)
+            .then(function (messages) {
+                self._threadWidget.render(
+                    messages,
+                    self._getThreadRenderingOptions(messages)
+                );
                 self._updateButtonStatus(messages.length === 0);
                 return self._loadEnoughMessages();
             });
     },
     /**
      * @private
-     * @param {Object} messages
+     * @param {mail.model.Message} messages
      * @returns {Object}
      */
     _getThreadRenderingOptions: function (messages) {
-        // Compute position of the 'New messages' separator, only once when joining
-        // a channel to keep it in the thread when new messages arrive
-        if (_.isUndefined(this.messages_separator_position)) {
-            if (!this.unread_counter) {
-                this.messages_separator_position = false; // no unread message -> don't display separator
+        // Compute position of the 'New messages' separator, only once when
+        // joining a channel to keep it in the thread when new messages arrive
+        if (_.isUndefined(this.messagesSeparatorPosition)) {
+            if (!this._unreadCounter) {
+                // no unread message -> don't display separator
+                this.messagesSeparatorPosition = false;
             } else {
-                var msg = this.call('chat_manager', 'getLastSeenMessage', this.channel);
-                this.messages_separator_position = msg ? msg.id : 'top';
+                var messageID = this._thread.getLastSeenMessageID();
+                this.messagesSeparatorPosition = messageID || 'top';
             }
         }
         return {
-            channel_id: this.channel.id,
-            display_load_more: !this.call('chat_manager', 'isAllHistoryLoaded', this.channel, this.domain),
-            display_needactions: this.channel.display_needactions,
-            messages_separator_position: this.messages_separator_position,
-            squash_close_messages: this.channel.type !== 'static' && !this.channel.mass_mailing,
-            display_empty_channel: !messages.length && !this.domain.length,
-            display_no_match: !messages.length && this.domain.length,
-            display_subject: this.channel.mass_mailing || this.channel.id === "channel_inbox" || this.channel.id === "channel_moderation",
-            display_email_icon: false,
-            display_reply_icon: true,
+            threadID: this._thread.getID(),
+            displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
+            displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
+            messagesSeparatorPosition: this.messagesSeparatorPosition,
+            squashCloseMessages: this._thread.getType() !== 'mailbox' &&
+                                    !this._thread.isMassMailing(),
+            displayEmptyChannel: !messages.length && !this.domain.length,
+            displayNoMatchFound: !messages.length && this.domain.length,
+            displaySubjectOnMessages:
+                (
+                    this._thread.getType() !== 'mailbox' &&
+                    this._thread.isMassMailing()
+                ) ||
+                this._thread.getID() === 'mailbox_inbox' ||
+                this._thread.getID() === 'mailbox_moderation',
+            displayEmailIcons: false,
+            displayReplyIcons: true,
         };
     },
     /**
@@ -423,11 +464,13 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      *   screen, or when there is no more message to fetch
      */
     _loadEnoughMessages: function () {
-        var loadMoreMessages = this.thread.el.clientHeight &&
-            this.thread.el.clientHeight === this.thread.el.scrollHeight &&
-            !this.call('chat_manager', 'isAllHistoryLoaded', this.channel, this.domain);
+        var loadMoreMessages =
+            this._threadWidget.el.clientHeight &&
+            (this._threadWidget.el.clientHeight === this._threadWidget.el.scrollHeight) &&
+            !this._thread.isAllHistoryLoaded(this.domain);
         if (loadMoreMessages) {
-            return this._loadMoreMessages().then(this._loadEnoughMessages.bind(this));
+            return this._loadMoreMessages()
+                        .then(this._loadEnoughMessages.bind(this));
         }
     },
     /**
@@ -438,21 +481,22 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _loadMoreMessages: function () {
         var self = this;
-        var oldestMsgID = this.$('.o_thread_message').first().data('messageId');
-        var oldestMsgSelector = '.o_thread_message[data-message-id="' + oldestMsgID + '"]';
-        var offset = -dom.getPosition(document.querySelector(oldestMsgSelector)).top;
-        return this.call('chat_manager', 'getMessages', {
-                channelID: this.channel.id,
-                domain: this.domain,
-                loadMore: true
-            })
+        var oldestMessageID = this.$('.o_thread_message').first().data('messageId');
+        var oldestMessageSelector = '.o_thread_message[data-message-id="' + oldestMessageID + '"]';
+        var offset = -dom.getPosition(document.querySelector(oldestMessageSelector)).top;
+        return this._thread.getMessages(this.domain, true)
             .then(function (messages) {
-                if (self.messages_separator_position === 'top') {
-                    self.messages_separator_position = undefined; // reset value to re-compute separator position
+                if (self.messagesSeparatorPosition === 'top') {
+                    // reset value to re-compute separator position
+                    self.messagesSeparatorPosition = undefined;
                 }
-                self.thread.render(messages, self._getThreadRenderingOptions(messages));
-                offset += dom.getPosition(document.querySelector(oldestMsgSelector)).top;
-                self.thread.scroll_to({offset: offset});
+                self._threadWidget.render(
+                    messages,
+                    self._getThreadRenderingOptions(messages)
+                );
+                offset += dom.getPosition(document.querySelector(oldestMessageSelector)
+                ).top;
+                self._threadWidget.scrollToPosition(offset);
             });
     },
     /**
@@ -484,68 +528,71 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * Binds handlers on the given $input to make them autocomplete and/or
-     * create channels.
+     * create threads.
      *
      * @private
      * @param {JQuery} $input the input to prepare
-     * @param {string} type the type of channel to create ('dm', 'public' or
-     *   'private')
+     * @param {string} type the type of thread to create ('dm', 'public' or
+     *   'private' channel)
      */
-    _prepareAddChannelInput: function ($input, type) {
+    _prepareAddThreadInput: function ($input, type) {
         var self = this;
         if (type === 'public') {
             $input.autocomplete({
                 source: function (request, response) {
-                    self.last_search_val = _.escape(request.term);
-                    self._searchChannel(self.last_search_val).done(function (result){
+                    self._lastSearchVal = _.escape(request.term);
+                    self._searchChannel(self._lastSearchVal).done(function (result){
                         result.push({
-                            'label':  _.str.sprintf('<strong>'+_t("Create %s")+'</strong>', '<em>"#'+self.last_search_val+'"</em>'),
+                            'label':  _.str.sprintf(
+                                        '<strong>' + _t("Create %s") + '</strong>',
+                                        '<em>"#' + self._lastSearchVal + '"</em>'
+                            ),
                             'value': '_create',
                         });
                         response(result);
                     });
                 },
-                select: function (event, ui) {
-                    if (self.last_search_val) {
+                select: function (ev, ui) {
+                    if (self._lastSearchVal) {
                         if (ui.item.value === '_create') {
-                            self.call('chat_manager', 'createChannel', self.last_search_val, "public");
+                            self.call('mail_service', 'createChannel', self._lastSearchVal, 'public');
                         } else {
-                            self.call('chat_manager', 'joinChannel', ui.item.id);
+                            self.call( 'mail_service', 'joinChannel', ui.item.id);
                         }
                     }
                 },
-                focus: function (event) {
-                    event.preventDefault();
+                focus: function (ev) {
+                    ev.preventDefault();
                 },
                 html: true,
             });
         } else if (type === 'private') {
-            $input.on('keyup', this, function (event) {
-                var name = _.escape($(event.target).val());
-                if (event.which === $.ui.keyCode.ENTER && name) {
-                    self.call('chat_manager', 'createChannel', name, "private");
+            $input.on('keyup', this, function (ev) {
+                var name = _.escape($(ev.target).val());
+                if (ev.which === $.ui.keyCode.ENTER && name) {
+                    self.call('mail_service', 'createChannel', name, 'private');
                 }
             });
         } else if (type === 'dm') {
             $input.autocomplete({
                 source: function (request, response) {
-                    self.last_search_val = _.escape(request.term);
-                    self.call('chat_manager', 'searchPartner', self.last_search_val, 10).done(response);
+                    self._lastSearchVal = _.escape(request.term);
+                    self.call('mail_service', 'searchPartner', self._lastSearchVal, 10).done(response);
                 },
-                select: function (event, ui) {
-                    var partner_id = ui.item.id;
-                    var dm = self.call('chat_manager', 'getDmFromPartnerID', partner_id);
+                select: function (ev, ui) {
+                    var partnerID = ui.item.id;
+                    var dm = self.call('mail_service', 'getDmFromPartnerID', partnerID);
                     if (dm) {
-                        self._setChannel(dm);
+                        self._setThread(dm.getID());
                     } else {
-                        self.call('chat_manager', 'createChannel', partner_id, "dm");
+                        self.call('mail_service', 'createChannel', partnerID, 'dm');
                     }
                     // clear the input
                     $(this).val('');
                     return false;
                 },
-                focus: function (event) {
-                    event.preventDefault();
+                focus: function (ev) {
+                    ev.preventDefault();
                 },
             });
         }
@@ -572,14 +619,15 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @private
      */
     _renderButtons: function () {
-        this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {debug: session.debug}));
-        this.$buttons.find('button').css({display:"inline-block"});
-        this.$buttons.on('click', '.o_mail_chat_button_invite', this._onInviteButtonClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_moderate_all', this._onModerateAllClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_select_all', this._onSelectAllClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_unselect_all', this._onUnselectAllClicked.bind(this));
+        this.$buttons = $(QWeb.render('mail.discuss.ControlButtons', { debug: session.debug }));
+        this.$buttons.find('button').css({display:'inline-block'});
+        this.$buttons
+            .on('click', '.o_mail_discuss_button_invite', this._onInviteButtonClicked.bind(this))
+            .on('click', '.o_mail_discuss_button_mark_all_read', this._onMarkAllAsReadClicked.bind(this))
+            .on('click', '.o_mail_discuss_button_unstar_all', this._onUnstarAllClicked.bind(this))
+            .on('click', '.o_mail_discuss_button_moderate_all', this._onModerateAllClicked.bind(this))
+            .on('click', '.o_mail_discuss_button_select_all', this._onSelectAllClicked.bind(this))
+            .on('click', '.o_mail_discuss_button_unselect_all', this._onUnselectAllClicked.bind(this));
     },
     /**
      * @private
@@ -588,25 +636,40 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _renderSearchView: function () {
         var self = this;
         var options = {
-            $buttons: $("<div>"),
+            $buttons: $('<div>'),
             action: this.action,
             disable_groupby: true,
         };
         this.searchview = new SearchView(this, this.dataset, this.fields_view, options);
-        return this.alive(this.searchview.appendTo($("<div>"))).then(function () {
-            self.$searchview_buttons = self.searchview.$buttons.contents();
-            // manually call do_search to generate the initial domain and filter
-            // the messages in the default channel
-            self.searchview.do_search();
-        });
+        return this.alive(this.searchview.appendTo($('<div>')))
+            .then(function () {
+                self.$searchview_buttons = self.searchview.$buttons.contents();
+                // manually call do_search to generate the initial domain and filter
+                // the messages in the default thread
+                self.searchview.do_search();
+            });
     },
     /**
+     * Render the sidebar of discuss app
+     *
      * @private
      * @param {Object} options
-     * @returns {JQuery}
+     * @param {mail.model.Thread[]} [options.threads=[]]
+     * @returns {jQueryElement}
      */
     _renderSidebar: function (options) {
-        return $(QWeb.render("mail.chat.Sidebar", options));
+        var inbox = this.call('mail_service', 'getMailbox', 'inbox');
+        var starred = this.call('mail_service', 'getMailbox', 'starred');
+        var moderation = this.call('mail_service', 'getMailbox', 'moderation');
+        var $sidebar = $(QWeb.render('mail.discuss.Sidebar', {
+            activeThreadID: this._thread ? this._thread.getID() : undefined,
+            threads: options.threads,
+            needactionCounter: inbox.getMailboxCounter(),
+            starredCounter: starred.getMailboxCounter(),
+            moderationCounter: moderation ? moderation.getMailboxCounter() : 0,
+            isModerator: this.call('mail_service', 'isModerator'),
+        }));
+        return $sidebar;
     },
     /**
      * @private
@@ -620,7 +683,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         }
         timeout = timeout || 20000;
         this.$snackbar = $(QWeb.render(template, context));
-        this.$('.o_mail_chat_content').append(this.$snackbar);
+        this.$('.o_mail_discuss_content').append(this.$snackbar);
         // Hide snackbar after [timeout] milliseconds (by default, 20s)
         var $snackbar = this.$snackbar;
         setTimeout(function () { $snackbar.fadeOut(); }, timeout);
@@ -632,52 +695,57 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @returns {Deferred}
      */
     _renderThread: function () {
-        this.thread = new ChatThread(this, {display_help: true, loadMoreOnScroll: true});
+        this._threadWidget = new ThreadWidget(this, {
+            displayHelp: true,
+            loadMoreOnScroll: true
+        });
 
-        this.thread.on('redirect', this, function (resModel, resID) {
-            this.call('chat_manager', 'redirect', resModel, resID, this._setChannel.bind(this));
-        });
-        this.thread.on('redirect_to_channel', this, function (channelID) {
-            this.call('chat_manager', 'joinChannel', channelID).then(this._setChannel.bind(this));
-        });
-        this.thread.on('load_more_messages', this, this._loadMoreMessages);
-        this.thread.on('mark_as_read', this, function (messageID) {
-            this.call('chat_manager', 'markAsRead', [messageID]);
-        });
-        this.thread.on('toggle_star_status', this, function (messageID) {
-            this.call('chat_manager', 'toggleStarStatus', messageID);
-        });
-        this.thread.on('select_message', this, this._selectMessage);
-        this.thread.on('unselect_message', this, this._unselectMessage);
-        return this.thread.appendTo(this.$('.o_mail_chat_content'));
+        this._threadWidget
+            .on('redirect', this, function (resModel, resID) {
+                this.call('mail_service', 'redirect', resModel, resID, this._setThread.bind(this));
+            })
+            .on('redirect_to_channel', this, function (channelID) {
+                this.call('mail_service', 'joinChannel', channelID).then(this._setThread.bind(this));
+            })
+            .on('load_more_messages', this, this._loadMoreMessages)
+            .on('mark_as_read', this, function (messageID) {
+                this.call('mail_service', 'markMessagesAsRead', [messageID]);
+            })
+            .on('toggle_star_status', this, function (messageID) {
+                var message = this.call('mail_service', 'getMessage', messageID);
+                message.toggleStarStatus();
+            })
+            .on('select_message', this, this._selectMessage)
+            .on('unselect_message', this, this._unselectMessage);
+
+        return this._threadWidget.appendTo(this.$('.o_mail_discuss_content'));
     },
     /**
-     * Restores the scroll position and composer state of the current channel
+     * @private
+     * @param {mail.model.Channel} channel
+     */
+    _restoreComposerState: function (channel) {
+        var composer = channel.isMassMailing() ? this._extendedComposer : this._basicComposer;
+        var composerState = this._composerStates[channel.getUUID()];
+        if (composerState) {
+            composer.setState(composerState);
+        }
+    },
+    /**
+     * Restores the scroll position and composer state of the current thread
      *
      * @private
      */
-    _restoreChannelState: function () {
+    _restoreThreadState: function () {
         var $newMessagesSeparator = this.$('.o_thread_new_messages_separator');
         if ($newMessagesSeparator.length) {
-            this.thread.$el.scrollTo($newMessagesSeparator);
+            this._threadWidget.$el.scrollTo($newMessagesSeparator);
         } else {
-            var newChannelScrolltop = this.channelsScrolltop[this.channel.id];
-            this.thread.scroll_to({offset: newChannelScrolltop});
+            var newThreadScrolltop = this._threadsScrolltop[this._thread.getID()];
+            this._threadWidget.scrollToPosition(newThreadScrolltop);
         }
-        this._restoreComposerState(this.channel);
-    },
-    /**
-     * @private
-     * @param {Object} channel
-     */
-    _restoreComposerState: function (channel) {
-        if (channel.type === 'static') {
-            return; // no composer in static channels
-        }
-        var composer = channel.mass_mailing ? this.extendedComposer : this.basicComposer;
-        var composerState = this.composerStates[channel.uuid];
-        if (composerState) {
-            composer.setState(composerState);
+        if (this._thread.getType() !== 'mailbox') {
+            this._restoreComposerState(this._thread);
         }
     },
     /**
@@ -694,10 +762,10 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .then(function (result){
                 var values = [];
                 _.each(result, function (channel){
-                    var escaped_name = _.escape(channel.name);
+                    var escapedName = _.escape(channel.name);
                     values.push(_.extend(channel, {
-                        'value': escaped_name,
-                        'label': escaped_name,
+                        'value': escapedName,
+                        'label': escapedName,
                     }));
                 });
                 return values;
@@ -709,145 +777,134 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _selectMessage: function (messageID) {
         this.$el.addClass('o_mail_selection_mode');
-        var message = this.call('chat_manager', 'getMessage', messageID);;
-        this.selected_message = message;
-        var subject = "Re: " + message.record_name;
-        this.extendedComposer.set_subject(subject);
+        var message = this.call('mail_service', 'getMessage', messageID);
+        this._selectedMessage = message;
+        var subject = "Re: " + message.getDocumentName();
+        this._extendedComposer.setSubject(subject);
 
-        if (this.channel.type !== 'static') {
-            this.basicComposer.do_hide();
+        if (this._thread.getType() !== 'mailbox') {
+            this._basicComposer.do_hide();
         }
-        this.extendedComposer.do_show();
+        this._extendedComposer.do_show();
 
-        this.thread.scroll_to({id: messageID, duration: 200, only_if_necessary: true});
-        this.extendedComposer.focus('body');
+        this._threadWidget.scrollToMessage({
+            msgID: messageID,
+            duration: 200,
+            onlyIfNecessary: true
+        });
+        this._extendedComposer.focus('body');
     },
     /**
+     * Set the selected thread with ID `threadID`.
+     * If there is no thread with such ID, fallback on mailbox 'inbox'.
+     *
      * @private
-     * @param {Object} channel
+     * @param {integer} threadID a thread with such ID
      * @returns {$.Promise}
      */
-    _setChannel: function (channel) {
+    _setThread: function (threadID) {
         var self = this;
 
-        // Store scroll position and composer state of the previous channel
-        this._storeChannelState();
+        // Store scroll position and composer state of the previous thread
+        this._storeThreadState();
 
-        this.channel = channel;
-        this.messages_separator_position = undefined; // reset value on channel change
-        this.unread_counter = this.channel.unread_counter;
-        this.last_seen_message_id = this.channel.last_seen_message_id;
+        this._thread = this.call('mail_service', 'getThread', threadID) ||
+                        this.call('mail_service', 'getMailbox', 'inbox');
+
+        // reset value on channel change
+        this.messagesSeparatorPosition = undefined;
+        this._unreadCounter = this._thread.getUnreadCounter();
         if (this.$snackbar) {
             this.$snackbar.remove();
         }
 
-        this.action.context.active_id = channel.id;
-        this.action.context.active_ids = [channel.id];
+        this.action.context.active_id = this._thread.getID();
+        this.action.context.active_ids = [this._thread.getID()];
 
         return this._fetchAndRenderThread().then(function () {
-            // Mark channel's messages as read and clear needactions
-            if (channel.type !== 'static') {
-                self.call('chat_manager', 'markChannelAsSeen', channel);
+            // Mark thread's messages as read and clear needactions
+            if (self._thread.getType() !== 'mailbox') {
+                self._thread.markAsRead();
             }
-            // Restore scroll position and composer of the new current channel
-            self._restoreChannelState();
+            // Restore scroll position and composer of the new current thread
+            self._restoreThreadState();
 
-            // Update control panel before focusing the composer, otherwise focus is on the searchview
-            self.set("title", '#' + channel.name);
+            // Update control panel before focusing the composer, otherwise
+            // focus is on the searchview
+            self.set("title", '#' + self._thread.getName());
             self._updateControlPanel();
-            self._updateControlPanelButtons(channel);
+            self._updateControlPanelButtons(self._thread);
 
-            // Display and focus the adequate composer, and unselect possibly selected message
-            // to prevent sending messages as reply to that message
+            // Display and focus the adequate composer, and unselect possibly
+            // selected message to prevent sending messages as reply to that
+            // message
             self._unselectMessage();
 
             self.action_manager.do_push_state({
                 action: self.action.id,
-                active_id: self.channel.id,
+                active_id: self._thread.getID(),
             });
         });
     },
     /**
-     * Binds handlers on chatManager events
+     * Binds handlers on mail bus events
      *
      * @private
      */
     _startListening: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.on('open_channel', this, this._setChannel);
-        chatBus.on('new_message', this, this._onNewMessage);
-        chatBus.on('update_message', this, this._onMessageUpdated);
-        chatBus.on('new_channel', this, this._onNewChannel);
-        chatBus.on('anyone_listening', this, function (channel, query) {
-            query.is_displayed = query.is_displayed ||
-                                (channel.id === this.channel.id && this.thread.is_at_bottom());
-        });
-        chatBus.on('unsubscribe_from_channel', this, this._onChannelLeft);
-        chatBus.on('update_needaction', this, this.throttledUpdateChannels);
-        chatBus.on('update_starred', this, this.throttledUpdateChannels);
-        chatBus.on('update_channel_unread_counter', this, this.throttledUpdateChannels);
-        chatBus.on('update_dm_presence', this, this.throttledUpdateChannels);
-        chatBus.on('activity_updated', this, this.throttledUpdateChannels);
-        chatBus.on('update_moderation_counter', this, this.throttledUpdateChannels);
+        this.call('mail_service', 'getMailBus')
+            .on('open_thread_in_discuss', this, this._onOpenThreadInDiscuss)
+            .on('new_message', this, this._onNewMessage)
+            .on('update_message', this, this._onMessageUpdated)
+            .on('new_channel', this, this._onNewChannel)
+            .on('is_thread_bottom_visible', this, this._onIsThreadBottomVisible)
+            .on('unsubscribe_from_channel', this, this._onChannelLeft)
+            .on('update_needaction', this, this._throttledUpdateThreads)
+            .on('update_starred', this, this._throttledUpdateThreads)
+            .on('update_thread_unread_counter', this, this._throttledUpdateThreads)
+            .on('update_dm_presence', this, this._throttledUpdateThreads)
+            .on('activity_updated', this, this._throttledUpdateThreads)
+            .on('update_moderation_counter', this, this._throttledUpdateThreads);
     },
     /**
-     * Stores the scroll position and composer state of the current channel
+     * @private
+     * @param {mail.model.Channel} channel
+     */
+    _storeComposerState: function (channel) {
+        var composer = channel.isMassMailing() ? this._extendedComposer : this._basicComposer;
+        this._composerStates[channel.getUUID()] = composer.getState();
+        composer.clearComposer();
+    },
+    /**
+     * Stores the scroll position of the current thread.
+     * For channels, also stores composer state.
      *
      * @private
      */
-    _storeChannelState: function () {
-        if (this.channel) {
-            this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
-            this._storeComposerState(this.channel);
+    _storeThreadState: function () {
+        if (this._thread) {
+            this._threadsScrolltop[this._thread.getID()] = this._threadWidget.getScrolltop();
+            if (this._thread.getType() !== 'mailbox') {
+                this._storeComposerState(this._thread);
+            }
         }
-    },
-    /**
-     * @private
-     * @param {Object} channel
-     */
-    _storeComposerState: function (channel) {
-        if (channel.type === 'static') {
-            return; // no composer in static channels
-        }
-        var composer = channel.mass_mailing ? this.extendedComposer : this.basicComposer;
-        this.composerStates[channel.uuid] = composer.getState();
-        composer.clear_composer();
     },
     /**
      * @private
      */
     _unselectMessage: function () {
-        this.basicComposer.do_toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
-        this.extendedComposer.do_toggle(this.channel.type !== 'static' && !!this.channel.mass_mailing);
+        this._basicComposer.do_toggle(this._thread.getType() !== 'mailbox' && !this._thread.isMassMailing());
+        this._extendedComposer.do_toggle(this._thread.getType() !== 'mailbox' && !!this._thread.isMassMailing());
 
         if (!config.device.touch) {
-            var composer = this.channel.mass_mailing ? this.extendedComposer : this.basicComposer;
+            var composer = this._thread.getType() !== 'mailbox' && this._thread.isMassMailing() ?
+                            this._extendedComposer :
+                            this._basicComposer;
             composer.focus();
         }
         this.$el.removeClass('o_mail_selection_mode');
-        this.thread.unselect();
-        this.selected_message = null;
-    },
-    /**
-     * Renders the mainside bar with current channels
-     *
-     * @private
-     */
-    _updateChannels: function () {
-        var self = this;
-        var $sidebar = this._renderSidebar({
-            active_channel_id: this.channel ? this.channel.id: undefined,
-            channels: this.call('chat_manager', 'getChannels'),
-            needaction_counter: this.call('chat_manager', 'getNeedactionCounter'),
-            starred_counter: this.call('chat_manager', 'getStarredCounter'),
-            moderationCounter: this.call('chat_manager', 'getModerationCounter'),
-            isModerator: this.call('chat_manager', 'isModerator'),
-        });
-        this.$(".o_mail_chat_sidebar").html($sidebar.contents());
-        _.each(['dm', 'public', 'private'], function (type) {
-            var $input = self.$('.o_mail_add_channel[data-type=' + type + '] input');
-            self._prepareAddChannelInput($input, type);
-        });
+        this._threadWidget.unselectMessage();
+        this._selectedMessage = null;
     },
     /**
      * @private
@@ -855,25 +912,31 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @param {string} type
      */
     _updateButtonStatus: function (disabled, type) {
-        if (this.channel.id === "channel_inbox") {
+        if (this._thread.getID() === 'mailbox_inbox') {
             this.$buttons
-                .find('.o_mail_chat_button_mark_read')
+                .find('.o_mail_discuss_button_mark_all_read')
                 .toggleClass('disabled', disabled);
             // Display Rainbowman when all inbox messages are read through
             // 'MARK ALL READ' or marking last inbox message as read
             if (disabled && type === 'mark_as_read') {
                 this.trigger_up('show_effect', {
-                    message: _t('Congratulations, your inbox is empty!'),
+                    message: _t("Congratulations, your inbox is empty!"),
                     type: 'rainbow_man',
                 });
             }
         }
-        if (this.channel.id === "channel_starred") {
+        if (this._thread.getID() === 'mailbox_starred') {
             this.$buttons
-                .find('.o_mail_chat_button_unstar_all')
+                .find('.o_mail_discuss_button_unstar_all')
                 .toggleClass('disabled', disabled);
         }
-        if ((this.channel.isModerated && this.channel.isModerator) || this.channel.id === "channel_moderation") {
+        if (
+            this._thread.getID() === 'mailbox_moderation' ||
+            (
+                this._thread.isModerated() &&
+                this._thread.isModerator()
+            )
+        ) {
             this._updateModerationButtons();
         }
     },
@@ -891,36 +954,37 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         });
     },
     /**
-     * Updates the control panel buttons visibility based on channel type
+     * Updates the control panel buttons visibility based on thread type
      *
      * @private
-     * @param {Object} channel
+     * @param {mail.model.Thread} thread
      */
-    _updateControlPanelButtons: function (channel) {
+    _updateControlPanelButtons: function (thread) {
         // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
         this.$buttons
-            .find('.o_mail_chat_button_invite, .o_mail_chat_button_settings')
-            .toggle(channel.type !== "dm" && channel.type !== 'static');
+            .find('.o_mail_discuss_button_invite, .o_mail_discuss_button_settings')
+            .toggle(thread.getType() !== 'dm' && thread.getType() !== 'mailbox');
         this.$buttons
-            .find('.o_mail_chat_button_mark_read')
-            .toggle(channel.id === "channel_inbox")
-            .removeClass("o_hidden");
+            .find('.o_mail_discuss_button_mark_all_read')
+            .toggle(thread.getID() === 'mailbox_inbox')
+            .removeClass('o_hidden');
         this.$buttons
-            .find('.o_mail_chat_button_unstar_all')
-            .toggle(channel.id === "channel_starred")
-            .removeClass("o_hidden");
+            .find('.o_mail_discuss_button_unstar_all')
+            .toggle(thread.getID() === 'mailbox_starred')
+            .removeClass('o_hidden');
         this.$buttons
-            .find('.o_mail_chat_button_select_all')
-            .toggle((channel.isModerated && channel.isModerator) || channel.id === "channel_moderation")
-            .removeClass("o_hidden");
+            .find('.o_mail_discuss_button_select_all')
+            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
+            .removeClass('o_hidden');
         this.$buttons
-            .find('.o_mail_chat_button_unselect_all')
-            .toggle((channel.isModerated && channel.isModerator) || channel.id === "channel_moderation")
-            .removeClass("o_hidden");
-        this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
-        this.$('.o_mail_chat_channel_item')
+            .find('.o_mail_discuss_button_unselect_all')
+            .toggle((thread.isModerated() && thread.isModerator()) || thread.getID() === 'mailbox_moderation')
+            .removeClass('o_hidden');
+        this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
+
+        this.$('.o_mail_discuss_item')
             .removeClass('o_active')
-            .filter('[data-channel-id=' + channel.id + ']')
+            .filter('[data-thread-id=' + thread.getID() + ']')
             .removeClass('o_unread_message')
             .addClass('o_active');
     },
@@ -942,20 +1006,20 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @private
      */
     _updateModerationDecisionButton: function () {
-        if (this.thread.$('.moderation_checkbox:checked').length) {
-            this.$buttons.find('.o_mail_chat_button_moderate_all').show();
+        if (this._threadWidget.$('.moderation_checkbox:checked').length) {
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').show();
         } else {
-            this.$buttons.find('.o_mail_chat_button_moderate_all').hide();
+            this.$buttons.find('.o_mail_discuss_button_moderate_all').hide();
         }
     },
     /**
      * @private
      */
     _updateSelectUnselectAllButtons: function () {
-        var buttonSelect = this.$buttons.find('.o_mail_chat_button_select_all');
-        var buttonUnselect = this.$buttons.find('.o_mail_chat_button_unselect_all');
-        var numCheckboxes = this.thread.$('.moderation_checkbox').length;
-        var numCheckboxesChecked = this.thread.$('.moderation_checkbox:checked').length;
+        var buttonSelect = this.$buttons.find('.o_mail_discuss_button_select_all');
+        var buttonUnselect = this.$buttons.find('.o_mail_discuss_button_unselect_all');
+        var numCheckboxes = this._threadWidget.$('.moderation_checkbox').length;
+        var numCheckboxesChecked = this._threadWidget.$('.moderation_checkbox:checked').length;
         if (numCheckboxes) {
             if (numCheckboxesChecked === numCheckboxes) {
                 buttonSelect.toggleClass('disabled', true);
@@ -972,6 +1036,26 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             buttonUnselect.toggleClass('disabled', true);
         }
     },
+    /**
+     * Renders the mainside bar with current threads
+     *
+     * @private
+     */
+    _updateThreads: function () {
+        var self = this;
+
+        var $sidebar = this._renderSidebar({
+            threads: _.filter(this.call('mail_service', 'getThreads'), function (thread) {
+                return thread.getType() !== 'document_thread';
+            }),
+        });
+
+        this.$('.o_mail_discuss_sidebar').html($sidebar.contents());
+        _.each(['dm', 'public', 'private'], function (type) {
+            var $input = self.$('.o_mail_add_thread[data-type=' + type + '] input');
+            self._prepareAddThreadInput($input, type);
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -979,103 +1063,123 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
 
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onAddChannel: function (event) {
-        event.preventDefault();
-        var type = $(event.target).data("type");
-        this.$('.o_mail_add_channel[data-type=' + type + ']')
+    _onAddThread: function (ev) {
+        ev.preventDefault();
+        var type = $(ev.target).data('type');
+        this.$('.o_mail_add_thread[data-type=' + type + ']')
             .show()
-            .find("input").focus();
+            .find('input').focus();
     },
     /**
      * @private
      */
-    _onAddChannelBlur: function () {
-        this.$('.o_mail_add_channel').hide();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onChannelClicked: function (event) {
-        event.preventDefault();
-        var channelID = $(event.currentTarget).data('channel-id');
-        var channel = this.call('chat_manager', 'getChannel', channelID);
-        this._setChannel(channel);
+    _onAddThreadBlur: function () {
+        this.$('.o_mail_add_thread').hide();
     },
     /**
      * @private
      * @param {integer|string} channelID
      */
     _onChannelLeft: function (channelID) {
-        if (this.channel.id === channelID) {
-            var channel = this.call('chat_manager', 'getChannel', 'channel_inbox');
-            this._setChannel(channel);
+        if (this._thread.getID() === channelID) {
+            this._setThread('mailbox_inbox');
         }
-        this._updateChannels();
-        delete this.channelsScrolltop[channelID];
+        this._updateThreads();
+        delete this._threadsScrolltop[channelID];
     },
     /**
      * @private
      */
     _onCloseNotificationBar: function () {
-        this.$(".o_mail_annoying_notification_bar").slideUp();
+        this.$('.o_mail_annoying_notification_bar').slideUp();
     },
     /**
      * @private
      */
     _onComposerFocused: function () {
-        var composer = this.channel.mass_mailing ? this.extendedComposer : this.basicComposer;
-        var commands = this.call('chat_manager', 'getCommands', this.channel);
-        var partners = this.call('chat_manager', 'getMentionPartnerSuggestions', this.channel);
-        composer.mention_set_enabled_commands(commands);
-        composer.mention_set_prefetched_partners(partners);
+        var composer = this._thread.isMassMailing() ? this._extendedComposer : this._basicComposer;
+        var commands = this._thread.getCommands();
+        var partners = this._thread.getMentionPartnerSuggestions();
+        composer.mentionSetCommands(commands);
+        composer.mentionSetPrefetchedPartners(partners);
     },
     /**
+     * When clicking on an item in the sidebar
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onDiscussItemClicked: function (ev) {
+        ev.preventDefault();
+        var threadID = $(ev.currentTarget).data('thread-id');
+        this._setThread(threadID);
+    },
+    /**
+     * Invite button is only for channels (not mailboxes)
+     *
      * @private
      */
     _onInviteButtonClicked: function () {
-        var title = _.str.sprintf(_t('Invite people to #%s'), this.channel.name);
-        new PartnerInviteDialog(this, title, this.channel.id).open();
+        var title = _.str.sprintf(_t("Invite people to #%s"), this._thread.getName());
+        new PartnerInviteDialog(this, title, this._thread.getID()).open();
+    },
+    /**
+     * Called when someone asks discuss whether the bottom of `thread` is
+     * visible or not. An object `query` is provided in order to reponse on the
+     * key `isDisplayed`.
+     *
+     * @private
+     * @param {mail.model.Thread} thread
+     * @param {Object} query
+     * @param {boolean} query.isBottomVisible the response to provide on whether
+     *   the thread is visible in discuss.
+     */
+    _onIsThreadBottomVisible: function (thread, query) {
+        query.isBottomVisible = query.isBottomVisible ||
+                            (
+                                thread.getID() === this._thread.getID() &&
+                                this._threadWidget.isAtBottom()
+                            );
     },
     /**
      * @private
-     * @param {KeyEvent} event
+     * @param {KeyEvent} ev
      */
-    _onKeydown: function (event) {
-        if (event.which === $.ui.keyCode.ESCAPE && this.selected_message) {
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ESCAPE && this._selectedMessage) {
             this._unselectMessage();
         }
     },
     /**
      * @private
      */
-    _onMarkAllReadClicked: function () {
-        this.call('chat_manager', 'markAllAsRead', this.channel, this.domain);
+    _onMarkAllAsReadClicked: function () {
+        this._thread.markAllMessagesAsRead(this.domain);
     },
     /**
      * @private
-     * @param {Object} message
+     * @param {mail.model.Message} message
      * @param {string} type the channel type
      */
     _onMessageUpdated: function (message, type) {
         var self = this;
-        var currentChannelID = this.channel.id;
-        if ((currentChannelID === "channel_starred" && !message.is_starred) ||
-            (currentChannelID === "channel_moderation" && !message.needsModeration) ||
-            (currentChannelID === "channel_inbox" && !message.is_needaction)) {
-                this.call('chat_manager', 'getMessages', {
-                        channelID: this.channel.id,
-                        domain: this.domain
-                }).then(function (messages) {
+        var currentThreadID = this._thread.getID();
+        if (
+            (currentThreadID === 'mailbox_starred' && !message.isStarred()) ||
+            (currentThreadID === 'mailbox_inbox' && !message.isNeedaction()) ||
+            (currentThreadID === 'mailbox_moderation' && !message.needsModeration())
+        ) {
+            this._thread.getMessages(this.domain)
+                .then(function (messages) {
                     var options = self._getThreadRenderingOptions(messages);
-                    self.thread.remove_message_and_render(message.id, messages, options)
+                    self._threadWidget.removeMessageAndRender(message.getID(), messages, options)
                         .then(function () {
                             self._updateButtonStatus(messages.length === 0, type);
                         });
                 });
-        } else if (_.contains(message.channel_ids, currentChannelID) || (message.res_id === currentChannelID)) {
+        } else if (_.contains(message.getThreadIDs(), currentThreadID)) {
             this._fetchAndRenderThread();
         }
     },
@@ -1085,7 +1189,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onModerateAllClicked: function (ev) {
         var decision = $(ev.target).data('decision');
-        var messageIDs = this.thread.$('.moderation_checkbox:checked')
+        var messageIDs = this._threadWidget.$('.moderation_checkbox:checked')
                             .map(function () {
                                 return $(this).data('message-id');
                             })
@@ -1105,55 +1209,69 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
-     * @param {Object} channel
+     * @param {mail.model.Channel} channel
      */
     _onNewChannel: function (channel) {
-        this._updateChannels();
-        if (channel.autoswitch) {
-            this._setChannel(channel);
+        this._updateThreads();
+        if (channel.isAutoswitch()) {
+            this._setThread(channel.getID());
         }
     },
     /**
      * @private
-     * @param {Object} message
+     * @param {mail.model.Message} message
      */
     _onNewMessage: function (message) {
         var self = this;
-        if (_.contains(message.channel_ids, this.channel.id)) {
-            if (this.channel.type !== 'static' && this.thread.is_at_bottom()) {
-                this.call('chat_manager', 'markChannelAsSeen', this.channel);
+        if (_.contains(message.getThreadIDs(), this._thread.getID())) {
+            if (this._thread.getType() !== 'mailbox' && this._threadWidget.isAtBottom()) {
+                this._thread.markAsRead();
             }
-            var should_scroll = this.thread.is_at_bottom();
+            var shouldScroll = this._threadWidget.isAtBottom();
             this._fetchAndRenderThread().then(function () {
-                if (should_scroll) {
-                    self.thread.scroll_to({id: message.id});
+                if (shouldScroll) {
+                    self._threadWidget.scrollToMessage({ msgID: message.getID() });
                 }
             });
         }
-        // Re-render sidebar to indicate that there is a new message in the corresponding channels
-        this._updateChannels();
-        // Dump scroll position of channels in which the new message arrived
-        this.channelsScrolltop = _.omit(this.channelsScrolltop, message.channel_ids);
+        // Re-render sidebar to indicate that there is a new message in the corresponding threads
+        this._updateThreads();
+        // Dump scroll position of threads in which the new message arrived
+        this._threadsScrolltop = _.omit(this._threadsScrolltop, message.getThreadIDs());
+    },
+    /**
+     * Called when opening a thread in discuss, due to discuss being open.
+     * All threads except document threads are valid for discuss app.
+     *
+     * @private
+     * @param {mail.model.Thread}
+     */
+    _onOpenThreadInDiscuss: function (thread) {
+        if (thread.getType() !== 'document_thread') {
+            this._setThread(thread.getID());
+        }
     },
     /**
      * @private
-     * @param {Object} message
+     * @param {Object} messageData
      */
-    _onPostMessage: function (message) {
+    _onPostMessage: function (messageData) {
         var self = this;
-        var options = this.selected_message ? {} : {channelID: this.channel.id};
-        if (this.selected_message) {
-            message.subtype = this.selected_message.is_note ? 'mail.mt_note': 'mail.mt_comment';
-            message.subtype_id = false;
-            message.message_type = 'comment';
+        if (this._selectedMessage) {
+            messageData.subtype = this._selectedMessage.isNote() ? 'mail.mt_note': 'mail.mt_comment';
+            messageData.subtype_id = false;
+            messageData.message_type = 'comment';
+            messageData.content_subtype = 'html';
         }
-        this.call('chat_manager', 'postMessage', message, options)
+        this._thread.postMessage(messageData)
             .then(function () {
-                if (self.selected_message) {
-                    self._renderSnackbar('mail.chat.MessageSentSnackbar', {record_name: self.selected_message.record_name}, 5000);
+                if (self._selectedMessage) {
+                    self._renderSnackbar('mail.discuss.MessageSentSnackbar', {
+                        documentName: self._selectedMessage.getDocumentName()
+                    }, 5000);
                     self._unselectMessage();
                 } else {
-                    self.thread.scroll_to();
+                    self._threadWidget.scrollToBottom();
                 }
             })
             .fail(function () {
@@ -1165,9 +1283,9 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _onPublicChannelsClick: function () {
         this.do_action({
-            name: _t('Public Channels'),
+            name: _t("Public Channels"),
             type: 'ir.actions.act_window',
-            res_model: "mail.channel",
+            res_model: 'mail.channel',
             views: [[false, 'kanban'], [false, 'form']],
             domain: [['public', '!=', 'private']],
         }, {
@@ -1176,41 +1294,41 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onRequestNotificationPermission: function (event) {
+    _onRequestNotificationPermission: function (ev) {
         var self = this;
-        event.preventDefault();
-        this.$(".o_mail_annoying_notification_bar").slideUp();
+        ev.preventDefault();
+        this.$('.o_mail_annoying_notification_bar').slideUp();
         var def = window.Notification && window.Notification.requestPermission();
         if (def) {
             def.then(function (value) {
                 if (value !== 'granted') {
-                    self.call('bus_service', 'sendNotification', self, _t('Permission denied'),
-                        _t('Odoo will not have the permission to send native notifications on this device.'));
+                    self.call('bus_service', 'sendNotification', _t("Permission denied"),
+                        _t("Odoo will not have the permission to send native notifications on this device."));
                 } else {
-                    self.call('bus_service', 'sendNotification', self, _t('Permission granted'),
-                        _t('Odoo has now the permission to send you native notifications on this device.'));
+                    self.call('bus_service', 'sendNotification', _t("Permission granted"),
+                        _t("Odoo has now the permission to send you native notifications on this device."));
                 }
             });
         }
     },
     /**
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} ev
      */
-    _onSearch: function (event) {
-        event.stopPropagation();
+    _onSearch: function (ev) {
+        ev.stopPropagation();
         var session = this.getSession();
         var result = pyeval.eval_domains_and_contexts({
-            domains: event.data.domains,
+            domains: ev.data.domains,
             contexts: [session.user_context],
         });
         this.domain = result.domain;
-        if (this.channel) {
+        if (this._thread) {
             // initially (when _onSearch is called manually), there is no
-            // channel set yet, so don't try to fetch and render the thread as
-            // this will be done as soon as the default channel is set
+            // thread set yet, so don't try to fetch and render the thread as
+            // this will be done as soon as the default thread is set
             this._fetchAndRenderThread();
         }
     },
@@ -1221,33 +1339,33 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _onSelectAllClicked: function (ev) {
         var $button = $(ev.target);
         if (!$button.hasClass('disabled')) {
-            this.thread.toggleModerationCheckboxes(true);
+            this._threadWidget.toggleModerationCheckboxes(true);
             this._updateModerationButtons();
         }
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onChannelSettingsClicked: function (event) {
-        var channelID = $(event.target).data("channel-id");
+    _onChannelSettingsClicked: function (ev) {
+        var threadID = $(ev.target).data('thread-id');
         this.do_action({
             type: 'ir.actions.act_window',
-            res_model: "mail.channel",
-            res_id: channelID,
+            res_model: 'mail.channel',
+            res_id: threadID,
             views: [[false, 'form']],
             target: 'current'
         });
     },
     /**
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onUnpinChannel: function (event) {
-        event.stopPropagation();
-        var channelID = $(event.target).data("channel-id");
-        var channel = this.call('chat_manager', 'getChannel', channelID);
-        this.call('chat_manager', 'unsubscribe', channel);
+    _onUnpinChannel: function (ev) {
+        ev.stopPropagation();
+        var channelID = $(ev.target).data('thread-id');
+        var channel = this.call('mail_service', 'getChannel', channelID);
+        channel.unsubscribe();
     },
     /**
      * @private
@@ -1256,7 +1374,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
     _onUnselectAllClicked: function (ev) {
         var $button = $(ev.target);
         if (!$button.hasClass('disabled')) {
-            this.thread.toggleModerationCheckboxes(false);
+            this._threadWidget.toggleModerationCheckboxes(false);
             this._updateModerationButtons();
         }
     },
@@ -1264,7 +1382,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      * @private
      */
     _onUnstarAllClicked: function () {
-        this.call('chat_manager', 'unstarAll');
+        this.call('mail_service', 'unstarAll');
     },
     /**
      * Update the moderation buttons.

@@ -11,16 +11,36 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
 
-                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+                <!-- Services -->
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_document_thread_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_notification_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_window_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/mail_service.js"></script>
+                <!-- Models -->
+                <script type="text/javascript" src="/mail/static/src/js/models/channel.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/dm.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/document_thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/mail_failure.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/mailbox.js"></script>
+                    <!-- messages -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/models/messages/message.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/models/thread_with_cache.js"></script>
+                <!-- Widgets -->
+                    <!-- thread windows -->
+                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/thread_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/extended_chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/services/chat_manager.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/services/chat_window_manager.js"></script>
+                    <!-- composers -->
+                    <script type="text/javascript" src="/mail/static/src/js/composers/basic_composer.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/composers/chatter_composer.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/composers/extended_composer.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/composers/mention_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_controller.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
@@ -28,15 +48,19 @@
                 <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/systray.js"></script>
+                    <!-- systray -->
+                    <script type="text/javascript" src="/mail/static/src/js/systray/systray_activity_menu.js"></script>
+                    <script type="text/javascript" src="/mail/static/src/js/systray/systray_messaging_menu.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <!-- Others -->
+                <script type="text/javascript" src="/mail/static/src/js/emojis.js"></script>
 
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/announcement.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/discuss.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chat_window.scss"/>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/extended_chat_window.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread_window.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/composer.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chatter.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/followers.scss"/>
@@ -55,12 +79,18 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/mail/static/tests/chat_window_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/thread_window_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/document_thread_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/mail_utils_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
-                <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
-                <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>  
+                <!-- systray -->
+                    <script type="text/javascript" src="/mail/static/tests/systray/systray_activity_menu_tests.js"></script>
+                    <script type="text/javascript" src="/mail/static/tests/systray/systray_messaging_menu_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>
+                <!-- Helpers -->
+                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>
         </template>
 

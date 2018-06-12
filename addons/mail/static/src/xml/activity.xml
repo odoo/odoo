@@ -40,13 +40,13 @@
                                     </dd>
                                     <dt>Created on</dt>
                                     <dd class="mb8">
-                                        <t t-esc="activity.create_date.format(datetime_format)"/>
+                                        <t t-esc="activity.create_date.format(datetimeFormat)"/>
                                     </dd>
                                     <dt>Assigned to</dt>
                                     <dd class="mb8">
                                         <img t-attf-src="/web/image#{activity.user_id[0] >= 0 ? ('/res.users/' + activity.user_id[0] + '/image_small') : ''}" height="18" width="18" class="img-circle mr4" t-att-title="activity.user_id[1]" t-att-alt="activity.user_id[1]"/>
                                         <b><t t-esc="activity.user_id[1]"/></b>
-                                        <em>, due on </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline.format(date_format)"/></span>
+                                        <em>, due on </em><span t-attf-class="o_activity_color_#{activity.state}"><t t-esc="activity.date_deadline.format(dateFormat)"/></span>
                                     </dd>
                                 </dl>
                             </div>

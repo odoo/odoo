@@ -1,13 +1,13 @@
-odoo.define('im_support.chat_discuss', function (require) {
+odoo.define('im_support.Discuss', function (require) {
 "use strict";
+
+var Discuss = require('mail.Discuss');
 
 /**
  * This module includes Discuss to handle the case of the Support channel.
  */
-
-var Discuss = require('mail.chat_discuss');
-
 Discuss.include({
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -21,8 +21,8 @@ Discuss.include({
      */
     _getThreadRenderingOptions: function () {
         var options = this._super.apply(this, arguments);
-        if (this.channel.supportChannel) {
-            options.display_stars = false;
+        if (this._thread.getType() === 'support_channel') {
+            options.displayStars = false;
         }
         return options;
     },
@@ -34,13 +34,13 @@ Discuss.include({
      * @override
      * @private
      */
-    _setChannel: function (channel) {
+    _setThread: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            var $buttonAddAttachment = self.basicComposer.$('.o_composer_button_add_attachment');
-            if (channel.supportChannel) {
-                if (!channel.available) {
-                    self.basicComposer.do_hide();
+            var $buttonAddAttachment = self._basicComposer.$('.o_composer_button_add_attachment');
+            if (self._thread.getType() === 'support_channel') {
+                if (!self._thread.isAvailable()) {
+                    self._basicComposer.do_hide();
                 }
                 $buttonAddAttachment.toggleClass('o_hidden', true);
             } else {
@@ -54,9 +54,9 @@ Discuss.include({
      * @override
      * @private
      */
-    _updateControlPanelButtons: function (channel) {
+    _updateControlPanelButtons: function (thread) {
         this._super.apply(this, arguments);
-        if (channel.supportChannel) {
+        if (thread.getType() === 'support_channel') {
             this.$buttons.find('button').hide();
         }
     },

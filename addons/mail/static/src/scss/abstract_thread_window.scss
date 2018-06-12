@@ -1,17 +1,17 @@
-$o-mail-chat-window-zindex: $zindex-modal + 1 !default;
+$o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
-.o_chat_window {
+.o_thread_window {
     @include o-flex-display;
     @include o-flex-flow(column, nowrap);
     position: fixed;
-    width: $o-mail-chat-window-width;
+    width: $o-mail-thread-window-width;
     max-width: 100%;
     height: 400px;
     max-height: 100%;
     font-size: 12px;
-    background-color: $o-mail-chat-window-bg;
+    background-color: $o-mail-thread-window-bg;
     border-radius: 6px 6px 0 0;
-    z-index: $o-mail-chat-window-zindex;
+    z-index: $o-mail-thread-window-zindex;
     box-shadow: -5px -5px 10px rgba(black, 0.18);
 
     @media (max-width: $screen-xs-max) {
@@ -27,7 +27,7 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
         display: none;
     }
 
-    .o_chat_header {
+    .o_thread_window_header {
         @include o-flex-display;
         @include o-flex(0, 0, auto);
         color: white;
@@ -41,26 +41,26 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
             height: $o-mail-chat-header-height;
             padding-top: 12px;
             border-radius: 0px;
-            .o_chat_title {
+            .o_thread_window_title {
                 font-size: 16px;
                 margin-left: 10px;
             }
 
-            .o_chat_window_close {
+            .o_thread_window_close {
                 font-size: 17px;
                 color: white;
             }
         }
 
-        .o_chat_title {
+        .o_thread_window_title {
             cursor: pointer;
             @include o-flex(1, 1, auto);
             @include o-text-overflow;
         }
 
-        .o_chat_window_buttons {
+        .o_thread_window_buttons {
             @include o-flex(0, 0, auto);
-            .o_chat_window_close, .o_chat_window_expand {
+            .o_thread_window_close, .o_thread_window_expand {
                 color: white;
                 padding: 3px;
                 margin-left: 5px;
@@ -77,7 +77,7 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
         .o_thread_date_separator {
             margin: 0px 0px 15px 0px;
             .o_thread_date {
-                background-color: $o-mail-chat-window-bg;
+                background-color: $o-mail-thread-window-bg;
             }
         }
         .o_thread_message {
@@ -88,12 +88,12 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
         }
     }
 
-    .o_chat_composer input {
+    .o_thread_composer input {
         width: 100%;
     }
 }
 
-.o_chat_window_dropdown {
+.o_thread_window_dropdown {
     width: auto;
     height: 28px;
     color: white;
@@ -105,11 +105,11 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
         display: none;
     }
 
-    .o_chat_header {
+    .o_thread_window_header {
         border-radius: 0;
     }
 
-    .o_chat_window_dropdown_toggler {
+    .o_thread_window_dropdown_toggler {
         padding: 5px;
 
         .o_total_unread_counter {
@@ -119,18 +119,18 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
             font-size: smaller;
         }
     }
-    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter, .o_chat_window_expand {
+    &.open .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
         display: none;
     }
 
     > ul {
-        max-width: $o-mail-chat-window-width;
+        max-width: $o-mail-thread-window-width;
         padding: 0;
 
-        > li.o_chat_header {
+        > li.o_thread_window_header {
             font-size: 12px;
             padding: 3px 5px;
-            &~li.o_chat_header {
+            &~li.o_thread_window_header {
                 border-top: 1px solid white;
             }
             &:hover {
@@ -140,17 +140,17 @@ $o-mail-chat-window-zindex: $zindex-modal + 1 !default;
     }
 }
 
-.o_ui_blocked .o_chat_window {
-    // We cannot put the z-index of chat windows directly to be greater than
+.o_ui_blocked .o_thread_window {
+    // We cannot put the z-index of thread windows directly to be greater than
     // blockUI's as ui-autocomplete dropdowns (which are below blockUI) would
-    // appear under the chat windows (and ui-autocomplete is used to choose the
+    // appear under the thread windows (and ui-autocomplete is used to choose the
     // person you want to chat with). So we only raise the z-index value when
     // the ui is really blocked (in that case, the ui-autocomplete dropdowns
-    // will disappear under the chat windows but this is not really an issue as
+    // will disappear under the thread windows but this is not really an issue as
     // there should not be any at that time).
     z-index: 1101; // blockUI's z-index is 1100
 }
 
-.o_no_chat_window .o_chat_window {
+.o_no_thread_window .o_thread_window {
     display: none;
 }

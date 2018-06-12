@@ -1,8 +1,9 @@
-odoo.define('note.systray', function (require) {
+odoo.define('note.systray.ActivityMenu', function (require) {
 "use strict";
 
+var ActivityMenu = require('mail.systray.ActivityMenu');
+
 var core = require('web.core');
-var ActivityMenu = require('mail.systray').ActivityMenu;
 var datepicker = require('web.datepicker');
 
 var _t = core._t;
@@ -24,8 +25,10 @@ ActivityMenu.include({
      */
     _getActivityData: function () {
         var self = this;
-        return this._super.apply(this, arguments).then(function() {
-            var reminderIndex = _.findIndex(self.activities, function (val) { return val.model == 'note.note'; });
+        return this._super.apply(this, arguments).then(function () {
+            var reminderIndex = _.findIndex(self.activities, function (val) {
+                return val.model === 'note.note';
+            });
             if (reminderIndex > 0) {
                 self.activities.splice(0, 0, self.activities.splice(reminderIndex, 1)[0]);
             }
@@ -60,7 +63,7 @@ ActivityMenu.include({
      */
     _onActivityFilterClick: function (ev) {
         var $el = $(ev.currentTarget);
-        if(!$el.hasClass("o_note")) {
+        if (!$el.hasClass("o_note")) {
             var data = _.extend({}, $el.data(), $(ev.target).data());
             if (data.res_model === "note.note" && data.filter === "my") {
                 this.do_action({
@@ -90,7 +93,6 @@ ActivityMenu.include({
         this.noteDateTimeWidget.$input.attr('placeholder', _t("Today"));
         this.$('.o_note_show, .o_note').toggleClass('hidden');
         this.$('.o_note_input').val('').focus();
-      
     },
     /**
      * When focusing on input for new quick note systerm tray must be open.

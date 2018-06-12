@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-     <div t-name="mail.ChatComposer" t-attf-class="o_chat_composer #{widget.extended ? 'o_chat_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
+     <div t-name="mail.Composer" t-attf-class="o_thread_composer #{widget.extended ? 'o_thread_composer_extended' : (widget.notInline ? '' : 'o_chat_inline_composer')} #{widget.isMini ? 'o_chat_mini_composer' : ''}">
          <div class="o_composer_container">
              <img t-if="widget.avatarURL" height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar img-circle" t-att-src="widget.avatarURL" alt="Avatar"/>
              <div t-if="widget.extended" class="o_composer_subject">
@@ -20,11 +20,11 @@
              <div class="o_composer_attachments_list"/>
          </div>
          <div class="o_composer_send">
-             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.send_text"/></button>
+             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send hidden-xs" type="button"><t t-esc="widget.options.sendText"/></button>
          </div>
          <span class="hide">
             <t t-call="HiddenInputFile">
-                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <t t-set="fileupload_id" t-value="widget.fileuploadID"/>
                 <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
                 <t t-set="multi_upload" t-value="true"/>
                 <input type="hidden" name="model" value="mail.compose.message"/>
@@ -34,15 +34,19 @@
          </span>
     </div>
 
-    <div t-name="mail.ChatComposer.emojis" class="o_mail_emoji_container">
+    <div t-name="mail.Composer.emojis" class="o_mail_emoji_container">
         <t t-foreach="emojis" t-as="emoji">
-            <button t-att-data-emoji="emoji.source" class="btn btn-link o_mail_emoji" t-att-title="emoji.description" t-att-aria-label="emoji.description">
-                <t t-raw="emoji.unicode_source"/>
+            <button t-att-data-emoji="emoji.sources[0]" class="btn btn-link o_mail_emoji" t-att-title="emoji.description" t-att-aria-label="emoji.description">
+                <t t-raw="emoji.unicode"/>
             </button>
         </t>
     </div>
 
-    <t t-name="mail.AbstractMentionSuggestions">
+    <!--
+        @param {Object[]} suggestions
+        @param {boolean} [suggestions.divider=false]
+    -->
+    <t t-name="mail.MentionSuggestions">
         <ul class="dropdown-menu" role="menu">
             <t t-foreach="suggestions" t-as="suggestion">
                 <li role="separator" t-if="suggestion.divider" class="divider"/>
@@ -52,7 +56,7 @@
             </t>
         </ul>
     </t>
-    <t t-name="mail.MentionPartnerSuggestions" t-extend="mail.AbstractMentionSuggestions">
+    <t t-name="mail.MentionSuggestions.Partner" t-extend="mail.MentionSuggestions">
         <t t-jquery=".o_mention_proposition a" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
             <t t-if="suggestion.email">
@@ -60,18 +64,18 @@
             </t>
         </t>
     </t>
-    <t t-name="mail.MentionChannelSuggestions" t-extend="mail.AbstractMentionSuggestions">
+    <t t-name="mail.MentionSuggestions.Channel" t-extend="mail.MentionSuggestions">
         <t t-jquery=".o_mention_proposition a" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.name"/></span>
         </t>
     </t>
-    <t t-name="mail.MentionCannedResponseSuggestions" t-extend="mail.AbstractMentionSuggestions">
+    <t t-name="mail.MentionSuggestions.CannedResponse" t-extend="mail.MentionSuggestions">
         <t t-jquery=".o_mention_proposition a" t-operation="append">
             <span class="o_mention_name"><t t-esc="suggestion.source"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.substitution"/></span>
         </t>
     </t>
-    <t t-name="mail.MentionCommandSuggestions" t-extend="mail.AbstractMentionSuggestions">
+    <t t-name="mail.MentionSuggestions.Command" t-extend="mail.MentionSuggestions">
         <t t-jquery=".o_mention_proposition a" t-operation="append">
             <span class="o_mention_name">/<t t-esc="suggestion.name"/></span>
             <span class="o_mention_info"><t t-esc="suggestion.help"/></span>

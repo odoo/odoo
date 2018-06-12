@@ -5,13 +5,13 @@
             <link rel="stylesheet" type="text/scss" href="/note/static/src/scss/note.scss"/>
         </xpath>
         <xpath expr="//script[last()]" position="after">
-             <script type="text/javascript" src="/note/static/src/js/systray.js"></script>
+             <script type="text/javascript" src="/note/static/src/js/systray_activity_menu.js"></script>
         </xpath>
     </template>
 
     <template id="qunit_suite" name="note_tests" inherit_id="web.qunit_suite">
         <xpath expr="//t[@t-set='head']" position="inside">
-            <script type="text/javascript" src="/note/static/tests/systray_tests.js"></script>
+            <script type="text/javascript" src="/note/static/tests/systray_activity_menu_tests.js"></script>
         </xpath>
     </template>
 </odoo>

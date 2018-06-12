@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <t t-extend="mail.chat.Sidebar">
+    <t t-extend="mail.discuss.Sidebar">
         <t t-jquery="hr" t-operation="before">
-            <t t-foreach="channels" t-as="channel">
-                <t t-if="channel.type == 'livechat'">
-                    <div t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id == channel.id) ? 'o_active': ''}"
-                         t-att-data-channel-id="channel.id">
-                        <span class="o_channel_name"><i class="fa fa-question-circle mr8"/>Odoo Support</span>
-                        <t t-set="counter" t-value="0"/>
-                        <t t-call="mail.chat.SidebarNeedaction"/>
+            <t t-foreach="threads" t-as="thread">
+                <t t-if="thread.getType() == 'support_channel'">
+                    <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == thread.getID()) ? 'o_active': ''}"
+                         t-att-data-thread-id="thread.getID()">
+                        <span class="o_thread_name"><i class="fa fa-question-circle mr8"/>Odoo Support</span>
+                        <t t-set="counter" t-value="thread.getUnreadCounter()"/>
+                        <t t-call="mail.discuss.SidebarCounter"/>
                     </div>
                 </t>
             </t>

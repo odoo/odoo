@@ -1,17 +1,17 @@
-odoo.define('calendar.systray_tests', function (require) {
+odoo.define('calendar.systray.ActivityMenuTests', function (require) {
 "use strict";
 
-var ChatManager = require('mail.ChatManager');
-var systray = require('mail.systray');
+var ActivityMenu = require('mail.systray.ActivityMenu');
+var mailUtils = require('mail.testUtils');
+
 var testUtils = require('web.test_utils');
-var createBusService = require('mail.testUtils').createBusService;
 
 
 QUnit.module('calendar', {}, function () {
 
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
-        this.services = [ChatManager, createBusService()];
+        this.services = mailUtils.getMailServices();
         this.data = {
             'calendar.event': {
                 records: [{
@@ -40,7 +40,7 @@ QUnit.module('ActivityMenu', {
 QUnit.test('activity menu widget:today meetings', function (assert) {
     assert.expect(8);
     var self = this;
-    var activityMenu = new systray.ActivityMenu();
+    var activityMenu = new ActivityMenu();
     testUtils.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
@@ -53,19 +53,19 @@ QUnit.test('activity menu widget:today meetings', function (assert) {
 
     activityMenu.appendTo($('#qunit-fixture'));
 
-    assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
+    assert.ok(activityMenu.$el.hasClass('o_mail_systray_item'), 'should be the instance of widget');
 
     testUtils.intercept(activityMenu, 'do_action', function (event) {
         assert.ok(true, "should have triggered a do_action");
-        assert.strictEqual(event.data.action.res_id,  activityMenu.$('.o_meeting_filter').eq(0).data('res_id'), 'should open particular meeting form view')
+        assert.strictEqual(event.data.action.res_id,  activityMenu.$('.o_meeting_filter').eq(0).data('res_id'), 'should open particular meeting form view');
     });
     activityMenu.$('.dropdown-toggle').click();
     activityMenu.$('.o_meeting_filter').eq(0).click();
 
     testUtils.intercept(activityMenu, 'do_action', function (event) {
-        assert.strictEqual(event.data.action,  "calendar.action_calendar_event", 'should open meeting calendar view in day mode')
+        assert.strictEqual(event.data.action,  "calendar.action_calendar_event", 'should open meeting calendar view in day mode');
     });
-    activityMenu.$('.o_mail_channel_preview').click();
+    activityMenu.$('.o_mail_preview').click();
 
     assert.ok(activityMenu.$('.o_meeting_filter'), "should be a meeting");
     assert.strictEqual(activityMenu.$('.o_meeting_filter').length, 2, 'there should be 2 meetings');

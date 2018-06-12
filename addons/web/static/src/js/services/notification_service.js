@@ -24,7 +24,10 @@ var NotificationService = AbstractService.extend({
         close: '_onCloseNotification',
     },
 
-    init: function () {
+    /**
+     * @override
+     */
+    start: function () {
         this._super.apply(this, arguments);
         this.notifications = {};
     },

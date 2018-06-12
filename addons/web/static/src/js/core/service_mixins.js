@@ -49,8 +49,10 @@ var ServiceProviderMixin = {
                 });
             });
             if (Service) {
-                this.services[Service.prototype.name] = new Service(this);
+                var service = new Service(this);
+                this.services[Service.prototype.name] = service;
                 delete this.UndeployedServices[Service.prototype.name];
+                service.start();
             } else {
                 done = true;
             }
