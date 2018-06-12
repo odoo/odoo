@@ -205,7 +205,7 @@
                 <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                    <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                    <div class="form-group field-db" t-if="not mono_db">
                         <label for="db" class="control-label">Database</label>
                         <div class="input-group">
                             <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>

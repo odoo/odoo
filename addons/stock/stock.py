@@ -1459,7 +1459,7 @@ class stock_picking(models.Model):
                 product_qty = ops.qty_done if done_qtys else ops.product_qty
                 qty_to_assign = uom_obj._compute_qty_obj(cr, uid, ops.product_uom_id, product_qty, ops.product_id.uom_id, context=context)
                 precision_rounding = ops.product_id.uom_id.rounding
-                for move_dict in prod2move_ids.get(ops.product_id.id, []):
+                for move_dict in list(prod2move_ids.get(ops.product_id.id, [])):
                     move = move_dict['move']
                     for quant in move.reserved_quant_ids:
                         if float_compare(qty_to_assign, 0, precision_rounding=precision_rounding) != 1:
