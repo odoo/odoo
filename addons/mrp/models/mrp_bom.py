@@ -80,6 +80,14 @@ class MrpBom(models.Model):
     def onchange_product_tmpl_id(self):
         if self.product_tmpl_id:
             self.product_uom_id = self.product_tmpl_id.uom_id.id
+            if self.product_id.product_tmpl_id != self.product_tmpl_id:
+                self.product_id = False
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        if self.product_id and self.product_id.product_tmpl_id != self.product_tmpl_id:
+            self.product_tmpl_id = self.product_id.product_tmpl_id
+
 
     @api.onchange('routing_id')
     def onchange_routing_id(self):
