@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-from openerp.exceptions import AccessError
+from openerp.exceptions import AccessError, ValidationError
 
 ##############################################################################
 #
@@ -323,6 +323,33 @@ class Bar(models.Model):
         for bar in self:
             bar.foo = self.env['test_new_api.foo'].search([('name', '=', bar.name)], limit=1)
 
+class InverseRequired(models.Model):
+    _name = "test_new_api.inverse_required"
+
+    name = fields.Char(compute="_compute_name", inverse="_inverse_name")
+    reference = fields.Char()
+    required = fields.Boolean()
+    sequence = fields.Integer()
+
+    @api.multi
+    @api.depends("reference", "sequence")
+    def _compute_name(self):
+        for record in self:
+            record.name = u"{} {}".format(record.sequence, record.reference)
+
+    @api.multi
+    def _inverse_name(self):
+        for record in self:
+            parts = record.name.split()
+            parts[0] = int(parts[0])
+            record.sequence, record.reference = parts
+
+    @api.multi
+    @api.constrains("reference", "required", "sequence")
+    def _check_required(self):
+        for record in self:
+            if record.required and not (record.reference and record.sequence):
+                raise ValidationError("Reference and sequence are required.")
 
 class ComputeRecursive(models.Model):
     _name = 'test_new_api.recursive'
