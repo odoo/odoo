@@ -390,9 +390,13 @@ class EventRegistration(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(EventRegistration, self).message_get_suggested_recipients()
+        public_users = set()
+        public_groups = self.env.ref("base.group_public", False)
+        if public_groups:
+            public_users = set(public_groups.sudo().mapped("users").ids)
         try:
             for attendee in self:
-                if attendee.partner_id:
+                if attendee.partner_id and not set(attendee.partner_id.user_ids.ids) & public_users:
                     attendee._message_add_suggested_recipient(recipients, partner=attendee.partner_id, reason=_('Customer'))
                 elif attendee.email:
                     attendee._message_add_suggested_recipient(recipients, email=attendee.email, reason=_('Customer Email'))
