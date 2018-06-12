@@ -36,7 +36,7 @@ from openerp.loglevels import ustr
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
-
+part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
 
 #----------------------------------------------------------
 # HTML Sanitizer
@@ -68,7 +68,6 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False):
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
     # html encode email tags
-    part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace('<%', cgi.escape('<%'))
