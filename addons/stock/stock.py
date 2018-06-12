@@ -4417,6 +4417,7 @@ class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
     _order = 'sequence'
+    _rec_name = 'complete_name'
 
     def open_barcode_interface(self, cr, uid, ids, context=None):
         final_url = "/barcode/web/#action=stock.ui&picking_type_id=" + str(ids[0]) if len(ids) else '0'
@@ -4487,7 +4488,7 @@ class stock_picking_type(osv.osv):
         return dict(self.name_get(cr, uid, ids, context=context))
 
     def name_get(self, cr, uid, ids, context=None):
-        """Overides orm name_get method to display 'Warehouse_name: PickingType_name' """
+        """Overrides orm name_get method to display 'Warehouse_name: PickingType_name' """
         if context is None:
             context = {}
         if not isinstance(ids, list):
@@ -4507,9 +4508,30 @@ class stock_picking_type(osv.osv):
         res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
         return res and res[0] or False
 
+    def _search_by_complete_name(self, cr, uid, model, name, criterion, context):
+        """
+        Search should be symmetric with name_get 'Warehouse_name: PickingType_name'
+        :param cr:
+        :param uid:
+        :param model:
+        :param name:
+        :param criterion: The criterion to look for.
+        :param context:
+        :return: returns a domain that look for stock picking type either by name and warehouse_id.name.
+        """
+        res = []
+        for field, operator, value in criterion:
+            assert field == name
+            if len(res) > 0:
+                res.insert(0, '|')
+            res.append(('warehouse_id.name',operator,value))
+            res.insert(0, '|')
+            res.append(('name',operator,value))
+        return res
+
     _columns = {
         'name': fields.char('Picking Type Name', translate=True, required=True),
-        'complete_name': fields.function(_get_name, type='char', string='Name'),
+        'complete_name': fields.function(_get_name, type='char', string='Name', fnct_search=_search_by_complete_name),
         'color': fields.integer('Color'),
         'sequence': fields.integer('Sequence', help="Used to order the 'All Operations' kanban view"),
         'sequence_id': fields.many2one('ir.sequence', 'Reference Sequence', required=True),
