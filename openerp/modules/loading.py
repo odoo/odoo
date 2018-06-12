@@ -156,7 +156,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         idref = {}
 
         mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
+        if hasattr(package, 'init') and package.state != 'installed' or package.state == 'to install':
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
