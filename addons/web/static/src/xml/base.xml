@@ -202,6 +202,20 @@
     </div>
 </t>
 
+<t t-name="ControlPanel.SwitchButtons.Mobile">
+    <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="o_switch_view_button_icon"/><span class="caret ml8"/>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right list-inline">
+        <li t-foreach="views" t-as="view">
+            <button type="button" t-att-accesskey="view.accessKey"
+                t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
+                t-att-aria-label="view.type"
+                t-att-data-view-type="view.type" t-att-title="view.label" tabindex="-1"/>
+        </li>
+    </ul>
+</t>
+
 <t t-name="ControlPanel.SwitchButtons">
     <t t-foreach="views" t-as="view">
         <button type="button" t-att-accesskey="view.accessKey"

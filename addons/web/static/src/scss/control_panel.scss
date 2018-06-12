@@ -93,6 +93,9 @@
 
         > .o_cp_switch_buttons > .btn:first-child {
             margin-left: $o-horizontal-padding;
+            @media (max-width: $screen-xs-max) {
+                margin-left: $o-horizontal-padding - 6;
+            }
         }
     }
 }

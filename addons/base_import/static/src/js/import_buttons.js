@@ -1,6 +1,7 @@
 odoo.define('base_import.import_buttons', function (require) {
 "use strict";
 
+var config = require('web.config');
 var KanbanController = require('web.KanbanController');
 var KanbanView = require('web.KanbanView');
 var ListController = require('web.ListController');
@@ -25,6 +26,7 @@ var ImportControllerMixin = {
      */
     init: function (parent, model, renderer, params) {
         this.importEnabled = params.importEnabled;
+        this.isMobile = config.device.isMobile;
     },
 
     //--------------------------------------------------------------------------
