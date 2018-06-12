@@ -34,6 +34,7 @@ class ReportBomStructure(models.AbstractModel):
         res = self._get_report_data(bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant)
         res['lines']['report_type'] = 'html'
         res['lines']['report_structure'] = 'all'
+        res['lines']['has_attachments'] = res['lines']['attachments'] or any(component['attachments'] for component in res['lines']['components'])
         res['lines'] = self.env.ref('mrp.report_mrp_bom').render({'data': res['lines']})
         return res
 
@@ -70,7 +71,6 @@ class ReportBomStructure(models.AbstractModel):
                     bom_product_variants[variant.id] = variant.display_name
 
         lines = self._get_bom(bom_id, product_id=searchVariant, line_qty=bom_quantity, level=1)
-
         return {
             'lines': lines,
             'variants': bom_product_variants,
@@ -103,6 +103,8 @@ class ReportBomStructure(models.AbstractModel):
             'level': level or 0,
             'operations': operations,
             'operations_cost': sum([op['total'] for op in operations]),
+            'attachments': self.env['mrp.document'].search(['|', '&',
+                ('res_model', '=', 'product.product'), ('res_id', '=', product.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', product.product_tmpl_id.id)]),
             'operations_time': sum([op['duration_expected'] for op in operations])
         }
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
@@ -135,6 +137,9 @@ class ReportBomStructure(models.AbstractModel):
                 'total': sub_total,
                 'child_bom': line.child_bom_id.id,
                 'phantom_bom': line.child_bom_id and line.child_bom_id.type == 'phantom' or False,
+                'attachments': self.env['mrp.document'].search(['|', '&',
+                    ('res_model', '=', 'product.product'), ('res_id', '=', line.product_id.id), '&', ('res_model', '=', 'product.template'), ('res_id', '=', line.product_id.product_tmpl_id.id)]),
+
             })
             total += sub_total
         return components, total

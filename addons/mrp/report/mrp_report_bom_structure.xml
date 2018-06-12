@@ -28,6 +28,7 @@
                                         <th groups="uom.group_uom">Unit of Measure</th>
                                         <th t-if="data['report_structure'] != 'bom_cost'" class="o_mrp_prod_cost" title="This is the cost defined on the product.">Product Cost</th>
                                         <th t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost" title="This is the cost based on the BoM of the product. It is computed by summing the costs of the components and operations needed to build the product.">BoM Cost</th>
+                                        <th t-if="data['report_type'] == 'html' and data['has_attachments']" class="o_mrp_has_attachments" title="Files attached to the product">Attachments</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,6 +43,13 @@
                                         </td>
                                         <td t-if="data['report_structure'] != 'bom_structure'" class="o_mrp_bom_cost">
                                             <span><t t-esc="data['total']" t-options='{"widget": "monetary", "display_currency": currency}'/></span>
+                                        </td>
+                                        <td t-if="data['report_type'] == 'html'">
+                                            <span>
+                                                <t t-if="data['attachments']">
+                                                    <a role="button" t-att-data-res-id="data['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fa fa-fw o_button_icon fa-files-o"/>
+                                                </t>
+                                            </span>
                                         </td>
                                     </tr>
                                     <t t-if="data['report_type'] == 'html'" t-call="mrp.report_mrp_bom_line"/>
@@ -96,6 +104,13 @@
                 <td class="o_mrp_bom_cost">
                     <span t-esc="l['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                 </td>
+                <td>
+                    <span>
+                        <t t-if="l['attachments']">
+                            <a role="button" t-att-data-res-id="l['attachments'].ids" t-att-data-model="'mrp.document'" class="o_mrp_show_attachment_action fa fa-fw o_button_icon fa-files-o"/>
+                        </t>
+                    </span>
+                </td>
             </tr>
         </t>
         <t t-if="data['operations']">
@@ -115,6 +130,7 @@
                 <td class="o_mrp_bom_cost">
                     <span t-esc="data['operations_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                 </td>
+                <td/>
             </tr>
         </t>
     </template>
@@ -136,6 +152,7 @@
               <td class="o_mrp_bom_cost">
                   <span t-esc="op['total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
               </td>
+              <td/>
           </tr>
       </t>
     </template>
