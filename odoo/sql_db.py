@@ -26,12 +26,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
 
-types_mapping = {
-    'date': (1082,),
-    'time': (1083,),
-    'datetime': (1114,),
-}
-
 def unbuffer(symb, cr):
     if symb is None:
         return None
@@ -42,8 +36,6 @@ def undecimalize(symb, cr):
         return None
     return float(symb)
 
-for name, typeoid in types_mapping.items():
-    psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 

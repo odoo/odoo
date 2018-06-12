@@ -3,7 +3,7 @@
 import math
 import calendar
 import json
-from datetime import date
+from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta
 from odoo.tools.func import monkey_patch
@@ -66,6 +66,58 @@ def get_fiscal_year(date, day=31, month=12):
         date_to = type(date)(date.year + 1, month, min(day, max_day))
     return date_from, date_to
 
+
+def start_of(self, value, granularity):
+    """
+    Get start of a time period from a date or a datetime.
+
+    :param value: Initial date or datetime
+    :param granularity: Type of period in string, can be year, quarter, month, day ou hour
+    """
+    is_datetime = isinstance(value, datetime)
+    if granularity == "year":
+        result = value.replace(month=1, day=1)
+    elif granularity == "quarter":
+        month = int((value.month - 1)/3) * 3 + 1
+        result = value.replace(month=month, day=1)
+    elif granularity == "month":
+        result = value.replace(day=1)
+    elif granularity == "day":
+        result = value
+    elif granularity == "hour" and is_datetime:
+        return datetime.combine(value, time.min).replace(hour=value.hour)
+    elif is_datetime:
+        raise ValueError("Granularity must be year, quarter, month, day or hour for value %s" % value)
+    else:
+        raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
+
+    return datetime.combine(result, time.min) if is_datetime else result
+
+def end_of(self, value, granularity):
+    """
+    Get end of a time period from a date or a datetime.
+
+    :param value: Initial date or datetime
+    :param granularity: Type of period in string, can be year, quarter, month, day ou hour
+    """
+    is_datetime = isinstance(value, datetime)
+    if granularity == "year":
+        result = value.replace(month=12, day=31)
+    elif granularity == "quarter":
+        result = value.replace(month=int((value.month - 1)/3 + 1)*3)
+        result = value + relativedelta(day=1, months=1, days=-1)
+    elif granularity == "month":
+        result = value + relativedelta(day=1, months=1, days=-1)
+    elif granularity == "day":
+        result = value
+    elif granularity == "hour" and is_datetime:
+        return datetime.combine(value, time.max).replace(hour=value.hour)
+    elif is_datetime:
+        raise ValueError("Granularity must be year, quarter, month, day or hour for value %s" % value)
+    else:
+        raise ValueError("Granularity must be year, quarter, month or day for value %s" % value)
+
+    return datetime.combine(result, time.max) if is_datetime else result
 
 @monkey_patch(json.JSONEncoder)
 def default(self, o):

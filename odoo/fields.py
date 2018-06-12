@@ -4,7 +4,8 @@
 """ High-level objects for fields. """
 
 from collections import OrderedDict, defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, time
+from dateutil.relativedelta import relativedelta
 from functools import partial
 from operator import attrgetter
 import itertools
@@ -1521,7 +1522,7 @@ class Date(Field):
         """ Return the current day in the format expected by the ORM.
             This function may be used to compute default values.
         """
-        return date.today().strftime(DATE_FORMAT)
+        return date.today()
 
     @staticmethod
     def context_today(record, timestamp=None):
@@ -1532,7 +1533,7 @@ class Date(Field):
             :param datetime timestamp: optional datetime value to use instead of
                 the current date and time (must be a datetime, regular dates
                 can't be converted between timezones.)
-            :rtype: str
+            :rtype: date
         """
         today = timestamp or datetime.now()
         context_today = None
@@ -1544,13 +1545,15 @@ class Date(Field):
             except Exception:
                 _logger.debug("failed to compute context/client-specific today date, using UTC value for `today`",
                               exc_info=True)
-        return (context_today or today).strftime(DATE_FORMAT)
+        return context_today or today
 
     @staticmethod
     def from_string(value):
         """ Convert an ORM ``value`` into a :class:`date` value. """
         if not value:
             return None
+        if isinstance(value, date) and not isinstance(value, datetime):
+            return value
         value = value[:DATE_LENGTH]
         return datetime.strptime(value, DATE_FORMAT).date()
 
@@ -1559,18 +1562,12 @@ class Date(Field):
         """ Convert a :class:`date` value into the format expected by the ORM. """
         return value.strftime(DATE_FORMAT) if value else False
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return super(Date, self).convert_to_column(value or None, record, values, validate)
-
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, pycompat.string_types):
-            if validate:
-                # force parsing for validation
-                self.from_string(value)
-            return value[:DATE_LENGTH]
-        return self.to_string(value)
+        if isinstance(value, datetime):
+            raise TypeError("%s (record %s) must be string or date, not datetime." % (value, record))
+        return self.from_string(value)
 
     def convert_to_export(self, value, record):
         if not value:
@@ -1622,31 +1619,24 @@ class Datetime(Field):
         """ Convert an ORM ``value`` into a :class:`datetime` value. """
         if not value:
             return None
-        value = value[:DATETIME_LENGTH]
-        if len(value) == DATE_LENGTH:
-            value += " 00:00:00"
-        return datetime.strptime(value, DATETIME_FORMAT)
+        if isinstance(value, datetime):
+            return value
+        try:
+            return datetime.strptime(value[:DATETIME_LENGTH], DATETIME_FORMAT)
+        except ValueError:
+            return datetime.strptime(value, DATE_FORMAT)
 
     @staticmethod
     def to_string(value):
         """ Convert a :class:`datetime` value into the format expected by the ORM. """
         return value.strftime(DATETIME_FORMAT) if value else False
 
-    def convert_to_column(self, value, record, values=None, validate=True):
-        return super(Datetime, self).convert_to_column(value or None, record, values, validate)
-
     def convert_to_cache(self, value, record, validate=True):
         if not value:
             return False
-        if isinstance(value, pycompat.string_types):
-            if validate:
-                # force parsing for validation
-                self.from_string(value)
-            value = value[:DATETIME_LENGTH]
-            if len(value) == DATE_LENGTH:
-                value += " 00:00:00"
-            return value
-        return self.to_string(value)
+        if isinstance(value, date) and not isinstance(value, datetime):
+            raise TypeError("%s (record %s) must be string or datetime, not date." % (value, record))
+        return self.from_string(value)
 
     def convert_to_export(self, value, record):
         if not value:
