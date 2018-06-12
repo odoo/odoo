@@ -12,7 +12,7 @@
          local(Symbola);
 }
 
-.o_chat_composer {
+.o_thread_composer {
     position: relative;
     @include o-flex(0, 0, auto);
     @include o-flex-display;
@@ -244,8 +244,8 @@
     //font-size:150%;
     font-family: emojifont;
 }
-.o_mail_channel_preview .o_mail_emoji{
-    font-size:100%;
+.o_mail_preview .o_mail_emoji {
+    font-size: 100%;
 }
 
 // Attachment Icons (common for chat thread and chat composer)
@@ -428,7 +428,7 @@ $o-mail-attachment-margin: 5px;
     }
 }
 .o_modal_fullscreen {
-    z-index: $o-mail-chat-window-zindex + 1;
+    z-index: $o-mail-thread-window-zindex + 1;
 
     .o_viewer_content {
         position: relative;

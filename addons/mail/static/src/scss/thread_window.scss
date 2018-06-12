@@ -1,6 +1,6 @@
-.o_chat_window {
+.o_thread_window {
     &.o_thread_less {
-        .o_chat_search_input {
+        .o_thread_search_input {
             @include o-flex-display;
             @include o-align-items(baseline);
             padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
@@ -20,12 +20,12 @@
             background-color: $o-webclient-background-color;
         }
 
-        .o_chat_composer {
+        .o_thread_composer {
             display: none;
         }
     }
 
-    .o_chat_composer {
+    .o_thread_composer {
         .o_composer {
             .o_composer_input {
                 width: 80%;

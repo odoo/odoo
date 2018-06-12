@@ -11,7 +11,7 @@ var BusService =  AbstractService.extend({
     /**
      * @override
      */
-    init: function () {
+    start: function () {
         this._super.apply(this, arguments);
         this.bus = bus;
         this._audio = null;
@@ -33,19 +33,18 @@ var BusService =  AbstractService.extend({
     /**
      * Send a notification, and notify once per browser's tab
      *
-     * @param {web.Widget} widget the widget that called sendNotification
      * @param {string} title
      * @param {string} content
      */
-    sendNotification: function (widget, title, content) {
+    sendNotification: function (title, content) {
         if (window.Notification && Notification.permission === "granted") {
             if (this.bus.is_master) {
                 this._sendNativeNotification(title, content);
             }
         } else {
-            widget.do_notify(title, content);
+            this.do_notify(title, content);
             if (this.bus.is_master) {
-                this._beep(widget);
+                this._beep();
             }
         }
     },
@@ -58,14 +57,13 @@ var BusService =  AbstractService.extend({
      * Lazily play the 'beep' audio on sent notification
      *
      * @private
-     * @param {web.Widget} widget
      */
-    _beep: function (widget) {
+    _beep: function () {
         if (typeof(Audio) !== "undefined") {
             if (!this._audio) {
                 this._audio = new Audio();
                 var ext = this._audio.canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3";
-                var session = widget.getSession();
+                var session = this.getSession();
                 this._audio.src = session.url("/mail/static/src/audio/ting" + ext);
             }
             this._audio.play();

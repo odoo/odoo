@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
 
-    <t t-extend="mail.chat.Sidebar">
-        <t t-jquery=".o_mail_chat_sidebar" t-operation="append">
-            <t t-set="channel_type" t-value="'livechat'"/>
-            <t t-set="disable_add_channel" t-value="true"/>
-            <t t-call="mail.chat.SidebarTitle">
-                <t t-set="channel_title">Livechat</t>
-                <t t-set="channel_icon" t-value="fa-comments"/>
+    <t t-extend="mail.discuss.Sidebar">
+        <t t-jquery=".o_mail_discuss_sidebar" t-operation="append">
+            <t t-set="type" t-value="'livechat'"/>
+            <t t-set="disableAddThread" t-value="true"/>
+            <t t-call="mail.discuss.SidebarTitle">
+                <t t-set="title">Livechat</t>
+                <t t-set="icon" t-value="fa-comments"/>
             </t>
-            <t t-call="mail.chat.SidebarItems"/>
+            <t t-call="mail.discuss.SidebarItems"/>
         </t>
     </t>
 

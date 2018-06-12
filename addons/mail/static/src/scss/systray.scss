@@ -1,5 +1,5 @@
-// Navbar icon and dropdown
-.o_mail_navbar_item {
+// Systray icon and dropdown
+.o_mail_systray_item {
     > a {
         opacity: 1;
         > i {
@@ -15,7 +15,7 @@
             display: none;
         }
     }
-    &.open .o_mail_navbar_dropdown {
+    &.open .o_mail_systray_dropdown {
         @include o-flex-display;
         @include o-flex-flow(column, nowrap);
     }
@@ -26,7 +26,7 @@
         padding: 0em 0.3em;
         font-size: 0.7em;
     }
-    .o_mail_navbar_dropdown {
+    .o_mail_systray_dropdown {
         width: 350px;
         padding: 0;
 
@@ -38,7 +38,7 @@
             height: 50px;
         }
 
-        .o_mail_navbar_dropdown_top {
+        .o_mail_systray_dropdown_top {
             @include o-flex-display;
             @include o-flex(0, 0, auto);
             justify-content: space-between;
@@ -59,23 +59,23 @@
             }
         }
 
-        .o_mail_navbar_dropdown_channels {
+        .o_mail_systray_dropdown_items {
             @include o-flex(0, 1, auto);
             max-height: 400px;
             min-height: 50px;
             overflow-y: auto;
 
             @media (min-width: $screen-sm-min) {
-                .o_mail_channel_preview {
+                .o_mail_preview {
                     min-height: 50px;
                     padding: 5px;
-                    .o_mail_channel_image {
+                    .o_mail_preview_image {
                         width: 40px;
                         height: 40px;
                     }
-                    .o_channel_info {
+                    .o_preview_info {
                         margin-left: 10px;
-                        .o_channel_title {
+                        .o_preview_title {
                             .o_last_message_date {
                                 padding-top: 2px;
                                 font-size: x-small;
@@ -99,29 +99,29 @@
     }
 }
 
-.o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
+.o_no_thread_window .o_mail_systray_dropdown .o_new_message {
     display: none;  // hide 'new message' button if chat windows are disabled
 }
 
 // Mobile rules
 // Goal: mock the design of Discuss in mobile
 @media (max-width: $screen-xs-max) {
-    .o_mail_navbar_item {
+    .o_mail_systray_item {
         .o_notification_counter {
             top: 10%;
         }
-        .o_mail_navbar_dropdown {
+        .o_mail_systray_dropdown {
             position: relative;
-            .o_mail_navbar_dropdown_top {
+            .o_mail_systray_dropdown_top {
                 padding: 5px;
             }
-            .o_mail_navbar_mobile_header {
+            .o_mail_systray_mobile_header {
                 padding: 5px;
                 height: 44px;
                 border-bottom: 1px solid #ebebeb;
                 box-shadow: 0 0 2px $gray-lighter-darker;
             }
-            .o_mail_navbar_dropdown_channels {
+            .o_mail_systray_dropdown_items {
                 max-height: none;
                 padding-bottom: 52px; // leave space for tabs
             }

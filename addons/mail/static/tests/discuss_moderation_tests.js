@@ -1,16 +1,11 @@
 odoo.define('mail.discuss_moderation_tests', function (require) {
 "use strict";
 
-var ChatManager = require('mail.ChatManager');
 var mailTestUtils = require('mail.testUtils');
 
-var Bus = require('web.Bus');
-
-var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
 
 QUnit.module('mail', {}, function () {
-
 QUnit.module('Discuss moderation', {
     beforeEach: function () {
         // patch _.debounce and _.throttle to be fast and synchronous
@@ -71,7 +66,7 @@ QUnit.module('Discuss moderation', {
                 },
             },
         };
-        this.services = [ChatManager, createBusService()];
+        this.services = mailTestUtils.getMailServices();
     },
     afterEach: function () {
         // unpatch _.debounce and _.throttle
@@ -104,8 +99,8 @@ QUnit.test('moderator: display moderation box', function (assert) {
         services: this.services,
     })
     .then(function (discuss) {
-        var moderationBoxSelector = '.o_mail_chat_channel_item' +
-                                    '[data-channel-id="channel_moderation"]';
+        var moderationBoxSelector = '.o_mail_discuss_item' +
+                                    '[data-thread-id="mailbox_moderation"]';
         assert.strictEqual(discuss.$(moderationBoxSelector).length, 1,
             "there should be a moderation mailbox");
         discuss.destroy();
@@ -149,8 +144,8 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
     })
     .then(function (discuss) {
         var $moderationBox = discuss.$(
-                                '.o_mail_chat_channel_item' +
-                                '[data-channel-id="channel_moderation"]');
+                                '.o_mail_discuss_item' +
+                                '[data-thread-id="mailbox_moderation"]');
         var $mailboxCounter = $moderationBox.find('.o_mail_sidebar_needaction.badge');
         assert.strictEqual($mailboxCounter.length, 1,
             "there should be a counter next to the moderation mailbox in the sidebar");
@@ -186,16 +181,16 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             "there should be a contextual moderation decision to ban the user of the message");
 
         // check select all (enabled) / unselect all (disabled) buttons
-        assert.strictEqual($('.o_mail_chat_button_select_all').length, 1,
+        assert.strictEqual($('.o_mail_discuss_button_select_all').length, 1,
             "there should be a 'Select All' button in the control panel");
-        assert.notOk($('.o_mail_chat_button_select_all').hasClass('disabled'),
+        assert.notOk($('.o_mail_discuss_button_select_all').hasClass('disabled'),
             "the 'Select All' button should not be disabled");
-        assert.strictEqual($('.o_mail_chat_button_unselect_all').length, 1,
+        assert.strictEqual($('.o_mail_discuss_button_unselect_all').length, 1,
             "there should be a 'Unselect All' button in the control panel");
-        assert.ok($('.o_mail_chat_button_unselect_all').hasClass('disabled'),
+        assert.ok($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
             "the 'Unselect All' button should be disabled");
         // check moderate all buttons (invisible)
-        var moderateAllSelector = '.o_mail_chat_button_moderate_all';
+        var moderateAllSelector = '.o_mail_discuss_button_moderate_all';
         assert.strictEqual($(moderateAllSelector).length, 3,
             "there should be 3 buttons to moderate selected messages in the control panel");
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').length, 1,
@@ -216,9 +211,9 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
         assert.ok($message.find('.moderation_checkbox').prop('checked'),
             "the moderation checkbox should become checked after click");
         // check select all (disabled) / unselect all buttons (enabled)
-        assert.ok($('.o_mail_chat_button_select_all').hasClass('disabled'),
+        assert.ok($('.o_mail_discuss_button_select_all').hasClass('disabled'),
             "the 'Select All' button should be disabled");
-        assert.notOk($('.o_mail_chat_button_unselect_all').hasClass('disabled'),
+        assert.notOk($('.o_mail_discuss_button_unselect_all').hasClass('disabled'),
             "the 'Unselect All' button should not be disabled");
         // check moderate all buttons updated (visible)
         assert.strictEqual($(moderateAllSelector + '[data-decision="accept"]').attr('style'),
@@ -229,7 +224,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', funct
             'display: inline-block;', 'the moderate button "Discard" should become visible');
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         $message = discuss.$('.o_thread_message');
         // check correct message
         assert.strictEqual($message.length, 1,
@@ -249,9 +244,6 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
     assert.expect(12);
     var done = assert.async();
 
-    var bus = new Bus();
-    var BusService = createBusService(bus);
-
     this.data.initMessaging = {
         channel_slots: {
             channel_channel: [{
@@ -281,7 +273,7 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'moderate') {
                 assert.step('moderate');
@@ -290,21 +282,6 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
                 assert.strictEqual(messageIDs.length, 1, "should moderate one message");
                 assert.strictEqual(messageIDs[0], 100, "should moderate message with ID 100");
                 assert.strictEqual(decision, 'accept', "should accept the message");
-
-                // simulate notification back (new accepted message in channel)
-                var dbName = undefined; // useless for tests
-                var messageData = {
-                    author_id: [2, "Someone"],
-                    body: "<p>test</p>",
-                    channel_ids: [],
-                    id: 100,
-                    model: 'mail.channel',
-                    moderation_status: 'accepted'
-                };
-                var metaData = [dbName, 'mail.channel'];
-                var notification = [metaData, messageData];
-                bus.trigger('notification', [notification]);
-                return $.when();
             }
             return this._super.apply(this, arguments);
         },
@@ -312,8 +289,8 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
     .then(function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
-                                '.o_mail_chat_channel_item' +
-                                '[data-channel-id="channel_moderation"]');
+                                '.o_mail_discuss_item' +
+                                '[data-thread-id="mailbox_moderation"]');
         $moderationBox.click();
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
@@ -333,7 +310,7 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         $message = discuss.$('.o_thread_message');
         // check message is there and has no moderate checkbox
         assert.strictEqual($message.length, 1,
@@ -351,9 +328,6 @@ QUnit.test('moderator: accept pending moderation message', function (assert) {
 QUnit.test('moderator: reject pending moderation message (reject with explanation)', function (assert) {
     assert.expect(21);
     var done = assert.async();
-
-    var bus = new Bus();
-    var BusService = createBusService(bus);
 
     this.data.initMessaging = {
         channel_slots: {
@@ -384,7 +358,7 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'moderate') {
                 assert.step('moderate');
@@ -398,17 +372,6 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
                     "should have correct reject message title");
                 assert.strictEqual(kwargs.comment, "Your message was rejected by moderator.",
                     "should have correct reject message body / comment");
-
-                // simulate notification back (deletion of rejected message in channel)
-                var dbName = undefined; // useless for tests
-                var notifData = {
-                    message_ids: messageIDs,
-                    type: "deletion",
-                };
-                var metaData = [dbName, 'res.partner'];
-                var notification = [metaData, notifData];
-                bus.trigger('notification', [notification]);
-                return $.when();
             }
             return this._super.apply(this, arguments);
         },
@@ -416,8 +379,8 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
     .then(function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
-                                '.o_mail_chat_channel_item' +
-                                '[data-channel-id="channel_moderation"]');
+                                '.o_mail_discuss_item' +
+                                '[data-thread-id="mailbox_moderation"]');
         $moderationBox.click();
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
@@ -456,13 +419,13 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
         $('.modal-footer button').click();
         assert.verifySteps(['moderate']);
 
-        // stop the fadeout animation and immediately remove the element
+        // // stop the fadeout animation and immediately remove the element
         discuss.$('.o_thread_message').stop(false, true);
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,
             "should now have no message displayed in moderated channel");
 
@@ -474,9 +437,6 @@ QUnit.test('moderator: reject pending moderation message (reject with explanatio
 QUnit.test('moderator: discard pending moderation message (reject without explanation)', function (assert) {
     assert.expect(15);
     var done = assert.async();
-
-    var bus = new Bus();
-    var BusService = createBusService(bus);
 
     this.data.initMessaging = {
         channel_slots: {
@@ -507,7 +467,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'moderate') {
                 assert.step('moderate');
@@ -516,17 +476,6 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
                 assert.strictEqual(messageIDs.length, 1, "should moderate one message");
                 assert.strictEqual(messageIDs[0], 100, "should moderate message with ID 100");
                 assert.strictEqual(decision, 'discard', "should discard the message");
-
-                // simulate notification back (deletion of rejected message in channel)
-                var dbName = undefined; // useless for tests
-                var notifData = {
-                    message_ids: messageIDs,
-                    type: 'deletion',
-                };
-                var metaData = [dbName, 'res.partner'];
-                var notification = [metaData, notifData];
-                bus.trigger('notification', [notification]);
-                return $.when();
             }
             return this._super.apply(this, arguments);
         },
@@ -534,8 +483,8 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
     .then(function (discuss) {
         // 1. go to moderation box
         var $moderationBox = discuss.$(
-                                '.o_mail_chat_channel_item' +
-                                '[data-channel-id="channel_moderation"]');
+                                '.o_mail_discuss_item' +
+                                '[data-thread-id="mailbox_moderation"]');
         $moderationBox.click();
         // check there is a message to moderate
         var $message = discuss.$('.o_thread_message');
@@ -571,7 +520,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
             "should now have no message displayed in moderation box");
 
         // 2. go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         assert.strictEqual(discuss.$('.o_thread_message').length, 0,
             "should now have no message displayed in moderated channel");
 
@@ -584,8 +533,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     assert.expect(4);
     var done = assert.async();
 
-    var bus = new Bus();
-    var BusService = createBusService(bus);
+    var bus = this.services[1].prototype.bus;
 
     var messagePostDef = $.Deferred();
 
@@ -605,7 +553,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'message_post') {
                 var message = {
@@ -637,7 +585,7 @@ QUnit.test('author: send message in moderated channel', function (assert) {
     .then(function (discuss) {
 
         // go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         // post a message
         discuss.$('.o_composer_input textarea').first().val("some text");
         discuss.$('.o_composer_send button').click();
@@ -665,8 +613,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
     assert.expect(8);
     var done = assert.async();
 
-    var bus = new Bus();
-    var BusService = createBusService(bus);
+    var bus = this.services[1].prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -695,7 +642,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         session: {
             partner_id: 2,
         },
@@ -703,7 +650,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
     .then(function (discuss) {
 
         // go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         // check message is pending
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
@@ -729,7 +676,7 @@ QUnit.test('author: sent message accepted in moderated channel', function (asser
         var notification = [metaData, messageData];
         bus.trigger('notification', [notification]);
 
-        // // check message is accepted
+        // check message is accepted
         $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,
             "should still have a message in the thread");
@@ -749,8 +696,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
     assert.expect(5);
     var done = assert.async();
 
-    var bus = new Bus();
-    var BusService = createBusService(bus);
+    var bus = this.services[1].prototype.bus;
 
     this.data.initMessaging = {
         channel_slots: {
@@ -779,7 +725,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
         context: {},
         params: {},
         data: this.data,
-        services: [ChatManager, BusService],
+        services: this.services,
         session: {
             partner_id: 2,
         },
@@ -787,7 +733,7 @@ QUnit.test('author: sent message rejected in moderated channel', function (asser
     .then(function (discuss) {
 
         // go to channel 'general'
-        discuss.$('.o_mail_chat_channel_item[data-channel-id="1"]').click();
+        discuss.$('.o_mail_discuss_item[data-thread-id="1"]').click();
         // check message is pending
         var $message = discuss.$('.o_thread_message');
         assert.strictEqual($message.length, 1,

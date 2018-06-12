@@ -20,8 +20,8 @@
         </t>
     </t>
 
-    <t t-extend="mail.chat.ActivityMenuPreview">
-        <t t-jquery="div.o_channel_title" t-operation="after">
+    <t t-extend="mail.systray.ActivityMenu.Previews">
+        <t t-jquery="div.o_preview_title" t-operation="after">
             <div t-if="activity and activity.type == 'meeting'">
                 <t t-set="is_next_meeting" t-value="true"/>
                 <t t-foreach="activity.meetings" t-as="meeting">

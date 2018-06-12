@@ -1,11 +1,14 @@
 odoo.define('mail.testUtils', function (require) {
 "use strict";
 
-var Discuss = require('mail.chat_discuss');
+var Discuss = require('mail.Discuss');
+var MailService = require('mail.Service');
 
 var AbstractService = require('web.AbstractService');
+var AbstractStorageService = require('web.AbstractStorageService');
 var Bus = require('web.Bus');
 var ControlPanel = require('web.ControlPanel');
+var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -17,51 +20,7 @@ var Widget = require('web.Widget');
  */
 
 /**
- * Create a mock bus_service, using 'bus' instead of bus.bus
- *
- * @param {web.bus} bus
- * @return {AbstractService} the mock bus_service
- */
-function createBusService(bus) {
-    var BusService =  AbstractService.extend({
-        name: 'bus_service',
-        /**
-         * @override
-         */
-        init: function () {
-            this._super.apply(this, arguments);
-            if (!bus) {
-                bus = new Bus();
-            }
-            this.bus = new _.extend(bus, {
-                /**
-                 * Do nothing
-                 */
-                start_polling: function () {},
-                is_odoo_focused: function () {
-                    return true;
-                },
-            });
-        },
-
-        //--------------------------------------------------------------------------
-        // Public
-        //--------------------------------------------------------------------------
-
-        /**
-         * Get the bus
-         */
-        getBus: function () {
-            return this.bus;
-        },
-    });
-
-    return BusService;
-}
-
-/**
  * Create asynchronously a discuss widget.
- * This is async due to chat_manager service that needs to be ready.
  *
  * @param {Object} params
  * @return {$.Promise} resolved with the discuss widget
@@ -99,9 +58,46 @@ function createDiscuss(params) {
     });
 }
 
+/**
+ * Returns the list of mail services required by the mail components: a
+ * mail_service, and its two dependencies bus_service and local_storage.
+ *
+ * @return {AbstractService[]} an array of 3 services: mail_service, bus_service
+ * and local_storage, in that order
+ */
+function getMailServices() {
+    var MockBus = Bus.extend({
+        /**
+         * Do nothing
+         */
+        start_polling: function () {},
+        is_odoo_focused: function () { return true; },
+    });
+    var BusService =  AbstractService.extend({
+        name: 'bus_service',
+        bus: new MockBus(),
+
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+
+        /**
+         * @returns {Bus}
+         */
+        getBus: function () {
+            return this.bus;
+        }
+    });
+    var LocalStorageService = AbstractStorageService.extend({
+        name: 'local_storage',
+        storage: new RamStorage(),
+    });
+    return [MailService, BusService, LocalStorageService];
+}
+
 return {
-    createBusService: createBusService,
     createDiscuss: createDiscuss,
+    getMailServices: getMailServices,
 };
 
 });

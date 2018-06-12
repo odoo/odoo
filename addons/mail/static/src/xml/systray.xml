@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="mail.chat.MessagingMenu">
-        <li class="o_mail_navbar_item">
+    <!--
+        @param {mail.systray.MessagingMenu} widget
+    -->
+    <t t-name="mail.systray.MessagingMenu">
+        <li class="o_mail_systray_item">
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
                 <i class="fa fa-comments" role="img" aria-label="Messages"/> <span class="o_notification_counter badge"/>
             </a>
-            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
-                <li role="menuitem" t-if="widget.isMobile">
-                    <div class="o_mail_navbar_mobile_header">
+            <ul class="o_mail_systray_dropdown dropdown-menu" role="menu">
+                <li role="menuitem" t-if="widget.isMobile()">
+                    <div class="o_mail_systray_mobile_header">
                         <button type="button" class="btn btn-default btn-sm o_new_message"> New message </button>
                     </div>
                 </li>
-                <li role="menuitem" t-if="!widget.isMobile" class="o_mail_navbar_dropdown_top">
+                <li role="menuitem" t-if="!widget.isMobile()" class="o_mail_systray_dropdown_top">
                     <div>
                         <button type="button" class="btn btn-sm btn-link o_filter_button active"> All </button>
                         <button type="button" class="btn btn-sm btn-link o_filter_button" data-filter='chat'> Chat </button>
@@ -20,8 +23,8 @@
                     </div>
                     <button type="button" class="btn btn-sm btn-link o_new_message"> New message </button>
                 </li>
-                <li role="menuitem" class="o_mail_navbar_dropdown_channels"/>
-                <li role="menuitem" t-if="widget.isMobile">
+                <li role="menuitem" class="o_mail_systray_dropdown_items"/>
+                <li role="menuitem" t-if="widget.isMobile()">
                     <div class="o_mail_mobile_tabs">
                         <div class="o_mail_mobile_tab o_filter_button active">
                             <span class="o_tab_title fa fa-envelope">All</span>
@@ -38,31 +41,38 @@
         </li>
     </t>
 
-    <t t-name="mail.chat.ChannelsPreview">
-         <t t-if="_.isEmpty(channels)">
+    <!--
+        @param {Object} previews valid list of objects for preview rendering
+          (see mail.Preview template)
+    -->
+    <t t-name="mail.systray.MessagingMenu.Previews">
+         <t t-if="_.isEmpty(previews)">
             <li class="text-center o_no_activity mt16">
-                <span>No discussion yet...</span>
+                <span>No conversation yet...</span>
             </li>
         </t>
-        <t t-foreach="channels" t-as="channel">
-            <t t-call="mail.chat.ChannelPreview"/>
+        <t t-foreach="previews" t-as="preview">
+            <t t-call="mail.Preview"/>
         </t>
     </t>
 
-    <t t-name="mail.chat.ActivityMenuPreview">
+    <!--
+        @param {Object[]} activities
+    -->
+    <t t-name="mail.systray.ActivityMenu.Previews">
         <t t-if="_.isEmpty(activities)">
             <li class="text-center o_no_activity">
                 <span>No activities planned.</span>
             </li>
         </t>
         <t t-foreach="activities" t-as="activity">
-            <div class="o_mail_channel_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
-                <div class="o_mail_channel_image o_mail_channel_app">
+            <div class="o_mail_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+                <div class="o_mail_preview_image o_mail_preview_app">
                     <img t-att-src="activity.icon" alt="Activity"/>
                 </div>
-                <div class="o_channel_info">
-                    <div class="o_channel_title">
-                        <span class="o_channel_name">
+                <div class="o_preview_info">
+                    <div class="o_preview_title">
+                        <span class="o_preview_name">
                             <t t-esc="activity.name"/>
                         </span>
                     </div>
@@ -79,13 +89,13 @@
         </t>
     </t>
 
-    <t t-name="mail.chat.ActivityMenu">
-        <li class="o_mail_navbar_item">
+    <t t-name="mail.systray.ActivityMenu">
+        <li class="o_mail_systray_item">
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
                 <i class="fa fa-clock-o" role="img" aria-label="Activities"/> <span class="o_notification_counter badge"/>
             </a>
-            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
-                <li role="menuitem" class="o_mail_navbar_dropdown_channels"/>
+            <ul class="o_mail_systray_dropdown dropdown-menu" role="menu">
+                <li role="menuitem" class="o_mail_systray_dropdown_items"/>
             </ul>
         </li>
     </t>

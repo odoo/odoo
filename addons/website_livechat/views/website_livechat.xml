@@ -8,12 +8,19 @@
         -->
         <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
+                    <!-- thread window -->
+                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/livechat_window.js"></script>
                 <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/chat_window.scss"></link>
+                <!-- Models -->
+                    <!-- messages -->
+                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
+                    <script type="text/javascript" src="/im_livechat/static/src/js/models/livechat_message.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
             </xpath>

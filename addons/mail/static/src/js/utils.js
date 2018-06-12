@@ -1,24 +1,28 @@
 odoo.define('mail.utils', function (require) {
 "use strict";
 
-function parse_and_transform(html_string, transform_function) {
-    var open_token = "OPEN" + Date.now();
-    var string = html_string.replace(/&lt;/g, open_token);
+var core = require('web.core');
+
+var _t = core._t;
+
+function parseAndTransform(htmlString, transformFunction) {
+    var openToken = "OPEN" + Date.now();
+    var string = htmlString.replace(/&lt;/g, openToken);
     var children = $('<div>').html(string).contents();
-    return _parse_and_transform(children, transform_function)
-                .replace(new RegExp(open_token, "g"), "&lt;");
+    return _parseAndTransform(children, transformFunction)
+                .replace(new RegExp(openToken, "g"), "&lt;");
 }
-function _parse_and_transform(nodes, transform_function) {
+function _parseAndTransform(nodes, transformFunction) {
     return _.map(nodes, function (node) {
-        return transform_function(node, function () {
-            return _parse_and_transform(node.childNodes, transform_function);
+        return transformFunction(node, function () {
+            return _parseAndTransform(node.childNodes, transformFunction);
         });
     }).join("");
 }
 
 // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
 // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
-var url_regexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._\+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_\+.~#?&'$//=]*)/gi;
+var urlRegexp = /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+.~#?&'$//=]*)/gi;
 function linkify(text, attrs) {
     attrs = attrs || {};
     if (attrs.target === undefined) {
@@ -27,28 +31,28 @@ function linkify(text, attrs) {
     attrs = _.map(attrs, function (value, key) {
         return key + '="' + _.escape(value) + '"';
     }).join(' ');
-    return text.replace(url_regexp, function (url) {
+    return text.replace(urlRegexp, function (url) {
         var href = (!/^https?:\/\//i.test(url)) ? "http://" + url : url;
         return '<a ' + attrs + ' href="' + href + '">' + url + '</a>';
     });
 }
 
-function add_link (node, transform_children) {
+function addLink(node, transformChildren) {
     if (node.nodeType === 3) {  // text node
         return linkify(node.data);
     }
     if (node.tagName === "A") return node.outerHTML;
-    node.innerHTML = transform_children();
+    node.innerHTML = transformChildren();
     return node.outerHTML;
 }
 
-function strip_html (node, transform_children) {
+function stripHTML(node, transformChildren) {
     if (node.nodeType === 3) return node.data;  // text node
     if (node.tagName === "BR") return "\n";
-    return transform_children();
+    return transformChildren();
 }
 
-function inline (node, transform_children) {
+function inline(node, transform_children) {
     if (node.nodeType === 3) return node.data;
     if (node.nodeType === 8) return "";
     if (node.tagName === "BR") return " ";
@@ -58,7 +62,7 @@ function inline (node, transform_children) {
 }
 
 // Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
-function parse_email (text) {
+function parseEmail(text) {
     if (text){
         var result = text.match(/(.*)<(.*@.*)>/);
         if (result) {
@@ -74,13 +78,13 @@ function parse_email (text) {
 
 // Replaces textarea text into html text (add <p>, <a>)
 // TDE note : should be done server-side, in Python -> use mail.compose.message ?
-function get_text2html (text) {
+function getTextToHTML(text) {
     return text
         .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
         .replace(/[\n\r]/g,'<br/>');
 }
 
-var accented_letters_mapping = {
+var accentedLettersMapping = {
     'a': '[àáâãäå]',
     'ae': 'æ',
     'c': 'ç',
@@ -92,21 +96,29 @@ var accented_letters_mapping = {
     'u': '[ùúûűü]',
     'y': '[ýÿ]',
 };
-function unaccent (str) {
-    _.each(accented_letters_mapping, function (value, key) {
+function unaccent(str) {
+    _.each(accentedLettersMapping, function (value, key) {
         str = str.replace(new RegExp(value, 'g'), key);
     });
     return str;
 }
 
+function timeFromNow(date) {
+    if (moment().diff(date, 'seconds') < 45) {
+        return _t("now");
+    }
+    return date.fromNow();
+}
+
 return {
-    parse_and_transform: parse_and_transform,
-    add_link: add_link,
-    linkify: linkify,
-    strip_html: strip_html,
+    addLink: addLink,
+    getTextToHTML: getTextToHTML,
     inline: inline,
-    parse_email: parse_email,
-    get_text2html: get_text2html,
+    linkify: linkify,
+    parseAndTransform: parseAndTransform,
+    parseEmail: parseEmail,
+    stripHTML: stripHTML,
+    timeFromNow: timeFromNow,
     unaccent: unaccent,
 };
 

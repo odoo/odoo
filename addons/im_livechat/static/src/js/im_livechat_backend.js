@@ -1,18 +1,23 @@
-odoo.define('im_livechat.chat_discuss', function (require) {
+odoo.define('im_livechat.Discuss', function (require) {
 "use strict";
 
-var Discuss = require('mail.chat_discuss');
+var Discuss = require('mail.Discuss');
 
 Discuss.include({
     _renderSidebar: function (options) {
-        // Override to sort livechat channels by last message's date
-        var channel_partition = _.partition(options.channels, function (channel) {
-            return channel.type === 'livechat';
+        // Override to sort livechat threads by last message's date
+        var threadPartition = _.partition(options.threads, function (thread) {
+            return thread.getType() === 'livechat';
         });
-        channel_partition[0].sort(function (c1, c2) {
-            return c2.last_message_date.diff(c1.last_message_date);
+        threadPartition[0].sort(function (c1, c2) {
+            if (!c1.hasMessages()) {
+                return -1;
+            } else if (!c2.hasMessages()) {
+                return 1;
+            }
+            return c2.getLastMessage().getDate().diff(c1.getLastMessage().getDate());
         });
-        options.channels = channel_partition[0].concat(channel_partition[1]);
+        options.threads = threadPartition[0].concat(threadPartition[1]);
         return this._super(options);
     },
 });

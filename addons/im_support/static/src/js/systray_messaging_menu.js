@@ -1,18 +1,13 @@
-odoo.define('im_support.systray', function (require) {
+odoo.define('im_support.systray.MessagingMenu', function (require) {
 "use strict";
 
-/**
- * This module adds a fake Support channel in the messaging menu of the systray.
- */
-
-var mailSystray = require('mail.systray');
+var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 
 var _t = core._t;
-var MessagingMenu = mailSystray.MessagingMenu;
 var SUPPORT_CHANNEL_ID = 'SupportChannel';
 
 // Disable Support in mobile for design purposes (for now at least), and don't
@@ -21,6 +16,9 @@ if (config.device.isMobile || !session.support_token || !session.support_origin)
     return;
 }
 
+/**
+ * This module adds a fake Support channel in the messaging menu of the systray.
+ */
 MessagingMenu.include({
     /**
      * @override
@@ -29,8 +27,8 @@ MessagingMenu.include({
         this._super.apply(this, arguments);
         this.supportChannel = {
             id: SUPPORT_CHANNEL_ID,
-            name: _t('Support'),
-            image_src: '/mail/static/src/img/odoo_o.png',
+            name: _t("Support"),
+            imageSRC: '/mail/static/src/img/odoo_o.png',
         };
     },
     /**
@@ -45,7 +43,7 @@ MessagingMenu.include({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            self.$('.o_mail_navbar_dropdown_bottom').addClass('o_mail_navbar_dropdown_channels');
+            self.$('.o_mail_systray_dropdown_bottom').addClass('o_mail_systray_dropdown_items');
         });
     },
 
@@ -59,10 +57,10 @@ MessagingMenu.include({
      * @override
      * @private
      */
-    _onClickChannel: function (ev) {
-        var channelID = $(ev.currentTarget).data('channel_id');
-        if (channelID === SUPPORT_CHANNEL_ID) {
-            this.call('chat_manager', 'startSupportLivechat');
+    _onClickPreview: function (ev) {
+        var id = $(ev.currentTarget).data('preview-id');
+        if (id === SUPPORT_CHANNEL_ID) {
+            this.call('mail_service', 'startSupportLivechat');
         } else {
             this._super.apply(this, arguments);
         }
