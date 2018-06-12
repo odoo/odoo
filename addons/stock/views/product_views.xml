@@ -32,8 +32,8 @@
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
                 <tree position="attributes">
-                    <attribute name="decoration-danger">virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">virtual_available&gt;=0</attribute>
+                    <attribute name="decoration-text-danger">virtual_available&lt;0</attribute>
+                    <attribute name="decoration-text-info">virtual_available&gt;=0</attribute>
                 </tree>
                 <field name="price" position="after">
                     <field name="qty_available"/>
@@ -48,8 +48,8 @@
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
                 <tree position="attributes">
-                    <attribute name="decoration-danger">virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">virtual_available&gt;=0</attribute>
+                    <attribute name="decoration-text-danger">virtual_available&lt;0</attribute>
+                    <attribute name="decoration-text-info">virtual_available&gt;=0</attribute>
                 </tree>
                 <field name="uom_id" position="before">
                     <field name="qty_available"/>

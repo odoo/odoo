@@ -134,7 +134,7 @@
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state=='to upgrade' or state=='to install'" decoration-danger="state=='uninstalled'" decoration-muted="state=='uninstallable'" create="false" string="Apps">
+                <tree decoration-text-info="state=='to upgrade' or state=='to install'" decoration-text-danger="state=='uninstalled'" decoration-text-muted="state=='uninstallable'" create="false" string="Apps">
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>

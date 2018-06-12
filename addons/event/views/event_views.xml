@@ -238,7 +238,7 @@
                                 <div>
                                     <field name="seats_availability" widget='radio'/>
                                     <span  attrs="{'invisible': [('seats_availability', '=', 'unlimited')]}" class="oe_read_only">
-                                        to 
+                                        to
                                     </span>
                                     <field name="seats_max" attrs="{'invisible': [('seats_availability', '=', 'unlimited')], 'required': [('seats_availability', '=', 'limited')]}"/>
                                 </div>
@@ -271,7 +271,7 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" decoration-bf="message_needaction==True" decoration-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-muted="state=='cancel'">
+                <tree string="Events" decoration-text-bf="message_needaction==True" decoration-text-danger="(seats_min and seats_min&gt;seats_reserved) or (seats_max and seats_max&lt;seats_reserved)" decoration-text-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="event_type_id"/>
                     <field name="date_begin"/>
@@ -440,7 +440,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" decoration-bf="message_needaction==True">
+                <tree string="Registration" decoration-text-bf="message_needaction==True">
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="name"/>

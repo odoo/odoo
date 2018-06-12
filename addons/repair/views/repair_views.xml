@@ -6,7 +6,7 @@
         <field name="name">repair.tree</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
+            <tree string="Repairs order" decoration-text-muted="state in ('done','cancel')" decoration-text-info="state=='draft'">
                 <field name="name" />
                 <field name="product_id" />
                 <field name="partner_id"/>

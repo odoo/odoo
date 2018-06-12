@@ -5,7 +5,7 @@
         <field name="name">hr.payslip.line.tree</field>
         <field name="model">hr.payslip.line</field>
         <field name="arch" type="xml">
-            <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
+            <tree string="Salary Structure" editable="bottom" decoration-text-info="total == 0">
                 <field name="category_id"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="sequence"/>
@@ -70,7 +70,7 @@
         <field name="name">hr.payslip.tree</field>
         <field name="model">hr.payslip</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state in ('confirm','hr_check','accont_check')" decoration-muted="state == 'cancel'" string="Payslips">
+            <tree decoration-text-info="state in ('confirm','hr_check','accont_check')" decoration-text-muted="state == 'cancel'" string="Payslips">
                 <field name="number"/>
                 <field name="employee_id"/>
                 <field name="name"/>
@@ -204,7 +204,7 @@
                     </page>
                     <page string="Salary Computation" >
                         <field name="line_ids" colspan="4" nolabel="1">
-                            <tree string="Salary Structure" editable="bottom" decoration-info="total == 0">
+                            <tree string="Salary Structure" editable="bottom" decoration-text-info="total == 0">
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="category_id"/>
@@ -232,7 +232,7 @@
                     </page>
                     <page string="Details By Salary Rule Category">
                         <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]">
-                            <tree string="Payslip Lines" decoration-info="total == 0">
+                            <tree string="Payslip Lines" decoration-text-info="total == 0">
                                 <field name="category_id"/>
                                 <field name="name"/>
                                 <field name="code"/>

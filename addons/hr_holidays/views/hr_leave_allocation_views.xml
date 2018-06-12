@@ -123,8 +123,8 @@
         <field name="name">hr.leave.allocation.tree</field>
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
-                   decoration-bf="message_needaction == True">
+            <tree decoration-text-danger="state == 'refuse'" decoration-text-info="state == 'draft'" string="Allocation Requests"
+                   decoration-text-bf="message_needaction == True">
                 <field name="employee_id"/>
                 <field name="department_id" invisible="1"/>
                 <field name="holiday_status_id"/>
@@ -140,8 +140,8 @@
         <field name="name">hr.holidays.my.allocation.tree</field>
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
-            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
-                   decoration-bf="message_needaction == True">
+            <tree decoration-text-danger="state == 'refuse'" decoration-text-info="state == 'draft'" string="Allocation Requests"
+                   decoration-text-bf="message_needaction == True">
                 <field name="employee_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>

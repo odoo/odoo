@@ -25,7 +25,7 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" decoration-bf="message_needaction==True">
+            <tree string="Applicants" decoration-text-bf="message_needaction==True">
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
                 <field name="create_date"/>
@@ -51,7 +51,7 @@
         <field name="name">hr.applicant.view.tree.activity</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+            <tree string="Next Activities" decoration-text-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="activity_date_deadline"/>
@@ -340,7 +340,7 @@
                                         </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -971,7 +971,7 @@
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')})]"/>
         <field name="context">{}</field>  <!-- force empty -->
     </record>
-    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root" 
+    <menuitem name="Reports" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
         <field name="name">Recruitment Analysis</field>

@@ -137,7 +137,7 @@
             <field name="name">crm.lead.tree.lead</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
+                <tree string="Leads" decoration-text-bf="message_needaction==True" decoration-text-muted="probability == 100">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Lead"/>
@@ -588,7 +588,7 @@
             <field name="name">crm.lead.tree.opportunity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-bf="message_needaction==True" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
+                <tree string="Opportunities" decoration-text-bf="message_needaction==True" decoration-text-muted="probability == 100" decoration-text-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date"/>
                     <field name="name" string="Opportunity"/>
@@ -617,7 +617,7 @@
             <field name="name">crm.lead.tree.opportunity.next.activity</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)" default_order="activity_date_deadline">
+                <tree string="Next Activities" decoration-text-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)" default_order="activity_date_deadline">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="activity_date_deadline"/>

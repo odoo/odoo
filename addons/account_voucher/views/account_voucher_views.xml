@@ -4,7 +4,7 @@
             <field name="name">account.voucher.tree</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Voucher Entries">
+                <tree decoration-text-info="state == 'draft'" decoration-text-muted="state == 'cancel'" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="partner_id" string="Customer"/>
@@ -19,7 +19,7 @@
             <field name="name">account.voucher.tree.supplier</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Voucher Entries" create="0" edit="0">
+                <tree decoration-text-info="state == 'draft'" decoration-text-muted="state == 'cancel'" string="Voucher Entries" create="0" edit="0">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
