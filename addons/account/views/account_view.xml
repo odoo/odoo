@@ -1170,7 +1170,7 @@
             <field name="model">account.move.line</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Journal Item">
+                <form string="Journal Item" create="false">
                     <sheet>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_state" invisible="1"/>
