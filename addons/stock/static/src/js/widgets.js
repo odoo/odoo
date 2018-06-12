@@ -694,7 +694,7 @@ function openerp_picking_widgets(instance){
                         return $.when();
                     }
                     return new instance.web.Model('stock.location').call('search',[[['usage','=','internal']]]).then(function(locations_ids){
-                        return new instance.web.Model('stock.location').call('read',[locations_ids, []]).then(function(locations){
+                        return new instance.web.Model('stock.location').call('read',[locations_ids, ['complete_name']]).then(function(locations){
                             self.locations = locations;
                         });
                     });
