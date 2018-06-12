@@ -316,7 +316,7 @@ var ScaleScreenWidget = ScreenWidget.extend({
     get_product_price: function(){
         var product = this.get_product();
         var pricelist = this._get_active_pricelist();
-        return (product ? product.get_price(pricelist, this.weight) : 0) || 0;
+        return (product ? product.get_pricelist_discount(pricelist, product, this.weight).price_compute : 0) || 0;
     },
     get_product_uom: function(){
         var product = this.get_product();
@@ -500,10 +500,16 @@ var OrderWidget = PosBaseWidget.extend({
             if( mode === 'quantity'){
                 order.get_selected_orderline().set_quantity(val);
             }else if( mode === 'discount'){
-                order.get_selected_orderline().set_discount(val);
+                var selected_orderline = order.get_selected_orderline();
+                selected_orderline.set_discount(val);
+                selected_orderline.set_discount_manually(val);
+                selected_orderline.discount_manually_set = true;
             }else if( mode === 'price'){
                 var selected_orderline = order.get_selected_orderline();
                 selected_orderline.price_manually_set = true;
+                selected_orderline.discount = 0;
+                selected_orderline.discountStr = '' + 0;
+                selected_orderline.discount_manually_set = false;
                 selected_orderline.set_unit_price(val);
             }
     	}

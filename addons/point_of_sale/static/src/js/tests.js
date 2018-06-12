@@ -22,7 +22,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     function compare_backend_frontend (product, pricelist_name, quantity) {
         return function () {
             var pricelist = _.findWhere(posmodel.pricelists, {name: pricelist_name});
-            var frontend_price = product.get_price(pricelist, quantity);
+            var frontend_price = product.get_pricelist_discount(pricelist, product, quantity).price_compute;
             // ORM applies digits= on non-stored computed field when
             // reading. It does not however truncate like it does when
             // storing the field.
