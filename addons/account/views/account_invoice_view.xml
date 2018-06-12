@@ -70,6 +70,13 @@
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_no_one"/>
                             <field name="currency_id" invisible="1"/>
+                            <!--
+                                We need the sequence field to be here
+                                because we want to be able to overwrite the default sequence value in the JS
+                                in order for new lines to be added at the correct position.
+                                NOTE: at some point we want to fix this in the framework so that an invisible field is not required.
+                            -->
+                            <field name="sequence" invisible="1"/>
                         </group>
                         <group>
                             <field domain="[('company_id', '=', parent.company_id)]" name="account_id" groups="account.group_account_user"/>
@@ -686,7 +693,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
               </p><p>
-                Note that the easiest way to create a credit note is to do it directly 
+                Note that the easiest way to create a credit note is to do it directly
                 from the customer invoice.
               </p>
             </field>
