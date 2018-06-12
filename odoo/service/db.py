@@ -405,6 +405,7 @@ def list_db_incompatible(databases):
                         incompatible_databases.append(database_name)
             else:
                 incompatible_databases.append(database_name)
+    for database_name in incompatible_databases:
         # release connection
         odoo.sql_db.close_db(database_name)
     return incompatible_databases
