@@ -2541,7 +2541,7 @@ QUnit.module('relational_fields', {
         $modal.find('thead input[type=checkbox]').click();
 
         $modal.find('.btn.btn-sm.btn-primary.o_select_button').click();
-        
+
         pager_limit = form.$('.o_field_many2many.o_field_widget.o_field_x2many.o_field_x2many_list .o_pager_limit');
         assert.equal(pager_limit.text(), '51',
             'We should have 51 records in the m2m field');
@@ -2620,7 +2620,7 @@ QUnit.module('relational_fields', {
             data: this.data,
             arch:'<form string="Partners">' +
                     '<field name="p">' +
-                        '<tree editable="bottom" limit="1" decoration-muted="foo != False" default_order="display_name">' +
+                        '<tree editable="bottom" limit="1" decoration-text-muted="[(\'foo\', \'!=\', False)]" default_order="display_name">' +
                             '<field name="foo" invisible="1"/>' +
                             '<field name="display_name" />' +
                         '</tree>' +
@@ -12263,7 +12263,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add>a')[0],
                             document.activeElement,
                             "after tab, the focus should be on the many2one on the add new line"));
-           
+
         form.destroy();
     });
 
@@ -12308,7 +12308,7 @@ QUnit.module('relational_fields', {
        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
                            document.activeElement,
                            "after tab, the focus should be on the many2one"));
-          
+
        form.destroy();
    });
 
@@ -12316,7 +12316,7 @@ QUnit.module('relational_fields', {
         assert.expect(3);
 
         this.data.partner.records[0].turtles = [];
-       
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -12360,7 +12360,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(assert.strictEqual(form.$el.find('input[name="foo"]')[0],
                             document.activeElement,
                             "after tab, the focus should be on the many2one"));
-            
+
         form.destroy();
     });
 
@@ -12368,7 +12368,7 @@ QUnit.module('relational_fields', {
         assert.expect(4);
 
         this.data.partner.records[0].turtles = [];
-       
+
         var form = createView({
             View: FormView,
             model: 'partner',
@@ -12422,7 +12422,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual($.find('input[name="turtle_foo"]')[0],
             document.activeElement,
             "after enter, the focus should be in the popup, in the first input field");
-        
+
         $('input[name="turtle_foo"]').trigger($.Event('keydown', {
             which: $.ui.keyCode.ESCAPE,
             keyCode: $.ui.keyCode.ESCAPE,
@@ -12431,7 +12431,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add a')[0],
             document.activeElement,
             "after escape, the focus should be back on the add new line link");
-        
+
         form.destroy();
     });
 

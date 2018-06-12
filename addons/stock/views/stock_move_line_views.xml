@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+            <tree decoration-text-muted="state == 'cancel'" decoration-text-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
                 <field name="date"/>
                 <field name="reference" string="Reference"/>
                 <field name="product_id"/>
@@ -126,8 +126,8 @@
             </field>
     </record>
 
-    <menuitem 
-        action="stock_move_line_action" 
-        id="stock_move_line_menu" 
+    <menuitem
+        action="stock_move_line_action"
+        id="stock_move_line_menu"
         parent="stock.menu_warehouse_report" sequence="150"/>
 </odoo>

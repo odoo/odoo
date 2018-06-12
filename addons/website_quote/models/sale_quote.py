@@ -50,7 +50,6 @@ class SaleQuoteLine(models.Model):
         ondelete='cascade', index=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     website_description = fields.Html('Line Description', related='product_id.product_tmpl_id.quote_description',
         translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
@@ -103,7 +102,6 @@ class SaleQuoteOption(models.Model):
         index=True, required=True)
     name = fields.Text('Description', required=True, translate=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True)
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     website_description = fields.Html('Option Description', translate=html_translate, sanitize_attributes=False)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))

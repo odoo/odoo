@@ -235,7 +235,7 @@
                 </div>
               </div>
               <t t-foreach="order.order_line" t-as="ol">
-                <div class="row orders_vertical_align">
+                <div t-if="ol.line_type != 'section'" class="row orders_vertical_align">
                     <div class="visible-lg col-lg-1 text-center">
                       <span t-field="ol.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
                     </div>
@@ -259,6 +259,11 @@
                   <div class="col-sm-2 col-xs-4 text-right">
                     <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/>
                   </div>
+                </div>
+                <div t-if="ol.line_type == 'section'" class="row orders_vertical_align">
+                    <div class="col-md-12">
+                        <strong t-esc="ol.name"/>
+                    </div>
                 </div>
               </t>
 

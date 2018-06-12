@@ -124,7 +124,7 @@
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                <tree decoration-text-info="state == 'draft'" decoration-text-muted="state == 'cancel'" string="Invoice">
                     <field name="partner_id" groups="base.group_user" string="Customer"/>
                     <field name="date_invoice"/>
                     <field name="number"/>
@@ -190,7 +190,7 @@
             <field name="name">account.invoice.supplier.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-bf="not partner_id" string="Vendor Bill">
+                <tree decoration-text-info="state == 'draft'" decoration-text-muted="state == 'cancel'" decoration-text-bf="not partner_id" string="Vendor Bill">
                     <field name="partner_id" invisible="1"/>
                     <field name="source_email" invisible="1"/>
                     <field name="invoice_icon" string=" "/>
@@ -426,12 +426,15 @@
                     <notebook colspan="4">
                         <page string="Invoice Lines">
                             <field name="invoice_line_ids" nolabel="1" widget="one2many_list" mode="tree,kanban" context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}">
-                                <tree string="Invoice Lines" editable="bottom">
+                                <!-- TODO SHT: also add decoration like on sale order for notes. -->
+                                <tree string="Invoice Lines"
+                                    decoration-text-danger="line_type == 'section'" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" domain="[('sale_ok','=',True)]"/>
                                     <field name="origin" invisible="1"/>
                                     <field name="is_rounding_line" invisible="1"/>
-                                    <field name="name"/>
+                                    <field name="name" class="product_name"/>
+                                    <field name="line_type" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
@@ -686,7 +689,7 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a credit note
               </p><p>
-                Note that the easiest way to create a credit note is to do it directly 
+                Note that the easiest way to create a credit note is to do it directly
                 from the customer invoice.
               </p>
             </field>

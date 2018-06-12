@@ -430,7 +430,7 @@ QUnit.module('Views', {
         var $td = form.$('.o_data_cell').first();
         var $td2 = form.$('.o_data_cell').eq(1);
         assert.ok($td.hasClass("o_readonly_modifier"), "first field must be readonly");
-        assert.ok($td2.hasClass("o_boolean_toggle_cell"), "second field must be not activable but updatable on click (boolean toggle in this case)"); 
+        assert.ok($td2.hasClass("o_boolean_toggle_cell"), "second field must be not activable but updatable on click (boolean toggle in this case)");
         $td.click(); //select row first
         var $slider = $td2.find('.slider').first();
         try {
@@ -1298,13 +1298,32 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree decoration-info="int_field > 5">' +
+            arch: '<tree decoration-text-info="[(\'int_field\', \'&gt;\', 5)]">' +
                     '<field name="foo"/><field name="int_field"/>' +
                 '</tree>',
         });
 
         assert.strictEqual(list.$('tbody tr.text-info').length, 3,
             "should have 3 columns with text-info class");
+
+        assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
+        list.destroy();
+    });
+
+    QUnit.test('support row decoration custom class', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree decoration-custom-class="[(\'int_field\', \'&gt;\', 5)]">' +
+                    '<field name="foo"/><field name="int_field"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tbody tr.custom-class').length, 3,
+            "should have 3 columns with custom-class class");
 
         assert.strictEqual(list.$('tbody tr').length, 4, "should have 4 rows");
         list.destroy();
@@ -1319,7 +1338,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree editable="bottom" decoration-danger="int_field &lt; 0">' +
+            arch: '<tree editable="bottom" decoration-text-danger="[(\'int_field\', \'&lt;\', 0)]">' +
                     '<field name="int_field"/>' +
                 '</tree>',
         });
@@ -1343,7 +1362,14 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            arch: '<tree decoration-info="datetime == \'2017-02-27 12:51:35\'" decoration-danger="datetime &gt; \'2017-02-27 12:51:35\' AND datetime &lt; \'2017-02-27 10:51:35\'">' +
+            arch:
+                '<tree ' +
+                    'decoration-text-info="[(\'datetime\', \'=\', \'2017-02-27 12:51:35\')]" ' +
+                    'decoration-text-danger="[' +
+                        '(\'datetime\', \'&gt;\', \'2017-02-27 12:51:35\'),' +
+                        '(\'datetime\', \'&lt;\', \'2017-02-27 10:51:35\'),' +
+                    ']" ' +
+                '>' +
                     '<field name="datetime"/><field name="int_field"/>' +
                 '</tree>',
         });

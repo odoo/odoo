@@ -161,7 +161,7 @@
                         <page string="Access Rights">
                             <field name="access_ids">
                                 <tree string="Access Rights" editable="top"
-                                      decoration-warning="not group_id and
+                                      decoration-text-warning="not group_id and
                                                          (perm_read or perm_write or
                                                           perm_create or perm_unlink)">
                                     <field name="name"/>
@@ -175,7 +175,7 @@
                         </page>
                         <page string="Record Rules">
                             <field name="rule_ids">
-                                <tree string="Record Rules" editable="top" decoration-info="not groups">
+                                <tree string="Record Rules" editable="top" decoration-text-info="not groups">
                                     <field name="name"/>
                                     <field name="groups" widget="many2many_tags" options="{'no_create':True}"/>
                                     <field name="domain_force"/>
@@ -528,7 +528,7 @@
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
                 <tree string="Access Rights" editable="top"
-                      decoration-warning="not group_id and
+                      decoration-text-warning="not group_id and
                                          (perm_read or perm_write or
                                           perm_create or perm_unlink)">
                     <field name="name"/>
@@ -558,7 +558,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
-                   </sheet> 
+                   </sheet>
                 </form>
             </field>
         </record>

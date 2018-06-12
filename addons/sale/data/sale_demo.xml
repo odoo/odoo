@@ -27,6 +27,12 @@
             <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
+        <record id="sale_order_section_line" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="line_type">section</field>
+            <field name="name">Section</field>
+        </record>
+
         <record id="sale_order_line_1" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
             <field name="name">Laptop E5023</field>

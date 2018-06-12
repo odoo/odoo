@@ -134,7 +134,6 @@ class SaleOrder(models.Model):
                 'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
-                'layout_category_id': line.layout_category_id,
                 'product_uom': line.product_uom_id.id,
                 'website_description': line.website_description,
                 'state': 'draft',
@@ -155,7 +154,6 @@ class SaleOrder(models.Model):
                 price = option.price_unit
             data = {
                 'product_id': option.product_id.id,
-                'layout_category_id': option.layout_category_id,
                 'name': option.name,
                 'quantity': option.quantity,
                 'uom_id': option.uom_id.id,
@@ -236,7 +234,6 @@ class SaleOrderOption(models.Model):
     line_id = fields.Many2one('sale.order.line', on_delete="set null")
     name = fields.Text('Description', required=True)
     product_id = fields.Many2one('product.product', 'Product', domain=[('sale_ok', '=', True)])
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     website_description = fields.Html('Line Description', sanitize_attributes=False, translate=html_translate)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
@@ -280,7 +277,6 @@ class SaleOrderOption(models.Model):
                 'name': self.name,
                 'order_id': order.id,
                 'product_id': self.product_id.id,
-                'layout_category_id': self.layout_category_id.id,
                 'product_uom_qty': self.quantity,
                 'product_uom': self.uom_id.id,
                 'discount': self.discount,

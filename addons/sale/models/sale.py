@@ -163,8 +163,6 @@ class SaleOrder(models.Model):
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
-
     def _compute_portal_url(self):
         super(SaleOrder, self)._compute_portal_url()
         for order in self:
@@ -432,7 +430,10 @@ class SaleOrder(models.Model):
 
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
+            section_line = is_invoice_created = False
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
+                if line.qty_to_invoice == 0 and line.line_type == 'section':
+                    section_line = line
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     continue
                 if group_key not in invoices:
@@ -450,8 +451,13 @@ class SaleOrder(models.Model):
 
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                    is_invoice_created = True
                 elif line.qty_to_invoice < 0 and final:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                    is_invoice_created = True
+                if is_invoice_created and section_line:
+                    section_line.invoice_line_create(invoices[group_key].id, section_line.qty_to_invoice)
+                    section_line = False
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
@@ -598,24 +604,39 @@ class SaleOrder(models.Model):
     @api.multi
     def order_lines_layouted(self):
         """
-        Returns this order lines classified by sale_layout_category and separated in
-        pages according to the category pagebreaks. Used to render the report.
+        Returns this order lines classified by section with subtotal.
+        Used to render the report.
         """
         self.ensure_one()
-        report_pages = [[]]
-        for category, lines in groupby(self.order_line, lambda l: l.layout_category_id):
-            # If last added category induced a pagebreak, this one will be on a new page
-            if report_pages[-1] and report_pages[-1][-1]['pagebreak']:
-                report_pages.append([])
-            # Append category to current report page
-            report_pages[-1].append({
-                'name': category and category.name or _('Uncategorized'),
-                'subtotal': category and category.subtotal,
-                'pagebreak': category and category.pagebreak,
-                'lines': list(lines)
-            })
-
-        return report_pages
+        result = []
+        empty_line = self.env['sale.order.line']
+        for line in self.order_line:
+            if line.line_type == 'section':
+                result.append({
+                    'section': {
+                        'name': line.name,
+                        'line_subtotal': line.line_subtotal,
+                        'line_pagebreak': line.line_pagebreak
+                    },
+                    'lines': empty_line
+                })
+            elif len(result):
+                result[-1]['lines'] = result[-1]['lines'] + line
+            else:
+                result = [{'section': {
+                    'name': _("Uncategorized"),
+                    'line_subtotal': line.line_subtotal,
+                    'line_pagebreak': line.line_pagebreak
+                },
+                    'lines': line,
+                }]
+        pages = []
+        for res in result:
+            if pages and not pages[-1][-1]['section']['line_pagebreak']:
+                pages[-1].append(res)
+            else:
+                pages.append([res])
+        return pages
 
     @api.multi
     def _get_tax_amount_by_group(self):
@@ -691,11 +712,21 @@ class SaleOrder(models.Model):
 
         return groups
 
+    def _recompute_parent_line_id(self):
+        current_parent_id = False
+
+        for line in self.order_line:
+            if line.line_type == 'section':
+                line.parent_line_id = False
+                current_parent_id = line
+            else:
+                line.parent_line_id = current_parent_id
+
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
-    _order = 'order_id, layout_category_id, sequence, id'
+    _order = 'order_id,sequence,id'
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
@@ -880,8 +911,8 @@ class SaleOrderLine(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
+    ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
+    price_unit = fields.Float('Unit Price', digits=dp.get_precision('Product Price'), default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True)
@@ -894,10 +925,10 @@ class SaleOrderLine(models.Model):
 
     discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
 
-    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
+    product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict')
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
-    product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
-    product_uom = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
+    product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1.0)
+    product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -939,11 +970,15 @@ class SaleOrderLine(models.Model):
     ], related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
 
     customer_lead = fields.Float(
-        'Delivery Lead Time', required=True, default=0.0,
+        'Delivery Lead Time', default=0.0,
         help="Number of days between the order confirmation and the shipping of the products to the customer", oldname="delay")
-    layout_category_id = fields.Many2one('sale.layout_category', string='Section')
-    layout_category_sequence = fields.Integer(string='Layout Sequence')
-    # TODO: remove layout_category_sequence in master or make it work properly
+
+    line_type = fields.Selection([('product', 'Product'), ('section', 'Section'), ('note', 'Note')], default="product")
+    line_pagebreak = fields.Boolean('Add pagebreak')
+    line_subtotal = fields.Boolean('Add subtotal', default=True)
+
+    parent_line_id = fields.Many2one('sale.order.line', index=True, string='Parent Line')
+    children_line_ids = fields.One2many('sale.order.line', 'parent_line_id', string='Children Lines')
 
     @api.multi
     @api.depends('state', 'is_expense')
@@ -1040,30 +1075,34 @@ class SaleOrderLine(models.Model):
         :param qty: float quantity to invoice
         """
         self.ensure_one()
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         res = {}
         account = self.product_id.property_account_income_id or self.product_id.categ_id.property_account_income_categ_id
-        if not account:
+
+        if not account and self.line_type == 'product':
             raise UserError(_('Please define income account for this product: "%s" (id:%d) - or for its category: "%s".') %
                 (self.product_id.name, self.product_id.id, self.product_id.categ_id.name))
 
         fpos = self.order_id.fiscal_position_id or self.order_id.partner_id.property_account_position_id
-        if fpos:
+        if fpos and account:
             account = fpos.map_account(account)
 
         res = {
             'name': self.name,
             'sequence': self.sequence,
             'origin': self.order_id.name,
-            'account_id': account.id,
+            'account_id': account and account.id or False,
             'price_unit': self.price_unit,
             'quantity': qty,
             'discount': self.discount,
             'uom_id': self.product_uom.id,
             'product_id': self.product_id.id or False,
-            'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
             'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'line_type': self.line_type,
+            'line_pagebreak': self.line_pagebreak,
+            'line_subtotal': self.line_subtotal
         }
         return res
 
@@ -1077,7 +1116,7 @@ class SaleOrderLine(models.Model):
         invoice_lines = self.env['account.invoice.line']
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for line in self:
-            if not float_is_zero(qty, precision_digits=precision):
+            if not float_is_zero(qty, precision_digits=precision) or line.line_type != 'product':
                 vals = line._prepare_invoice_line(qty=qty)
                 vals.update({'invoice_id': invoice_id, 'sale_line_ids': [(6, 0, [line.id])]})
                 invoice_lines |= self.env['account.invoice.line'].create(vals)
@@ -1096,6 +1135,7 @@ class SaleOrderLine(models.Model):
         # TO DO: move me in master/saas-16 on sale.order
         if self.order_id.pricelist_id.discount_policy == 'with_discount':
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         final_price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         context_partner = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order)
         base_price, currency = self.with_context(context_partner)._get_real_price_currency(self.product_id, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
@@ -1109,6 +1149,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     @api.onchange('product_id')
     def product_id_change(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         if not self.product_id:
             return {'domain': {'product_uom': []}}
 
@@ -1157,6 +1198,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return
@@ -1250,6 +1292,7 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):
+        # TODO SHT: shouldn't we prevent the method from going further if the line_type is not product??
         self.discount = 0.0
         if not (self.product_id and self.product_uom and
                 self.order_id.partner_id and self.order_id.pricelist_id and

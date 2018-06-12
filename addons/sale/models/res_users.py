@@ -12,6 +12,7 @@ class ResUsers(models.Model):
         compute='_compute_groups_id', inverse='_inverse_groups_id',
         group_xml_id='sale.group_warning_sale')
 
+    # TODO SHT : probably remove this has_group_sale_layout
     has_group_sale_layout = fields.Boolean(
         "Personalize sales order and invoice report",
         compute='_compute_groups_id', inverse='_inverse_groups_id',

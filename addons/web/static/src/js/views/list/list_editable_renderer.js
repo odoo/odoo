@@ -15,6 +15,7 @@ var core = require('web.core');
 var dom = require('web.dom');
 var ListRenderer = require('web.ListRenderer');
 var utils = require('web.utils');
+var Context = require('web.Context');
 
 var _t = core._t;
 
@@ -42,6 +43,44 @@ ListRenderer.include({
         // if addCreateLine is true, the renderer will add a 'Add a line' link
         // at the bottom of the list view
         this.addCreateLine = params.addCreateLine;
+
+        // Controls allow to override "add a line" by custom controls.
+
+        // Each <control> will be a footer line, containing at least one <create>.
+        // Each <create> will be a "add a line" button with custom text/behaviour.
+
+        // Below we: find the <control> on this tree,
+        // then for each <control>, we find the <create> children, and finally
+        // we filter the <control> again to remove those with no <create> found.
+
+        this.controls = _.chain(this.arch.children)
+            .filter(function (control) {
+                return control.tag === 'control';
+            })
+            .map(function (control) {
+                return _.chain(control.children)
+                    .filter(function (create) {
+                        return create.tag === 'create';
+                    })
+                    .map(function (create) {
+                        return {
+                            'always-show-dialog': create.attrs['always-show-dialog'],
+                            'context': create.attrs['context'],
+                            'string': create.attrs['string'],
+                        };
+                    })
+                    .value();
+            })
+            .filter(function (control) {
+                return control.length > 0;
+            })
+            .value();
+
+        if (this.controls.length === 0) {
+            this.controls.push([{
+                string: _t("Add a line"),
+            }]);
+        }
 
         // if addTrashIcon is true, there will be a small trash icon at the end
         // of each line, so the user can delete a record.
@@ -525,15 +564,26 @@ ListRenderer.include({
      * @returns {jQueryElement}
      */
     _renderRows: function () {
+        var self = this;
         var $rows = this._super();
+
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add a line"));
-            var $td = $('<td>')
-                        .attr('colspan', this._getNumberOfCols())
-                        .addClass('o_field_x2many_list_row_add')
-                        .append($a);
-            var $tr = $('<tr>').append($td);
-            $rows.push($tr);
+            _.each(self.controls, function (control) {
+                var $td = $('<td>')
+                    .attr('colspan', self._getNumberOfCols())
+                    .addClass('o_field_x2many_list_row_add');
+                var $tr = $('<tr>').append($td);
+                $rows.push($tr);
+
+                _.each(control, function (create) {
+                    var $a = $('<a href="#">')
+                        .attr('context', create['context'])
+                        .attr('always-show-dialog', create['always-show-dialog'])
+                        .addClass('ml16')
+                        .text(create['string']);
+                    $td.append($a);
+                });
+            });
         }
         return $rows;
     },
@@ -703,18 +753,35 @@ ListRenderer.include({
      *
      * @param {MouseEvent} event
      */
-    _onAddRecord: function (event) {
+    _onAddRecord: function (ev, params) {
         // we don't want the browser to navigate to a the # url
-        event.preventDefault();
+        ev.preventDefault();
 
         // we don't want the click to cause other effects, such as unselecting
         // the row that we are creating, because it counts as a click on a tr
-        event.stopPropagation();
+        ev.stopPropagation();
 
         // but we do want to unselect current row
         var self = this;
         this.unselectRow().then(function () {
-            self.trigger_up('add_record'); // TODO write a test, the deferred was not considered
+
+            var params = {};
+
+            var context = ev.currentTarget.attributes.getNamedItem('context');
+            var alwaysShowDialog = ev.currentTarget.attributes.getNamedItem('always-show-dialog');
+
+            if (context) {
+                params.contextExtend = new Context(context.textContent).eval();
+                params.titleExtend = " (" + ev.currentTarget.textContent + ")";
+                // Why or when?
+                // params.disable_multiple_selection = true;
+            }
+
+            if (alwaysShowDialog) {
+                params.alwaysShowDialog = true;
+            }
+
+            self.trigger_up('add_record', params); // TODO write a test, the deferred was not considered
         });
     },
     /**
@@ -758,7 +825,7 @@ ListRenderer.include({
                 break;
         }
     },
-    /** 
+    /**
      * It will returns the first visible widget that is editable
      *
      * @private
@@ -768,9 +835,9 @@ ListRenderer.include({
         var record = this.state.data[this.currentRow];
         var recordWidgets = this.allFieldWidgets[record.id];
         var firstWidget = _.find(recordWidgets, function (widget) {
-            var isFirst = widget.$el.is(':visible') && 
+            var isFirst = widget.$el.is(':visible') &&
                                 (widget.$el.has('input').length > 0 ||
-                                widget.tagName== 'input') && 
+                                widget.tagName== 'input') &&
                             !widget.$el.hasClass('o_readonly_modifier');
             return isFirst;
         });
@@ -876,8 +943,8 @@ ListRenderer.include({
      * @override
      * @private
      */
-    _onRowClicked: function () {
-        if (!this._isEditable()) {
+    _onRowClicked: function (ev, ignoreEditable) {
+        if (ignoreEditable || !this._isEditable()) {
             this._super.apply(this, arguments);
         }
     },

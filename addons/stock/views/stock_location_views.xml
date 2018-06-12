@@ -88,7 +88,7 @@
         <field name="model">stock.location</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false">
+            <tree string="Stock Location" decoration-text-info="usage=='view'" decoration-text-danger="usage=='internal'" create="false">
                 <field name="active" invisible="1"/>
                 <field name="display_name"/>
                 <field name="usage"/>

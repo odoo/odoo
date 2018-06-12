@@ -18,6 +18,8 @@ var fieldRegistry = require('web.field_registry');
 var pyeval = require('web.pyeval');
 var utils = require('web.utils');
 
+var DECORATION_PREFIX = 'decoration-';
+
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {
         Model: BasicModel,
@@ -211,12 +213,11 @@ var BasicView = AbstractView.extend({
 
         // process decoration attributes
         _.each(attrs, function (value, key) {
-            var splitKey = key.split('-');
-            if (splitKey[0] === 'decoration') {
+            if (key.startsWith(DECORATION_PREFIX)) {
                 attrs.decorations = attrs.decorations || [];
                 attrs.decorations.push({
-                    className: 'text-' + splitKey[1],
-                    expression: py.parse(py.tokenize(value))
+                    className: key.replace(DECORATION_PREFIX, ''),
+                    expression: value,
                 });
             }
         });

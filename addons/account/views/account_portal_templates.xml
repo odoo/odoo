@@ -1,5 +1,5 @@
 <odoo>
-	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
+    <template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'invoice'" class="active">
                 <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
@@ -158,25 +158,30 @@
             </thead>
             <tbody class="o_portal_report_tbody">
                 <tr t-foreach="invoice.invoice_line_ids" t-as="l">
-                    <td><span t-field="l.name"/></td>
-                    <td class="hidden"><span t-field="l.origin"/></td>
-                    <td class="text-right">
-                        <span t-field="l.quantity"/>
-                        <span t-field="l.uom_id"  groups="uom.group_uom"/>
-                    </td>
-                    <td class="text-right">
-                        <span t-field="l.price_unit"/>
-                    </td>
-                    <td t-if="display_discount" class="text-right">
-                        <span t-field="l.discount"/>
-                    </td>
-                    <td class="text-right">
-                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
-                    </td>
-                    <td class="text-right" id="subtotal">
-                        <span t-field="l.price_subtotal"
-                            t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
-                    </td>
+                    <t t-if="l.line_type != 'section'">
+                        <td><span t-field="l.name"/></td>
+                        <td class="hidden"><span t-field="l.origin"/></td>
+                        <td class="text-right">
+                            <span t-field="l.quantity"/>
+                            <span t-field="l.uom_id"  groups="uom.group_uom"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="l.price_unit"/>
+                        </td>
+                        <td t-if="display_discount" class="text-right">
+                            <span t-field="l.discount"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+                        </td>
+                        <td class="text-right" id="subtotal">
+                            <span t-field="l.price_subtotal"
+                                t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                        </td>
+                    </t>
+                    <t t-if="l.line_type == 'section'">
+                        <td class="active" colspan="5"><span t-field="l.name"/></td>
+                    </t>
                 </tr>
                 <tr t-foreach="range(max(5-len(invoice.invoice_line_ids),0))" t-as="l">
                     <td t-translation="off">&amp;nbsp;</td>

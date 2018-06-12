@@ -4,7 +4,7 @@
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" create="false" string="Advices Analysis">
+            <tree decoration-text-info="state == 'draft'" decoration-text-muted="state == 'cancel'" create="false" string="Advices Analysis">
                 <field name="nbr" sum="# Payment Lines"/>
                 <field name="name" invisible="1"/>
                 <field name="employee_id" invisible="1"/>

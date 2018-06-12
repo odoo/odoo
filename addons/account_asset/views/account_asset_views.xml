@@ -184,7 +184,7 @@
                     <notebook colspan="4">
                         <page string="Depreciation Board">
                             <field name="depreciation_line_ids" mode="tree" options="{'reload_whole_on_button': true}">
-                                <tree string="Depreciation Lines" decoration-info="(move_check == False)" create="false">
+                                <tree string="Depreciation Lines" decoration-text-info="(move_check == False)" create="false">
                                     <field name="depreciation_date"/>
                                     <field name="amount" widget="monetary" string="Depreciation"/>
                                     <field name="depreciated_value" readonly="1"/>
@@ -277,7 +277,7 @@
         <field name="name">account.asset.asset.purchase.tree</field>
         <field name="model">account.asset.asset</field>
         <field name="arch" type="xml">
-            <tree string="Assets" decoration-info="(state == 'draft')" decoration-muted="(state == 'close')">
+            <tree string="Assets" decoration-text-info="(state == 'draft')" decoration-text-muted="(state == 'close')">
                 <field name="name"/>
                 <field name="category_id" string="Asset Category"/>
                 <field name="date"/>

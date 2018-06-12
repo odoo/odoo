@@ -123,7 +123,7 @@
         <field name="name">fleet.vehicle.tree</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle" decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-danger="contract_renewal_overdue">
+            <tree string="Vehicle" decoration-text-warning="contract_renewal_due_soon and not contract_renewal_overdue" decoration-text-danger="contract_renewal_overdue">
                 <field name="active" invisible="1"/>
                 <field name="license_plate" />
                 <field name="model_id" />
@@ -358,7 +358,7 @@
     </record>
 
     <menuitem action="fleet_vehicle_odometer_action" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="fleet_group_user"/>
-    
+
     <record id='fleet_vehicle_service_types_view_tree' model='ir.ui.view'>
         <field name="name">fleet.service.type.tree</field>
         <field name="model">fleet.service.type</field>

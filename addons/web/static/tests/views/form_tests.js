@@ -215,8 +215,8 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="int_field"/>' +
-                    '<field name="display_name" decoration-danger="int_field &lt; 5"/>' +
-                    '<field name="foo" decoration-danger="int_field &gt; 5"/>' +
+                    '<field name="display_name" decoration-text-danger="[(\'int_field\', \'&lt;\', 5)]"/>' +
+                    '<field name="foo" decoration-text-danger="[(\'int_field\', \'&gt;\', 5)]"/>' +
                 '</form>',
             res_id: 2,
         });
@@ -236,7 +236,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="int_field"/>' +
-                    '<field name="display_name" decoration-danger="int_field &lt; 5"/>' +
+                    '<field name="display_name" decoration-text-danger="[(\'int_field\', \'&lt;\', 5)]"/>' +
                 '</form>',
             res_id: 2,
             viewOptions: {mode: 'edit'},
@@ -257,7 +257,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                    '<field name="int_field" decoration-danger="int_field &lt; 5"/>' +
+                    '<field name="int_field" decoration-text-danger="[(\'int_field\', \'&lt;\', 5)]"/>' +
                 '</form>',
             res_id: 2,
             viewOptions: {mode: 'edit'},

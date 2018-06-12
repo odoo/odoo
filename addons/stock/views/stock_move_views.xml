@@ -5,7 +5,7 @@
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
+                <tree decoration-text-muted="state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
@@ -51,7 +51,7 @@
             <field name="model">stock.move</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
+                <tree decoration-text-muted="state == 'cancel'" decoration-text-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
                     <field name="date" groups="base.group_no_one"/>
                     <field name="reference"/>
                     <field name="picking_type_id" invisible="1"/>
@@ -110,7 +110,7 @@
             <field name="model">stock.move</field>
             <field eval="12" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
+                <tree decoration-text-muted="scrapped == True" string="Stock Moves" editable="bottom">
                     <field name="product_id"/>
                     <field name="name" invisible="1"/>
                     <field name="product_uom_qty"/>
@@ -184,7 +184,7 @@
             <field name="model">stock.move.line</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="product_uom_qty==qty_done" decoration-danger="qty_done &gt; product_uom_qty and state != 'done'">
+                <tree editable="bottom" decoration-text-muted="state == 'done' and is_locked == True" decoration-text-success="product_uom_qty==qty_done" decoration-text-danger="qty_done &gt; product_uom_qty and state != 'done'">
                     <field name="picking_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="location_id" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
@@ -414,7 +414,7 @@
             <field name="model">stock.move</field>
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
+                <tree decoration-text-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
                     <field name="date_expected" widget='date'/>
                     <field name="date" widget="date"/>
                     <field name="picking_id" string="Reference" invisible="1"/>

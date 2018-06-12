@@ -33,6 +33,7 @@ odoo.define('web.AbstractField', function (require) {
 var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
+var Domain = require('web.Domain');
 
 var AbstractField = Widget.extend({
     cssLibs: [],
@@ -346,9 +347,13 @@ var AbstractField = Widget.extend({
     _applyDecorations: function () {
         var self = this;
         this.attrs.decorations.forEach(function (dec) {
-            var isToggled = py.PY_isTrue(
-                py.evaluate(dec.expression, self.record.evalContext)
-            );
+            var isToggled;
+            if (dec.expression === undefined || dec.expression === false || dec.expression === true) {
+                isToggled = !!dec.expression;
+            } else {
+                isToggled = new Domain(dec.expression, self.record.evalContext)
+                    .compute(self.record.evalContext);
+            }
             self.$el.toggleClass(dec.className, isToggled);
         });
     },

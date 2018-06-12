@@ -2,9 +2,8 @@
 <odoo>
 
     <template id="gst_report_invoice_layouted_inherit" inherit_id="sale.report_invoice_layouted">
-        <xpath expr="//t[@name='lines_layouted']" position="replace">
-            <t groups="sale.group_sale_layout" t-foreach="o.order_lines_layouted()" t-as="page" name="lines_layouted">
-                <table class="table table-condensed">
+        <xpath expr="//table[@name='invoice_line_table']" position="replace">
+                <table class="table table-condensed" name="invoice_line_table">
                     <thead>
                         <th>Description</th>
                         <th class="text-right">Quantity</th>
@@ -20,18 +19,18 @@
                         </t>
                     </thead>
                     <tbody class="invoice_tbody">
-                        <t t-foreach="page" t-as="layout_category">
-
-                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
-                                <tr class="active">
-                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
-                                        <t t-esc="layout_category['name']"/>
-                                    </td>
-                                </tr>
-                            </t>
+                        <t t-foreach="pages" t-as="layout">
+                            <t t-set="section" t-value="layout['section']"/>
+                            <t t-set="lines" t-value="layout['lines']"/>   
+                            
+                            <tr class="active">
+                                <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">
+                                    <t t-esc="section['name']"/>
+                                </td>
+                            </tr>
 
                             <!-- Lines associated -->
-                            <t t-foreach="layout_category['lines']" t-as="l">
+                            <t t-foreach="lines" t-as="l">
                                 <tr>
                                     <td><span t-field="l.name"/>
                                     <t t-if="l.product_id.l10n_in_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.l10n_in_hsn_code"/></h6></t></td>
@@ -91,23 +90,16 @@
                                 </tr>
                             </t>
 
-                            <t t-if="(layout_category_size > 1 or page_size > 1) and layout_category['subtotal']" groups="sale.group_sale_layout">
-                                <tr class="text-right">
-                                    <td t-att-colspan="o.company_id.country_id.code == 'IN' and 9 or 6">
-                                        <strong>Subtotal: </strong>
-                                        <t t-set="subtotal" t-value="sum(line.price_subtotal for line in layout_category['lines'])"/>
-                                        <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
-                                    </td>
-                                </tr>
-                            </t>
+                            <tr t-if="section['line_subtotal']"  class="text-right">
+                                <td t-att-colspan="o.company_id.country_id.code == 'IN' and 9 or 6">
+                                    <strong>Subtotal: </strong>
+                                    <t t-set="subtotal" t-value="sum(line.price_subtotal for line in lines)"/>
+                                    <span t-esc="subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                            </tr>
                         </t>
                     </tbody>
                 </table>
-
-                <t t-if="page_index &lt; page_size - 1" groups="sale.group_sale_layout">
-                    <p style="page-break-before:always;"> </p>
-                </t>
-            </t>
         </xpath>
     </template>
 

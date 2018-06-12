@@ -1361,30 +1361,23 @@ Let us mention the most important ones:
 Decorations
 -----------
 
+``decoration-{$name}``
+
 Like the list view, field widgets have a simple support for decorations. The
 goal of decorations is to have a simple way to specify a text color depending on
-the record current state.  For example,
+the record current state. For example,
 
 .. code-block:: xml
+  <field name="state" decoration-text-danger="[('amount', '>', 10000)]" />
 
-    <field name="state" decoration-danger="amount &lt; 10000"/>
+Values are domains. For each record, the domain is evaluated
+with the record's attributes as context values and if ``true``, the
+corresponding style is applied to the row. Other context values are
+``uid`` (the id of the current user) and ``current_date`` (the current date
+as a string of the form ``yyyy-MM-dd``).
 
-The valid decoration names are:
+``{$name}`` can be any string that is both accepted as an XML attribute and as a CSS class. Each decoration *decoration-X* will be mapped to a CSS class *X*.
 
-- decoration-bf
-- decoration-it
-- decoration-danger
-- decoration-info
-- decoration-muted
-- decoration-primary
-- decoration-success
-- decoration-warning
-
-Each decoration *decoration-X* will be mapped to a css class *text-X*, which is
-a standard bootstrap css class (except for *text-it* and *text-bf*, which are
-handled by odoo and correspond to italic and bold, respectively).  Note that the
-value of the decoration attribute should be a valid python expression, which
-will be evaluated with the record as evaluation context.
 
 Non relational fields
 ---------------------
