@@ -1610,10 +1610,15 @@ class IrModelData(models.Model):
         for (id, name, model, res_id, module) in self._cr.fetchall():
             if (module, name) not in self.loads:
                 if model in self.env:
-                    _logger.info('Deleting %s@%s (%s.%s)', res_id, model, module, name)
                     record = self.env[model].browse(res_id)
                     if record.exists():
-                        record.unlink()
+                        linked_count = self.search_count([('res_id', '=', res_id), ('model', '=', model)])
+                        if linked_count == 1:
+                            _logger.info('Deleting %s@%s (%s.%s)', res_id, model, module, name)
+                            record.unlink()
+                        else:
+                            _logger.info('Removing Model Data Link %s@%s (%s.%s)', res_id, model, module, name)
+                            bad_imd_ids.append(id)
                     else:
                         bad_imd_ids.append(id)
         if bad_imd_ids:
