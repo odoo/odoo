@@ -277,7 +277,7 @@ class IrAttachment(models.Model):
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
                             string='Type', required=True, default='binary', change_default=True,
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
-    url = fields.Char('Url', size=1024)
+    url = fields.Char('Url', index=True, size=1024)
     public = fields.Boolean('Is public document')
 
     # for external access
@@ -297,14 +297,6 @@ class IrAttachment(models.Model):
         res = super(IrAttachment, self)._auto_init()
         tools.create_index(self._cr, 'ir_attachment_res_idx',
                            self._table, ['res_model', 'res_id'])
-        self._cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_attachment_gin_url'")
-        if not self._cr.fetchone():
-            self._cr.execute("SELECT extname FROM pg_extension WHERE extname='pg_trgm';")
-            if self._cr.fetchone():
-                # url is filtered using with `LIKE %` a traditional index is not working very well.
-                self._cr.execute("CREATE INDEX ir_attachment_gin_url ON ir_attachment USING GIN (url gin_trgm_ops)")
-            else:
-                _logger.info("Run manually: 'CREATE EXTENSION IF NOT EXISTS pg_trgm' on your database using a superuser rol.")
         return res
 
     @api.model
