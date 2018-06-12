@@ -98,14 +98,16 @@ QUnit.module('Web', {
     QUnit.test('options rendering', function (assert) {
         assert.expect(3);
 
-        this.items[0].options = [{optionId: 1, description: "First Option"}, {optionId: 2, description: "Second Option"}];
+        this.items[0].options = [{optionId: 1, description: "First Option", groupId: 1}, {optionId: 2, description: "Second Option", groupId: 1}];
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
         // open dropdown
         dropdownMenu.$('button:first').click();
         assert.strictEqual(dropdownMenu.$('li').length, 4);
-        dropdownMenu.$('span.fa-caret-down').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 6);
+        // open options menu
+        dropdownMenu.$('span.fa-caret-right').click();
+        assert.strictEqual(dropdownMenu.$('li').length, 7);
+        // close options menu
         dropdownMenu.$('span.fa-caret-down').click();
         assert.strictEqual(dropdownMenu.$('li').length, 4);
 
@@ -119,8 +121,9 @@ QUnit.module('Web', {
 
         var dropdownMenu = createDropdownMenu(this.dropdownHeader, this.items);
         dropdownMenu.$('button:first').click();
-        dropdownMenu.$('span.fa-caret-down').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 6);
+        // open options menu
+        dropdownMenu.$('span.fa-caret-right').click();
+        assert.strictEqual(dropdownMenu.$('li').length, 7);
         dropdownMenu.$('button:first').click();
         dropdownMenu.$('button:first').click();
         assert.strictEqual(dropdownMenu.$('li').length, 4);
@@ -158,24 +161,27 @@ QUnit.module('Web', {
                 },
             },
         });
+        // open dropdown menu
         dropdownMenu.$('button:first').click();
-        dropdownMenu.$('span.fa-caret-down').click();
-        assert.strictEqual(dropdownMenu.$('li').length, 6);
-        assert.ok(!dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:first').hasClass('selected'));
+        // open options menu
+        dropdownMenu.$('span.fa-caret-right').click();
+        assert.strictEqual(dropdownMenu.$('li').length, 7);
+        // Don't forget there is a hidden li.divider element at first place among children
+        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
         dropdownMenu.$('li.o_item_option:first').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
-        assert.ok(dropdownMenu.$('.o_item_option:first').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        dropdownMenu.$('li.o_item_option:nth-child(2)').click();
-        assert.ok(dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:first').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
-        dropdownMenu.$('li.o_item_option:nth-child(2)').click();
-        assert.ok(!dropdownMenu.$('.o_menu_item:first').hasClass('selected'));
-        assert.ok(!dropdownMenu.$('.o_item_option:first').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        dropdownMenu.$('li.o_item_option:nth-child(3)').click();
+        assert.ok(dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
         assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
+        assert.ok(dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
+        dropdownMenu.$('li.o_item_option:nth-child(3)').click();
+        assert.ok(!dropdownMenu.$('.o_menu_item:nth-child(2)').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(2)').hasClass('selected'));
+        assert.ok(!dropdownMenu.$('.o_item_option:nth-child(3)').hasClass('selected'));
         dropdownMenu.destroy();
     });
 
