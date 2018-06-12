@@ -349,6 +349,8 @@ class procurement_order(osv.osv):
             if use_new_cursor:
                 cr = openerp.registry(cr.dbname).cursor()
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
+                op_name = op.name
+                product_id = op.product_id.id
                 try:
                     prods = self._product_virtual_get(cr, uid, op)
                     if prods is None:
@@ -377,6 +379,14 @@ class procurement_order(osv.osv):
                     if use_new_cursor:
                         orderpoint_ids.append(op.id)
                         cr.rollback()
+                        continue
+                    else:
+                        raise
+                except Exception, e:
+                    if use_new_cursor:
+                        cr.rollback()
+                        msg = 'Cannot process orderpoint %s: %s' % (op_name, e)
+                        self.pool.get('product.product').message_post(cr, uid, [product_id], body=msg, context=context)
                         continue
                     else:
                         raise
