@@ -68,6 +68,7 @@ class project(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
+        task_obj = self.pool.get('project.task')
         val = {}
         if not part:
             return {'value': val}
@@ -75,6 +76,12 @@ class project(osv.osv):
             pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
             pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
             val['pricelist_id'] = pricelist_id
+
+        if part:
+            for proj in self.browse(cr, uid, ids, context=context):
+                for task in proj.tasks:
+                    task_obj.write(cr, uid, [task.id], {'partner_id': part})
+
         return {'value': val}
 
     def unlink(self, cr, uid, ids, context=None):
