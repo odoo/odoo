@@ -69,15 +69,3 @@ class TestIrAttachment(TransactionCase):
 
         a2_fn = os.path.join(self.filestore, a2_store_fname2)
         self.assertTrue(os.path.isfile(a2_fn))
-
-    def test_06_index_url_used(self):
-        for i in range(10):
-            name = ('Hello world and México! %d ' % i) * 5
-            self.Attachment.create({
-                'name': name,
-                'url': name,
-            })
-        self.cr.execute("EXPLAIN (ANALYZE, VERBOSE, BUFFERS) SELECT id, url FROM ir_attachment WHERE url LIKE '/web/content/%-d6fee47/web.assets_backend%%.css'")
-        res = self.cr.fetchall()
-        res_str = '\n'.join([i[0] for i in res])
-        self.assertNotIn('Seq Scan on ', res_str, "It is using manual scan without index: %s" % res_str)
