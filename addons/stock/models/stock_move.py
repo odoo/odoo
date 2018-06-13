@@ -654,7 +654,7 @@ class StockMove(models.Model):
         self.product_uom = product.uom_id.id
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
-    @api.onchange('date')
+    @api.onchange('date_expected')
     def onchange_date(self):
         if self.date_expected:
             self.date = self.date_expected
@@ -780,7 +780,7 @@ class StockMove(models.Model):
                 group_id = False
         return {
             'company_id': self.company_id,
-            'date_planned': self.date,
+            'date_planned': self.date_expected,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,
