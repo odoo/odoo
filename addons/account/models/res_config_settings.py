@@ -85,27 +85,13 @@ class ResConfigSettings(models.TransientModel):
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-            wizard = self.env['wizard.multi.charts.accounts'].create({
-                'company_id': self.company_id.id,
-                'chart_template_id': self.chart_template_id.id,
-                'code_digits': self.chart_template_id.code_digits,
-                'sale_tax_rate': 15.0,
-                'purchase_tax_rate': 15.0,
-                'code_digits': self.chart_template_id.code_digits,
-                'complete_tax_set': self.chart_template_id.complete_tax_set,
-                'currency_id': self.currency_id.id,
-                'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
-                'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
-                'transfer_account_code_prefix': self.chart_template_id.transfer_account_code_prefix,
-            })
-            wizard.onchange_chart_template_id()
-            wizard.execute()
+            self.chart_template_id.load_for_current_company(15.0, 15.0)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.chart_template_id = self.company_id.chart_template_id or False
-        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
+        self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
 
     @api.onchange('show_line_subtotals_tax_selection')
     def _onchange_sale_tax(self):

@@ -2017,57 +2017,6 @@
             <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
 
-        <!--  Wizard for Multi Charts of Accounts -->
-        <record id="view_wizard_multi_chart" model="ir.ui.view">
-            <field name="name">Choose Accounting Template</field>
-            <field name="model">wizard.multi.charts.accounts</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
-            <field name="arch" type="xml">
-                <form position="attributes">
-                    <attribute name="string">Accounting Application Configuration</attribute>
-                </form>
-                <group name="res_config_contents" position="replace">
-                    <field name="only_one_chart_template" invisible="1"/>
-                    <field name="complete_tax_set" invisible="1"/>
-                    <group col="1">
-                        <group>
-                            <field name="chart_template_id" widget="selection" domain="[('visible','=', True)]"/>
-                        </group>
-                        <group invisible="1">
-                            <field name="company_id" options="{'no_create': True}"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                            <field name="currency_id" class="oe_inline"/>
-                            <field name="use_anglo_saxon"/>
-                            <field name="sale_tax_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','sale')]"/>
-                            <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
-                            <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
-                                <field name="sale_tax_rate" class="oe_inline"/> %%
-                            </div>
-                            <field name="purchase_tax_id" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','=','purchase')]"/>
-                            <label for="purchase_tax_rate" string="Purchase Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
-                            <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
-                                <field name="purchase_tax_rate" class="oe_inline"/> %%
-                            </div>
-                        </group>
-                        <group groups="account.group_account_user" invisible="1">
-                            <field name="code_digits"/>
-                            <field name="bank_account_code_prefix"/>
-                            <field name="cash_account_code_prefix"/>
-                            <field name="transfer_account_code_prefix"/>
-                        </group>
-                    </group>
-                </group>
-            </field>
-        </record>
-        <record id="action_wizard_multi_chart" model="ir.actions.act_window">
-            <field name="name">Choose Accounting Template</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">wizard.multi.charts.accounts</field>
-            <field name="view_id" ref="view_wizard_multi_chart"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
          <!-- Fiscal Position Templates -->
 
         <record id="view_account_position_template_search" model="ir.ui.view">
