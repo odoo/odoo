@@ -54,6 +54,7 @@ The Dashboard for the Sales Manager will include
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/sale_make_invoice_advance_views.xml',
+        'views/account_config_settings_views.xml',
         'views/sale_views.xml',
         'views/sales_team_views.xml',
         'views/res_partner_views.xml',

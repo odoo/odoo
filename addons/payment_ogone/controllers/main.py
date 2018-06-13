@@ -48,7 +48,7 @@ class OgoneController(http.Controller):
     def feedback(self, **kwargs):
         try:
             tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
-            tx._ogone_s2s_validate()
+            tx._ogone_s2s_validate_tree(kwargs)
         except ValidationError:
             return 'ko'
         return 'ok'
