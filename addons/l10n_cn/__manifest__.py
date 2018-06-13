@@ -14,12 +14,12 @@
     'maintainer': 'jeff@osbzr.com',
     'website': 'http://openerp-china.org',
     'description': """
+Include those data/包含以下数据
+===============================
 
-    科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+    Account Type/科目类型
 
-    添加中文省份数据
-
-    增加小企业会计科目表
+    State Data/省份数据
 
     """,
     'depends': ['base', 'account', 'l10n_multilang'],
