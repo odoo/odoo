@@ -641,7 +641,6 @@ class IrActionsReport(models.Model):
             return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=html_ids), 'pdf'
         return pdf_content, 'pdf'
 
-    @api.model
     def render_qweb_html(self, docids, data=None):
         """This method generates and returns html version of a report.
         """
