@@ -32,7 +32,7 @@ SAFE_EVAL_BASE = {
 def make_compute(text, deps):
     """ Return a compute function from its code body and dependencies. """
     func = lambda self: safe_eval(text, SAFE_EVAL_BASE, {'self': self}, mode="exec")
-    deps = [arg.strip() for arg in (deps or "").split(",")]
+    deps = [arg.strip() for arg in deps.split(",")] if deps else []
     return api.depends(*deps)(func)
 
 
