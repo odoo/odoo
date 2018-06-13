@@ -4,24 +4,24 @@
 # 
 # Translators:
 # ТАрас <tratatuta@i.ua>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
+# Zoriana Zaiats, 2016
+# Bohdan Lisnenko, 2016
 # Yaroslav Molochko <onorua@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Martin Trigaux, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
@@ -37,7 +37,7 @@ msgstr "Активно"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Дні закриття"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_code
@@ -85,6 +85,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Визначте робочі години та часові таблиці, які можуть бути заплановані для "
+"ваших учасників проекту"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -115,6 +117,8 @@ msgstr "Кінцева дата"
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Помилка! Відпустка початкової дати повинна бути нижчою, а потім кінцева дата"
+" відпустки."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -135,7 +139,7 @@ msgstr "Години"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr ""
+msgstr "Людський"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_id
@@ -151,6 +155,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Якщо порожньо, це загальний вихідний компанії. Якщо ресурс встановлено, "
+"вихідний/відпустка призначається лише для цього ресурсу"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_active
@@ -158,6 +164,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Якщо активне поле встановлено на Помилкове, це дозволить вам приховати запис"
+" ресурсу, не видаливши його."
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -198,7 +206,7 @@ msgstr "Деталі пропуску"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Місяць відпустки"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -233,7 +241,7 @@ msgstr "Причина"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Пов'язане ім'я користувача ресурсу для управління доступом."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -253,7 +261,7 @@ msgstr "Календар ресурсу"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Детальна інформація про ресурси"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -269,7 +277,7 @@ msgstr "Тип ресурсу"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Календар ресурсу"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -281,7 +289,7 @@ msgstr "Ресурси"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Відпустки ресурсу"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -290,6 +298,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Ресурси дозволяють створювати та керувати ресурсами, які потрібно залучити "
+"до певної фази проекту. Ви також можете встановити їх рівень ефективності та"
+" навантаження залежно від їх тижневого робочого часу."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -299,17 +310,17 @@ msgstr "Субота"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Search Resource"
-msgstr ""
+msgstr "Шукати ресурс"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "Шукати відпустки робочого періоду"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
-msgstr ""
+msgstr "Шукати робочий час"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -319,7 +330,7 @@ msgstr "Початкова дата"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
 msgid "Start and End time of working."
-msgstr ""
+msgstr "Початок та кінець робочого часу."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -329,7 +340,7 @@ msgstr "Початкова дата"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "Початкова дата відпустки за місяцем"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -340,7 +351,7 @@ msgstr "Неділя"
 #: code:addons/resource/models/resource.py:714
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Коефіцієнт ефективності не може бути рівним 0."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -350,6 +361,10 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficiency of"
 " 200%, then his load will only be 50%."
 msgstr ""
+"Це поле відображає ефективність ресурсу для виконання завдань. напр., "
+"ресурс, покладений окремо на етапі 5 днів з 5 поставленими йому завданнями, "
+"за умовчанням покаже навантаження на цю фазу на 100%, але якщо ми поставимо "
+"ефективність на 200%, то його навантаження буде лише на 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -385,23 +400,23 @@ msgstr "Деталі роботи"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
 msgid "Work from"
-msgstr ""
+msgstr "Робота з"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_to
 msgid "Work to"
-msgstr ""
+msgstr "Робота до"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
 msgid "Workgroup Manager"
-msgstr ""
+msgstr "Менеджер робочої групи"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
-msgstr ""
+msgstr "Робочий період"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form

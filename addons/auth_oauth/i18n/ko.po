@@ -4,6 +4,7 @@
 # 
 # Translators:
 # 방상우 <mrroom@gmail.com>, 2017
+# link up <link-up@naver.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # 최재호 <hwangtog@gmail.com>, 2017
 # 종현 엄 <whd5367@naver.com>, 2017
@@ -80,18 +81,19 @@ msgid ""
 "Check that the application type is set on <b>Web Application</b>. \n"
 "                                        Now configure the allowed pages on which you will be redirected."
 msgstr ""
+"<b>웹 응용 프로그램</b> 에서 응용 프로그램 유형이 설정되어 있는지 확인하십시오. 이제 리디렉션 할 허용 페이지 환경설정 하십시오."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Click on <b>Create Project</b> and enter the project name and \n"
 "                                        other details."
-msgstr ""
+msgstr "<b>프로젝트 생성</b> 클릭하고 프로젝트 이름 및 기타 세부 사항을 입력하십시오."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
+msgstr "<b>Google API 사용</b> 클릭하십시오."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -107,7 +109,7 @@ msgstr "거래처 회사"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Connect to your Google account and go to"
-msgstr ""
+msgstr "구글 계정 연결하고 이동"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -133,7 +135,7 @@ msgstr "유통"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
 msgid "Customer Payment Terms"
-msgstr ""
+msgstr "고객 지불 조건"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -143,7 +145,7 @@ msgstr "데이터 URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "이 채무자의 신뢰 정도"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
@@ -155,22 +157,22 @@ msgstr "표시 이름"
 msgid ""
 "Fill in your address, email and the product name (for example odoo) \n"
 "                                        and then save."
-msgstr ""
+msgstr "주소, 전자 메일 및 제품 이름 (예 : odoo)을 입력 한 다음 저장하십시오."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
 msgid "Fiscal Position"
-msgstr "재정 위치"
+msgstr "재정 상태"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Google Client ID:"
-msgstr ""
+msgstr "구글 고객 ID:"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr ""
+msgstr "미 조정 항목 있음"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -215,11 +217,13 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
+"지난 번 이 파트너에 대해 송ㅈ 및 결제 일치가 수행되었습니다. 적어도 미 조정 된 차변 및 미 조정 신용이 없거나 \"완료\"버튼을 "
+"클릭하는 경우 설정됩니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr ""
+msgstr "최신 송장 및 지불 일치 날짜"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
@@ -239,12 +243,12 @@ msgstr "OAuth 공급자"
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 msgid "OAuth Providers"
-msgstr "OAuth 공급자"
+msgstr "OAuth 공급자들"
 
 #. module: auth_oauth
 #: sql_constraint:res.users:0
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID는 공급자마다 유일해야 합니다"
+msgstr "OAuth UID는 공급자 당 고유해야 합니다"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_uid
@@ -272,6 +276,8 @@ msgid ""
 "On the left side menu, select the sub menu <b>Credentials</b> \n"
 "                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
 msgstr ""
+"왼쪽 메뉴에서 <b>API 관리자의</b> <b>자격증 명</b> 하위 메뉴를 선택한 다음 <b>OAuth 동의 화면</b> 을 "
+"선택합니다."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -280,6 +286,8 @@ msgid ""
 "                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
 "                                        the field below."
 msgstr ""
+"완료되면, 두 개의 정보 ( <b>고객 ID</b> 및 <b>고객 비밀</b> )를 받습니다. 아래 입력란에 <b>고객 ID</b> 를 "
+"입력해야 합니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
@@ -294,12 +302,12 @@ msgstr "공급자명"
 #. module: auth_oauth
 #: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
 msgid "Providers"
-msgstr "공급자"
+msgstr "공급자들"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Return to Top"
-msgstr ""
+msgstr "페이지 맨 위로 돌아가기"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
@@ -313,80 +321,80 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 흐름이 차단됩니다. 메시지는 "
+"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 수신이 차단됩니다. 메시지는 "
 "다음 필드에 작성되어야 합니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
 msgid "Sequence"
-msgstr "순서"
+msgstr "순차적"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
 msgid "Server uri"
-msgstr ""
+msgstr "서버 URI"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Show Tutorial"
-msgstr ""
+msgstr "사용 지침서 보기"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
 msgid "Show tutorial"
-msgstr ""
+msgstr "사용 지침서 보기"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:97
 #, python-format
 msgid "Sign up is not allowed on this database."
-msgstr "이 데이터베이스가 가입을 허용하지 않습니다."
+msgstr "이 데이터베이스에는 가입이 허용되지 않습니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
 msgid ""
 "The fiscal position will determine taxes and accounts used for the partner."
-msgstr "회계 상태는 파트너에게 사용되는 세금과 계정을 결정합니다."
+msgstr "재정 상태가 파트너에게 사용되는 세금과 계정을 결정 할 것입니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
+msgstr "마지막으로 송장 및 지불 일치가 수행 된 이후 파트너에게는 최소 하나의 미결 된 차변 및 대변이 있습니다."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "Then click on <b>Add Credentials</b> and select the second option \n"
 "                                        (OAuth 2.0 Client ID)."
-msgstr ""
+msgstr "그런 다음 <b>자격증 정보 추가를</b> 클릭하고 두 번째 옵션 (OAuth 2.0 고객 ID)을 선택하십시오."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Then click on <b>Create</b>."
-msgstr ""
+msgstr "그런 다음 <b>만들기를</b> 클릭."
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr ""
+msgstr "이 계정은 현재 파트너에 대한 지불 계정으로 기본 계정 대신 사용됩니다"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
 msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
-msgstr ""
+msgstr "이 계정은 현재 파트너의 채권 계정으로 기본 계정 대신 사용됩니다"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
-msgstr ""
+msgstr "이 지급 기간은 구매 주문 및 공급 업체 청구서의 기본값 대신 사용됩니다"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
@@ -400,14 +408,14 @@ msgstr "이 지불 기간은 판매 주문과 고객 송장 중 하나를 기본
 msgid ""
 "To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
 "                                        Copy paste the following link in the box"
-msgstr ""
+msgstr "이를 위해, <b>승인 된 리디렉션 URI</b> 필드를 완성하십시오. 상자에 다음 링크를 복사하여 붙여 넣으십시오"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
 "To setup the sign in process with Google, you have to perform \n"
 "                                    the following steps first."
-msgstr ""
+msgstr "Google 로그인 과정을 설정하려면 먼저 다음 단계를 수행해야합니다."
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
@@ -432,7 +440,7 @@ msgstr "고객이 지불할 총 금액."
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "이 공급 업체에 지불해야 하는 총 금액입니다."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -442,7 +450,7 @@ msgstr "사용자 목록"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
 msgid "Utility field to express amount currency"
-msgstr ""
+msgstr "금액 통화를 나타내는 유틸리티 필드"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
@@ -452,7 +460,7 @@ msgstr "검증 URL"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr ""
+msgstr "공급 업체 지불 조건"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:101
@@ -461,7 +469,7 @@ msgid ""
 "You do not have access to this database or your invitation has expired. "
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
-msgstr "이 데이터베이스에 접근할 수 없거나 초청장이 만료됐습니다. 초청장을 요청해주시고 초청 이메일의 링크를 클릭해주세요."
+msgstr "이 데이터베이스에 접근할 수 없거나 초대기간이 만료됐습니다. 초청장을 요청해주시고 초청 이메일의 링크를 클릭해주세요."
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
@@ -472,7 +480,7 @@ msgstr "arch"
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
+msgstr "base.config.settings"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -482,7 +490,7 @@ msgstr "예) 1234-xyz.apps.googleusercontent.com"
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "https://console.developers.google.com/"
-msgstr ""
+msgstr "https://console.developers.google.com/"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter

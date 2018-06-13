@@ -3,20 +3,24 @@
 # * project
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
-# Bo Cao <cao.poobo@hotmail.com>, 2016
+# Bo Cao, 2016
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Maie <m@maie.name>, 2017
+# e2f <projects@e2f.com>, 2018
+# Talway <9010446@qq.com>, 2018
+# Martin Trigaux, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2017\n"
+"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -139,6 +143,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>尊敬的 ${object.partner_id.name or 'customer'}：</p>\n"
+"<p>感谢您的询问。<br /></p>\n"
+"<p>如果您有任何疑问，请随时与我们联系。</p>\n"
+"<p>此致，</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -985,7 +994,7 @@ msgstr "有效"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Activities"
-msgstr ""
+msgstr "活动"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -999,7 +1008,7 @@ msgstr "添加说明..."
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
-msgstr ""
+msgstr "<b/><br/><i/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -1141,6 +1150,9 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
+"在每一个阶段，员工可以阻止或者让任务／议题准备进入下一阶段。\n"
+" 您可以在这里定义标签来替代 \n"
+" 默认的标签。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1278,7 +1290,7 @@ msgstr "选择这个框来通过这个项目管理内部活动"
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1305,7 +1317,7 @@ msgstr "点击卡片查看任务详情。"
 #, python-format
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
@@ -1984,7 +1996,7 @@ msgid ""
 "Good job! Your completed the Project Management tour. You can continue with "
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2035,6 +2047,12 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"保持当前项目任务或问题的能见度：\n"
+"- 仅基于邀请：员工可能仅查看下列项目、任务或问题 \n"
+"- 所有员工可见的：员工可能查看的所有项目、任务或问题 \n"
+"- 以下客户可见的：员工可以查看每一件事；\n"
+" 如果网站已激活，门户用户可能查看项目、任务或问题，其次是 \n"
+" 他们或他们公司的某个人 \n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
@@ -2095,7 +2113,7 @@ msgstr "定义议题和阻塞点更加容易"
 msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
-msgstr ""
+msgstr "当任务或问题到达这一步时，设置发送电子邮件给客户。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2538,7 +2556,7 @@ msgstr "通知"
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_opening_days
@@ -2558,7 +2576,7 @@ msgstr "附件数量"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Objectives"
-msgstr ""
+msgstr "目标"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2909,7 +2927,7 @@ msgstr "准备已经被文档化过的取消"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "${object.name}的招待会"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -3472,6 +3490,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"这设置了项目和任务所使用的度量单位。\n"
+" 如果您使用连接到项目上的工作表，请不要忘记在员工中设置正确的度量单位。"
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3593,14 +3613,14 @@ msgstr "用单独的会议来解决大的议题或者哪些队整个团队来说
 msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:88
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3683,7 +3703,7 @@ msgstr "Wait. Expert"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "<i/><b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3756,7 +3776,7 @@ msgstr "一年下来工作小时数的平均数是多少？"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_is_favorite
 msgid "Whether this project should be displayed on the dashboard or not"
-msgstr ""
+msgstr "不管这个项目是否显示在仪表板"
 
 #. module: project
 #. openerp-web
@@ -3848,7 +3868,7 @@ msgstr "你的目标"
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Odoo 项目应用程序已启动并开始运行"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3873,7 +3893,7 @@ msgstr "和有效的"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "例如，办公场所"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3919,7 +3939,7 @@ msgstr "去描述<br/> 你的经验，以及改进建议 !"
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "to play with."
-msgstr ""
+msgstr "同。"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

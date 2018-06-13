@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from datetime import timedelta, datetime
+import calendar
+import time
+from dateutil.relativedelta import relativedelta
+
 from odoo import fields, models, api, _
-from odoo.exceptions import ValidationError
-from datetime import timedelta
+from odoo.exceptions import ValidationError, UserError
+from odoo.tools.misc import DEFAULT_SERVER_DATE_FORMAT
 
 
 class ResCompany(models.Model):
@@ -44,6 +49,61 @@ If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
 Best Regards,''')
+
+    @api.multi
+    def _check_lock_dates(self, vals):
+        '''Check the lock dates for the current companies. This can't be done in a api.constrains because we need
+        to perform some comparison between new/old values. This method forces the lock dates to be irreversible.
+
+        * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set
+        after the lock date for users.
+        * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set after the
+        last day of the previous month.
+        * The new lock date for advisors must be set after the previous lock date.
+
+        :param vals: The values passed to the write method.
+        '''
+        period_lock_date = vals.get('period_lock_date') and\
+            time.strptime(vals['period_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+        fiscalyear_lock_date = vals.get('fiscalyear_lock_date') and\
+            time.strptime(vals['fiscalyear_lock_date'], DEFAULT_SERVER_DATE_FORMAT)
+
+        previous_month = datetime.strptime(fields.Date.today(), DEFAULT_SERVER_DATE_FORMAT) + relativedelta(months=-1)
+        days_previous_month = calendar.monthrange(previous_month.year, previous_month.month)
+        previous_month = previous_month.replace(day=days_previous_month[1]).timetuple()
+        for company in self:
+            old_fiscalyear_lock_date = company.fiscalyear_lock_date and\
+                time.strptime(company.fiscalyear_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+
+            # The user attempts to remove the lock date for advisors
+            if old_fiscalyear_lock_date and not fiscalyear_lock_date and 'fiscalyear_lock_date' in vals:
+                raise ValidationError(_('The lock date for advisors is irreversible and can\'t be removed.'))
+
+            # The user attempts to set a lock date for advisors prior to the previous one
+            if old_fiscalyear_lock_date and fiscalyear_lock_date and fiscalyear_lock_date < old_fiscalyear_lock_date:
+                raise ValidationError(_('The new lock date for advisors must be set after the previous lock date.'))
+
+            # In case of no new fiscal year in vals, fallback to the oldest
+            if not fiscalyear_lock_date:
+                if old_fiscalyear_lock_date:
+                    fiscalyear_lock_date = old_fiscalyear_lock_date
+                else:
+                    continue
+
+            # The user attempts to set a lock date for advisors prior to the last day of previous month
+            if fiscalyear_lock_date > previous_month:
+                raise ValidationError(_('You cannot lock a period that is not finished yet. Please make sure that the lock date for advisors is not set after the last day of the previous month.'))
+
+            # In case of no new period lock date in vals, fallback to the one defined in the company
+            if not period_lock_date:
+                if company.period_lock_date:
+                    period_lock_date = time.strptime(company.period_lock_date, DEFAULT_SERVER_DATE_FORMAT)
+                else:
+                    continue
+
+            # The user attempts to set a lock date for advisors prior to the lock date for users
+            if period_lock_date < fiscalyear_lock_date:
+                raise ValidationError(_('You cannot define stricter conditions on advisors than on users. Please make sure that the lock date on advisor is set before the lock date for users.'))
 
     @api.multi
     def compute_fiscalyear_dates(self, date):
@@ -110,4 +170,10 @@ Best Regards,''')
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code, digits)
             if values.get('accounts_code_digits'):
                 company.reflect_code_digits_change(digits)
+
+            #forbid the change of currency_id if there are already some accounting entries existing
+            if 'currency_id' in values and values['currency_id'] != company.currency_id.id:
+                if self.env['account.move.line'].search([('company_id', '=', company.id)]):
+                    raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
+
         return super(ResCompany, self).write(values)

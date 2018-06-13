@@ -73,9 +73,9 @@ var Translate = translate.Class.include({
             dialog.appendTo($(document.body));
             dialog.on('activate', this, function () {
                 if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                    local_storage.removeItem(nodialog);
-                } else {
                     local_storage.setItem(nodialog, true);
+                } else {
+                    local_storage.removeItem(nodialog);
                 }
                 dialog.$el.modal('hide');
             });

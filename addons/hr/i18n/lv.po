@@ -69,6 +69,8 @@ msgid ""
 "<span class=\"o_unfollow\">Unfollow</span>\n"
 "                                    <span class=\"o_following\">Following</span>"
 msgstr ""
+"<span class=\"o_unfollow\">Pārtraukt sekošanu</span>\n"
+"                                    <span class=\"o_following\">Sekojat</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -78,12 +80,12 @@ msgstr "<span>Reports</span>"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Approve</span>"
-msgstr ""
+msgstr "<span>Apstiprināmi</span>"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>To Do</span>"
-msgstr ""
+msgstr "<span>Darāmais</span>"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -211,12 +213,12 @@ msgstr "Click to add a new employee."
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
-msgstr ""
+msgstr "Nospiediet, lai izveidotu nodaļu."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid "Click to define a new job position."
-msgstr ""
+msgstr "Nospiediet, lai nodefinētu jaunu amatu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -302,7 +304,7 @@ msgstr "Izveidots"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_employee
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Pašreizējais darbinieku skaits"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
@@ -442,13 +444,13 @@ msgstr "Darbinieku birkas"
 #: code:addons/hr/models/hr.py:254
 #, python-format
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Kļūda! Jūs nedrīkstat veidot rekursīvas nodaļas."
 
 #. module: hr
 #: code:addons/hr/models/hr.py:167
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Kļūda! Jūs nedrīkstat veidot rekursīvu darbinieku hierarhiju."
 
 #. module: hr
 #: model:ir.model,name:hr.model_event_event
@@ -458,13 +460,14 @@ msgstr "Notikums"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
 msgid "Expected New Employees"
-msgstr ""
+msgstr "Paredzami jauni darbinieki"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
+"Paredzamais darbinieku skaits šim amatam pēc jaunas personāla atlases."
 
 #. module: hr
 #: model:hr.job,name:hr.job_developer
@@ -621,6 +624,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Lauka 'Aktīvs sistēmā' atzīmēšana kā False ļaus Jums paslēpt resursa "
+"ierakstu, to nedzēšot."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -689,6 +694,10 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
+"Amati tiek izmantoti, lai nodefinētu darbus un to prasības.\n"
+"                Jūs varat sekot līdzi darbinieku skaitam katrā amatā\n"
+"                un sekot izvērtēšanai, saskaņā ar ieplānoto darbu\n"
+"                nākotnē."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
@@ -734,7 +743,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Sākt personāla atlasi"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -808,6 +817,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Vidēja izmēra darbinieka foto. Tas tiek autimātiski mainīts uz 128x128px "
+"izmēra attēlu, saglabājot malu attiecību. Izmantojiet šo lauku formas "
+"skatījumos vai dažos kanban tipa skatījumos."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -859,7 +871,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Not Recruiting"
-msgstr ""
+msgstr "Nenotiek atlase"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_note
@@ -874,18 +886,18 @@ msgstr "Piezīmes"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Darbinieku skaits, kas šobrīd ieņem šo amatu."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr ""
+msgstr "Nolīgto darbinieku skaits šim amatam personāla atlases fāzē."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr ""
+msgstr "Darbinieku skaits, ko Jūs plānojat pieņemt darbā."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -908,7 +920,7 @@ msgstr "Cits"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Other Information ..."
-msgstr ""
+msgstr "Cita informācija..."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -992,7 +1004,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitment in Progress"
-msgstr ""
+msgstr "Notiek atlase"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -1002,12 +1014,12 @@ msgstr "Saistītais lietotājs"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users_employee_ids
 msgid "Related employees"
-msgstr ""
+msgstr "Saistītie darbinieki"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Ar resursu saistītā lietotāja vārds tā piekļuves pārvaldīšanai."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
@@ -1067,6 +1079,7 @@ msgstr ""
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
 msgstr ""
+"Norādiet, vai šim amatam ir atvērts vai noslēgts personāla atlases process."
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1101,6 +1114,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
+"Maza izmēra darbinieka foto. Tas tiek autimātiski mainīts uz 64x64px izmēra "
+"attēlu, saglabājot malu attiecību. Izmantojiet šo lauku jebkurā vietā, kur "
+"nepieciešams maza izmēra attēls."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_sinid
@@ -1122,7 +1138,7 @@ msgstr "Statuss"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "Pārtraukt personāla atlasi"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_employee_action_subordinate_hierachy
@@ -1162,7 +1178,7 @@ msgstr "Test Mail Model"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
+msgstr "Uzņēmuma amata nosaukumam jābūt unikālam nodaļas ietvaros!"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_attendance
@@ -1186,11 +1202,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Šajā laukā tiek glabāts attēls, kas tiek izmantots kā darbinieka foto, "
+"ierobežots līdz 1024x1024px."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Kopējais prognozēto darbinieku skaits"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -1412,6 +1430,9 @@ msgid ""
 "                the recruitment process to evaluate the applicants for this job\n"
 "                position."
 msgstr ""
+"Jūs amatam varat pievienot aptauju. Tā tiks izmantota\n"
+"                personāla atlases procesā šī amata pretendentu\n"
+"                izvērtēšanai."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1528,7 +1549,7 @@ msgstr ""
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
 msgid "Your document has not been created"
-msgstr ""
+msgstr "Jūsu dokuments nav izveidots"
 
 #. module: hr
 #: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
@@ -1537,6 +1558,9 @@ msgid ""
 "recognized. Please send emails with the email address recorded on your "
 "employee information, or contact your HR manager."
 msgstr ""
+"Jūsu dokuments nav izveidots, jo Jūsu e-pasta adrese netika atpazīta. Lūdzam"
+" sūtīt e-pastus ar e-pasta adresēm, kas ierakstītas darbinieka informācijā, "
+"vai sazināties ar savu HR menedžeri."
 
 #. module: hr
 #: code:addons/hr/models/mail_thread.py:41
@@ -1552,7 +1576,7 @@ msgstr "nodaļa"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Part Time"
-msgstr ""
+msgstr "piem., Nepilna laika"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -1568,7 +1592,7 @@ msgstr "skipping"
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "lietotājs varēs apstiprināt darbinieku veidotos dokumentus."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1576,3 +1600,5 @@ msgid ""
 "the user will have an access to the human resources configuration as well as"
 " statistic reports."
 msgstr ""
+"lietotājam būs pieejama cilvēkresursu konfigurācija, kā arī statistiskās "
+"atskaites."

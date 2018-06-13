@@ -26,7 +26,7 @@ class QWeb(models.AbstractModel):
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         website = getattr(request, 'website', None) if request else None
         if website and website.cdn_activated:
-            values = dict(values, url_for=website.get_cdn_url)
+            values = dict(values or {}, url_for=website.get_cdn_url)
         return super(QWeb, self)._get_asset(xmlid, options, css, js, debug, async, values)
 
     def _website_build_attribute(self, tagName, name, value, options, values):

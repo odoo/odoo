@@ -348,7 +348,9 @@ class HrExpense(models.Model):
             product = default_product
         else:
             expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
+        account = product.product_tmpl_id._get_product_accounts()['expense']
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -375,6 +377,8 @@ class HrExpense(models.Model):
             'unit_amount': price,
             'company_id': employee.company_id.id,
         })
+        if account:
+            custom_values['account_id'] = account.id
         return super(HrExpense, self).message_new(msg_dict, custom_values)
 
 class HrExpenseSheet(models.Model):
@@ -411,18 +415,20 @@ class HrExpenseSheet(models.Model):
 
     @api.multi
     def check_consistency(self):
-        if any(sheet.employee_id != self[0].employee_id for sheet in self):
-            raise UserError(_("Expenses must belong to the same Employee."))
-
-        expense_lines = self.mapped('expense_line_ids')
-        if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
-            raise UserError(_("Expenses must have been paid by the same entity (Company or employee)"))
+        for rec in self:
+            expense_lines = rec.expense_line_ids
+            if not expense_lines:
+                continue
+            if any(expense.employee_id != rec.employee_id for expense in expense_lines):
+                raise UserError(_("Expenses must belong to the same Employee."))
+            if any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
+                raise UserError(_("Expenses must have been paid by the same entity (Company or employee)"))
 
     @api.model
     def create(self, vals):
         self._create_set_followers(vals)
         sheet = super(HrExpenseSheet, self).create(vals)
-        self.check_consistency()
+        sheet.check_consistency()
         return sheet
 
     @api.multi
@@ -591,7 +597,7 @@ class HrExpenseSheet(models.Model):
             raise ValidationError(_('You cannot have a positive and negative amounts on the same expense report.'))
 
     @api.one
-    @api.constrains('expense_line_ids')
+    @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):

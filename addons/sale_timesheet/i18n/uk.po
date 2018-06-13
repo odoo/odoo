@@ -3,16 +3,17 @@
 # * sale_timesheet
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Bohdan Lisnenko, 2016
+# Martin Trigaux, 2016
 # ТАрас <tratatuta@i.ua>, 2016
+# Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
 "PO-Revision-Date: 2016-09-19 12:36+0000\n"
-"Last-Translator: ТАрас <tratatuta@i.ua>, 2016\n"
+"Last-Translator: Alina Semeniuk <alinasemeniuk1@gmail.com>, 2017\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,6 +43,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Створіть нове завдання під цим проектом у перевірці замовлення на продаж. Це"
+" налаштування має бути встановлене для кожної компанії. "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -51,7 +54,7 @@ msgstr "Співробітник"
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Order Line"
-msgstr ""
+msgstr "Рядок замовлення"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
@@ -99,7 +102,7 @@ msgstr "Проект"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr ""
+msgstr "Проект пов'язаний із цим продажем"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -125,6 +128,8 @@ msgstr "Завдання"
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
 msgstr ""
+"Завдання створене (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
@@ -135,7 +140,7 @@ msgstr "Завдання"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "Завдання пов'язане із цим продажем"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/procurement.py:84
@@ -144,6 +149,8 @@ msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
 "id=%d>%s</a> (%s)"
 msgstr ""
+"Це завдання було створене з: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
@@ -151,6 +158,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Це встановить одиницю вимірювання, що використовується в проектах та завданнях.\n"
+"Якщо ви використовуєте розклад, пов'язаний з проектами, не забувайте встановлювати потрібну одиницю вимірювання вашим співробітникам."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
@@ -184,6 +193,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
 msgstr ""
+"Коли видається новий серійний номер, це число днів перед тим, як буде "
+"сповіщення."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
@@ -191,6 +202,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
 msgstr ""
+"Коли видається новий серійний номер, це число днів до того, як товари можуть"
+" стати небезпечними, і їх не слід споживати."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
@@ -198,6 +211,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
 msgstr ""
+"Коли видається новий серійний номер, це число днів до вивезення товару зі "
+"складу."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
@@ -205,6 +220,8 @@ msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
 msgstr ""
+"Коли видається новий серійний номер, це число днів до того, як товари "
+"починають псуватися, але ще не є небезпечними."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
@@ -214,6 +231,9 @@ msgid ""
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
+"Ви можете використовувати лише один продукт за розкладом одного й того ж "
+"продавця. Ви повинні розділити ваше замовлення, щоб включити лише один "
+"контракт на основі часу та матеріалу."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
@@ -222,3 +242,5 @@ msgid ""
 "You cannot delete a task related to a Sale Order. You can only archive this "
 "task."
 msgstr ""
+"Ви не можете видалити завдання, пов'язане із замовленням на продаж. Ви "
+"можете лише зберегти завдання."

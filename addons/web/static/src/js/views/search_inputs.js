@@ -152,7 +152,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
         if (domain) {
             value_to_domain = function (facetValue) {
                 return new data.CompoundDomain(domain)
-                    .set_eval_context({self: self.value_from(facetValue)});
+                    .set_eval_context({self: self.value_from(facetValue), raw_value: facetValue.attributes.value});
             };
         } else {
             value_to_domain = function (facetValue) {
@@ -354,7 +354,11 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         }
 
         // THIS SHOULD BE FORWARDPORTED UP TO SAAS-15, NOT LATER
-        var m = moment.utc(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
+        if (t === 'datetime') {
+            var m = moment.utc(v, 'YYYY-MM-DD HH:mm:ss');
+        } else {
+            var m = moment(v, 'YYYY-MM-DD');
+        }
         if (!m.isValid()) { return $.when(null); }
         var d = m.toDate();
         var date_string = formats.format_value(d, this.attrs);

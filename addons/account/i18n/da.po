@@ -3,13 +3,13 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Morten Schou <ms@msteknik.dk>, 2016
 # Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2016
-# Jarnhold Nattestad <nattestads@gmail.com>, 2016
-# Jesper Carstensen <info@danodoo.dk>, 2016
 # Ejner Sønniksen <ejner@vkdata.dk>, 2016
+# Jesper Carstensen <info@danodoo.dk>, 2016
+# Jarnhold Nattestad <nattestads@gmail.com>, 2016
 # peso <peer.sommerlund@gmail.com>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Visti Kristensen <visti@vkdata.dk>, 2016
@@ -18,13 +18,14 @@
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
 # JonathanStein <jstein@image.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +119,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * Statussen 'Kladde' anvendes når en bruger er ved at indtaste en ny og ubekræftet Faktura\n"
+" * Statussen 'Pro-forma' anvendes når fakturaen ikke har et fakturanummer.\n"
+" * Statussen 'Åben' anvendes når en bruger opretter faktura, og et fakturanummer genereres. Den forbliver i åben status, indtil brugeren betaler fakturaen.\n"
+" * Statussen 'Betalt' angives automatisk når fakturaen er betalt. Dens relaterede journalposteringer kan både være udlignede og uudlignede.\n"
+" * Statussen 'Annulleret' anvendes når brugeren annullerer fakturaen."
 
 #. module: account
 #. openerp-web
@@ -937,7 +943,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>Referance:</strong>"
+msgstr "<strong>Reference:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1620,6 +1626,11 @@ msgstr "Adresse"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
 msgstr "Justeret skat"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -2317,6 +2328,12 @@ msgid "Bank Statement"
 msgstr "Bank kontoudtog"
 
 #. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
+
+#. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Bank kontoudtogslinie"
@@ -2492,7 +2509,7 @@ msgstr "Efter refundering"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
 msgid "By Salespersons"
-msgstr "Af salgsperson"
+msgstr "Per sælger"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_active
@@ -7061,7 +7078,7 @@ msgstr "Udestående debitorer"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue"
-msgstr "Forsinket"
+msgstr "Forfalden"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
@@ -7071,7 +7088,7 @@ msgstr "Forfaldne betalinger"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_overdue_msg
 msgid "Overdue Payments Message"
-msgstr "Forfalden betalings besked"
+msgstr " Besked om forfalden betaling"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_overdue_msg
@@ -7081,7 +7098,7 @@ msgstr "Besked om forsinket betaling *"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr "Forfaldne fakturaer, udløbsdato passeret"
+msgstr "Forfaldne fakturaer, forfaldsdato overskredet"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
@@ -10691,6 +10708,14 @@ msgid ""
 msgstr ""
 "Du kan ikke annullere en faktura, der er delvist betalt. Du skal først "
 "afklare relaterede betalingsindtægter."
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account.py:180

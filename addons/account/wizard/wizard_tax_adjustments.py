@@ -18,24 +18,26 @@ class TaxAdjustments(models.TransientModel):
     debit_account_id = fields.Many2one('account.account', string='Debit account', required=True, domain=[('deprecated', '=', False)])
     credit_account_id = fields.Many2one('account.account', string='Credit account', required=True, domain=[('deprecated', '=', False)])
     amount = fields.Monetary(currency_field='company_currency_id', required=True)
+    adjustment_type = fields.Selection([('debit', 'Applied on debit journal item'), ('credit', 'Applied on credit journal item')], string="Adjustment Type", store=False, required=True)
     company_currency_id = fields.Many2one('res.currency', readonly=True, default=lambda self: self.env.user.company_id.currency_id)
     tax_id = fields.Many2one('account.tax', string='Adjustment Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'none'), ('tax_adjustment', '=', True)], required=True)
 
     @api.multi
     def _create_move(self):
+        adjustment_type = self.env.context.get('adjustment_type', (self.amount > 0.0 and 'debit' or 'credit'))
         debit_vals = {
             'name': self.reason,
-            'debit': self.amount,
+            'debit': abs(self.amount),
             'credit': 0.0,
             'account_id': self.debit_account_id.id,
-            'tax_line_id': self.tax_id.id,
+            'tax_line_id': adjustment_type == 'debit' and self.tax_id.id or False,
         }
         credit_vals = {
             'name': self.reason,
             'debit': 0.0,
-            'credit': self.amount,
+            'credit': abs(self.amount),
             'account_id': self.credit_account_id.id,
-            'tax_line_id': self.tax_id.id,
+            'tax_line_id': adjustment_type == 'credit' and self.tax_id.id or False,
         }
         vals = {
             'journal_id': self.journal_id.id,
@@ -48,6 +50,13 @@ class TaxAdjustments(models.TransientModel):
         return move.id
 
     @api.multi
+    def create_move_debit(self):
+        return self.with_context(adjustment_type='debit').create_move()
+
+    @api.multi
+    def create_move_credit(self):
+        return self.with_context(adjustment_type='credit').create_move()
+
     def create_move(self):
         #create the adjustment move
         move_id = self._create_move()

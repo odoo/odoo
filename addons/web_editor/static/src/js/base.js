@@ -32,11 +32,13 @@ data.dom_ready = dom_ready;
 var all_ready;
 data.ready = function () {
     if (!all_ready) {
-        all_ready = $.when(dom_ready, ajax.loadXML()).then(translations);
-    } else if(all_ready.state() === "resolved") { // can add async template
-        all_ready = $.when(dom_ready, ajax.loadXML());
+        all_ready = dom_ready;
+        if (!odoo._modules) {
+            all_ready = all_ready.then(translations);
+        }
     }
-    return all_ready;
+    // also load new templates since previous ready call
+    return $.when(all_ready, ajax.loadXML());
 };
 
 function translations() {

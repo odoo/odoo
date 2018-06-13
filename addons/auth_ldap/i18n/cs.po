@@ -3,21 +3,22 @@
 # * auth_ldap
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # xlu <xlu@seznam.cz>, 2016
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: xlu <xlu@seznam.cz>, 2016\n"
+"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2016\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
@@ -25,8 +26,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Automaticky vytvořit místní uživatelské účty pro nové uživatele přihlašující"
-" se přes LDAP"
+"Automaticky vytvoří místní uživatelské účty pro nové uživatele přihlašující "
+"se přes LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -78,7 +79,7 @@ msgstr "Parametry LDAPu"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
 msgid "LDAP Parameters *"
-msgstr ""
+msgstr "LDAP parametry*"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server

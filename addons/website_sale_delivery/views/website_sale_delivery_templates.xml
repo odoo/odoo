@@ -36,7 +36,7 @@
                                     <span class="badge" t-field="delivery.price"
                                         t-options='{
                                             "widget": "monetary",
-                                            "from_currency": delivery.product_id.company_id.currency_id,
+                                            "from_currency": delivery.delivery_type in [&apos;fixed&apos;, &apos;base_on_rule&apos;] and delivery.product_id.company_id.currency_id or False,
                                             "display_currency": website_sale_order.currency_id
                                         }'/>
                                     <div t-field="delivery.website_description" class="text-muted"/>

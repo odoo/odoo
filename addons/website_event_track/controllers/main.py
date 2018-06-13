@@ -14,7 +14,7 @@ class WebsiteEventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/track/<model("event.track", "[('event_id','=',event[0])]"):track>'''], type='http', auth="public", website=True)
     def event_track_view(self, event, track, **post):
-        track = track.sudo()
+        track = track.sudo().with_context(tz=event.date_tz or 'UTC')
         values = {'track': track, 'event': track.event_id, 'main_object': track}
         return request.render("website_event_track.track_view", values)
 
@@ -55,11 +55,14 @@ class WebsiteEventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
+        event = event.with_context(tz=event.date_tz or 'UTC')
+        local_tz = pytz.timezone(event.date_tz or 'UTC')
         days_tracks = collections.defaultdict(lambda: [])
         for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
             if not track.date:
                 continue
-            days_tracks[track.date[:10]].append(track)
+            date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
+            days_tracks[str(date)[:10]].append(track)
 
         days = {}
         days_tracks_count = {}
@@ -85,6 +88,7 @@ class WebsiteEventTrackController(http.Controller):
         '''/event/<model("event.event", "[('show_tracks','=',1)]"):event>/track/tag/<model("event.track.tag"):tag>'''
         ], type='http', auth="public", website=True)
     def event_tracks(self, event, tag=None, **post):
+        event = event.with_context(tz=event.date_tz or 'UTC')
         searches = {}
         if tag:
             searches.update(tag=tag.id)

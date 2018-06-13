@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Mathias Neef <mn@copado.de>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Renzo Meister <info@jamotion.ch>, 2016
+# Martin Trigaux, 2016
+# Renzo Meister, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Wolfgang Taferner, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
@@ -18,15 +18,16 @@
 # Philipp Hug <philipp@hug.cx>, 2016
 # key six <mobile.umts@gmail.com>, 2016
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2016
-# Andi <flimflam@salasar.de>, 2017
+# Andi, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,7 +113,7 @@ msgid ""
 "transaction. The order has been confirmed but will not be paid. Do not "
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
-msgstr ""
+msgstr "<span><i/></span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -248,7 +249,7 @@ msgstr "Abgebrochen"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Transaktion erfassen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -422,7 +423,7 @@ msgstr "Gebühren"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Gebührenberechnung unterstützt"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -485,7 +486,7 @@ msgstr "Bild"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -647,6 +648,9 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Beachten Sie, dass Token von Zahlungsanbietern, die nur für die "
+"Autorisierung von Transaktionen festgelegt wurden (anstatt die Menge zu "
+"erfassen) nicht verfügbar sind."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -657,13 +661,15 @@ msgstr "Ogone"
 #: code:addons/payment/models/payment_acquirer.py:619
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
-msgstr ""
+msgstr "Nur Transaktionen im autorisierten Status können erfasst werden."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:626
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
 msgstr ""
+"Nur Transaktionen im autorisierten Status können für ungültig erklärt "
+"werden."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -686,7 +692,7 @@ msgstr "Partner Name"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
@@ -817,12 +823,12 @@ msgstr "Gespeicherte Zahlungsdaten"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Zahlungs-Token gespeichert"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "Das Speichern von Kartendaten wird unterstützt"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -875,7 +881,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -905,6 +911,8 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
+"Diese Funktion ist für Zahlungsanbieter, die auf den „Autorisierungs“-Modus eingestellt sind, nicht verfügbar.\n"
+" Bitte verwenden Sie einen Token eines anderen Anbieters als %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -975,6 +983,7 @@ msgstr "Banküberweisung"
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
 msgstr ""
+"Sie sind schnell mit der Stripe-Zahlungsseite für Zahlungsinformationen."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -982,6 +991,8 @@ msgid ""
 "You will be redirected to the Adyen website after clicking on the payment "
 "button."
 msgstr ""
+"Sie werden zur Website von Ayden weitergeleitet, wenn Sie auf den Bezahlen-"
+"Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_authorize
@@ -989,6 +1000,8 @@ msgid ""
 "You will be redirected to the Authorize website after clicking on the "
 "payment button."
 msgstr ""
+"Sie werden zur Autorisierungs-Website weitergeleitet, wenn Sie auf den "
+"Bezahlen-Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
@@ -996,6 +1009,8 @@ msgid ""
 "You will be redirected to the Buckaroo website after clicking on the payment"
 " button."
 msgstr ""
+"Sie werden zur Website von Buckaroo weitergeleitet, wenn Sie auf den "
+"Bezahlen-Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
@@ -1003,6 +1018,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Sie werden zur Website von Ingenico weitergeleitet, wenn Sie auf den "
+"Bezahlen-Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -1010,6 +1027,8 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"Sie werden zur Website von PayUmoney weitergeleitet, wenn Sie auf den "
+"Bezahlen-Button drücken."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
@@ -1025,6 +1044,8 @@ msgstr ""
 msgid ""
 "You will be redirected to the Sips website after clicking on payment button."
 msgstr ""
+"Sie werden zur Website von Sips weitergeleitet, wenn Sie auf den Bezahlen-"
+"Button drücken."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -1073,7 +1094,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
 msgid "payment.token"
-msgstr ""
+msgstr "payment.token"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

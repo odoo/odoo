@@ -230,13 +230,18 @@
                         <group>
                             <field name="voucher_type" invisible="True"/>
                             <field name="currency_id" invisible="True"/>
-                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             <field name="partner_id" domain="[('customer','=',True)]" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="pay_now" required="1"/>
-                            <field name="account_id"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="journal_id" domain="[('type','=','sale')]" widget="selection" groups="account.group_account_user"/>
+                            <field name="journal_id"
+                                   domain="[('type','=','sale')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date"/>
                             <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                             <field name="name" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
@@ -338,25 +343,27 @@
                     <h1>
                         <field name="number" readonly="1"/>
                     </h1>
-                    <field name="voucher_type" invisible="True"/>
                     <group>
                         <group>
+                            <field name="voucher_type" invisible="True"/>
+                            <field name="currency_id" invisible="True"/>
                             <field name="partner_id" domain="[('supplier','=',True)]" string="Vendor" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
                             <field name="pay_now" required="1"/>
-                            <field name="account_id"/>
-                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
-                            <field name="reference"/>
+                            <field name="payment_journal_id"
+                                   attrs="{'invisible': [('pay_now', '!=', 'pay_now')], 'required': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="account_id" groups="account.group_account_user" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="reference"/>
                         </group>
                         <group>
+                            <field name="journal_id"
+                                   domain="[('type','=','purchase')]"
+                                   widget="selection"
+                                   groups="account.group_account_user"/>
                             <field name="date" string="Bill Date"/>
                             <field name="date_due" attrs="{'invisible': [('pay_now', '=', 'pay_now')]}"/>
+                            <field name="name" colspan="2" attrs="{'invisible': [('pay_now', '=', 'pay_later')]}"/>
                             <field name="paid" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="journal_id"
-                                domain="[('type','=','purchase')]"
-                                widget="selection"
-                                groups="account.group_account_user"/>
                         </group>
                     </group>
                     <notebook>

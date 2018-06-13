@@ -8,7 +8,7 @@ SalesTeamDashboardView.include({
 
     fetch_data: function() {
         return new Model('crm.lead')
-            .call('retrieve_sales_dashboard', []);
+            .call('retrieve_sales_dashboard', [], {context: this.session.user_context || {}});
     }
 });
 

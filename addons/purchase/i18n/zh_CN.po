@@ -3,11 +3,11 @@
 # * purchase
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # Bo Cao <cao.poobo@hotmail.com>, 2016
-# 林俊 <54773801@qq.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # guohuadeng <guohuadeng@hotmail.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 msgid ""
@@ -74,6 +74,26 @@ msgid ""
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
+"\n"
+"<p>Dear ${object.partner_id.name} \n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"Please find in attachment a <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
+"% if object.partner_ref:\n"
+"    with reference: ${object.partner_ref}\n"
+"% endif\n"
+"% if object.origin:\n"
+"    (RFQ origin: ${object.origin})\n"
+"% endif\n"
+"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"<p>You can reply to this email if you have any questions.</p>\n"
+"<p>Thank you,</p>\n"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_config_settings_module_stock_dropshipping
@@ -896,6 +916,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"订购数量：根据订购数量控制账单。\n"
+"收到的数量：根据收到的数量控制账单。"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1186,7 +1208,7 @@ msgstr "采购订单修改 *"
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
-msgstr ""
+msgstr "采购订单在订单确认后您想要采购订单时可以修改"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
@@ -1540,6 +1562,9 @@ msgid ""
 "                purchase process: prices, procurement logistics, accounting data,\n"
 "                available vendors, etc."
 msgstr ""
+"产品表格包含了改进的详细信息\n"
+"                 采购流程：价格，采购物流，会计数据，\n"
+"                 可用的供应商等"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1587,7 +1612,7 @@ msgstr "此科目将用于评估采购价格和成本价格之间的价格差异
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "This changes the scheduled date of all order lines to the given date"
-msgstr ""
+msgstr "这将所有订单行的预定日期更改为给定日期"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
@@ -1622,13 +1647,13 @@ msgstr ""
 #: code:addons/purchase/models/account_invoice.py:184
 #, python-format
 msgid "This vendor bill has been created from: %s"
-msgstr ""
+msgstr "该供应商帐单已经从：%s创建"
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:198
 #, python-format
 msgid "This vendor bill has been modified from: %s"
-msgstr ""
+msgstr "此供应商帐单已从%s修改"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1686,7 +1711,7 @@ msgstr "不能取消采购订单 %s，因为有相关的收货已经发生"
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
-msgstr ""
+msgstr "无法取消此采购订单。 您必须先取消相关的供应商账单。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1737,6 +1762,10 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"使用此菜单来控制从您的发票收到\n"
+"            供应商。 注册新账单时，设置采购订单\n"
+"             Odoo会根据订单自动填写账单\n"
+"             或收到的数量。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1897,6 +1926,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"无论你购买什么，你都必须定义一个产品\n"
+"                 它是一种实物产品，您购买的消耗品或服务\n"
+"                分包商。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1905,6 +1937,9 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"无论你购买什么，你都必须定义一个产品\n"
+"             它是一种实物产品，您购买的消耗品或服务\n"
+"            分包商。"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:389

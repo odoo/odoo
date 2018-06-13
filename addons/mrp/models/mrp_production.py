@@ -357,7 +357,7 @@ class MrpProduction(models.Model):
             source_location = routing.location_id
         else:
             source_location = self.location_src_id
-        original_quantity = self.product_qty - self.qty_produced
+        original_quantity = (self.product_qty - self.qty_produced) or 1.0
         #El siguiente codigo fue modificado por TRESCLOUD
         sequence = bom_line.sequence
         if self.env.context.get('sequence'):

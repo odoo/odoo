@@ -93,13 +93,15 @@ return Widget.extend({
             this.$inputs.first().focus();
             return;
         }
-        var search = this.searchview.build_search_data(),
-            view_manager = this.findAncestor(function (a) {
-                // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
-                return 'active_view' in a;
-            }),
-            view_context = view_manager ? view_manager.active_view.controller.get_context() : {},
-            results = pyeval.sync_eval_domains_and_contexts({
+        var search = this.searchview.build_search_data();
+        // ONLY FORWARDPORT THIS COMMIT UP TO SAAS-15
+        var view_context;
+        this.trigger_up('get_controller_context', {
+            callback: function (ctx) {
+                view_context = ctx;
+            },
+        });
+        var results = pyeval.sync_eval_domains_and_contexts({
                 domains: search.domains,
                 contexts: search.contexts.concat(view_context || []),
                 group_by_seq: search.groupbys || [],

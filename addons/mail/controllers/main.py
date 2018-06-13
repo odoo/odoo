@@ -89,6 +89,13 @@ class MailController(http.Controller):
                 return cls._redirect_to_messaging()
             if record_action['type'] == 'ir.actions.act_url':
                 return werkzeug.utils.redirect(record_action['url'])
+        else:
+            # Specific case in 10.0 only: not logged users could receive an act_url that is
+            # not public. As we don't handle fully access tokens in 10.0 we have to redirect
+            # to the login to avoid access issues and/or crash when computing url_params.
+            # CHS-note: do not forward-port me as in saas-16 it is already managed
+            if record_action['type'] == 'ir.actions.act_url':
+                return cls._redirect_to_messaging()
 
         url_params = {
             'view_type': record_action['view_type'],

@@ -59,6 +59,13 @@ class AccountInvoice(models.Model):
             data['account_id'] = account.id
         return data
 
+    def _onchange_product_id(self):
+        domain = super(AccountInvoice, self)._onchange_product_id()
+        if self.purchase_id:
+            # Use the purchase uom by default
+            self.uom_id = self.product_id.uom_po_id
+        return domain
+
     # Load all unsold PO lines
     @api.onchange('purchase_id')
     def purchase_order_change(self):
@@ -78,7 +85,7 @@ class AccountInvoice(models.Model):
         self.purchase_id = False
         return {}
 
-    @api.onchange('currency_id', 'date_invoice')
+    @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):

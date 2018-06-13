@@ -91,6 +91,7 @@ tour.register('event_buy_tickets', {
         {
             content: "Last step",
             trigger: '.oe_website_sale:contains("Thank you for your order")',
+            timeout: 30000,
         }
     ]
 );

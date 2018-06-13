@@ -204,8 +204,6 @@
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
                                 <field name="partner_id"/>
-                                <field name="email_from" invisible="1"/>
-                                <field name="phone" invisible="1"/>
                                 <label for="planned_revenue"/>
                                 <div class="o_row">
                                     <field name="planned_revenue"/>
@@ -218,6 +216,19 @@
                             <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
                             <button string="Discard" class="btn-default" special="cancel"/>
                         </footer>
+                        <field name="partner_name" invisible="1"/>
+                        <field name="contact_name" invisible="1"/>
+                        <field name="title" invisible="1"/>
+                        <field name="street" invisible="1"/>
+                        <field name="street2" invisible="1"/>
+                        <field name="city" invisible="1"/>
+                        <field name="state_id" invisible="1"/>
+                        <field name="country_id" invisible="1"/>
+                        <field name="email_from" invisible="1"/>
+                        <field name="phone" invisible="1"/>
+                        <field name="mobile" invisible="1"/>
+                        <field name="zip" invisible="1"/>
+                        <field name="function" invisible="1"/>
                     </sheet>
                 </form>
             </field>

@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Rémi CAZENAVE remi@le-filament.com https://github.com/remi-filament
+Rémi CAZENAVE 30716308+remi-filament@users.noreply.github.com https://github.com/remi-filament

@@ -5,7 +5,18 @@ var translation = require('web.translation');
 
 var _t = translation._t;
 
-function QWeb(debug, default_dict) {
+/**
+ * @param {boolean} debug
+ * @param {Object} default_dict
+ * @param {boolean} [enableTranslation=true] if true (this is the default),
+ *   the rendering will translate all strings that are not marked with
+ *   t-translation=off.  This is useful for the kanban view, which uses a
+ *   template which is already translated by the server
+ */
+function QWeb(debug, default_dict, enableTranslation) {
+    if (enableTranslation === undefined) {
+        enableTranslation = true;
+    }
     var qweb = new QWeb2.Engine();
     qweb.default_dict = _.extend({}, default_dict || {}, {
         '_' : _,
@@ -16,7 +27,7 @@ function QWeb(debug, default_dict) {
         'csrf_token': odoo.csrf_token,
     });
     qweb.debug = debug;
-    qweb.preprocess_node = preprocess_node;
+    qweb.preprocess_node = enableTranslation ? preprocess_node : function () {};
     return qweb;
 }
 

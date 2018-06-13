@@ -7,14 +7,15 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2017
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1638,6 +1639,11 @@ msgid "Adjustment Tax"
 msgstr "Vergi Düzeltme"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr "Düzeltme Türü"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -2328,6 +2334,12 @@ msgstr "Banka Uzlaştırma Hareketi Önayarı"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Banka Hesap Özeti"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr "Hesap Durumu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -9964,12 +9976,13 @@ msgstr "Vergisiz Toplam"
 msgid ""
 "Total amount in the currency of the company, negative for credit notes."
 msgstr ""
+"Şirketinizin para akışının toplam miktarı, kredi notu için olumsuzdur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr ""
+msgstr "Faturanın para akışının toplam miktarı, kredi notu için olumsuzdur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -10691,6 +10704,16 @@ msgid ""
 msgstr ""
 "Kısmen ödenmiş bir faturayı iptal edemezsiniz! Önce ödeme kayıtlarından "
 "uzlaşmayı kaldırmalısınız!"
+
+#. module: account
+#: code:addons/account/models/company.py:118
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"Bazı yevmiye kalemleri oluşturulduktan sonra şirketinizin para birimini "
+"değiştiremezsiniz."
 
 #. module: account
 #: code:addons/account/models/account.py:180

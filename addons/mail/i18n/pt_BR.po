@@ -3,7 +3,7 @@
 # * mail
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
 # Clemilton Clementino <clemylton@hotmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
@@ -192,6 +192,15 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_channel.py:550
 #, python-format
 msgid ""
@@ -268,6 +277,9 @@ msgid ""
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
+"<p>Canais facilitam a organização de informação em diferentes tópicos e "
+"grupos.</p> <p>Tente <b>criar seu primeiro canal</b> (e.g. vendas, "
+"marketing, produto XYA, festa depois do trabalho, etc).</p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -3565,7 +3577,7 @@ msgstr "Canais Privados"
 #: code:addons/mail/static/src/js/client_action.js:138
 #, python-format
 msgid "Public Channels"
-msgstr ""
+msgstr "Canais Públicos"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:180

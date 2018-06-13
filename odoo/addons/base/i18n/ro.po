@@ -5,7 +5,7 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016
 # Iulian Cutui <iulian.cutui@gmail.com>, 2017
 msgid ""
@@ -1077,10 +1077,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Permite anularea inregistrarilor contabile.\n"
+"Permite anularea notelor contabile.\n"
 "====================================\n"
 "\n"
-"Acest modul adauga campul 'Permite Anularea Inregistrarilor' in vizualizarea formularului a jurnalului contului.\n"
+"Acest modul adauga campul 'Permite Anularea Notelor contabile' in vizualizarea formularului a jurnalului contului.\n"
 "Daca este setat pe adevarat, ii permite utilizatorului sa anuleze inregistrari si facturi.\n"
 "    "
 
@@ -2510,6 +2510,28 @@ msgid ""
 "* Work Order Analysis\n"
 "    "
 msgstr ""
+"\n"
+"Gestionați procesul de producție în Odoo\n"
+"===========================================\n"
+"\n"
+"Modulul de producție vă permite să acoperiți planificarea, comanda, stocurile și fabricarea sau asamblarea produselor din materii prime și componente. Aplicația gestionează consumul și producția de produse în conformitate cu o listă de materiale și operațiunile necesare pe mașini, unelte sau resurse umane în conformitate cu fișa tehnologică.\n"
+"\n"
+"Sprijină integrarea și planificarea completă a bunurilor, consumabilelor sau serviciilor stocabile. Serviciile sunt complet integrate cu restul software-ului. De exemplu, puteți crea un serviciu de subcontractare într-un document de materiale pentru a achiziționa în mod automat la comandă asamblarea producției.\n"
+"\n"
+"Caracteristici cheie\n"
+"------------\n"
+"* Producție pe stoc / producție la comanda\n"
+"* Liste de materiale pe mai multe niveluri, fără limită\n"
+"* Fișe tehnologice pe mai multe nivele, fără limită\n"
+"* Fișe tehnologice și centre de lucru integrate cu contabilitate analitică\n"
+"* Calculul planificare\n"
+"* Permite răsfoirea listelor de materiale într-o structură completă\n"
+"\n"
+"Tabloul de bord / Rapoarte pentru MRP vor include:\n"
+"-----------------------------------------\n"
+"* Achiziții în excepție (grafic)\n"
+"* Variația valorii stocului (grafic)\n"
+"* Analiza comenzilor de lucru"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_mps
@@ -5207,7 +5229,7 @@ msgstr "(editare)"
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
 msgid ", or your preferred text editor"
-msgstr ", sau editorul dumneavoastra de text preferat"
+msgstr ", sau editorul dvs. de text preferat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
@@ -5367,6 +5389,10 @@ msgid ""
 "env[\"res.partner\"].create({\"name\": partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -6403,7 +6429,7 @@ msgstr "Module de exportat"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_upgrade_module_info
 msgid "Apps to Update"
-msgstr ""
+msgstr "App de actualizat"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -6637,7 +6663,7 @@ msgstr "Azerbaidjan"
 #: code:addons/translate.py:1069
 #, python-format
 msgid "Bad file format: %s"
-msgstr ""
+msgstr "Format greșit fișier %s"
 
 #. module: base
 #: model:res.country,name:base.bs
@@ -7137,7 +7163,7 @@ msgstr "Anulează Instalarea"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_cancel
 msgid "Cancel Journal Entries"
-msgstr "Anuleaza Inregistrarile in registru"
+msgstr "Anulează înregistrările în registru"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -7448,7 +7474,7 @@ msgstr "Click aici pentru a modifica afișarea"
 #. module: base
 #: model:ir.actions.act_window,help:base.action_attachment
 msgid "Click here to create new documents."
-msgstr ""
+msgstr "Clic aici pentru a face un document nou."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8031,7 +8057,7 @@ msgstr "Numele țării"
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
-msgstr "Tara"
+msgstr "Județ"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -8480,7 +8506,7 @@ msgstr "Clienți, vânzători, parteneri"
 #: model:ir.ui.view,arch_db:base.view_view_custom_search
 #: model:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "Vizualizari Personalizate"
+msgstr "Vizualizări Personalizate"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
@@ -8838,7 +8864,7 @@ msgstr "Diagramă"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Digital Signatures"
-msgstr ""
+msgstr "Semnături digitale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_direction
@@ -9082,7 +9108,7 @@ msgstr "Dr."
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
 #: model:ir.module.module,summary:base.module_stock_dropshipping
 msgid "Drop Shipping"
-msgstr ""
+msgstr "Drop Shipping"
 
 #. module: base
 #: selection:workflow.activity,kind:0
@@ -9665,7 +9691,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_help
 msgid "Field Help"
-msgstr ""
+msgstr "Câmp ajutor"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_field_description
@@ -9710,7 +9736,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:307
 #, python-format
 msgid "Field names must be unique per model."
-msgstr ""
+msgstr "Numele câmpului trebuie să fie unic per model"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -9733,7 +9759,7 @@ msgstr "Descriere Câmpuri"
 #: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid "Fields:"
-msgstr ""
+msgstr "Câmpuri:"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -11399,7 +11425,7 @@ msgstr "Interval Unitate"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_interval_number
 msgid "Interval number"
-msgstr ""
+msgstr "Număr interval"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_intrastat
@@ -11424,7 +11450,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
-msgstr ""
+msgstr "Parametrul  'group by' e invalid"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:70
@@ -11743,7 +11769,7 @@ msgstr "LGPL Versiunea 3"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_landed_costs
 msgid "Landed Costs"
-msgstr ""
+msgstr "Costuri adiționale"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export_lang
@@ -12396,7 +12422,7 @@ msgstr "Responsabil"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_maintenance
 msgid "Maintenance - MRP"
-msgstr ""
+msgstr "Întreținere - MRP"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -12454,6 +12480,10 @@ msgid ""
 "Manage partner tags to better classify them for tracking and analysis purposes.\n"
 "                    A partner may have several categories and categories have a hierarchical structure: a partner with a category has also the parent category."
 msgstr ""
+"Gestionați etichetele partenerilor pentru a-i clasifica mai bine în scopuri "
+"de urmărire și analiză. Un partener poate avea mai multe categorii și "
+"categorii având o structură ierarhică: un partener cu o categorie are și "
+"categoria părinte."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_title_contact
@@ -12630,6 +12660,18 @@ msgstr "Managementul membrilor"
 #: model:ir.module.module,shortdesc:base.module_note_pad
 msgid "Memos pad"
 msgstr "Bloc notes"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:382
+#, python-format
+msgid "Model %s does not exist"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:383
+#, python-format
+msgid "Please specify a valid model for the object relation"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_name
@@ -12823,7 +12865,7 @@ msgstr "Model (doar modificare)"
 #: model:ir.ui.view,arch_db:base.view_model_constraint_form
 #: model:ir.ui.view,arch_db:base.view_model_constraint_list
 msgid "Model Constraints"
-msgstr "Restrictii Model"
+msgstr "Restricții Model"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_model_data_id
@@ -13365,7 +13407,7 @@ msgstr "Note"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category_module_nr
 msgid "Number of Apps"
-msgstr ""
+msgstr "Număr de aplicații"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_numbercall
@@ -13538,6 +13580,8 @@ msgid ""
 "One of the documents you are trying to access has been deleted, please try "
 "again after refreshing."
 msgstr ""
+"Unul dintre documentele pe care încercați să le accesați a fost șters, "
+"încercați din nou după reîmprospătare."
 
 #. module: base
 #: code:addons/models.py:3626
@@ -14784,7 +14828,7 @@ msgstr "Referință"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_ref_object
 msgid "Reference record"
-msgstr ""
+msgstr "Referință înregistrare"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -15434,7 +15478,7 @@ msgstr "Vezi toate valorile posibile"
 #: code:addons/common.py:42
 #, python-format
 msgid "See http://openerp.com"
-msgstr ""
+msgstr "Vezi http://openerp.com"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_model_object_field
@@ -15570,7 +15614,7 @@ msgstr "Secvență"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_code
 msgid "Sequence Code"
-msgstr ""
+msgstr "Cod secvență"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
@@ -16539,6 +16583,12 @@ msgid "Thailand - Accounting Reports"
 msgstr ""
 
 #. module: base
+#: code:addons/base/res/res_users.py:288
+#, python-format
+msgid "The \"App Switcher\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -16565,6 +16615,12 @@ msgid ""
 " 1,06,500; [1,2,-1] will represent it to be 106,50,0;[3] will represent it "
 "as 106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
+"Formatul Separator ar trebui să fie de genul [,n] unde 0<n : pornind de la cifra de unitate. -1 va termina separarea. \n"
+"De exemplu: \n"
+"[3,2, -1] va prezenta valoarea 106500 în forma  1,06,500; \n"
+"[1,2, -1] va afișa 106,50,0; \n"
+"[3] o va afișa 106,500. \n"
+"Furnizată ca separator de mii în fiecare caz."
 
 #. module: base
 #: code:addons/base/res/res_lang.py:66
@@ -16575,6 +16631,11 @@ msgid ""
 " 1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as"
 " 106,500. Provided as the thousand separator in each case."
 msgstr ""
+"Formatul Separator ar trebui să fie de genul [,n] unde 0<n : pornind de la cifra de unitate. -1 va termina separarea. de exemplu. \n"
+"[3,2, -1] va prezenta valoarea 106500 în forma  1,06,500; \n"
+"[1,2, -1] va afișa 106,50,0; \n"
+"[3] o va afișa 106,500. \n"
+"Furnizată ca separator de mii în fiecare caz."
 
 #. module: base
 #: code:addons/base/module/module.py:666
@@ -16679,6 +16740,9 @@ msgid ""
 "                                    the field must be assigned to each record with a dictionary-like\n"
 "                                    assignment."
 msgstr ""
+"Câmpul <strong>Compute</strong> conține codul Python pentru calculul valorii"
+" câmpului dintr-un set de înregistrări. Valoarea câmpului trebuie să fie "
+"atribuită fiecărei înregistrări cu o atribuire asemănătoare unui dicționar."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -17961,17 +18025,17 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_datetime
 msgid "Value datetime"
-msgstr ""
+msgstr "Valoare datetime"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_float
 msgid "Value float"
-msgstr ""
+msgstr "Valoare float"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_integer
 msgid "Value integer"
-msgstr ""
+msgstr "Valoare integer"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_reference
@@ -17981,7 +18045,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_property_value_text
 msgid "Value text"
-msgstr ""
+msgstr "Valoare text"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -18062,7 +18126,7 @@ msgstr "Structura vizualizării"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_translation_search
 msgid "View ID"
-msgstr ""
+msgstr "Id vizualizare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_name
@@ -18095,7 +18159,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Mod moștenire vizualizare"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_mode
@@ -18170,7 +18234,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
-msgstr ""
+msgstr "Costuri adiționale"
 
 #. module: base
 #: model:res.country,name:base.wf
@@ -18467,6 +18531,12 @@ msgid ""
 "default value. If you don't do that, your customization will be overwrited "
 "at the next update or upgrade to a future version of Odoo."
 msgstr ""
+"Când personalizați un flux de lucru, asigurați-vă că nu modificați un nod "
+"sau săgeată existentă, ci adăugați noduri sau săgeți noi. Dacă aveți absolut"
+" nevoie să modificați un nod sau o săgeată, puteți modifica numai câmpurile "
+"goale sau setate la valoarea implicită. Dacă nu faceți acest lucru, "
+"personalizarea dvs. va fi suprascrisă la următoarea actualizare sau upgrade "
+"la o versiune viitoare a Odoo."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_sequence
@@ -19011,7 +19081,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Sales Director"
-msgstr ""
+msgstr "ex. Director vânzări"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

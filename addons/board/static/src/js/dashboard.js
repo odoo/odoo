@@ -172,8 +172,8 @@ var DashBoard = form_common.FormWidget.extend({
             board.columns.push(actions);
         });
         var arch = QWeb.render('DashBoard.xml', board);
-        this.rpc('/web/view/add_custom', {
-            view_id: this.view.fields_view.view_id,
+        this.rpc('/web/view/edit_custom', { // do not forward-port > saas-15
+            custom_id: this.view.fields_view.custom_view_id, // do not forward-port > saas-15
             arch: arch
         }).then(function() {
             data_manager.invalidate();
@@ -273,6 +273,14 @@ var DashBoard = form_common.FormWidget.extend({
                         kanban.loaded.done(function() {
                             kanban.controller.open_record = function(event, editable) {
                                 new_form_action(event.data.id, editable);
+                            };
+                        });
+                    }
+                    var calendar = am.inner_widget.views.calendar;
+                    if (calendar) {
+                        calendar.loaded.done(function () {
+                            calendar.controller.open_event = function (id, title) {
+                                new_form_action(Number(id));
                             };
                         });
                     }

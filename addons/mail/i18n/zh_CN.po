@@ -3,15 +3,17 @@
 # * mail
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,10 +123,10 @@ msgid ""
 "object.parent_id.subject) or (object.parent_id and "
 "object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
-"${object.subject 或 (object.record_name 和 'Re: %s' % object.record_name) 或 "
-"(object.parent_id and object.parent_id.subject 和 'Re: %s' % "
-"object.parent_id.subject) 或 (object.parent_id 和 object.parent_id.record_name"
-" 和 'Re: %s' % object.parent_id.record_name)}"
+"${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
+"object.parent_id.subject) or (object.parent_id and "
+"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -163,7 +165,7 @@ msgstr "(从"
 msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
-msgstr ""
+msgstr "* 笑脸仅用于 HTML 代码显示图像 * 文本 (默认值) 是用于和其他文本代替文本"
 
 #. module: mail
 #. openerp-web
@@ -181,6 +183,20 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+msgstr ""
+"<br><br>\n"
+" 您可以通过键入 <b>@用户名</b>提及某人，这将吸引他的注意力。<br>\n"
+" 您可以通过键入 <b>#渠道</b>提及渠道。<br>\n"
+" 您可以通过键入 <b>/命令</b>执行命令。<br>\n"
+" 您可以通过键入 <b>:快捷方式</b>在您的消息中插入预设回复。<br>"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:475
+#, python-format
+msgid ""
+"<div class=\"o_mail_notification\">%(author)s invited %(new_partner)s to <a "
+"href=\"#\" class=\"o_channel_redirect\" data-oe-"
+"id=\"%(channel_id)s\">#%(channel_name)s</a></div>"
 msgstr ""
 
 #. module: mail
@@ -596,7 +612,7 @@ msgstr "附件"
 msgid ""
 "Attachments are linked to a document through model / res_id and to the "
 "message through this field."
-msgstr ""
+msgstr "附件是通过模型  / res_id 连接到文档中并通过该字段链接到消息上。"
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -1226,7 +1242,7 @@ msgstr "显示一个关联单据的选项 ，用该模板打开撰写向导"
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
-msgstr ""
+msgstr "不要在文档通信历史中保存电子邮件副本（仅限群发邮件）"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
@@ -1957,7 +1973,7 @@ msgstr "如果选中”退出“，这个联系人拒绝接收群发邮件和市
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
-msgstr ""
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -1965,7 +1981,7 @@ msgstr ""
 msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
-msgstr ""
+msgstr "如果设置完毕，队列管理员将在指定日期之后发送电子邮件。如果未设置完毕，电子邮件将尽快发送。可以使用 Jinja2 占位符。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_base_config_settings_alias_domain
@@ -3072,7 +3088,7 @@ msgstr "Odoo"
 #, python-format
 msgid ""
 "Odoo has now the permission to send you native notifications on this device."
-msgstr ""
+msgstr "Odoo 现在有权限在该设备上发送本地通知。"
 
 #. module: mail
 #. openerp-web
@@ -3088,7 +3104,7 @@ msgstr "Odoo需要你的许可进行"
 msgid ""
 "Odoo will not have the permission to send native notifications on this "
 "device."
-msgstr ""
+msgstr "Odoo 没有权限在该设备上发送本地通知。"
 
 #. module: mail
 #. openerp-web
@@ -3134,7 +3150,7 @@ msgstr "旧文本值"
 msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
-msgstr ""
+msgstr "如果消息已生效，您可以返回并随时在此对它进行检查。"
 
 #. module: mail
 #. openerp-web
@@ -3958,7 +3974,7 @@ msgstr "关联这个群组的email地址。收到新的email将自动创建一�
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_substitution
 msgid "The escaped html code replacing the shortcut"
-msgstr ""
+msgstr "html 转义码替换快捷方式"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_model_id
@@ -4008,13 +4024,13 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "在聊天信息中，必须替换掉的快捷方式"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,help:mail.field_mail_template_model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "该模板可使用的文档类型"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4026,7 +4042,7 @@ msgstr "资料显示在下面，当发送一个邮件时，将取值于邮件模
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "此"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -4108,7 +4124,7 @@ msgstr "在此群中讨论的话题 ..."
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
-msgstr ""
+msgstr "在单独的模型中存储跟踪值。该字段允许重建跟踪，以便在模型中生成统计数据。"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
@@ -4152,7 +4168,7 @@ msgstr "UUID"
 #: code:addons/mail/models/mail_message.py:31
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
-msgstr ""
+msgstr "无法发送电子邮件，请设定发送人的电子邮件地址。"
 
 #. module: mail
 #. openerp-web
@@ -4606,7 +4622,7 @@ msgstr "关注者"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "from:"
-msgstr ""
+msgstr "从:"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
@@ -4616,7 +4632,7 @@ msgstr "通用"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been"
-msgstr ""
+msgstr "已经"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -4649,20 +4665,20 @@ msgstr "标记为已读"
 #: code:addons/mail/models/mail_thread.py:943
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "模型 %s 不接受文档创建"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:938
 #, python-format
 msgid "model %s does not accept document update"
-msgstr ""
+msgstr "模型 %s 不接受文档更新"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:931
 #, python-format
 msgid ""
 "model %s does not accept document update, fall back on document creation"
-msgstr ""
+msgstr "模型 %s 不接受文档更新，将在文档创建中退回"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -4695,7 +4711,7 @@ msgstr "在"
 msgid ""
 "posting a message without model should be with a null res_id (private "
 "message), received %s"
-msgstr ""
+msgstr "发布无模型消息应使用无效 res_id（私人信息），收到%s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:917
@@ -4737,19 +4753,19 @@ msgstr "记录："
 #: code:addons/mail/models/mail_thread.py:935
 #, python-format
 msgid "reply to missing document (%s,%s)"
-msgstr ""
+msgstr "对缺失文档的回复 (%s,%s)"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:928
 #, python-format
 msgid "reply to missing document (%s,%s), fall back on new document creation"
-msgstr ""
+msgstr "对丢失文档的回复  (%s,%s), 在新文档创建中退回"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:913
 #, python-format
 msgid "resetting thread_id"
-msgstr ""
+msgstr "重新设置 thread_id"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
