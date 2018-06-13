@@ -9,7 +9,7 @@ from odoo import api, fields, models
 
 class PayslipLinesContributionRegister(models.TransientModel):
     _name = 'payslip.lines.contribution.register'
-    _description = 'PaySlip Lines by Contribution Registers'
+    _description = 'Payslip Lines by Contribution Registers'
 
     date_from = fields.Date(string='Date From', required=True,
         default=datetime.now().strftime('%Y-%m-01'))

@@ -17,6 +17,7 @@ _logger = logging.getLogger('base.partner.merge')
 class MergePartnerLine(models.TransientModel):
 
     _name = 'base.partner.merge.line'
+    _description = 'Merge Partner Line'
     _order = 'min_id asc'
 
     wizard_id = fields.Many2one('base.partner.merge.automatic.wizard', 'Wizard')
@@ -32,6 +33,7 @@ class MergePartnerAutomatic(models.TransientModel):
     """
 
     _name = 'base.partner.merge.automatic.wizard'
+    _description = 'Merge Partner Wizard'
 
     @api.model
     def default_get(self, fields):

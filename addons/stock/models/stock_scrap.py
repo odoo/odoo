@@ -9,6 +9,7 @@ from odoo.tools import float_compare
 class StockScrap(models.Model):
     _name = 'stock.scrap'
     _order = 'id desc'
+    _description = 'Scrap'
 
     def _get_default_scrap_location_id(self):
         return self.env['stock.location'].search([('scrap_location', '=', True), ('company_id', 'in', [self.env.user.company_id.id, False])], limit=1).id

@@ -328,7 +328,7 @@ class StockQuant(models.Model):
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = "stock.quant.package"
-    _description = "Physical Packages"
+    _description = "Packages"
     _order = 'name'
 
     name = fields.Char(

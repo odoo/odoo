@@ -179,6 +179,7 @@ class Groups(models.Model):
 class ResUsersLog(models.Model):
     _name = 'res.users.log'
     _order = 'id desc'
+    _description = 'Users Log'
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
 
@@ -1228,7 +1229,7 @@ class ChangePasswordWizard(models.TransientModel):
 class ChangePasswordUser(models.TransientModel):
     """ A model to configure users in the change password wizard. """
     _name = 'change.password.user'
-    _description = 'Change Password Wizard User'
+    _description = 'User, Change Password Wizard'
 
     wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')

@@ -334,7 +334,7 @@ class EventEvent(models.Model):
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
-    _description = 'Attendee'
+    _description = 'Event Registration'
     _inherit = ['mail.thread']
     _order = 'name, create_date desc'
 

@@ -4,6 +4,7 @@ from odoo import fields, models
 
 class IrLogging(models.Model):
     _name = 'ir.logging'
+    _description = 'Logging'
     _order = 'id DESC'
 
     create_date = fields.Datetime(readonly=True)

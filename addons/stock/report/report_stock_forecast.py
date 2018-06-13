@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools
 class ReportStockForecat(models.Model):
     _name = 'report.stock.forecast'
     _auto = False
+    _description = 'Stock Forecast Report'
 
     date = fields.Date(string='Date')
     product_id = fields.Many2one('product.product', string='Product', readonly=True)

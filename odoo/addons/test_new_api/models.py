@@ -10,6 +10,7 @@ from odoo.tools import pycompat
 
 class Category(models.Model):
     _name = 'test_new_api.category'
+    _description = 'Test New API Category'
     _order = 'name'
     _parent_store = True
     _parent_name = 'parent'
@@ -65,6 +66,7 @@ class Category(models.Model):
 
 class Discussion(models.Model):
     _name = 'test_new_api.discussion'
+    _description = 'Test New API Discussion'
 
     name = fields.Char(string='Title', required=True,
         help="General description of what this discussion is about.")
@@ -112,6 +114,7 @@ class Discussion(models.Model):
 
 class Message(models.Model):
     _name = 'test_new_api.message'
+    _description = 'Test New API Message'
 
     discussion = fields.Many2one('test_new_api.discussion', ondelete='cascade')
     body = fields.Text()
@@ -182,6 +185,7 @@ class Message(models.Model):
 
 class EmailMessage(models.Model):
     _name = 'test_new_api.emailmessage'
+    _description = 'Test New API Email Message'
     _inherits = {'test_new_api.message': 'message'}
 
     message = fields.Many2one('test_new_api.message', 'Message',
@@ -194,6 +198,7 @@ class Multi(models.Model):
         one2many field several times.
     """
     _name = 'test_new_api.multi'
+    _description = 'Test New API Multi'
 
     name = fields.Char(related='partner.name', readonly=True)
     partner = fields.Many2one('res.partner')
@@ -212,6 +217,7 @@ class Multi(models.Model):
 
 class MultiLine(models.Model):
     _name = 'test_new_api.multi.line'
+    _description = 'Test New API Multi Line'
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
@@ -221,12 +227,14 @@ class MultiLine(models.Model):
 
 class MultiTag(models.Model):
     _name = 'test_new_api.multi.tag'
+    _description = 'Test New API Multi Tag'
 
     name = fields.Char()
 
 
 class Edition(models.Model):
     _name = 'test_new_api.creativework.edition'
+    _description = 'Test New API Creative Work Edition'
 
     name = fields.Char()
     res_id = fields.Integer(required=True)
@@ -236,6 +244,7 @@ class Edition(models.Model):
 
 class Book(models.Model):
     _name = 'test_new_api.creativework.book'
+    _description = 'Test New API Creative Work Book'
 
     name = fields.Char()
     editions = fields.One2many(
@@ -245,6 +254,7 @@ class Book(models.Model):
 
 class Movie(models.Model):
     _name = 'test_new_api.creativework.movie'
+    _description = 'Test New API Creative Work Movie'
 
     name = fields.Char()
     editions = fields.One2many(
@@ -254,6 +264,7 @@ class Movie(models.Model):
 
 class MixedModel(models.Model):
     _name = 'test_new_api.mixed'
+    _description = 'Test New API Mixed'
 
     number = fields.Float(digits=(10, 2), default=3.14)
     date = fields.Date()
@@ -288,6 +299,7 @@ class MixedModel(models.Model):
 
 class BoolModel(models.Model):
     _name = 'domain.bool'
+    _description = 'Boolean Domain'
 
     bool_true = fields.Boolean('b1', default=True)
     bool_false = fields.Boolean('b2', default=False)
@@ -296,6 +308,7 @@ class BoolModel(models.Model):
 
 class Foo(models.Model):
     _name = 'test_new_api.foo'
+    _description = 'Test New API Foo'
 
     name = fields.Char()
     value1 = fields.Integer(change_default=True)
@@ -304,6 +317,7 @@ class Foo(models.Model):
 
 class Bar(models.Model):
     _name = 'test_new_api.bar'
+    _description = 'Test New API Bar'
 
     name = fields.Char()
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo')
@@ -318,6 +332,7 @@ class Bar(models.Model):
 
 class Related(models.Model):
     _name = 'test_new_api.related'
+    _description = 'Test New API Related'
 
     name = fields.Char()
     # related fields with a single field
@@ -330,6 +345,7 @@ class Related(models.Model):
 
 class ComputeProtected(models.Model):
     _name = 'test_new_api.compute.protected'
+    _description = 'Test New API Compute Protected'
 
     foo = fields.Char(default='')
     bar = fields.Char(compute='_compute_bar', store=True)
@@ -341,6 +357,7 @@ class ComputeProtected(models.Model):
 
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
+    _description = 'Test New API Compute Inversse'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
@@ -360,6 +377,7 @@ class ComputeInverse(models.Model):
 class MultiComputeInverse(models.Model):
     """ Model with the same inverse method for several fields. """
     _name = 'test_new_api.multi_compute_inverse'
+    _description = 'Test New API Multi Compute Inverse'
 
     foo = fields.Char(default='', required=True)
     bar1 = fields.Char(compute='_compute_bars', inverse='_inverse_bar1', store=True)
@@ -386,12 +404,14 @@ class MultiComputeInverse(models.Model):
 
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
+    _description = 'Test New API Company'
 
     foo = fields.Char(company_dependent=True)
 
 
 class CompanyDependentAttribute(models.Model):
     _name = 'test_new_api.company.attr'
+    _description = 'Test New API Company Attribute'
 
     company = fields.Many2one('test_new_api.company')
     quantity = fields.Integer()
@@ -405,6 +425,7 @@ class CompanyDependentAttribute(models.Model):
 
 class ComputeRecursive(models.Model):
     _name = 'test_new_api.recursive'
+    _description = 'Test New API Recursive'
 
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
@@ -421,6 +442,7 @@ class ComputeRecursive(models.Model):
 
 class ComputeCascade(models.Model):
     _name = 'test_new_api.cascade'
+    _description = 'Test New API Cascade'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar')               # depends on foo

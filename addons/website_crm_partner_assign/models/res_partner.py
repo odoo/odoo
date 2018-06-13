@@ -8,6 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 class ResPartnerGrade(models.Model):
     _name = 'res.partner.grade'
     _inherit = ['website.published.mixin']
+    _description = 'Partner Grade'
 
     website_published = fields.Boolean(default=True)
     sequence = fields.Integer('Sequence')
@@ -26,6 +27,7 @@ class ResPartnerGrade(models.Model):
 class ResPartnerActivation(models.Model):
     _name = 'res.partner.activation'
     _order = 'sequence'
+    _description = 'Partner Activation'
 
     sequence = fields.Integer('Sequence')
     name = fields.Char('Name', required=True)

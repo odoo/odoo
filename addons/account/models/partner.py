@@ -164,7 +164,7 @@ class AccountFiscalPosition(models.Model):
 
 class AccountFiscalPositionTax(models.Model):
     _name = 'account.fiscal.position.tax'
-    _description = 'Taxes Fiscal Position'
+    _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -181,7 +181,7 @@ class AccountFiscalPositionTax(models.Model):
 
 class AccountFiscalPositionAccount(models.Model):
     _name = 'account.fiscal.position.account'
-    _description = 'Accounts Fiscal Position'
+    _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
@@ -201,6 +201,7 @@ class AccountFiscalPositionAccount(models.Model):
 class ResPartner(models.Model):
     _name = 'res.partner'
     _inherit = 'res.partner'
+    _description = 'Contact'
 
     @api.multi
     def _credit_debit_get(self):

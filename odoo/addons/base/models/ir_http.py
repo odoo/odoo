@@ -74,7 +74,7 @@ class SignedIntConverter(werkzeug.routing.NumberConverter):
 
 class IrHttp(models.AbstractModel):
     _name = 'ir.http'
-    _description = "HTTP routing"
+    _description = "HTTP Routing"
 
     @classmethod
     def _get_converters(cls):

@@ -9,6 +9,7 @@ from odoo.tools.misc import formatLang
 
 class AccountReconciliation(models.AbstractModel):
     _name = 'account.reconciliation.widget'
+    _description = 'Account Reconciliation widget'
 
     ####################################################
     # Search propositions

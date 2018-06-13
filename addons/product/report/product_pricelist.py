@@ -7,6 +7,7 @@ from odoo.tools import float_round
 
 class report_product_pricelist(models.AbstractModel):
     _name = 'report.product.report_pricelist'
+    _description = 'Product Price List Report'
 
     @api.model
     def _get_report_values(self, docids, data=None):

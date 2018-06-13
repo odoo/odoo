@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 
 class MassMailingScheduleDate(models.TransientModel):
     _name = 'mass.mailing.schedule.date'
-    _description = 'Schedule in the Future'
+    _description = 'Mass Mailing Scheduling'
 
     schedule_date = fields.Datetime(string='Schedule in the Future')
     mass_mailing_id = fields.Many2one('mail.mass_mailing', required=True)

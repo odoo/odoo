@@ -49,6 +49,7 @@ class PutAwayStrategy(models.Model):
 class FixedPutAwayStrategy(models.Model):
     _name = 'stock.fixed.putaway.strat'
     _order = 'sequence'
+    _description = 'Fixed Putaway Strategy on Location'
 
     product_id = fields.Many2one('product.product', 'Product')
     putaway_id = fields.Many2one('product.putaway', 'Put Away Method', required=True)

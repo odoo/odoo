@@ -16,7 +16,7 @@ from operator import itemgetter
 
 class PickingType(models.Model):
     _name = "stock.picking.type"
-    _description = "The operation type determines the picking view"
+    _description = "Picking Type"
     _order = 'sequence, id'
 
     name = fields.Char('Operation Type', required=True, translate=True)
@@ -162,7 +162,7 @@ class PickingType(models.Model):
 class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _description = "Transfer"
+    _description = "Transfer (Picking)"
     _order = "priority desc, date asc, id desc"
 
     name = fields.Char(

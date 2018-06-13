@@ -6,7 +6,7 @@ class AccountMoveReversal(models.TransientModel):
     Account move reversal wizard, it cancel an account move by reversing it.
     """
     _name = 'account.move.reversal'
-    _description = 'Account move reversal'
+    _description = 'Account Move Reversal'
 
     date = fields.Date(string='Reversal date', default=fields.Date.context_today, required=True)
     journal_id = fields.Many2one('account.journal', string='Use Specific Journal', help='If empty, uses the journal of the journal entry to be reversed.')

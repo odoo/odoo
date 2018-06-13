@@ -95,6 +95,7 @@ class HrSalaryRuleCategory(models.Model):
 class HrSalaryRule(models.Model):
     _name = 'hr.salary.rule'
     _order = 'sequence, id'
+    _description = 'Salary Rule'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True,

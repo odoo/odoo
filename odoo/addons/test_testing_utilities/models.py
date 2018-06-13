@@ -4,6 +4,7 @@ from odoo import api, fields, models
 
 class A(models.Model):
     _name = 'test_testing_utilities.a'
+    _description = 'Testing Utilities A'
 
     f1 = fields.Integer(required=True)
     f2 = fields.Integer(default=42)
@@ -21,6 +22,7 @@ class A(models.Model):
 
 class B(models.Model):
     _name = 'test_testing_utilities.readonly'
+    _description = 'Testing Utilities Readonly'
 
     f1 = fields.Integer(default=1, readonly=True)
     f2 = fields.Integer(compute='_compute_f2')
@@ -32,6 +34,7 @@ class B(models.Model):
 
 class C(models.Model):
     _name = 'test_testing_utilities.c'
+    _description = 'Testing Utilities C'
 
     name = fields.Char("name", required=True)
     f2 = fields.Many2one('test_testing_utilities.m2o')
@@ -42,11 +45,13 @@ class C(models.Model):
 
 class M2O(models.Model):
     _name = 'test_testing_utilities.m2o'
+    _description = 'Testing Utilities Many To One'
 
     name = fields.Char(required=True)
 
 class M2Onchange(models.Model):
     _name = 'test_testing_utilities.d'
+    _description = 'Testing Utilities D'
 
     # used to check that defaults & onchange to m2o work
     f = fields.Many2one(
@@ -66,6 +71,7 @@ class M2Onchange(models.Model):
 
 class M2MChange(models.Model):
     _name = 'test_testing_utilities.e'
+    _description = 'Testing Utilities E'
 
     m2m = fields.Many2many('test_testing_utilities.sub2')
     count = fields.Integer(compute='_m2m_count')
@@ -77,11 +83,13 @@ class M2MChange(models.Model):
 
 class M2MSub(models.Model):
     _name = 'test_testing_utilities.sub2'
+    _description = 'Testing Utilities Subtraction 2'
 
     name = fields.Char()
 
 class M2MChange2(models.Model):
     _name = 'test_testing_utilities.f'
+    _description = 'Testing Utilities F'
 
     def _get_some(self):
         r = self.env['test_testing_utilities.sub2'].search([], limit=2)
@@ -99,16 +107,19 @@ class M2MChange2(models.Model):
 
 class M2MReadonly(models.Model):
     _name = 'test_testing_utilities.g'
+    _description = 'Testing Utilities G'
 
     m2m = fields.Many2many('test_testing_utilities.sub3', readonly=True)
 
 class M2MSub3(models.Model):
     _name = 'test_testing_utilities.sub3'
+    _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char()
 
 class O2MChange(models.Model):
     _name = 'test_testing_utilities.parent'
+    _description = 'Testing Utilities Parent'
 
     value = fields.Integer(default=1)
     v = fields.Integer()
@@ -120,6 +131,7 @@ class O2MChange(models.Model):
 
 class O2MSub(models.Model):
     _name = 'test_testing_utilities.sub'
+    _description = 'Testing Utilities Subtraction'
 
     name = fields.Char(compute='_compute_name')
     value = fields.Integer(default=2)
@@ -144,6 +156,7 @@ class O2MSub(models.Model):
 
 class O2MDefault(models.Model):
     _name = 'test_testing_utilities.default'
+    _description = 'Testing Utilities Default'
 
     def _default_subs(self):
         return [
@@ -155,6 +168,7 @@ class O2MDefault(models.Model):
 
 class O2MSub3(models.Model):
     _name = 'test_testing_utilities.sub3'
+    _description = 'Testing Utilities Subtraction 3'
 
     name = fields.Char(compute='_compute_name')
     value = fields.Integer(default=2)
@@ -173,6 +187,7 @@ class O2MSub3(models.Model):
 
 class O2MOnchangeParent(models.Model):
     _name = 'test_testing_utilities.onchange_parent'
+    _description = 'Testing Utilities Onchange Parent'
 
     line_ids = fields.One2many('test_testing_utilities.onchange_line', 'parent')
 
@@ -184,6 +199,7 @@ class O2MOnchangeParent(models.Model):
 
 class M2OOnchangeLine(models.Model):
     _name = 'test_testing_utilities.onchange_line'
+    _description = 'Testing Utilities Onchange Line'
 
     parent = fields.Many2one('test_testing_utilities.onchange_parent')
     dummy = fields.Float()

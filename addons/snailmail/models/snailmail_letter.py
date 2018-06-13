@@ -16,6 +16,7 @@ PRINT_ENDPOINT = '/iap/snailmail/1/print'
 
 class SnailmailLetter(models.Model):
     _name = 'snailmail.letter'
+    _description = 'Snailmail Letter'
 
     user_id = fields.Many2one('res.users', 'User sending the letter')
     model = fields.Char('Model', required=True)

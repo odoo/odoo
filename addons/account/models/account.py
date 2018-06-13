@@ -353,6 +353,7 @@ class AccountAccount(models.Model):
 
 class AccountGroup(models.Model):
     _name = "account.group"
+    _description = 'Account Group'
     _parent_store = True
     _order = 'code_prefix'
 
@@ -857,6 +858,7 @@ class ResPartnerBank(models.Model):
 
 class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
+    _description = 'Tax Group'
     _order = 'sequence asc'
 
     name = fields.Char(required=True, translate=True)
@@ -1164,7 +1166,7 @@ class AccountTax(models.Model):
 
 class AccountReconcileModel(models.Model):
     _name = "account.reconcile.model"
-    _description = "Preset to create journal entries during a invoices and payments matching"
+    _description = "Reconciliation Models"
 
     name = fields.Char(string='Button Label', required=True)
     sequence = fields.Integer(required=True, default=10)

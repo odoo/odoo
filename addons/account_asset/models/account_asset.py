@@ -12,7 +12,7 @@ from odoo.tools import float_compare, float_is_zero
 
 class AccountAssetCategory(models.Model):
     _name = 'account.asset.category'
-    _description = 'Asset category'
+    _description = 'Asset Category'
 
     active = fields.Boolean(default=True)
     name = fields.Char(required=True, index=True, string="Asset Type")
@@ -472,7 +472,7 @@ class AccountAssetAsset(models.Model):
 
 class AccountAssetDepreciationLine(models.Model):
     _name = 'account.asset.depreciation.line'
-    _description = 'Asset depreciation line'
+    _description = 'Asset Depreciation Line'
 
     name = fields.Char(string='Depreciation Name', required=True, index=True)
     sequence = fields.Integer(required=True)

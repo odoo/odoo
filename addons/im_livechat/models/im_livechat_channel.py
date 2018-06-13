@@ -208,7 +208,7 @@ class ImLivechatChannelRule(models.Model):
     """
 
     _name = 'im_livechat.channel.rule'
-    _description = 'Channel Rules'
+    _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
 
 

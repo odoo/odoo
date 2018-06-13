@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class StockOverProcessedTransfer(models.TransientModel):
     _name = 'stock.overprocessed.transfer'
+    _description = 'Transfer Over Processed Stock'
 
     picking_id = fields.Many2one('stock.picking')
     overprocessed_product_name = fields.Char(compute='_compute_overprocessed_product_name',

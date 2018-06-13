@@ -6,6 +6,7 @@ from odoo import api, fields, models
 
 class ReportOverdue(models.AbstractModel):
     _name = 'report.account.report_overdue'
+    _description = 'Account Overdue Report'
 
     def _get_account_move_lines(self, partner_ids):
         res = {x: [] for x in partner_ids}
