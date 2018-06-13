@@ -282,6 +282,7 @@ var CompletionFieldMixin = {
             initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
             initial_view: view,
             disable_multiple_selection: true,
+            no_create: self.options.no_create,
             on_selected: function(element_ids) {
                 self.add_id(element_ids[0]);
                 self.focus();
