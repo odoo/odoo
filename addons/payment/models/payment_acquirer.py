@@ -88,8 +88,10 @@ class PaymentAcquirer(models.Model):
                                                      'payment interface. This mode is advised when setting up the '
                                                      'acquirer. Watch out, test and production modes require '
                                                      'different credentials.',
-        default='disabled', required=True)
+        default='enabled', required=True)
     # Formerly associated to `authorize` option from auto_confirm
+    missing_required_fields = fields.Char('Missing credentials', compute='_check_missing_required_fields',
+                                          store=False)
     capture_manually = fields.Boolean(string="Capture Amount Manually",
         help="Capture the amount from Odoo, when the delivery is completed.")
     # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
@@ -198,19 +200,21 @@ class PaymentAcquirer(models.Model):
             acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
+    @api.multi
     def _check_missing_required_fields(self):
         """ If the field has 'required_if_provider="<provider>"' attribute, then it
         required if record.provider is <provider>.
         Else if the field has 'required_if_provider=""' attribute, then it is required
         for all providers"""
-        missing_fields = []
-        for field, f in self._fields.items():
-            if getattr(f, 'required_if_provider', None) in [self.provider, ''] and not self[field]:
-                missing_fields.append(f.string)
-        if missing_fields:
-            return ', '.join(missing_fields)
-        else:
-            return False
+        for acquirer in self:
+            missing_fields = []
+            for field, f in acquirer._fields.items():
+                if getattr(f, 'required_if_provider', None) in [acquirer.provider, ''] and not acquirer[field]:
+                    missing_fields.append(f.string)
+            if missing_fields:
+                acquirer.missing_required_fields = ', '.join(missing_fields)
+            else:
+                acquirer.missing_required_fields = False
 
     def _get_feature_support(self):
         """Get advanced feature support by provider.
@@ -297,13 +301,7 @@ class PaymentAcquirer(models.Model):
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
-        res = super(PaymentAcquirer, self).write(self._check_on_empty_html_fields(vals))
-        for acquirer in self.filtered(lambda a: a.status != 'disabled'):
-            if acquirer._check_missing_required_fields():
-                super(PaymentAcquirer, acquirer).write({'status': 'disabled'})
-                raise ValidationError("Some information is missing to activate the payment acquirer: \n %s"
-                                      % acquirer._check_missing_required_fields())
-        return res
+        return super(PaymentAcquirer, self).write(self._check_on_empty_html_fields(vals))
 
     @api.multi
     def get_form_action_url(self):

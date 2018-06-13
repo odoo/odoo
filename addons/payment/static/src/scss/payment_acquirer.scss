@@ -1,5 +1,6 @@
 .o_kanban_view.o_kanban_payment_acquirer {
     &.o_kanban_ungrouped {
+
         .o_kanban_record {
             width: 500px;
 
@@ -30,10 +31,13 @@
                     bottom: 8px;
                     right: 8px;
                 }
-                > .label {
+                > .labels {
                     position: absolute;
                     bottom: 8px;
                     left: 8px;
+                    > .label {
+                        position: relative;
+                    }
                 }
             }
         }
@@ -41,6 +45,19 @@
 }
 
 .o_form_view {
+    .o_missing_fields_bar {
+        height: 40px;
+        width: 100%;
+        background-color: #DFA941;
+        color: white;
+        text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+        text-align: center;
+        font-size: 16px;
+        line-height: 40px;
+        > span {}
+    }
+
+
     .o_payment_acquirer_desc {
         ul {
             list-style-type: none;

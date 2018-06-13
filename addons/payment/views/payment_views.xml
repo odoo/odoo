@@ -16,6 +16,9 @@
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
+                        <div class="o_missing_fields_bar" attrs="{'invisible': ['|',('missing_required_fields', '=', False), ('status', '==', 'disabled')]}">
+                            The following fields are required: <field name="missing_required_fields"/>
+                        </div>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
@@ -113,6 +116,7 @@
                     <field name="module_id"/>
                     <field name="module_state"/>
                     <field name="status"/>
+                    <field name="missing_required_fields"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
@@ -126,7 +130,12 @@
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
-                                        <field name="status" widget="label_selection" options="{'classes': {'test': 'warning', 'enabled': 'success', 'disabled': 'default'}}"/>
+                                        <div class="labels">
+                                            <field name="status" widget="label_selection" options="{'classes': {'test': 'warning', 'enabled': 'success', 'disabled': 'default'}}"/>
+                                            <t t-if="record.missing_required_fields.raw_value and record.status.raw_value != 'disabled'">
+                                                <div class="o_field_widget label label-warning">Missing credentials</div>
+                                            </t>
+                                        </div>
                                     </t>
                                     <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm"
                                             name="button_immediate_install">Install
