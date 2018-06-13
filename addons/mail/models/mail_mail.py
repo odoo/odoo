@@ -176,6 +176,18 @@ class MailMail(models.Model):
         return res
 
     @api.multi
+    def send_get_email_list(self):
+        """Return a list of email dictionaries.
+        """
+        self.ensure_one()
+        email_list = []
+        if self.email_to:
+            email_list.append(self.send_get_email_dict())
+        for partner in self.recipient_ids:
+            email_list.append(self.send_get_email_dict(partner=partner))
+        return email_list
+
+    @api.multi
     def send(self, auto_commit=False, raise_exception=False):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
@@ -210,11 +222,7 @@ class MailMail(models.Model):
                                for a in mail.attachment_ids.sudo().read(['datas_fname', 'datas'])]
 
                 # specific behavior to customize the send email for notified partners
-                email_list = []
-                if mail.email_to:
-                    email_list.append(mail.send_get_email_dict())
-                for partner in mail.recipient_ids:
-                    email_list.append(mail.send_get_email_dict(partner=partner))
+                email_list = mail.send_get_email_list()
 
                 # headers
                 headers = {}
