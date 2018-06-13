@@ -348,7 +348,7 @@ class Picking(models.Model):
 
     @api.one
     def _set_min_date(self):
-        self.move_lines.write({'date_expected': self.min_date})
+        self.move_lines.write({'date_expected': self.min_date, 'date': self.min_date})
 
     @api.one
     def _has_scrap_move(self):
