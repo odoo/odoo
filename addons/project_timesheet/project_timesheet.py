@@ -186,6 +186,7 @@ class project_work(osv.osv):
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name'] or '/'))
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
+                vals_line.update(timesheet_obj.on_change_user_id(cr, uid, [task.id], vals['user_id'])['value'])
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
