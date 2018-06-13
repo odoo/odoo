@@ -92,10 +92,23 @@ class DecimalPrecisionFloat(orm.AbstractModel):
 class DecimalPrecisionTestModel(orm.Model):
     _name = 'decimal.precision.test'
 
+    def _compute_float_nonstored_computed_2(
+            self, cr, uid, ids, field_name, obj, args, context=None):
+        return dict((i, 1.0 / 3) for i in ids)
+
     _columns = {
         'float': fields.float(),
         'float_2': fields.float(digits=(16, 2)),
         'float_4': fields.float(digits=(16, 4)),
+        'float_nonstored_computed_2': fields.function(
+            _compute_float_nonstored_computed_2, digits=(16, 2),
+        ),
     }
+    float_nonstored_computed_v8 = openerp.fields.Float(
+        digits=(16, 2), compute='_compute_float_nonstored_computed_v8')
+
+    def _compute_float_nonstored_computed_v8(self):
+        for this in self:
+            this.float_nonstored_computed_v8 = 1.0 / 3
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
