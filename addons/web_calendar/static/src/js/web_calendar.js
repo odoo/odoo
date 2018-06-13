@@ -235,7 +235,7 @@ var CalendarView = View.extend({
             this.info_fields.push(fv.arch.children[fld].attrs.name);
         }
 
-        self.shown.done(this._do_show_init.bind(this));
+        $.when(self.shown, self.ready).done(this._do_show_init.bind(this));
         var edit_check = new Model(this.dataset.model)
             .call("check_access_rights", ["write", false])
             .then(function (write_right) {
@@ -275,7 +275,7 @@ var CalendarView = View.extend({
 
         var bindCalendarButton = function(selector, arg1, arg2) {
             self.$buttons.on('click', selector, _.bind(self.$calendar.fullCalendar, self.$calendar, arg1, arg2));
-        }
+        };
         bindCalendarButton('.o_calendar_button_prev', 'prev');
         bindCalendarButton('.o_calendar_button_today', 'today');
         bindCalendarButton('.o_calendar_button_next', 'next');
@@ -721,15 +721,15 @@ var CalendarView = View.extend({
 
     do_search: function (domain, context, _group_by) {
         var self = this;
-        this.shown.done(function () {
+        $.when(this.shown, this.ready).done(function () {
             self._do_search(domain, context, _group_by);
         });
     },
     _do_search: function(domain, context, _group_by) {
         var self = this;
-       if (! self.all_filters) {
+        if (! self.all_filters) {
             self.all_filters = {};
-       }
+        }
 
         if (! _.isUndefined(this.event_source)) {
             this.$calendar.fullCalendar('removeEventSource', this.event_source);
