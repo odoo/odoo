@@ -468,7 +468,13 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this, {defaultDate: this.value});
+        return new datepicker.DateWidget(
+            this,
+            _.defaults(
+                this.nodeOptions.datepicker || {},
+                {defaultDate: this.value}
+            )
+        );
     },
 
     /**
