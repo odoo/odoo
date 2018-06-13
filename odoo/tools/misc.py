@@ -1107,13 +1107,15 @@ def format_date(env, value, lang_code=False, date_format=False):
     '''
     if not value:
         return ''
-    if isinstance(value, datetime.datetime):
-        value = value.date()
-    elif isinstance(value, pycompat.string_types):
+    if isinstance(value, pycompat.string_types):
         if len(value) < DATE_LENGTH:
             return ''
-        value = value[:DATE_LENGTH]
-        value = datetime.datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT).date()
+        if len(value) > DATE_LENGTH:
+            # a datetime, convert to correct timezone
+            value = odoo.fields.Datetime.from_string(value)
+            value = odoo.fields.Datetime.context_timestamp(env['res.lang'], value)
+        else:
+            value = odoo.fields.Datetime.from_string(value)
 
     lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
     locale = babel.Locale.parse(lang.code)

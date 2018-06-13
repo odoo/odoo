@@ -1329,10 +1329,26 @@ order.
 
     - Supported field types: *date*, *datetime*
 
+    Options:
+
+    - datepicker: extra settings for the datepicker_ widget.
+
+    .. code-block:: xml
+
+        <field name="datefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
+
 - datetime (FieldDateTime)
     This is the default field type for fields of type *datetime*.
 
     - Supported field types: *date*, *datetime*
+
+    Options:
+
+    - datepicker: extra settings for the datepicker_ widget.
+
+    .. code-block:: xml
+
+        <field name="datefield" options='{"datepicker": {"daysOfWeekDisabled": [0, 6]}}'/>
 
 - monetary (FieldMonetary)
     This is the default field type for fields of type 'monetary'. It is used to
@@ -1813,5 +1829,7 @@ Relational fields
 
 .. _event delegation:
     http://api.jquery.com/delegate/
+
+.. _datepicker: https://github.com/Eonasdan/bootstrap-datetimepicker
 
 .. _deferred: http://api.jquery.com/category/deferred-object/
