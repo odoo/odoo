@@ -70,7 +70,7 @@ class PaymentTransaction(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice'):
             for trans in self.filtered(lambda t: t.sale_order_ids):
                 trans.sale_order_ids._force_lines_to_invoice_policy_order()
-                invoices = trans.sale_order_ids.action_invoice_create()
+                invoices = trans.sale_order_ids.action_invoice_create(unbilled=True)
                 trans.invoice_ids = [(6, 0, invoices)]
         return super(PaymentTransaction, self)._set_transaction_done()
 
