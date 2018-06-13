@@ -5,7 +5,15 @@ var core = require('web.core');
 var utils = require('web.utils');
 var time = require('web.time');
 
-function genericJsonRpc (fct_name, params, fct) {
+function genericJsonRpc (fct_name, params, settings, fct) {
+    var shadow = settings.shadow || false;
+    delete settings.shadow;
+    if (!shadow) {
+        core.bus.trigger('rpc_request');
+    }
+
+    var deferred = $.Deferred();
+
     var data = {
         jsonrpc: "2.0",
         method: fct_name,
@@ -29,12 +37,56 @@ function genericJsonRpc (fct_name, params, fct) {
         return def.reject.apply(def, ["communication"].concat(_.toArray(arguments)));
     });
     // FIXME: jsonp?
-    result.abort = function () { if (xhr.abort) xhr.abort(); };
-    return result;
+    deferred.abort = function () {
+        deferred.reject('communication', $.Event(), 'abort', 'abort');
+        if (xhr.abort) {
+            xhr.abort();
+        }
+    };
+
+    result.then(function (result) {
+        if (!shadow) {
+            core.bus.trigger('rpc_response');
+        }
+        deferred.resolve(result);
+    }, function (type, error, textStatus, errorThrown) {
+        if (type === "server") {
+            if (!shadow) {
+                core.bus.trigger('rpc_response');
+            }
+            if (error.code === 100) {
+                core.bus.trigger('invalidate_session');
+            }
+            deferred.reject(error, $.Event());
+        } else {
+            if (!shadow) {
+                core.bus.trigger('rpc_response_failed');
+            }
+            var nerror = {
+                code: -32098,
+                message: "XmlHttpRequestError " + errorThrown,
+                data: {
+                    type: "xhr"+textStatus,
+                    debug: error.responseText,
+                    objects: [error, errorThrown]
+                },
+            };
+            deferred.reject(nerror, $.Event());
+        }
+    });
+    deferred.fail(function () { // Allow deferred user to disable rpc_error call in fail
+        deferred.fail(function (error, event) {
+            if (!event.isDefaultPrevented()) {
+                core.bus.trigger('rpc_error', error, event);
+            }
+        });
+    });
+    return deferred;
 }
 
 function jsonRpc(url, fct_name, params, settings) {
-    return genericJsonRpc(fct_name, params, function(data) {
+    settings = settings || {};
+    return genericJsonRpc(fct_name, params, settings, function(data) {
         return $.ajax(url, _.extend({}, settings, {
             url: url,
             dataType: 'json',
@@ -47,7 +99,7 @@ function jsonRpc(url, fct_name, params, settings) {
 
 function jsonpRpc(url, fct_name, params, settings) {
     settings = settings || {};
-    return genericJsonRpc(fct_name, params, function(data) {
+    return genericJsonRpc(fct_name, params, settings, function(data) {
         var payload_str = JSON.stringify(data, time.date_to_utc);
         var payload_url = $.param({r:payload_str});
         var force2step = settings.force2step || false;
