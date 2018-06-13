@@ -933,6 +933,9 @@ class SaleOrderLine(models.Model):
         compute='_get_invoice_qty', string='Invoiced', store=True, readonly=True,
         digits=dp.get_precision('Product Unit of Measure'))
 
+    untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', compute_sudo=True, store=True)
+    untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', compute_sudo=True, store=True)
+
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', readonly=True)
     currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id'], store=True, string='Currency', readonly=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
@@ -1046,6 +1049,52 @@ class SaleOrderLine(models.Model):
                 line.qty_delivered_manual = line.qty_delivered
             else:
                 line.qty_delivered_manual = 0.0
+
+    @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.invoice_id.state', 'invoice_lines.invoice_id.type')
+    def _compute_untaxed_amount_invoiced(self):
+        """ Compute the untaxed amount already invoiced from the sale order line, taking the refund attached
+            the so line into account. This amount is computed as
+                SUM(inv_line.price_subtotal) - SUM(ref_line.price_subtotal)
+            where
+                `inv_line` is a customer invoice line linked to the SO line
+                `ref_line` is a customer credit note (refund) line linked to the SO line
+        """
+        for line in self:
+            amount_invoiced = 0.0
+            for invoice_line in line.invoice_lines:
+                if invoice_line.invoice_id.state in ['open', 'paid']:
+                    invoice_date = invoice_line.invoice_id.date_invoice or fields.Date.today()
+                    if invoice_line.invoice_id.type == 'out_invoice':
+                        amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+                    elif invoice_line.invoice_id.type == 'out_refund':
+                        amount_invoiced -= invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
+            line.untaxed_amount_invoiced = amount_invoiced
+
+    @api.depends('state', 'product_id', 'untaxed_amount_invoiced', 'qty_delivered')
+    def _compute_untaxed_amount_to_invoice(self):
+        """ Total of remaining amount to invoice on the sale order line (taxes excl.) as
+                total_sol - amount already invoiced
+            where Total_sol depends on the invoice policy of the product.
+
+            Note: Draft invoice are ignored on purpose, the 'to invoice' amount should
+            come only from the SO lines.
+        """
+        for line in self:
+            amount_to_invoice = 0.0
+            if line.state in ['sale', 'done']:
+                # Note: do not use price_subtotal field as it returns zero when the ordered quantity is
+                # zero. It causes problem for expense line (e.i.: ordered qty = 0, deli qty = 4,
+                # price_unit = 20 ; subtotal is zero), but when you can invoice the line, you see an
+                # amount and not zero. Since we compute untaxed amount, we can use directly the price
+                # unit without using `compute_all()` method on taxes.
+                price_subtotal = 0.0
+                if line.product_id.invoice_policy == 'delivery':
+                    price_subtotal = line.price_unit * line.qty_delivered
+                else:
+                    price_subtotal = line.price_unit * line.product_uom_qty
+
+                amount_to_invoice = price_subtotal - line.untaxed_amount_invoiced
+            line.untaxed_amount_to_invoice = amount_to_invoice
 
     @api.multi
     def _prepare_invoice_line(self, qty):
