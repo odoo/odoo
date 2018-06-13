@@ -285,6 +285,7 @@ return AbstractRenderer.extend({
                 {
                     values: values,
                     key: measure,
+                    area: true
                 }
             ];
             tickValues = this.state.data.map(function (d, i) { return i;});
@@ -332,7 +333,9 @@ return AbstractRenderer.extend({
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
           showYAxis: true,
+          
         });
+        
         chart.xAxis.tickValues(tickValues)
             .tickFormat(tickFormat);
         chart.yAxis.tickFormat(function (d) {
@@ -340,7 +343,7 @@ return AbstractRenderer.extend({
                 digits : self.state.fields[self.state.measure] && self.state.fields[self.state.measure].digits || [69, 2],
             });
         });
-
+        
         chart(svg);
         return chart;
     },
