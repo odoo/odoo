@@ -110,6 +110,25 @@ class crm_phonecall(osv.osv):
                 self.write(cr, uid, [phonecall.id], values, context=context)
         return True
 
+    def _prepare_another_phonecall_vals(self, cr, uid, call, schedule_time,
+                                        call_summary, user_id=False,
+                                        section_id=False, categ_id=False,
+                                        context=None):
+        return {
+            'name': call_summary,
+            'user_id': user_id or False,
+            'categ_id': categ_id or False,
+            'description': call.description or False,
+            'date': schedule_time,
+            'section_id': section_id or False,
+            'partner_id': call.partner_id and call.partner_id.id or False,
+            'partner_phone': call.partner_phone,
+            'partner_mobile': call.partner_mobile,
+            'priority': call.priority,
+            'opportunity_id': (call.opportunity_id and
+                               call.opportunity_id.id or False),
+        }
+
     def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
                     user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
         """
@@ -130,19 +149,10 @@ class crm_phonecall(osv.osv):
                 user_id = call.user_id and call.user_id.id or False
             if not schedule_time:
                 schedule_time = call.date
-            vals = {
-                    'name' : call_summary,
-                    'user_id' : user_id or False,
-                    'categ_id' : categ_id or False,
-                    'description' : call.description or False,
-                    'date' : schedule_time,
-                    'section_id' : section_id or False,
-                    'partner_id': call.partner_id and call.partner_id.id or False,
-                    'partner_phone' : call.partner_phone,
-                    'partner_mobile' : call.partner_mobile,
-                    'priority': call.priority,
-                    'opportunity_id': call.opportunity_id and call.opportunity_id.id or False,
-            }
+            vals = self._prepare_another_phonecall_vals(
+                cr, uid, call, schedule_time, call_summary,
+                user_id=user_id, section_id=section_id, categ_id=categ_id,
+                context=context)
             new_id = self.create(cr, uid, vals, context=context)
             if action == 'log':
                 self.write(cr, uid, [new_id], {'state': 'done'}, context=context)
