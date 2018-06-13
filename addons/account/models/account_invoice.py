@@ -1170,10 +1170,9 @@ class AccountInvoiceLine(models.Model):
         return accounts['expense']
 
     def _set_currency(self):
-        company = self.invoice_id.company_id
         currency = self.invoice_id.currency_id
-        if company and currency:
-            if company.currency_id != currency:
+        if self.product_id and currency:
+            if self.product_id.currency_id != currency:
                 self.price_unit = self.price_unit * currency.with_context(dict(self._context or {}, date=self.invoice_id.date_invoice)).rate
 
     def _set_taxes(self):
