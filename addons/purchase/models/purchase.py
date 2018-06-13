@@ -1043,12 +1043,13 @@ class ProcurementOrder(models.Model):
             if domain in cache:
                 po = cache[domain]
             else:
-                po = self.env['purchase.order'].search([dom for dom in domain])
+                po = self.env['purchase.order'].sudo().search([dom for dom in domain])
                 po = po[0] if po else False
                 cache[domain] = po
+
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
-                po = self.env['purchase.order'].create(vals)
+                po = self.env['purchase.order'].sudo().create(vals)
                 name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or procurement.move_dest_id.raw_material_production_id and procurement.move_dest_id.raw_material_production_id.name or "")
                 message = _("This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
                 po.message_post(body=message)
@@ -1091,7 +1092,7 @@ class ProcurementOrder(models.Model):
                     break
             if not po_line:
                 vals = procurement._prepare_purchase_order_line(po, supplier)
-                self.env['purchase.order.line'].create(vals)
+                self.env['purchase.order.line'].sudo().create(vals)
         return res
 
     @api.multi
