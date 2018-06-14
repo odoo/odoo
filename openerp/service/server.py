@@ -795,7 +795,6 @@ class WorkerCron(Worker):
 
             import openerp.addons.base as base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
-            openerp.modules.registry.RegistryManager.delete(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:

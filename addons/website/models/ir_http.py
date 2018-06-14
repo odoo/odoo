@@ -5,6 +5,7 @@ import re
 import time
 import traceback
 
+import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
@@ -159,6 +160,11 @@ class ir_http(orm.AbstractModel):
                 request.context['edit_translations'] = False
             if not request.context.get('tz'):
                 request.context['tz'] = request.session.get('geoip', {}).get('time_zone')
+                try:
+                    pytz.timezone(request.context['tz'] or '')
+                except pytz.UnknownTimeZoneError:
+                    request.context.pop('tz')
+
             # bind modified context
             request.website = request.website.with_context(request.context)
 
