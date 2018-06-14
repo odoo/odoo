@@ -37,6 +37,8 @@ Here is how it works:
         'data/account_vat2011_data.xml',
         'data/account_fiscal_position_data.xml',
         'data/account_chart_template_data.yml',
+        'data/account_account_tag.xml',
+        'data/account_account.xml',
         'report/isr_report.xml',
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
