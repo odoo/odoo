@@ -546,14 +546,27 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'no'
             elif not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                 line.invoice_status = 'to invoice'
+            #TRESCLOUD: Se agrega un hook para la qty_delivered y la qty_invoiced
             elif line.state == 'sale' and line.product_id.invoice_policy == 'order' and\
-                    float_compare(line.qty_delivered, line.product_uom_qty, precision_digits=precision) == 1:
+                    float_compare(line._get_qty_delivered(), line.product_uom_qty, precision_digits=precision) == 1:
                 line.invoice_status = 'upselling'
-            elif float_compare(line.qty_invoiced, line.product_uom_qty, precision_digits=precision) >= 0:
+            elif float_compare(line._get_qty_invoiced(), line.product_uom_qty, precision_digits=precision) >= 0:
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
+    
+    #TRESCLOUD - hook para qty_delivered y qty_invoiced
+    @api.model
+    def _get_qty_delivered(self):
+        '''Hook para agregar el concepto de cantidades devueltas'''
+        return self.qty_delivered
 
+    #TRESCLOUD - hook para qty_delivered y qty_invoiced
+    @api.model
+    def _get_qty_invoiced(self):
+        '''Hook para agregar el concepto de qtys en notas de credito'''
+        return self.qty_invoiced
+            
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
         """
