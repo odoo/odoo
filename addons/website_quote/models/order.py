@@ -314,6 +314,17 @@ class sale_order(osv.osv):
     def _get_payment_type(self, cr, uid, ids, context=None):
         return 'form'
 
+    def _set_default_value_on_column(self, cr, column_name, context=None):
+        if column_name != 'access_token':
+            super(sale_order, self)._set_default_value_on_column(cr, column_name, context=context)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(random()::text || clock_timestamp()::text)::uuid
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._table, 'column_name': column_name}
+            cr.execute(query)
+
+
 class sale_quote_option(osv.osv):
     _name = "sale.quote.option"
     _description = "Quotation Option"
