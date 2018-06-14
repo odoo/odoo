@@ -408,7 +408,7 @@ class StockMove(models.Model):
         self.product_uom_qty = 1.0
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
-    @api.onchange('date')
+    @api.onchange('date_expected')
     def onchange_date(self):
         if self.date_expected:
             self.date = self.date_expected
