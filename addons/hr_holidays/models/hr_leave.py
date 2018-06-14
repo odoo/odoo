@@ -146,6 +146,9 @@ class HolidaysRequest(models.Model):
         date_from = False
         date_to = False
 
+        if not self.employee_id:
+            return
+
         if self.request_date_from:
             if self.date_from:
                 date_from = fields.Datetime.to_string(datetime.combine(fields.Date.from_string(self.request_date_from), fields.Datetime.from_string(self.date_from).time()))
