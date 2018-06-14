@@ -6,6 +6,7 @@ var utils = require('web_tour.utils');
 var Tip = require('web_tour.Tip');
 
 var get_first_visible_element = utils.get_first_visible_element;
+var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 var RunningTourActionHelper = core.Class.extend({
     init: function (tip_widget) {
@@ -38,7 +39,7 @@ var RunningTourActionHelper = core.Class.extend({
         }
     },
     _get_action_values: function (element) {
-        var $e = $(element);
+        var $e = get_jquery_element_from_selector(element);
         var $element = element ? get_first_visible_element($e) : this.tip_widget.$anchor;
         if ($element.length === 0) {
             $element = $e.first();
@@ -90,20 +91,30 @@ var RunningTourActionHelper = core.Class.extend({
         values.$element.trigger("change");
     },
     _drag_and_drop: function (values, to) {
-        var $to = $(to || document.body);
-
+        var $to;
+        if (to) {
+            $to = get_jquery_element_from_selector(to);
+        } else {
+            $to = $(document.body);
+        }
         var elementCenter = values.$element.offset();
         elementCenter.left += values.$element.outerWidth()/2;
         elementCenter.top += values.$element.outerHeight()/2;
 
         var toCenter = $to.offset();
+
+        if (to && to.indexOf('iframe') !== -1) {
+            var iFrameOffset = $('iframe').offset();
+            toCenter.left += iFrameOffset.left;
+            toCenter.top += iFrameOffset.top;
+        }
         toCenter.left += $to.outerWidth()/2;
         toCenter.top += $to.outerHeight()/2;
 
         values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
         values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
         values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-    },
+     },
     _keydown: function (values, keyCodes) {
         while (keyCodes.length) {
             var keyCode = +keyCodes.shift();
