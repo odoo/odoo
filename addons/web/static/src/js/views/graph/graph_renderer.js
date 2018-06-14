@@ -106,7 +106,7 @@ return AbstractRenderer.extend({
         }
         if (!_.contains(CHART_TYPES, this.state.mode)) {
             this.$el.empty();
-            this.trigger_up('warning', {
+            this.trigger('warning', {
                 title: _t('Invalid mode for chart'),
                 message: _t('Cannot render chart with mode : ') + this.state.mode
             });

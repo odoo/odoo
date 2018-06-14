@@ -323,7 +323,7 @@ var RTEWidget = Widget.extend({
 
         // start element observation
         $(document).on('content_changed', '.o_editable', function (ev) {
-            self.trigger_up('rte_change', {target: ev.target});
+            self.trigger('rte_change', {target: ev.target});
             if (!ev.__isDirtyHandled) {
                 $(this).addClass('o_dirty');
                 ev.__isDirtyHandled = true;

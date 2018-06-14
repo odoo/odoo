@@ -45,7 +45,7 @@ options.registry.menu_data = options.Class.extend({
             $content: $(core.qweb.render('website.leaving_current_page_edition')),
             buttons: [
                 {text: _t("Go to Link"), classes: 'btn-primary', click: function () {
-                    self.trigger_up('request_save', {
+                    self.trigger('request_save', {
                         reload: false,
                         onSuccess: function () {
                             window.location.href = self.$target.attr('href');
@@ -53,12 +53,12 @@ options.registry.menu_data = options.Class.extend({
                     });
                 }},
                 {text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
-                    this.trigger_up('action_demand', {
+                    this.trigger('action_demand', {
                         actionName: 'edit_menu',
                         params: [
                             function () {
                                 var def = $.Deferred();
-                                self.trigger_up('request_save', {
+                                self.trigger('request_save', {
                                     onSuccess: def.resolve.bind(def),
                                     onFailure: def.reject.bind(def),
                                 });
@@ -109,7 +109,7 @@ options.registry.company_data = options.Class.extend({
 
         Dialog.confirm(this, _t("Do you want to edit the company data ?"), {
             confirm_callback: function () {
-                self.trigger_up('request_save', {
+                self.trigger('request_save', {
                     reload: false,
                     onSuccess: function () {
                         window.location.href = proto.__link;
@@ -142,7 +142,7 @@ options.registry.carousel = options.Class.extend({
         // set background and prepare to clean for save
         this.$target.on('slid.bs.carousel', function () {
             self.$target.carousel('pause');
-            self.trigger_up('option_update', {
+            self.trigger('option_update', {
                 optionNames: ['background', 'background_position', 'colorpicker', 'sizing_y'],
                 name: 'target',
                 data: self.$target.find('.carousel-item.active'),
@@ -493,7 +493,7 @@ options.registry.layout_column = options.Class.extend({
             return;
         }
 
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
+        this.trigger('request_history_undo_record', {$target: this.$target});
 
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
@@ -508,7 +508,7 @@ options.registry.layout_column = options.Class.extend({
         }
 
         this._resizeColumns();
-        this.trigger_up('cover_update');
+        this.trigger('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
@@ -555,7 +555,7 @@ options.registry.parallax = options.Class.extend({
      * @override
      */
     onFocus: function () {
-        this.trigger_up('option_update', {
+        this.trigger('option_update', {
             optionNames: ['background', 'background_position'],
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
@@ -677,7 +677,7 @@ var FacebookPageDialog = weWidgets.Dialog.extend({
      * @param {boolean} toggle
      */
     _toggleWarning: function (toggle) {
-        this.trigger_up('animation_stop_demand', {
+        this.trigger('animation_stop_demand', {
             $target: this.$previewPage,
         });
         this.$('.facebook_page_warning').toggleClass('d-none', toggle);
@@ -803,7 +803,7 @@ options.registry.ul = options.Class.extend({
     start: function () {
         var self = this;
         this.$target.on('mouseup', '.o_ul_toggle_self, .o_ul_toggle_next', function () {
-            self.trigger_up('cover_update');
+            self.trigger('cover_update');
         });
         return this._super.apply(this, arguments);
     },
@@ -828,7 +828,7 @@ options.registry.ul = options.Class.extend({
     toggleClass: function () {
         this._super.apply(this, arguments);
 
-        this.trigger_up('animation_stop_demand', {
+        this.trigger('animation_stop_demand', {
             $target: this.$target,
         });
 
@@ -862,7 +862,7 @@ options.registry.collapse = options.Class.extend({
     start: function () {
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
-            self.trigger_up('cover_update');
+            self.trigger('cover_update');
         });
         return this._super.apply(this, arguments);
     },
@@ -1003,7 +1003,7 @@ options.registry.gallery = options.Class.extend({
                 }).appendTo($container);
             }
             self._reset();
-            self.trigger_up('cover_update');
+            self.trigger('cover_update');
         });
         dialog.open();
     },
@@ -1307,7 +1307,7 @@ options.registry.gallery_img = options.Class.extend({
      * @override
      */
     onRemove: function () {
-        this.trigger_up('option_update', {
+        this.trigger('option_update', {
             optionName: 'gallery',
             name: 'image_removed',
             data: {
@@ -1326,8 +1326,8 @@ options.registry.gallery_img = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position: function (previewMode, value) {
-        this.trigger_up('deactivate_snippet');
-        this.trigger_up('option_update', {
+        this.trigger('deactivate_snippet');
+        this.trigger('option_update', {
             optionName: 'gallery',
             name: 'image_index_request',
             data: {

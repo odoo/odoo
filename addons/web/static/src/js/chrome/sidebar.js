@@ -134,7 +134,7 @@ var Sidebar = Widget.extend({
      */
     _onItemActionClicked: function (item) {
         var self = this;
-        this.trigger_up('sidebar_data_asked', {
+        this.trigger('sidebar_data_asked', {
             callback: function (env) {
                 self.env = env;
                 var activeIdsContext = {
@@ -161,7 +161,7 @@ var Sidebar = Widget.extend({
                     result.flags.new_window = true;
                     self.do_action(result, {
                         on_close: function () {
-                            self.trigger_up('reload');
+                            self.trigger('reload');
                         },
                     });
                 });

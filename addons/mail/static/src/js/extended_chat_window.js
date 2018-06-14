@@ -20,7 +20,7 @@ return ChatWindow.extend({
                         self.call('chat_manager', 'searchPartner', request.term, 10).done(response);
                     },
                     select: function (event, ui) {
-                        self.trigger_up('open_dm_session', {partnerID: ui.item.id});
+                        self.trigger('open_dm_session', {partnerID: ui.item.id});
                     },
                 })
                 .focus();
@@ -48,7 +48,7 @@ return ChatWindow.extend({
         event.stopPropagation();
     },
     on_reverse_breadcrumb: function () {
-        this.call('chat_manager', 'getChatBus').trigger_up('discuss_open', {value: false});
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', {value: false});
      },
     on_click_expand: _.debounce(function (event) {
         event.preventDefault();

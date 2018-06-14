@@ -239,7 +239,7 @@ var SnippetOption = Widget.extend({
         // (so record the action)
         if (!previewMode) {
             this._reset();
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
+            this.trigger('request_history_undo_record', {$target: this.$target});
         }
 
         // Search for methods (data-...) (i.e. data-toggle-class) on the
@@ -467,7 +467,7 @@ registry.sizing = SnippetOption.extend({
 
                 if (change) {
                     self._onResize(compass, beginClass, current);
-                    self.trigger_up('cover_update');
+                    self.trigger('cover_update');
                     $handle.addClass('o_active');
                 }
             };
@@ -487,7 +487,7 @@ registry.sizing = SnippetOption.extend({
                     return;
                 }
                 setTimeout(function () {
-                    self.trigger_up('request_history_undo_record', {
+                    self.trigger('request_history_undo_record', {
                         $target: self.$target,
                         event: 'resize_' + XY,
                     });
@@ -1275,7 +1275,7 @@ registry.many2one = SnippetOption.extend({
         this.ID = +$li.data('id');
         this.$target.attr('data-oe-many2one-id', this.ID).data('oe-many2one-id', this.ID);
 
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
+        this.trigger('request_history_undo_record', {$target: this.$target});
         this.$target.trigger('content_changed');
 
         if (self.$target.data('oe-type') === 'contact') {
@@ -1305,7 +1305,7 @@ registry.many2one = SnippetOption.extend({
         }
 
         _.defer(function () {
-            self.trigger_up('deactivate_snippet');
+            self.trigger('deactivate_snippet');
         });
     }
 });

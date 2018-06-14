@@ -125,7 +125,7 @@ var AttachDocument = Widget.extend({
             def.resolve();
         }
         return $.when(def).then(function () {
-            self.trigger_up('reload');
+            self.trigger('reload');
             framework.unblockUI();
         });
     },

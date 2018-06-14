@@ -105,30 +105,30 @@ var DiagramRenderer = AbstractRenderer.extend({
         $div.remove();
 
         CuteNode.double_click_callback = function (cutenode) {
-            self.trigger_up('edit_node', {id: cutenode.id});
+            self.trigger('edit_node', {id: cutenode.id});
         };
         CuteNode.destruction_callback = function (cutenode) {
-            self.trigger_up('remove_node', {id: cutenode.id});
+            self.trigger('remove_node', {id: cutenode.id});
             // return a rejected deferred to prevent the library from removing
             // the node directly,as the diagram will be redrawn once the node is
             // deleted
             return $.Deferred().reject();
         };
         CuteEdge.double_click_callback = function (cuteedge) {
-            self.trigger_up('edit_edge', {id: cuteedge.id});
+            self.trigger('edit_edge', {id: cuteedge.id});
         };
 
         CuteEdge.creation_callback = function (node_start, node_end) {
             return {label: ''};
         };
         CuteEdge.new_edge_callback = function (cuteedge) {
-            self.trigger_up('add_edge', {
+            self.trigger('add_edge', {
                 source_id: cuteedge.get_start().id,
                 dest_id: cuteedge.get_end().id,
             });
         };
         CuteEdge.destruction_callback = function (cuteedge) {
-            self.trigger_up('remove_edge', {id: cuteedge.id});
+            self.trigger('remove_edge', {id: cuteedge.id});
             // return a rejected deferred to prevent the library from removing
             // the edge directly, as the diagram will be redrawn once the edge
             // is deleted

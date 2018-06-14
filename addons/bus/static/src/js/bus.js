@@ -39,7 +39,7 @@ bus.Bus = Widget.extend({
         this.set("window_focus", true);
         this.on("change:window_focus", this, function () {
             if (this.get("window_focus")) {
-                this.trigger_up('window_focus', this.is_master);
+                this.trigger('window_focus', this.is_master);
             }
         });
         $(window).on("focus." + this.bus_id, _.bind(this.focus_change, this, true));

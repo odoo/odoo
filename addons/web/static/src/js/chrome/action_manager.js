@@ -180,7 +180,7 @@ var ActionManager = Widget.extend({
      * @param {Object} state
      */
     do_push_state: function (state) {
-        this.trigger_up('push_state', {state: state});
+        this.trigger('push_state', {state: state});
     },
     /**
      * Returns the action of the last controller in the controllerStack, i.e.
@@ -251,7 +251,7 @@ var ActionManager = Widget.extend({
         });
 
         if (controller.scrollPosition) {
-            this.trigger_up('scrollTo', controller.scrollPosition);
+            this.trigger('scrollTo', controller.scrollPosition);
         }
     },
     /**
@@ -484,7 +484,7 @@ var ActionManager = Widget.extend({
 
         // display some effect (like rainbowman) on appropriate actions
         if (action.effect) {
-            this.trigger_up('show_effect', action.effect);
+            this.trigger('show_effect', action.effect);
         }
 
         return $.when(result);
@@ -640,7 +640,7 @@ var ActionManager = Widget.extend({
      */
     _getScrollPosition: function () {
         var scrollPosition;
-        this.trigger_up('getScrollPosition', {
+        this.trigger('getScrollPosition', {
             callback: function (_scrollPosition) {
                 scrollPosition = _scrollPosition;
             }
@@ -716,7 +716,7 @@ var ActionManager = Widget.extend({
         this._appendController(controller);
 
         // notify the environment of the new action
-        this.trigger_up('current_action_updated', {
+        this.trigger('current_action_updated', {
             action: this.getCurrentAction(),
             controller: controller,
         });
@@ -739,7 +739,7 @@ var ActionManager = Widget.extend({
                 return;
             }
             state = _.extend({}, state, this._getControllerState(controller.jsID));
-            this.trigger_up('push_state', {state: state});
+            this.trigger('push_state', {state: state});
         }
     },
     /**
@@ -753,7 +753,7 @@ var ActionManager = Widget.extend({
      */
     _loadAction: function (actionID, context) {
         var def = $.Deferred();
-        this.trigger_up('load_action', {
+        this.trigger('load_action', {
             actionID: actionID,
             context: context,
             on_success: def.resolve.bind(def),
@@ -864,7 +864,7 @@ var ActionManager = Widget.extend({
             var controller = self.controllers[controllerID];
             return self.actions[controller.actionID].target === 'fullscreen';
         });
-        this.trigger_up('toggle_fullscreen', {fullscreen: fullscreen});
+        this.trigger('toggle_fullscreen', {fullscreen: fullscreen});
     },
 
     //--------------------------------------------------------------------------

@@ -256,7 +256,7 @@ var KanbanController = BasicController.extend({
                     active_model: record.model,
                 });
         }
-        this.trigger_up('execute_action', {
+        this.trigger('execute_action', {
             action_data: attrs,
             env: {
                 context: record.getContext(),
@@ -284,7 +284,7 @@ var KanbanController = BasicController.extend({
             });
         } else {
             // Open the form view
-            this.trigger_up('switch_view', {
+            this.trigger('switch_view', {
                 view_type: 'form',
                 res_id: undefined
             });
@@ -388,7 +388,7 @@ var KanbanController = BasicController.extend({
                 .updateColumn(columnState.id, columnState, {openQuickCreate: true, state: state})
                 .then(function () {
                     if (ev.data.openRecord) {
-                        self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                        self.trigger('open_record', {id: db_id, mode: 'edit'});
                     }
                 });
         };

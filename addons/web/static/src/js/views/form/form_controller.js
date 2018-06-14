@@ -352,7 +352,7 @@ var FormController = BasicController.extend({
     _onDeletedRecords: function () {
         var state = this.model.get(this.handle, {raw: true});
         if (!state.res_ids.length) {
-            this.trigger_up('history_back');
+            this.trigger('history_back');
         } else {
             this._super.apply(this, arguments);
         }

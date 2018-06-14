@@ -33,7 +33,7 @@ var QuickCreateFormRenderer = FormRenderer.extend({
         var direction = ev.data.direction;
         if (direction === 'cancel' || direction === 'next_line') {
             ev.stopPropagation();
-            this.trigger_up(direction === 'cancel' ? 'cancel' : 'add');
+            this.trigger(direction === 'cancel' ? 'cancel' : 'add');
         } else {
             this._super.apply(this, arguments);
         }

@@ -141,7 +141,7 @@ return Widget.extend({
             };
             this.$input.val('');
             if (content) {
-                this.trigger_up('post_message', {
+                this.trigger('post_message', {
                     message: message,
                     channelID: this.channel_id,
                 });
@@ -151,12 +151,12 @@ return Widget.extend({
     on_click_close: function (event) {
         event.stopPropagation();
         event.preventDefault();
-        this.trigger_up("close_chat_session");
+        this.trigger("close_chat_session");
     },
     on_click_fold: function () {
         if (!config.device.isMobile) {
             this.toggle_fold();
-            this.trigger_up("fold_channel", {channelID: this.channel_id, folded: this.folded});
+            this.trigger("fold_channel", {channelID: this.channel_id, folded: this.folded});
         }
     },
     /**
@@ -192,7 +192,7 @@ return Widget.extend({
      */
     _onEscapePressed: function () {
         if (!this.folded) {
-            this.trigger_up("close_chat_session");
+            this.trigger("close_chat_session");
         }
     },
 });

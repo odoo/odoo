@@ -64,7 +64,7 @@ var FormViewBarcodeHandler = AbstractField.extend({
     init: function() {
         this._super.apply(this, arguments);
 
-        this.trigger_up('activeBarcode', {
+        this.trigger('activeBarcode', {
             name: this.name,
             commands: {
                 barcode: '_barcodeAddX2MQuantity',

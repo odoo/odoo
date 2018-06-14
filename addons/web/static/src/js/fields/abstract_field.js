@@ -481,7 +481,7 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
-            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
+            this.trigger('set_dirty', {dataPointID: this.dataPointID});
             return $.Deferred().reject();
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
@@ -490,7 +490,7 @@ var AbstractField = Widget.extend({
         var def = $.Deferred();
         var changes = {};
         changes[this.name] = value;
-        this.trigger_up('field_changed', {
+        this.trigger('field_changed', {
             dataPointID: this.dataPointID,
             changes: changes,
             viewType: this.viewType,
@@ -523,7 +523,7 @@ var AbstractField = Widget.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.TAB:
-                var event = this.trigger_up('navigation_move', {
+                var event = this.trigger('navigation_move', {
                     direction: ev.shiftKey ? 'previous' : 'next',
                 });
                 if (event.is_stopped()) {
@@ -533,26 +533,26 @@ var AbstractField = Widget.extend({
                 break;
             case $.ui.keyCode.ENTER:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'next_line'});
+                this.trigger('navigation_move', {direction: 'next_line'});
                 break;
             case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
+                this.trigger('navigation_move', {direction: 'cancel', originalEvent: ev});
                 break;
             case $.ui.keyCode.UP:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'up'});
+                this.trigger('navigation_move', {direction: 'up'});
                 break;
             case $.ui.keyCode.RIGHT:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'right'});
+                this.trigger('navigation_move', {direction: 'right'});
                 break;
             case $.ui.keyCode.DOWN:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'down'});
+                this.trigger('navigation_move', {direction: 'down'});
                 break;
             case $.ui.keyCode.LEFT:
                 ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'left'});
+                this.trigger('navigation_move', {direction: 'left'});
                 break;
         }
     },

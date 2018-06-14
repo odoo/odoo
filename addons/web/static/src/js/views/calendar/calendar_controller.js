@@ -91,7 +91,7 @@ var CalendarController = AbstractController.extend({
             isMobile: config.device.isMobile,
         }));
         this.$buttons.on('click', 'button.o_calendar_button_new', function () {
-            self.trigger_up('switch_view', {view_type: 'form'});
+            self.trigger('switch_view', {view_type: 'form'});
         });
 
         _.each(['prev', 'today', 'next'], function (action) {

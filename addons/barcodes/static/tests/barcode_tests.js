@@ -344,7 +344,7 @@ QUnit.test('specification of widget barcode_handler', function (assert) {
         init: function () {
             this._super.apply(this, arguments);
 
-            this.trigger_up('activeBarcode', {
+            this.trigger('activeBarcode', {
                 name: 'test',
                 fieldName: 'line_ids',
                 quantity: 'quantity',
@@ -426,7 +426,7 @@ QUnit.test('specification of widget barcode_handler with keypress and notifyChan
         init: function () {
             this._super.apply(this, arguments);
 
-            this.trigger_up('activeBarcode', {
+            this.trigger('activeBarcode', {
                 name: 'test',
                 fieldName: 'line_ids',
                 notifyChange: false,

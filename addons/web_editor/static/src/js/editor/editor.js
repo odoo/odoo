@@ -92,7 +92,7 @@ var EditorMenuBar = Widget.extend({
         this.rte.editable().find('*').off('mousedown mouseup click');
 
         return $.when.apply($, defs).then(function () {
-            self.trigger_up('edit_mode');
+            self.trigger('edit_mode');
         });
     },
     /**

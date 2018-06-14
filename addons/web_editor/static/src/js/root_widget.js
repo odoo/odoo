@@ -150,7 +150,7 @@ var RootWidgetRegistry = Class.extend(mixins.EventDispatcherMixin, {
             selector: selector,
         };
         this._registry.push(registryInfo);
-        this.trigger_up('registry_update', registryInfo);
+        this.trigger('registry_update', registryInfo);
     },
     /**
      * Retrieves all the registry elements.

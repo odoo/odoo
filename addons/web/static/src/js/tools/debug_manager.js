@@ -106,12 +106,12 @@ var DebugManager = Widget.extend({
         if (events && events.length) {
             this._events.push(events);
         }
-        this.trigger_up('update-stats', {rqs: this._events});
+        this.trigger('update-stats', {rqs: this._events});
     },
     requests_clear: function () {
         if (!this._events) { return; }
         this._events = [];
-        this.trigger_up('update-stats', {rqs: this._events});
+        this.trigger('update-stats', {rqs: this._events});
     },
     _update_stats: function (ev) {
         var rqs = ev.data.rqs;

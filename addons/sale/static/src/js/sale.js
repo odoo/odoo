@@ -48,8 +48,8 @@ KanbanRecord.include({
         if (isNaN(value)) {
             this.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
         } else {
-            this.trigger_up('kanban_record_update', {invoiced_target: value});
-            this.trigger_up('reload');
+            this.trigger('kanban_record_update', {invoiced_target: value});
+            this.trigger('reload');
                 // TODO: previous lines can be refactored as follows (in master)
                 // self.trigger_up('kanban_record_update', {invoiced_target: value});
         }

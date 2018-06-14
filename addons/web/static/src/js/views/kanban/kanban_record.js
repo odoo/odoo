@@ -211,7 +211,7 @@ var KanbanRecord = Widget.extend({
      */
     _openRecord: function () {
         var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
-        this.trigger_up('open_record', {
+        this.trigger('open_record', {
             id: this.db_id,
             mode: editMode ? 'edit' : 'readonly',
         });
@@ -473,7 +473,7 @@ var KanbanRecord = Widget.extend({
      * @param {Object} data the new values
      */
     _updateRecord: function (data) {
-        this.trigger_up('kanban_record_update', data);
+        this.trigger('kanban_record_update', data);
     },
 
     //--------------------------------------------------------------------------
@@ -489,7 +489,7 @@ var KanbanRecord = Widget.extend({
         var data = {};
         var color_field = $(event.delegateTarget).data('field') || 'color';
         data[color_field] = $(event.currentTarget).data('color');
-        this.trigger_up('kanban_record_update', data);
+        this.trigger('kanban_record_update', data);
     },
     /**
      * @private
@@ -549,17 +549,17 @@ var KanbanRecord = Widget.extend({
 
         switch (type) {
             case 'edit':
-                this.trigger_up('open_record', {id: this.db_id, mode: 'edit'});
+                this.trigger('open_record', {id: this.db_id, mode: 'edit'});
                 break;
             case 'open':
-                this.trigger_up('open_record', {id: this.db_id});
+                this.trigger('open_record', {id: this.db_id});
                 break;
             case 'delete':
-                this.trigger_up('kanban_record_delete', {id: this.db_id, record: this});
+                this.trigger('kanban_record_delete', {id: this.db_id, record: this});
                 break;
             case 'action':
             case 'object':
-                this.trigger_up('button_clicked', {
+                this.trigger('button_clicked', {
                     attrs: $action.data(),
                     record: this.state,
                 });

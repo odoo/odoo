@@ -82,7 +82,7 @@ var DiagramController = AbstractController.extend({
             changes[state.parent_field] = {
                 id: state.res_id
             };
-            pop.form_view.trigger_up('field_changed', {
+            pop.form_view.trigger('field_changed', {
                 dataPointID: pop.form_view.handle,
                 changes: changes,
             });
@@ -121,7 +121,7 @@ var DiagramController = AbstractController.extend({
             changes[state.connectors.attrs.destination] = {
                 id: event.data.dest_id
             };
-            pop.form_view.trigger_up('field_changed', {
+            pop.form_view.trigger('field_changed', {
                 dataPointID: pop.form_view.handle,
                 changes: changes,
             });

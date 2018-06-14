@@ -88,7 +88,7 @@ var Notification = Widget.extend({
      */
     close: function (silent) {
         var self = this;
-        this.trigger_up('close');
+        this.trigger('close');
         if (!silent && !this._buttonClicked) {
             if (this._closeCallback) {
                 this._closeCallback();

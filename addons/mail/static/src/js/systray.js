@@ -180,7 +180,7 @@ var MessagingMenu = Widget.extend({
                 }
                 this.do_action('mail.mail_channel_action_client_chat', clientChatOptions)
                     .then(function () {
-                        self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
+                        self.trigger('hide_home_menu'); // we cannot 'go back to previous page' otherwise
                         core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID'));
                     });
             }

@@ -338,7 +338,7 @@ var KanbanRenderer = BasicRenderer.extend({
                             ids.push($(u).data('id'));
                         }
                     });
-                    self.trigger_up('resequence_columns', {ids: ids});
+                    self.trigger('resequence_columns', {ids: ids});
                 },
             });
 

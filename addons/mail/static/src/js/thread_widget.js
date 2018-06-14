@@ -421,7 +421,7 @@ var ThreadWidget = Widget.extend({
         if ('channelID' in options) {
             this.trigger('redirect_to_channel', options.channelID);
         } else {
-            this.trigger_up('redirect', {
+            this.trigger('redirect', {
                 resModel:options.model,
                 resID: options.id
             });
@@ -542,7 +542,7 @@ var ThreadWidget = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onChangeModerationCheckbox: function (ev) {
-        this.trigger_up('update_moderation_buttons');
+        this.trigger('update_moderation_buttons');
     },
     /**
      * @private
@@ -615,7 +615,7 @@ var ThreadWidget = Widget.extend({
         var $button = $(ev.currentTarget);
         var messageID = $button.data('message-id');
         var decision = $button.data('decision');
-        this.trigger_up('message_moderation', {
+        this.trigger('message_moderation', {
             messageID: messageID,
             decision: decision,
         });

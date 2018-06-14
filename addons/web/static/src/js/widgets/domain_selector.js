@@ -115,7 +115,7 @@ var DomainNode = Widget.extend({
     _onAddButtonClick: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        this.trigger_up("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
+        this.trigger("add_node_clicked", {newBranch: !!$(e.currentTarget).data("branch"), child: this});
     },
     /**
      * Called when the delete button is clicked -> trigger_up an event to ask
@@ -126,7 +126,7 @@ var DomainNode = Widget.extend({
     _onDeleteButtonClick: function (e) {
         e.preventDefault();
         e.stopPropagation();
-        this.trigger_up("delete_node_clicked", {child: this});
+        this.trigger("delete_node_clicked", {child: this});
     },
     /**
      * Called when a "controlpanel" button is hovered -> add classes to the
@@ -252,7 +252,7 @@ var DomainTree = DomainNode.extend({
         if (i < 0) return false;
 
         this.children.splice(i+1, 0, instantiateNode(this, this.model, domain, this.options));
-        this.trigger_up("domain_changed", {child: this});
+        this.trigger("domain_changed", {child: this});
         return true;
     },
     /**
@@ -290,7 +290,7 @@ var DomainTree = DomainNode.extend({
      */
     _changeOperator: function (operator, silent) {
         this.operator = operator;
-        if (!silent) this.trigger_up("domain_changed", {child: this});
+        if (!silent) this.trigger("domain_changed", {child: this});
     },
     /**
      * @see DomainTree.init
@@ -357,7 +357,7 @@ var DomainTree = DomainNode.extend({
 
         this.children[i].destroy();
         this.children.splice(i, 1);
-        this.trigger_up("domain_changed", {child: this});
+        this.trigger("domain_changed", {child: this});
         return true;
     },
     /**
@@ -584,7 +584,7 @@ var DomainSelector = DomainTree.extend({
             return;
         }
         this._redraw(domain).then((function () {
-            this.trigger_up("domain_changed", {child: this, alreadyRedrawn: true});
+            this.trigger("domain_changed", {child: this, alreadyRedrawn: true});
         }).bind(this));
     },
     /**
@@ -769,7 +769,7 @@ var DomainLeaf = DomainNode.extend({
             }
             this._changeValue(this.value, true);
 
-            if (!silent) this.trigger_up("domain_changed", {child: this});
+            if (!silent) this.trigger("domain_changed", {child: this});
         }).bind(this));
     },
     /**
@@ -798,7 +798,7 @@ var DomainLeaf = DomainNode.extend({
             this._changeValue(this.value, true);
         }
 
-        if (!silent) this.trigger_up("domain_changed", {child: this});
+        if (!silent) this.trigger("domain_changed", {child: this});
     },
     /**
      * Handles a formatted value change in the domain. In that case, the value
@@ -844,7 +844,7 @@ var DomainLeaf = DomainNode.extend({
             }
         }
 
-        if (!silent) this.trigger_up("domain_changed", {child: this});
+        if (!silent) this.trigger("domain_changed", {child: this});
     },
     /**
      * Returns the mapping of "technical operator" to "display operator value"

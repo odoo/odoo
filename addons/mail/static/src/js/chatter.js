@@ -504,7 +504,7 @@ var Chatter = Widget.extend({
         if (this.fields.thread && event.data.thread) {
             fieldNames.push(this.fields.thread.name);
         }
-        this.trigger_up('reload', {
+        this.trigger('reload', {
             fieldNames: fieldNames,
             keepChanges: true,
         });

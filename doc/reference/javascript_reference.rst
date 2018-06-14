@@ -935,7 +935,7 @@ The previous example can be updated to use the custom event system:
 
     // in Counter widget, we need to call the trigger_up method:
 
-    ... this.trigger_up('valuechange', {value: someValue});
+    ... this.trigger('valuechange', {value: someValue});
 
 
 Registries
@@ -997,7 +997,7 @@ There are many ways to communicate between components.
 
     .. code-block:: javascript
 
-        this.trigger_up('open_record', { record: record, id: id});
+        this.trigger('open_record', { record: record, id: id});
 
     This event will be triggered on the widget, then will bubble up and be
     eventually caught by some upstream widget:

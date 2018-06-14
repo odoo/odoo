@@ -979,7 +979,7 @@ var ChatManager =  AbstractService.extend({
                 return _.isString(channel.name) ? channel.name.toLowerCase() : '';
             });
             if (!options.silent) {
-                this.chatBus.trigger_up("new_channel", {channel: channel});
+                this.chatBus.trigger("new_channel", {channel: channel});
             }
             if (channel.is_detached) {
                 this.call('chat_window_manager', 'openChat', channel);
@@ -1040,7 +1040,7 @@ var ChatManager =  AbstractService.extend({
                     }
                     if (channel.hidden) {
                         channel.hidden = false;
-                        self.chatBus.trigger_up('new_channel', {channel: channel});
+                        self.chatBus.trigger('new_channel', {channel: channel});
                     }
                     if (channel.type !== 'static' && !msg.is_author && !msg.is_system_notification) {
                         if (options.increment_unread) {
@@ -1052,14 +1052,14 @@ var ChatManager =  AbstractService.extend({
                                 self.call('chat_window_manager', 'openChat', channel, { passively: true });
                             }
                             var query = {is_displayed: false};
-                            self.chatBus.trigger_up('anyone_listening', {channel: channel, query: query});
+                            self.chatBus.trigger('anyone_listening', {channel: channel, query: query});
                             self._notifyIncomingMessage(msg, query);
                         }
                     }
                 }
             });
             if (!options.silent) {
-                this.chatBus.trigger_up('new_message', {message:msg});
+                this.chatBus.trigger('new_message', {message:msg});
             }
         } else if (options.domain && options.domain !== []) {
             this._addToCache(msg, options.domain);
@@ -1701,7 +1701,7 @@ var ChatManager =  AbstractService.extend({
             if (message) {
                 self._invalidateCaches(message.channel_ids);
                 self._removeMessageFromChannel("channel_inbox", message);
-                self.chatBus.trigger_up('update_message', {message: message, type: data.type});
+                self.chatBus.trigger('update_message', {message: message, type: data.type});
             }
         });
         if (data.channel_ids) {
@@ -1717,7 +1717,7 @@ var ChatManager =  AbstractService.extend({
             });
         }
         this.needactionCounter = Math.max(this.needactionCounter - data.message_ids.length, 0);
-        this.chatBus.trigger_up('update_needaction', this.needactionCounter);
+        this.chatBus.trigger('update_needaction', this.needactionCounter);
     },
     /**
      * @private
@@ -1751,7 +1751,7 @@ var ChatManager =  AbstractService.extend({
                 channel.needaction_counter++;
             }
         });
-        this.chatBus.trigger_up('update_needaction', this.needactionCounter);
+        this.chatBus.trigger('update_needaction', this.needactionCounter);
     },
     /**
      * @private
@@ -1769,7 +1769,7 @@ var ChatManager =  AbstractService.extend({
                     msg = _.str.sprintf(_t('You unpinned your conversation with <b>%s</b>.'), channel.name);
                 }
                 this._removeChannel(channel);
-                this.chatBus.trigger_up("unsubscribe_from_channel", {channelID: data.id});
+                this.chatBus.trigger("unsubscribe_from_channel", {channelID: data.id});
                 web_client.do_notify(_t("Unsubscribed"), msg);
             }
         } else if (data.type === 'toggle_star') {
@@ -1804,7 +1804,7 @@ var ChatManager =  AbstractService.extend({
         var dm = this.getDmFromPartnerID(data.id);
         if (dm) {
             dm.status = data.im_status;
-            this.chatBus.trigger_up('update_dm_presence', {channel: dm});
+            this.chatBus.trigger('update_dm_presence', {channel: dm});
         }
     },
     /**
@@ -1828,7 +1828,7 @@ var ChatManager =  AbstractService.extend({
                     var channelStarred = self.getChannel('channel_starred');
                     channelStarred.cache = _.pick(channelStarred.cache, "[]");
                 }
-                self.chatBus.trigger_up('update_message', {message: message});
+                self.chatBus.trigger('update_message', {message: message});
             }
         });
 
@@ -1838,7 +1838,7 @@ var ChatManager =  AbstractService.extend({
             this.starredCounter -= data.message_ids.length;
         }
 
-        this.chatBus.trigger_up('update_starred', this.starredCounter);
+        this.chatBus.trigger('update_starred', this.starredCounter);
     },
     /**
      * @private
@@ -1933,7 +1933,7 @@ var ChatManager =  AbstractService.extend({
             this.unreadConversationCounter++;
         }
         channel.unread_counter = counter;
-        this.chatBus.trigger_up("update_channel_unread_counter", channel);
+        this.chatBus.trigger("update_channel_unread_counter", channel);
     },
     /**
      * Update the message notification status of message based on update_message

@@ -73,7 +73,7 @@ var AttributeTranslateDialog = weWidgets.Dialog.extend({
                 var value = $input.val();
                 $node.html(value).trigger('change', node);
                 $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
-                self.trigger_up('rte_change', {target: node});
+                self.trigger('rte_change', {target: node});
             });
             $group.append($label).append($input);
         });

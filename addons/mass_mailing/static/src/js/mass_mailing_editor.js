@@ -71,7 +71,7 @@ options.registry.sizing_x = options.Class.extend({
     },
     change_width: function (event, target, target_width, offset, grow) {
         target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
-        this.trigger_up('cover_update');
+        this.trigger('cover_update');
     },
     get_int_width: function (el) {
         return parseInt($(el).css("width"), 10);

@@ -54,7 +54,7 @@ var TranslatableFieldMixin = {
      * @private
      */
     _onTranslate: function () {
-        this.trigger_up('translate', {fieldName: this.name, id: this.dataPointID});
+        this.trigger('translate', {fieldName: this.name, id: this.dataPointID});
     },
 };
 
@@ -1484,7 +1484,7 @@ var AbstractFieldBinary = AbstractField.extend({
         if (filename && filename in this.fields) {
             var changes = {};
             changes[filename] = value;
-            this.trigger_up('field_changed', {
+            this.trigger('field_changed', {
                 dataPointID: this.dataPointID,
                 changes: changes,
                 viewType: this.viewType,
@@ -1530,7 +1530,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
         'click img': function () {
             if (this.mode === "readonly") {
-                this.trigger_up('bounce_edit');
+                this.trigger('bounce_edit');
             }
         },
     }),
@@ -2338,7 +2338,7 @@ var FieldProgressBar = AbstractField.extend({
                 }
                 var changes = {};
                 changes[this.nodeOptions.max_value] = this.max_value;
-                this.trigger_up('field_changed', {
+                this.trigger('field_changed', {
                     dataPointID: this.dataPointID,
                     changes: changes,
                 });

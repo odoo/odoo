@@ -1055,7 +1055,7 @@ var Discuss = AbstractAction.extend({
             // Display Rainbowman when all inbox messages are read through
             // 'MARK ALL READ' or marking last inbox message as read
             if (disabled && type === 'mark_as_read') {
-                this.trigger_up('show_effect', {
+                this.trigger('show_effect', {
                     message: _t("Congratulations, your inbox is empty!"),
                     type: 'rainbow_man',
                 });

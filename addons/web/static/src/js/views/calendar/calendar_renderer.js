@@ -119,7 +119,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                 args: [{'user_id': session.uid,'partner_id': value,}],
             })
             .then(function () {
-                self.trigger_up('changeFilter', {
+                self.trigger('changeFilter', {
                     'fieldName': self.fieldName,
                     'value': value,
                     'active': true,
@@ -132,7 +132,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
      */
     _onFilterActive: function (e) {
         var $input = $(e.currentTarget);
-        this.trigger_up('changeFilter', {
+        this.trigger('changeFilter', {
             'fieldName': this.fieldName,
             'value': $input.closest('.o_calendar_filter_item').data('value'),
             'active': $input.prop('checked'),
@@ -153,7 +153,7 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                         args: [[$filter.data('id')]],
                     })
                     .then(function () {
-                        self.trigger_up('changeFilter', {
+                        self.trigger('changeFilter', {
                             'fieldName': self.fieldName,
                             'id': $filter.data('id'),
                             'active': false,
@@ -310,9 +310,9 @@ return AbstractRenderer.extend({
         this.$calendar.on('touchend', function (event) {
             touchEndX = event.originalEvent.changedTouches[0].pageX;
             if (touchStartX - touchEndX > 100) {
-                self.trigger_up('next');
+                self.trigger('next');
             } else if (touchStartX - touchEndX < -100) {
-                self.trigger_up('prev');
+                self.trigger('prev');
             }
         });
     },
@@ -365,13 +365,13 @@ return AbstractRenderer.extend({
         //Documentation here : http://arshaw.com/fullcalendar/docs/
         var fc_options = $.extend({}, this.state.fc_options, {
             eventDrop: function (event) {
-                self.trigger_up('dropRecord', event);
+                self.trigger('dropRecord', event);
             },
             eventResize: function (event) {
-                self.trigger_up('updateRecord', event);
+                self.trigger('updateRecord', event);
             },
             eventClick: function (event) {
-                self.trigger_up('openEvent', event);
+                self.trigger('openEvent', event);
                 self.$calendar.fullCalendar('unselect');
             },
             select: function (target_date, end_date, event, _js_event, _view) {
@@ -379,7 +379,7 @@ return AbstractRenderer.extend({
                 if (self.state.context.default_name) {
                     data.title = self.state.context.default_name;
                 }
-                self.trigger_up('openCreate', data);
+                self.trigger('openCreate', data);
                 self.$calendar.fullCalendar('unselect');
             },
             eventRender: function (event, element) {
@@ -406,7 +406,7 @@ return AbstractRenderer.extend({
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'
                 var mode = view.name === 'month' ? 'month' : (view.name === 'agendaWeek' ? 'week' : 'day');
-                self.trigger_up('viewUpdated', {
+                self.trigger('viewUpdated', {
                     mode: mode,
                     title: view.title,
                 });
@@ -428,7 +428,7 @@ return AbstractRenderer.extend({
         this.$small_calendar = this.$(".o_calendar_mini");
         this.$small_calendar.datepicker({
             'onSelect': function (datum, obj) {
-                self.trigger_up('changeDate', {
+                self.trigger('changeDate', {
                     date: moment(new Date(+obj.currentYear , +obj.currentMonth, +obj.currentDay))
                 });
             },
@@ -552,7 +552,7 @@ return AbstractRenderer.extend({
      * @private
      */
     _onToggleSidebar: function () {
-        this.trigger_up('toggleFullWidth');
+        this.trigger('toggleFullWidth');
     },
 });
 

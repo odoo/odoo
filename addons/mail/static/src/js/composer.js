@@ -445,7 +445,7 @@ var BasicComposer = Widget.extend({
         this.$attachments_list = this.$('.o_composer_attachments_list');
         this.$input = this.$('.o_composer_input textarea');
         this.$input.focus(function () {
-            self.trigger_up('input_focused');
+            self.trigger('input_focused');
         });
         this.$input.val(this.options.default_body);
         dom.autoresize(this.$input, {parent: this, min_height: this.options.input_min_height});
@@ -493,7 +493,7 @@ var BasicComposer = Widget.extend({
         clearTimeout(this.canned_timeout);
         var self = this;
         this.preprocess_message().then(function (message) {
-            self.trigger_up('post_message', {message: message});
+            self.trigger('post_message', {message: message});
             self.clear_composer_on_send();
             self.$input.focus();
         });
@@ -578,7 +578,7 @@ var BasicComposer = Widget.extend({
                 } else if (this.ignoreEscape) {
                     this.ignoreEscape = false;
                 } else {
-                    this.trigger_up("escape_pressed");
+                    this.trigger("escape_pressed");
                 }
                 break;
             // ENTER, UP, DOWN, TAB: check if navigation in mention propositions

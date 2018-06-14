@@ -45,7 +45,7 @@ var M2ODialog = Dialog.extend({
                 classes: 'btn-primary',
                 click: function () {
                     if (this.$("input").val() !== ''){
-                        this.trigger_up('quick_create', { value: this.$('input').val() });
+                        this.trigger('quick_create', { value: this.$('input').val() });
                         this.close(true);
                     } else {
                         this.$("input").focus();
@@ -56,7 +56,7 @@ var M2ODialog = Dialog.extend({
                 classes: 'btn-primary',
                 close: true,
                 click: function () {
-                    this.trigger_up('search_create_popup', {
+                    this.trigger('search_create_popup', {
                         view_type: 'form',
                         value: this.$('input').val(),
                     });
@@ -84,7 +84,7 @@ var M2ODialog = Dialog.extend({
      */
     destroy: function () {
         if (!this.isSet) {
-            this.trigger_up('closed_unset');
+            this.trigger('closed_unset');
         }
         this._super.apply(this, arguments);
     },
@@ -601,7 +601,7 @@ var FieldMany2One = AbstractField.extend({
                     context: this.record.getContext(this.recordParams),
                 })
                 .then(function (action) {
-                    self.trigger_up('do_action', {action: action});
+                    self.trigger('do_action', {action: action});
                 });
         }
     },
@@ -643,7 +643,7 @@ var FieldMany2One = AbstractField.extend({
                     on_saved: function (record, changed) {
                         if (changed) {
                             self._setValue(self.value.data, {forceChange: true});
-                            self.trigger_up('reload', {db_id: self.value.id});
+                            self.trigger('reload', {db_id: self.value.id});
                         }
                     },
                 }).open();
@@ -1048,7 +1048,7 @@ var FieldX2Many = AbstractField.extend({
             },
         });
         this.pager.on('pager_changed', this, function (ev) {
-            self.trigger_up('load', {
+            self.trigger('load', {
                 id: self.value.id,
                 limit: ev.data.limit,
                 offset: ev.data.current_min - 1,
@@ -1104,7 +1104,7 @@ var FieldX2Many = AbstractField.extend({
         var def = $.Deferred();
         var fieldNames = this.renderer.canBeSaved(recordID);
         if (fieldNames.length) {
-            this.trigger_up('discard_changes', {
+            this.trigger('discard_changes', {
                 recordID: recordID,
                 onSuccess: def.resolve.bind(def),
                 onFailure: def.reject.bind(def),
@@ -1190,7 +1190,7 @@ var FieldX2Many = AbstractField.extend({
     _onDiscardChanges: function (ev) {
         if (ev.target !== this) {
             ev.stopPropagation();
-            this.trigger_up('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
+            this.trigger('discard_changes', _.extend({}, ev.data, {fieldName: this.name}));
         }
     },
     /**
@@ -1202,7 +1202,7 @@ var FieldX2Many = AbstractField.extend({
      */
     _onEditLine: function (ev) {
         ev.stopPropagation();
-        this.trigger_up('edited_list', { id: this.value.id });
+        this.trigger('edited_list', { id: this.value.id });
         var editedRecord = this.value.data[ev.data.index];
         this.renderer.setRowMode(editedRecord.id, 'edit')
             .done(ev.data.onSuccess);
@@ -1301,7 +1301,7 @@ var FieldX2Many = AbstractField.extend({
         var self = this;
         ev.stopPropagation();
         this.renderer.commitChanges(ev.data.recordID).then(function () {
-            self.trigger_up('mutexify', {
+            self.trigger('mutexify', {
                 action: function () {
                     return self._saveLine(ev.data.recordID)
                         .done(ev.data.onSuccess)
@@ -1319,7 +1319,7 @@ var FieldX2Many = AbstractField.extend({
     _onResequence: function (event) {
         event.stopPropagation();
         var self = this;
-        this.trigger_up('edited_list', { id: this.value.id });
+        this.trigger('edited_list', { id: this.value.id });
         var rowIDs = event.data.rowIDs.slice();
         var rowID = rowIDs.pop();
         var defs = _.map(rowIDs, function (rowID, index) {
@@ -1340,7 +1340,7 @@ var FieldX2Many = AbstractField.extend({
                 id: rowID,
                 data: _.object([event.data.handleField], [event.data.offset + rowIDs.length]),
             }).always(function () {
-                self.trigger_up('toggle_column_order', {
+                self.trigger('toggle_column_order', {
                     id: self.value.id,
                     name: event.data.handleField,
                 });
@@ -1365,7 +1365,7 @@ var FieldX2Many = AbstractField.extend({
     _onActiveNextWidget: function (e) {
         e.stopPropagation();
         this.renderer.unselectRow();
-        this.trigger_up('navigation_move',{direction:'next'});
+        this.trigger('navigation_move',{direction:'next'});
     },
 });
 
@@ -1445,7 +1445,7 @@ var FieldOne2Many = FieldX2Many.extend({
             this.recordParams,
             { additionalContext: params.context }
         ));
-        this.trigger_up('open_one2many_record', _.extend(params, {
+        this.trigger('open_one2many_record', _.extend(params, {
             domain: this.record.getDomain(this.recordParams),
             context: context,
             field: this.field,
@@ -1492,7 +1492,7 @@ var FieldOne2Many = FieldX2Many.extend({
                 }
             } else if (!this.creatingRecord) {
                 this.creatingRecord = true;
-                this.trigger_up('edited_list', { id: this.value.id });
+                this.trigger('edited_list', { id: this.value.id });
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable || data.forceEditable,
@@ -1619,7 +1619,7 @@ var FieldMany2Many = FieldX2Many.extend({
             fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: function () {
                 self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
-                self.trigger_up('reload', {db_id: ev.data.id});
+                self.trigger('reload', {db_id: ev.data.id});
             },
             on_remove: function () {
                 self._setValue({operation: 'FORGET', ids: [ev.data.id]});
@@ -2095,7 +2095,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
         changes[this.colorField] = color;
 
-        this.trigger_up('field_changed', {
+        this.trigger('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
             changes: changes,
             force_save: true,

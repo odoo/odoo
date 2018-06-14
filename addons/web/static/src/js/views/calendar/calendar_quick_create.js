@@ -51,7 +51,7 @@ var QuickCreate = Dialog.extend({
                     dataCalendar.disableQuickCreate = true;
                     dataCalendar.title = self.$('input').val().trim();
                     dataCalendar.on_save = self.destroy.bind(self);
-                    self.trigger_up('openCreate', dataCalendar);
+                    self.trigger('openCreate', dataCalendar);
                 }},
                 {text: _t("Cancel"), close: true},
             ] : [],
@@ -78,7 +78,7 @@ var QuickCreate = Dialog.extend({
         dataCalendar = $.extend({}, this.dataTemplate, dataCalendar);
         var val = this.$('input').val().trim();
         dataCalendar.title = val;
-        return (val)? this.trigger_up('quickCreate', {data: dataCalendar, options: this.options}) : false;
+        return (val)? this.trigger('quickCreate', {data: dataCalendar, options: this.options}) : false;
     },
 
     //--------------------------------------------------------------------------

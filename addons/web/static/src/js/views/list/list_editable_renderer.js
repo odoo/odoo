@@ -414,7 +414,7 @@ ListRenderer.include({
         toggleWidgets(true);
 
         var def = $.Deferred();
-        this.trigger_up('save_line', {
+        this.trigger('save_line', {
             recordID: record.id,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
@@ -502,7 +502,7 @@ ListRenderer.include({
                 self._selectCell(self.currentRow + 1, 0);
             } else {
                 self.unselectRow().then(function () {
-                    self.trigger_up('add_record', {
+                    self.trigger('add_record', {
                         onFail: self._selectCell.bind(self, 0, 0, {}),
                     });
                 });
@@ -667,7 +667,7 @@ ListRenderer.include({
             rowIDs.reverse();
         }
         this.unselectRow().then(function () {
-            self.trigger_up('resequence', {
+            self.trigger('resequence', {
                 rowIDs: rowIDs,
                 offset: _.min(sequences),
                 handleField: self.handleField,
@@ -749,7 +749,7 @@ ListRenderer.include({
             }
             // Notify the controller we want to make a record editable
             var def = $.Deferred();
-            self.trigger_up('edit_line', {
+            self.trigger('edit_line', {
                 index: rowIndex,
                 onSuccess: def.resolve.bind(def),
             });
@@ -778,7 +778,8 @@ ListRenderer.include({
         // but we do want to unselect current row
         var self = this;
         this.unselectRow().then(function () {
-            self.trigger_up('add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
+            self.trigger('add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
+
         });
     },
     /**
@@ -889,7 +890,7 @@ ListRenderer.include({
                             this._moveToNextLine();
                         }
                         else {
-                            this.trigger_up('activate_next_widget');
+                            this.trigger('activate_next_widget');
                         }
                     }
                 } else {
@@ -909,7 +910,7 @@ ListRenderer.include({
                 // prevent from closing the potential dialog containing this list
                 // also auto-focus the 1st control, if any.
                 ev.data.originalEvent.stopPropagation();
-                this.trigger_up('discard_changes', {
+                this.trigger('discard_changes', {
                     recordID: ev.target.dataPointID,
                 });
                 this.$('.o_field_x2many_list_row_add a:first').focus();
@@ -927,7 +928,7 @@ ListRenderer.include({
         var $row = $(event.target).closest('tr');
         var id = $row.data('id');
         if ($row.hasClass('o_selected_row')) {
-            this.trigger_up('list_record_remove', {id: id});
+            this.trigger('list_record_remove', {id: id});
         } else {
             var self = this;
             this.unselectRow().then(function () {

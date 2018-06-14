@@ -299,7 +299,7 @@ var BoardRenderer = FormRenderer.extend({
         // this function has a side effect.  This is ok because we assume that
         // once we have a '<board>' tag, we are in a special dashboard mode.
         this.$el.addClass('o_dashboard');
-        this.trigger_up('enable_dashboard');
+        this.trigger('enable_dashboard');
 
         var hasAction = _.detect(node.children, function (column) {
             return _.detect(column.children,function (element){
@@ -350,7 +350,7 @@ var BoardRenderer = FormRenderer.extend({
             handle: '.oe_header',
             scroll: false
         }).bind('sortstop', function () {
-            self.trigger_up('save_dashboard');
+            self.trigger('save_dashboard');
         });
 
         return $html;
@@ -365,7 +365,7 @@ var BoardRenderer = FormRenderer.extend({
      */
     _onChangeLayout: function () {
         var currentLayout = this.$('.oe_dashboard').attr('data-layout');
-        this.trigger_up('change_layout', {currentLayout: currentLayout});
+        this.trigger('change_layout', {currentLayout: currentLayout});
     },
     /**
      * @private
@@ -377,7 +377,7 @@ var BoardRenderer = FormRenderer.extend({
         Dialog.confirm(this, (_t("Are you sure you want to remove this item?")), {
             confirm_callback: function () {
                 $container.remove();
-                self.trigger_up('save_dashboard');
+                self.trigger('save_dashboard');
             },
         });
     },
@@ -398,7 +398,7 @@ var BoardRenderer = FormRenderer.extend({
         }
         $e.toggleClass('oe_minimize oe_maximize');
         $action.find('.oe_content').toggle();
-        this.trigger_up('save_dashboard');
+        this.trigger('save_dashboard');
     },
     /**
      * Let FormController know which form view it should display based on the

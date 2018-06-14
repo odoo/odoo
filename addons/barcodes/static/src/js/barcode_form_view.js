@@ -433,7 +433,7 @@ FormRenderer.include({
             name = name + '_' + node.attrs.string;
         }
 
-        this.trigger_up('activeBarcode', {
+        this.trigger('activeBarcode', {
             name: name,
             commands: commands
         });

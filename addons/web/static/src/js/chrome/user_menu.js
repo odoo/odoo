@@ -61,7 +61,7 @@ var UserMenu = Widget.extend({
      */
     _onMenuAccount: function () {
         var self = this;
-        this.trigger_up('clear_uncommitted_changes', {
+        this.trigger('clear_uncommitted_changes', {
             callback: function () {
                 self._rpc({route: '/web/session/account'})
                     .then(function (url) {
@@ -84,7 +84,7 @@ var UserMenu = Widget.extend({
      * @private
      */
     _onMenuLogout: function () {
-        this.trigger_up('clear_uncommitted_changes', {
+        this.trigger('clear_uncommitted_changes', {
             callback: this.do_action.bind(this, 'logout'),
         });
     },
@@ -94,7 +94,7 @@ var UserMenu = Widget.extend({
     _onMenuSettings: function () {
         var self = this;
         var session = this.getSession();
-        this.trigger_up('clear_uncommitted_changes', {
+        this.trigger('clear_uncommitted_changes', {
             callback: function () {
                 self._rpc({
                         route: "/web/action/load",

@@ -71,7 +71,7 @@ var ColumnQuickCreate = Widget.extend({
         this._update();
         if (!this.folded) {
             this.$input.focus();
-            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
+            this.trigger('scrollTo', {selector: '.o_column_quick_create'});
         }
     },
 
@@ -91,7 +91,7 @@ var ColumnQuickCreate = Widget.extend({
             return;
         }
         this.$input.val('');
-        this.trigger_up('quick_create_add_column', {value: value});
+        this.trigger('quick_create_add_column', {value: value});
         this.$input.focus();
     },
     /**
@@ -114,7 +114,7 @@ var ColumnQuickCreate = Widget.extend({
     _update: function () {
         this.$quickCreateFolded.toggle(this.folded);
         this.$quickCreateUnfolded.toggle(!this.folded);
-        this.trigger_up('quick_create_column_updated');
+        this.trigger('quick_create_column_updated');
     },
 
     //--------------------------------------------------------------------------

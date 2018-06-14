@@ -325,15 +325,20 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
             self.off(events, dest, what);
         });
     },
-    trigger: function () {
-        this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
-        return this;
-    },
-    trigger_up: function (name, info) {
-        var event = new OdooEvent(this, name, info);
+    // trigger: function () {
+    //     this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
+    //     return this;
+    // },
+    trigger: function (name, info) {
+        if (this.getParent()) {
+            var event = new OdooEvent(this, name, info);
+            this._trigger_up(event);
+            return event;
+        } else {
+            this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
+            return this;
+        }
         //console.info('event: ', name, info);
-        this._trigger_up(event);
-        return event;
     },
     _trigger_up: function (event) {
         var parent;

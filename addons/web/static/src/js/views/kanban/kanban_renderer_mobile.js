@@ -138,7 +138,7 @@ KanbanRenderer.include({
         var def = $.Deferred();
         this.activeColumnIndex = moveToIndex;
         var column = this.widgets[this.activeColumnIndex];
-        this.trigger_up('kanban_load_records', {
+        this.trigger('kanban_load_records', {
             columnID: column.db_id,
             onSuccess: function () {
                 // update the columns and tabs positions (optionally with an animation)

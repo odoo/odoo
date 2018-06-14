@@ -262,7 +262,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      *   world
      */
     _pushState: function (state) {
-        this.trigger_up('push_state', {
+        this.trigger('push_state', {
             controllerID: this.controllerID,
             state: state || {},
         });
@@ -370,7 +370,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         var $switchButtonsFiltered = config.device.isMobile ? $switchButtons.find('button') : $switchButtons.filter('button');
         $switchButtonsFiltered.click(_.debounce(function (event) {
             var viewType = $(event.target).data('view-type');
-            self.trigger_up('switch_view', {view_type: viewType});
+            self.trigger('switch_view', {view_type: viewType});
         }, 200, true));
 
         // set active view's icon as view switcher button's icon in mobile

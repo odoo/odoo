@@ -109,7 +109,7 @@ var KanbanColumnProgressBar = Widget.extend({
         var self = this;
 
         // Update column display according to active filter
-        this.trigger_up('tweak_column', {
+        this.trigger('tweak_column', {
             callback: function ($el) {
                 $el.removeClass('o_kanban_group_show');
                 _.each(self.colors, function (val, key) {
@@ -120,7 +120,7 @@ var KanbanColumnProgressBar = Widget.extend({
                 }
             },
         });
-        this.trigger_up('tweak_column_records', {
+        this.trigger('tweak_column_records', {
             callback: function ($el, recordData) {
                 var categoryValue = recordData[self.fieldName];
                 _.each(self.colors, function (val, key) {
@@ -230,7 +230,7 @@ var KanbanColumnProgressBar = Widget.extend({
      * @private
      */
     _notifyState: function () {
-        this.trigger_up('set_progress_bar_state', {
+        this.trigger('set_progress_bar_state', {
             columnID: this.columnID,
             values: {
                 groupCount: this.groupCount,

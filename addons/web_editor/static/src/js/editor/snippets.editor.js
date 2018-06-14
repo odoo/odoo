@@ -311,6 +311,62 @@ var SnippetEditor = Widget.extend({
 
         return $.when.apply($, defs);
     },
+<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
+=======
+    /**
+     * Removes the associated snippet from the DOM and destroys the associated
+     * editor (itself).
+     *
+     * @private
+     */
+    _removeSnippet: function () {
+        this.toggleFocus(false);
+
+        this.trigger('call_for_each_child_snippet', {
+            $snippet: this.$target,
+            callback: function (editor, $snippet) {
+                for (var i in editor.styles) {
+                    editor.styles[i].onRemove();
+                }
+            },
+        });
+
+        var $parent = this.$target.parent();
+        this.$target.find('*').andSelf().tooltip('destroy');
+        this.$target.remove();
+        this.$el.remove();
+
+        var node = $parent[0];
+        if (node && node.firstChild) {
+            $.summernote.core.dom.removeSpace(node, node.firstChild, 0, node.lastChild, 1);
+            if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
+                node.removeChild(node.firstChild);
+            }
+        }
+
+        if ($parent.closest(':data("snippet-editor")').length) {
+            while (!$parent.data('snippet-editor')) {
+                var $nextParent = $parent.parent();
+                if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                    $parent.remove();
+                }
+                $parent = $nextParent;
+            }
+            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                _.defer(function () {
+                    $parent.data('snippet-editor')._removeSnippet();
+                });
+            }
+        }
+
+        // clean editor if they are image or table in deleted content
+        $('.note-control-selection').hide();
+        $('.o_table_handler').remove();
+
+        this.trigger('snippet_removed');
+        this.destroy();
+    },
+>>>>>>> [IMP] generic: improvments trigger_up to trigger
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -326,10 +382,10 @@ var SnippetEditor = Widget.extend({
         ev.preventDefault();
         var $clone = this.$target.clone(false);
 
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
+        this.trigger('request_history_undo_record', {$target: this.$target});
 
         this.$target.after($clone);
-        this.trigger_up('call_for_each_child_snippet', {
+        this.trigger('call_for_each_child_snippet', {
             $snippet: $clone,
             callback: function (editor, $snippet) {
                 for (var i in editor.styles) {
@@ -376,8 +432,8 @@ var SnippetEditor = Widget.extend({
             else $selectorChildren = $selectorChildren.add(self.selectorChildren[i].all());
         }
 
-        this.trigger_up('go_to_parent', {$snippet: this.$target});
-        this.trigger_up('activate_insertion_zones', {
+        this.trigger('go_to_parent', {$snippet: this.$target});
+        this.trigger('activate_insertion_zones', {
             $selectorSiblings: $selectorSiblings,
             $selectorChildren: $selectorChildren,
         });
@@ -425,7 +481,7 @@ var SnippetEditor = Widget.extend({
         $clone.remove();
 
         if (this.dropped) {
-            this.trigger_up('request_history_undo_record', {$target: this.$target});
+            this.trigger('request_history_undo_record', {$target: this.$target});
 
             if (prev) {
                 this.$target.insertAfter(prev);
@@ -440,7 +496,7 @@ var SnippetEditor = Widget.extend({
             }
         }
 
-        self.trigger_up('drag_and_drop_stop', {
+        self.trigger('drag_and_drop_stop', {
             $snippet: self.$target,
         });
     },
@@ -482,7 +538,7 @@ var SnippetEditor = Widget.extend({
      */
     _onParentButtonClick: function (ev) {
         ev.preventDefault();
-        this.trigger_up('go_to_parent', {
+        this.trigger('go_to_parent', {
             $snippet: this.$target,
         });
     },
@@ -494,8 +550,13 @@ var SnippetEditor = Widget.extend({
      */
     _onRemoveClick: function (ev) {
         ev.preventDefault();
+<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
         this.trigger_up('request_history_undo_record', {$target: this.$target});
         this.removeSnippet();
+=======
+        this.trigger('request_history_undo_record', {$target: this.$target});
+        this._removeSnippet();
+>>>>>>> [IMP] generic: improvments trigger_up to trigger
     },
 });
 
@@ -634,8 +695,15 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: function () {
+<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
         this.trigger_up('ready_to_clean_for_save');
         this._destroyEditors();
+=======
+        this.trigger('ready_to_clean_for_save');
+        _.each(this.snippetEditors, function (snippetEditor) {
+            snippetEditor.cleanForSave();
+        });
+>>>>>>> [IMP] generic: improvments trigger_up to trigger
 
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
@@ -1260,16 +1328,16 @@ var SnippetsMenu = Widget.extend({
 
                     if (prev) {
                         $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $(prev)});
+                        self.trigger('request_history_undo_record', {$target: $(prev)});
                         $toInsert.insertAfter(prev);
                     } else if (next) {
                         $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $(next)});
+                        self.trigger('request_history_undo_record', {$target: $(next)});
                         $toInsert.insertBefore(next);
                     } else {
                         var $parent = $toInsert.parent();
                         $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $parent});
+                        self.trigger('request_history_undo_record', {$target: $parent});
                         $parent.prepend($toInsert);
                     }
 
@@ -1278,7 +1346,7 @@ var SnippetsMenu = Widget.extend({
                     var $target = $toInsert;
 
                     _.defer(function () {
-                        self.trigger_up('snippet_dropped', {$target: $target});
+                        self.trigger('snippet_dropped', {$target: $target});
                         self._disableUndroppableSnippets();
 
                         self._callForEachChildSnippet($target, function (editor, $snippet) {

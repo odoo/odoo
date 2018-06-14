@@ -137,7 +137,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 method: 'assign_outstanding_credit',
                 args: [JSON.parse(this.value).invoice_id, id],
             }).then(function () {
-                self.trigger_up('reload');
+                self.trigger('reload');
             });
     },
     /**
@@ -154,7 +154,7 @@ var ShowPaymentLineWidget = AbstractField.extend({
                 method: 'remove_move_reconcile',
                 args: [paymentId, {'invoice_id': this.res_id}]
             }).then(function () {
-                self.trigger_up('reload');
+                self.trigger('reload');
             });
         }
     },

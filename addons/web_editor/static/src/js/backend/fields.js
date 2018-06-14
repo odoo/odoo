@@ -206,7 +206,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             return;
         }
         this.attachments = this.attachments.concat(attachments);
-        this.trigger_up('field_changed', {
+        this.trigger('field_changed', {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
                 operation: 'ADD_M2M',

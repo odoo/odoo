@@ -341,7 +341,7 @@ var ListRenderer = BasicRenderer.extend({
             // TODO this should be moved to a handler
             $button.on("click", function (e) {
                 e.stopPropagation();
-                self.trigger_up('button_clicked', {
+                self.trigger('button_clicked', {
                     attrs: node.attrs,
                     record: record,
                 });
@@ -402,7 +402,7 @@ var ListRenderer = BasicRenderer.extend({
         pager.on('pager_changed', this, function (ev) {
             var self = this;
             pager.disable();
-            this.trigger_up('load', {
+            this.trigger('load', {
                 id: group.id,
                 limit: ev.data.limit,
                 offset: ev.data.current_min - 1,
@@ -727,7 +727,7 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = _.map($selectedRows, function (row) {
             return $(row).data('id');
         });
-        this.trigger_up('selection_changed', { selection: this.selection });
+        this.trigger('selection_changed', { selection: this.selection });
         this._updateFooter();
     },
 
@@ -757,7 +757,7 @@ var ListRenderer = BasicRenderer.extend({
                     ev.preventDefault();
                     var id = $(ev.currentTarget).data('id');
                     if (id) {
-                        this.trigger_up('open_record', { id: id, target: ev.target });
+                        this.trigger('open_record', { id: id, target: ev.target });
                     }
                     break;
             }
@@ -773,7 +773,7 @@ var ListRenderer = BasicRenderer.extend({
         if (!$(ev.target).prop('special_click')) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
-                this.trigger_up('open_record', { id: id, target: ev.target });
+                this.trigger('open_record', { id: id, target: ev.target });
             }
         }
     },
@@ -794,7 +794,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _onSortColumn: function (ev) {
         var name = $(ev.currentTarget).data('name');
-        this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
+        this.trigger('toggle_column_order', { id: this.state.id, name: name });vments trigger_up to trigger
     },
     /**
      * @private
@@ -803,7 +803,7 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleGroup: function (ev) {
         var group = $(ev.currentTarget).data('group');
         if (group.count) {
-            this.trigger_up('toggle_group', { group: group });
+            this.trigger('toggle_group', { group: group });
         }
     },
     /**

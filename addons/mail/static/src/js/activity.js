@@ -522,7 +522,7 @@ var Activity = BasicActivity.extend({
         if (id) {
             ev.preventDefault();
             var model = $(ev.currentTarget).data('oe-model');
-            this.trigger_up('redirect', {
+            this.trigger('redirect', {
                 res_id: id,
                 res_model: model,
             });
