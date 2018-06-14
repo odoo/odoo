@@ -32,7 +32,7 @@
             groups= "sales_team.group_sale_manager,account.group_account_manager,account.group_account_user"/>
 
         <menuitem id="sales_team_config"
-            name="Sales Channels"
+            name="Sales Teams"
             parent="sale.menu_sale_config"
             action="sales_team.sales_team_config_action"
             sequence="2"/>
@@ -50,7 +50,7 @@
             sequence="1"/>
 
         <menuitem id="report_sales_team"
-            name="Sales Channel Dashboard"
+            name="Sales Teams"
             parent="sale_order_menu"
             action="sales_team.crm_team_salesteams_act"
             sequence="3"/>
@@ -571,7 +571,7 @@
                     <field name="name" string="Sales Order" filter_domain="['|','|',('name','ilike',self),('client_order_ref','ilike',self),('partner_id','child_of',self)]"/>
                     <field name="partner_id" operator="child_of"/>
                     <field name="user_id"/>
-                    <field name="team_id" string="Sales Channel"/>
+                    <field name="team_id" string="Sales Team"/>
                     <field name="analytic_account_id"/>
                     <!-- We only allow to search on the following sale order line fields (product, name) because the other fields, such as price, quantity, ...
                         will not be searched as often, and if they need to be searched it's usually in the context of products
@@ -878,7 +878,7 @@
                     <field name="team_id"/>
                 </xpath>
                 <xpath expr="//group/filter[@name='status']" position="after">
-                    <filter string="Sales Channel" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
+                    <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
             </field>
         </record>
