@@ -3525,9 +3525,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if not key.startswith('default_')
                 })
                 for field in sorted(other_fields, key=attrgetter('_sequence')):
-                    for other, data in pycompat.izip(others, data_list):
-                        if field.name in data['stored']:
-                            field.write(other, data['stored'][field.name], create=True)
+                    field.create([
+                        (other, data['stored'][field.name])
+                        for other, data in pycompat.izip(others, data_list)
+                        if field.name in data['stored']
+                    ])
 
                 # mark fields to recompute
                 records.modified([field.name for field in other_fields])

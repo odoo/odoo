@@ -932,12 +932,20 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
         return NotImplementedError("Method read() undefined on %s" % self)
 
-    def write(self, records, value, create=False):
-        """ Write the value of ``self`` on ``records``. The ``value`` must be in
-        the format of method :meth:`BaseModel.write`.
+    def create(self, record_values):
+        """ Write the value of ``self`` on the given records, which have just
+        been created.
 
-        :param create: whether ``records`` have just been created (to enable
-            some optimizations)
+        :param record_values: a list of pairs ``(record, value)``, where
+            ``value`` is in the format of method :meth:`BaseModel.write`
+        """
+        for record, value in record_values:
+            self.write(record, value)
+
+    def write(self, records, value):
+        """ Write the value of ``self`` on ``records``.
+
+        :param value: a value in the format of method :meth:`BaseModel.write`
         """
         return NotImplementedError("Method write() undefined on %s" % self)
 
@@ -1710,17 +1718,33 @@ class Binary(Field):
         for record in records:
             cache.set(record, self, data.get(record.id, False))
 
-    def write(self, records, value, create=False):
-        # retrieve the attachments that stores the value, and adapt them
+    def create(self, record_values):
         assert self.attachment
-        if create:
-            atts = records.env['ir.attachment'].sudo()
-        else:
-            atts = records.env['ir.attachment'].sudo().search([
-                ('res_model', '=', records._name),
-                ('res_field', '=', self.name),
-                ('res_id', 'in', records.ids),
+        if not record_values:
+            return
+        # create the attachments that store the values
+        env = record_values[0][0].env
+        with env.norecompute():
+            env['ir.attachment'].sudo().create([{
+                    'name': self.name,
+                    'res_model': self.model_name,
+                    'res_field': self.name,
+                    'res_id': record.id,
+                    'type': 'binary',
+                    'datas': value,
+                }
+                for record, value in record_values
+                if value
             ])
+
+    def write(self, records, value):
+        assert self.attachment
+        # retrieve the attachments that store the values, and adapt them
+        atts = records.env['ir.attachment'].sudo().search([
+            ('res_model', '=', self.model_name),
+            ('res_field', '=', self.name),
+            ('res_id', 'in', records.ids),
+        ])
         with records.env.norecompute():
             if value:
                 # update the existing attachments
@@ -2283,10 +2307,71 @@ class One2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(group[record.id]))
 
-    def write(self, records, value, create=False):
+    def create(self, record_values):
+        if not record_values:
+            return
+
+        model = record_values[0][0]
+        comodel = model.env[self.comodel_name].with_context(**self.context)
+        inverse = self.inverse_name
+        vals_list = []                  # vals for lines to create in batch
+
+        def flush():
+            if vals_list:
+                comodel.create(vals_list)
+                vals_list.clear()
+
+        def drop(lines):
+            if comodel._fields[inverse].ondelete == 'cascade':
+                lines.unlink()
+            else:
+                lines.write({inverse: False})
+
+        with model.env.norecompute():
+            for record, value in record_values:
+                for act in (value or []):
+                    if act[0] == 0:
+                        vals_list.append(dict(act[2], **{inverse: record.id}))
+                    elif act[0] == 1:
+                        comodel.browse(act[1]).write(act[2])
+                    elif act[0] == 2:
+                        comodel.browse(act[1]).unlink()
+                    elif act[0] == 3:
+                        drop(comodel.browse(act[1]))
+                    elif act[0] == 4:
+                        line = comodel.browse(act[1])
+                        line_sudo = line.sudo().with_context(prefetch_fields=False)
+                        if int(line_sudo[inverse]) != record.id:
+                            line.write({inverse: record.id})
+                    elif act[0] == 5:
+                        flush()
+                        domain = self.domain(record) if callable(self.domain) else self.domain
+                        domain = domain + [(inverse, '=', record.id)]
+                        drop(comodel.search(domain))
+                    elif act[0] == 6:
+                        flush()
+                        comodel.browse(act[2]).write({inverse: record.id})
+                        domain = self.domain(record) if callable(self.domain) else self.domain
+                        domain = domain + [(inverse, '=', record.id), ('id', 'not in', act[2] or [0])]
+                        drop(comodel.search(domain))
+
+            flush()
+
+    def write(self, records, value):
         comodel = records.env[self.comodel_name].with_context(**self.context)
         inverse = self.inverse_name
         vals_list = []                  # vals for lines to create in batch
+
+        def flush():
+            if vals_list:
+                comodel.create(vals_list)
+                vals_list.clear()
+
+        def drop(lines):
+            if comodel._fields[inverse].ondelete == 'cascade':
+                lines.unlink()
+            else:
+                lines.write({inverse: False})
 
         with records.env.norecompute():
             for act in (value or []):
@@ -2298,11 +2383,7 @@ class One2many(_RelationalMulti):
                 elif act[0] == 2:
                     comodel.browse(act[1]).unlink()
                 elif act[0] == 3:
-                    inverse_field = comodel._fields[inverse]
-                    if inverse_field.ondelete == 'cascade':
-                        comodel.browse(act[1]).unlink()
-                    else:
-                        comodel.browse(act[1]).write({inverse: False})
+                    drop(comodel.browse(act[1]))
                 elif act[0] == 4:
                     record = records[-1]
                     line = comodel.browse(act[1])
@@ -2310,27 +2391,19 @@ class One2many(_RelationalMulti):
                     if int(line_sudo[inverse]) != record.id:
                         line.write({inverse: record.id})
                 elif act[0] == 5:
+                    flush()
                     domain = self.domain(records) if callable(self.domain) else self.domain
                     domain = domain + [(inverse, 'in', records.ids)]
-                    inverse_field = comodel._fields[inverse]
-                    if inverse_field.ondelete == 'cascade':
-                        comodel.search(domain).unlink()
-                    else:
-                        comodel.search(domain).write({inverse: False})
+                    drop(comodel.search(domain))
                 elif act[0] == 6:
+                    flush()
                     record = records[-1]
                     comodel.browse(act[2]).write({inverse: record.id})
                     domain = self.domain(records) if callable(self.domain) else self.domain
                     domain = domain + [(inverse, 'in', records.ids), ('id', 'not in', act[2] or [0])]
-                    inverse_field = comodel._fields[inverse]
-                    if inverse_field.ondelete == 'cascade':
-                        comodel.search(domain).unlink()
-                    else:
-                        comodel.search(domain).write({inverse: False})
+                    drop(comodel.search(domain))
 
-            # create lines in batch
-            if vals_list:
-                comodel.create(vals_list)
+            flush()
 
 
 class Many2many(_RelationalMulti):
@@ -2484,16 +2557,100 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(group[record.id]))
 
-    def write(self, records, value, create=False):
-        cr = records._cr
+    def create(self, record_values):
+        if not record_values:
+            return
+
+        model = record_values[0][0]
+        comodel = model.env[self.comodel_name]
+
+        # determine links (set of pairs (id1, id2))
+        links = set()
+        recs, vals_list = [], []
+
+        def flush():
+            # create lines in batch, and add new links to them
+            if vals_list:
+                lines = comodel.create(vals_list)
+                for rec, line in pycompat.izip(recs, lines):
+                    links.add((rec.id, line.id))
+                recs.clear()
+                vals_list.clear()
+
+        for record, value in record_values:
+            for act in (value or []):
+                if not isinstance(act, (list, tuple)) or not act:
+                    continue
+                if act[0] == 0:
+                    recs.append(record)
+                    vals_list.append(act[2])
+                elif act[0] == 1:
+                    comodel.browse(act[1]).write(act[2])
+                elif act[0] == 2:
+                    comodel.browse(act[1]).unlink()
+                    links.discard((record.id, act[1]))
+                elif act[0] == 3:
+                    links.discard((record.id, act[1]))
+                elif act[0] == 4:
+                    links.add((record.id, act[1]))
+                elif act[0] in (5, 6):
+                    if recs and recs[-1] == record:
+                        flush()
+                    links.difference_update(pair for pair in links if pair[0] == record.id)
+                    if act[0] == 6:
+                        links.update((record.id, id2) for id2 in act[2])
+
+        flush()
+
+        # add links
+        if links:
+            query = """
+                INSERT INTO {rel} ({id1}, {id2}) VALUES {values}
+            """.format(
+                rel=self.relation, id1=self.column1, id2=self.column2,
+                values=", ".join(["%s"] * len(links)),
+            )
+            model.env.cr.execute(query, tuple(links))
+
+    def write(self, records, value):
+        if not value:
+            return
+
+        cr = records.env.cr
         comodel = records.env[self.comodel_name]
-        parts = dict(rel=self.relation, id1=self.column1, id2=self.column2)
 
-        clear = False           # whether the relation should be cleared
-        links = {}              # {id: True (link it) or False (unlink it)}
-        vals_list = []          # vals for lines to create in batch
+        # determine old links (set of pairs (id1, id2))
+        clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
+        if '"%s"' % self.relation not in tables:
+            tables.append('"%s"' % self.relation)
+        query = """
+            SELECT {rel}.{id1}, {rel}.{id2} FROM {tables}
+            WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
+        """.format(
+            rel=self.relation, id1=self.column1, id2=self.column2,
+            table=comodel._table, tables=",".join(tables),
+            cond=" AND ".join(clauses) if clauses else "1=1",
+        )
+        cr.execute(query, [tuple(records.ids)] + params)
+        old_links = set(cr.fetchall())
 
-        for act in (value or []):
+        # determine new links (set of pairs (id1, id2))
+        new_links = set(old_links)
+        vals_list = []
+
+        def pairs(ids2):
+            for id1 in records.ids:
+                for id2 in ids2:
+                    yield (id1, id2)
+
+        def flush():
+            # create lines in batch, and add new links to them
+            if vals_list:
+                lines = comodel.create(vals_list)
+                new_links.update(pairs(lines.ids))
+                vals_list.clear()
+
+        for act in value:
             if not isinstance(act, (list, tuple)) or not act:
                 continue
             if act[0] == 0:
@@ -2502,50 +2659,43 @@ class Many2many(_RelationalMulti):
                 comodel.browse(act[1]).write(act[2])
             elif act[0] == 2:
                 comodel.browse(act[1]).unlink()
+                new_links.difference_update(pairs([act[1]]))
             elif act[0] == 3:
-                links[act[1]] = False
+                new_links.difference_update(pairs([act[1]]))
             elif act[0] == 4:
-                links[act[1]] = True
-            elif act[0] == 5:
-                clear = True
-                links.clear()
-            elif act[0] == 6:
-                clear = True
-                links = dict.fromkeys(act[2], True)
+                new_links.update(pairs([act[1]]))
+            elif act[0] in (5, 6):
+                flush()
+                new_links.clear()
+                if act[0] == 6:
+                    new_links.update(pairs(act[2]))
 
-        # create lines in batch
-        if vals_list:
-            for line in comodel.create(vals_list):
-                links[line.id] = True
+        flush()
 
-        if clear and not create:
-            # remove all records for which user has access rights
-            clauses, params, tables = comodel.env['ir.rule'].domain_get(comodel._name)
-            cond = " AND ".join(clauses) if clauses else "1=1"
-            query = """ DELETE FROM {rel} USING {tables}
-                        WHERE {rel}.{id1} IN %s AND {rel}.{id2}={table}.id AND {cond}
-                    """.format(table=comodel._table, tables=','.join(tables), cond=cond, **parts)
-            cr.execute(query, [tuple(records.ids)] + params)
+        # add links (beware of duplicates)
+        links = new_links - old_links
+        if links:
+            query = """
+                INSERT INTO {rel} ({id1}, {id2})
+                VALUES {values}
+                ON CONFLICT DO NOTHING
+            """.format(
+                rel=self.relation, id1=self.column1, id2=self.column2,
+                values=", ".join(["%s"] * len(links)),
+            )
+            cr.execute(query, tuple(links))
 
-        # link records to the ids such that links[id] = True
-        if any(links.values()):
-            # beware of duplicates when inserting
-            query = """ INSERT INTO {rel} ({id1}, {id2})
-                        (SELECT a, b FROM unnest(%s) AS a, unnest(%s) AS b)
-                        EXCEPT (SELECT {id1}, {id2} FROM {rel} WHERE {id1} IN %s)
-                    """.format(**parts)
-            ids = [id for id, flag in links.items() if flag]
-            for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute(query, (records.ids, list(sub_ids), tuple(records.ids)))
-
-        # unlink records from the ids such that links[id] = False
-        if not all(links.values()):
-            query = """ DELETE FROM {rel}
-                        WHERE {id1} IN %s AND {id2} IN %s
-                    """.format(**parts)
-            ids = [id for id, flag in links.items() if not flag]
-            for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute(query, (tuple(records.ids), sub_ids))
+        # remove links
+        links = old_links - new_links
+        if links:
+            cond = "{id1}=%s AND {id2}=%s".format(id1=self.column1, id2=self.column2)
+            query = """
+                DELETE FROM {rel} WHERE {cond}
+            """.format(
+                rel=self.relation,
+                cond=" OR ".join([cond] * len(links)),
+            )
+            cr.execute(query, tuple(arg for pair in links for arg in pair))
 
 
 class Id(Field):
