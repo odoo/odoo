@@ -828,7 +828,6 @@ class WorkerCron(Worker):
 
             from odoo.addons import base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
-            odoo.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
