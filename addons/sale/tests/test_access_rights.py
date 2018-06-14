@@ -47,7 +47,7 @@ class TestAccessRights(TestCommonSaleNoChart):
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
         })
 
-        # Create a sales channel
+        # Create a Sales Team
         self.sales_channel = self.env['crm.team'].with_context(tracking_disable=True).create({
             'name': 'Test Channel',
         })
@@ -80,17 +80,17 @@ class TestAccessRights(TestCommonSaleNoChart):
         self.order.sudo(self.user_manager).unlink()
         self.assertNotIn(self.order.id, SaleOrder.search([]).ids, 'Sales manager should be able to delete the SO')
 
-        # Manager can create a sales channel
+        # Manager can create a Sales Team
         india_channel = self.env['crm.team'].with_context(tracking_disable=True).sudo(self.user_manager).create({
             'name': 'India',
         })
-        self.assertIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to create a sales channel')
-        # Manager can edit a sales channel
+        self.assertIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to create a Sales Team')
+        # Manager can edit a Sales Team
         india_channel.sudo(self.user_manager).write({'dashboard_graph_group': 'week'})
-        self.assertEquals(india_channel.dashboard_graph_group, 'week', 'Sales manager should be able to edit a sales channel')
-        # Manager can delete a sales channel
+        self.assertEquals(india_channel.dashboard_graph_group, 'week', 'Sales manager should be able to edit a Sales Team')
+        # Manager can delete a Sales Team
         india_channel.sudo(self.user_manager).unlink()
-        self.assertNotIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to delete a sales channel')
+        self.assertNotIn(india_channel.id, self.env['crm.team'].search([]).ids, 'Sales manager should be able to delete a Sales Team')
 
     def test_access_sales_person(self):
         """ Test Salesperson's access rights """
@@ -100,7 +100,7 @@ class TestAccessRights(TestCommonSaleNoChart):
         # Now assign the SO to themselves
         self.order.write({'user_id': self.user_salesperson_1.id})
         self.order.sudo(self.user_salesperson_1).read()
-        # Salesperson can change a sales channel of SO
+        # Salesperson can change a Sales Team of SO
         self.order.sudo(self.user_salesperson_1).write({'team_id': self.sales_channel.id})
         # Salesperson can't create the SO of other salesperson
         with self.assertRaises(AccessError):

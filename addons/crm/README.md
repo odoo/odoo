@@ -19,7 +19,7 @@ Lead Management Made Easy
 -------------------------
 
 Create leads automatically from incoming emails. Analyse leads efficiency and
-compare performance by campaigns, channels or sales channel.
+compare performance by campaigns, channels or Sales Team.
 
 Find duplicates, merge leads and assign them to the right salesperson in one
 operation. Spend less time on administration and more time on qualifying leads.
@@ -42,7 +42,7 @@ company uses Microsoft Outlook or Gmail, no one needs to change the way they
 work, so everyone stays productive.
 
 Route, sort and filter incoming emails automatically. Odoo CRM handles incoming
-emails and route them to the right opportunities or sales channel. New leads are
+emails and route them to the right opportunities or Sales Team. New leads are
 created on the fly and interested salespersons are notified automatically.
 
 Collaborative Agenda
@@ -80,12 +80,12 @@ Drive Engagement with Gamification
 
 Reinforce good habits and improve win rates with real-time recognition and
 rewards inspired by [game mechanics](http://en.wikipedia.org/wiki/Gamification).
-Align sales channels around clear business objectives with challenges, personal
+Align Sales Teams around clear business objectives with challenges, personal
 objectives and team leader boards.
 
 ### Leaderboards
 
-Promote leaders and competition amongst sales channel with performance ratios.
+Promote leaders and competition amongst Sales Team with performance ratios.
 
 ### Personal Objectives
 
