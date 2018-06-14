@@ -6,6 +6,7 @@ import os
 import re
 import traceback
 
+import pytz
 import werkzeug
 import werkzeug.routing
 import werkzeug.utils
@@ -204,6 +205,11 @@ class Http(models.AbstractModel):
                 context['edit_translations'] = False
             if not context.get('tz'):
                 context['tz'] = request.session.get('geoip', {}).get('time_zone')
+                try:
+                    pytz.timezone(context['tz'] or '')
+                except pytz.UnknownTimeZoneError:
+                    context.pop('tz')
+
             # bind modified context
             request.context = context
             request.website = request.website.with_context(context)
