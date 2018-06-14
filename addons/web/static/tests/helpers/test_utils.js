@@ -576,6 +576,13 @@ function dragAndDrop($el, $to, options) {
         toOffset.left += $to.outerWidth()/2;
     }
 
+    if ($to[0].ownerDocument !== document) {
+        // we are in an iframe
+        var bound = $('iframe')[0].getBoundingClientRect();
+        toOffset.left += bound.left;
+        toOffset.top += bound.top;
+    }
+
     $el.trigger($.Event("mousedown", {
         which: 1,
         pageX: elementCenter.left,
