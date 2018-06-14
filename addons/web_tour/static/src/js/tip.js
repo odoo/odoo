@@ -132,7 +132,7 @@ var Tip = Widget.extend({
             $location = $location.parent();
             o = $location.css("overflow");
             p = $location.css("position");
-        } while ((o === "visible" || o === "hidden") && p !== "fixed" && $location[0] !== document.body);
+        } while ((o === "visible" || o === "hidden") && p !== "fixed" && $location[0].tagName.toUpperCase() !== 'BODY');
 
         return $location;
     },
