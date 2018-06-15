@@ -890,10 +890,10 @@ class Channel(models.Model):
             channel_partners = self.env['mail.channel.partner'].search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
             msg = _("You are in a private conversation with <b>@%s</b>.") % (channel_partners[0].partner_id.name if channel_partners else _('Anonymous'))
         msg += _("""<br><br>
-            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>
-            You can mention a channel by typing <b>#channel</b>.<br>
-            You can execute a command by typing <b>/command</b>.<br>
-            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>""")
+            Type <b>@username</b> to mention someone, and grab his attention.<br>
+            Type <b>#channel</b>.to mention a channel.<br>
+            Type <b>/command</b> to execute a command.<br>
+            Type <b>:shortcut</b> to insert canned responses in your message.<br>""")
 
         self._send_transient_message(partner, msg)
 
