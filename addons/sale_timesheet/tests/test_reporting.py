@@ -233,11 +233,13 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         action_invoice = payment.with_context(context).create_invoices()
         invoice_id = action_invoice['res_id']
         invoice_1 = self.env['account.invoice'].browse(invoice_id)
+        invoice_1.action_invoice_open()
 
         # deliver project should now have cost and something invoiced
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_1_timesheet_cost = timesheet1.amount + timesheet3.amount + timesheet5.amount
         project_so_1_timesheet_sold_unit = timesheet3.unit_amount + timesheet5.unit_amount
+
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_invoiced'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The invoiced amount of the project from SO1 should only include timesheet linked to task")
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
@@ -285,6 +287,7 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         action_invoice = payment.with_context(context).create_invoices()
         invoice_id = action_invoice['res_id']
         invoice_2 = self.env['account.invoice'].browse(invoice_id)
+        invoice_2.action_invoice_open()
 
         # deliver project should not be impacted by the invoice of the other SO
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
