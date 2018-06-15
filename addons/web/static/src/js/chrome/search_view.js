@@ -27,7 +27,7 @@ var Facet = core.Class.extend(mixins.PropertiesMixin, {
         var values = attrs.values;
         delete attrs.values;
 
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.apply(this, arguments);
 
         this.values = new FacetValues(values || []);
         this.values.on('add remove change reset', function (_, options) {
