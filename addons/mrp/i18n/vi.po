@@ -1289,6 +1289,9 @@ msgid ""
 "                                    order for this product, the delivery order will contain the raw\n"
 "                                    materials, instead of the finished product."
 msgstr ""
+"Nếu Sản phẩm là một thành phẩm: khi xử lý đơn bán/mua cho Sản phẩm\n"
+"                                    này, phiếu giao nhận sẽ chứa các thành phần (nguyên liệu thô)\n"
+"                                    thay vì thành phẩm."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1298,6 +1301,10 @@ msgid ""
 "                                    the raw materials of that product will be added to the\n"
 "                                    manufacturing order of the final product."
 msgstr ""
+"Nếu sản phẩm là một bán thành phẩm: Khi xử lý một lệnh sản xuất\n"
+"                                    mà chứa sản phầm này như một thành phần (nguyên vật liệu thô),\n"
+"                                    các thành phần (nguyên vật liệu thô) của sản phẩm này sẽ được thêm\n"
+"                                    vào lệnh sản xuất làm nguyên vật liệu thô của thành phẩm của lệnh sản xuất."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1313,7 +1320,7 @@ msgstr "Đang Thực hiện"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_index_content
 msgid "Indexed Content"
-msgstr ""
+msgstr "Nội dung được đánh chỉ mục"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_line_lot_produced_qty
@@ -1348,7 +1355,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_is_locked
 msgid "Is Locked"
-msgstr ""
+msgstr "Bị Khoá"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
@@ -1358,12 +1365,12 @@ msgstr "Là một Lý do Phong toả"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
 msgid "Is a Blocking Reason?"
-msgstr ""
+msgstr "Là một Lý do Phong toả?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document_public
 msgid "Is public document"
-msgstr ""
+msgstr "Là một tài liệu công cộng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
