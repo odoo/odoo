@@ -1407,7 +1407,7 @@ class AccountInvoice(models.Model):
     @api.model
     def _get_refund_modify_read_fields(self):
         read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids',
-                       'date', 'partner_insite', 'partner_contact', 'partner_ref']
+                       'date']
         return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
 
     @api.model
