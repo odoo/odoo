@@ -8,6 +8,7 @@ from odoo import api, fields, models, tools
 _logger = logging.getLogger(__name__)
 EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
+
 class MailComposeMessage(models.TransientModel):
     """Add concept of mass mailing campaign to the mail.compose.message wizard
     """
@@ -50,7 +51,6 @@ class MailComposeMessage(models.TransientModel):
             # if recipient_ids is present, it means they are partners
             # (the only object to fill get_default_recipient this way)
             recipient_partners_ids = []
-            read_partners = {}
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('recipient_ids'):
@@ -81,14 +81,13 @@ class MailComposeMessage(models.TransientModel):
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
                     seen_list.add(mail_to)
-
                 stat_vals = {
                     'model': self.model,
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id
                 }
                 # propagate ignored state to stat when still-born
-                if mail_values.get('state', 'None') == 'cancel':
+                if mail_values.get('state', None) == 'cancel':
                     stat_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,

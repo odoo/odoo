@@ -26,10 +26,7 @@ class MailBlackList(models.Model):
         mass_mail_contact = self.env['mail.mass_mailing.contact'].search([('email', '=ilike', vals['email'])])
         message = 'The email address %s has been blacklisted.' % vals['email']
         if 'reason' in vals and vals['reason']:
-            if 'The email address %s has been blacklisted' % vals['email'] in vals['reason']:
-                message = vals['reason']
-            else:
-                message += ' %s' % vals['reason']
+            message += ' %s' % vals['reason']
         for partner in partners:
             partner.sudo().message_post(body=_(message))
         if mass_mail_contact:
@@ -89,16 +86,7 @@ class MailBlackListMixin(models.Model):
         groups="base.group_user")
     blacklist_reason = fields.Char(compute="_compute_is_blacklisted", store=True)
 
-    @api.depends(lambda self: self._get_depends())
-    def _compute_is_blacklisted(self):
-        [email_field] = self._email_field_name
-        blacklist = self.env['mail.mass_mailing.blacklist'].sudo().search([('email', 'in', [item[email_field] for item in self])]).read(['email', 'reason'])
-        for rec in self: # Optimisation : create indexed dict sorted by email and lookup in dict to get email and reason
-            email = rec[email_field]
-            item = next((x for x in blacklist if email == x['email']), None)
-            rec.is_blacklisted = bool(item['email']) if item else False
-            rec.blacklist_reason = str(item['reason']) if item and item['reason'] else ''
-
+    @api.model
     def _search_blacklist_id(self, operator, value):
         if self._email_field_name:
             [email_field] = self._email_field_name
@@ -109,6 +97,16 @@ class MailBlackListMixin(models.Model):
             return [(email_field, 'in', emails)]
         # else:
         #     return []
+
+    @api.depends(lambda self: self._get_depends())
+    def _compute_is_blacklisted(self):
+        [email_field] = self._email_field_name
+        blacklist = self.env['mail.mass_mailing.blacklist'].sudo().search([('email', 'in', [item[email_field] for item in self])]).read(['email', 'reason'])
+        for rec in self:  # Optimisation: create indexed dict sorted by email and lookup in dict to get email and reason
+            email = rec[email_field]
+            item = next((x for x in blacklist if email == x['email']), None)
+            rec.is_blacklisted = bool(item['email']) if item else False
+            rec.blacklist_reason = str(item['reason']) if item and item['reason'] else ''
 
     @api.multi
     def toggle_blacklist(self):
@@ -124,7 +122,7 @@ class MailBlackListMixin(models.Model):
             else:
                 blacklist.sudo().create({
                     'email': email,
-                    'reason': "The email address %s has been blacklisted by %s from %s." % (email, self.env['res.users'].browse(self._uid).name, self._description)
+                    'reason': "%s has blacklisted the recipient from %s." % (self.env['res.users'].browse(self._uid).name, self._description)
                 })
                 return [self.id, True]
         return [self.id, 'not_found']

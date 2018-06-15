@@ -27,7 +27,6 @@ MASS_MAILING_BUSINESS_MODELS = [
 
 EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
-
 class MassMailingTag(models.Model):
     """Model of categories of mass mailing, i.e. marketing, newsletter, ... """
     _name = 'mail.mass_mailing.tag'
@@ -104,7 +103,7 @@ class MassMailingList(models.Model):
     opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Mailing Contact')
 
     # Compute number of contacts non opt-out, blacklisted and not invalid for a mailing list
-    #  NOPE ! Temporarilly take evething because result is wrong due to bug with init opt_out value (null is some case).
+    #  NOPE ! Temporarily take everything because result is wrong due to bug with init opt_out value (null is some case).
     # And we will change anyway the opt out behaviour (adding the double opt in functionality.
     def _compute_contact_nbr(self):
         self.env.cr.execute('''
@@ -148,7 +147,6 @@ class MassMailingList(models.Model):
         self.ensure_one()
         # Put destination is sources lists if not already the case
         src_lists |= self
-
         self.env.cr.execute("""
             INSERT INTO mass_mailing_list_contact_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
@@ -699,9 +697,6 @@ class MassMailing(models.Model):
             else:
                 record.write({'opt_out': value})
 
-            # if feedback:
-            #     record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
-
     #------------------------------------------------------
     # Views & Actions
     #------------------------------------------------------
@@ -763,7 +758,6 @@ class MassMailing(models.Model):
     #------------------------------------------------------
     def _get_unsubscribed_list(self):
         """Returns a set of emails opted-out in target model"""
-        # it and update it.
         self.ensure_one()
         unsubscribed_list = set()
         target = self.env[self.mailing_model_real]

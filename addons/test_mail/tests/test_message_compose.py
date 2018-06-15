@@ -290,7 +290,6 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             'body': '<p>${object.name}</p>',
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
         })
-
         composer.with_context({
             'default_res_id': -1,
             'active_ids': [self.test_record.id, test_record_2.id]
@@ -301,7 +300,6 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
         for mail in mails:
             self.assertEqual(mail.recipient_ids, self.partner_1 | self.partner_2,
                              'compose wizard: mail_mail mass mailing: mail.mail in mass mail incorrect recipients')
-
 
         # check message on test_record
         message1 = self.test_record.message_ids[0]

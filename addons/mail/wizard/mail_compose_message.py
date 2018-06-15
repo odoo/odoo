@@ -8,9 +8,9 @@ from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
+
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
-
 
 
 def _reopen(self, res_id, model, context=None):
@@ -271,7 +271,6 @@ class MailComposer(models.TransientModel):
         """Generate the values that will be used by send_mail to create mail_messages
         or mail_mails. """
         self.ensure_one()
-        res_model = self.env[self.model]
         results = dict.fromkeys(res_ids, False)
         rendered_values = {}
         mass_mail_mode = self.composition_mode == 'mass_mail'
@@ -282,7 +281,7 @@ class MailComposer(models.TransientModel):
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
-            records = res_model.browse(res_ids)
+            records = self.env[self.model].browse(res_ids)
             reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         for res_id in res_ids:
@@ -301,11 +300,9 @@ class MailComposer(models.TransientModel):
                 'mail_activity_type_id': self.mail_activity_type_id.id,
             }
 
-            # fetch model record
-            res_record = res_model.browse(res_id)
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=res_record))
+                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
@@ -335,10 +332,9 @@ class MailComposer(models.TransientModel):
                     mail_values.pop('attachments', []),
                     attachment_ids,
                     {'model': 'mail.message', 'res_id': 0}
-                    )
+                )
 
             results[res_id] = mail_values
-
         return results
 
     #------------------------------------------------------

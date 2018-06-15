@@ -10,9 +10,9 @@ class TestAccessRights(common.TransactionCase):
     def setUp(self):
         super(TestAccessRights, self).setUp()
 
-        Users = self.env['res.users'].with_context(no_reset_password=True)
-        Partners = self.env['res.partner'].with_context(no_reset_password=True)
-        Mass_Mailing_Contacts = self.env['mail.mass_mailing.contact'].with_context(no_reset_password=True)
+        users = self.env['res.users'].with_context(no_reset_password=True)
+        partners = self.env['res.partner'].with_context(no_reset_password=True)
+        mass_mailing_contacts = self.env['mail.mass_mailing.contact'].with_context(no_reset_password=True)
 
         group_user = self.env.ref('mass_mailing.group_mass_mailing_user')
 
@@ -24,29 +24,29 @@ class TestAccessRights(common.TransactionCase):
             i -= 1
 
         # Create users
-        self.user_mm_user = Users.create({
+        self.user_mm_user = users.create({
             'name': 'Andrew User',
             'login': 'user',
             'email': 'a.m@example.com',
             'groups_id': [(6, 0, [group_user.id])]
         })
-        self.user_employee = Users.create({
+        self.user_employee = users.create({
             'name': 'Bert Tartignole',
             'login': 'bert',
             'email': 'b.t@example.com',
             'groups_id': [(6, 0, [self.env.ref('base.group_user').id])]
         })
-        self.user_portal = Users.create({
+        self.user_portal = users.create({
             'name': 'Chell Gladys',
             'login': 'chell',
             'email': 'chell@gladys.portal',
             'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])]
         })
-        self.contact_blacklisted = Mass_Mailing_Contacts.create({
+        self.contact_blacklisted = mass_mailing_contacts.create({
             'name': 'Jack Black',
             'email': 'contact@black.list'
         })
-        self.partner_blacklisted = Partners.create({
+        self.partner_blacklisted = partners.create({
             'name': 'Joe Black',
             'email': 'test@black.list'
         })
@@ -72,21 +72,28 @@ class TestAccessRights(common.TransactionCase):
         self.env['mail.mass_mailing.blacklist'].sudo(self.user_mm_user).create({
             'email': 'another@black.list',
         })
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3)
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3,
+                        'Number of blacklisted address incorrect, should be equals to 3')
         # mass mailing user can delete a blacklist entry
-        self.blacklist_entry.sudo(self.user_mm_user).with_context(caca=True).unlink()
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
+        self.blacklist_entry.sudo(self.user_mm_user).unlink()
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
 
         # mass mailing user can see if user is balcklisted using mixin
-        self.assertFalse(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted)
+        self.assertFalse(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                         'Blacklist state incorrect. Should not be blacklisted.')
         # mass mailing user can add the blacklisted user to the blacklist using the mixin
         self.partner_blacklisted.sudo(self.user_mm_user).toggle_blacklist()
-        self.assertTrue(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3)
+        self.assertTrue(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                        'Blacklist state incorrect. Should be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3,
+                        'Number of blacklisted address incorrect, should be equals to 3')
         # mass mailing user can remove the blacklisted user from the blacklist using the mixin
         self.partner_blacklisted.sudo(self.user_mm_user).toggle_blacklist()
-        self.assertFalse(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
+        self.assertFalse(self.partner_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                         'Blacklist state incorrect. Should not be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
 
         # ============================
         # Test on mass mailing contact
@@ -96,18 +103,24 @@ class TestAccessRights(common.TransactionCase):
         self.env['mail.mass_mailing.blacklist'].sudo(self.user_mm_user).create({
             'email': 'again_another@black.list',
         })
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3)
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3,
+                        'Number of blacklisted address incorrect, should be equals to 3')
         self.blacklist_contact_entry.sudo(self.user_mm_user).unlink()
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
 
-        self.assertFalse(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted)
+        self.assertFalse(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                         'Blacklist state incorrect. Should not be blacklisted.')
         self.contact_blacklisted.sudo(self.user_mm_user).toggle_blacklist()
-        self.assertTrue(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3)
+        self.assertTrue(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                        'Blacklist state incorrect. Should be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 3,
+                        'Number of blacklisted address incorrect, should be equals to 3')
         self.contact_blacklisted.sudo(self.user_mm_user).toggle_blacklist()
-        self.assertFalse(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
-
+        self.assertFalse(self.contact_blacklisted.sudo(self.user_mm_user).is_blacklisted,
+                         'Blacklist state incorrect. Should not be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
 
     def test_access_portal_user(self):
         """ Test portal user's access rights """
@@ -129,12 +142,13 @@ class TestAccessRights(common.TransactionCase):
         # Portal user can't see if user is balcklisted using mixin
         with self.assertRaises(AccessError):
             self.partner_blacklisted.sudo(self.user_portal).is_blacklisted()
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
         # Portal user can't remove or add the blacklisted user from the blacklist using the mixin
         with self.assertRaises(AccessError):
             self.partner_blacklisted.sudo(self.user_portal).toggle_blacklist()
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
-
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')
 
     def test_access_employee(self):
         """ Test classic employee's access rights """
@@ -154,12 +168,17 @@ class TestAccessRights(common.TransactionCase):
             self.blacklist_entry.sudo(self.user_employee).unlink()
 
         # Employee can see if user is balcklisted using mixin
-        self.assertTrue(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted)
+        self.assertTrue(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted,
+                        'Blacklist state incorrect. Should be blacklisted.')
         # Employee can remove the blacklisted user from the blacklist using the mixin
         self.partner_blacklisted.sudo(self.user_employee).toggle_blacklist()
-        self.assertFalse(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 1)
+        self.assertFalse(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted,
+                         'Blacklist state incorrect. Should not be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 1,
+                        'Number of blacklisted address incorrect, should be equals to 1')
         # Employee can add the blacklisted user to the blacklist using the mixin
         self.partner_blacklisted.sudo(self.user_employee).toggle_blacklist()
-        self.assertTrue(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted)
-        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2)
+        self.assertTrue(self.partner_blacklisted.sudo(self.user_employee).is_blacklisted,
+                        'Blacklist state incorrect. Should be blacklisted.')
+        self.assertTrue(len(self.env['mail.mass_mailing.blacklist'].search([])) == 2,
+                        'Number of blacklisted address incorrect, should be equals to 2')

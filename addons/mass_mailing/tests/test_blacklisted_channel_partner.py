@@ -40,8 +40,10 @@ class TestChannelPartnersNotification(common.MockEmails):
         self._join_channel(self.test_channel, self.test_partner)
         self.test_channel.message_post(body="Test", message_type='comment', subtype='mt_comment')
 
-        self.assertEqual(len(self._mails), 1)
+        self.assertEqual(len(self._mails), 1, 'Number of mail incorrect. Should be equal to 1.')
         for email in self._mails:
             self.assertEqual(
                 set(email['email_to']),
-                set([formataddr((self.test_partner.name, self.test_partner.email))]))
+                set([formataddr((self.test_partner.name, self.test_partner.email))]),
+                'email_to incorrect. Should be equal to "%s"' % (
+                    formataddr((self.test_partner.name, self.test_partner.email))))
