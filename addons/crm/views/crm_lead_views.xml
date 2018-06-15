@@ -667,16 +667,13 @@
                         ]"/>
 
                     <separator/>
-                    <filter string="Creation Date" name="creation_date" date="create_date" default_period="this_week"/>
+                    <filter string="Creation Date" name="creation_date" date="create_date"/>
+                    <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
+                    <filter string="Closed Date" name="close_date" date="date_closed"/>
                     <filter string="Overdue Opportunities" name="overdue_opp"
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
                             help="Opportunities with a date of Expected Closing which is in the past"/>
 
-                    <filter string="To Close This Month" name="close_this_month" domain="[
-                                '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
-                            ]"/>
                     <separator/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.probability', '=', 100)]"/>
@@ -692,6 +689,7 @@
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Closed Date" name="close_date_groupby" context="{'group_by':'date_closed'}"/>
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>

@@ -475,6 +475,9 @@
                     <filter string="Quotations" name="draft" domain="[('state','=','draft')]"/>
                     <filter string="Quotations Sent" name="sent" domain="[('state','=','sent')]"/>
                     <filter string="Sales" name="sales" domain="[('state','in',('sale','done'))]"/>
+                    <separator/>
+                    <filter string="Creation Date" name="filter_create_date" date="create_date"/>
+                    <filter string="Expiration Date" name="filter_validity_date" date="validity_date"/>
                 </xpath>
             </field>
         </record>
@@ -488,6 +491,10 @@
                 <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
                     <filter string="To Invoice" name="to_invoice" domain="[('invoice_status','=','to invoice')]" />
                     <filter string="Upselling" name="upselling" domain="[('invoice_status','=','upselling')]" />
+                </xpath>
+                <xpath expr="//filter[@name='activities_upcoming_all']" position="after">
+                    <separator/>
+                    <filter string="Confirmation Date" name="confirmation_date_filter" date="confirmation_date"/>
                 </xpath>
             </field>
         </record>
