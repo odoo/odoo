@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.models', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var BarcodeParser = require('barcodes.BarcodeParser');
 var PosDB = require('point_of_sale.DB');
 var devices = require('point_of_sale.devices');
@@ -9,6 +8,7 @@ var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
+var mixins = require("web.mixins");
 var rpc = require('web.rpc');
 var session = require('web.session');
 var time = require('web.time');
@@ -32,9 +32,9 @@ var exports = {};
 // There is a single instance of the PosModel for each Front-End instance, it is usually called
 // 'pos' and is available to all widgets extending PosWidget.
 
-exports.PosModel = Backbone.Model.extend({
-    initialize: function(session, attributes) {
-        Backbone.Model.prototype.initialize.call(this, attributes);
+exports.PosModel = core.Class.extend(mixins.PropertiesMixin, {
+    init: function(session, attributes) {
+        this._super.apply(this, arguments);
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
         this.chrome = attributes.chrome;
@@ -112,6 +112,7 @@ exports.PosModel = Backbone.Model.extend({
         this.proxy.close();
         this.barcode_reader.disconnect();
         this.barcode_reader.disconnect_from_proxy();
+        this._super.apply(this, arguments);
     },
 
     connect_to_proxy: function(){
@@ -1207,8 +1208,9 @@ exports.load_models = function(models,options) {
     pmodels.splice.apply(pmodels,[index,0].concat(models));
 };
 
-exports.Product = Backbone.Model.extend({
-    initialize: function(attr, options){
+exports.Product = core.Class.extend(mixins.PropertiesMixin, {
+    init: function(attr, options){
+        this._super.apply(this, arguments);
         _.extend(this, options);
     },
 
@@ -1293,8 +1295,9 @@ var orderline_id = 1;
 // An orderline represent one element of the content of a client's shopping cart.
 // An orderline contains a product, its quantity, its price, discount. etc. 
 // An Order contains zero or more Orderlines.
-exports.Orderline = Backbone.Model.extend({
-    initialize: function(attr,options){
+exports.Orderline = core.Class.extend(PropertiesMixin, {
+    init: function(attr,options){
+        this._super.apply(this, arguments);
         this.pos   = options.pos;
         this.order = options.order;
         if (options.json) {
@@ -1762,11 +1765,12 @@ var OrderlineCollection = Backbone.Collection.extend({
     model: exports.Orderline,
 });
 
-exports.Packlotline = Backbone.Model.extend({
+exports.Packlotline = core.Class.extend(mixins.PropertiesMixin, {
     defaults: {
         lot_name: null
     },
-    initialize: function(attributes, options){
+    init: function(attributes, options){
+        this._super.apply(this, arguments);
         this.order_line = options.order_line;
         if (options.json) {
             this.init_from_JSON(options.json);
@@ -1835,8 +1839,9 @@ var PacklotlineCollection = Backbone.Collection.extend({
 });
 
 // Every Paymentline contains a cashregister and an amount of money.
-exports.Paymentline = Backbone.Model.extend({
-    initialize: function(attributes, options) {
+exports.Paymentline = core.Class.extend(mixins.PropertiesMixin, {
+    init: function(attributes, options) {
+        this._super.apply(this, arguments);
         this.pos = options.pos;
         this.order = options.order;
         this.amount = 0;
@@ -1904,9 +1909,9 @@ var PaymentlineCollection = Backbone.Collection.extend({
 // plus the associated payment information (the Paymentlines) 
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
-exports.Order = Backbone.Model.extend({
-    initialize: function(attributes,options){
-        Backbone.Model.prototype.initialize.apply(this, arguments);
+exports.Order = web.Class.extend(mixins.PropertiesMixin, {
+    init: function(attributes,options){
+        this._super.apply(this, arguments);
         var self = this;
         options  = options || {};
 
@@ -2547,7 +2552,7 @@ exports.Order = Backbone.Model.extend({
         this.destroy();
     },
     destroy: function(){
-        Backbone.Model.prototype.destroy.apply(this,arguments);
+        this._super.apply(this, arguments);
         this.pos.db.remove_unpaid_order(this);
     },
     /* ---- Invoice --- */
@@ -2598,7 +2603,7 @@ var OrderCollection = Backbone.Collection.extend({
  The numpad handles both the choice of the property currently being modified
  (quantity, price or discount) and the edition of the corresponding numeric value.
  */
-exports.NumpadState = Backbone.Model.extend({
+exports.NumpadState = core.Class.extend(mixins.PropertiesMixin, {
     defaults: {
         buffer: "0",
         mode: "quantity"
