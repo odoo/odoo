@@ -18,6 +18,16 @@ QUnit.module('core', function () {
         assert.strictEqual(result, 42, "should properly evaluate basic sum");
     });
 
+    QUnit.test('simple arithmetic', function(assert) {
+        assert.expect(2);
+
+        var result = pyEval.py_eval("1 + 2");
+        assert.strictEqual(result, 3, "should properly evaluate sum");
+        result = pyEval.py_eval("42 % 5");
+        assert.strictEqual(result, 2, "should properly evaluate modulo operator");
+    });
+
+
     QUnit.test('not prefix', function (assert) {
         assert.expect(3);
 
