@@ -115,8 +115,11 @@
                         <button string="Schedule" name="action_close_dialog"
                             type="object" class="btn-primary"/>
                         <button string="Mark as Done" name="action_done"
-                            type="object" class="btn-secondary"/>
-                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next" type="object" class="btn-secondary"/>
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                            type="object" class="btn-secondary"
+                            context="{'mail_activity_quick_update': True}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" />
                     </footer>
                 </sheet>

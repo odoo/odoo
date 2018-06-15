@@ -144,6 +144,26 @@ class TestMailActivity(BaseFunctionalTest):
             self.assertEqual(self.test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(len(self.test_record.message_ids), 2)
 
+    def test_activity_notify_other_user(self):
+        self.user_admin.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_admin=(1, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_admin.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_admin)
+
+    def test_activity_notify_same_user(self):
+        self.user_employee.notification_type = 'email'
+        rec = self.test_record.sudo(self.user_employee)
+        with self.assertNotifications(partner_employee=(0, 'email', 'read')):
+            activity = rec.activity_schedule(
+                'test_mail.mail_act_test_todo',
+                user_id=self.user_employee.id)
+        self.assertEqual(activity.create_user_id, self.user_employee)
+        self.assertEqual(activity.user_id, self.user_employee)
+
     def test_activity_security_user_access(self):
         activity = self.test_record.activity_schedule(
             'test_mail.mail_act_test_todo',
