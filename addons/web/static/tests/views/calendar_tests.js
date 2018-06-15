@@ -229,11 +229,11 @@ QUnit.module('Views', {
         // test search bar in filter
 
         $sidebar.find('input[type="text"]').trigger('click');
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').length, 2, "should display 2 choices in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
+        assert.strictEqual($('ul.ui-autocomplete li').length, 2, "should display 2 choices in one2many autocomplete");
         $('ul.ui-autocomplete li:first').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
         $sidebar.find('input[type="text"]').trigger('click');
-        assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
+        assert.strictEqual($('ul.ui-autocomplete li').text(), "partner 4", "should display the last choice in one2many autocomplete");
         $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
         assert.ok($('.modal button.btn:contains(Ok)').length, "should display the confirm message");
         $('.modal button.btn:contains(Ok)').trigger('click');
