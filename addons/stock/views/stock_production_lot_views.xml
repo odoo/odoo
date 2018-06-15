@@ -32,11 +32,13 @@
                                 <field name="product_uom_id" readonly="1" groups="uom.group_uom"/>
                             </div>
                         <field name="ref"/>
+                        <field name="warranty_expiration_date"/>
                     </group>
                 </group>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -59,8 +61,14 @@
                     <group name="main_group">
                         <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <field name="ref"/>
+                        <field name="warranty_expiration_date"/>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

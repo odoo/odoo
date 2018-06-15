@@ -78,7 +78,7 @@ class Repair(models.Model):
         'stock.production.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id)]",
         help="Products repaired are all belonging to this lot", oldname="prodlot_id")
-    guarantee_limit = fields.Date('Warranty Expiration', states={'confirmed': [('readonly', True)]})
+    warranty_limit = fields.Date(related='lot_id.warranty_expiration_date',store="True")
     operations = fields.One2many(
         'repair.line', 'repair_id', 'Parts',
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -158,7 +158,7 @@ class Repair(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        self.guarantee_limit = False
+        self.warranty_limit = False
         self.lot_id = False
         if self.product_id:
             self.product_uom = self.product_id.uom_id.id
@@ -543,7 +543,7 @@ class RepairLine(models.Model):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
         @param product: Changed operation type.
-        @param guarantee_limit: Guarantee limit of current record.
+        @param warranty_limit: warranty limit of current record.
         @return: Dictionary of values.
         """
         if not self.type:

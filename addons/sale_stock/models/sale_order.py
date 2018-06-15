@@ -403,3 +403,16 @@ class SaleOrderLine(models.Model):
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)
+
+
+class ProductionLot(models.Model):
+    _inherit = 'stock.production.lot'
+
+    sale_order_ids = fields.Many2many('sale.order', string="Sale Orders", compute='_sale_orders', readonly=True, store=False)
+
+    @api.depends('name')
+    def _sale_orders(self):
+        for stock_move_line in self.env['stock.move.line'].search([('lot_id','=',self.id),('state','=','done')]):
+            for stock_move in stock_move_line.move_id:
+                if (stock_move_line.move_id.picking_id.location_dest_id.usage == "customer" and stock_move.state=="done" ):
+                    self.sale_order_ids = [ stock_move.sale_line_id.order_id.id]

@@ -12,7 +12,7 @@
                 <field name="partner_id"/>
                 <field name="address_id"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
-                <field name="guarantee_limit"/>
+                <field name="warranty_limit"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -64,7 +64,7 @@
                         <group>
                             <field name="location_id"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field name="guarantee_limit"/>
+                            <field name="warranty_limit" attrs="{'readonly':[('lot_id','!=',False)]}"/>
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field name="pricelist_id" groups="product.group_sale_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
@@ -195,7 +195,7 @@
                 <field name="product_id" />
                 <field name="partner_id"/>
                 <field name="address_id"/>
-                <field name="guarantee_limit"/>
+                <field name="warranty_limit"/>
                 <field name="state"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -255,7 +255,7 @@
                       <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
-                      <filter string="Guarantee limit Month" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit by Month"/>
+                      <filter string="Warranty limit Month" name="warranty_limit" domain="[]" context="{'group_by':'warranty_limit'}" help="Warranty limit by Month"/>
                       <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
               </search>
