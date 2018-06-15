@@ -51,7 +51,7 @@ class ProfitabilityAnalysis(models.Model):
                     SOL.product_id AS product_id,
                     SOL.qty_delivered_method AS sale_qty_delivered_method,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'analytic' THEN (SOL.price_reduce / COALESCE(CR.rate, 1.0)) * SOL.qty_to_invoice
+                       WHEN SOL.qty_delivered_method = 'analytic' THEN (SOL.untaxed_amount_to_invoice / COALESCE(CR.rate, 1.0))
                        ELSE 0.0
                     END AS expense_amount_untaxed_to_invoice,
                     CASE
@@ -65,11 +65,11 @@ class ProfitabilityAnalysis(models.Model):
                        ELSE 0.0
                     END AS expense_amount_untaxed_invoiced,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.price_reduce / COALESCE(CR.rate, 1.0)) * SOL.qty_to_invoice
+                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_to_invoice / COALESCE(CR.rate, 1.0))
                        ELSE 0.0
                     END AS amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.price_reduce / COALESCE(CR.rate, 1.0)) * SOL.qty_invoiced
+                       WHEN SOL.qty_delivered_method = 'timesheet' THEN (SOL.untaxed_amount_invoiced / COALESCE(CR.rate, 1.0))
                        ELSE 0.0
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
