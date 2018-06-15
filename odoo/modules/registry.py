@@ -153,9 +153,7 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                registry = cls.registries.pop(db_name)
-                registry.clear_caches()
-                registry.registry_invalidated = True
+                cls.registries.pop(db_name)
 
     @classmethod
     def delete_all(cls):
