@@ -608,13 +608,6 @@
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </div>
-                <group name="description" position="after">
-                    <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
-                        <field name="sale_line_warn" nolabel="1"/>
-                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
-                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
-                    </group>
-                </group>
             </field>
         </record>
 
@@ -630,6 +623,13 @@
                         <field name="track_service" widget="radio" invisible="True"/>
                     </group>
                 </page>
+                <group name="description" position="after">
+                    <group string="Warning when Selling this Product" colspan="2" groups="sale.group_warning_sale">
+                        <field name="sale_line_warn" nolabel="1"/>
+                        <field name="sale_line_warn_msg" colspan="3" nolabel="1"
+                                attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')], 'invisible':[('sale_line_warn','=','no-message')]}"/>
+                    </group>
+                </group>
             </field>
         </record>
 
