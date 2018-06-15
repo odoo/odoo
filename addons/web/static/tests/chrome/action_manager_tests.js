@@ -2301,6 +2301,51 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('requests for execute_action of type object: disable buttons', function (assert) {
+        assert.expect(2);
+
+        var self = this;
+        var def;
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_button') {
+                    return $.when(false);
+                } else if (args.method === 'read') {
+                    // Block the 'read' call
+                    var result = this._super.apply(this, arguments);
+                    return $.when(def).then(_.constant(result));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(3);
+
+        // open a record in form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+
+        // click on 'Call method' button (should call an Object method)
+        def = $.Deferred();
+        actionManager.$('.o_form_view button:contains(Call method)').click();
+
+        // Buttons should be disabled
+        assert.strictEqual(
+            actionManager.$('.o_form_view button:contains(Call method)').attr('disabled'),
+            'disabled', 'buttons should be disabled')
+
+        // Release the 'read' call
+        def.resolve();
+
+        // Buttons should be enabled after the reload
+        assert.strictEqual(
+            actionManager.$('.o_form_view button:contains(Call method)').attr('disabled'),
+            undefined, 'buttons should be disabled')
+
+        actionManager.destroy();
+    });
+
     QUnit.test('can open different records from a multi record view', function (assert) {
         assert.expect(11);
 
