@@ -98,13 +98,13 @@ class Product(models.Model):
 
         domain_move_in = [('product_id', 'in', self.ids)] + domain_move_in_loc
         domain_move_out = [('product_id', 'in', self.ids)] + domain_move_out_loc
-        if lot_id:
+        if lot_id is not None:
             domain_quant += [('lot_id', '=', lot_id)]
-        if owner_id:
+        if owner_id is not None:
             domain_quant += [('owner_id', '=', owner_id)]
             domain_move_in += [('restrict_partner_id', '=', owner_id)]
             domain_move_out += [('restrict_partner_id', '=', owner_id)]
-        if package_id:
+        if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
             domain_move_in_done = list(domain_move_in)

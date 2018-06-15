@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         ], string="POS Pricelists", config_parameter='point_of_sale.pos_pricelist_setting')
 
     @api.onchange('pos_sales_price')
-    def _onchange_sale_price(self):
+    def _onchange_pos_sales_price(self):
         if not self.pos_sales_price:
             self.pos_pricelist_setting = False
         if self.pos_sales_price and not self.pos_pricelist_setting:

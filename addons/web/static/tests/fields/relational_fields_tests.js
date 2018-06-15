@@ -425,9 +425,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
 
-        $('.o_searchview_more').click();  // Magnifying class for more filters
         $('button:contains(Filters)').click();
-        $('.o_add_filter').click();  // Add a custom filter, datetime field is selected
+        $('.o_add_custom_filter:visible').click();  // Add a custom filter, datetime field is selected
         assert.strictEqual($('li.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
             "datetime field should be selected");
         $('.o_apply_filter').click();
@@ -11132,11 +11131,12 @@ QUnit.module('relational_fields', {
             },
         });
 
+
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
 
-        $('.modal .o_searchview_more').click();  // Magnifying class for more filters
+        $('.modal .o_search_options .fa-bars').click();
         $('.modal .o_search_options .o_group_by_menu a:contains(Bar)').click(); // group by 'Bar'
 
         $('.modal .o_group_header:first').click();

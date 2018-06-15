@@ -1018,6 +1018,75 @@
         </div>
     </t>
 </div>
+
+<t t-name="DropdownMenu.MenuItems">
+    <t t-if="widget.items.length !== 0">
+        <t t-set="group" t-value="0"/>
+        <t t-foreach="widget.items" t-as="item">
+            <li t-if="group !== item.groupId" class="divider" data-removable="1"/>
+            <li t-att-class="'o_menu_item ' + (item.isActive ? 'selected ' : '')"
+                t-att-data-id="item.itemId">
+                <a href="#">
+                    <t t-esc="item.description"/>
+                    <span t-if="item.isRemovable" t-att-data-id="item.itemId" class="o_trash_button" > <span class="fa fa-trash-o"></span> </span>
+                    <span t-if="item.hasOptions" t-att-data-id="item.itemId" class="o_submenu_switcher"> <span class="fa fa-caret-down"></span> </span>
+                </a>
+                <ul t-if="item.hasOptions &amp;&amp; item.isOpen">
+                    <t t-foreach="_.values(item.options)" t-as="option">
+                        <li t-att-class="'o_item_option ' + (item.currentOptionId === option.optionId ? 'selected': '')"
+                            t-att-data-item_id="item.itemId" t-att-data-option_id="option.optionId">
+                            <a href="#"><t t-esc="option.description"/></a>
+                        </li>
+                    </t>
+                </ul>
+            </li>
+            <t t-set="group" t-value="item.groupId"/>
+        </t>
+    </t>
+</t>
+
+<div t-name="web.DropdownMenu" t-att-class="widget.dropdownStyle.el.class" t-att="widget.dropdownStyle.el.attrs" >
+    <button t-att-class="widget.dropdownStyle.mainButton.class" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
+        <span t-att-class="widget.dropdownIcon"/> <t t-esc="widget.dropdownTitle"/> <span t-att-class="widget.dropdownSymbol"/>
+    </button>
+    <ul class="dropdown-menu o_dropdown_menu" role="menu">
+        <t t-call="DropdownMenu.MenuItems"/>
+    </ul>
+</div>
+
+<t t-name="GroupbyMenuGenerator">
+    <li t-if="Object.keys(widget.presentedFields).length !== 0 &amp;&amp; widget.items.length !== 0" class="o_generator_menu divider"/>
+    <li t-if="Object.keys(widget.presentedFields).length !== 0" class="o_generator_menu o_add_custom_group ">
+        <a href="#">Add Custom Group</a>
+    </li>
+    <li t-if="widget.generatorMenuIsOpen" class="o_generator_menu">
+        <select class="o_input o_group_selector o_add_group">
+            <t t-foreach="widget.presentedFields" t-as="field">
+                <option t-att-value="field.name"><t t-esc="field.string"/></option>
+            </t>
+        </select>
+    </li>
+    <li t-if="widget.generatorMenuIsOpen" class="o_generator_menu">
+        <button type="button" class="btn btn-primary btn-sm o_apply_group o_add_group" tabindex="-1">Apply</button>
+    </li>
+</t>
+
+<t t-name="FiltersMenuGenerator">
+    <li class="divider"/>
+    <li t-if="Object.keys(widget.fields).length !== 0" class="o_add_custom_filter o_closed_menu">
+        <a href="#">Add Custom Filter</a>
+    </li>
+    <li class="o_add_filter_menu">
+        <button class="btn btn-primary btn-sm o_apply_filter" type="button">Apply</button>
+        <button class="btn btn-default btn-sm o_add_condition" type="button">
+            <span class="fa fa-plus-circle"/>
+            Add a condition
+        </button>
+    </li>
+</t>
+
+
+
 <div t-name="SearchView" class="o_searchview">
     <span class="o_searchview_more fa" title="Advanced Search..."/>
     <div class="o_searchview_input_container"/>
@@ -1050,25 +1119,12 @@
     <div class="fa fa-sm fa-remove o_facet_remove"/>
 </div>
 <span t-name="SearchView.FacetView.Value">
-    <t t-esc="widget.model.get('label')"/>
+    <t t-esc="widget.model.get('label') + (widget.intervalLabel ? (': ' + widget.intervalLabel) : '')"/>
 </span>
 <t t-name="SearchView.autocomplete">
     <ul class="dropdown-menu o_searchview_autocomplete" role="menu"></ul>
 </t>
-<div t-name="SearchView.FilterMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
-        <span class="fa fa-filter"/> Filters <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
-    </button>
-    <ul class="dropdown-menu o_filters_menu" role="menu">
-        <li class="o_add_filter o_closed_menu">
-            <a href="#">Add Custom Filter</a>
-        </li>
-        <li class="o_add_filter_menu">
-            <button class="btn btn-primary btn-sm o_apply_filter" type="button">Apply</button>
-            <button class="btn btn-default btn-sm o_add_condition" type="button"><span class="fa fa-plus-circle"/> Add a condition</button>
-        </li>
-    </ul>
-</div>
+
 <t t-name="SearchView.filters">
     <li t-foreach="widget.filters" t-as="filter" t-if="!filter.visible || filter.visible()"
             t-att-title="filter.attrs.string ? filter.attrs.help : undefined"
@@ -1167,27 +1223,7 @@
         </option>
     </select>
 </t>
-<div t-name="SearchView.GroupByMenu" class="btn-group o_dropdown">
-    <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
-        <span class="fa fa-bars"/> Group By <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
-    </button>
-    <ul class="dropdown-menu o_group_by_menu" role="menu">
-        <li class="divider"/>
-        <li class="o_add_custom_group o_closed_menu">
-            <a href="#">Add custom group</a>
-        </li>
-    </ul>
-</div>
-<t t-name="GroupByMenuSelector">
-    <li><select class="o_input o_add_group o_group_selector">
-        <t t-foreach="groupableFields" t-as="field">
-            <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
-        </t>
-    </select></li>
-    <li>
-        <button type="button" class="btn btn-primary btn-sm o_add_group o_select_group" tabindex="-1">Apply</button>
-    </li>
-</t>
+
 <div t-name="SearchView.FavoriteMenu" class="btn-group o_dropdown">
     <button class="o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
         <span class="fa fa-star"/> Favorites <span t-attf-class="#{widget.isMobile ? 'fa fa-chevron-right pull-right mt4' : 'caret'}"/>
