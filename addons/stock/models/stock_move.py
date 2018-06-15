@@ -506,7 +506,7 @@ class StockMove(models.Model):
         Push = self.env['stock.location.path']
         for move in self:
             # if the move is already chained, there is no need to check push rules
-            if move.move_dest_ids:
+            if move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')):
                 continue
             # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
             # to receive goods without triggering the push rules again (which would duplicate chained operations)
