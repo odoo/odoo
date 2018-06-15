@@ -49,6 +49,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.qweb_mutex = new concurrency.Mutex();
         this.currencies = {};
         this._groups_def = {};
+        core.bus.on('invalidate_session', this, this._onInvalidateSession);
     },
     setup: function (origin, options) {
         // must be able to customize server
@@ -327,13 +328,10 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     rpc: function (url, params, options) {
         var self = this;
         options = _.clone(options || {});
-        var shadow = options.shadow || false;
         options.headers = _.extend({}, options.headers);
         if (odoo.debug) {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
-
-        delete options.shadow;
 
         return self.check_session_id().then(function () {
             // TODO: remove
@@ -341,9 +339,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 _.extend(options, url);
                 url = url.url;
             }
-            // TODO correct handling of timeouts
-            if (! shadow)
-                self.trigger('request');
             var fct;
             if (self.origin_server) {
                 fct = ajax.jsonRpc;
@@ -362,37 +357,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
             }
-            var p = fct(url, "call", params, options);
-            p = p.then(function (result) {
-                if (! shadow)
-                    self.trigger('response');
-                return result;
-            }, function (type, error, textStatus, errorThrown) {
-                if (type === "server") {
-                    if (! shadow)
-                        self.trigger('response');
-                    if (error.code === 100) {
-                        self.uid = false;
-                    }
-                    return $.Deferred().reject(error, $.Event());
-                } else {
-                    if (! shadow)
-                        self.trigger('response_failed');
-                    var nerror = {
-                        code: -32098,
-                        message: "XmlHttpRequestError " + errorThrown,
-                        data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
-                    };
-                    return $.Deferred().reject(nerror, $.Event());
-                }
-            });
-            return p.fail(function () { // Allow deferred user to disable rpc_error call in fail
-                p.fail(function (error, event) {
-                    if (!event.isDefaultPrevented()) {
-                        self.trigger('error', error, event);
-                    }
-                });
-            });
+            return fct(url, "call", params, options);
         });
     },
     url: function (path, params) {
@@ -417,6 +382,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     getTZOffset: function (date) {
         return -new Date(date).getTimezoneOffset();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInvalidateSession: function () {
+        this.uid = false;
     },
 });
 

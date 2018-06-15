@@ -11,6 +11,7 @@
                     <button class="oe_stat_button"
                         type="object"
                         icon="fa-ticket"
+                        groups="event.group_event_user"
                         name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
                         <field string="Events" name="event_count" widget="statinfo"/>
                     </button>

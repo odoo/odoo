@@ -271,6 +271,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
             <field eval="1" name="phone_code" />
+            <field name="vat_label">HST</field>            
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -440,8 +441,10 @@
             <field name="name">Dominican Republic</field>
             <field name="code">do</field>
             <field file="base/static/img/country_flags/do.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="DOP" />
-            <field eval="0" name="phone_code" />
+            <field eval="1" name="phone_code" />
+            <field name="vat_label">RNC</field>
         </record>
         <record id="dz" model="res.country">
             <field name="name">Algeria</field>

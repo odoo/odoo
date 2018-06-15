@@ -1038,7 +1038,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.db = db
         self.uid = uid
         self.login = login
-        self.session_token = uid and security.compute_session_token(self)
+        self.session_token = uid and security.compute_session_token(self, request.env)
         request.uid = uid
         request.disable_db = False
 
@@ -1053,9 +1053,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         """
         if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-
+        # We create our own environment instead of the request's one.
+        # to avoid creating it without the uid since request.uid isn't set yet
+        env = odoo.api.Environment(request.cr, self.uid, self.context)
         # here we check if the session is still valid
-        if not security.check_session(self):
+        if not security.check_session(self, env):
             raise SessionExpiredException("Session expired")
 
     def logout(self, keep_db=False):

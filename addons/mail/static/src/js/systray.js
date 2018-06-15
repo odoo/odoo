@@ -128,7 +128,7 @@ var MessagingMenu = Widget.extend({
         if (channelID === 'channel_inbox') {
             var resID = $(event.currentTarget).data('res_id');
             var resModel = $(event.currentTarget).data('res_model');
-            if (resModel && resID) {
+            if (resModel && resModel !== 'mail.channel' && resID) {
                 this.do_action({
                     type: 'ir.actions.act_window',
                     res_model: resModel,
@@ -136,7 +136,11 @@ var MessagingMenu = Widget.extend({
                     res_id: resID
                 });
             } else {
-                this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
+                var clientChatOptions = {clear_breadcrumbs: true};
+                if (resModel && resModel === 'mail.channel' && resID) {
+                    clientChatOptions.active_id = resID;
+                }
+                this.do_action('mail.mail_channel_action_client_chat', clientChatOptions)
                     .then(function () {
                         self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
                         core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID'));
