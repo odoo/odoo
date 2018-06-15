@@ -660,6 +660,12 @@ class Picking(models.Model):
                         picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
                             'result_package_id': pack.id,
                         })
+                    else:
+                        picking.move_line_ids.filtered(lambda ml: ml.package_id == pack).write({
+                            'result_package_id': pack.id,
+                            'package_level_id': package_level.id,
+                        })
+
     @api.multi
     def do_unreserve(self):
         for picking in self:

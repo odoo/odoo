@@ -500,11 +500,11 @@ class MailThread(models.AbstractModel):
         msg_comment = MailMessage.search([
             ('model', '=', self._name),
             ('res_id', '=', self.id),
-            ('subtype_id', '=', subtype_comment.id)])
+            ('subtype_id', '=', subtype_comment)])
         msg_not_comment = MailMessage.search([
             ('model', '=', self._name),
             ('res_id', '=', self.id),
-            ('subtype_id', '!=', subtype_comment.id)])
+            ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
         msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})

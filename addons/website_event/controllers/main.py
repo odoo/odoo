@@ -264,7 +264,7 @@ class WebsiteEventController(http.Controller):
 
         urls = event._get_event_resource_urls(Attendees.ids)
         return request.render("website_event.registration_complete", {
-            'attendees': Attendees,
+            'attendees': Attendees.sudo(),
             'event': event,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url')

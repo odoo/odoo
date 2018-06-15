@@ -9,6 +9,8 @@ from odoo import http, fields, _
 from odoo.http import request
 from odoo.tools import float_round
 
+from odoo.addons.web.controllers.main import clean_action
+
 DEFAULT_MONTH_RANGE = 3
 
 
@@ -394,7 +396,7 @@ class SaleTimesheetController(http.Controller):
                 'type': 'ir.actions.act_window',
                 'res_model': res_model,
                 'view_mode': 'tree,form',
-                'view_type': 'tree',
+                'view_type': 'form',
                 'views': [[ts_view_tree_id, 'list'], [ts_view_form_id, 'form']],
                 'domain': domain,
             }
@@ -410,9 +412,9 @@ class SaleTimesheetController(http.Controller):
             if len(tasks.mapped('project_id')) == 1:
                 action['context']['default_project_id'] = tasks.mapped('project_id')[0].id
         elif res_model == 'sale.order':
-            action = request.env.ref('sale.action_orders').read()[0]
+            action = clean_action(request.env.ref('sale.action_orders').read()[0])
             action['domain'] = domain
         elif res_model == 'account.invoice':
-            action = request.env.ref('account.action_invoice_tree1').read()[0]
+            action = clean_action(request.env.ref('account.action_invoice_tree1').read()[0])
             action['domain'] = domain
         return action

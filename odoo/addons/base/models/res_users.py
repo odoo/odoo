@@ -884,7 +884,6 @@ class UsersImplied(models.Model):
                 super(UsersImplied, self).write(vals)
         return res
 
-
 #----------------------------------------------------------
 # change password wizard
 #----------------------------------------------------------

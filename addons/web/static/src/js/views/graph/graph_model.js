@@ -51,6 +51,8 @@ return AbstractModel.extend({
      * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
      * @param {string[]} params.domain
+     * @param {Object} params.intervalMapping object linking fieldNames with intervals.
+     *   this could be useful to simplify the code. For now this parameter is not used.
      * @returns {Deferred} The deferred does not return a handle, we don't need
      *   to keep track of various entities.
      */
@@ -62,6 +64,12 @@ return AbstractModel.extend({
         this.chart = {
             data: [],
             groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+            // this parameter is not used anywhere for now.
+            // the idea would be to seperate intervals from
+            // fieldnames in groupbys. This could be done
+            // in graph view only or everywhere but this is
+            // a big refactoring.
+            intervalMapping: params.intervalMapping,
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
             domain: params.domain,
@@ -96,6 +104,9 @@ return AbstractModel.extend({
         }
         if ('groupBy' in params) {
             this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
+        }
+        if ('intervalMapping' in params) {
+            this.chart.intervalMapping = params.intervalMapping;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;

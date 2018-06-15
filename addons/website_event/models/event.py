@@ -167,9 +167,10 @@ class Event(models.Model):
             'action': 'TEMPLATE',
             'text': self.name,
             'dates': url_date_start + '/' + url_date_stop,
-            'location': self.sudo().address_id.contact_address.replace('\n', ' '),
             'details': self.name,
         })
+        if self.address_id:
+            params['location'] = self.sudo().address_id.contact_address.replace('\n', ' ')
         google_url = GOOGLE_CALENDAR_URL + params
         iCal_url = '/event/%s/ics?%s' % (slug(self), params)
         return {'google_url': google_url, 'iCal_url': iCal_url}

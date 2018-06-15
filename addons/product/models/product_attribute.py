@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+from odoo.osv import expression
 
 
 class ProductAttribute(models.Model):
@@ -107,7 +108,7 @@ class ProductAttributeLine(models.Model):
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+            args = expression.AND([['|', ('attribute_id', operator, name), ('value_ids', operator, name)], args])
             attribute_ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
             return self.browse(attribute_ids).name_get()
         return super(ProductAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)

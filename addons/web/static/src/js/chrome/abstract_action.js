@@ -10,7 +10,7 @@ odoo.define('web.AbstractAction', function (require) {
  * of actions.  Whenever the user navigates in the interface, switches views,
  * open different menus, the action manager creates/updates/destroys special
  * widgets which are actions.  These actions need to answer to a standardised
- * API, which is the reason this AbstractAction class.
+ * API, which is the reason for this AbstractAction class.
  *
  * In practice, most actions are view controllers (coming from a
  * ir.action.act_window).  However, some actions are 'client actions'.  They
@@ -50,6 +50,13 @@ var AbstractAction = Widget.extend({
      */
     canBeRemoved: function () {
         return $.when();
+    },
+    /**
+     * This function is called when the current context (~state) of the action
+     * should be known. For instance, if the action is a view controller,
+     * this may be useful to reinstantiate the view in the same state.
+     */
+    getContext: function () {
     },
     /**
      * Gives the focus to the action

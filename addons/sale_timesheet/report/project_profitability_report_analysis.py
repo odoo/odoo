@@ -50,7 +50,6 @@ class ProfitabilityAnalysis(models.Model):
                     S.date_order AS order_confirmation_date,
                     SOL.product_id AS product_id,
                     SOL.qty_delivered_method AS sale_qty_delivered_method,
-                    IP.value_float as standar_price,
                     CASE
                        WHEN SOL.qty_delivered_method = 'analytic' THEN (SOL.price_reduce / COALESCE(CR.rate, 1.0)) * SOL.qty_to_invoice
                        ELSE 0.0

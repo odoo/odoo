@@ -277,15 +277,15 @@
                                                         <t t-if="row_value_index != 0">
                                                             <t t-if="row_value_index &lt; len(row)-2">
                                                                 <t t-if="row_is_milestone">
-                                                                    <i><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></i>
+                                                                    <i t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></i>
                                                                 </t>
                                                                 <t t-else="">
-                                                                    <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                    <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
                                                                 </t>
                                                             </t>
                                                             <t t-else="">
-                                                                <t t-if="not row_is_milestone">
-                                                                    <t t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                <t t-if="not row_is_milestone and not row[0].get('type') == 'hr_employee'">
+                                                                    <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
                                                                 </t>
                                                             </t>
                                                         </t>

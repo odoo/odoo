@@ -1,0 +1,16 @@
+// Group By
+.o_group_by_menu {
+    @include o-selected-li;
+
+    max-height: calc(100vh - 125px);
+    overflow: auto;
+
+    .o_add_group { // add button
+        @include o-search-options-dropdown-custom-li;
+    }
+
+    .o_submenu_switcher {
+    	position: absolute;
+    	right: 0px;
+    }
+}
