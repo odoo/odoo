@@ -5,8 +5,6 @@ from datetime import date, datetime, timedelta
 import pytz
 
 from odoo import api, exceptions, fields, models, _
-from odoo.osv import expression
-from odoo.tools import pycompat
 
 
 class MailActivityType(models.Model):
