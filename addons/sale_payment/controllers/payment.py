@@ -8,7 +8,7 @@ from odoo.http import request, route
 
 class PaymentPortal(http.Controller):
 
-    @route('/pay/sale/<int:order_id>/form_tx', type='json', auth="public", website=True)
+    @route('/pay/sale/<int:order_id>/form_tx', type='json', auth="user", website=True)
     def sale_pay_form(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button on the payment
@@ -17,10 +17,14 @@ class PaymentPortal(http.Controller):
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
         success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
 
         order_sudo = request.env['sale.order'].sudo().browse(order_id)
         if not order_sudo:
+            return False
+
+        # Check if the current user has access to this order
+        commercial_partner_id = request.env.user.partner_id.commercial_partner_id.id
+        if request.env['sale.order'].sudo().search_count([('id', '=', order_id), ('message_partner_ids', 'child_of', commercial_partner_id)]) == 0:
             return False
 
         try:
@@ -33,12 +37,7 @@ class PaymentPortal(http.Controller):
             order_sudo,
             acquirer,
             payment_token=token,
-            tx_type='form_save' if save_token else 'form',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order_sudo._name)], limit=1).id,
-                'callback_res_id': order_sudo.id,
-                'callback_method': callback_method,
-            })
+            tx_type='form_save' if save_token else 'form')
 
         # set the transaction id into the session
         request.session['portal_sale_%s_transaction_id' % order_sudo.id] = tx.id
@@ -53,12 +52,11 @@ class PaymentPortal(http.Controller):
             }
         )
 
-    @http.route('/pay/sale/<int:order_id>/s2s_token_tx', type='http', auth='public', website=True)
+    @http.route('/pay/sale/<int:order_id>/s2s_token_tx', type='http', auth='user', website=True)
     def sale_pay_token(self, order_id, pm_id=None, **kwargs):
         """ Use a token to perform a s2s transaction """
         error_url = kwargs.get('error_url', '/my')
         success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
         access_token = kwargs.get('access_token')
         params = {}
         if access_token:
@@ -68,6 +66,11 @@ class PaymentPortal(http.Controller):
         if not order_sudo:
             params['error'] = 'pay_sale_invalid_doc'
             return request.redirect(_build_url_w_params(error_url, params))
+
+        # Check if the current user has access to this order
+        commercial_partner_id = request.env.user.partner_id.commercial_partner_id.id
+        if request.env['sale.order'].sudo().search_count([('id', '=', order_id), ('message_partner_ids', 'child_of', commercial_partner_id)]) == 0:
+            return False
 
         try:
             token = request.env['payment.token'].sudo().browse(int(pm_id))
@@ -82,12 +85,7 @@ class PaymentPortal(http.Controller):
             order_sudo,
             token.acquirer_id,
             payment_token=token,
-            tx_type='server2server',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order_sudo._name)], limit=1).id,
-                'callback_res_id': order_sudo.id,
-                'callback_method': callback_method,
-            })
+            tx_type='server2server')
 
         # set the transaction id into the session
         request.session['portal_sale_%s_transaction_id' % order_sudo.id] = tx.id
