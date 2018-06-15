@@ -1620,7 +1620,7 @@ var ChatManager =  AbstractService.extend({
                 }
                 this._removeChannel(channel);
                 this.chatBus.trigger("unsubscribe_from_channel", data.id);
-                web_client.do_notify(_("Unsubscribed"), msg);
+                web_client.do_notify(_t("Unsubscribed"), msg);
             }
         } else if (data.type === 'toggle_star') {
             this._manageToggleStarNotification(data);
