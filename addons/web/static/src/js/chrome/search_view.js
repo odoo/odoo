@@ -7,7 +7,6 @@ var core = require('web.core');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
-var mixins = require("web.mixins");
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
 var utils = require('web.utils');
@@ -16,18 +15,18 @@ var _t = core._t;
 
 var Backbone = window.Backbone;
 
-var FacetValue = core.Class.extend(mixins.PropertiesMixin, {});
+var FacetValue = Backbone.Model.extend({});
 
 var FacetValues = Backbone.Collection.extend({
     model: FacetValue
 });
 
-var Facet = core.Class.extend(mixins.PropertiesMixin, {
-    init: function (attrs) {
+var Facet = Backbone.Model.extend({
+    initialize: function (attrs) {
         var values = attrs.values;
         delete attrs.values;
 
-        mixins.PropertiesMixin.init.apply(this, arguments);
+        Backbone.Model.prototype.initialize.apply(this, arguments);
 
         this.values = new FacetValues(values || []);
         this.values.on('add remove change reset', function (_, options) {
@@ -36,13 +35,13 @@ var Facet = core.Class.extend(mixins.PropertiesMixin, {
     },
     get: function (key) {
         if (key !== 'values') {
-            return this._super(key);
+            return Backbone.Model.prototype.get.call(this, key);
         }
         return this.values.toJSON();
     },
     set: function (key, value) {
         if (key !== 'values') {
-            return this._super(key, value);
+            return Backbone.Model.prototype.set.call(this, key, value);
         }
         this.values.reset(value);
     },

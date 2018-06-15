@@ -18,10 +18,10 @@ The internal structure of the faceted search is inspired by
 [#previous]_.
 
 As does VisualSearch, the new search view is based on `Backbone`_ and
-makes significant use of Backbone's collections (OpenERP
+makes significant use of Backbone's models and collections (OpenERP
 Web's widgets make a good replacement for Backbone's own views). As a
 result, understanding the implementation details of the OpenERP Web 7
-search view also requires a basic understanding of Backbone's
+search view also requires a basic understanding of Backbone's models,
 collections and events.
 
 .. note::
