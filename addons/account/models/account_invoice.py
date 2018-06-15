@@ -966,7 +966,7 @@ class AccountInvoice(models.Model):
         return super(AccountInvoice, self).get_access_action(access_uid)
 
     def get_mail_url(self):
-        return self.get_share_url()
+        return self.get_share_url(signup_partner=True)
 
     @api.multi
     def get_formview_id(self, access_uid=None):

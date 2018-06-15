@@ -21,6 +21,20 @@
     white-space: nowrap;
 }
 
+// less properties for copy widget
+.o_field_copy {
+    position: relative;
+    width: 100% !important;
+    border-radius: 4px;
+    border: 1px solid $btn-primary-border;
+    font-size: $font-size-small;
+    color: $o-brand-optional;
+    font-weight: $badge-font-weight;
+    .o_clipboard_button {
+        @include o-position-absolute($top: 0, $right: 0);
+    }
+}
+
 //------------------------------------------------------------------------------
 // Fields
 //------------------------------------------------------------------------------

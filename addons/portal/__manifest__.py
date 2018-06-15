@@ -19,11 +19,14 @@ a dependency towards website edition and customization capabilities.""",
     'data': [
         'data/portal_data.xml',
         'views/assets.xml',
+        'views/mail_channel_view.xml',
         'views/portal_templates.xml',
+        'wizard/mail_invite_share_views.xml',
         'wizard/portal_wizard_views.xml',
     ],
     'qweb': [
         'static/src/xml/portal_chatter.xml',
         'static/src/xml/portal_signature.xml',
+        'static/src/xml/portal_share.xml',
     ],
 }

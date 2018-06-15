@@ -54,6 +54,7 @@
                         <tr t-foreach="projects" t-as="project">
                             <td>
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
+                                <t t-if="project.shared"><span class="label label-info">shared</span></t>
                             </td>
                             <td>
                                 <a t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
@@ -80,6 +81,7 @@
                             <h4>
                                 <t t-call='portal.record_pager'/>
                                 Project - <span t-field="project.name"/>
+                                <t t-if="project.shared"><span class="label label-info">shared</span></t>
                             </h4>
                         </div>
                     </div>
@@ -142,6 +144,7 @@
                                     <tr>
                                         <td>
                                             <a t-attf-href="/my/task/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                            <t t-if="task.shared"><span class="label label-info">shared</span></t>
                                         </td>
                                         <td>
                                             <span class="label label-info" title="Current stage of the task" t-esc="task.stage_id.name" />
@@ -171,6 +174,7 @@
                             <h4>
                                 <t t-call='portal.record_pager'/>
                                 Task - <span t-field="task.name"/> (#<span t-esc="task.id"/>)
+                                <t t-if="task.shared"><span class="label label-info">shared</span></t>
                                 <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                 <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>
                             </h4>

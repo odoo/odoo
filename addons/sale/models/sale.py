@@ -170,6 +170,11 @@ class SaleOrder(models.Model):
         for order in self:
             order.portal_url = '/my/orders/%s' % (order.id)
 
+    def _compute_share_warning(self):
+        super(SaleOrder, self)._compute_share_warning()
+        for order in self.filtered(lambda x: x.state in ['cancel', 'draft']):
+            order.share_warning = _("The sales order won't be visible in the recipient's portal because the state of the order is '%s'.\n") % (order.state)
+
     def _compute_is_expired(self):
         now = datetime.now()
         for order in self:
@@ -670,7 +675,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).get_access_action(access_uid)
 
     def get_mail_url(self):
-        return self.get_share_url()
+        return self.get_share_url(signup_partner=True)
 
     def get_portal_confirmation_action(self):
         return self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')

@@ -163,7 +163,7 @@ var Followers = AbstractField.extend({
     _inviteFollower: function (channel_only) {
         var action = {
             type: 'ir.actions.act_window',
-            res_model: 'mail.wizard.invite',
+            res_model: 'mail.invite.follower',
             view_mode: 'form',
             view_type: 'form',
             views: [[false, 'form']],

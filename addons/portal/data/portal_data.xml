@@ -34,5 +34,14 @@
 <p>
 ${object.wizard_id.welcome_message or ''}]]></field>
         </record>
+        <template id="portal_share_template">
+            <div>
+                <p>Hello,</p>
+                <p>A document <strong t-esc="record.display_name"/> has been shared with you.</p>
+                <a t-attf-href="#{share_link}" style="background-color: #875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 12px;">View Document</a><br/>
+                <p t-if="note" t-esc="note"/>
+                <p>Thank you,</p>
+            </div>
+        </template>
     </data>
 </odoo>

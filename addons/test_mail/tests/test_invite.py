@@ -13,7 +13,7 @@ class TestInvite(common.BaseFunctionalTest, common.MockEmails):
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com'})
 
-        mail_invite = self.env['mail.wizard.invite'].with_context({
+        mail_invite = self.env['mail.invite.follower'].with_context({
             'default_res_model': 'mail.test.simple',
             'default_res_id': self.test_record.id
         }).sudo(self.user_employee.id).create({

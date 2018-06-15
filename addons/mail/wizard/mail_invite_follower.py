@@ -4,14 +4,14 @@
 from odoo import _, api, fields, models
 
 
-class Invite(models.TransientModel):
+class MailInviteFollower(models.TransientModel):
     """ Wizard to invite partners (or channels) and make them followers. """
-    _name = 'mail.wizard.invite'
-    _description = 'Invite wizard'
+    _name = 'mail.invite.follower'
+    _description = 'Invite follower wizard'
 
     @api.model
     def default_get(self, fields):
-        result = super(Invite, self).default_get(fields)
+        result = super(MailInviteFollower, self).default_get(fields)
         user_name = self.env.user.name_get()[0][1]
         model = result.get('res_model')
         res_id = result.get('res_id')

@@ -1182,6 +1182,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Char & Text Fields: Copy to clipboard button', function (assert) {
+        assert.expect(2);
+        var done = assert.async();
+        testUtils.createAsyncView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                            '<div>' +
+                                '<field name="txt" widget="CopyClipboardText"/>' +
+                                '<field name="foo" widget="CopyClipboardChar"/>' +
+                            '</div>' +
+                    '</sheet>' +
+                '</form>',
+        }).then(function (form) {
+            assert.strictEqual(form.$('.o_clipboard_button.o_btn_text_copy').length, 1,"Should have copy button on text type field");
+            assert.strictEqual(form.$('.o_clipboard_button.o_btn_char_copy').length, 1,"Should have copy button on char type field");
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {
