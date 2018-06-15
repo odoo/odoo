@@ -884,6 +884,11 @@ class UsersImplied(models.Model):
                 super(UsersImplied, self).write(vals)
         return res
 
+            if not view.check_access_rights('write',  raise_exception=False):
+                # erp manager has the rights to update groups/users but not
+                # to modify ir.ui.view
+                if self.env.user.has_group('base.group_erp_manager'):
+                    view = view.sudo()
 
 #----------------------------------------------------------
 # change password wizard

@@ -23,7 +23,6 @@
                 <field name="manager_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
-                <field name="documents_count"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{kanban_color(record.color.raw_value)}">
@@ -49,7 +48,6 @@
                                         <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block">
                                             <a name="action_get_attachment_tree_view" type="object">
                                                 <span title='Documents'><i class='fa fa-book'/>
-                                                    <t t-esc="record.documents_count.raw_value"/>
                                                 </span>
                                             </a>
                                         </div>

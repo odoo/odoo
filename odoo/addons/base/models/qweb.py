@@ -308,8 +308,9 @@ class QWeb(object):
             raise e
         except Exception as e:
             path = _options['last_path_node']
-            node = element.getroottree().xpath(path)
-            raise QWebException("Error when compiling AST", e, path, etree.tostring(node[0], encoding='unicode'), name)
+            element, document = self.get_template(template, options)
+            node = element.getroottree().xpath(path) if ':' not in path else None
+            raise QWebException("Error when compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
         astmod.body.extend(_options['ast_calls'])
 
         if 'profile' in options:
@@ -344,7 +345,7 @@ class QWeb(object):
             except Exception as e:
                 path = log['last_path_node']
                 element, document = self.get_template(template, options)
-                node = element.getroottree().xpath(path)
+                node = element.getroottree().xpath(path) if ':' not in path else None
                 raise QWebException("Error to render compiling AST", e, path, node and etree.tostring(node[0], encoding='unicode'), name)
 
         return _compiled_fn

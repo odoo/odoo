@@ -201,39 +201,45 @@ class ProductProduct(models.Model):
             fifo_automated_values[(row[0], row[1])] = (row[2], row[3], list(row[4]))
 
         for product in self:
-            if product.cost_method in ['standard', 'average']:
-                qty_available = product.with_context(company_owned=True).qty_available
-                price_used = product.standard_price
-                if to_date:
-                    price_used = product.get_history_price(
-                        self.env.user.company_id.id,
-                        date=to_date,
-                    )
-                product.stock_value = price_used * qty_available
-                product.qty_at_date = qty_available
-            elif product.cost_method == 'fifo':
-                if to_date:
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        domain = [('product_id', '=', product.id), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
-                        moves = StockMove.search(domain)
+            if to_date:
+                price_used = product.get_history_price(
+                    self.env.user.company_id.id,
+                    date=to_date,
+                ) if product.cost_method in ['standard', 'average'] else 0.0
+                if product.product_tmpl_id.valuation == 'manual_periodic':
+                    domain = [('product_id', '=', product.id), ('date', '<=', to_date)] + StockMove._get_all_base_domain()
+                    moves = StockMove.search(domain)
+                    product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
+                    if product.cost_method == 'fifo':
                         product.stock_value = sum(moves.mapped('value'))
-                        product.qty_at_date = product.with_context(company_owned=True).qty_available
                         product.stock_fifo_manual_move_ids = StockMove.browse(moves.ids)
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                    elif product.cost_method in ['standard', 'average']:
+                        product.stock_value = product.qty_at_date * price_used
+                elif product.product_tmpl_id.valuation == 'real_time':
+                    valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
+                    value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                    product.qty_at_date = quantity
+                    if product.cost_method == 'fifo':
                         product.stock_value = value
-                        product.qty_at_date = quantity
                         product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
-                else:
-                    product.stock_value, moves = product._sum_remaining_values()
-                    product.qty_at_date = product.with_context(company_owned=True).qty_available
-                    if product.product_tmpl_id.valuation == 'manual_periodic':
-                        product.stock_fifo_manual_move_ids = moves
-                    elif product.product_tmpl_id.valuation == 'real_time':
-                        valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
-                        value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                    elif product.cost_method in ['standard', 'average']:
+                        product.stock_value = quantity * price_used
+            else:
+                if product.product_tmpl_id.valuation == 'manual_periodic':
+                    product.qty_at_date = product.with_context(company_owned=True, owner_id=False).qty_available
+                    if product.cost_method == 'fifo':
+                        product.stock_value, product.stock_fifo_manual_move_ids = product._sum_remaining_values()
+                    elif product.cost_method in ['standard', 'average']:
+                        product.stock_value = product.qty_at_date * product.standard_price
+                elif product.product_tmpl_id.valuation == 'real_time':
+                    valuation_account_id = product.categ_id.property_stock_valuation_account_id.id
+                    value, quantity, aml_ids = fifo_automated_values.get((product.id, valuation_account_id)) or (0, 0, [])
+                    product.qty_at_date = quantity
+                    if product.cost_method == 'fifo':
+                        product.stock_value = value
                         product.stock_fifo_real_time_aml_ids = self.env['account.move.line'].browse(aml_ids)
+                    elif product.cost_method in ['standard', 'average']:
+                        product.stock_value = quantity * product.standard_price
 
     def action_valuation_at_date_details(self):
         """ Returns an action with either a list view of all the valued stock moves of `self` if the
@@ -404,4 +410,3 @@ class ProductCategory(models.Model):
                 'message': _("Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"),
             }
         }
-
