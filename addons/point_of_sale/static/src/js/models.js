@@ -1295,7 +1295,7 @@ var orderline_id = 1;
 // An orderline represent one element of the content of a client's shopping cart.
 // An orderline contains a product, its quantity, its price, discount. etc. 
 // An Order contains zero or more Orderlines.
-exports.Orderline = core.Class.extend(PropertiesMixin, {
+exports.Orderline = core.Class.extend(mixins.PropertiesMixin, {
     init: function(attr,options){
         this._super.apply(this, arguments);
         this.pos   = options.pos;
