@@ -34,7 +34,7 @@ var exports = {};
 
 exports.PosModel = core.Class.extend(mixins.PropertiesMixin, {
     init: function(session, attributes) {
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
         this.chrome = attributes.chrome;
@@ -84,8 +84,8 @@ exports.PosModel = core.Class.extend(mixins.PropertiesMixin, {
             var order = self.get_order();
             this.set('selectedClient', order ? order.get_client() : null );
         }
-        this.get('orders').bind('add remove change', update_client, this);
-        this.bind('change:selectedOrder', update_client, this);
+        this.get('orders').on('add remove change', this, update_client);
+        this.on('change:selectedOrder', this, update_client);
 
         // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
         // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched.
@@ -1210,7 +1210,7 @@ exports.load_models = function(models,options) {
 
 exports.Product = core.Class.extend(mixins.PropertiesMixin, {
     init: function(attr, options){
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         _.extend(this, options);
     },
 
@@ -1297,7 +1297,7 @@ var orderline_id = 1;
 // An Order contains zero or more Orderlines.
 exports.Orderline = core.Class.extend(mixins.PropertiesMixin, {
     init: function(attr,options){
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         this.pos   = options.pos;
         this.order = options.order;
         if (options.json) {
@@ -1770,7 +1770,7 @@ exports.Packlotline = core.Class.extend(mixins.PropertiesMixin, {
         lot_name: null
     },
     init: function(attributes, options){
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         this.order_line = options.order_line;
         if (options.json) {
             this.init_from_JSON(options.json);
@@ -1841,7 +1841,7 @@ var PacklotlineCollection = Backbone.Collection.extend({
 // Every Paymentline contains a cashregister and an amount of money.
 exports.Paymentline = core.Class.extend(mixins.PropertiesMixin, {
     init: function(attributes, options) {
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         this.pos = options.pos;
         this.order = options.order;
         this.amount = 0;
@@ -1909,9 +1909,9 @@ var PaymentlineCollection = Backbone.Collection.extend({
 // plus the associated payment information (the Paymentlines) 
 // there is always an active ('selected') order in the Pos, a new one is created
 // automaticaly once an order is completed and sent to the server.
-exports.Order = web.Class.extend(mixins.PropertiesMixin, {
+exports.Order = core.Class.extend(mixins.PropertiesMixin, {
     init: function(attributes,options){
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
         var self = this;
         options  = options || {};
 
