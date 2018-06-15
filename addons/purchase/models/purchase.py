@@ -536,7 +536,7 @@ class PurchaseOrder(models.Model):
         result['context'] = {}
         pick_ids = self.mapped('picking_ids')
         #choose the view_mode accordingly
-        if len(pick_ids) > 1:
+        if not pick_ids or len(pick_ids) > 1:
             result['domain'] = "[('id','in',%s)]" % (pick_ids.ids)
         elif len(pick_ids) == 1:
             res = self.env.ref('stock.view_picking_form', False)

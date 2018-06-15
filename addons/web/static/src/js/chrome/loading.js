@@ -26,9 +26,9 @@ var Loading = Widget.extend({
         this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
-        session.on("request", this, this.request_call);
-        session.on("response", this, this.response_call);
-        session.on("response_failed", this, this.response_call);
+        core.bus.on('rpc_request', this, this.request_call);
+        core.bus.on("rpc_response", this, this.response_call);
+        core.bus.on("rpc_response_failed", this, this.response_call);
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
