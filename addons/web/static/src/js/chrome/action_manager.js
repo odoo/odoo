@@ -485,8 +485,9 @@ var ActionManager = Widget.extend({
      * @returns {Deferred} resolved immediately
      */
     _executeCloseAction: function (action, options) {
+        var result;
         if (!this.currentDialogController) {
-            options.on_close();
+            result = options.on_close();
         }
 
         this._closeDialog();
@@ -496,7 +497,7 @@ var ActionManager = Widget.extend({
             this.trigger_up('show_effect', action.effect);
         }
 
-        return $.when();
+        return $.when(result);
     },
     /**
      * Executes actions of type 'ir.actions.server'.
