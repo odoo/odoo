@@ -9,9 +9,12 @@ import textwrap
 import uuid
 from datetime import datetime
 from subprocess import Popen, PIPE
+from collections import OrderedDict
 from odoo import fields, tools
+from odoo.tools.pycompat import string_types, to_text
 from odoo.http import request
 from odoo.modules.module import get_resource_path
+from odoo.addons.base.ir.ir_qweb.qweb import escape
 import psycopg2
 from odoo.tools import func, misc
 
@@ -65,7 +68,6 @@ def rjsmin(script):
     ).strip()
     return result
 
-
 class AssetError(Exception):
     pass
 
@@ -79,17 +81,16 @@ class AssetsBundle(object):
     rx_preprocess_imports = re.compile("""(@import\s?['"]([^'"]+)['"](;?))""")
     rx_css_split = re.compile("\/\*\! ([a-f0-9-]+) \*\/")
 
-    def __init__(self, name, files, remains, env=None):
+    # remains attribute is depreciated and will remove after v11
+    def __init__(self, name, files, remains=None, env=None):
         self.name = name
         self.env = request.env if env is None else env
         self.max_css_rules = self.env.context.get('max_css_rules', MAX_CSS_RULES)
         self.javascripts = []
         self.stylesheets = []
         self.css_errors = []
-        self.remains = []
         self._checksum = None
         self.files = files
-        self.remains = remains
         for f in files:
             if f['atype'] == 'text/sass':
                 self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
@@ -100,9 +101,30 @@ class AssetsBundle(object):
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
+    # depreciated and will remove after v11
     def to_html(self, sep=None, css=True, js=True, debug=False, async=False, url_for=(lambda url: url)):
+        nodes = self.to_node(css=css, js=js, debug=debug, async=async)
+
         if sep is None:
             sep = u'\n            '
+        response = []
+        for tagName, attributes, content in nodes:
+            html = u"<%s " % tagName
+            for name, value in attributes.items():
+                if value or isinstance(value, string_types):
+                    html += u' %s="%s"' % (name, escape(to_text(value)))
+            if content is None:
+                html += u'/>'
+            else:
+                html += u'>%s</%s>' % (escape(to_text(content)), tagName)
+            response.append(html)
+
+        return sep + sep.join(response)
+
+    def to_node(self, css=True, js=True, debug=False, async=False):
+        """
+        :returns [(tagName, attributes, content)] if the tag is auto close
+        """
         response = []
         if debug == 'assets':
             if css and self.stylesheets:
@@ -111,28 +133,37 @@ class AssetsBundle(object):
                     self.preprocess_css(debug=debug, old_attachments=old_attachments)
                     if self.css_errors:
                         msg = '\n'.join(self.css_errors)
-                        response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
-                        response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_html())
+                        response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
+                        response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/css/bootstrap.css").to_node())
                 if not self.css_errors:
                     for style in self.stylesheets:
-                        response.append(style.to_html())
+                        response.append(style.to_node())
 
             if js:
                 for jscript in self.javascripts:
-                    response.append(jscript.to_html())
+                    response.append(jscript.to_node())
         else:
             if css and self.stylesheets:
                 css_attachments = self.css() or []
                 for attachment in css_attachments:
-                    response.append(u'<link href="%s" rel="stylesheet"/>' % url_for(attachment.url))
+                    attr = OrderedDict([
+                        ["type", "text/css"],
+                        ["rel", "stylesheet"],
+                        ["href", attachment.url],
+                    ])
+                    response.append(("link", attr, None))
                 if self.css_errors:
                     msg = '\n'.join(self.css_errors)
-                    response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_html())
+                    response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
             if js and self.javascripts:
-                response.append(u'<script %s type="text/javascript" src="%s"></script>' % (async and u'async="async"' or '', url_for(self.js().url)))
-        response.extend(self.remains)
+                attr = OrderedDict([
+                    ["async", "async" if async else None],
+                    ["type", "text/javascript"],
+                    ["src", self.js().url],
+                ])
+                response.append(("script", attr, None))
 
-        return sep + sep.join(response)
+        return response
 
     @func.lazy_property
     def last_modified(self):
@@ -152,7 +183,7 @@ class AssetsBundle(object):
         Not really a full checksum.
         We compute a SHA1 on the rendered bundle + max linked files last_modified date
         """
-        check = u"%s%s%s" % (json.dumps(self.files, sort_keys=True), u",".join(self.remains), self.last_modified)
+        check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
         return hashlib.sha1(check.encode('utf-8')).hexdigest()
 
     def clean_attachments(self, type):
@@ -314,7 +345,7 @@ class AssetsBundle(object):
             outdated = False
             assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
             if assets:
-                assets_domain = [('url', 'in', list(assets))]
+                assets_domain = [('url', 'in', list(assets.keys()))]
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
                 for attachment in attachments:
                     asset = assets[attachment.url]
@@ -474,7 +505,20 @@ class WebAsset(object):
             except Exception:
                 raise AssetNotFound("Could not find %s" % self.name)
 
+    # depreciated and will remove after v11
     def to_html(self):
+        tagName, attributes, content = self.to_node()
+        html = u"<%s " % tagName
+        for name, value in attributes.items():
+            if value or isinstance(value, string_types):
+                html += u' %s="%s"' % (name, escape(to_text(value)))
+        if content is None:
+            html += u'/>'
+        else:
+            html += u'>%s</%s>' % (escape(to_text(content)), tagName)
+        return html
+
+    def to_node(self):
         raise NotImplementedError()
 
     @func.lazy_property
@@ -533,13 +577,19 @@ class JavascriptAsset(WebAsset):
         try:
             return super(JavascriptAsset, self)._fetch_content()
         except AssetError as e:
-            return "console.error(%s);" % json.dumps(str(e))
+            return u"console.error(%s);" % json.dumps(to_text(e))
 
-    def to_html(self):
+    def to_node(self):
         if self.url:
-            return '<script type="text/javascript" src="%s"></script>' % (self.html_url)
+            return ("script", OrderedDict([
+                ["type", "text/javascript"],
+                ["src", self.html_url],
+            ]), None)
         else:
-            return '<script type="text/javascript" charset="utf-8">%s</script>' % self.with_header()
+            return ("script", OrderedDict([
+                ["type", "text/javascript"],
+                ["charset", "utf-8"],
+            ]), self.with_header())
 
 
 class StylesheetAsset(WebAsset):
@@ -595,13 +645,21 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r' *([{}]) *', r'\1', content)
         return self.with_header(content)
 
-    def to_html(self):
-        media = (' media="%s"' % misc.html_escape(self.media)) if self.media else ''
+    def to_node(self):
         if self.url:
-            href = self.html_url
-            return '<link rel="stylesheet" href="%s" type="text/css"%s/>' % (href, media)
+            attr = OrderedDict([
+                ["type", "text/css"],
+                ["rel", "stylesheet"],
+                ["href", self.html_url],
+                ["media", escape(to_text(self.media)) if self.media else None]
+            ])
+            return ("link", attr, None)
         else:
-            return '<style type="text/css"%s>%s</style>' % (media, self.with_header())
+            attr = OrderedDict([
+                ["type", "text/css"],
+                ["media", escape(to_text(self.media)) if self.media else None]
+            ])
+            return ("style", attr, self.with_header())
 
 
 class PreprocessedCSS(StylesheetAsset):
