@@ -101,8 +101,9 @@
                     <field name="team_id" context="{'invisible_team': False}"/>
                     <field name="user_id" string="Salesperson"/>
                     <separator/>
-                    <filter string="This Month" name="this_month" domain="[('date_closed', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
-                    <filter string="Last Month" name="last_month" domain="['&amp;', ('date_closed', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%%Y-%%m-01')), ('date_closed', '&lt;', context_today().strftime('%%Y-%%m-01'))]"/>
+                    <filter string="Creation Date" name="filter_create_date" date="create_date"/>
+                    <filter string="Expected Closing" name="filter_date_deadline" date="date_deadline"/>
+                    <filter string="Date Closed" name="date_closed_filter" date="date_closed"/>
                     <separator/>
                     <filter string="Current" name="current" domain="[('active', '=', True)]"/>
                     <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
@@ -127,8 +128,9 @@
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline"/>
                         <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
+                        <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline"/>
+                        <filter string="Closed Date" context="{'group_by':'date_closed'}" name="date_closed_groupby"/>
                         <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>

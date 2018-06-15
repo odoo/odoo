@@ -190,7 +190,7 @@
                 <field name="name" />
                 <filter name="open_sessions" string="Open" domain="[('state', '=', 'opened')]" />
                 <separator/>
-                <filter string="Today" name="today" domain="[('start_at', '>=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" />
+                <filter string="Start Date" name="start_at_filter" date="start_at" default_period="today"/>
                 <field name="config_id" />
                 <field name="user_id" />
                 <group expand="0" string="Group By">

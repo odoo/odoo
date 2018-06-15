@@ -6,15 +6,13 @@
         <field name="arch" type="xml">
             <search>
                 <field name="workcenter_id"/>
-                <filter string="Today" name="today" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-%%d'))]"/>
-                <filter string="This Month" name="thismonth" domain="[('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"/>
-                <filter string="This Year" name="thisyear" domain="[('date_start','&gt;=',time.strftime('%%Y-01-01'))]"/>
-                <separator/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
                 <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
                 <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
+                <filter string="Start Date" name="date_start_filter" date="date_start"/>
                 <separator/>
             </search>
         </field>

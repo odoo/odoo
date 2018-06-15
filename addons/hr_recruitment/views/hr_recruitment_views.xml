@@ -930,7 +930,7 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
-                <filter string="This Year" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter string="Creation Date" name="year" date="create_date" default_period="this_year"/>
                 <separator/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
