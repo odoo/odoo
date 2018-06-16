@@ -12,19 +12,20 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2017
 # Eimantas <eimantas@focusate.eu>, 2018
+# Linas Versada <paulius.sladkevicius@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:43+0000\n"
 "PO-Revision-Date: 2016-10-10 08:43+0000\n"
-"Last-Translator: Eimantas <eimantas@focusate.eu>, 2018\n"
+"Last-Translator: Linas Versada <paulius.sladkevicius@gmail.com>, 2018\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: lt\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: hr
 #: code:addons/hr/models/hr.py:76
@@ -597,7 +598,7 @@ msgstr "Pasamdyti puikių vadovų komandą "
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Hire a team of great marketing people"
-msgstr ""
+msgstr "Pasamdykite kvalifikuotų rinkodaros specialistų"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_hired_employee
@@ -712,6 +713,10 @@ msgid ""
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
 msgstr ""
+"Darbo pozicijos yra naudojamos nustatyti darbus ir jų reikalavimus.\n"
+"                Galite sekti, kiek darbuotojų turite kiekvienai darbo pozicijai,\n"
+"                ir sekti jų kitimą pagal tai, ką jūs planavote\n"
+"                ateičiai."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
@@ -757,22 +762,23 @@ msgstr "Vėliausias ryšys"
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
-msgstr ""
+msgstr "Paleisti įdarbinimą"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Launch new marketing campaigns and offers"
-msgstr ""
+msgstr "Paleiskite naujas marketingo kampanijas ir pasiūlymus"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Launch new products, Human Resources campaigns and offers"
 msgstr ""
+"Paleiskite naujus produktus, žmogiškųjų išteklių kampanijas ir pasiūlymus"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Launch new products, marketing campaigns and offers"
-msgstr ""
+msgstr "Paleiskite naujus produktus, rinkodaros kampanijas ir pasiūlymus"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_login
@@ -817,7 +823,7 @@ msgstr "Susituokęs/-usi"
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Master or engineer in computer science"
-msgstr ""
+msgstr "Magistro ar inžinieriaus laipsnis IT"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
@@ -831,6 +837,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Vidutinio darbuotojo nuotrauka. Ji automatiškai sumažinama iki 128x128px "
+"dydžio nuotraukos, išlaikant kraštinių santykį. Naudokite šį lauką formos "
+"peržiūrose arba kai kuriuose Kanban peržiūrose."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_member_ids
@@ -1174,7 +1183,7 @@ msgstr "Žymos"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Take part in the consulting services"
-msgstr ""
+msgstr "Dalyvaukite konsultavimo paslaugose"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1233,6 +1242,7 @@ msgstr "Mokinys"
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Transform our product into a suite of well positioned business Apps"
 msgstr ""
+"Paverskite savo produktą puikiai pozicionuotų verslo programų rinkiniu"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -1267,6 +1277,12 @@ msgid ""
 " give him the best service. You report to the head of consulting service and"
 " will be coached by a senior consultant."
 msgstr ""
+"Ieškome motyvuoto ir į rezultatą orientuoto funkcinio konsultanto! Jūs "
+"dalyvausite konsultavimo paslaugose, kurias teikiame savo partneriams ir "
+"klientams funkcinėje dalyje. Jūsų darbas prasidės nuo kliento užklausos ir "
+"baigsis pristatymų klientui. Jūs klausysite kliento ir suteiksite jam "
+"geriausias paslaugas. Būsite atskaitingas konsultavimo paslaugų vadovui ir "
+"jus mokys vyresnieji konsultantai."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
@@ -1276,6 +1292,10 @@ msgid ""
 "and ..... not afraid to start new things, a lot of new things and scale "
 "them."
 msgstr ""
+"Ieškome energingo žmogiškųjų išteklių vadybininko, kuris padėtų mums kurti "
+"žmonių mėgstamus produktus. Mums reikia žmogaus, kuris būtų ambicingas, "
+"energingas ir... nebijantis pradėti naujus dalykus, daug naujų dalykų ir "
+"perkelti juos į kitą lygį."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1284,6 +1304,10 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Ieškome energingo vykdančiojo vadovo, kuris padėtų mums kurti žmonių "
+"mėgstamus produktus. Mums reikia žmogaus, kuris būtų ambicingas, energingas "
+"ir... nebijantis pradėti naujus dalykus, daug naujų dalykų ir perkelti juos "
+"į kitą lygį."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
@@ -1292,6 +1316,10 @@ msgid ""
 "people love to use. We need someone who is ambitious, passionated, and ....."
 " not afraid to start new things, a lot of new things and scale them."
 msgstr ""
+"Ieškome energingo rinkodaros vadybininko, kuris padėtų mums kurti žmonių "
+"mėgstamus produktus. Mums reikia žmogaus, kuris būtų ambicingas, energingas "
+"ir... nebijantis pradėti naujus dalykus, daug naujų dalykų ir perkelti juos "
+"į kitą lygį."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1323,7 +1351,7 @@ msgstr "Našlys/-ė"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "Will report to the Head of Professional Services"
-msgstr ""
+msgstr "Bus atskaitingas profesinių paslaugų vadovui"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -1333,6 +1361,9 @@ msgid ""
 "                can easily find all the information you need for each person;\n"
 "                contact data, job position, availability, etc."
 msgstr ""
+"Vos užmetę akį į Odoo darbuotojų vaizdą jūs\n"
+"                galėsite rasti visą reikiamą informaciją apie kiekvieną žmogų;\n"
+"                kontaktinius duomenis, poziciją, pasiekiamumą ir kt."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1347,6 +1378,9 @@ msgid ""
 "source, full featured and it’s online offer is 3 times cheaper than "
 "traditional competitors. We have 2.000.000 users, and we're growing fast."
 msgstr ""
+"Su mūsų produktus, kuris yra 3000 verslo programų rinkinys. Jis yra visiškai"
+" atviro kodo, daugiafunkcinis ir siūlo 3 kartus mažesnę kainą internetu nei "
+"įprasti konkurentai. Mes turime 2.000.000 vartotojų ir sparčiai augame."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
@@ -1381,22 +1415,22 @@ msgstr "Darbo laikas"
 #. module: hr
 #: model:hr.job,website_description:hr.job_marketing
 msgid "Write attractive content"
-msgstr ""
+msgstr "Rašykite patrauklų turinį"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_hrm
 msgid "Write attractive content and build up Human Resources materials"
-msgstr ""
+msgstr "Rašykite patrauklų turinį ir sukurkite žmogiškųjų išteklių medžiagą"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 msgid "Write attractive content and build up executive materials"
-msgstr ""
+msgstr "Rašykite patrauklų turinį ir sukurkite vadovų medžiagą"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are a quick and autonomous learner"
-msgstr ""
+msgstr "Jūs esate greitai ir savarankiškas mokinys"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1408,7 +1442,7 @@ msgstr "Esi komunikabilus bei puikus derybininkas"
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are approachable, honest and fun team player"
-msgstr ""
+msgstr "Esate lengvai bendraujantis, nuoširdus ir linksmas komandos žaidėjas"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1425,14 +1459,14 @@ msgstr "Esi kūrybiškas"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You are ready to travel in US"
-msgstr ""
+msgstr "Esate pasiruošęs keliauti į JAV"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You are ready to work in a dynamic company"
-msgstr ""
+msgstr "Esate pasiruošęs dirbti dinamiškoje kompanijoje"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -1441,6 +1475,9 @@ msgid ""
 "                the recruitment process to evaluate the applicants for this job\n"
 "                position."
 msgstr ""
+"Galite prie darbo pozicijos prisegti apklausą. Jis bus naudojama\n"
+"               įdarbinimo procese, kad būtų įvertinti šios pozicijos\n"
+"                kandidatai."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1450,30 +1487,30 @@ msgstr "Turi 2-3 metų patirtį"
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have a Master degree in Business Management"
-msgstr ""
+msgstr "Turite magistro laipsnį verslo vadyboje"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the IT world"
-msgstr ""
+msgstr "Turite potraukį IT pasauliui"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
 #: model:hr.job,website_description:hr.job_hrm
 #: model:hr.job,website_description:hr.job_marketing
 msgid "You have an affinity with the product"
-msgstr ""
+msgstr "Turite potraukį produktui"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You have good knowledge in accounting"
-msgstr ""
+msgstr "Turite geras buhalterijos žinias"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
 msgid "You speak a third language"
-msgstr ""
+msgstr "Kalbate trečiąja kalba"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_consultant
@@ -1489,6 +1526,9 @@ msgid ""
 "small distributed development teams for specific projects. You will become a"
 " technical                 expert of the product."
 msgstr ""
+"Būsite atsakingas už programų kūrimą ir tobulinimą. Dirbsite savarankiškai, "
+"taip pat koordinuosite ir prižiūrėsite mažas kūrėjų komandas tam tikriems "
+"projektams. Tapsite produkto techniniu ekspertu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -1498,6 +1538,9 @@ msgid ""
 "development teams for specific projects. You will become a technical expert "
 "of the product."
 msgstr ""
+"Būsite atsakingas už programų kūrimą ir tobulinimą. Dirbsite savarankiškai, "
+"taip pat koordinuosite ir prižiūrėsite mažas kūrėjų komandas tam tikriems "
+"projektams. Tapsite produkto techniniu ekspertu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_ceo
@@ -1509,50 +1552,53 @@ msgid ""
 "distributed development teams for specific projects. You will become a "
 "techinical expert of the product."
 msgstr ""
+"Būsite atsakingas už produkto komunikacijos kūrimą ir tobulinimą. Dirbsite "
+"savarankiškai, taip pat koordinuosite ir prižiūrėsite mažas kūrėjų komandas "
+"tam tikriems projektams. Tapsite produkto techniniu ekspertu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will become a technical expert of the product."
-msgstr ""
+msgstr "Tapsite produkto techniniu ekspertu."
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "You will initially be coached by senior developers"
-msgstr ""
+msgstr "Iš pradžių būsite mokomas aukštesnių darbuotojų"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will initially be coached by senior technical officer"
-msgstr ""
+msgstr "Iš pradžių būsite mokomas techninio vadovo"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will initially be coached by senior trainees"
-msgstr ""
+msgstr "Iš pradžių būsite mokomas vyresnių praktikantų"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 #: model:hr.job,website_description:hr.job_developer
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will report to the head of R&amp;D"
-msgstr ""
+msgstr "Bus atskaitingas R&amp;D vadovui"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
 msgid "You will work closely with all developers"
-msgstr ""
+msgstr "Artimai dirbsite su visais kūrėjais"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_cto
 msgid "You will work closely with all technical officer"
-msgstr ""
+msgstr "Artimai dirbsite su visais techniniais vadovais"
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_trainee
 msgid "You will work closely with all trainees"
-msgstr ""
+msgstr "Artimai dirbsite su visais praktikantais"
 
 #. module: hr
 #: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
@@ -1566,6 +1612,9 @@ msgid ""
 "recognized. Please send emails with the email address recorded on your "
 "employee information, or contact your HR manager."
 msgstr ""
+"Jūsų dokumentas nebuvo sukurtas, kadangi jūsų el. pašto adresas nėra "
+"atpažįstamas. Prašome siųsti laiškus su darbuotojo informacijoje nurodytu "
+"el. pašto adresu arba susisiekti su žmogiškųjų išteklių vadybininku."
 
 #. module: hr
 #: code:addons/hr/models/mail_thread.py:41
@@ -1597,7 +1646,7 @@ msgstr "praleidimas"
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
 msgid "the user will be able to approve document created by employees."
-msgstr ""
+msgstr "vartotojas galės patvirtinti dokumentą, sukurtą darbuotojų."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -1605,3 +1654,5 @@ msgid ""
 "the user will have an access to the human resources configuration as well as"
 " statistic reports."
 msgstr ""
+"vartotojas turės prieigą prie žmogiškųjų išteklių konfigūracijos ir "
+"statistikos ataskaitų."
