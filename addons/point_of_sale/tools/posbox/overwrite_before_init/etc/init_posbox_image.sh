@@ -36,14 +36,14 @@ rm -rf /usr/share/doc
 # this may be fixed with libusb>2:1.0.11-1, but that's the most recent one in raspbian
 # so we install the latest pyusb that works with this libusb
 pip install pyusb==1.0.0b1
-pip install qrcode
-pip install evdev
-pip install simplejson
-pip install unittest2
+pip install qrcode==5.0.1
+pip install evdev==1.0.0
+pip install simplejson==3.5.3
+pip install unittest2==0.5.1
 
 # --upgrade because websocket_client in wheezy is bad:
 # https://github.com/docker/compose/issues/1288
-pip install --upgrade websocket_client
+pip install --upgrade websocket_client==0.48.0
 
 groupadd usbusers
 usermod -a -G usbusers pi
