@@ -72,6 +72,47 @@ var DocumentThread = Thread.extend({
         }
     },
     /**
+     * Overrides to store the thread's state in the LocalStorage, so that it is
+     * shared between tabs, and restored on F5.
+     *
+     * @override
+     */
+    close: function () {
+        this._super.apply(this, arguments);
+        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+            name: this.getName(),
+            windowState: 'closed',
+        });
+    },
+    /**
+     * Overrides to store the thread's state in the LocalStorage, so that it is
+     * shared between tabs, and restored on F5.
+     *
+     * @override
+     */
+    detach: function () {
+        this._super.apply(this, arguments);
+        var windowState = this._folded ? 'folded' : 'open';
+        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+            name: this.getName(),
+            windowState: windowState,
+        });
+    },
+    /**
+     * Overrides to store the thread's state in the LocalStorage, so that it is
+     * shared between tabs, and restored on F5.
+     *
+     * @override
+     */
+    fold: function () {
+        this._super.apply(this, arguments);
+        var windowState = this._folded ? 'folded' : 'open';
+        this.call('mail_service', 'updateDocumentThreadState', this._id, {
+            name: this.getName(),
+            windowState: windowState,
+        });
+    },
+    /**
      * Get the model name of the document that is linked to this document thread
      *
      * @returns {string}
@@ -151,7 +192,7 @@ var DocumentThread = Thread.extend({
                 _.extend(messageData, {
                     context: data.context,
                     message_type: data.message_type,
-                    subtype: data.subtype,
+                    subtype: data.subtype || "mail.mt_comment",
                     subtype_id: data.subtype_id,
                 });
                 return self._rpc({
