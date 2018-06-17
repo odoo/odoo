@@ -7,6 +7,7 @@ var MailManager = require('mail.Manager');
 
 require('mail.Manager.Notification');
 require('mail.Manager.Window');
+require('mail.Manager.DocumentThread');
 
 core.serviceRegistry.add('mail_service', MailManager);
 
