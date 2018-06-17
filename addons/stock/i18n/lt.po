@@ -2045,23 +2045,23 @@ msgstr "Aprašymas"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr ""
+msgstr "Aprašymas pristatymo užsakymams"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Internal Transfers"
-msgstr ""
+msgstr "Aprašymas vidiniams perkėlimams"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receptions"
-msgstr ""
+msgstr "Aprašymas gavimams"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template_description_pickingout
 msgid "Description on Delivery Orders"
-msgstr ""
+msgstr "Aprašymas pristatymo užsakymams"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
@@ -2607,6 +2607,12 @@ msgid ""
 "                the purchase order reference. Then you can confirm all products\n"
 "                received using the buttons on the right of each line."
 msgstr ""
+"Čia galite gauti atskirus produktus, nesvarbu, iš kokio\n"
+"pirkimo užsakymo ar paėmimo užsakymo jie yra. Rasite\n"
+"visų produktų, kurių laukiate, sąrašą. Kai gausite užsakymą\n"
+"galite filtruoti pagal pardavėjo pavadinimą ar pirkimo užsakymo\n"
+"numerį. Tada grąžintus produktus galite patvirtinti naudodami mygtukus\n"
+"kiekvienos eilutės dešinėje."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6206,6 +6212,8 @@ msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
 msgstr ""
+"Techninis laukas, naudojimas skaičiuoti, ar pasiekiamumo mygtukas turėtų "
+"būti rodomas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_mark_as_todo
@@ -6213,11 +6221,15 @@ msgid ""
 "Technical field used to compute whether the mark as todo button should be "
 "shown."
 msgstr ""
+"Techninis laukas, naudojamas skaičiuoti, ar mygtukas \"pažymėti kaip "
+"atliktiną\" turėtų būti rodomas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_show_validate
 msgid "Technical field used to compute whether the validate should be shown."
 msgstr ""
+"Techninis laukas, naudojamas skaičiuoti, ar patvirtinimas turėtų būti "
+"rodomas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_partner_id
@@ -6238,11 +6250,12 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move_line_produce_line_ids
 msgid "Technical link to see which line was produced with this. "
 msgstr ""
+"Techninė nuoroda, parodanti, kuri linija buvo pagaminta naudojant tai."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line_consume_line_ids
 msgid "Technical link to see who consumed what. "
-msgstr ""
+msgstr "Techninė nuoroda, rodanti, kas suvartojo ką."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_tmpl_id
@@ -6716,6 +6729,10 @@ msgid ""
 "                            Shipping area, Merchandise return, Shelf 34 etc).\n"
 "                            Do not use Locations if you do not manage inventory per zone."
 msgstr ""
+"Geresniam atsargų valdymui galite sukurti\n"
+"                            savo sandėlio poskyrius, vadinamus <strong>Vietomis</strong> (pvz:\n"
+"                            pristatymo vieta, grąžinimo vieta, lentyna 34 ir t.t.).\n"
+"                            Nenaudokite vietų, jei nevaldote inventoriaus zonomis."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7211,6 +7228,10 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        data."
 msgstr ""
+"Mes atliekame visą importo procesą už Jus:\n"
+"                                        paprasčiausiai atsiųskite savo Odoo projekto\n"
+"                                        vadovui CSV failą su visa produktų\n"
+"                                        informacija."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7220,6 +7241,9 @@ msgid ""
 "                                        manager a CSV file containing all your\n"
 "                                        products."
 msgstr ""
+"Mes atliekame visą importo procesą už Jus:\n"
+"                                        paprasčiausiai atsiųskite savo Odoo projekto\n"
+"                                        vadovui CSV failą su visais jūsų produktais."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7383,7 +7407,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "You can delete lines to ignore some products."
-msgstr ""
+msgstr "Galite ištrinti eilutes, kad ignoruotumėte kai kuriuos produktus."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -7409,6 +7433,9 @@ msgid ""
 "stock move. If you need to change the type, you should first unreserve the "
 "stock move."
 msgstr ""
+"Negalite pakeisti tipo produkto, kuris šiuo metu yra rezervuotas atsargų "
+"perkėlimui. Jei jums reikia pakeisti tipą, pirmiausia turėtumėte "
+"atrezervuoti atsargų perkėlimą."
 
 #. module: stock
 #: code:addons/stock/models/product.py:502
@@ -7452,7 +7479,7 @@ msgstr "Jūs galite ištrinti tik juodraščio būsenos įrašus"
 #: code:addons/stock/models/stock_move_line.py:126
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
-msgstr ""
+msgstr "Galite apdoroti tik 1.0 %s produktams su unikaliu serijiniu numeriu."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -7800,7 +7827,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "on the sales order form to see Transfer Order"
-msgstr ""
+msgstr "pardavimų užsakymo formoje matyti perkėlimo užsakymą"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_forecast
