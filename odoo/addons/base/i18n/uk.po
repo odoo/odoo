@@ -8316,7 +8316,7 @@ msgstr "Двійковий"
 #: model:ir.model.fields,field_description:base.field_ir_actions_binding_model_id_274
 #: model:ir.model.fields,field_description:base.field_ir_cron_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Модель зв'язування"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_binding_type
@@ -8328,7 +8328,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_binding_type_275
 #: model:ir.model.fields,field_description:base.field_ir_cron_binding_type
 msgid "Binding Type"
-msgstr ""
+msgstr "Тип зв'язування"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
@@ -8840,7 +8840,7 @@ msgstr "Китай"
 #: code:addons/base/ir/ir_actions_report.py:685
 #, python-format
 msgid "Choose Your Document Layout"
-msgstr ""
+msgstr "Оберіть ваш документ Layout"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_form
@@ -14848,7 +14848,7 @@ msgstr "Модель не знайдено: %(model)s"
 #: model:ir.model.fields,help:base.field_ir_act_server_model_id
 #: model:ir.model.fields,help:base.field_ir_cron_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Модель, на якій виконується дія сервера."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_model
@@ -17847,6 +17847,8 @@ msgid ""
 "Provide the field used to link the newly created record on the record on "
 "used by the server action."
 msgstr ""
+"Укажіть поле, яке використовується для пов'язування новоствореного запису із"
+" записами, що використовуються сервером."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
@@ -18493,7 +18495,7 @@ msgstr "Переказ кредиту SEPA на витрати"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr ""
+msgstr "Прямий дебет SEPA "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
@@ -19059,6 +19061,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
+"Встановлення значення робить цю дію доступною на бічній панелі для даної "
+"моделі."
 
 #. module: base
 #: code:addons/base/res/res_users.py:520
@@ -20836,6 +20840,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Тип дії сервера. Доступні наступні значення:\n"
+"- 'Execute Python Code': блок коду python, який буде виконуватися\n"
+"- \"Створити або скопіювати новий запис\": створити новий запис із новими значеннями або скопіювати існуючий запис у вашу базу даних\n"
+"- \"Написати на запис\": оновіть значення запису\n"
+"- \"Виконати кілька дій\": визначити дію, яка запускає кілька інших дій сервера\n"
+"- \"Додати послідовників\": додавати послідовників до запису (доступно в Обговоренні)\n"
+"- \"Надіслати електронний лист\": автоматично надсилатиме електронний лист (доступний в email_template)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint_type
