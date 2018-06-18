@@ -164,13 +164,13 @@ class GamificationBadge(models.Model):
 
         for badge in self:
             owners = badge.owner_ids
-            badge.stats_my = sum(o.user_id == self.env.user for o in owners)
-            badge.stats_this_month = sum(o.create_date >= first_month_day for o in owners)
-            badge.stats_my_this_month = sum(
+            badge.stat_my = sum(o.user_id == self.env.user for o in owners)
+            badge.stat_this_month = sum(o.create_date >= first_month_day for o in owners)
+            badge.stat_my_this_month = sum(
                 o.user_id == self.env.user and o.create_date >= first_month_day
                 for o in owners
             )
-            badge.stats_my_monthly_sending = sum(
+            badge.stat_my_monthly_sending = sum(
                 o.create_uid == self.env.user and o.create_date >= first_month_day
                 for o in owners
             )
