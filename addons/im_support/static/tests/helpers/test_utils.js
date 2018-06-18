@@ -70,7 +70,7 @@ function addMockSupportEnvironment(widget, params) {
             }
         }, true);
         // manually call initSupport (which is supposed to be called at webclient startup)
-        widget.call('chat_manager', 'initSupport');
+        widget.call('mail_service', 'initSupport');
     }
 }
 
