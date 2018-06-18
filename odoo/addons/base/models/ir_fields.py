@@ -303,6 +303,7 @@ class IrFieldsConverter(models.AbstractModel):
 
         id = None
         warnings = []
+        error_msg = ''
         action = {'type': 'ir.actions.act_window', 'target': 'new',
                   'view_mode': 'tree,form', 'view_type': 'form',
                   'views': [(False, 'tree'), (False, 'form')],
@@ -346,6 +347,13 @@ class IrFieldsConverter(models.AbstractModel):
                         _(u"Found multiple matches for field '%%(field)s' (%d matches)")
                         % (len(ids))))
                 id, _name = ids[0]
+            else:
+                name_create_enabled_fields = self.env.context.get('name_create_enabled_fields')
+                if name_create_enabled_fields and name_create_enabled_fields.get(field.name):
+                    try:
+                        id, _name = RelatedModel.name_create(name=value)
+                    except Exception as e:
+                        error_msg = e.args[0]
         else:
             raise self._format_import_error(
                 Exception,
@@ -354,9 +362,11 @@ class IrFieldsConverter(models.AbstractModel):
             )
 
         if id is None:
+            message = _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
+            message += error_msg and ' or ' + error_msg
             raise self._format_import_error(
                 ValueError,
-                _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'"),
+                message,
                 {'field_type': field_type, 'value': value},
                 {'moreinfo': action})
         return id, field_type, warnings

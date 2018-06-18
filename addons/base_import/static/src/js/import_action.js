@@ -418,7 +418,21 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 placeholder: _t('Don\'t import'),
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
+            }).on("select2-removed", function (e) {
+                // fired when a choice is removed or cleared.
+                $(e.currentTarget).next().replaceWith($("<div class='o_create_record_option'></div>"));
+            }).on("select2-close", function (e) {
+                // fired after the dropdown is closed.
+                var currentTarget = $(e.currentTarget),
+                    $nextElement = currentTarget.next('.o_create_record_option'),
+                    data = item_finder(currentTarget.val());
+                $nextElement.replaceWith(QWeb.render('ImportView.create_record_option', data));
             });
+
+            var data = item_finder($(v).val());
+            if (session.debug) {
+                $(v).after(QWeb.render('ImportView.create_record_option', data));
+            }
         });
     },
     generate_fields_completion: function (root, index) {
@@ -448,7 +462,8 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
                 collection.push({
                     id: id,
                     text: label,
-                    required: field.required
+                    required: field.required,
+                    type: field.type
                 });
 
             }
@@ -521,6 +536,13 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         var columns = this.$('.oe_import_grid-header .oe_import_grid-cell .o_import_header_name').map(function () {
             return $(this).text().trim().toLowerCase() || false;
         }).get();
+        var options = this.import_options();
+        // create record if doesn't exist option on many2one and many2many fields
+        var name_create_enabled_fields = {};
+        this.$('input.o_import_create_option').each(function (index, el) {
+            name_create_enabled_fields[$(el).attr('id')] = $(el).prop('checked');
+        });
+        options['name_create_enabled_fields'] = name_create_enabled_fields;
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
         var defer_parent_store = 'defer_parent_store' in kwargs ? kwargs.defer_parent_store : !!this.$('#oe_import_deferparentstore').prop('checked')
         delete kwargs.tracking_disable;
@@ -532,7 +554,7 @@ var DataImport = AbstractAction.extend(ControlPanelMixin, {
         return this._rpc({
                 model: 'base_import.import',
                 method: 'do',
-                args: [this.id, fields, columns, this.import_options()],
+                args: [this.id, fields, columns, options],
                 kwargs : kwargs,
             }).then(null, function (error, event) {
                 // In case of unexpected exception, convert
