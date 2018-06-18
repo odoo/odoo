@@ -12,11 +12,11 @@ tour.register('event_buy_tickets', {
     [
         {
             content: "Go to the `Events` page",
-            trigger: 'a[href*="/event"]:contains("Conference on Business Apps"):first',
+            trigger: 'a[href*="/event"]:contains("Conference for Architects"):first',
         },
         {
             content: "Select 1 unit of `Standard` ticket type",
-            extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference on Business Apps")))',
+            extra_trigger: '#wrap:not(:has(a[href*="/event"]:contains("Conference for Architects")))',
             trigger: 'select:eq(0)',
             run: 'text 1',
         },

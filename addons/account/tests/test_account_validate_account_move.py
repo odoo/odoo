@@ -21,13 +21,13 @@ class TestAccountValidateAccount(AccountingTestCase):
         })
         # create move line
         account_move_line.create({'account_id': account_cash.id,
-            'name': 'Basic Computer',
+            'name': 'Four Person Desk',
             'move_id': move.id,
         })
 
         # create another move line
         account_move_line.create({'account_id': account_cash.id,
-            'name': 'Basic Computer',
+            'name': 'Four Person Desk',
             'move_id': move.id,
         })
 

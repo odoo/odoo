@@ -14,7 +14,7 @@ class TestFifoPrice(TestPurchase):
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Set a product as using fifo price
-        product_icecream = self.env['product.product'].create({
+        product_cable_management_box = self.env['product.product'].create({
             'default_code': 'FIFO',
             'name': 'FIFO Ice Cream',
             'type': 'product',
@@ -36,7 +36,7 @@ class TestFifoPrice(TestPurchase):
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
-                'product_id': product_icecream.id,
+                'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
@@ -55,15 +55,15 @@ class TestFifoPrice(TestPurchase):
 
         # Check the standard price of the product (fifo icecream), that should have not changed
         # because the standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEquals(product_icecream.standard_price, 70.0, 'Standard price should not have changed')
-        self.assertEquals(product_icecream.stock_value, 500.0, 'Wrong stock value')
+        self.assertEquals(product_cable_management_box.standard_price, 70.0, 'Standard price should not have changed')
+        self.assertEquals(product_cable_management_box.stock_value, 500.0, 'Wrong stock value')
 
         # I create a draft Purchase Order for second shipment for 30 kg at 80 euro
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': 'FIFO Ice Cream',
-                'product_id': product_icecream.id,
+                'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
@@ -79,8 +79,8 @@ class TestFifoPrice(TestPurchase):
 
         # Check the standard price of the product, that should have not changed because the
         # standard price is supposed to be updated only when goods are going out of the stock
-        self.assertEquals(product_icecream.standard_price, 70.0, 'Standard price as fifo price of second reception incorrect!')
-        self.assertEquals(product_icecream.stock_value, 2900.0, 'Stock valuation should be 2900')
+        self.assertEquals(product_cable_management_box.standard_price, 70.0, 'Standard price as fifo price of second reception incorrect!')
+        self.assertEquals(product_cable_management_box.stock_value, 2900.0, 'Stock valuation should be 2900')
 
         # Let us send some goods
         outgoing_shipment = self.env['stock.picking'].create({
@@ -88,8 +88,8 @@ class TestFifoPrice(TestPurchase):
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
@@ -104,7 +104,7 @@ class TestFifoPrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment.id)]}).process()
 
         # Check stock value became 1600 .
-        self.assertEqual(product_icecream.stock_value, 1600.0, 'Stock valuation should be 1600')
+        self.assertEqual(product_cable_management_box.stock_value, 1600.0, 'Stock valuation should be 1600')
 
         # Do a delivery of an extra 500 g (delivery order)
         outgoing_shipment_uom = self.env['stock.picking'].create({
@@ -112,8 +112,8 @@ class TestFifoPrice(TestPurchase):
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
                 'product_uom': self.env.ref('uom.product_uom_gram').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
@@ -128,8 +128,8 @@ class TestFifoPrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment_uom.id)]}).process()
 
         # Check stock valuation and qty in stock
-        self.assertEqual(product_icecream.stock_value, 1560.0, 'Stock valuation should be 1560')
-        self.assertEqual(product_icecream.qty_available, 19.5, 'Should still have 19.5 in stock')
+        self.assertEqual(product_cable_management_box.stock_value, 1560.0, 'Stock valuation should be 1560')
+        self.assertEqual(product_cable_management_box.qty_available, 19.5, 'Should still have 19.5 in stock')
 
         # We will temporarily change the currency rate on the sixth of June to have the same results all year
         NewUSD = self.env['res.currency'].create({
@@ -144,14 +144,14 @@ class TestFifoPrice(TestPurchase):
             'currency_id': NewUSD.id,
             'order_line': [(0, 0, {
                     'name': 'FIFO Ice Cream',
-                    'product_id': product_icecream.id,
+                    'product_id': product_cable_management_box.id,
                     'product_qty': 30,
                     'product_uom': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 0.150,
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
-                    'name': product_icecream.name,
-                    'product_id': product_icecream.id,
+                    'name': product_cable_management_box.name,
+                    'product_id': product_cable_management_box.id,
                     'product_qty': 10.0,
                     'product_uom': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 150.0,
@@ -170,8 +170,8 @@ class TestFifoPrice(TestPurchase):
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
@@ -191,8 +191,8 @@ class TestFifoPrice(TestPurchase):
             'location_id': self.env.ref('stock.stock_location_stock').id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
@@ -205,7 +205,7 @@ class TestFifoPrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment_ret.id)]}).process()
 
         # Check rounded price is 150.0 / 1.2834
-        self.assertEqual(round(product_icecream.qty_available), 0.0, 'Wrong quantity in stock after first reception.')
+        self.assertEqual(round(product_cable_management_box.qty_available), 0.0, 'Wrong quantity in stock after first reception.')
 
         # Let us create some outs to get negative stock for a new product using the same config
         product_fifo_negative = self.env['product.product'].create({
@@ -297,7 +297,7 @@ class TestFifoPrice(TestPurchase):
         purchase_order_neg2 = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
-                'name': product_icecream.name,
+                'name': product_cable_management_box.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,

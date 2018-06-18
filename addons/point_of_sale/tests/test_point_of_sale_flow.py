@@ -472,7 +472,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         current_session = self.pos_config.current_session_id
         num_starting_orders = len(current_session.order_ids)
 
-        untax, atax = compute_tax(self.carotte, 0.9)
+        untax, atax = compute_tax(self.led_lamp, 0.9)
         carrot_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
@@ -487,9 +487,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'id': 42,
               'pack_lot_ids': [],
               'price_unit': 0.9,
-              'product_id': self.carotte.id,
+              'product_id': self.led_lamp.id,
               'qty': 1,
-              'tax_ids': [(6, 0, self.carotte.taxes_id.ids)]}]],
+              'tax_ids': [(6, 0, self.led_lamp.taxes_id.ids)]}]],
            'name': 'Order 00042-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -506,7 +506,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00042-003-0014',
           'to_invoice': False}
 
-        untax, atax = compute_tax(self.courgette, 1.2)
+        untax, atax = compute_tax(self.whiteboard_pen, 1.2)
         zucchini_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
@@ -521,9 +521,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'id': 3,
               'pack_lot_ids': [],
               'price_unit': 1.2,
-              'product_id': self.courgette.id,
+              'product_id': self.whiteboard_pen.id,
               'qty': 1,
-              'tax_ids': [(6, 0, self.courgette.taxes_id.ids)]}]],
+              'tax_ids': [(6, 0, self.whiteboard_pen.taxes_id.ids)]}]],
            'name': 'Order 00043-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -540,8 +540,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
           'id': '00043-003-0014',
           'to_invoice': False}
 
-        untax, atax = compute_tax(self.onions, 1.28)
-        onions_order = {'data':
+        untax, atax = compute_tax(self.newspaper_rack, 1.28)
+        newspaper_rack_order = {'data':
           {'amount_paid': untax + atax,
            'amount_return': 0,
            'amount_tax': atax,
@@ -555,9 +555,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
               'id': 3,
               'pack_lot_ids': [],
               'price_unit': 1.28,
-              'product_id': self.onions.id,
+              'product_id': self.newspaper_rack.id,
               'qty': 1,
-              'tax_ids': [[6, False, self.onions.taxes_id.ids]]}]],
+              'tax_ids': [[6, False, self.newspaper_rack.taxes_id.ids]]}]],
            'name': 'Order 00044-003-0014',
            'partner_id': False,
            'pos_session_id': current_session.id,
@@ -589,7 +589,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
         # I keep selling after the session is closed
         with mute_logger('odoo.addons.point_of_sale.models.pos_order'):
-            self.PosOrder.create_from_ui([zucchini_order, onions_order])
+            self.PosOrder.create_from_ui([zucchini_order, newspaper_rack_order])
         rescue_session = self.PosSession.search([
             ('config_id', '=', self.pos_config.id),
             ('state', '=', 'opened'),

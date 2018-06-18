@@ -28,7 +28,7 @@
 
     <!-- event.event -->
     <record id="event_0" model="event.event">
-        <field name="name">Open Days in Los Angeles</field>
+        <field name="name">Design Fair Los Angeles</field>
         <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 8:00:00')" name="date_begin"/>
         <field eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d 18:00:00')" name="date_end"/>
         <field name="seats_availability">limited</field>
@@ -37,7 +37,7 @@
         <field name="event_type_id" ref="event_type_1"/>
         <field name="description"><![CDATA[
 <div class="oe_structure">
-    <center><strong>Join us to our main event of the year: the Open Days</strong></center>
+    <center><strong>Join us to our main event of the year: the Design Fair</strong></center>
     <p>&nbsp;</p>
     <p>Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc.... This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the version 8!
     </p>
@@ -45,7 +45,7 @@
     <p>&nbsp;</p>
     <p><strong>What's new for this year?</strong></p>
     <ul>
-    <li>The Open Days are preceded by 2 days of optional training sessions for experts! We propose 3 different training sessions, 2 days each.</li>
+    <li>The Design Fair is preceded by 2 days of optional training sessions for experts! We propose 3 different training sessions, 2 days each.</li>
     <li>The whole event is open to all public! We ask a participation fee of 49.50€ for the costs for the 3 days (morning coffee, coffee breaks, drinks, sandwiches for lunch and the surprising beer party of Wednesday evening) but it's optional. For those who do not want to contribute, there is a free ticket, therefore, catering is not inclued.</li>
     <li>The plenary sessions in the morning will be shorter and we will give more time for thematical meetings, conferences, workshops and tutorial sessions in the afternoon.</li>
     </ul>
@@ -109,7 +109,7 @@
     </record>
     
     <record id="event_2" model="event.event">
-        <field name="name">Conference on Business Apps</field>
+        <field name="name">Conference for Architects</field>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 7:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_2"/>
@@ -118,7 +118,7 @@
         <field name="seats_max">200</field>
         <field name="description"><![CDATA[
 <div class="oe_structure">
-    <center><strong>Conference on Business Apps</strong></center>
+    <center><strong>Conference for Architects</strong></center>
     <p>&nbsp;</p>
     <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>
     <p>&nbsp;</p>

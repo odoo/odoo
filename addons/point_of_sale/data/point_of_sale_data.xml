@@ -25,8 +25,14 @@
             <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
         </record>
 
+        <record id="product_category_pos" model="product.category">
+            <field name="parent_id" ref="product.product_category_1"/>
+            <field name="name">PoS</field>
+        </record>
+
         <record id="product_product_tip" model="product.product">
             <field name="name">Tips</field>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
         </record>
 
         <record model="pos.config" id="pos_config_main">
@@ -40,6 +46,7 @@
             <field name="standard_price">13.0</field>
             <field name="list_price">18.0</field>
             <field name="type">consu</field>
+            <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">MISC</field>

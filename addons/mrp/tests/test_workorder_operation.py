@@ -21,6 +21,8 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
         product_screw = self.env.ref('mrp.product_product_computer_desk_screw')
+        self.env['stock.move'].search([('product_id', 'in', [product_bolt.id, product_screw.id])])._do_unreserve()
+        (product_bolt + product_screw).write({'type': 'product'})
 
         production_table = self.env['mrp.production'].create({
             'product_id': dining_table.id,
@@ -119,6 +121,8 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_table_sheet = self.env.ref('mrp.product_product_computer_desk_head')
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
+        self.env['stock.move'].search([('product_id', '=', product_bolt.id)])._do_unreserve()
+        product_bolt.type = 'product'
 
         bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
         bom.routing_id = self.ref('mrp.mrp_routing_1')

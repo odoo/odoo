@@ -55,13 +55,7 @@
         </record>
 
         <!-- Products -->
-        <record id="product.service_order_01" model="product.product">
-            <field name="service_type">timesheet</field>
-            <field name="service_tracking">project_only</field>
-        </record>
-
         <record id="product.product_product_2" model="product.product">
-            <field name="name">Support Contract (on timesheet)</field>
             <field name="service_type">timesheet</field>
             <field name="service_tracking">project_only</field>
         </record>
@@ -72,16 +66,9 @@
             <field name="project_id" ref="project_GAP"/>
         </record>
 
-        <record id="product.product_product_5c" model="product.product">
-            <field name="service_type">timesheet</field>
-        </record>
-
-        <record id="product.service_cost_01" model="product.product">
-            <field name="service_type">timesheet</field>
-        </record>
-
         <record id="product_service_order_timesheet" model="product.product">
-            <field name="name">Support (Prepaid Hours)</field>
+            <field name="name">Customer Care (Prepaid Hours)</field>
+            <field name="default_code">SERV_585189</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="type">service</field>
             <field name="list_price">250.00</field>
@@ -94,7 +81,8 @@
         </record>
 
         <record id="product_service_deliver_timesheet_1" model="product.product">
-            <field name="name">Senior Developer (Invoice on Timesheets)</field>
+            <field name="name">Senior Architect (Invoice on Timesheets)</field>
+            <field name="default_code">SERV_89744</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">200.00</field>
             <field name="standard_price">150.00</field>
@@ -106,7 +94,8 @@
         </record>
 
         <record id="product_service_deliver_timesheet_2" model="product.product">
-            <field name="name">Junior Developer (Invoice on Timesheets)</field>
+            <field name="name">Junior Architect (Invoice on Timesheets)</field>
+            <field name="default_code">SERV_89665</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">100.00</field>
             <field name="standard_price">85.00</field>
@@ -118,7 +107,8 @@
         </record>
 
         <record id="product_service_deliver_manual" model="product.product">
-            <field name="name">Milestones</field>
+            <field name="name">Kitchen Assembly (Milestones)</field>
+            <field name="default_code">SERV_32289</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">500</field>
             <field name="standard_price">420.00</field>

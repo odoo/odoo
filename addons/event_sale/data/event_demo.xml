@@ -1,61 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="event_0_product" model="product.product">
-        <field name="name">Open Days in Los Angeles</field>
-        <field name="event_ok">True</field>
-        <field name="categ_id" ref="product.product_category_1"/>
-        <field name="type">service</field>
-        <field name="list_price">2500.0</field>
-        <field name="standard_price">1000.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="image" type="base64" file="event_sale/static/img/event_product-image.jpg"/>
-    </record>
-
-    <record id="event_1_product" model="product.product">
-        <field name="name">Functional Webinar</field>
-        <field name="event_ok">True</field>
-        <field name="categ_id" ref="product.product_category_1"/>
-        <field name="type">service</field>
-        <field name="list_price">2500.0</field>
-        <field name="standard_price">1000.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="image" type="base64" file="event_sale/static/img/event_product-image.jpg"/>
-    </record>
-
-    <record id="event_2_product" model="product.product">
-        <field name="name">Conference on Business Applications</field>
-        <field name="event_ok">True</field>
-        <field name="categ_id" ref="product.product_category_1"/>
-        <field name="type">service</field>
-        <field name="list_price">2500.0</field>
-        <field name="standard_price">1000.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="image" type="base64" file="event_sale/static/img/event_product-image.jpg"/>
-    </record>
-
     <record id="event.event_3" model="event.event">
         <field name="organizer_id" ref="base.res_partner_address_4"/>
-    </record>
-
-    <record id="event_3_product" model="product.product">
-        <field name="name">Technical Training</field>
-        <field name="event_ok">True</field>
-        <field name="categ_id" ref="product.product_category_1"/>
-        <field name="type">service</field>
-        <field name="list_price">2500.0</field>
-        <field name="standard_price">1000.0</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="uom_po_id" ref="uom.product_uom_unit"/>
-        <field name="image" type="base64" file="event_sale/static/img/event_product-image.jpg"/>
     </record>
 
     <record id="event_0_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_0"/>
-        <field name="product_id" ref="event_0_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">50</field>
@@ -64,7 +16,7 @@
     <record id="event_0_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_0"/>
-        <field name="product_id" ref="event_0_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">10</field>
@@ -74,7 +26,7 @@
     <record id="event_1_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_1"/>
-        <field name="product_id" ref="event_1_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">60</field>
@@ -84,7 +36,7 @@
     <record id="event_2_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_2"/>
-        <field name="product_id" ref="event_2_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">50</field>
@@ -93,7 +45,7 @@
     <record id="event_2_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_2"/>
-        <field name="product_id" ref="event_2_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">5</field>
@@ -102,7 +54,7 @@
     <record id="event_3_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_3"/>
-        <field name="product_id" ref="event_3_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
         <field name="price">1000.0</field>
         <field name="seats_max">20</field>
@@ -111,7 +63,7 @@
     <record id="event_3_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_3"/>
-        <field name="product_id" ref="event_3_product"/>
+        <field name="product_id" ref="product_product_event"/>
         <field name="deadline" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
         <field name="price">1500.0</field>
         <field name="seats_max">5</field>

@@ -43,8 +43,8 @@ QUnit.module('Barcodes', {
                     barcode: {string: "Barcode", type: "char"},
                 },
                 records: [
-                    {id: 1, name: "iPad Mini", barcode: '1234567890'},
-                    {id: 2, name: "Mouse, Optical", barcode: '0987654321'},
+                    {id: 1, name: "Large Cabinet", barcode: '1234567890'},
+                    {id: 2, name: "Cabinet with Doors", barcode: '0987654321'},
                 ],
             },
         };
@@ -145,19 +145,19 @@ QUnit.test('pager buttons', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-NEXT
     _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-PREV
     _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-LAST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-FIRST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
 
     form.destroy();
 });
