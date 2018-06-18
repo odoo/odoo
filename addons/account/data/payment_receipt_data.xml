@@ -4,24 +4,32 @@
 
         <!--Email template -->
         <record id="mail_template_data_payment_receipt" model="mail.template">
-            <field name="name">Payment Receipt - Send by Email</field>
+            <field name="name">Payment Receipt: Send by email</field>
+            <field name="model_id" ref="account.model_account_payment"/>
             <field name="subject">${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })</field>
             <field name="partner_to">${object.partner_id.id}</field>
-            <field name="model_id" ref="account.model_account_payment"/>
-            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="xml">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}<br/><br/>
+        Thank you for your payment.
+        Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting
+        to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.
+        <br /><br />
+        Do not hesitate to contact us if you have any question.
+        <br/><br/>
+        Best regards,<br/>
+        % if user and user.signature:
+        ${user.signature | safe}
+        % endif
+    </p>
+</div>
+</field>
             <field name="report_template" ref="account.action_report_payment_receipt"/>
             <field name="report_name">${(object.name or '').replace('/','-')}</field>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="body_html" type="xml">
-<p>Dear ${object.partner_id.name},</p>
-<p>Thank you for your payment.<br />Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>
-<p>If you have any questions, please do not hesitate to contact us.</p>
-<p>Best regards,
-% if user and user.signature:
-${user.signature | safe}
-% endif
-</p>
-</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="user_signature" eval="False"/>
         </record>
 
         <act_window name="Send Receipt By Email"
@@ -39,6 +47,7 @@ ${user.signature | safe}
                 'default_res_id': active_id,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
                 'force_email': True,
+                'custom_layout': 'mail.mail_notification_light',
             }"
         />
     </data>
