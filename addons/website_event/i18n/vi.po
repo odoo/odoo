@@ -85,7 +85,7 @@ msgstr "<small>Tác giả</small>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">Sự kiện Địa phương</span>"
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Sự kiện Bản địa</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
@@ -94,11 +94,14 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Đã bán hết\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Đăng ký Sự kiện</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -107,6 +110,9 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Miễn phí\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -146,12 +152,12 @@ msgstr "<strong>Điện thoại</strong> <span class=\"text-muted\">(Tuỳ chọ
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
 msgid "<strong>Ticket Type:</strong>"
-msgstr ""
+msgstr "<strong>Kiểu Vé:</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Use this tag:</strong>"
-msgstr "<strong>Dùng tag này:</strong>"
+msgstr "<strong>Dùng thẻ này:</strong>"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:96
@@ -173,7 +179,7 @@ msgstr "Tất cả các Sự kiện"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Đặt câu hỏi cho người tham dự khi đăng ký trực tuyến"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -253,7 +259,7 @@ msgstr "Trình đơn Đặc dụng"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Hiển thị một trình đơn riêng trên Website"
 
 #. module: website_event
 #. openerp-web
@@ -285,7 +291,7 @@ msgstr "Sự kiện"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Category"
-msgstr ""
+msgstr "Nhóm Sự kiện"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
