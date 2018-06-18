@@ -3,6 +3,7 @@
 
 from .common import TestCrmCases
 from odoo.modules.module import get_module_resource
+from odoo.tests import Form
 
 
 class TestCRMLead(TestCrmCases):
@@ -178,3 +179,41 @@ class TestCRMLead(TestCrmCases):
         self.assertEqual(merged_opportunity.partner_id.id, self.env.ref("base.res_partner_3").id, 'Partner mismatch')
         self.assertEqual(merged_opportunity.type, 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merged_opportunity.type)
         self.assertFalse(test_crm_opp_03.exists(), 'This tailing opp (id %s) should not exist anymore' % test_crm_opp_03.id)
+
+    def test_crm_lead_sales_team(self):
+        default_stage_id = self.ref("crm.stage_lead1")
+        crm_team = self.env['crm.team'].create({
+            'use_leads': True,
+            'name': 'test sales',
+            'company_id': False,
+        })
+        crm_salesman = self.env['res.users'].create({
+            'company_id': self.env.ref("base.main_company").id,
+            'name': "Crm Salesman2",
+            'login': "csu2",
+            'email': "crmuser2@yourcompany.com",
+            'notification_type': 'inbox',
+            'groups_id': [(6, 0, [self.env.ref('sales_team.group_sale_salesman_all_leads').id, self.env.ref('base.group_partner_manager').id])]
+        })
+        crm_lead = self.env['crm.lead'].create({
+            'type': 'lead',
+            'name': 'Test lead first',
+            'team_id': crm_team.id,
+            'user_id': self.crm_salesman.id,
+            'partner_id': self.env.ref("base.res_partner_1").id,
+            'stage_id': default_stage_id,
+            'description': 'This is the description of the test lead first.'
+        })
+        lead_form = Form(crm_lead)
+        print('>>>> Team: %s' % crm_team)
+        print('>>>> Salesman: %s - %s' % (crm_salesman.id, crm_salesman.team_id))
+        print('>>>> Lead (pre): %s - %s - %s' % (crm_lead.id, crm_lead.user_id, crm_lead.team_id))
+        self.assertFalse(crm_salesman.team_id)
+        self.assertEqual(crm_team.id, crm_lead.team_id.id)
+        self.assertNotEqual(crm_salesman.id, crm_lead.user_id.id)
+        lead_form.user_id = crm_salesman
+        lead_form.save()
+        crm_lead = self.env['crm.lead'].browse(crm_lead.id)
+        print('>>>> Lead (post): %s - %s - %s' % (crm_lead.id, crm_lead.user_id, crm_lead.team_id))
+        self.assertEqual(crm_team.id, crm_lead.team_id.id)
+        self.assertEqual(crm_salesman, crm_lead.user_id)
