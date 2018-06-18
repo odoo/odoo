@@ -1520,7 +1520,9 @@ def db_filter(dbs, httprequest=None):
         # use the value of --database as a comma seperated list of exposed databases.
         exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
         dbs = sorted(exposed_dbs.intersection(dbs))
-    return dbs
+    # do not accept dbs with null bytes in name (sessions with null bytes in db
+    # name cannot call any http interface (not even database selector))
+    return [db for db in dbs if "\x00" not in db]
 
 def db_monodb(httprequest=None):
     """
