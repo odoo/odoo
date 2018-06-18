@@ -6,24 +6,21 @@ odoo.define('im_support.systray_no_support_tests', function (require) {
  * on the webclient when the support is not available.
  */
 
-var ChatManager = require('mail.ChatManager');
-var systray = require('mail.systray');
 var mailTestUtils = require('mail.testUtils');
+var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
-
-var createBusService = mailTestUtils.createBusService;
 
 QUnit.module('im_support', {}, function () {
 
 QUnit.module('systray', {
     beforeEach: function () {
-        this.services = [ChatManager, createBusService()];
         this.data = {
             'mail.message': {
                 fields: {},
             },
         };
+        this.services = mailTestUtils.getMailServices();
     },
 });
 
@@ -32,15 +29,15 @@ QUnit.test('messaging menu does not display the Support channel if not available
     // specified in the session, which is not the case for this test
     assert.expect(1);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
-        services: this.services,
         data: this.data,
+        services: this.services,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         0, "should not display the Support channel");
 
     messagingMenu.destroy();

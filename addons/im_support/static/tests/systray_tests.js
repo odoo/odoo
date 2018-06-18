@@ -4,30 +4,27 @@ odoo.define('im_support.systray_tests', function (require) {
 var supportBus = require('im_support.SupportBus');
 var imSupportTestUtils = require('im_support.test_utils');
 
-var ChatManager = require('mail.ChatManager');
-var ChatWindowManager = require('mail.ChatWindowManager');
-var systray = require('mail.systray');
 var mailTestUtils = require('mail.testUtils');
+var MessagingMenu = require('mail.systray.MessagingMenu');
 
 var testUtils = require('web.test_utils');
 
 var addMockSupportEnvironment = imSupportTestUtils.addMockSupportEnvironment;
-var createBusService = mailTestUtils.createBusService;
 
 QUnit.module('im_support', {}, function () {
 
 QUnit.module('systray', {
     beforeEach: function () {
-        this.services = [ChatManager, ChatWindowManager, createBusService()];
-        this.supportParams = {
-            db_uuid: 'some_uuid',
-            support_token: 'ABCDEFGHIJ',
-            support_origin: 'something.com',
-        };
         this.data = {
             'mail.message': {
                 fields: {},
             },
+        };
+        this.services = mailTestUtils.getMailServices();
+        this.supportParams = {
+            db_uuid: 'some_uuid',
+            support_token: 'ABCDEFGHIJ',
+            support_origin: 'something.com',
         };
     },
 });
@@ -35,16 +32,16 @@ QUnit.module('systray', {
 QUnit.test('messaging menu displays the Support channel', function (assert) {
     assert.expect(1);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_navbar_dropdown_bottom .o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
     messagingMenu.destroy();
@@ -53,10 +50,11 @@ QUnit.test('messaging menu displays the Support channel', function (assert) {
 QUnit.test('clicking on Support channel: channel not available', function (assert) {
     assert.expect(9);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -73,20 +71,19 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
-    messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').click();
-    assert.strictEqual($('.o_chat_window').length, 1,
+    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
-    assert.strictEqual($('.o_chat_window .o_chat_title').text().trim(), 'Support (offline)',
+    assert.strictEqual($('.o_thread_window .o_thread_window_title').text().trim(), 'Support (offline)',
         "should display the offline status in the header");
-    assert.strictEqual($('.o_chat_window .o_composer_input').length, 0,
+    assert.strictEqual($('.o_thread_window .o_composer_input').length, 0,
         "should have no composer");
 
     assert.verifySteps([
@@ -102,10 +99,11 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
 QUnit.test('clicking on Support channel: channel available', function (assert) {
     assert.expect(9);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -118,20 +116,19 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
-    messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').click();
-    assert.strictEqual($('.o_chat_window').length, 1,
+    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
-    assert.strictEqual($('.o_chat_window .o_chat_title').text().trim(), 'Support',
-        "should display the correct channel title");
-    assert.strictEqual($('.o_chat_window .o_composer_input').length, 1,
+    assert.strictEqual($('.o_thread_window .o_thread_window_title').text().trim(), 'Support',
+        "should display the correct thread title");
+    assert.strictEqual($('.o_thread_window .o_composer_input').length, 1,
         "should have a composer");
 
     assert.verifySteps([
@@ -147,10 +144,11 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
 QUnit.test('post messages in Support channel', function (assert) {
     assert.expect(8);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -163,19 +161,18 @@ QUnit.test('post messages in Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
-    messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').click();
-    assert.strictEqual($('.o_chat_window .o_composer_input').length, 1,
+    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    assert.strictEqual($('.o_thread_window .o_composer_input').length, 1,
         "should have a composer");
 
-    $('.o_chat_window .o_composer_input .o_input')
+    $('.o_thread_window .o_composer_input .o_input')
         .val('some message')
         .trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
 
@@ -193,10 +190,11 @@ QUnit.test('post messages in Support channel', function (assert) {
 QUnit.test('fold Support channel', function (assert) {
     assert.expect(11);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -209,7 +207,6 @@ QUnit.test('fold Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     testUtils.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage') {
@@ -219,17 +216,17 @@ QUnit.test('fold Support channel', function (assert) {
     messagingMenu.appendTo($('#qunit-fixture'));
 
     messagingMenu.$('.dropdown-toggle').click();
-    assert.strictEqual(messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').length,
+    assert.strictEqual(messagingMenu.$('.o_mail_systray_dropdown_bottom .o_mail_preview[data-preview-id=SupportChannel]').length,
         1, "should display the Support channel");
 
-    messagingMenu.$('.o_mail_channel_preview[data-channel_id=SupportChannel]').click();
-    assert.strictEqual($('.o_chat_window').length, 1,
+    messagingMenu.$('.o_mail_preview[data-preview-id=SupportChannel]').click();
+    assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
 
     // fold, re-open and close channel
-    $('.o_chat_window .o_chat_title').click();
-    $('.o_chat_window .o_chat_title').click();
-    $('.o_chat_window .o_chat_window_close').click();
+    $('.o_thread_window .o_thread_window_title').click();
+    $('.o_thread_window .o_thread_window_title').click();
+    $('.o_thread_window .o_thread_window_close').click();
 
     assert.verifySteps([
         '/mail/init_messaging',
@@ -248,11 +245,12 @@ QUnit.test('fold Support channel', function (assert) {
 QUnit.test('restore Support channel if necessary', function (assert) {
     assert.expect(5);
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -265,11 +263,10 @@ QUnit.test('restore Support channel if necessary', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    assert.strictEqual($('.o_chat_window').length, 1,
+    assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
 
     assert.verifySteps([
@@ -282,15 +279,16 @@ QUnit.test('restore Support channel if necessary', function (assert) {
 });
 
 QUnit.test('receive messages in the Support channel', function (assert) {
-    assert.expect(9);
+    assert.expect(10);
 
     var supportChannelID;
 
-    var messagingMenu = new systray.MessagingMenu();
+    var messagingMenu = new MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
+        data: this.data,
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            if (!_.str.contains(route, '/static/')) {
+            if (!_.string.endsWith(route, '.png')) { // ignore images
                 assert.step(args.method || route);
             }
             return this._super.apply(this, arguments);
@@ -303,13 +301,12 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
-        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
-    assert.strictEqual($('.o_chat_window').length, 1,
+    assert.strictEqual($('.o_thread_window').length, 1,
         "should have open a chat window");
-    assert.strictEqual($('.o_chat_window .o_thread_message').length, 0,
+    assert.strictEqual($('.o_thread_window .o_thread_message').length, 0,
         "there should be no message in the thread");
 
     // simulate an incoming message on the supportBus
@@ -321,11 +318,13 @@ QUnit.test('receive messages in the Support channel', function (assert) {
     var notification = [[false, 'mail.channel'], data];
     supportBus.trigger('notification', [notification]);
 
-    assert.strictEqual($('.o_chat_window .o_thread_message').length, 1,
+    assert.strictEqual($('.o_thread_window .o_thread_message').length, 1,
         "there should be a new message in the thread");
-    assert.strictEqual($('.o_chat_window .o_thread_message .o_thread_author ').text().trim(),
+    assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_author ').text().trim(),
         'An operator', "should correctly display the author");
-    assert.strictEqual($('.o_chat_window .o_thread_message .o_thread_message_content ').text().trim(),
+    assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_message_avatar').attr('data-src'),
+        '/mail/static/src/img/odoo_o.png', "should have correct avatar");
+    assert.strictEqual($('.o_thread_window .o_thread_message .o_thread_message_content ').text().trim(),
         'A message', "message is correct");
 
     assert.verifySteps([
