@@ -146,17 +146,6 @@ class Team(models.Model):
         if user_team_id:
             action_context['default_team_id'] = user_team_id
 
-        tree_view_id = self.env.ref('crm.crm_case_tree_view_oppor').id
-        form_view_id = self.env.ref('crm.crm_case_form_view_oppor').id
-        kanb_view_id = self.env.ref('crm.crm_case_kanban_view_leads').id
-        action['views'] = [
-                [kanb_view_id, 'kanban'],
-                [tree_view_id, 'tree'],
-                [form_view_id, 'form'],
-                [False, 'graph'],
-                [False, 'calendar'],
-                [False, 'pivot']
-            ]
         action['context'] = action_context
         return action
 

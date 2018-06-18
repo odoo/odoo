@@ -52,35 +52,6 @@
             </field>
         </record>
 
-        <!-- Custom reports (aka filters) -->
-        <record id="filter_opportunity_opportunities_cohort" model="ir.filters">
-            <field name="name">Opportunities Cohort</field>
-            <field name="model_id">crm.lead</field>
-            <field name="domain">[('probability', '=', 100)]</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['date_closed:month'],'col_group_by': ['create_date:month'], 'measures': ['__count__']}</field>
-        </record>
-        <record id="filter_opportunity_opportunities_won_per_team" model="ir.filters">
-            <field name="name">Won by Channel</field>
-            <field name="model_id">crm.lead</field>
-            <field name="domain">[('probability', '=', 100)]</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['team_id'], 'col_group_by': ['date_last_stage_update:month'], 'measures': ['expected_revenue']}</field>
-        </record>
-        <record id="filter_opportunity_country" model="ir.filters">
-            <field name="name">Won by Country</field>
-            <field name="model_id">crm.lead</field>
-            <field name="user_id" eval="False"/>
-            <field name="domain">[('probability', '=', 100)]</field>
-            <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['country_id']}</field>
-        </record>
-        <record id="filter_opportunity_expected_revenue" model="ir.filters">
-            <field name="name">Expected Revenue by Channel</field>
-            <field name="model_id">crm.lead</field>
-            <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['create_date:month', 'team_id'], 'measures': ['expected_revenue', '__count__']}</field>
-        </record>
-
         <!-- Opportunities by user and team Search View -->
         <record id="crm_opportunity_report_view_search" model="ir.ui.view">
             <field name="name">crm.lead.search</field>
