@@ -1252,13 +1252,16 @@ class Export(http.Controller):
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
 
-        if import_compat and parent_field_type == "many2one":
-            fields = {}
+        if import_compat and parent_field_type in ['many2one', 'many2many']:
+            fields = self.fields_get(model)
+            fields = {k: v for k, v in fields.items() if k in ['id', 'name']}
         else:
             fields = self.fields_get(model)
 
         if not import_compat:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
+        else:
+            fields['id']['string'] = _('External ID')
 
         if parent_field:
             parent_field['string'] = _('External ID')
@@ -1281,6 +1284,9 @@ class Export(http.Controller):
                 continue
 
             id = prefix + (prefix and '/'or '') + field_name
+            if field_name == 'name' and import_compat and parent_field_type in ['many2one', 'many2many']:
+                # Add name field when expand m2o and m2m fields in import-compatible mode
+                id = prefix
             name = parent_name + (parent_name and '/' or '') + field['string']
             record = {'id': id, 'string': name,
                       'value': id, 'children': False,
@@ -1293,10 +1299,7 @@ class Export(http.Controller):
                 ref = field.pop('relation')
                 record['value'] += '/id'
                 record['params'] = {'model': ref, 'prefix': id, 'name': name, 'parent_field': field}
-
-                if not import_compat or field['type'] == 'one2many':
-                    # m2m field in import_compat is childless
-                    record['children'] = True
+                record['children'] = True
 
         return records
 
