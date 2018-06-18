@@ -241,6 +241,7 @@ class TestSaleStock(TestSale):
         """
         # sell two products
         item1 = self.products['prod_order']  # consumable
+        item1.type = 'consu'
         item2 = self.products['prod_del']    # stockable
 
         self.so = self.env['sale.order'].create({

@@ -4,50 +4,21 @@
         <!--
         Resource: res.partner.category
         -->
-
         <record id="res_partner_category_0" model="res.partner.category">
-            <field name="name">Partner</field>
-            <field name="color" eval="1"/>
-        </record>
-        <record id="res_partner_category_1" model="res.partner.category">
             <field name="name">Vendor</field>
             <field name="color" eval="2"/>
         </record>
         <record id="res_partner_category_2" model="res.partner.category">
-            <field name="name">Prospect</field>
+            <field name="name">Prospects</field>
             <field name="color" eval="3"/>
         </record>
         <record id="res_partner_category_3" model="res.partner.category">
-            <field name="name">Employee</field>
+            <field name="name">Employees</field>
             <field name="color" eval="4"/>
-        </record>
-        <record id="res_partner_category_4" model="res.partner.category">
-            <field name="name">Gold</field>
-            <field name="color" eval="2"/>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_5" model="res.partner.category">
-            <field name="name">Silver</field>
-            <field name="color" eval="3"/>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_6" model="res.partner.category">
-            <field name="name">Bronze</field>
-            <field name="color" eval="4"/>
-            <field name="parent_id" ref="res_partner_category_0"/>
-        </record>
-        <record id="res_partner_category_7" model="res.partner.category">
-            <field name="name">IT Services</field>
-            <field name="color" eval="5"/>
-            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_8" model="res.partner.category">
-            <field name="name">Consultancy Services</field>
+            <field name="name">Consulting Services</field>
             <field name="color" eval="5"/>
-        </record>
-        <record id="res_partner_category_9" model="res.partner.category">
-            <field name="name">Components Buyer</field>
-            <field name="color" eval="6"/>
         </record>
         <record id="res_partner_category_11" model="res.partner.category">
             <field name="name">Services</field>
@@ -55,27 +26,13 @@
         </record>
         <record id="res_partner_category_12" model="res.partner.category">
             <field name="name">Office Supplies</field>
+            <field name="parent_id" ref="res_partner_category_0"/>
             <field name="color" eval="8"/>
         </record>
-        <record id="res_partner_category_13" model="res.partner.category">
-            <field name="name">Distributor</field>
-            <field name="color" eval="9"/>
-        </record>
         <record id="res_partner_category_14" model="res.partner.category">
-            <field name="name">Manufacturer</field>
+            <field name="name">Desk Manufacturers</field>
             <field name="color" eval="10"/>
-        </record>
-        <record id="res_partner_category_15" model="res.partner.category">
-            <field name="name">Wholesaler</field>
-            <field name="color" eval="1"/>
-        </record>
-        <record id="res_partner_category_16" model="res.partner.category">
-            <field name="name">Retailer</field>
-            <field name="color" eval="2"/>
-        </record>
-        <record id="res_partner_category_17" model="res.partner.category">
-            <field name="name">Company Contact</field>
-            <field name="color" eval="3"/>
+            <field name="parent_id" ref="res_partner_category_0"/>
         </record>
 
        <!--
@@ -84,7 +41,7 @@
 
         <record id="res_partner_1" model="res.partner">
             <field name="name">ASUSTeK</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
             <field name="is_company">1</field>
@@ -99,7 +56,7 @@
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Agrolait</field>
-            <field eval="[(6, 0, [ref('base.res_partner_category_7'), ref('base.res_partner_category_9')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('base.res_partner_category_14')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Wavre</field>
             <field name="zip">1300</field>
@@ -128,7 +85,7 @@
         
         <record id="res_partner_4" model="res.partner">
             <field name="name">Delta PC</field>
-            <field eval="[(6, 0, [ref('res_partner_category_13'), ref('res_partner_category_12')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_14'), ref('res_partner_category_12')])]" name="category_id"/>
             <field eval="0" name="customer"/>
             <field eval="1" name="supplier"/>
             <field name="is_company">1</field>
@@ -145,7 +102,6 @@
 
         <record id="res_partner_10" model="res.partner">
             <field name="name">The Jackson Group</field>
-            <field eval="[(6, 0, [ref('res_partner_category_4'), ref('res_partner_category_7')])]" name="category_id"/>
             <field name="is_company">1</field>
             <field name="city">Miami</field>
             <field name="zip">33169</field>
@@ -159,7 +115,7 @@
   
         <record id="res_partner_12" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field eval="[(6, 0, [ref('res_partner_category_11'), ref('res_partner_category_4')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
             <field name="supplier">1</field>
             <field name="customer">1</field>
             <field name="is_company">1</field>
@@ -176,7 +132,6 @@
         <record id="res_partner_18" model="res.partner">
             <field name="name">Think Big Systems</field>
             <field name="is_company">1</field>
-            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
             <field name="city">London</field>
             <field name="email">thinkbig@yourcompany.example.com</field>
             <field name="phone">+1 857 349 3049</field>
@@ -240,13 +195,6 @@
             <field name="name">John M. Brown</field>
             <field name="email">john.brown@epic.example.com</field>
         </record>
-        <record id="res_partner_address_12" model="res.partner">
-            <field name="name">James Miller</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Electrical Supervisor</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
         <record id="res_partner_address_13" model="res.partner">
             <field name="function">Senior Associate</field>
             <field name="parent_id" eval="ref('res_partner_4')"/>
@@ -282,12 +230,6 @@
             <field name="parent_id" eval="ref('res_partner_10')"/>
             <field name="name">William Thomas</field>
             <field name="email">william.jackson@jackson.example.com</field>
-        </record>
-        <record id="res_partner_address_22" model="res.partner">
-            <field name="function">Director</field>
-            <field name="parent_id" eval="ref('res_partner_2')"/>
-            <field name="name">Laith Jubair</field>
-            <field name="email">laith.jubair@axelor.example.com</field>
         </record>
         <record id="res_partner_address_24" model="res.partner">
             <field name="function">System Analyst</field>
@@ -343,20 +285,6 @@
             <field name="name">Arthur Gomez</field>
             <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Software Developer</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_26" model="res.partner">
-            <field name="name">Julia Rivero</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Technical Director</field>
-            <field name="supplier">1</field>
-            <field eval="0" name="customer"/>
-        </record>
-        <record id="res_partner_address_35" model="res.partner">
-            <field name="name">Peter Mitchell</field>
-            <field name="parent_id" eval="ref('res_partner_1')"/>
-            <field name="function">Store Manager</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>

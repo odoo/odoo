@@ -592,12 +592,12 @@ class TestExpression(TransactionCase):
             Country.search([('create_date', '=', "1970-01-01'); --")])
 
     def test_active(self):
-        # testing for many2many field with category vendor and active=False
+        # testing for many2many field with category office and active=False
         Partner = self.env['res.partner']
         vals = {
             'name': 'OpenERP Test',
             'active': False,
-            'category_id': [(6, 0, [self.ref("base.res_partner_category_1")])],
+            'category_id': [(6, 0, [self.ref("base.res_partner_category_0")])],
             'child_ids': [(0, 0, {'name': 'address of OpenERP Test', 'country_id': self.ref("base.be")})],
         }
         Partner.create(vals)

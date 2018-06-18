@@ -28,7 +28,7 @@ class TestUi(odoo.tests.HttpCase):
                                    'value': 'account.account,' + str(account_receivable.id)})
 
         # test an extra price on an attribute
-        pear = env.ref('point_of_sale.poire_conference')
+        pear = env.ref('point_of_sale.whiteboard')
         attribute_value = env['product.attribute.value'].create({
             'name': 'add 2',
             'product_ids': [(6, 0, [pear.id])],
@@ -51,12 +51,12 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             })],
         })
 
@@ -66,17 +66,17 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             })],
         })
 
@@ -87,33 +87,33 @@ class TestUi(odoo.tests.HttpCase):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.papillon_orange').id,
+                'product_id': env.ref('point_of_sale.small_shelf').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.citron').id,
+                'product_id': env.ref('point_of_sale.magnetic_board').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.limon').id,
+                'product_id': env.ref('point_of_sale.monitor_stand').id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': env.ref('point_of_sale.pamplemousse_rouge_pamplemousse').id,
+                'product_id': env.ref('point_of_sale.desk_pad').id,
             })],
         })
 
@@ -124,13 +124,13 @@ class TestUi(odoo.tests.HttpCase):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': env.ref('point_of_sale.boni_orange').id,
+                'product_id': env.ref('point_of_sale.wall_shelf').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -146,7 +146,7 @@ class TestUi(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': env.ref('point_of_sale.boni_orange_product_template').id,
+                'product_tmpl_id': env.ref('point_of_sale.wall_shelf_product_template').id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,

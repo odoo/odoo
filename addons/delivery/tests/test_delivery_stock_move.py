@@ -16,13 +16,12 @@ class StockMoveInvoice(AccountingTestCase):
         self.partner_18 = self.env.ref('base.res_partner_18')
         self.pricelist_id = self.env.ref('product.list0')
         self.product_11 = self.env.ref('product.product_product_11')
-        self.product_icecream = self.env.ref('stock.product_icecream')
+        self.product_cable_management_box = self.env.ref('stock.product_cable_management_box')
         self.product_uom_kgm = self.env.ref('uom.product_uom_kgm')
         self.normal_delivery = self.env.ref('delivery.normal_delivery_carrier')
 
     def test_01_delivery_stock_move(self):
         # Test if the stored fields of stock moves are computed with invoice before delivery flow
-        # Set a weight on ipod 16GB
         self.product_11.write({
             'weight': 0.25,
         })
@@ -34,7 +33,7 @@ class StockMoveInvoice(AccountingTestCase):
             'pricelist_id': self.pricelist_id.id,
             'order_line': [(0, 0, {
                 'name': 'Ice Cream',
-                'product_id': self.product_icecream.id,
+                'product_id': self.product_cable_management_box.id,
                 'product_uom_qty': 2,
                 'product_uom': self.product_uom_kgm.id,
                 'price_unit': 750.00,

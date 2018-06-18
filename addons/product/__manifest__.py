@@ -46,7 +46,6 @@ Print product labels with barcode.
     ],
     'demo': [
         'data/product_demo.xml',
-        'data/product_image_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

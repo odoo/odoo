@@ -18,7 +18,6 @@
         'data/stock_demo2.xml',
         'data/stock_location_demo_cpu1.xml',
         'data/stock_location_demo_cpu3.xml',
-        'data/stock_quant_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',

@@ -8,7 +8,6 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
-
 class StockQuant(TransactionCase):
     def setUp(self):
         super(StockQuant, self).setUp()
@@ -222,10 +221,9 @@ class StockQuant(TransactionCase):
         the reserved quanntity for the same product.
         """
         stock_location = self.env.ref('stock.stock_location_stock')
-        product = self.env.ref('stock.test_quant_product')
-        product.type = 'product'  # product 12 is a consumable by default
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 10.0)
-
+        quant = self.env['stock.quant'].search([('location_id', '=', stock_location.id)], limit=1)
+        product = quant.product_id
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, stock_location)
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
         with closing(self.registry.cursor()) as cr:
@@ -234,8 +232,8 @@ class StockQuant(TransactionCase):
             cr.execute("SELECT 1 FROM stock_quant WHERE id=%s FOR UPDATE", quant_id)
             self.env['stock.quant']._update_available_quantity(product, stock_location, 1.0)
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 11.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), available_quantity + 1)
+        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location, strict=True)), 2)
 
     def test_increase_available_quantity_4(self):
         """ Increase the available quantity when no quants are already in a location with a user without access right.
@@ -336,19 +334,18 @@ class StockQuant(TransactionCase):
         the reserved quanntity for the same product.
         """
         stock_location = self.env.ref('stock.stock_location_stock')
-        product = self.env.ref('stock.test_quant_product')
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 10.0)
-        quants = self.env['stock.quant']._gather(product, stock_location)
-        self.assertEqual(len(quants), 1)
+        quant = self.env['stock.quant'].search([('location_id', '=', stock_location.id)], limit=1)
+        product = quant.product_id
+        available_quantity = self.env['stock.quant']._get_available_quantity(product, stock_location)
 
         # opens a new cursor and SELECT FOR UPDATE the quant, to simulate another concurrent reserved
         # quantity increase
         with closing(self.registry.cursor()) as cr:
-            cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quants.ids)
+            cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE", quant.ids)
             self.env['stock.quant']._update_available_quantity(product, stock_location, -1.0)
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 9.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location)), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), available_quantity - 1)
+        self.assertEqual(len(self.env['stock.quant']._gather(product, stock_location, strict=True)), 2)
 
     def test_decrease_available_quantity_4(self):
         """ Decrease the available quantity that delete the quant. The active user should have

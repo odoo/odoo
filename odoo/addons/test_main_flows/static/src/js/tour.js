@@ -516,6 +516,16 @@ tour.register('main_flow_tour', {
     content: _t('Go to Manufacturing'),
     position: 'bottom',
 }, {
+    edition: "enterprise",
+    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
+    content: _t('Click on Operations menuitem'),
+    position: 'bottom',
+}, {
+    edition: "enterprise",
+    trigger: ".o_menu_sections a[data-menu-xmlid='mrp.menu_mrp_production_action']",
+    content: _t('Open manufacturing orders'),
+    position: 'bottom',
+}, {
     trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first',
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',

@@ -40,7 +40,7 @@ tour.register('sale_tour', {
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: function (actions) {
-        actions.text("Ipad", this.$anchor.find("input"));
+        actions.text("DESK0001", this.$anchor.find("input"));
     },
 }, {
     trigger: ".ui-menu-item > a",
@@ -53,9 +53,6 @@ tour.register('sale_tour', {
         }
     },
     id: "quotation_product_selected",
-}, {
-    trigger: ".modal-dialog:has(div.o_dialog_warning) footer.modal-footer .btn-primary",
-    position: "right",
 }, {
     trigger: ".o_form_button_save",
     extra_trigger: ".o_sale_order",

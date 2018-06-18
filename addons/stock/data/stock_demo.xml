@@ -60,13 +60,6 @@
             <field name="product_qty">16.0</field>
             <field name="location_id" ref="stock_location_14"/>
         </record>
-        <record id="stock_inventory_line_15" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_5b"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_0"/>
-            <field name="product_qty">8.0</field>
-            <field name="location_id" ref="stock_location_14"/>
-        </record>
         <record id="stock_inventory_line_2" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_7"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
@@ -100,13 +93,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">26.0</field>
-            <field name="location_id" ref="stock_location_components"/>
-        </record>
-        <record id="stock_inventory_line_9" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_17"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_0"/>
-            <field name="product_qty">39.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
         <record id="stock_inventory_line_11" model="stock.inventory.line">
@@ -164,7 +150,7 @@
             <field name="currency_id" ref="base.USD"/>
             <field name="partner_id" ref="res_partner_company_1"/>
             <field name="parent_id" ref="base.main_company"/>
-            <field name="name">My Company, Chicago</field>
+            <field name="name">ProBike Chicago</field>
         </record>
 
         <record id="stock_warehouse_shop0" model="stock.warehouse">
@@ -172,6 +158,24 @@
             <field name="partner_id" ref="res_partner_address_41"/>
             <field name="company_id" ref="res_company_1"/>
             <field name="code">Chic</field>
+        </record>
+
+        <record id="product.consu_delivery_03" model="product.product">
+            <field name="type">product</field>
+        </record>
+        <record id="product.consu_delivery_02" model="product.product">
+            <field name="type">product</field>
+        </record>
+        <record id="product.consu_delivery_01" model="product.product">
+            <field name="type">product</field>
+        </record>
+        <record id="product.product_order_01" model="product.product">
+            <field name="type">product</field>
+        </record>
+
+        <!-- Activate Lots options as demo data depends on it -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
         </record>
 
     </data>

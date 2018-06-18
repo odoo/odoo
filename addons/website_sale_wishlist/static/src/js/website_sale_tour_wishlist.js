@@ -47,23 +47,23 @@ tour.register('shop_wishlist', {
             },
         },
         {
-            content: "check that logged in and search for ipad",
+            content: "check that logged in and search for desk customizable",
             extra_trigger: 'li span:contains(Administrator)',
             trigger: 'form input[name="search"]',
-            run: "text ipad retina",
+            run: "text Desk Customizable",
         },
         {
             content: "submit search",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            content: "click on ipad",
-            trigger: '.oe_product_cart a:contains("iPad Retina Display")',
+            content: "click on desk customizable",
+            trigger: '.oe_product_cart a:contains("Desk Customizable")',
         },
         {
-            content: "select ipad 32GB",
+            content: "select desk cutomizable",
             extra_trigger: '#product_detail',
-            trigger: 'label:contains(32 GB) input',
+            trigger: 'label:contains(Aluminium) input',
         },
         {
             content: "click on add to wishlist",
@@ -75,8 +75,8 @@ tour.register('shop_wishlist', {
             trigger: 'a[href="/shop/wishlist"]',
         },
         {
-            content: "remove Ipad",
-            trigger: 'tr:contains("iPad Retina Display") a.o_wish_rm:first',
+            content: "remove desk customizable",
+            trigger: 'tr:contains("Desk Customizable") a.o_wish_rm:first',
         },
         {
             content: "check that wishlist contains 1 item",

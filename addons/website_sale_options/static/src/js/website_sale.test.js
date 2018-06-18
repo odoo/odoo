@@ -31,19 +31,19 @@ tour.register('shop_customize', {
             trigger: "#customize-menu a:contains(Product Attribute's Filters)",
         },
         {
-            content: "select product attribute memory 16 GB",
+            content: "select product attribute memory Steel",
             extra_trigger: 'body:not(:has(#customize-menu:visible .dropdown-menu:visible))',
-            trigger: 'form.js_attributes label:contains(16 GB) input:not(:checked)',
+            trigger: 'form.js_attributes label:contains(Steel) input:not(:checked)',
         },
         {
             content: "check the selection",
-            trigger: 'form.js_attributes label:contains(16 GB) input:checked',
+            trigger: 'form.js_attributes label:contains(Steel) input:checked',
             run: function () {}, // it's a check
         },
         {
-            content: "select iPad",
+            content: "select product",
             extra_trigger: 'body:not(:has(.oe_website_sale .oe_product_cart:eq(2)))',
-            trigger: '.oe_product_cart a:contains("iPad")',
+            trigger: '.oe_product_cart a:contains("Desk Customizable")',
         },
         {
             content: "open customize menu",
@@ -102,8 +102,8 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "check pricelit has been applied and switch to 32 GB variant",
-            trigger: ".js_product label:contains('32 GB')",
+            content: "check pricelit has been applied and switch to Aluminium variant",
+            trigger: ".js_product label:contains('Aluminium')",
         },
         {
             content: "verify that price has changed when changing variant",
@@ -135,8 +135,8 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "switch to 32 GB variant",
-            trigger: ".js_product label:contains('32 GB')",
+            content: "switch to Aluminium variant",
+            trigger: ".js_product label:contains('Aluminium')",
         },
         {
             content: "verify that price has changed when changing variant",
@@ -144,8 +144,8 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "switch back to 16 GB variant",
-            trigger: ".js_product label:contains('16 GB')",
+            content: "switch back to Steel variant",
+            trigger: ".js_product label:contains('Steel')",
         },
         {
             content: "click on 'Add to Cart' button",
@@ -193,7 +193,7 @@ tour.register('shop_customize', {
             run: function () {}, // it's a check
         },
         {
-            content: "remove iPad from cart",
+            content: "remove large cabinet from cart",
             trigger: '#cart_products a.js_add_cart_json:first',
         },
         {

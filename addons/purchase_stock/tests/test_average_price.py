@@ -15,7 +15,7 @@ class TestAveragePrice(TestPurchase):
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Set a product as using average price.
-        product_icecream = self.env['product.product'].create({
+        product_cable_management_box = self.env['product.product'].create({
             'default_code': 'AVG',
             'name': 'Average Ice Cream',
             'type': 'product',
@@ -37,7 +37,7 @@ class TestAveragePrice(TestPurchase):
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
                 'name': 'Average Ice Cream',
-                'product_id': product_icecream.id,
+                'product_id': product_cable_management_box.id,
                 'product_qty': 10.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 60.0,
@@ -56,15 +56,15 @@ class TestAveragePrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 
         # Check the average_price of the product (average icecream).
-        self.assertEqual(product_icecream.qty_available, 10.0, 'Wrong quantity in stock after first reception')
-        self.assertEqual(product_icecream.standard_price, 60.0, 'Standard price should be the price of the first reception!')
+        self.assertEqual(product_cable_management_box.qty_available, 10.0, 'Wrong quantity in stock after first reception')
+        self.assertEqual(product_cable_management_box.standard_price, 60.0, 'Standard price should be the price of the first reception!')
 
         # I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
         purchase_order_2 = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_qty': 30.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
@@ -79,7 +79,7 @@ class TestAveragePrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 
         # Check the standard price
-        self.assertEqual(product_icecream.standard_price, 75.0, 'After second reception, we should have an average price of 75.0 on the product')
+        self.assertEqual(product_cable_management_box.standard_price, 75.0, 'After second reception, we should have an average price of 75.0 on the product')
 
         # Create picking to send some goods
         outgoing_shipment = self.env['stock.picking'].create({
@@ -88,7 +88,7 @@ class TestAveragePrice(TestPurchase):
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': 'outgoing_shipment_avg_move',
-                'product_id': product_icecream.id,
+                'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id':  self.env.ref('stock.stock_location_stock').id,
@@ -100,15 +100,15 @@ class TestAveragePrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, outgoing_shipment.id)]}).process()
 
         # Check the average price (60 * 10 + 30 * 80) / 40 = 75.0€ did not change
-        self.assertEqual(product_icecream.standard_price, 75.0, 'Average price should not have changed with outgoing picking!')
-        self.assertEqual(product_icecream.qty_available, 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong')
+        self.assertEqual(product_cable_management_box.standard_price, 75.0, 'Average price should not have changed with outgoing picking!')
+        self.assertEqual(product_cable_management_box.qty_available, 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong')
 
         # Make a new purchase order with 500 g Average Ice Cream at a price of 0.2€/g
         purchase_order_3 = self.env['purchase.order'].create({
             'partner_id': self.env.ref('base.res_partner_3').id,
             'order_line': [(0, 0, {
-                'name': product_icecream.name,
-                'product_id': product_icecream.id,
+                'name': product_cable_management_box.name,
+                'product_id': product_cable_management_box.id,
                 'product_qty': 500.0,
                 'product_uom': self.ref('uom.product_uom_gram'),
                 'price_unit': 0.2,
@@ -123,6 +123,6 @@ class TestAveragePrice(TestPurchase):
         self.env['stock.immediate.transfer'].create({'pick_ids': [(4, picking.id)]}).process()
 
         # Check price is (75.0 * 20 + 200*0.5) / 20.5 = 78.04878€
-        self.assertEqual(product_icecream.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')
-        self.assertEqual(round(product_icecream.standard_price, 2), 78.05,
-            'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(product_icecream.standard_price, 2)))
+        self.assertEqual(product_cable_management_box.qty_available, 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock')
+        self.assertEqual(round(product_cable_management_box.standard_price, 2), 78.05,
+            'Standard price as average price of third reception with other UoM incorrect! Got %s instead of 78.05' % (round(product_cable_management_box.standard_price, 2)))

@@ -764,7 +764,7 @@ class StockMove(TransactionCase):
                 'fixed_location_id': shelf1_location.id,
             })],
             'product_location_ids': [(0, 0, {
-                'product_id': self.env.ref('stock.product_icecream').id,
+                'product_id': self.env.ref('stock.product_cable_management_box').id,
                 'fixed_location_id': shelf2_location.id,
             })],
         })
@@ -777,7 +777,7 @@ class StockMove(TransactionCase):
             'name': 'test_putaway_3',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
-            'product_id': self.env.ref('stock.product_icecream').id,
+            'product_id': self.env.ref('stock.product_cable_management_box').id,
             'product_uom': self.env.ref('uom.product_uom_kgm').id,
             'product_uom_qty': 100.0,
         })
@@ -817,7 +817,7 @@ class StockMove(TransactionCase):
                 'fixed_location_id': shelf1_location.id,
             })],
             'product_location_ids': [(0, 0, {
-                'product_id': self.env.ref('stock.product_icecream').id,
+                'product_id': self.env.ref('stock.product_cable_management_box').id,
                 'fixed_location_id': shelf2_location.id,
             })],
         })
