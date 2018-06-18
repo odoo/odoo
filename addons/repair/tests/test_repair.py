@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.stock.tests.common2 import TestStockCommon
 from odoo.tests import tagged
 
 
@@ -153,3 +154,93 @@ class TestRepair(AccountingTestCase):
         # I define Invoice Method 'No Invoice' option in this repair order.
         # So, I check that Invoice has not been created for this repair order.
         self.assertNotEqual(len(repair.invoice_id), 1, "Invoice should not exist for this repair order")
+
+
+class TestRepairOwner(TestStockCommon):
+
+    def test_00_repair_withowner(self):
+        stock_location = self.env.ref('stock.stock_location_stock')
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+
+        product1 = self.env['product.product'].create({
+            'name': 'Product 1',
+            'type': 'product'
+        })
+        res_repair_user = self.env['res.users'].create({
+            'name': 'Repair User',
+            'login': 'abc',
+            'password': 'abc',
+            'email': 'repair_user@yourcompany.com',
+            'groups_id': [(6, 0, [self.env.ref('stock.group_stock_user').id])]
+        })
+        customer = self.env['res.partner'].create({'name': 'Customer', 'customer': True})
+        partner = self.env.ref('base.res_partner_address_1')
+
+        # Create a reciept and set owner.
+        picking_in = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'owner_id' : customer.id,
+            })
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'restrict_partner_id': customer.id,
+            'product_id': product1.id,
+            'product_uom': product1.uom_id.id,
+            'product_uom_qty': 1.0,
+            'picking_id': picking_in.id,
+        })
+        # Confirm incoming shipment.
+        picking_in.action_confirm()
+
+        self.assertEqual(picking_in.move_lines.state, 'assigned', 'Wrong state of move line.')
+        # Assign owner.
+        picking_in.action_assign_owner()
+        # Assign incoming shipment.
+        picking_in.action_assign()
+        move1.move_line_ids.qty_done = 1.0
+        # Transfer incoming shipments.
+        picking_in.action_done()
+
+        # Check incoming shipment state.
+        self.assertEqual(picking_in.state, 'done', 'Incoming shipment state should be done.')
+        # Check owner set in the move lines.
+        self.assertEqual(picking_in.move_line_ids.owner_id.id, customer.id, 'owner not assigned.')
+        
+        # Create a repair order without owner.
+        repair = self.env['repair.order'].create({
+            'product_id': product1.id,
+            'product_uom': product1.uom_id.id,
+            'product_qty': 1.0,
+            'address_id': partner.id,
+            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'invoice_method': 'none',
+            'location_id': stock_location.id,
+            'partner_id': self.env.ref('base.res_partner_12').id,
+        })
+
+        # Wizard open for Insuffiecient Quantity as owner is not set in repair order.
+        dict_values = repair.sudo(res_repair_user.id).action_validate()
+        self.assertEqual("stock.warn.insufficient.qty.repair", dict_values['res_model'], 'wrong model of wizard.')
+
+        # Now I set owner in the repair order.
+        repair.owner_id = customer.id
+
+        # I confirm Repair order for Invoice Method 'No Invoice'.
+        repair.sudo(res_repair_user.id).action_validate()
+
+        # I start the repairing process by clicking on "Start Repair" button.
+        repair.action_repair_start()
+
+        # I check its state which is in "Under Repair".
+        self.assertEqual(repair.state, "under_repair", 'Repair order should be in "Under_repair" state.')
+
+        # Repairing process for product is in Done state and I end this process by clicking on "End Repair" button.
+        repair.action_repair_end()
+
+        # Check the owner_id in the stock move.
+        self.assertEqual(repair.move_id.restrict_partner_id.id, customer.id, 'owner not set correctly')
