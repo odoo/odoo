@@ -137,7 +137,7 @@ class DeliveryCarrier(models.Model):
                 else:
                     computed_price = 0.0
 
-            self.price = computed_price * (1.0 + (float(self.margin) / 100.0))
+            self.price = float(computed_price) * (1.0 + (float(self.margin) / 100.0))
 
     # -------------------------- #
     # API for external providers #
