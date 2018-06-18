@@ -37,6 +37,9 @@ function createBusService(bus) {
                  * Do nothing
                  */
                 start_polling: function () {},
+                is_odoo_focused: function () {
+                    return true;
+                },
             });
         },
 
