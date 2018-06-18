@@ -2,8 +2,11 @@
 
 import math
 import calendar
+import json
+from datetime import date
 
 from dateutil.relativedelta import relativedelta
+from odoo.tools.func import monkey_patch
 
 
 def get_month(date):
@@ -62,3 +65,10 @@ def get_fiscal_year(date, day=31, month=12):
         max_day = calendar.monthrange(date_to.year + 1, date_to.month)[1]
         date_to = type(date)(date.year + 1, month, min(day, max_day))
     return date_from, date_to
+
+
+@monkey_patch(json.JSONEncoder)
+def default(self, o):
+    if isinstance(o, date):
+        return str(o)
+    return default.super(self, o)
