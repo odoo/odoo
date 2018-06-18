@@ -379,6 +379,9 @@
                     <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="create_date"/>
                     <field name="country_id"/>
+                    <field name="city"/>
+                    <field name="lost_reason"/>
+                    <field name="stage_id"/>
                     <separator />
                     <filter string="My Leads"
                             name="assigned_to_me"
@@ -389,11 +392,12 @@
                             help="No salesperson"/>
                     <separator />
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
-                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <separator />
+                    <filter string="Current" name="current" domain="[('active', '=', True)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
                     <filter string="Exclude Opt Out"
-                            name='not_opt_out' domain="[('opt_out', '=', False)]"
-                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                        name='not_opt_out' domain="[('opt_out', '=', False)]"
+                        help="Leads that did not ask not to be included in mass mailing campaigns"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -403,20 +407,20 @@
                             help="Show all records which has next action date is before today"/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities (7 days)" name="activities_week"
-                            domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                     ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                            ]"/>
-                    <filter string="Future Activities (All)" name="activities_upcoming_all"
+                    <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="groupby_team" domain="[]" context="{'group_by':'team_id'}"/>
+                        <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter name="city" string="City" context="{'group_by': 'city'}"/>
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                         <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
-                        <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
                         <filter string="Medium" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
                         <filter string="Creation Date" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
@@ -613,6 +617,29 @@
             </field>
         </record>
 
+        <record id="crm_lead_view_graph" model="ir.ui.view">
+            <field name="name">crm.lead.view.graph</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities">
+                    <field name="stage_id" type="col"/>
+                    <field name="user_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_pivot" model="ir.ui.view">
+            <field name="name">crm.lead.view.pivot</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <pivot string="Pipeline Analysis" disable_linking="True">
+                    <field name="create_date" interval="month" type="row"/>
+                    <field name="stage_id" type="col"/>
+                    <field name="expected_revenue" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
         <record id="crm_lead_view_tree_activity" model="ir.ui.view">
             <field name="name">crm.lead.tree.opportunity.next.activity</field>
             <field name="model">crm.lead</field>
@@ -639,20 +666,32 @@
                     <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
                     <field name="team_id"/>
                     <field name="user_id"/>
+                    <field name="city"/>
                     <field name="partner_id" operator="child_of" string="Customer"/>
                     <field name="stage_id" domain="[]"/>
                     <field name="activity_type_id"/>
                     <field name="activity_summary"/>
                     <field name="probability"/>
                     <field name="lost_reason"/>
+                    <field name="date_conversion"/>
+                    <separator/>
+                    <filter string="My Pipeline" name="assigned_to_me"
+                        domain="[('user_id', '=', uid)]"
+                        help="Opportunities that are assigned to me"/>
+                    <filter string="Unassigned" name="unassigned"
+                        domain="[('user_id','=', False)]" help="No salesperson"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
-                    <filter string="My Pipeline" name="assigned_to_me"
-                            domain="[('user_id', '=', uid)]"
-                            help="Opportunities that are assigned to me"/>
-                    <filter string="Unassigned" name="unassigned"
-                            domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Overdue Opportunities" name="overdue_opp"
+                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
+                            help="Opportunities with a date of Expected Closing which is in the past"/>
+                    <filter string="Creation Date" name="creation_date" date="create_date"/>
+                    <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
+                    <filter string="Closed Date" name="close_date" date="date_closed"/>
+                    <separator/>
+                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.probability', '=', 100)]"/>
+                    <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
                     <filter string="Activities Todo" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -665,32 +704,21 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
-
-                    <separator/>
-                    <filter string="Creation Date" name="creation_date" date="create_date"/>
-                    <filter string="Expected Closing" name="close_this_month" date="date_deadline"/>
-                    <filter string="Closed Date" name="close_date" date="date_closed"/>
-                    <filter string="Overdue Opportunities" name="overdue_opp"
-                            domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
-                            help="Opportunities with a date of Expected Closing which is in the past"/>
-
-                    <separator/>
-                    <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
-                    <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.probability', '=', 100)]"/>
                     <group expand="0" string="Group By" colspan="16">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
                         <filter string="Sales Team" name="saleschannel" context="{'group_by':'team_id'}"/>
-                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter name="city" string="City" context="{'group_by': 'city'}"/>
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
                         <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
                         <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Closed Date" name="close_date_groupby" context="{'group_by':'date_closed'}"/>
-                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Conversion Date" name="date_conversion" context="{'group_by': 'date_conversion'}" groups="crm.group_use_lead"/>
                     </group>
                 </search>
             </field>
@@ -819,10 +847,6 @@ for rec in records:
             <field name="res_model">crm.lead</field>
             <field name="view_mode">tree,kanban,graph,pivot,calendar,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
-                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'default_type':'lead',
@@ -830,6 +854,41 @@ for rec in records:
                     'search_default_to_process':1,
                 }
             </field>
+        </record>
+
+        <record id="crm_lead_all_leads_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="act_window_id" ref="crm_lead_all_leads"/>
+        </record>
+
+        <record id="crm_lead_all_leads_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_crm_lead_kanban"/>
+            <field name="act_window_id" ref="crm_lead_all_leads"/>
+        </record>
+
+        <record id="crm_lead_all_leads_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="crm_case_calendar_view_leads"/>
+            <field name="act_window_id" ref="crm_lead_all_leads"/>
+        </record>
+
+        <record id="crm_lead_all_leads_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="crm_lead_view_pivot"/>
+            <field name="act_window_id" ref="crm_lead_all_leads"/>
+        </record>
+
+        <record id="crm_lead_all_leads_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_lead_view_graph"/>
+            <field name="act_window_id" ref="crm_lead_all_leads"/>
         </record>
 
         <menuitem
@@ -854,24 +913,45 @@ for rec in records:
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_oppor11">
+        <record id="crm_lead_opportunities_view_kanban" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="crm_case_kanban_view_leads"/>
             <field name="act_window_id" ref="crm_lead_opportunities"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
+        <record id="crm_lead_opportunities_view_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
             <field name="act_window_id" ref="crm_lead_opportunities"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
+        <record id="crm_lead_opportunities_view_form" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record id="crm_lead_opportunities_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_lead_view_graph"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record id="crm_lead_opportunities_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="crm_lead_view_pivot"/>
+            <field name="act_window_id" ref="crm_lead_opportunities"/>
+        </record>
+
+        <record id="crm_lead_opportunities_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="crm_case_calendar_view_leads"/>
             <field name="act_window_id" ref="crm_lead_opportunities"/>
         </record>
 
@@ -892,15 +972,49 @@ for rec in records:
                     'default_user_id': uid,
                     'search_default_assigned_to_me': 1
             }</field>
-            <field name="view_ids"
-                   eval="[(5, 0, 0),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')}),
-                          (0, 0, {'view_mode': 'form', 'view_id': ref('crm_case_form_view_oppor')}),
-                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('crm_case_kanban_view_leads')}),
-                          (0, 0, {'view_mode': 'calendar'}),
-                          (0, 0, {'view_mode': 'pivot'}),
-                          (0, 0, {'view_mode': 'graph'})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="crm_case_calendar_view_leads"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="crm_lead_view_pivot"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
+        </record>
+
+        <record id="crm_lead_opportunities_tree_view_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm_lead_view_graph"/>
+            <field name="act_window_id" ref="crm_lead_opportunities_tree_view"/>
         </record>
 
         <menuitem
