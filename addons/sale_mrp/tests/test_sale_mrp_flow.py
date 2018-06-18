@@ -37,6 +37,9 @@ class TestSaleMrpFlow(common.TransactionCase):
                 p.route_ids.add(r)
             return p.save()
 
+        dp = self.env.ref('product.decimal_product_uom')
+        dp.digits = 7
+
         self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm.id), ('uom_type', '=', 'reference')], limit=1)
         self.uom_kg.write({
             'name': 'Test-KG',

@@ -45,6 +45,9 @@ class TestStockCommon(common.TransactionCase):
         self.productE = self.ProductObj.create({'name': 'Product E', 'type': 'product'})
 
         # Configure unit of measure.
+        dp = self.env.ref('product.decimal_product_uom')
+        dp.digits = 7
+
         self.uom_kg = self.env['uom.uom'].search([('category_id', '=', self.categ_kgm), ('uom_type', '=', 'reference')], limit=1)
         self.uom_kg.write({
             'name': 'Test-KG',

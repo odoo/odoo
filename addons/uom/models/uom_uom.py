@@ -99,6 +99,15 @@ class UoM(models.Model):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
+        if 'rounding' in values:
+            digits = self.env['decimal.precision'].precision_get(
+                'Product Unit of Measure'
+            )
+            if values['rounding'] * 10**digits < 1:
+                raise UserError(_(
+                    "The rounding precision cannot be more accurate than the "
+                    "decimal accuracy defined in the general settings."
+                ))
         return super(UoM, self).write(values)
 
     @api.model
