@@ -189,7 +189,7 @@
                         </ul>
                     </page>
                     <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
-                        <field name="move_ids">
+                        <field name="move_ids" mode="tree,kanban">
                             <tree decoration-muted="scrapped == True" string="Stock Moves">
                                 <field name="product_id"/>
                                 <field name="product_uom_qty"/>
@@ -202,6 +202,42 @@
                                 <field name="location_dest_id"/>
                                 <field name="state"/>
                             </tree>
+                            <!--Codigo modificado por TRESCLOUD-->
+                            <kanban class="o_kanban_mobile">
+                                <field name="product_id"/>
+                                <field name="product_uom_qty"/>
+                                <field name="location_id"/>
+                                <field name="location_dest_id"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div t-attf-class="oe_kanban_global_click_edit">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <strong>
+                                                        <field name='product_id'/>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.product_uom_qty.string'/>: <t t-esc='record.product_uom_qty.value'/></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.location_id.string'/>: <t t-esc='record.location_id.value'/></span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12 text-muted">
+                                                    <span><t t-esc='record.location_dest_id.string'/>: <t t-esc='record.location_dest_id.value'/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                            <!--Fin del Codigo modificado por TRESCLOUD-->
                         </field>
                     </page>
                 </notebook>

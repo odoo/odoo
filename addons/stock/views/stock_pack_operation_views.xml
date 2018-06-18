@@ -80,7 +80,7 @@
                     </span>
                 </group>
                 <group>
-                    <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}">
+                    <field name="pack_lot_ids" nolabel="1" attrs="{'readonly': [('state', '=', 'done')]}" mode="tree,kanban">
                         <tree editable="bottom" decoration-success="qty_todo==qty" decoration-danger="(qty_todo &gt; 0) and (qty&gt;qty_todo)">
                             <field name="lot_name" invisible="not context.get('only_create', False)"/>
                             <field name="lot_id" invisible="context.get('only_create', False)"
@@ -92,6 +92,46 @@
                             <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
                             <field name="plus_visible" invisible="1"/>
                         </tree>
+                        <!--Codigo modificado por TRESCLOUD-->
+                        <kanban class="o_kanban_mobile">
+                            <field name="lot_name" invisible="not context.get('only_create', False)"/>
+                            <field name="lot_id" invisible="context.get('only_create', False)"
+                                   domain="[('product_id','=', parent.product_id)]"
+                                   context="{'default_product_id': parent.product_id, 'active_pack_operation': parent.id}"/>
+                            <field name="qty_todo" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
+                            <field name="qty" invisible="context.get('serial')"/>
+                            <field name="plus_visible" invisible="1"/>
+
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_global_click_edit">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <strong>
+                                                    <field name="lot_name" invisible="not context.get('only_create', False)"/>
+                                                </strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                <span><t t-esc='record.lot_id.string'/>: <t t-esc='record.lot_id.value'/></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                <span><t t-esc='record.qty_todo.string'/>: <t t-esc='record.qty_todo.value'/></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                <span><t t-esc='record.qty.string'/>: <t t-esc='record.qty.value'/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <!--Fin del Codigo modificado por TRESCLOUD-->
                     </field>
                 </group>
                 <footer>

@@ -11,12 +11,32 @@
                </group>
                <div attrs="{'invisible': [('method', '!=', 'fixed')]}">
                    <separator string="Fixed Locations Per Categories"/>
-                   <field name="fixed_location_ids" colspan="4" nolabel="1">
+                   <field name="fixed_location_ids" colspan="4" nolabel="1"  mode="tree,kanban">
                        <tree editable="top">
                            <field name="sequence" widget='handle'/>
                            <field name="category_id"/>
                            <field name="fixed_location_id"/>
                        </tree>
+                       <!--Codigo modificado por TRESCLOUD-->
+                        <kanban class="o_kanban_mobile">
+                            <field name="category_id"/>
+                            <field name="fixed_location_id"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-12 text-muted">
+                                                <strong><span><t t-esc="record.category_id.value or ''"/></span></strong>
+                                            </div>
+                                            <div class="col-xs-12 text-muted">
+                                                <strong><span><t t-esc="record.fixed_location_id.value or ''"/></span></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <!--Fin del Codigo modificado por TRESCLOUD-->
                    </field>
                </div>
            </form>
