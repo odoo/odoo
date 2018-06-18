@@ -15,14 +15,9 @@ class ProductProduct(models.Model):
             ('state', 'in', ['sale', 'done']),
             ('product_id', 'in', self.ids),
         ]
-        self.update({'sales_count': 0})
-        uom = self.env['product.uom']
-        for group in self.env['sale.order.line'].read_group(domain, ['product_id', 'product_uom', 'product_uom_qty'], ['product_id', 'product_uom'], lazy=False):
-            product = self.browse(group['product_id'][0])
-            uom = uom.browse(group['product_uom'][0])
-            if uom != product.uom_id:
-                group['product_uom_qty'] = uom._compute_quantity(group['product_uom_qty'], product.uom_id)
-            product['sales_count'] += group['product_uom_qty']
+        sale_order_lines = self.env['sale.order.line'].search(domain)
+        for product in self:
+            product.sales_count = len(sale_order_lines.filtered(lambda r: r.product_id == product).mapped('order_id'))
 
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
 
