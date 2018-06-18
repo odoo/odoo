@@ -903,6 +903,11 @@ var ActionManager = Widget.extend({
             var length = this.controllerStack.length;
             if (length > 1) {
                 this._restoreController(this.controllerStack[length - 2]);
+            } else {
+                this.do_action({
+                    type: 'ir.actions.client',
+                    tag: 'home',
+                });
             }
         }
     },
