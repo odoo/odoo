@@ -3042,16 +3042,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             self._cr.execute(query, (tuple(self.ids), self._uid))
             return self.browse([row[0] for row in self._cr.fetchall()])
 
-        where_clause, where_params, tables = self.env['ir.rule'].domain_get(self._name, operation)
-        if not where_clause:
+        query = self.env['ir.rule'].domain_get(self._name, operation)
+        if not query.where_clause:
             return self
-
+        table = '"%s"' % self._table
+        query = query & Query([table], [table + '.id IN %s'])  # leave out ids parameter
+        from_clause, where_clause, params = query.get_sql()
         valid_ids = []
-        query = "SELECT {}.id FROM {} WHERE {}.id IN %s AND {}".format(
-            self._table, ",".join(tables), self._table, " AND ".join(where_clause),
-        )
         for sub_ids in self._cr.split_for_in_conditions(self.ids):
-            self._cr.execute(query, [sub_ids] + where_params)
+            self.env.cr.execute(
+                "SELECT DISTINCT({table}.id) FROM {from_clause} WHERE {where_clause}".format(
+                    table=table, from_clause=from_clause, where_clause=where_clause),
+                params + [sub_ids])
             valid_ids.extend(row[0] for row in self._cr.fetchall())
         return self.browse(valid_ids)
 
@@ -3851,31 +3853,32 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self._uid == SUPERUSER_ID:
             return
 
-        def apply_rule(clauses, params, tables, parent_model=None):
+        def apply_rule(query, rule_query, parent_model=None):
             """ :param parent_model: name of the parent model, if the added
                     clause comes from a parent model
             """
-            if clauses:
+            if rule_query.where_clause:
                 if parent_model:
                     # as inherited rules are being applied, we need to add the
                     # missing JOIN to reach the parent table (if not JOINed yet)
-                    parent_table = '"%s"' % self.env[parent_model]._table
-                    parent_alias = '"%s"' % self._inherits_join_add(self, parent_model, query)
+                    parent_table_unescaped = self.env[parent_model]._table
+                    parent_table = '"%s"' % parent_table_unescaped
+                    parent_alias_unescaped = self._inherits_join_add(self, parent_model, query)
+                    parent_alias = '"%s"' % parent_alias_unescaped
                     # inherited rules are applied on the external table, replace
                     # parent_table by parent_alias
-                    clauses = [clause.replace(parent_table, parent_alias) for clause in clauses]
+                    rule_query.where_clause = [
+                        clause.replace(parent_table, parent_alias) for clause in rule_query.where_clause]
                     # replace parent_table by parent_alias, and introduce
                     # parent_alias if needed
-                    tables = [
+                    rule_query.tables = [
                         (parent_table + ' as ' + parent_alias) if table == parent_table \
                             else table.replace(parent_table, parent_alias)
-                        for table in tables
+                        for table in rule_query.tables
                     ]
-                query.where_clause += clauses
-                query.where_clause_params += params
-                for table in tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
+                    if parent_table_unescaped in query.joins:
+                        rule_query.joins[parent_alias_unescaped] = rule_query.joins.pop(parent_table_unescaped)
+                query += rule_query
 
         if self._transient:
             # One single implicit access rule for transient models: owner only!
@@ -3888,13 +3891,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # apply main rules on the object
         Rule = self.env['ir.rule']
-        where_clause, where_params, tables = Rule.domain_get(self._name, mode)
-        apply_rule(where_clause, where_params, tables)
+        rule_query = Rule.domain_get(self._name, mode)
+        apply_rule(query, rule_query)
 
         # apply ir.rules from the parents (through _inherits)
         for parent_model in self._inherits:
-            where_clause, where_params, tables = Rule.domain_get(parent_model, mode)
-            apply_rule(where_clause, where_params, tables, parent_model)
+            rule_query = Rule.domain_get(parent_model, mode)
+            apply_rule(query, rule_query, parent_model)
 
     @api.model
     def _generate_translated_field(self, table_alias, field, query):

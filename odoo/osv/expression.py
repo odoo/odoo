@@ -809,6 +809,15 @@ class expression(object):
                 and validated. """
             self.result.append(leaf)
 
+        def get_not_null_leafs(leaf, column, operator):
+            """ Fetch not null leafs in the current join context. Such leafs
+            need to be pushed after pusing an auto_join leaf with a negative
+            operator. """
+            if operator in NEGATIVE_TERM_OPERATORS:
+                return [create_substitution_leaf(leaf, (column, '!=', False)),
+                        create_substitution_leaf(leaf, AND_OPERATOR)]
+            return []
+
         self.result = []
         self.stack = [ExtendedLeaf(leaf, self.root_model) for leaf in self.expression]
         # process from right to left; expression is from left to right
@@ -887,11 +896,15 @@ class expression(object):
 
             elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
+                not_null_leafs = get_not_null_leafs(leaf, path[0], operator)
                 leaf.add_join_context(comodel, path[0], 'id', path[0], 'LEFT JOIN')
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
+                for not_null_leaf in not_null_leafs:
+                    push(not_null_leaf)
 
             elif len(path) > 1 and field.store and field.type == 'one2many' and field.auto_join:
                 # res_partner.id = res_partner__bank_ids.partner_id
+                not_null_leafs = get_not_null_leafs(leaf, path[0], operator)
                 leaf.add_join_context(comodel, 'id', field.inverse_name, path[0], 'LEFT JOIN')
                 domain = field.domain(model) if callable(field.domain) else field.domain
                 push(create_substitution_leaf(leaf, (path[1], operator, right), comodel))
@@ -900,6 +913,8 @@ class expression(object):
                     for elem in reversed(domain):
                         push(create_substitution_leaf(leaf, elem, comodel))
                     push(create_substitution_leaf(leaf, AND_OPERATOR, comodel))
+                for not_null_leaf in not_null_leafs:
+                    push(not_null_leaf)
 
             elif len(path) > 1 and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)

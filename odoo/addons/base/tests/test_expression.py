@@ -707,6 +707,8 @@ class TestAutoJoin(TransactionCase):
 
         # Do: one2many without _auto_join
         self._reinit_mock()
+        patch_auto_join(partner_obj, 'bank_ids', False)
+        patch_auto_join(partner_obj, 'child_ids', False)
         partners = partner_obj.search([('bank_ids.sanitized_acc_number', 'like', name_test)])
         # Test result
         self.assertEqual(partners, p_aa,
@@ -819,6 +821,8 @@ class TestAutoJoin(TransactionCase):
 
         # Do: many2one without _auto_join
         self._reinit_mock()
+        patch_auto_join(partner_obj, 'state_id', False)
+        patch_auto_join(state_obj, 'country_id', False)
         partners = partner_obj.search([('state_id.country_id.code', 'like', name_test)])
         # Test result: at least our added data + demo data
         self.assertLessEqual(p_a + p_b + p_aa + p_ab + p_ba, partners,
