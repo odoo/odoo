@@ -3744,7 +3744,7 @@ class StockMove(TransactionCase):
         from odoo.fields import Datetime
         for quant in quants:
             if quant.lot_id == lot1:
-                self.assertEqual(quant.in_date, Datetime.to_string(initial_in_date_lot1))
+                self.assertEqual(quant.in_date, initial_in_date_lot1)
             elif quant.lot_id == lot2:
                 self.assertEqual(quant.in_date, initial_in_date_lot2)
 

@@ -193,7 +193,7 @@ class StockRule(models.Model):
         :param procurement: browse record
         :rtype: dictionary
         '''
-        date_expected = (datetime.strptime(values['date_planned'], DEFAULT_SERVER_DATETIME_FORMAT) - relativedelta(days=self.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        date_expected = (values['date_planned'] - relativedelta(days=self.delay or 0)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty

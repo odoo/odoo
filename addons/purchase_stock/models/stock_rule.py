@@ -118,7 +118,7 @@ class StockRule(models.Model):
         seller = product_id._select_seller(
             partner_id=partner,
             quantity=procurement_uom_po_qty,
-            date=po.date_order and po.date_order[:10],
+            date=po.date_order and po.date_order.date(),
             uom_id=product_id.uom_po_id)
 
         taxes = product_id.supplier_taxes_id
