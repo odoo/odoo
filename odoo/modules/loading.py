@@ -98,7 +98,6 @@ def force_demo(cr):
     cr.execute('update ir_module_module set demo=%s', (True,))
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['ir.module.module'].invalidate_cache(['demo'])
-    cr.commit()
 
 
 def load_module_graph(cr, graph, status=None, perform_checks=True,
@@ -112,8 +111,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
        :return: list of modules that were installed or updated
     """
     def load_test(idref, mode):
-        nonlocal package
-        cr.commit()
+        cr.execute("SAVEPOINT load_test_data_file")
         try:
             load_data(cr, idref, mode, 'test', package, report)
             return True
@@ -122,7 +120,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 'module %s: an exception occurred in a test', package.name)
             return False
         finally:
-            cr.rollback()
+            cr.execute("ROLLBACK TO SAVEPOINT load_test_data_file")
             # avoid keeping stale xml_id, etc. in cache
             odoo.registry(cr.dbname).clear_caches()
 
@@ -180,7 +178,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             models_to_check -= set(model_names)
             registry.setup_models(cr)
             registry.init_models(cr, model_names, {'module': package.name})
-            cr.commit()
         elif package.state != 'to remove':
             # The current module has simply been loaded. The models extended by this module
             # and for which we updated the schema, must have their schema checked again.
@@ -230,6 +227,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # validate all the views at a whole
             env['ir.ui.view']._validate_module_views(module_name)
 
+            # need to commit any modification the module's installation or
+            # update made to the schema or data so the tests can run
+            # (separately in their own transaction)
+            cr.commit()
             if demo_loaded:
                 # launch tests only in demo mode, allowing tests to use demo data.
                 if tools.config.options['test_enable']:
@@ -257,13 +258,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         if package.name is not None:
             registry._init_modules.add(package.name)
-        cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
     registry.clear_caches()
 
-    cr.commit()
 
     return loaded_modules, processed_modules
 
@@ -316,8 +315,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     models_to_check = set()
 
-    cr = db.cursor()
-    try:
+    with db.cursor() as cr:
         if not odoo.modules.db.is_initialized(cr):
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
@@ -444,8 +442,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
 
-        cr.commit()
-
         # STEP 5: Uninstall modules to remove
         if update_module:
             # Remove records referenced from ir_model_data for modules to be
@@ -507,11 +503,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 9: save installed/updated modules for post-install tests
         registry.updated_modules += processed_modules
-        cr.commit()
-
-    finally:
-        cr.close()
-
 
 def reset_modules_state(db_name):
     """

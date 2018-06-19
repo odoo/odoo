@@ -127,7 +127,10 @@ Are there any automation scripts available I might use?
         </record>
 
         <!-- Run Scheduler -->
-        <function model="gamification.challenge" name="_cron_update"/>
+        <function model="gamification.challenge" name="_cron_update">
+            <value eval="False"/>
+            <value eval="False"/>
+        </function>
 
     </data>
 </odoo>
