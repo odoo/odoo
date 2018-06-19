@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux, 2017
 # Paolo Valier, 2017
+# Léonie Bouchat <lbo@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Paolo Valier, 2017\n"
+"Last-Translator: Léonie Bouchat <lbo@odoo.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +41,7 @@ msgstr "<%s> transazione (%s) stato non valido: %s"
 #: code:addons/sale_payment/models/payment.py:139
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr "<%s> transzione (%s) conferma ordine non riuscita: <%s>"
+msgstr "<%s> transazione (%s) conferma ordine non riuscita: <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -50,7 +51,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Paga Ora"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Finito"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -67,6 +68,8 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Finito</span>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -82,17 +85,17 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
-msgstr ""
+msgstr "Numero di transazioni in attesa"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
-msgstr ""
+msgstr "Numero di transazioni da registrare"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "Transazioni di pagamento autorizzate"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
@@ -117,28 +120,28 @@ msgstr ""
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Ultima transazione"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Numero di transazioni di pagamento"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
-msgstr ""
+msgstr "Numero di transazioni in attesa"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
 msgid "Number of transactions to capture"
-msgstr ""
+msgstr "Numero di transazioni da registrare"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:49
 #, python-format
 msgid "Pay"
-msgstr ""
+msgstr "Paga"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:200
@@ -164,17 +167,17 @@ msgstr "Transazione Pagamento"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payment to Capture"
-msgstr ""
+msgstr "Pagamento da recuperare"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Pagamenti da recuperare"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr "Transazioni di pagamento in attesa"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -184,7 +187,7 @@ msgstr "Preventivo"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_so_state
 msgid "Sale Order State"
-msgstr ""
+msgstr "Stato dell'ordine di vendita"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
@@ -209,16 +212,22 @@ msgstr ""
 msgid ""
 "There was an error processing your payment: impossible to validate order."
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: "
+"impossibile validare l'ordine."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order state."
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: stato di"
+" ordine invalido."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order."
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: ordine "
+"invalido."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
@@ -226,27 +235,37 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
+" con la convalida del codice identificativo della carta di credito. "
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
+" con l'importo della transazione.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: "
+"transazione fallita.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: problema"
+" di transazione.<br/>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Si è verificato un errore durante il trattamento del tuo pagamento: codice "
+"identificativo della carta di credito invalido."
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids

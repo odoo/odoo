@@ -1405,6 +1405,7 @@ exports.Orderline = Backbone.Model.extend({
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity()));
             this.order.fix_tax_included_price(this);
         }
+        this.trigger('change', this);
     },
     // return the quantity of product
     get_quantity: function(){
@@ -2123,7 +2124,7 @@ exports.Order = Backbone.Model.extend({
                 company_registry: company.company_registry,
                 contact_address: company.partner_id[1],
                 vat: company.vat,
-                vat_label: company.country.vat_label,
+                vat_label: company.country && company.country.vat_label || '',
                 name: company.name,
                 phone: company.phone,
                 logo:  this.pos.company_logo_base64,

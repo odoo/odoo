@@ -190,18 +190,19 @@
                             <label for="duration"/>
                             <div>
                                 <button style="pointer-events: none;" class="oe_inline label label-default">
-                                    <field name="duration" widget="mrp_time_counter"/>
+                                    <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."/>
                                 </button>
                             </div>
                         </group>
                     </group>
                     <group>
-                        <field name="time_ids" nolabel="1">
+                        <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id}">
                             <tree>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="duration" widget="float_time" sum="Total duration"/>
                                 <field name="user_id"/>
+                                <field name="workcenter_id" invisible="1"/>
                                 <field name="loss_id" string="Efficiency"/>
                             </tree>
                             <form>
@@ -213,6 +214,7 @@
                                     </group>
                                     <group>
                                         <field name="user_id"/>
+                                        <field name="workcenter_id"/>
                                         <field name="loss_id"/>
                                     </group>
                                 </group>
