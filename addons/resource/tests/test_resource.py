@@ -743,18 +743,18 @@ class TestTimezones(TestResourceCommon):
 
     def test_plan_hours(self):
         dt = self.calendar_jean.plan_hours(10, datetime_tz(2018, 4, 10, 8, 0, 0))
-        self.assertEqual(dt, datetime_tz(2018, 4, 11, 12, 0, 0, tzinfo=self.tz2))
+        self.assertEqual(dt, datetime_tz(2018, 4, 11, 10, 0, 0))
 
         dt = self.calendar_jean.plan_hours(10, datetime_tz(2018, 4, 10, 8, 0, 0, tzinfo=self.tz4))
-        self.assertEqual(dt, datetime_tz(2018, 4, 12, 10, 0, 0, tzinfo=self.tz2))
+        self.assertEqual(dt, datetime_tz(2018, 4, 11, 22, 0, 0, tzinfo=self.tz4))
 
     def test_plan_days(self):
         dt = self.calendar_jean.plan_days(2, datetime_tz(2018, 4, 10, 8, 0, 0))
-        self.assertEqual(dt, datetime_tz(2018, 4, 11, 16, 0, 0, tzinfo=self.tz2))
+        self.assertEqual(dt, datetime_tz(2018, 4, 11, 14, 0, 0))
 
         # We lose one day because of timezone
         dt = self.calendar_jean.plan_days(2, datetime_tz(2018, 4, 10, 8, 0, 0, tzinfo=self.tz4))
-        self.assertEqual(dt, datetime_tz(2018, 4, 12, 16, 0, 0, tzinfo=self.tz2))
+        self.assertEqual(dt, datetime_tz(2018, 4, 12, 4, 0, 0, tzinfo=self.tz4))
 
     def test_work_data(self):
         # 09-04-2018 10:00:00 - 13-04-2018 18:00:00
