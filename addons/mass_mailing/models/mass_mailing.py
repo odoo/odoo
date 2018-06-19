@@ -103,8 +103,6 @@ class MassMailingList(models.Model):
     opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Mailing Contact')
 
     # Compute number of contacts non opt-out, blacklisted and not invalid for a mailing list
-    #  NOPE ! Temporarily take everything because result is wrong due to bug with init opt_out value (null is some case).
-    # And we will change anyway the opt out behaviour (adding the double opt in functionality.
     def _compute_contact_nbr(self):
         self.env.cr.execute('''
             select
@@ -112,12 +110,24 @@ class MassMailingList(models.Model):
             from
                 mass_mailing_list_contact_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
+            where r.opt_out = false
+                AND c.email NOT IN (select email from mail_mass_mailing_blacklist)
+                AND substring(c.email, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             group by
                 list_id
         ''')
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+
+    @api.model
+    def create(self, vals):
+        result = super(MassMailingList, self).create(vals)
+        if 'contact_ids' in vals:
+            opt_out_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('contact_id', 'in', result.contact_ids.mapped('id'))])
+            for rec in opt_out_list_contacts:
+                rec.opt_out = False
+        return result
 
     @api.multi
     def action_merge(self, src_lists, archive):
@@ -243,14 +253,12 @@ class MassMailingContact(models.Model):
         if not re.match(EMAIL_PATTERN, self.email):
             raise ValidationError(_("The provided email is invalid."))
 
-    @api.multi
-    def write(self, vals):
-        result = super(MassMailingContact, self).write(vals)
+    @api.model
+    def create(self, vals):
+        result = super(MassMailingContact, self).create(vals)
         if 'list_ids' in vals:
-            for rec in self:
-                for list in rec.opt_out_list_ids:
-                    if list.opt_out == None or list.opt_out == False:
-                        list.opt_out = False
+            for rec in result.opt_out_list_ids.filtered(lambda r: r.list_id.id in result.list_ids.mapped('id')):
+                rec.opt_out = False
         return result
 
     def get_name_email(self, name):
