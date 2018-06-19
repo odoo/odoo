@@ -868,7 +868,7 @@ class ProcurementRule(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', string='Purchase Order Line')
+    purchase_line_id = fields.Many2one('purchase.order.line', string='Purchase Order Line', copy=False)
     purchase_id = fields.Many2one(related='purchase_line_id.order_id', string='Purchase Order')
 
     @api.multi
