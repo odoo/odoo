@@ -230,7 +230,6 @@ class AccountAssetAsset(models.Model):
                     # depreciation_date set manually from the 'first_depreciation_manual_date' field
                     depreciation_date = self.first_depreciation_manual_date
 
-            depreciation_date = depreciation_date.date()
             total_days = (depreciation_date.year % 4) and 365 or 366
             month_day = depreciation_date.day
             undone_dotation_number = self._compute_board_undone_dotation_nb(depreciation_date, total_days)

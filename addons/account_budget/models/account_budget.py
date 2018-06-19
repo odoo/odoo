@@ -265,14 +265,14 @@ class CrossoveredBudgetLines(models.Model):
     @api.one
     @api.constrains('date_from', 'date_to')
     def _line_dates_between_budget_dates(self):
-        budget_date_from = fields.Datetime.from_string(self.crossovered_budget_id.date_from)
-        budget_date_to = fields.Datetime.from_string(self.crossovered_budget_id.date_to)
+        budget_date_from = self.crossovered_budget_id.date_from
+        budget_date_to = self.crossovered_budget_id.date_to
         if self.date_from:
-            date_from = fields.Datetime.from_string(self.date_from)
+            date_from = self.date_from
             if date_from < budget_date_from or date_from > budget_date_to:
                 raise ValidationError(_('"Start Date" of the budget line should be included in the Period of the budget'))
 
         if self.date_to:
-            date_to = fields.Datetime.from_string(self.date_to)
+            date_to = self.date_to
             if date_to < budget_date_from or date_to > budget_date_to:
                 raise ValidationError(_('"End Date" of the budget line should be included in the Period of the budget'))
