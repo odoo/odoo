@@ -234,9 +234,9 @@
                                     <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Batch Deposits"/>
+                                    <label string="Batch Payments"/>
                                     <div class="text-muted">
-                                        Group received checks before depositing them to the bank
+                                        Group payments into a single batch to ease the reconciliation process
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +248,12 @@
                                     <label string="SEPA Direct Debit (SDD)" for="module_account_sepa"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
-                                        Collect customer payments in one-click using Euro SEPA Service.
+                                        Collect customer payments in one-click using Euro SEPA Service
+                                    </div>
+                                    <div id="account_reports_followup" class="content-group" attrs="{'invisible': [('module_account_sepa_direct_debit', '=', False)]}">
+                                        <div class="text-warning mt16 mb4">
+                                            Save this page and come back here to set up the feature.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +281,7 @@
                                     <label for="module_account_sepa"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
-                                        Pay your bills in one-click using Euro SEPA service
+                                        Pay your bills in one-click using Euro SEPA Service
                                     </div>
                                 </div>
                             </div>
