@@ -29,10 +29,8 @@ class account_journal(models.Model):
     account_setup_bank_data_done = fields.Boolean(string='Bank setup marked as done', related='company_id.account_setup_bank_data_done', help="Technical field used in the special view for the setup bar step.")
 
     def _graph_title_and_key(self):
-        if self.type == 'sale':
-            return ['', _('Sales: Untaxed Total')]
-        elif self.type == 'purchase':
-            return ['', _('Purchase: Untaxed Total')]
+        if self.type in ['sale', 'purchase']:
+            return ['', _('Residual amount')]
         elif self.type == 'cash':
             return ['', _('Cash: Balance')]
         elif self.type == 'bank':
@@ -141,7 +139,7 @@ class account_journal(models.Model):
         the bar graph's data as its first element, and the arguments dictionary
         for it as its second.
         """
-        return ("""SELECT sum(residual_company_signed) as total, min(date) as aggr_date
+        return ("""SELECT sum(residual_company_signed) as total, min(date_due) as aggr_date
                FROM account_invoice
                WHERE journal_id = %(journal_id)s and state = 'open'""", {'journal_id':self.id})
 
