@@ -83,6 +83,12 @@ class ResConfigSettings(models.TransientModel):
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
+    def set_values(self):
+        super(ResConfigSettings, self).set_values()
+        if not self.group_discount_per_so_line:
+            pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
+            pl.write({'discount_policy': 'with_discount'})
+
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
         if self.multi_sales_price and not self.multi_sales_price_method:
