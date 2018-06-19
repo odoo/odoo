@@ -868,7 +868,7 @@ class ProcurementRule(models.Model):
 class ProcurementOrder(models.Model):
     _inherit = 'procurement.order'
 
-    purchase_line_id = fields.Many2one('purchase.order.line', string='Purchase Order Line')
+    purchase_line_id = fields.Many2one('purchase.order.line', string='Purchase Order Line', copy=False)
     purchase_id = fields.Many2one(related='purchase_line_id.order_id', string='Purchase Order')
 
     @api.multi
@@ -917,10 +917,23 @@ class ProcurementOrder(models.Model):
 
     @api.multi
     def _check(self):
-        if self.purchase_line_id:
+        if self.rule_id.action == 'buy':
+            # In case Phantom BoM splits only into procurements
             if not self.move_ids:
+                if self.purchase_line_id and self.purchase_line_id.order_id.state not in ('purchase', 'done', 'cancel'):
+                    return False
+                else:
+                    return True
+            move_all_done_or_cancel = all(move.state in ['done', 'cancel'] for move in self.move_ids)
+            move_all_cancel = all(move.state == 'cancel' for move in self.move_ids)
+            if not move_all_done_or_cancel:
                 return False
-            return all(move.state in ('done', 'cancel') for move in self.move_ids) and any(move.state == 'done' for move in self.move_ids)
+            elif move_all_done_or_cancel and not move_all_cancel:
+                return True
+            else:
+                self.message_post(body=_('All stock moves have been cancelled for this procurement.'))
+                self.write({'state': 'cancel'})
+                return False
         return super(ProcurementOrder, self)._check()
 
     def _get_purchase_schedule_date(self):
