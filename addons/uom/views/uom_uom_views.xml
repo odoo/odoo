@@ -27,6 +27,7 @@
                             attrs="{'invisible':[('uom_type','!=','smaller')],
                                     'readonly':[('uom_type','=','bigger')]}"/>
                         <field name="factor_inv"
+                            string="Ratio"
                             digits="[42,5]"
                             attrs="{'invisible':[('uom_type','!=','bigger')],
                                     'readonly':[('uom_type','!=','bigger')]}"/>
