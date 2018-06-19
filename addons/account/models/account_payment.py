@@ -137,10 +137,18 @@ class account_abstract_payment(models.AbstractModel):
         if self.journal_id:
             # Set default payment method (we consider the first to be the default one)
             payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
-            self.payment_method_id = payment_methods and payment_methods[0] or False
+            payment_methods_list = payment_methods.ids
+
+            default_payment_method_id = self.env.context.get('default_payment_method_id')
+            if default_payment_method_id:
+                # Ensure the domain will accept the provided default value
+                payment_methods_list.append(default_payment_method_id)
+            else:
+                self.payment_method_id = payment_methods and payment_methods[0] or False
+
             # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
             payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
-            return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods.ids)]}}
+            return {'domain': {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}}
         return {}
 
     def _compute_journal_domain_and_types(self):
