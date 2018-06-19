@@ -664,6 +664,7 @@ class Picking(models.Model):
         all_in = True
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
         keys = ['product_id', 'lot_id']
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         grouped_quants = {}
         for k, g in groupby(sorted(package.quant_ids, key=itemgetter(*keys)), key=itemgetter(*keys)):
@@ -672,8 +673,8 @@ class Picking(models.Model):
         grouped_ops = {}
         for k, g in groupby(sorted(pack_move_lines, key=itemgetter(*keys)), key=itemgetter(*keys)):
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
-        if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
-                or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):
+        if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
+                or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
             all_in = False
         return all_in
 
