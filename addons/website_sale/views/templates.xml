@@ -621,17 +621,21 @@
     </template>
 
     <template id="variants">
+      <t t-set="attrib_param" t-value="request.httprequest.values.getlist('attrib')" />
       <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
       <ul t-attf-class="list-unstyled js_add_cart_variants #{ul_class}" t-att-data-attribute_value_ids="attribute_value_ids">
         <t t-foreach="product.attribute_line_ids.sorted(key=lambda x: x.attribute_id.sequence)" t-as="variant_id">
           <li t-if="len(variant_id.value_ids) > 1">
 
-            <strong t-field="variant_id.attribute_id.name"/>
+            <strong t-field="variant_id.attribute_id.name" />
+
+            <t t-set="selected_by_param" t-value="True if [x for x in attrib_param if x.startswith('%s-' % variant_id.attribute_id.id)] else False" />
 
             <t t-if="variant_id.attribute_id.type in ['select', 'hidden']">
               <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
                 <t t-foreach="variant_id.value_ids" t-as="value_id">
-                  <option t-att-value="value_id.id">
+                  <t t-set="attrib_value" t-value="'%s-%s' % (variant_id.attribute_id.id, value_id.id)" />
+                  <option t-att-value="value_id.id" t-att-selected="'selected' if attrib_value in attrib_param else None">
                       <span t-field="value_id.name"/>
                       <span t-if="value_id.price_extra">
                           <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
@@ -651,7 +655,8 @@
                   <t t-foreach="variant_id.value_ids" t-as="value_id">
                       <li class="form-group js_attribute_value" style="margin: 0;">
                           <label class="control-label" style="margin: 0 20px;">
-                              <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None" t-att-checked="'checked' if not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
+                              <t t-set="attrib_value" t-value="'%s-%s' % (variant_id.attribute_id.id, value_id.id)" />
+                              <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None" t-att-checked="'checked' if selected_by_param and attrib_value in attrib_param or not selected_by_param and not inc else None" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)" t-att-value="value_id.id" style="vertical-align: top; margin-right: 10px;"/>
                               <span t-field="value_id.name"/>
                               <span class="badge" t-if="value_id.price_extra">
                                   <t t-esc="value_id.price_extra > 0 and '+' or ''"/><span t-field="value_id.price_extra" style="white-space: nowrap;" t-options='{
@@ -671,10 +676,11 @@
               <ul class="list-inline">
                   <t t-set="inc" t-value="0"/>
                   <li t-foreach="variant_id.value_ids" t-as="value_id">
+                      <t t-set="attrib_value" t-value="'%s-%s' % (variant_id.attribute_id.id, value_id.id)" />
                       <label t-attf-style="background-color:#{value_id.html_color or value_id.name}"
-                          t-attf-class="css_attribute_color #{'active' if not inc else ''}">
+                          t-attf-class="css_attribute_color #{'active' if selected_by_param and attrib_value in attrib_param or not selected_by_param and not inc else ''}">
                         <input type="radio" t-att-class="'js_variant_change' if variant_id.attribute_id.create_variant else None"
-                          t-att-checked="'checked' if not inc else None"
+                          t-att-checked="'checked' if selected_by_param and attrib_value in attrib_param or not selected_by_param and not inc else None"
                           t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)"
                           t-att-value="value_id.id"
                           t-att-title="value_id.name"/>

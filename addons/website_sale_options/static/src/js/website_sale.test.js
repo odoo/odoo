@@ -46,6 +46,11 @@ tour.register('shop_customize', {
             trigger: '.oe_product_cart a:contains("iPad")',
         },
         {
+            content: "check the variant selection",
+            trigger: 'form.js_add_cart_variants label:contains(16 GB) input:checked',
+            run: function () {}, // it's a check
+        },
+        {
             content: "click on 'Add to Cart' button",
             trigger: "a:contains(Add to Cart)",
         },
