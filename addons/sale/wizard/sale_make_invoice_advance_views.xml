@@ -14,6 +14,7 @@
                         <field name="sale_order_id" invisible="1"/>
                         <field name="invoice_options" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
+                        <field name="invoiceable_line" invisible="1"/>
                         <field name="product_id"
                             context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
                             invisible="1"/>
@@ -41,10 +42,10 @@
                             </div>
                             <field name="unbilled_total" widget="monetary" nolabel="1" class="oe_subtotal_footer_separator" attrs="{'invisible': [('undelivered_products', '=', 0)]}"/>
                             <field name="undelivered_products" widget="monetary" help="Products to invoice after the delivery" attrs="{'invisible': ['|',('undelivered_products', '=', 0),('ready_to_invoice', '==', 0)]}"/>
-                            <div class="oe_subtotal_footer_separator o_td_label" attrs="{'invisible': [('ready_to_invoice', '==', 0)]}">
+                            <div class="oe_subtotal_footer_separator o_td_label" attrs="{'invisible': [('invoiceable_line', '=', False)]}">
                                 <label for="ready_to_invoice"/>
                             </div>
-                            <field name="ready_to_invoice" widget="monetary" nolabel="1" class="oe_subtotal_footer_separator" attrs="{'invisible': [('ready_to_invoice', '==', 0)]}"/>
+                            <field name="ready_to_invoice" widget="monetary" nolabel="1" class="oe_subtotal_footer_separator" attrs="{'invisible': [('invoiceable_line', '=', False)]}"/>
                         </group>
                     </group>
                     <footer>

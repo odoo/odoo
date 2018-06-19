@@ -69,6 +69,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     unbilled_total = fields.Monetary(string='Unbilled Total', compute='compute_all')
     undelivered_products = fields.Monetary(string='Undelivered Products', compute='compute_all')
     ready_to_invoice = fields.Monetary(string='Ready to Invoice', compute='compute_all')
+    invoiceable_line = fields.Boolean(string='Invoiceable line', compute='compute_all')
 
     @api.depends('sale_order_id')
     def compute_all(self):
@@ -105,6 +106,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'already_invoiced': -(already_invoiced + downpayment),
                 'unbilled_total': (unbill + downpayment),
                 'undelivered_products': -undeliver,
+                'invoiceable_line': True if ready > 0 else False,
                 'ready_to_invoice': ready + downpayment if ready > 0 else ready
             })
 
