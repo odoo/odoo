@@ -742,7 +742,6 @@ form: module.record_id""" % (xml_id,)
                 try:
                     self._tags[rec.tag](rec, de, mode=mode)
                 except Exception as e:
-                    self.cr.rollback()
                     exc_info = sys.exc_info()
                     pycompat.reraise(
                         ParseError,
