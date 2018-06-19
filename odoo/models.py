@@ -3184,8 +3184,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if inverse_vals:
                 self.modified(set(inverse_vals) - set(store_vals))
 
-                # in case several fields use the same inverse method, call it once
-                for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
+                # group fields by inverse method (to call it once), and order
+                # groups by dependence (in case they depend on each other)
+                field_groups = sorted(
+                    (fields for _inv, fields in groupby(inverse_fields, attrgetter('inverse'))),
+                    key=lambda fields: min(pycompat.imap(self.pool.field_sequence, fields)),
+                )
+                for fields in field_groups:
                     # If a field is not stored, its inverse method will probably
                     # write on its dependencies, which will invalidate the field
                     # on all records. We therefore inverse the field one record
@@ -3201,7 +3206,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         fields[0].determine_inverse(records)
 
                 self.modified(set(inverse_vals) - set(store_vals))
-
 
                 # check Python constraints for inversed fields
                 self._validate_fields(set(inverse_vals) - set(store_vals))
@@ -3414,12 +3418,21 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # determine which fields to protect on which records
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
-            # in case several fields use the same inverse method, call it once
-            for _inv, fields in groupby(inversed_fields, attrgetter('inverse')):
+            # group fields by inverse method (to call it once), and order groups
+            # by dependence (in case they depend on each other)
+            field_groups = sorted(
+                (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse'))),
+                key=lambda fields: min(pycompat.imap(self.pool.field_sequence, fields)),
+            )
+            for fields in field_groups:
                 # determine which records to inverse for those fields
                 inv_names = {field.name for field in fields}
                 rec_vals = [
-                    (data['record'], data['inversed'])
+                    (data['record'], {
+                        name: data['inversed'][name]
+                        for name in inv_names
+                        if name in data['inversed']
+                    })
                     for data in data_list
                     if not inv_names.isdisjoint(data['inversed'])
                 ]
