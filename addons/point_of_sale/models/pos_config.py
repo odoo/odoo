@@ -100,7 +100,7 @@ class PosConfig(models.Model):
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
     iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
         help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount.')
-    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], related="company_id.iface_tax_included", required=True)
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
@@ -267,7 +267,7 @@ class PosConfig(models.Model):
     def _onchange_use_pricelist(self):
         """
         If the 'pricelist' box is unchecked, we reset the pricelist_id to stop
-        using a pricelist for this posbox. 
+        using a pricelist for this posbox.
         """
         if not self.use_pricelist:
             self.pricelist_id = self._default_pricelist()
