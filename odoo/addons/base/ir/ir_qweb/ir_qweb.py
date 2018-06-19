@@ -343,6 +343,8 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         # adds template compile options for rendering fields
         for k, v in options.items():
+            if isinstance(k, pycompat.string_types) and k.startswith('_'):
+                continue
             field_options.setdefault(k, v)
 
         # adds generic field options
