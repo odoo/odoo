@@ -33,12 +33,17 @@ class HolidaysAllocation(models.Model):
     _description = "Leaves Allocation"
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    def _default_domain_holiday_status_id(self):
+        if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
+            return [('valid', '=', True), ('limit', '=', False)]
+        return [('valid', '=', True), ('employee_applicability', 'in', ['allocation', 'both']), ('limit', '=', False)]
+
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
 
     def _default_holiday_status_id(self):
         LeaveType = self.env['hr.leave.type'].with_context(employee_id=self._default_employee().id)
-        lt = LeaveType.search([('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both']), ('limit', '=', False)])
+        lt = LeaveType.search(self._default_domain_holiday_status_id())
         return lt[:1]
 
     name = fields.Char('Description')
@@ -56,7 +61,7 @@ class HolidaysAllocation(models.Model):
             "\nThe status is 'Approved', when leave request is approved by manager.")
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        domain="[('valid', '=', True), ('employee_applicability', 'in', ['allocation', 'both']), ('limit', '=', False)]", default=_default_holiday_status_id)
+        domain=lambda self: self._default_domain_holiday_status_id(), default=_default_holiday_status_id)
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
