@@ -109,7 +109,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.iPadMini.taxes_id = self.tax_10pc_incl
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'name': 'Large Cabinet',
             'product_uom_qty': 3.0,
             'order_id': order.id,
         })
@@ -142,19 +142,19 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             'rule_minimum_amount': 872,
         })
         self.p2 = self.env['sale.coupon.program'].create({
-            'name': 'Buy 4 ipads, get one for free',
+            'name': 'Buy 4 large cabinet, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.iPadMini.id,
             'rule_min_quantity': 3,
-            'rule_products_domain': '[["name","ilike","ipad mini"]]',
+            'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
         order = self.empty_order
         self.iPadMini.taxes_id = self.tax_10pc_incl
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'name': 'Large Cabinet',
             'product_uom_qty': 3.0,
             'order_id': order.id,
         })
@@ -182,13 +182,13 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
         sol1.product_uom_qty = 4
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 4, "We should get a free iPad Mini")
+        self.assertEqual(len(order.order_line.ids), 4, "We should get a free Large Cabinet")
         self.assertEqual(order.reward_amount, -20 -290.91)
         self.assertEqual(sum([line.price_total for line in order._get_no_effect_on_threshold_lines()]), 0)
         self.assertEqual(order.amount_untaxed, 872.73)
 
         p_specific_product = self.env['sale.coupon.program'].create({
-            'name': '20% reduction on ipad in cart',
+            'name': '20% reduction on large cabinet in cart',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'discount',
             'program_type': 'promotion_program',
@@ -199,4 +199,4 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         p_specific_product.discount_apply_on = 'cheapest_product'
         order.recompute_coupon_lines()
         # 872.73 - (20% of 1 iPad) = 872.73 - 64 = 808.73
-        self.assertEqual(order.amount_untaxed, 808.73, "One iPad should be discounted by 20%")
+        self.assertEqual(order.amount_untaxed, 808.73, "One large cabinet should be discounted by 20%")
