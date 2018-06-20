@@ -138,7 +138,8 @@ class AccountChartTemplate(models.Model):
         new_code = ''
         for num in range(1, 100):
             new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
-            rec = self.env['account.account.template'].search([('code', '=', new_code), ('chart_template_id', '=', self.id)], limit=1)
+            rec = self.env['account.account.template'].search(
+                [('code', '=', new_code), '|', ('chart_template_id', 'child_of', self.id), ('chart_template_id', 'parent_of', self.id)], limit=1)
             if not rec:
                 break
         else:
@@ -1043,8 +1044,14 @@ class IrModelData(models.Model):
         #  - an entry in ir_model_data: this allow to still use the method create_record_with_xmlid() and don't make any difference between
         #    regular accounts created and that liquidity transfer account
         if model == 'account.chart.template' and xml_id and module:
+            chart_template = self.env[model].browse(record_id)
+
+            # Create the transfer account only for leaf chart template in the hierarchy.
+            if chart_template.parent_id:
+                return record_id
+
             new_xml_id = xml_id + '_liquidity_transfer'
             if not self.search([('model', '=', 'account.account.template'), ('module', '=', module), ('name', '=', new_xml_id)]):
-                vals = self.env[model].browse(record_id)._prepare_transfer_account_template()
+                vals = chart_template._prepare_transfer_account_template()
                 self._update('account.account.template', module, vals, xml_id=new_xml_id, store=True, noupdate=noupdate, mode=mode, res_id=False)
         return record_id
