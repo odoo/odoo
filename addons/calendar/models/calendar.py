@@ -829,8 +829,8 @@ class Meeting(models.Model):
                 startdate = startdate.astimezone(pytz.utc)  # Convert to UTC
                 meeting.start = fields.Datetime.to_string(startdate)
             else:
-                meeting.start = meeting.start_datetime
-                meeting.stop = meeting.stop_datetime
+                meeting.write({'start': meeting.start_datetime,
+                               'stop': meeting.stop_datetime})
 
     @api.depends('byday', 'recurrency', 'final_date', 'rrule_type', 'month_by', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'day', 'week_list')
     def _compute_rrule(self):
