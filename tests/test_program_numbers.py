@@ -29,21 +29,21 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'program_type': 'promotion_program',
         })
         self.p2 = self.env['sale.coupon.program'].create({
-            'name': 'Buy 3 ipads, get one for free',
+            'name': 'Buy 3 cabinets, get one for free',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.iPadMini.id,
             'rule_min_quantity': 3,
-            'rule_products_domain': '[["name","ilike","ipad mini"]]',
+            'rule_products_domain': '[["name","ilike","large cabinet"]]',
         })
         self.p3 = self.env['sale.coupon.program'].create({
-            'name': 'Buy 1 computer case, get a free little server',
+            'name': 'Buy 1 drawer black, get a free Large Meeting Table',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'product',
             'program_type': 'promotion_program',
             'reward_product_id': self.littleServer.id,
-            'rule_products_domain': '[["name","ilike","computer case"]]',
+            'rule_products_domain': '[["name","ilike","drawer black"]]',
         })
 
     def test_program_numbers_free_and_paid_product_qty(self):
@@ -51,14 +51,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order = self.empty_order
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'name': 'Large Cabinet',
             'product_uom_qty': 4.0,
             'order_id': order.id,
         })
 
         # Check we correctly get a free product
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2, "We should have 2 lines as we now have one 'Free iPad Mini' line as we bought 4 of them")
+        self.assertEqual(len(order.order_line.ids), 2, "We should have 2 lines as we now have one 'Free Large Cabinet' line as we bought 4 of them")
 
         # Check free product's price is not added to total when applying reduction (Or the discount will also be applied on the free product's price)
         self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, 'test_10pc')
@@ -69,16 +69,16 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Check free product is removed since we are below minimum required quantity
         sol1.product_uom_qty = 3
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 1, "Free iPad Mini should have been removed")
+        self.assertEqual(len(order.order_line.ids), 1, "Free Large Cabinet should have been removed")
 
         # Free product in cart will be considered as paid product when changing quantity of paid product, so the free product quantity computation will be wrong.
         # 100 iPad in cart, 25 free, set quantity to 10 ipad, you should have 2 free ipad but you get 8 because it add the 25 initial free ipad to the total paid ipad when computing (25+10 > 35 > /4 = 8 free ipad)
         sol1.product_uom_qty = 100
         order.recompute_coupon_lines()
-        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 25, "We should have 25 Free iPad Mini")
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 25, "We should have 25 Free Large Cabinet")
         sol1.product_uom_qty = 10
         order.recompute_coupon_lines()
-        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 2, "We should have 2 Free iPad Mini")
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 2, "We should have 2 Free Large Cabinet")
 
     def test_program_numbers_check_eligibility(self):
         # These tests will focus on numbers (free product qty, SO total, reduction total..)
@@ -88,19 +88,19 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order = self.empty_order
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.computerCase.id,
-            'name': 'Computer Case',
+            'name': 'drawer black',
             'product_uom_qty': 4.0,
             'order_id': order.id,
         })
         sol2 = self.env['sale.order.line'].create({
             'product_id': self.littleServer.id,
-            'name': 'Little Server',
+            'name': 'Large Meeting Table',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 3, "We should have a 'Free Little Server' promotion line")
-        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 1, "We should receive one and only one free Little Server")
+        self.assertEqual(len(order.order_line.ids), 3, "We should have a 'Free Large Meeting Table' promotion line")
+        self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).product_uom_qty, 1, "We should receive one and only one free Large Meeting Table")
 
         # Check the required value amount to be eligible for the program is correctly computed (eg: it does not add negative value (from free product) to total)
         # A = free b | Have your cart with A 2B b | cart value should be A + 1B but in code it is only A (free b value is subsstract 2 times)
@@ -115,12 +115,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # Check you can still have auto applied promotion if you have a promo code set to the order
         sol4 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'name': 'Large Cabinet',
             'product_uom_qty': 4.0,
             'order_id': order.id,
         })
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 6, "We should have 2 more lines as we now have one 'Free iPad Mini' line since we bought 4 of them")
+        self.assertEqual(len(order.order_line.ids), 6, "We should have 2 more lines as we now have one 'Free Large Cabinet' line since we bought 4 of them")
 
     def test_program_numbers_taxes_and_rules(self):
         percent_tax = self.env['account.tax'].create({
@@ -130,7 +130,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
             'price_include': True,
         })
         p_specific_product = self.env['sale.coupon.program'].create({
-            'name': '20% reduction on ipad in cart',
+            'name': '20% reduction on Large Cabinet in cart',
             'promo_code_usage': 'no_code_needed',
             'reward_type': 'discount',
             'program_type': 'promotion_program',
@@ -144,17 +144,17 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.iPadMini.taxes_id = percent_tax
         sol1 = self.env['sale.order.line'].create({
             'product_id': self.iPadMini.id,
-            'name': 'iPad Mini',
+            'name': 'Large Cabinet',
             'product_uom_qty': 1.0,
             'order_id': order.id,
         })
 
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 1, "We should not get the reduction line since we dont have 320$ tax excluded (ipad is 320$ tax included)")
+        self.assertEqual(len(order.order_line.ids), 1, "We should not get the reduction line since we dont have 320$ tax excluded (cabinet is 320$ tax included)")
         sol1.tax_id.price_include = False
         sol1._compute_tax_id()
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (ipad is 320$ tax included)")
+        self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
         # (320 +15% tax) - (20% of (320 + 15% tax) = 368 + 73.6 = 294.4
         self.assertEqual(order.amount_total, 294.4, "Check discount has been applied correctly (eg: on taxes aswell)")
 
@@ -166,7 +166,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
         self.env['sale.coupon.apply.code'].sudo().apply_coupon(order, '20pc')
         order.recompute_coupon_lines()
-        self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (ipad is 320$ tax included)")
+        self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
 
         #check discount applied only on ipad
         sol2 = self.env['sale.order.line'].create({
@@ -177,11 +177,11 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         })
         order.recompute_coupon_lines()
         # (10x25) + (320 +15% tax) - (20% of (320 + 15% tax) = 250 + 368 - 73.6 = 544.4
-        self.assertEqual(order.amount_total, 544.4, "We should only get reduction on ipad")
+        self.assertEqual(order.amount_total, 544.4, "We should only get reduction on cabinet")
         sol1.product_uom_qty = 10
         order.recompute_coupon_lines()
         # (10x25) + (10x (320 +15% tax)) - (20% of (10x (320 + 15% tax))) - 2 free iPads = 250 + 3680 - 736 - 736 = 2458
-        self.assertEqual(order.amount_total, 2458, "Changing ipad quantity should change discount amount correctly")
+        self.assertEqual(order.amount_total, 2458, "Changing cabinet quantity should change discount amount correctly")
 
         p_specific_product.discount_max_amount = 200
         order.recompute_coupon_lines()
