@@ -51,7 +51,21 @@ class IrQWeb(models.AbstractModel, QWeb):
             if method.startswith('render_'):
                 _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
-        context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
+        def jsonable(val):
+            try:
+                json.dumps(val)
+                return True
+            except Exception:
+                return False
+
+        context = {
+            key: val
+            for key, val in self.env.context.items()
+            if isinstance(key, pycompat.string_types) and not key.startswith('_')
+            if jsonable(val)
+        }
+        context['dev_mode'] = 'qweb' in tools.config['dev_mode']
+        # context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
         return super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
