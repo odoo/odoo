@@ -282,7 +282,7 @@ function classToStyle($editable) {
 
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;"><tr><td></td></tr></table>');
+            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;vertical-align:middle"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({
