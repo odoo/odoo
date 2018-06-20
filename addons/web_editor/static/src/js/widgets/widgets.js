@@ -363,6 +363,7 @@ var ImageWidget = MediaWidget.extend({
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
+        domain.push('!', ['datas_fname', '=like', '%.crop'], '!', ['name', '=like', '%.crop']);
         return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
