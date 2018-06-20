@@ -95,8 +95,11 @@ class TestO2M(BaseImportCase):
     def get_fields(self, field):
         return self.env['base_import.import'].get_fields('base_import.tests.models.' + field)
 
+    def user_has_groups(self, groups):
+        return self.env['base_import.import'].user_has_groups(groups)
+
     def test_shallow(self):
-        self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=[
+        expected_fields = [
             ID_FIELD,
             # FIXME: should reverse field be ignored?
             {'id': 'parent_id', 'name': 'parent_id', 'string': 'Parent id', 'type': 'many2one', 'required': False, 'fields': [
@@ -104,7 +107,11 @@ class TestO2M(BaseImportCase):
                 {'id': 'parent_id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [], 'type': 'id'},
             ]},
             {'id': 'value', 'name': 'value', 'string': 'Value', 'required': False, 'fields': [], 'type': 'integer'},
-        ]))
+        ]
+        if self.user_has_groups('base.group_no_one'):
+            expected_fields.append({'id': '.id', 'name': '.id', 'string': 'Database ID', 'required': False, 'fields': [],
+                                   'type': 'id'})
+        self.assertEqualFields(self.get_fields('o2m'), make_field(field_type='one2many', fields=expected_fields))
 
 
 class TestMatchHeadersSingle(TransactionCase):
