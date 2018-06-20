@@ -90,6 +90,7 @@ var SnippetEditor = Widget.extend({
      * @override
      */
     destroy: function () {
+        this.cleanForSave();
         this._super.apply(this, arguments);
         this.$target.removeData('snippet-editor');
     },
@@ -634,9 +635,7 @@ var SnippetsMenu = Widget.extend({
      */
     cleanForSave: function () {
         this.trigger_up('ready_to_clean_for_save');
-        _.each(this.snippetEditors, function (snippetEditor) {
-            snippetEditor.cleanForSave();
-        });
+        this._destroyEditors();
 
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
@@ -816,6 +815,14 @@ var SnippetsMenu = Widget.extend({
             });
         }
         return $.when();
+    },
+    /**
+     * @private
+     */
+    _destroyEditors: function () {
+        _.each(this.snippetEditors, function (snippetEditor) {
+            snippetEditor.destroy();
+        });
     },
     /**
      * Updates the cover dimensions of the current snippet editor.
@@ -1355,15 +1362,11 @@ var SnippetsMenu = Widget.extend({
     /**
      * Called when a snippet has moved in the page.
      *
-     * @todo technically, as a snippet has been moved, all editors should be
-     * destroyed as their snippet options may not correspond to their
-     * selector anymore. However this should rarely (maybe never ?) be the case,
-     * so we might not want to do this as it would slow the editor.
-     *
      * @private
      * @param {OdooEvent} ev
      */
     _onDragAndDropStop: function (ev) {
+        this._destroyEditors();
         this._activateSnippet(ev.data.$snippet);
     },
     /**
