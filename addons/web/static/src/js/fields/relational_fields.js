@@ -464,7 +464,7 @@ var FieldMany2One = AbstractField.extend({
             res_model: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
-            no_create: !this.can_create || !this.activeActions.create,
+            no_create: !this.can_create,
             title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
             initial_ids: ids ? _.map(ids, function (x) { return x[0]; }) : undefined,
             initial_view: view,

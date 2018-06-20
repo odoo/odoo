@@ -749,7 +749,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('standalone many2one field', function (assert) {
-        assert.expect(3);
+        assert.expect(9);
         var done = assert.async();
 
         var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
@@ -757,6 +757,11 @@ QUnit.module('relational_fields', {
 
         var fixture = $('#qunit-fixture');
         var self = this;
+
+        for (var i=0; i<10; i++) {
+            var id = 5 + i;
+            this.data.partner.records.push({id: id, display_name: "aaa " + id});
+        }
 
         var model = testUtils.createModel({
             Model: BasicModel,
@@ -786,8 +791,14 @@ QUnit.module('relational_fields', {
             var parent = new StandaloneWidget(model);
             testUtils.addMockEnvironment(parent, {
                 data: self.data,
+                archs: {
+                    'partner,false,list': '<tree string="Vendors">' +
+                                            '<field name="display_name"/>' +
+                                      '</tree>',
+                    'partner,false,search': '<search><field name="display_name"/></search>',
+                },
                 mockRPC: function (route, args) {
-                    assert.step(args.method);
+                    assert.step(_.last(route.split('/')));
                     return this._super.apply(this, arguments);
                 },
             });
@@ -800,13 +811,44 @@ QUnit.module('relational_fields', {
             });
 
             relField.appendTo(fixture);
-            $('input.o_input').val('xyzzrot').trigger('input');
+
+            // Create another instance of FieldMany2One to check can_create
+            var relField2 = new relationalFields.FieldMany2One(parent,
+                'partner_id',
+                record,
+                {
+                    mode: 'edit',
+                    attrs: {
+                        can_create: false,
+                    },
+            });
+
+            relField2.appendTo(fixture);
+
+            relField.$('input.o_input').val('xyzzrot').trigger('input');
 
             concurrency.delay(0).then(function () {
-                var $dropdown = $('input.o_input').autocomplete('widget');
+                var $dropdown = relField.$('input.o_input').autocomplete('widget');
                 $dropdown.find('.o_m2o_dropdown_option:contains(Create)')
                     .first().mouseenter().click();
-                assert.verifySteps(['name_search', 'name_create']);
+
+                // Check create option is not available and Select Create Popup doesn't have Create button
+                relField2.$('input.o_input').val('aa').trigger('input');
+
+                return concurrency.delay(0);
+            }).then(function () {
+                var $dropdown = relField2.$('input.o_input').autocomplete('widget');
+                assert.ok(!$dropdown.find('.o_m2o_dropdown_option:contains(Create)').length,
+                    "Should not have Create or Create and Edit option");
+                $dropdown.find('.o_m2o_dropdown_option:contains(Search)')
+                    .first().mouseenter().click();
+                var $modal = $('.modal-dialog');
+                assert.equal($modal.length, 1,
+                    'There should be 1 modal opened');
+                assert.ok(!$modal.find(".modal-footer button:contains(Create)").length,
+                    'Should not have Create button in modal');
+
+                assert.verifySteps(['name_search', 'name_create', 'name_search', 'name_search', 'search_read']);
                 parent.destroy();
                 model.destroy();
                 relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
