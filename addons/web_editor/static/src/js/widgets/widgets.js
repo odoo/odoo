@@ -1799,7 +1799,6 @@ var CropImageDialog = Dialog.extend({
             case 'ratio':
                 $option.siblings().removeClass('active');
                 $option.addClass('active');
-                this.$cropperImage.cropper('reset');
                 this.imageData.aspectRatio = value;
                 this.$cropperImage.cropper('setAspectRatio', this.imageData.aspectRatio);
                 break;
