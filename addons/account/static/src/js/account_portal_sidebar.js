@@ -1,7 +1,24 @@
-odoo.define('account.AccountPortalSidebar', function (require) {
+odoo.define('account.AccountPortalSidebar.instance', function (require) {
 "use strict";
 
 require('web.dom_ready');
+var AccountPortalSidebar = require('account.AccountPortalSidebar');
+
+if (!$('.o_portal_invoice_sidebar').length) {
+    return $.Deferred().reject("DOM doesn't contain '.o_portal_invoice_sidebar'");
+}
+
+var account_portal_sidebar = new AccountPortalSidebar();
+return account_portal_sidebar.attachTo($('.o_portal_invoice_sidebar')).then(function () {
+    return account_portal_sidebar;
+});
+});
+
+//==============================================================================
+
+odoo.define('account.AccountPortalSidebar', function (require) {
+"use strict";
+
 var PortalSidebar = require('portal.PortalSidebar');
 
 var AccountPortalSidebar = PortalSidebar.extend({
@@ -46,13 +63,6 @@ var AccountPortalSidebar = PortalSidebar.extend({
     },
 });
 
-$(function () {
-    if (!$('.o_portal_invoice_sidebar').length) {
-        return $.Deferred().reject("DOM doesn't contain '.o_portal_invoice_sidebar'");
-    }
-    var account_portal_sidebar = new AccountPortalSidebar();
-    account_portal_sidebar.attachTo($('.o_portal_invoice_sidebar'));
-});
 
 return AccountPortalSidebar;
 });

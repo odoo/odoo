@@ -1,7 +1,6 @@
 odoo.define('portal.PortalSidebar', function (require) {
 "use strict";
 
-require('web.dom_ready');
 var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
