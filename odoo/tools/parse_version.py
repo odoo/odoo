@@ -7,6 +7,7 @@
 from __future__ import print_function
 import re
 
+from odoo.release import version
 from odoo.tools import pycompat
 
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
@@ -64,6 +65,41 @@ def parse_version(s):
                 parts.pop()
         parts.append(part)
     return tuple(parts)
+
+
+def version_match(valid_ranges, current=version):
+    """Check if a version range matches the specified Odoo version.
+
+    :param str valid_ranges:
+        One or many version ranges. A range are 2 versions, separated by ``:``.
+        The 1st one is the minimum version, and the 2nd one is the maximum.
+        If any of the versions is empty, it will always match.
+        Multiple ranges can be separated by ``,``.
+
+        Examples that would return ``True``::
+
+            version_match(":")
+            version_match("12.0.0:,:15", "12.0")
+            version_match("11.0:", "12.0")
+            version_match(":13.0", "12.0")
+
+        Check ``parse_version`` to know how those versions are parsed.
+
+    :param str current:
+        Target version to check against. It defaults to current Odoo version.
+
+    :return bool:
+        Indicates if Odoo version matches the range or not.
+    """
+    current_parsed = parse_version(current)
+    for valid_range in valid_ranges.split(","):
+        min_, max_ = valid_range.split(":")
+        min_ = parse_version(min_) if min_ else current_parsed
+        max_ = parse_version(max_) if max_ else current_parsed
+        if not min_ <= current_parsed <= max_:
+            return False
+    return True
+
 
 if __name__ == '__main__':
         def chk(lst, verbose=False):

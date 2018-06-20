@@ -282,6 +282,20 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         return ajax.get_file(options);
     },
     /**
+     * Get current server version info, lazy-cached
+     *
+     * @returns {$.Deferred} deferred with version info dict
+     */
+    version_info: function (cache) {
+        if (
+            this._version_def === undefined ||
+            this._version_def.isRejected()
+        ) {
+            this._version_def = this.rpc("/web/webclient/version_info");
+        }
+        return this._version_def;
+    },
+    /**
      * (re)loads the content of a session: db name, username, user id, session
      * context and status of the support contract
      *
