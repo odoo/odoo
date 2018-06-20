@@ -98,8 +98,8 @@ var PortalSidebar = Widget.extend({
     _onUpdateSidebarPosition: function () {
         var $sidebar = this.$el.find('.bs-sidebar, .o_portal_brand');
         $sidebar.css({
-            position: config.device.size_class >= config.device.SIZES.SM ? "fixed" : '',
-            width: config.device.size_class >= config.device.SIZES.SM ? $sidebar.outerWidth() : '',
+            position: config.device.size_class >= config.device.SIZES.MD ? "fixed" : '',
+            width: config.device.size_class >= config.device.SIZES.MD ? $sidebar.outerWidth() : '',
         });
     },
 });
