@@ -255,11 +255,14 @@ class Web_Editor(http.Controller):
         elif image_id:
             record = request.env['ir.attachment'].browse(image_id)
         result = {
-            'id': record.id,
             'mimetype': record.mimetype,
         }
+        # If we received the image ID and that image has an associated URL
+        # field, this should be a crop image attachment, so we return the ID
+        # and URL to confirm
         if image_id and record.url:
-            result['src'] = record.url
+            result['id'] = record.id
+            result['originalSrc'] = record.url
         return result
 
     ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
