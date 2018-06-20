@@ -69,7 +69,7 @@
                             </table>
                             <br/>
                             <br/>
-                            <table class="table table-sm" t-if="o.move_line_ids">
+                            <table class="table table-sm" t-if="o.move_line_ids and o.move_ids_without_package">
                                 <t t-set="has_barcode" t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
                                 <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
                                 <thead>
@@ -135,22 +135,27 @@
                                     </t>
                                   </tbody>
                             </table>
-                            <table class="table table-sm" t-if="o.package_level_ids and o.picking_type_entire_packs">
+                            <table class="table table-sm" t-if="o.package_level_ids and o.picking_type_entire_packs and o.state in ['assigned', 'done']">
                                 <thead>
                                     <tr>
-                                        <th width="25%">Package</th>
-                                        <th width="25%" class="text-center">Barcode</th>
-                                        <th width="25%" class="text-left">Source</th>
-                                        <th width="25%" class="text-right">Destination</th>
+                                        <th>Package</th>
+                                        <th t-if="o.picking_type_code == 'outgoing' or env['ir.ui.view'].user_has_groups('stock.group_stock_multi_locations')">From</th>
+                                        <th t-if="o.picking_type_code == 'incoming' or env['ir.ui.view'].user_has_groups('stock.group_stock_multi_locations')">To</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
                                         <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
-                                        <td><span t-field="package.package_id.name"/></td>
-                                        <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)" style="width:300px    ;height:50px" alt="Barcode"/></td>
-                                        <td><span t-field="package.location_id"/></td>
-                                        <td><span t-field="package.location_dest_id"/></td>
+                                        <td>
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.package_id.name, 600, 100)" style="width:300px    ;height:50px; margin-left: -50px;" alt="Barcode"/><br/>
+                                            <span t-field="package.package_id.name"/>
+                                        </td>
+                                        <td t-if="o.picking_type_code == 'outgoing' or env['ir.ui.view'].user_has_groups('stock.group_stock_multi_locations')">
+                                            <span t-field="package.location_id"/>
+                                        </td>
+                                        <td t-if="o.picking_type_code == 'incoming' or env['ir.ui.view'].user_has_groups('stock.group_stock_multi_locations')">
+                                            <span t-field="package.location_dest_id"/>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
