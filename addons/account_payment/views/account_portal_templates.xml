@@ -86,25 +86,6 @@
                     <t t-call="account_payment.portal_invoice_payment"/>
                 </div>
             </div>
-            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending','authorized', 'done'))"/>
-            <div t-if="tx_ids" class="o_tx_status mb8">
-                <strong>Transactions</strong>
-                <br/>
-                <t t-foreach="tx_ids" t-as="tx">
-                    <span t-esc="tx.reference"/>
-                    <span class="text-muted" t-field="tx.create_date"/>
-                    <t t-if="tx.state == 'done'">
-                        <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
-                    </t>
-                    <t t-if="tx.state == 'authorized'">
-                        <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Authorized</span>
-                    </t>
-                    <t t-if="tx.state not in ('done', 'authorized')">
-                        <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
-                        <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
-                    </t>
-                </t>
-            </div>
         </xpath>
     </template>
 

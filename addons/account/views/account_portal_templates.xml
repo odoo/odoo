@@ -75,7 +75,12 @@
                 <div class="col-md-3 hidden-print">
                     <div class="bs-sidebar mb16" id="sidebar_content">
                         <div class="text-center pt16 o_account_portal_sidebar">
-                            <h2 class="media-heading"><strong><span t-field="invoice.amount_total"/></strong></h2>
+                            <h2 class="media-heading">
+                                <strong>
+                                    <span t-if="invoice.residual > 0" t-field="invoice.residual"/>
+                                    <span t-else="1" t-field="invoice.amount_total"/>
+                                </strong>
+                            </h2>
                             <div class="mb4" t-if="invoice.state != 'paid'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.date_due"/></div>
                         </div>
                         <div class="o_payment_button">

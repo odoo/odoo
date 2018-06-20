@@ -176,7 +176,7 @@
                     <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div class="text-muted">
+                <div t-if="not type_html" class="text-muted">
                     Page:
                     <span class="page"/>
                     of
@@ -215,7 +215,7 @@
                     <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div>
+                <div t-if="not type_html">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
@@ -257,7 +257,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-xs-1">
-                    <ul class="list-inline pagenumber pull-right text-center">
+                    <ul t-if="not type_html" class="list-inline pagenumber pull-right text-center">
                         <li><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
@@ -304,7 +304,7 @@
                     <span t-field="company.report_footer"/>
                 </div>
 
-                <div class="text-muted">
+                <div t-if="not type_html" class="text-muted">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
