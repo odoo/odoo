@@ -638,9 +638,9 @@ class AccountMoveLine(models.Model):
 
         #compute the default credit/debit of the next line in case of a manual entry
         balance = 0
-        for line in self._context['line_ids']:
-            if line[2]:
-                balance += line[2].get('debit', 0) - line[2].get('credit', 0)
+        for line in self.move_id.resolve_2many_commands(
+                'line_ids', self._context['line_ids'], fields=['credit', 'debit']):
+            balance += line.get('debit', 0) - line.get('credit', 0)
         if balance < 0:
             rec.update({'debit': -balance})
         if balance > 0:
