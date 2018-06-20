@@ -104,7 +104,7 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        if not self.ids:
+        if not ids:
             filters = ['&',
                        ('state', '=', 'outgoing'),
                        '|',
