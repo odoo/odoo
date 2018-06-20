@@ -13,6 +13,10 @@ class ReportAgedPartnerBalance(models.AbstractModel):
     _name = 'report.account.report_agedpartnerbalance'
 
     def _get_partner_move_lines(self, account_type, date_from, target_move, period_length):
+        # This method can receive the context key 'include_nullified_amount' {Boolean}
+        # Do an invoice and a payment and unreconcile. The amount will be nullified
+        # By default, the partner wouldn't appear in this report.
+        # The context key allow it to appear
         periods = {}
         start = datetime.strptime(date_from, "%Y-%m-%d")
         for i in range(5)[::-1]:
@@ -190,7 +194,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 values['name'] = _('Unknown Partner')
                 values['trust'] = False
 
-            if at_least_one_amount:
+            if at_least_one_amount or self._context.get('include_nullified_amount'):
                 res.append(values)
 
         return res, total, lines

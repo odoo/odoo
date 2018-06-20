@@ -1140,7 +1140,8 @@
                         <group>
                             <field name="name"/>
                             <field name="partner_id"
-                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                                domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"
+                                attrs="{'readonly': [('parent_state', '=', 'posted')]}"/>
                         </group>
                         <notebook colspan="4">
                             <page string="Information">
@@ -1466,7 +1467,7 @@
                                         domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                     <field name="name"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>

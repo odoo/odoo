@@ -78,11 +78,14 @@ class IrTranslation(models.Model):
                     translation.transifex_url = False
                     continue
 
-                # e.g. 'https://www.transifex.com/odoo/odoo-10/translate/#fr/sale/42?q=Sale+Order'
+                # e.g. https://www.transifex.com/odoo/odoo-10/translate/#fr/sale/42?q=text'Sale+Order'
                 translation.transifex_url = "%(url)s/%(project)s/translate/#%(lang)s/%(module)s/42?q=%(src)s" % {
                     'url': base_url,
                     'project': project,
                     'lang': lang_code,
                     'module': translation.module,
-                    'src': werkzeug.url_quote_plus(translation.source[:50]),
+                    'src': werkzeug.url_quote_plus(
+                            "text:'" +
+                            translation.source[:50].replace("'", "\'") +
+                            "'"),
                 }

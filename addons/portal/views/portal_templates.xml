@@ -10,6 +10,7 @@
                         is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
                         user_id: <t t-esc="json.dumps(request.env.user.id)" />,
                         is_frontend: true,
+                        translationURL: '/website/translations',
                     };
                 </script>
 
@@ -194,6 +195,21 @@
                 </li>
             </ul>
         </div>
+        <div t-if="searchbar_groupby" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_groupby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-bars fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_groupby[groupby].get('label', 'None')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_groupby">
+                <li t-foreach="searchbar_groupby" t-as="option" t-att-class="groupby == option and 'active'">
+                    <a t-att-href="default_url + '?' + keep_query('*', groupby=option)">
+                        <span t-esc="searchbar_groupby[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
     </template>
 
     <template id="portal_contact" name="Contact">
@@ -278,7 +294,7 @@
                                 <select name="country_id" class="form-control">
                                     <option value="">Country...</option>
                                     <t t-foreach="countries or []" t-as="country">
-                                        <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                        <option t-att-value="country.id" t-att-selected="country.id == int(country_id) if country_id else country.id == partner.country_id.id">
                                             <t t-esc="country.name" />
                                         </option>
                                     </t>
@@ -349,7 +365,7 @@
                      the message will be posted with the identity of the partner_id of the object
     -->
     <template id="message_thread">
-        <div id="discussion" class="hidden-print o_portal_chatter"
+        <div id="discussion" class="hidden-print o_portal_chatter o_not_editable"
             t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
         </div>
     </template>

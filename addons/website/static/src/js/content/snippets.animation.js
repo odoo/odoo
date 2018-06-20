@@ -856,7 +856,7 @@ registry.socialShare = Animation.extend({
         var hashtags = ' #'+ document.title.split(" | ")[1].replace(' ','') + ' ' + this.hashtags;  // company name without spaces (for hashtag)
         var social_network = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
-            'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ' + url),
+            'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
             'google-plus': 'https://plus.google.com/share?url=' + url,
         };

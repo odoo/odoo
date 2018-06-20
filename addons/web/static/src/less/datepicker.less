@@ -17,11 +17,12 @@
 
     .o_datepicker_input {
         width: 100%;
+        cursor: pointer;
     }
 
     .o_datepicker_button {
         .o-position-absolute(2px, 4px);
-        cursor: pointer;
+        pointer-events: none; // let click events go through the underlying input
         &:after {
             .o-caret-down;
         }

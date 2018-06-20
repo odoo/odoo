@@ -56,8 +56,8 @@ class SaleTimesheetController(http.Controller):
             dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
             # rates
-            dashboard_values['rates'][billable_type] = round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
-            dashboard_values['rates']['total'] += round(data.get('unit_amount') / dashboard_total_hours * 100, 2)
+            dashboard_values['rates'][billable_type] = dashboard_total_hours and round(data.get('unit_amount') / dashboard_total_hours * 100, 2) or 0
+            dashboard_values['rates']['total'] += dashboard_total_hours  and round(data.get('unit_amount') / dashboard_total_hours * 100, 2) or 0
 
         # money_amount
         so_lines = values['timesheet_lines'].mapped('so_line')

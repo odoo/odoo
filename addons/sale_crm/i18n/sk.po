@@ -5,24 +5,25 @@
 # Translators:
 # Martin Trigaux, 2017
 # gebri <gebri@inmail.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: gebri <gebri@inmail.sk>, 2018\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Objednávky</span>"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -42,12 +43,12 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "Iniciatíva/Príležitosť"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Prihláste sa do chatter-u, z ktorého pochádza príležitosť objednávky"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -57,23 +58,23 @@ msgstr "Nová cenová ponuka"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
-msgstr ""
+msgstr "Počet cenových ponúk"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
 msgid "Opportunity"
-msgstr ""
+msgstr "Príležitosť"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
 msgid "Orders"
-msgstr ""
+msgstr "Objednávky"
 
 #. module: sale_crm
 #: code:addons/sale_crm/models/crm_team.py:12
 #, python-format
 msgid "Pipeline"
-msgstr ""
+msgstr "Reťazové spracovanie"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -104,12 +105,12 @@ msgstr "Objednávka predaja"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
+msgstr "Súčet objednávok"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
-msgstr ""
+msgstr "Popisky"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead_sale_amount_total

@@ -146,6 +146,7 @@ class AccountVoucher(models.Model):
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
+        pay_journal_domain = [('type', 'in', ['cash', 'bank'])]
         if self.pay_now != 'pay_now':
             if self.partner_id:
                 self.account_id = self.partner_id.property_account_receivable_id \
@@ -155,6 +156,12 @@ class AccountVoucher(models.Model):
                 domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
 
                 self.account_id = self.env['account.account'].search(domain, limit=1)
+        else:
+            if self.voucher_type == 'purchase':
+                pay_journal_domain.append(('outbound_payment_method_ids', '!=', False))
+            else:
+                pay_journal_domain.append(('inbound_payment_method_ids', '!=', False))
+        return {'domain': {'payment_journal_id': pay_journal_domain}}
 
     @api.multi
     def proforma_voucher(self):
@@ -288,6 +295,9 @@ class AccountVoucher(models.Model):
             #create one move line per voucher line where amount is not 0.0
             if not line.price_subtotal:
                 continue
+            line_subtotal = line.price_subtotal
+            if self.voucher_type == 'sale':
+                line_subtotal = -1 * line.price_subtotal
             # convert the amount set on the voucher line into the currency of the voucher's company
             # this calls res_curreny.compute() with the right context,
             # so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
@@ -304,7 +314,7 @@ class AccountVoucher(models.Model):
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
                 'date': self.account_date,
                 'tax_ids': [(4,t.id) for t in line.tax_ids],
-                'amount_currency': line.price_subtotal if current_currency != company_currency else 0.0,
+                'amount_currency': line_subtotal if current_currency != company_currency else 0.0,
                 'currency_id': company_currency != current_currency and current_currency or False,
                 'payment_id': self._context.get('payment_id'),
             }

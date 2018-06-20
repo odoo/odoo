@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
@@ -35,7 +35,7 @@ msgstr "Ключ API "
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
-msgstr ""
+msgstr "Секрет API"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:16
@@ -66,7 +66,7 @@ msgstr "Назва для відображення"
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
-msgstr ""
+msgstr "Найкращі форми"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_screen_name
@@ -212,7 +212,7 @@ msgstr "Не було нових даних для повернення."
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Tutorial"
-msgstr ""
+msgstr "Туторіал"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet_id
@@ -227,7 +227,7 @@ msgstr "Твіти"
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter API Credentials"
-msgstr ""
+msgstr "Повноваження Twitter API "
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
@@ -247,7 +247,7 @@ msgstr "Ключ API твіттера"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Ключ Twitter API ви можете отримати з https://apps.twitter.com/"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_api_secret
@@ -257,7 +257,7 @@ msgstr "Пароль API твіттера"
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
-msgstr ""
+msgstr "Секрет Twitter API ви можете отримати з https://apps.twitter.com/"
 
 #. module: website_twitter
 #. openerp-web
@@ -269,7 +269,7 @@ msgstr "Налаштування Twitter"
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Twitter Roller"
-msgstr ""
+msgstr "Twitter Roller"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:62
@@ -308,7 +308,7 @@ msgstr ""
 #: model:ir.cron,cron_name:website_twitter.ir_cron_twitter_actions
 #: model:ir.cron,name:website_twitter.ir_cron_twitter_actions
 msgid "Twitter: Fetch new favorites"
-msgstr ""
+msgstr "Twitter: Отримайте нові обрані"
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/res_config_settings.py:58

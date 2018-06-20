@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report_intrastat
-#
+# 
 # Translators:
+# Martin Trigaux, 2018
+# Turkesh Patel <turkesh4friends@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-08 07:46+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Gujarati (http://www.transifex.com/odoo/odoo-9/language/gu/)\n"
-"Language: gu\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Turkesh Patel <turkesh4friends@gmail.com>, 2018\n"
+"Language-Team: Gujarati (https://www.transifex.com/odoo/teams/41243/gu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: gu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: report_intrastat
@@ -25,6 +27,11 @@ msgstr ""
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Document:</strong>"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position Remark:</strong>"
 msgstr ""
 
 #. module: report_intrastat
@@ -44,12 +51,12 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Payment Term:</strong>"
+msgid "<strong>Payment Terms:</strong>"
 msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Total Without Taxes</strong>"
+msgid "<strong>Subtotal</strong>"
 msgstr ""
 
 #. module: report_intrastat
@@ -93,6 +100,11 @@ msgid "Country code"
 msgstr ""
 
 #. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Credit Note"
+msgstr ""
+
+#. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
 msgid "Currency"
 msgstr "ચલણ"
@@ -115,7 +127,7 @@ msgstr "છુટ"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "પ્રદર્શન નામ"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -151,6 +163,8 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.model.fields,field_description:report_intrastat.field_product_product_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
 msgid "Intrastat Code"
@@ -163,13 +177,12 @@ msgid "Intrastat Data"
 msgstr ""
 
 #. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+#: model:ir.actions.report,name:report_intrastat.account_intrastatinvoices
 msgid "Intrastat Invoices"
 msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
 msgid "Intrastat code"
@@ -236,11 +249,6 @@ msgid "October"
 msgstr "ઑક્ટોબર"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "PRO-FORMA"
-msgstr ""
-
-#. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
 msgid "Product Template"
 msgstr ""
@@ -249,11 +257,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Quantity"
 msgstr "જથ્થો"
-
-#. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Refund"
-msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -307,7 +310,7 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Vendor Refund"
+msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: report_intrastat

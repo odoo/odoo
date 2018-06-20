@@ -4,42 +4,43 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Michal Veselý <michal@veselyberanek.net>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+msgstr "<%s> transakce (%s) potvrzení faktury selhalo : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
 #, python-format
 msgid "<%s> transaction (%s) failed : <%s>"
-msgstr ""
+msgstr "<%s> transakce (%s) selhala : <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "<%s> transakce (%s) neplatný stav : <%s>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Zaplať nyní"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -47,16 +48,18 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
 "Now</span>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Zaplať "
+"nyní</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Zaplaceno"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Čeká"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -64,6 +67,8 @@ msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Čeká</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -71,17 +76,19 @@ msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Done</span>"
 msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Hotovo</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
 msgid "<strong>Transactions</strong>"
-msgstr ""
+msgstr "<strong>Transakce</strong>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:80
 #, python-format
 msgid "Amount Mismatch (%s)"
-msgstr ""
+msgstr "Nesoulad účtů (%s)"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:52
@@ -90,6 +97,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Pokud vaše platební informace uložíme na našem serveru, platby předplatného "
+"budou prováděny automaticky."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -100,46 +109,46 @@ msgstr "Faktura"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Poslední transakce"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
 msgid "Number of payment transactions"
-msgstr ""
+msgstr "Počet platebních transakcí"
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Zaplať a potvrď"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:119
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Zaplať nyní"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "Pay with"
-msgstr ""
+msgstr "Zaplať s"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Platební brána"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Platební transakce"
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_invoice.py:28
 #, python-format
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Platební transakce"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -153,22 +162,24 @@ msgid ""
 "The invoice was not confirmed despite response from the acquirer (%s): "
 "invoice amount is %r but acquirer replied with %r."
 msgstr ""
+"Faktura nebyla ověřena přestože jsme  od platební brány (%s) obdrželi "
+"odpověď: částka faktury je %r ale brána odpověděla že %r."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
-msgstr ""
+msgstr "Při zpracování platby došlo k chybě: není možné ověřit fakturu."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
-msgstr ""
+msgstr "Při zpracování platby došlo k chybě: neplatný stav faktury."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Při zpracování platby došlo k chybě: neplatná faktura."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -176,35 +187,39 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Při zpracování platby došlo k chybě: problém s potvrzením identifikace "
+"kreditní karty."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Při zpracování platby došlo k chybě: problém s částkou transakce.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Při zpracování platby došlo k chybě: transakce selhala.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "Při zpracování platby došlo k chybě: problém s transakcí.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Při zpracování platby došlo k chybě: neplatná identifikace kreditní karty."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
-msgstr ""
+msgstr "Transakce"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Vaše platba byla autorizována"

@@ -45,9 +45,6 @@ class WebsiteSaleDelivery(WebsiteSale):
         has_stockable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
         if has_stockable_products:
             if order.carrier_id and not order.delivery_rating_success:
-                values['errors'].append(
-                    (_("Ouch, you cannot choose this carrier!"),
-                     _("%s does not ship to your address, please choose another one.\n(Error: %s)" % (order.carrier_id.name, order.delivery_message))))
                 order._remove_delivery_line()
 
             delivery_carriers = order._get_delivery_methods()
@@ -60,13 +57,21 @@ class WebsiteSaleDelivery(WebsiteSale):
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
+        currency = order.currency_id
         if order:
             order._check_carrier_quotation(force_carrier_id=carrier_id)
             return {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
-                    'new_amount_delivery': order.currency_id.round(order.delivery_price),
-                    'new_amount_untaxed': order.amount_untaxed,
-                    'new_amount_tax': order.amount_tax,
-                    'new_amount_total': order.amount_total,
+                    'new_amount_delivery': self._format_amount(order.delivery_price, currency),
+                    'new_amount_untaxed': self._format_amount(order.amount_untaxed, currency),
+                    'new_amount_tax': self._format_amount(order.amount_tax, currency),
+                    'new_amount_total': self._format_amount(order.amount_total, currency),
             }
+
+    def _format_amount(self, amount, currency):
+        fmt = "%.{0}f".format(currency.decimal_places)
+        lang = request.env['res.lang']._lang_get(request.env.context.get('lang') or 'en_US')
+
+        return lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+            .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')

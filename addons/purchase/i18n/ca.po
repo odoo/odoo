@@ -4,13 +4,17 @@
 # 
 # Translators:
 # Quim - eccit <quim@eccit.com>, 2017
+# Sandra Franch <sandra.franch@upc.edu>, 2018
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
+# Eric Antones <eantones@users.noreply.github.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2018-04-27 14:51+0000\n"
+"PO-Revision-Date: 2018-04-27 14:51+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +27,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -36,7 +40,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -53,7 +57,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -66,33 +70,13 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
 "<p>You can reply to this email if you have any questions.</p>\n"
 "<p>Thank you,</p>\n"
 msgstr ""
-"\n"
-"<p>Estimat ${object.partner_id.name} \n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>\n"
-"Si us plau, trobi un annexe <strong>${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} ${object.name}</strong>\n"
-"% if object.partner_ref:\n"
-"    amb referencia: ${object.partner_ref}\n"
-"% endif\n"
-"% if object.origin:\n"
-"    (Origen RFQ: ${object.origin})\n"
-"% endif\n"
-"suma <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"de ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"<p>Pots respondre aquest correu si tens dubtes.</p>\n"
-"<p>Gràcies,</p>\n"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:79
@@ -137,7 +121,7 @@ msgstr "${object.company_id.name} Comanda (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:mail.template,subject:purchase.mail_template_data_notification_email_purchase_order
 msgid "${object.subject}"
-msgstr ""
+msgstr "${object.subject}"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -154,6 +138,7 @@ msgstr ""
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -169,7 +154,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -195,16 +180,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -310,7 +295,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Total:</strong>"
-msgstr ""
+msgstr "<strong>Total:</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -350,7 +335,7 @@ msgstr "Afegir comanda de compra"
 #: code:addons/purchase/controllers/portal.py:53
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "Tot"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -665,7 +650,7 @@ msgstr "Entregar a"
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "Quantitats entregades "
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -876,7 +861,7 @@ msgstr "Factures i recepcions"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturació"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_is_shipped
@@ -1016,7 +1001,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Regla d'inventari mínim"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -1052,13 +1037,13 @@ msgstr "Les meves activitats"
 #: code:addons/purchase/controllers/portal.py:44
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:43
 #, python-format
 msgid "Newest"
-msgstr ""
+msgstr "Les Novetats"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1162,7 +1147,7 @@ msgstr ""
 #. module: purchase
 #: selection:res.config.settings,default_purchase_method:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "Quantitats demanades"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_orderpoint_id
@@ -1225,7 +1210,7 @@ msgstr "Grup de proveïment "
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Petició de proveïment"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
@@ -1587,7 +1572,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
 msgid "Reporting"
-msgstr ""
+msgstr "Informes"
 
 #. module: purchase
 #: model:ir.actions.report,name:purchase.report_purchase_quotation
@@ -1627,7 +1612,7 @@ msgstr "Responsable"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Retorna albarà"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1762,7 +1747,7 @@ msgstr "Impostos"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Taxes:"
-msgstr ""
+msgstr "Impostos:"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_default_location_dest_id_usage
@@ -1777,7 +1762,7 @@ msgstr "Termes i condicions "
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "URL completa per accedir al document a través del lloc web."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2021,7 +2006,7 @@ msgstr "Base imposable"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Untaxed Amount:"
-msgstr ""
+msgstr "Base imposable:"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -2156,7 +2141,7 @@ msgstr "Avisos"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "URL del lloc web"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse_buy_to_resupply
@@ -2201,7 +2186,7 @@ msgstr "Ha d'assignar una localització de venedor per aquest soci %s"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "days"
-msgstr ""
+msgstr "dies"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings

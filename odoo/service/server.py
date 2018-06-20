@@ -92,9 +92,6 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         me = threading.currentThread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
-# _reexec() should set LISTEN_* to avoid connection refused during reload time. It
-# should also work with systemd socket activation. This is currently untested
-# and not yet used.
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -106,14 +103,15 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
                                                            handler=RequestHandler)
 
     def server_bind(self):
-        envfd = os.environ.get('LISTEN_FDS')
-        if envfd and os.environ.get('LISTEN_PID') == str(os.getpid()):
+        SD_LISTEN_FDS_START = 3
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
             self.reload_socket = True
-            self.socket = socket.fromfd(int(envfd), socket.AF_INET, socket.SOCK_STREAM)
-            # should we os.close(int(envfd)) ? it seem python duplicate the fd.
+            self.socket = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            _logger.info('HTTP service (werkzeug) running through socket activation')
         else:
             self.reload_socket = False
             super(ThreadedWSGIServerReloadable, self).server_bind()
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
 
     def server_activate(self):
         if not self.reload_socket:
@@ -257,7 +255,6 @@ class ThreadedServer(CommonServer):
         t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
         t.setDaemon(True)
         t.start()
-        _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
 
     def start(self, stop=False):
         _logger.debug("Setting signal handlers")
@@ -363,7 +360,10 @@ class GeventServer(CommonServer):
 
     def start(self):
         import gevent
-        from gevent.wsgi import WSGIServer
+        try:
+            from gevent.pywsgi import WSGIServer
+        except ImportError:
+            from gevent.wsgi import WSGIServer
 
 
         if os.name == 'posix':
@@ -828,7 +828,6 @@ class WorkerCron(Worker):
 
             from odoo.addons import base
             base.ir.ir_cron.ir_cron._acquire_job(db_name)
-            odoo.modules.registry.Registry.delete(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
@@ -883,7 +882,8 @@ def _reexec(updated_modules=None):
         args += ["-u", ','.join(updated_modules)]
     if not args or args[0] != exe:
         args.insert(0, exe)
-    os.execv(sys.executable, args)
+    # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
+    os.execve(sys.executable, args, os.environ)
 
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
 "Last-Translator: Kiros Haregewoine <kirosharegewoine@yahoo.com>, 2017\n"
 "Language-Team: Amharic (https://www.transifex.com/odoo/teams/41243/am/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
@@ -163,7 +162,7 @@ msgstr ""
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
 "<p>If you have any questions, please do not hesitate to contact us.</p>\n"
 "<p>Best regards,\n"
 "% if user and user.signature:\n"
@@ -178,7 +177,7 @@ msgstr ""
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -265,7 +264,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -1501,7 +1500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_template_active
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
-msgstr ""
+msgstr "ጥቅም ላይ ማዋል"
 
 #. module: account
 #. openerp-web
@@ -1552,6 +1551,21 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_tax_id
 msgid "Adjustment Tax"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
 msgstr ""
 
 #. module: account
@@ -1707,11 +1721,6 @@ msgid "Allow Cancelling Entries"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
-msgid "Allow Currency Rate Live"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
 msgstr ""
@@ -1753,6 +1762,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2015,7 +2025,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr ""
+msgstr "ጥቅም ላይ ማዋል"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_asset
@@ -2058,14 +2068,14 @@ msgid "Automated Entries"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:349
+#: code:addons/account/models/company.py:354
 #: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
 msgstr ""
 
@@ -2096,7 +2106,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_price_average
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_user_currency_price_average
 msgid "Average Price"
-msgstr ""
+msgstr "አማካኝ ዋጋ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2240,6 +2250,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
 msgstr ""
 
 #. module: account
@@ -2921,7 +2937,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_register_payments_payment_method_code
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "Code"
-msgstr ""
+msgstr "የሚስጥር ቁልፍ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_code_prefix
@@ -2942,7 +2958,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag_color
 #: model:ir.model.fields,field_description:account.field_account_journal_color
 msgid "Color Index"
-msgstr ""
+msgstr "የከለሮች ድብልቅ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_label_filter
@@ -3101,7 +3117,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "ማስተካከያዎች"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:622
@@ -3156,7 +3172,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Confirm"
-msgstr ""
+msgstr "ማረጋገጫ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
@@ -3182,7 +3198,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Confirmed"
-msgstr ""
+msgstr "ተረጋገጠ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -3220,7 +3236,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_users_contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users_contracts_count
 msgid "Contracts"
-msgstr ""
+msgstr "ውሎች"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -3689,7 +3705,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
 msgid "Customers"
-msgstr ""
+msgstr "ተባባሪ"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -4145,7 +4161,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Draft"
-msgstr ""
+msgstr "ንድፍ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -4273,11 +4289,6 @@ msgid "Enable Comparison"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
-msgid "Enable payment followup management"
-msgstr ""
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
 msgstr ""
@@ -4296,7 +4307,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_to_cmp
 msgid "End Date"
-msgstr ""
+msgstr "መጨረሻው ቀን"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -4370,7 +4381,7 @@ msgstr ""
 #: code:addons/account/models/res_config_settings.py:131
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "ስህተት!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4596,7 +4607,7 @@ msgstr ""
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "ቛሚ"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -4624,7 +4635,7 @@ msgid "Follow-up"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
 msgid "Follow-up Levels"
 msgstr ""
 
@@ -4825,7 +4836,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_group_id
 #: model:ir.model.fields,field_description:account.field_account_account_template_group_id
 msgid "Group"
-msgstr ""
+msgstr "ምድብ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -5282,7 +5293,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Information"
-msgstr ""
+msgstr "መረጃ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_move_line_reconcile_writeoff
@@ -5526,7 +5537,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -6641,7 +6651,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "Name"
-msgstr ""
+msgstr "ስም"
 
 #. module: account
 #. openerp-web
@@ -6668,7 +6678,7 @@ msgstr ""
 #. module: account
 #: selection:account.bank.statement,state:0
 msgid "New"
-msgstr ""
+msgstr "አዲስ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6775,23 +6785,12 @@ msgid "Normal Text"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr ""
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:254
 #: model:ir.model.fields,field_description:account.field_account_account_template_note
 #, python-format
 msgid "Note"
-msgstr ""
+msgstr "ማስታወሻ"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_out_refund
@@ -6806,7 +6805,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_note
 #: model:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Notes"
-msgstr ""
+msgstr "ማስታወሻዎች"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7004,13 +7003,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr ""
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7135,7 +7135,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Other Info"
-msgstr ""
+msgstr "ተጨማሪ መረጃ"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -7198,12 +7198,13 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
-msgstr ""
+msgstr "ተከፈል"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr ""
@@ -7225,7 +7226,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_financial_report_parent_id
 #: model:ir.model.fields,field_description:account.field_account_group_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "ወላጅ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_parent_id
@@ -7303,12 +7304,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_common_partner_report_result_selection
 #: model:ir.model.fields,field_description:account.field_account_report_partner_ledger_result_selection
 msgid "Partner's"
-msgstr ""
+msgstr "ተባባሪ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "Partners"
-msgstr ""
+msgstr "ተባባሪ"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:106
@@ -7857,7 +7858,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_search
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Purchase"
-msgstr ""
+msgstr "ግዢ"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7883,7 +7884,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Purchases"
-msgstr ""
+msgstr "ግዢዎች"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_in
@@ -7915,7 +7916,7 @@ msgstr "ብዛት"
 #: model:ir.model.fields,field_description:account.field_cash_box_in_name
 #: model:ir.model.fields,field_description:account.field_cash_box_out_name
 msgid "Reason"
-msgstr ""
+msgstr "ምክንያት"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -8091,7 +8092,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_cash_box_in_ref
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "ማመሳከሪያ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_uom_name
@@ -8176,7 +8177,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,type:0
 msgid "Regular"
-msgstr ""
+msgstr "መደበኛ"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_residual_company_signed
@@ -8246,7 +8247,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:236
 #, python-format
 msgid "Residual"
-msgstr ""
+msgstr "ቀሪ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_amount_residual
@@ -8364,7 +8365,7 @@ msgid "Rounding Tree"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
 msgstr ""
 
@@ -8698,7 +8699,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_account_config
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Settings"
-msgstr ""
+msgstr "ማስተካከያዎች"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8798,7 +8799,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from
 #: model:ir.model.fields,field_description:account.field_accounting_report_date_from_cmp
 msgid "Start Date"
-msgstr ""
+msgstr "መጀመሪያው ቀን"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_start
@@ -8813,7 +8814,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr ""
+msgstr "ሁኔታው"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_parent_state
@@ -8852,7 +8853,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "States"
-msgstr ""
+msgstr "ሁኔታው"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_states_count
@@ -8899,7 +8900,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_tag_ids
 #: model:ir.ui.view,arch_db:account.account_tag_view_form
 msgid "Tags"
-msgstr ""
+msgstr "ምልክት"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9656,6 +9657,13 @@ msgid "The partner reference of this invoice."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:60
 #, python-format
 msgid "The payment amount cannot be negative."
@@ -10114,7 +10122,6 @@ msgid "Total"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr ""
@@ -10297,7 +10304,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line_user_type_id
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value
 msgid "Type"
-msgstr ""
+msgstr "ዓይነት"
 
 #. module: account
 #: selection:account.cash.rounding,rounding_method:0
@@ -10447,11 +10454,6 @@ msgid "Use SEPA Direct Debit"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
-msgid "Use SEPA payments"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
 msgid "Use Specific Journal"
 msgstr ""
@@ -10566,7 +10568,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
 #, python-format
 msgid "Validate"
-msgstr ""
+msgstr "ማረጋገጫ"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
@@ -10582,7 +10584,7 @@ msgstr ""
 #: selection:account.bank.statement,state:0
 #: model:mail.message.subtype,name:account.mt_invoice_validated
 msgid "Validated"
-msgstr ""
+msgstr "ማረጋገጥ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line_value_amount
@@ -10691,7 +10693,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,type:0
 msgid "View"
-msgstr ""
+msgstr "መመልከቻ"
 
 #. module: account
 #: selection:res.partner,invoice_warn:0
@@ -10714,7 +10716,7 @@ msgstr ""
 #: code:addons/account/models/account_invoice.py:1643
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "ማስጠንቀቅያ!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_group_warning_account
@@ -10893,14 +10895,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:207
+#: code:addons/account/models/account_move.py:209
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_move.py:209
+#: code:addons/account/models/account_move.py:211
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -10908,11 +10910,19 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1193
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:143
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
 msgstr ""
 
 #. module: account
@@ -11403,7 +11413,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr ""
+msgstr "የእናት ድርጅት"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner

@@ -5,19 +5,22 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Jiří P., 2018
+# Adam Kettner <cetnerix@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: Adam Kettner <cetnerix@gmail.com>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
@@ -108,7 +111,7 @@ msgstr ""
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_stripe
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_transfer
 msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
+msgstr "<span><i>Zrušit,</i> Vaše platba byla zrušena.</span>"
 
 #. module: payment
 #: model:payment.acquirer,done_msg:payment.payment_acquirer_adyen
@@ -204,7 +207,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
@@ -215,7 +218,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_adyen
@@ -226,7 +229,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Always"
-msgstr ""
+msgstr "Vždy"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_amount
@@ -234,7 +237,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Amount"
-msgstr ""
+msgstr "Částka"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
@@ -256,7 +259,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovní účet"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -299,7 +302,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: payment
 #. openerp-web
@@ -327,7 +330,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr ""
+msgstr "Město"
 
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
@@ -343,7 +346,7 @@ msgstr ""
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_transfer
 msgid "Communication"
-msgstr ""
+msgstr "Sdělení"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -353,12 +356,12 @@ msgstr "Firma"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurovat"
 
 #. module: payment
 #. openerp-web
@@ -386,13 +389,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
 msgid "Countries"
-msgstr ""
+msgstr "Země"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Country"
-msgstr ""
+msgstr "Země"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_create_uid
@@ -432,7 +435,7 @@ msgstr "Měna"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_custom
 msgid "Custom"
-msgstr ""
+msgstr "Vlastní"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_id
@@ -460,7 +463,7 @@ msgstr "Zobrazovaný název"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Done"
-msgstr ""
+msgstr "Hotovo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
@@ -470,7 +473,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Návrh"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -485,23 +488,23 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_environment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Environment"
-msgstr ""
+msgstr "Prostředí"
 
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_error_msg
 msgid "Error Message"
-msgstr ""
+msgstr "Chybové hlášení"
 
 #. module: payment
 #. openerp-web
@@ -513,7 +516,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
 msgid "Fees"
-msgstr ""
+msgstr "Poplatky"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
@@ -543,7 +546,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form"
-msgstr ""
+msgstr "Formulář"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
@@ -558,7 +561,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -589,7 +592,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_image_payment_form
@@ -605,7 +608,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr ""
+msgstr "Instalovat"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
@@ -620,7 +623,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
 msgid "Language"
-msgstr ""
+msgstr "Jazyk"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer___last_update
@@ -679,7 +682,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
 msgid "Medium-sized image"
-msgstr ""
+msgstr "Středně velký obrázek"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_medium
@@ -693,7 +696,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Message"
-msgstr ""
+msgstr "Zpráva"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_post_msg
@@ -732,7 +735,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Messages"
-msgstr ""
+msgstr "Zprávy"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:395
@@ -748,7 +751,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
@@ -758,7 +761,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,save_token:0
 msgid "Never"
-msgstr ""
+msgstr "Nikdy"
 
 #. module: payment
 #. openerp-web
@@ -792,7 +795,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:376
 #, python-format
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:759
@@ -820,7 +823,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:39
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Zaplať nyní"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -832,20 +835,20 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "Platba"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Platební brána"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr ""
+msgstr "Příjemci plateb"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_flow
@@ -862,17 +865,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Ikony platebních služeb"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Deník plateb"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Payment Methods"
-msgstr ""
+msgstr "Způsoby platby"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
@@ -892,7 +895,7 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_transaction_id
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Platební transakce"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
@@ -902,7 +905,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.transaction_form
 #: model:ir.ui.view,arch_db:payment.transaction_list
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Platební transakce"
 
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
@@ -920,7 +923,7 @@ msgstr ""
 #: model:ir.ui.menu,name:payment.root_payment_menu
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 msgid "Payments"
-msgstr ""
+msgstr "Platby"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -943,7 +946,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Čekající"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -953,7 +956,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: payment
 #. openerp-web
@@ -990,7 +993,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Production"
-msgstr ""
+msgstr "Výroba"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_provider
@@ -1009,7 +1012,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.confirm
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Reference"
-msgstr ""
+msgstr "Reference"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
@@ -1106,7 +1109,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_small
 msgid "Small-sized image"
-msgstr ""
+msgstr "Malý obrázek"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
@@ -1145,7 +1148,7 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,environment:0
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_post_msg
@@ -1217,7 +1220,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate
@@ -1259,7 +1262,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:352
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varování!"
 
 #. module: payment
 #. openerp-web
@@ -1366,17 +1369,17 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Your payment has been authorized."
-msgstr ""
+msgstr "Vaše platba byla autorizována"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "ZIP"
-msgstr ""
+msgstr "PSČ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_zip
 msgid "Zip"
-msgstr ""
+msgstr "PSČ"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

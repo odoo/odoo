@@ -3,14 +3,15 @@
 # * auth_ldap
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2018\n"
 "Language-Team: Macedonian (https://www.transifex.com/odoo/teams/41243/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +25,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Автоматски креирај локални кориснички сметки за новите корисници што вршат "
+"автентикација преку LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -38,7 +41,7 @@ msgstr "Компанија"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
 msgid "Create User"
-msgstr ""
+msgstr "Креирај корисник"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
@@ -64,13 +67,13 @@ msgstr "ID"
 #: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "LDAP конфигурација"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
 msgid "LDAP Parameters"
-msgstr ""
+msgstr "LDAP параметри"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
@@ -80,32 +83,32 @@ msgstr ""
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "Адреса на LDAP серверот"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "Порт на LDAP серверот"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "LDAP база"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "LDAP binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "LDAP филтер"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "LDAP лозинка"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
@@ -125,12 +128,12 @@ msgstr "Последно ажурирање на"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr ""
+msgstr "Информации за логирање"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "Параметар за процесот"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
@@ -139,6 +142,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
+"Барање за сигурна TLS/SSL енкрипција при поврзување со LDAP серверот. Ова "
+"бара сервер со овозможен STARTTLS, во спротивно обидите за автентикација ќе "
+"бидат неуспешни."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -148,17 +154,17 @@ msgstr "Секвенца"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr ""
+msgstr "Информации за сервер"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Поставување на LDAP серверот"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr ""
+msgstr "Урнек корисник"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -166,6 +172,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Лозинката на корисничката сметка на LDAP серверот што се користи за "
+"пребарување на директориумот."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -173,31 +181,33 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Корисничката сметка на LDAP серверот што се користи за пребарување на "
+"директориумот. За анонимно поврзување, оставете празно."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "Користи TLS"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "Информации за корисникот"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Корисник за копирање кога се креираат нови корисници"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Корисници"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
-msgstr ""
+msgstr "res.company.ldap"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings

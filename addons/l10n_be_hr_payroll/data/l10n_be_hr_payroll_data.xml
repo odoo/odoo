@@ -160,7 +160,7 @@ elif salary &lt;= 2510.47:
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital=='married' and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wage = categories.BASIC
@@ -184,7 +184,7 @@ else:
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = (((employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 wage = categories.BASIC
@@ -208,7 +208,7 @@ else:
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
     </record>
     <record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
@@ -218,7 +218,7 @@ else:
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = ((employee.marital=='married' and employee.spouse_fiscal_status=='without income') and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = ((employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='without income') and (employee.resident_bool!=True))</field>
     </record>
     <record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
@@ -361,7 +361,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Net</field>
         <field name="sequence">148</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
@@ -372,7 +372,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Oth.Net</field>
         <field name="sequence">149</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital in ['married', 'cohabitant'] and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>

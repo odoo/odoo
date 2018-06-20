@@ -20,13 +20,14 @@
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
 # Monika Grzelak <m.e.grzelak@gmail.com>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,6 +81,8 @@ msgid ""
 "17\" LCD Monitor\n"
 "Processor AMD 8-Core"
 msgstr ""
+"17\" Monitor LCD\n"
+"Procesor AMD 8 rdzeni"
 
 #. module: product
 #: model:product.product,description:product.product_product_25
@@ -162,7 +165,7 @@ msgstr "<span>kg</span>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>m³</span>"
-msgstr ""
+msgstr "<span>m³</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -313,7 +316,7 @@ msgstr ""
 #: model:product.template,website_description:product.product_product_4c_product_template
 #: model:product.template,website_description:product.product_product_4d_product_template
 msgid "And because it’s so easy to use, it’s easy to love."
-msgstr ""
+msgstr "A ponieważ jest tak łatwy w użyciu, łatwo go pokochać."
 
 #. module: product
 #: model:product.product,name:product.product_product_7
@@ -917,7 +920,7 @@ msgstr "Opis"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Description for Customers"
-msgstr ""
+msgstr "Opis dla klientów"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -1392,7 +1395,7 @@ msgstr "Zdjęcie wariantu produktu (Małe zdjęcie szablonu jeśli Fałsz)"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Individually calibrated for true-to-life color."
-msgstr ""
+msgstr "Indywidualnie skalibrowane dla prawdziwego koloru."
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1446,7 +1449,7 @@ msgstr ""
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Key Features"
-msgstr ""
+msgstr "Kluczowe cechy"
 
 #. module: product
 #: model:product.product,name:product.product_product_27
@@ -1635,7 +1638,7 @@ msgstr "Minimalna ilość"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "More energy efficient."
-msgstr ""
+msgstr "Bardziej energooszczędny."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_5b
@@ -1667,7 +1670,7 @@ msgstr "Mysz, bezprzewodowa"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Music. It's what beats inside."
-msgstr ""
+msgstr "Muzyka. To właśnie bije w środku."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_name
@@ -1704,7 +1707,7 @@ msgstr "Inny cennik"
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Over 375,000 apps."
-msgstr ""
+msgstr "Ponad 375000 aplikacji."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
@@ -2073,6 +2076,11 @@ msgstr "Produkty: "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Cena katalogowa"
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "Public Pricelist"
+msgstr "Cennik katalogowy"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2467,7 +2475,7 @@ msgstr "Switch, 24 porty"
 #: model:product.template,website_description:product.product_product_11_product_template
 #: model:product.template,website_description:product.product_product_11b_product_template
 msgid "Sync to your heart’s content."
-msgstr ""
+msgstr "Synchronizuj treść z sercem."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -2546,7 +2554,7 @@ msgstr "Współczynnik konwersji jednostki miary nie może być 0!"
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "The desktop. In its most advanced form ever"
-msgstr ""
+msgstr "Pulpit. W swojej najbardziej zaawansowanej formie w historii"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_sequence
@@ -2798,21 +2806,16 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.pricelist,name:product.list0
-msgid "USD"
-msgstr ""
-
-#. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "Ultrafast wireless."
-msgstr ""
+msgstr "Ultraszybki bezprzewodowy."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "Ultrathin design"
-msgstr ""
+msgstr "Ultracienki design"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_uom_active

@@ -61,7 +61,7 @@
                 <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
                     <li t-if="'website_published' in main_object.fields_get()" t-attf-class="js_publish_management #{main_object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="main_object.id" t-att-data-object="main_object._name" t-att-data-controller="publish_controller">
                         <a>
-                            <label class="o_switch js_publish_btn" for="id" >
+                            <label class="o_switch o_switch_danger js_publish_btn" for="id" >
                                 <input type="checkbox" t-att-checked="main_object.website_published" id="id"/>
                                 <span/>
                                 <span class="css_publish">Unpublished</span>

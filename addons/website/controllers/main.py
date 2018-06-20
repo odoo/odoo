@@ -18,8 +18,9 @@ from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import pycompat, OrderedSet
 from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
-from odoo.addons.web.controllers.main import WebClient, Binary, Home
+from odoo.addons.web.controllers.main import WebClient, Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+from odoo.addons.portal.controllers.web import Home
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +76,7 @@ class Website(Home):
         else:
             top_menu = request.website.menu_id
             first_menu = top_menu and top_menu.child_id and top_menu.child_id.filtered(lambda menu: menu.is_visible)
-            if first_menu and first_menu[0].url != '/' and (not (first_menu[0].url.startswith(('/?', '/#')))):
+            if first_menu and first_menu[0].url not in ('/', '') and (not (first_menu[0].url.startswith(('/?', '/#', ' ')))):
                 return request.redirect(first_menu[0].url)
 
         raise request.not_found()
@@ -294,17 +295,6 @@ class Website(Home):
             if modules:
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
-
-    @http.route('/website/translations', type='json', auth="public", website=True)
-    def get_website_translations(self, lang, mods=None):
-        Modules = request.env['ir.module.module'].sudo()
-        modules = Modules.search([
-            '|', ('name', 'ilike', 'website'), ('name', '=', 'web_editor'),
-            ('state', '=', 'installed')
-        ]).mapped('name')
-        if mods:
-            modules += mods
-        return WebClient().translations(mods=modules, lang=lang)
 
     @http.route(['/website/publish'], type='json', auth="public", website=True)
     def publish(self, id, object):

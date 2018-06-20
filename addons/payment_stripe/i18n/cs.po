@@ -2,25 +2,30 @@
 # This file contains the translation of the following modules:
 # * payment_stripe
 # 
+# Translators:
+# Jiří P., 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Ondřej Skuhravý <ondra.sk@volny.cz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Ondřej Skuhravý <ondra.sk@volny.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&times;"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer_stripe_image_url
@@ -38,7 +43,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Card number"
-msgstr ""
+msgstr "Číslo platební karty"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -55,14 +60,14 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "Zavřít"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -79,12 +84,12 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Platební brána"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Platební transakce"
 
 #. module: payment_stripe
 #. openerp-web

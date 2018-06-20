@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: rating_project
 #: model:mail.template,body_html:rating_project.rating_project_request_email_template
@@ -101,12 +101,12 @@ msgstr ""
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Запит рейтингу послуг"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
 msgid "% On tasks"
-msgstr ""
+msgstr "% На завданнях"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -116,7 +116,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid "Automatic kanban status"
-msgstr ""
+msgstr "Автоматичний статус канбану"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -144,6 +144,8 @@ msgid ""
 "Customer ratings on tasks. If you have no rating, change your project "
 "Settings to activate it."
 msgstr ""
+"Оцінка клієнтів на завдання. Якщо у вас немає рейтингу, змініть параметри "
+"проекту, щоб його активувати."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_project_report
@@ -151,11 +153,13 @@ msgid ""
 "Customer ratings on tasks/issues. If you have no rating, change your project"
 " Settings to activate it."
 msgstr ""
+"Рейтинги клієнтів щодо завдань/проблем. Якщо у вас немає рейтингу, змініть "
+"параметри проекту, щоб його активувати."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status
 msgid "Customer(s) Ratings"
-msgstr ""
+msgstr "Рейтинги клієнта(ів)"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -168,16 +172,18 @@ msgid ""
 "Edit project's stages and set an email template\n"
 "                            on the stages on which you want to activate the rating."
 msgstr ""
+"Відредагуйте етапи проекту та встановіть шаблон електронної пошти\n"
+"на етапах, на яких ви хочете активувати рейтинг."
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_project
 msgid "Happy % on Project"
-msgstr ""
+msgstr "Щасливі % на проекті"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_percentage_satisfaction_task
 msgid "Happy % on Task"
-msgstr ""
+msgstr "Щасливі % на завданні"
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_project_rating_status
@@ -188,6 +194,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Як отримати зворотній зв'язок з клієнтом?\n"
+"- Рейтинг при зміні стадії: електронна пошта буде надіслана, коли завдання/питання витягнуте на іншому етапі\n"
+"- Періодичний рейтинг: електронна пошта буде надсилатися періодично\n"
+"\n"
+"Не забудьте налаштувати поштові шаблони на етапах, для яких ви хочете отримати зворотній зв'язок з клієнтом."
 
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_rating_template_id
@@ -205,27 +216,27 @@ msgstr "Останні 30 днів"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Останній рейтинг: Високо незадоволений"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Останній рейтинг: Не задоволений"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_kanban_inherit_rating
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Останній рейтинг: Задоволений"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Немає рейтингу"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Once a Month"
-msgstr ""
+msgstr "Раз на місяць"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
@@ -233,11 +244,13 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Відсоток щасливих оцінок за останні 30 днів. Отримайте дані про оцінку в "
+"меню \"Додатково\"."
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Періодичний рейтинг"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -276,7 +289,7 @@ msgstr "Шаблон листа оцінки"
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Частота рейтингу"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_project_rating_request_deadline
@@ -291,7 +304,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Рейтинг при зміні етапу"
 
 #. module: rating_project
 #: model:mail.message.subtype,description:rating_project.mt_task_rating
@@ -323,7 +336,7 @@ msgstr "Завдання"
 #: model:mail.message.subtype,name:rating_project.mt_project_task_rating
 #: model:mail.message.subtype,name:rating_project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Рейтинг завдання"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task_type
@@ -343,7 +356,7 @@ msgstr "На даний момент немає жодного оцінюван�
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Двічі на місяць"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0

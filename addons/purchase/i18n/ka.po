@@ -7,26 +7,29 @@
 # Saba Khmaladze <skhmaladze@uglt.org>, 2018
 # Giorgi Melitauri <gmelitauri@live.com>, 2018
 # Gizo Kobakhidze <040168@gmail.com>, 2018
+# Temur, 2018
+# Nika Chikhradze <nika@globaltravel.ge>, 2018
+# Dachi Darchiashvili <darcho.dd@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-04-27 14:51+0000\n"
+"PO-Revision-Date: 2018-04-27 14:51+0000\n"
+"Last-Translator: Dachi Darchiashvili <darcho.dd@gmail.com>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ka\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid ""
 "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -39,7 +42,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -56,7 +59,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -69,7 +72,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -137,6 +140,7 @@ msgstr ""
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -152,7 +156,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -178,16 +182,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -347,7 +351,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_account_analytic_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "ანალიტიკური ანგარიში"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -389,7 +393,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
 msgid "Average Price"
-msgstr ""
+msgstr "საშუალო ფასი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
@@ -679,7 +683,7 @@ msgstr "სახელი"
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
@@ -1031,7 +1035,7 @@ msgstr ""
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "შეტყობინება არ არის"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1048,7 +1052,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Notes"
-msgstr ""
+msgstr "ჩანაწერები"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1211,7 +1215,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
-msgstr ""
+msgstr "პროდუქტის კატეგორია"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
@@ -1221,13 +1225,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
 msgid "Product Quantity"
-msgstr ""
+msgstr "პროდუქტის რაოდენობა"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "პროდუქტის შაბლონი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
@@ -1265,7 +1269,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase"
-msgstr ""
+msgstr "შესყიდვა"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_purchase_requisition
@@ -1415,7 +1419,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 #: model:ir.ui.view,arch_db:purchase.view_warehouse_orderpoint_purchase_form
 msgid "Purchases"
-msgstr ""
+msgstr "შესყიდვები"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1511,7 +1515,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
@@ -1571,7 +1575,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Responsible"
-msgstr ""
+msgstr "პასუხისმგებელი"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
@@ -1685,7 +1689,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_subtotal
 msgid "Subtotal"
-msgstr ""
+msgstr "ქვეჯამი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
@@ -1696,14 +1700,14 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
 msgid "Tax"
-msgstr ""
+msgstr "გადასახადი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_tax
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_taxes_id
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Taxes"
-msgstr ""
+msgstr "გადასახადები"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1864,7 +1868,7 @@ msgstr "დღევანდელი აქტივობები"
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_total
@@ -1905,7 +1909,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "ერთეულის ფასი"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
@@ -1930,7 +1934,7 @@ msgstr "წაუკითხავი შეტყობინებები"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr ""
+msgstr "ძირითადი"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
@@ -2031,20 +2035,20 @@ msgstr ""
 #: model:ir.model,name:purchase.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
 msgid "Warehouse"
-msgstr ""
+msgstr "საწყობი"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "გაფრთხილება"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
 #: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "გაფრთხილება %s გამო"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -2059,7 +2063,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_warning_purchase
 msgid "Warnings"
-msgstr ""
+msgstr "გაფრთხილებები"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url

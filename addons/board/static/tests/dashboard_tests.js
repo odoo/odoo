@@ -3,6 +3,7 @@ odoo.define('board.dashboard_tests', function (require) {
 
 var testUtils = require('web.test_utils');
 var FormView = require('web.FormView');
+var ListRenderer = require('web.ListRenderer');
 
 var createView = testUtils.createView;
 
@@ -123,8 +124,8 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -155,7 +156,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     form.$('.oe_fold').click();
 
     assert.ok(form.$('.oe_content').is(':visible'), "content is visible again");
-    assert.verifySteps(['load action', 'add custom', 'add custom']);
+    assert.verifySteps(['load action', 'edit custom', 'edit custom']);
 
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
 
@@ -183,7 +184,7 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
     assert.strictEqual($('.modal').length, 0, "should have no modal open");
     assert.strictEqual(form.$('.oe_action').length, 0, "should have no displayed action");
 
-    assert.verifySteps(['load action', 'add custom', 'add custom', 'add custom', 'add custom']);
+    assert.verifySteps(['load action', 'edit custom', 'edit custom', 'edit custom', 'edit custom']);
     form.destroy();
 });
 
@@ -292,8 +293,8 @@ QUnit.test('can drag and drop a view', function (assert) {
                     views: [[4, 'list']],
                 });
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -339,8 +340,8 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
                     views: [[4, 'list'],[5, 'kanban']],
                 });
             }
-            if (route === '/web/view/add_custom') {
-                assert.step('add custom');
+            if (route === '/web/view/edit_custom') {
+                assert.step('edit custom');
                 return $.when(true);
             }
             return this._super.apply(this, arguments);
@@ -454,5 +455,48 @@ QUnit.test('clicking on a kanban\'s button should trigger the action', function 
     form.destroy();
 });
 
+QUnit.test('subviews are aware of attach in or detach from the DOM', function (assert) {
+    assert.expect(2);
+
+    // patch list renderer `on_attach_callback` for the test only
+    testUtils.patch(ListRenderer, {
+        on_attach_callback: function () {
+            assert.step('subview on_attach_callback');
+        }
+    });
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<list string="Partner"><field name="foo"/></list>',
+        },
+    });
+
+    assert.verifySteps(['subview on_attach_callback']);
+
+    // restore on_attach_callback of ListRenderer
+    testUtils.unpatch(ListRenderer);
+
+    form.destroy();
+});
 
 });

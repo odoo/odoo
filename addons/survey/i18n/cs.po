@@ -5,19 +5,23 @@
 # Translators:
 # Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Jiří P., 2018
+# Ladislav Tomm <tomm@helemik.cz>, 2018
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: survey
 #: model:mail.template,body_html:survey.email_template_survey
@@ -49,12 +53,12 @@ msgstr "#Otázek"
 #: code:addons/survey/models/survey.py:122
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -250,7 +254,7 @@ msgstr "O používání vašeho Odoo"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -316,7 +320,7 @@ msgstr "Odpovědi"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivováno"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -326,7 +330,7 @@ msgstr "Používáte Odoo denně?"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
-msgstr ""
+msgstr "Přílohy"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
@@ -340,12 +344,12 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
-msgstr ""
+msgstr "Zpět k dotazníku"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_4
 msgid "CRM"
-msgstr ""
+msgstr "CRM"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -377,28 +381,28 @@ msgstr "Klikněte pro přidání k dotazníku"
 #: model:ir.ui.view,arch_db:survey.page
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Close"
-msgstr ""
+msgstr "Zavřít"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_closed
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
-msgstr ""
+msgstr "Uzavřeno"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 msgid "Color"
-msgstr ""
+msgstr "Barva"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
 msgid "Color Index"
-msgstr ""
+msgstr "Barevný index"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
 msgid "Comment"
-msgstr ""
+msgstr "Komentář"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_comment_count_as_answer
@@ -425,12 +429,12 @@ msgstr "Dokončeno"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Compose Email"
-msgstr ""
+msgstr "Napsat e-mail"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
@@ -440,7 +444,7 @@ msgstr "Průvodce nastavením existuje pro každé důležité nastavení"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Constraints"
-msgstr ""
+msgstr "Omezení"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -454,11 +458,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Copy, paste and share the web link below to your audience."
 msgstr ""
+"Zkopírujte, vložte a sdílejte níže uvedený webový odkaz pro respondenty."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_date_create
 msgid "Create Date"
-msgstr ""
+msgstr "Vytvořit datum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_uid
@@ -493,7 +498,7 @@ msgstr "Datum vytvoření"
 #: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
@@ -606,7 +611,7 @@ msgstr ""
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
 msgid "Draft"
-msgstr ""
+msgstr "Návrh"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_email
@@ -626,12 +631,12 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "Šablona e-mailu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -699,7 +704,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Resources"
-msgstr ""
+msgstr "Personalistika"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -878,7 +883,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:survey.action_survey_label_form
 #: model:ir.ui.menu,name:survey.menu_survey_label_form1
 msgid "Labels"
-msgstr ""
+msgstr "Štítky"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label___last_update
@@ -924,12 +929,12 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Zpožděné činnosti"
 
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Link"
-msgstr ""
+msgstr "Odkaz"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
@@ -945,7 +950,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manažer"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -956,7 +961,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Manually"
-msgstr ""
+msgstr "Ručně"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1041,17 +1046,17 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "Moje činnosti"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_name
 msgid "Name"
-msgstr ""
+msgstr "Název"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1091,7 +1096,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
-msgstr ""
+msgstr "číslo"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_column_nb
@@ -1138,7 +1143,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
-msgstr ""
+msgstr "Možnosti"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
@@ -1152,7 +1157,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_page_title
 #: model:ir.ui.view,arch_db:survey.survey_page_form
 msgid "Page Title"
-msgstr ""
+msgstr "Název stránky"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page_sequence
@@ -1165,7 +1170,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey_page_ids
 #: model:ir.ui.menu,name:survey.menu_survey_page_form1
 msgid "Pages"
-msgstr ""
+msgstr "Stránky"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
@@ -1182,7 +1187,7 @@ msgstr "Kontakt"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
 msgid "Partner Survey Mailing"
-msgstr ""
+msgstr "Emailový průzkum partnerů"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
@@ -1218,7 +1223,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_5
 msgid "Project Management"
-msgstr ""
+msgstr "Správa projektů"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
@@ -1261,7 +1266,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
-msgstr ""
+msgstr "Otázka"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
@@ -1346,17 +1351,17 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_1
 msgid "Sales Management"
-msgstr ""
+msgstr "Řízení prodeje"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Save as a new template"
-msgstr ""
+msgstr "Uložit jako novou šablonu"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Save as new template"
-msgstr ""
+msgstr "Uložit jako novou šablonu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_quizz_score
@@ -1406,7 +1411,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Send"
-msgstr ""
+msgstr "Odeslat"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_form
@@ -1465,6 +1470,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1494,7 +1500,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey_stage_id
 #: model:ir.ui.view,arch_db:survey.survey_stage_form
 msgid "Stage"
-msgstr ""
+msgstr "Fáze"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_init
@@ -1504,7 +1510,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Started"
-msgstr ""
+msgstr "Začal"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_state
@@ -1514,7 +1520,7 @@ msgstr "Stav"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
-msgstr ""
+msgstr "Předmět..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1551,7 +1557,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
-msgstr ""
+msgstr "Průzkum"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_response_line_tree
@@ -1569,14 +1575,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_page_form
 #: model:ir.ui.view,arch_db:survey.survey_page_tree
 msgid "Survey Page"
-msgstr ""
+msgstr "Strana dotazníku"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 #: model:ir.ui.view,arch_db:survey.survey_question_tree
 msgid "Survey Question"
-msgstr ""
+msgstr "Otázka průzkumu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_stage
@@ -1586,7 +1592,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Title"
-msgstr ""
+msgstr "Název průzkumu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -1629,13 +1635,13 @@ msgstr ""
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr ""
+msgstr "Průzkumy"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
-msgstr ""
+msgstr "Test"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
@@ -1650,7 +1656,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_text
@@ -1700,7 +1706,7 @@ msgstr ""
 #: model:survey.question,validation_error_msg:survey.feedback_4_1
 #, python-format
 msgid "The answer you entered has an invalid format."
-msgstr ""
+msgstr "Zadaná odpověď má nesprávný formát."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_email_compose_message.py:139
@@ -1822,7 +1828,7 @@ msgstr ""
 #: model:survey.question,constr_error_msg:survey.feedback_4_1
 #, python-format
 msgid "This question requires an answer."
-msgstr ""
+msgstr "Otázka musí být zodpovězena."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.nopages
@@ -1855,12 +1861,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
-msgstr ""
+msgstr "Název"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
-msgstr ""
+msgstr "Dnešní činnosti"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -1881,7 +1887,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_type
@@ -1906,7 +1912,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
-msgstr ""
+msgstr "Použít šablonu"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
@@ -1917,7 +1923,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -2096,7 +2102,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required

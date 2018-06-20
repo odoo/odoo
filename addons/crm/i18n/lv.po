@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
+"POT-Creation-Date: 2018-04-20 11:58+0000\n"
+"PO-Revision-Date: 2018-04-20 11:58+0000\n"
 "Last-Translator: Arnis Putniņš <arnis.putnins@its1.lv>, 2017\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
@@ -122,6 +122,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hooray!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Your Odoo CRM application is up and running.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">What’s next?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Try creating a lead by sending an email to </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Track your opportunities in your sale funnel by simply dragging and dropping the cards from one column to another</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM planner</span></a></span>\n"
+"                                <span> to activate extra features</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Automatically assign your leads to your salesmen with the lead scoring, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Keep in touch with your potential client with efficient email campaigns,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Gain high quality insight from surveys,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>And much more...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
+"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
+"                                </span><span> or with our </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -953,7 +1052,7 @@ msgstr ""
 "                        sales performance."
 
 #. module: crm
-#: code:addons/crm/wizard/base_partner_merge.py:274
+#: code:addons/crm/wizard/base_partner_merge.py:273
 #, python-format
 msgid ""
 "All contacts must have the same email. Only the Administrator can merge "
@@ -963,7 +1062,7 @@ msgstr ""
 "contacts with different emails."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:905
+#: code:addons/crm/models/crm_lead.py:916
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
@@ -1366,7 +1465,7 @@ msgstr "Kontakts"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr "Contact Information"
+msgstr "Kontaktinformācija"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1670,7 +1769,7 @@ msgstr "Datums"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_open
 msgid "Days to Assign"
-msgstr "Days to Assign"
+msgstr "Dienas piešķiršanai"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_day_close
@@ -1680,12 +1779,12 @@ msgstr "Dienas līdz pabeigšanai"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_deduplicate
 msgid "Deduplicate Contacts"
-msgstr "Deduplicate Contacts"
+msgstr "Apvienot kontaktus"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Deduplicate the other Contacts"
-msgstr "Deduplicate the other Contacts"
+msgstr "Apvienot citus kontaktus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_crm_alias_prefix
@@ -2060,7 +2159,7 @@ msgstr "Force assignation"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Formats phone numbers"
+msgid "Format phone numbers based on national conventions"
 msgstr ""
 
 #. module: crm
@@ -2101,7 +2200,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Gamification"
-msgstr "Gamification"
+msgstr "Spēles elementi"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2344,7 +2443,7 @@ msgstr "Incoming Emails"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
 msgid "Information"
-msgstr "Information"
+msgstr "Informācija"
 
 #. module: crm
 #. openerp-web
@@ -2372,7 +2471,7 @@ msgstr "Ir uzņēmums"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_function
 msgid "Job Position"
-msgstr "Job Position"
+msgstr "Amats"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_exclude_journal_item
@@ -2474,7 +2573,7 @@ msgstr "Pavediens / klients"
 #: model:mail.message.subtype,name:crm.mt_lead_create
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead
 msgid "Lead Created"
-msgstr "Pavediens izveidots"
+msgstr "Lead Created"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_tag_action
@@ -2710,7 +2809,7 @@ msgstr "Mass Lead To Opportunity Partner"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_base_partner_merge_automatic_wizard_maximum_group
 msgid "Maximum of Group of Contacts"
-msgstr "Maximum of Group of Contacts"
+msgstr "Kontaktu grupas maksimums"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_medium_id
@@ -2759,7 +2858,7 @@ msgstr "Merge Automatically all process"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
 msgid "Merge Contacts"
-msgstr "Merge Contacts"
+msgstr "Apvienot kontaktus"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2769,7 +2868,7 @@ msgstr "Merge Leads/Opportunities"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_partner_merge
 msgid "Merge Selected Contacts"
-msgstr "Merge Selected Contacts"
+msgstr "Apvienot izvēlētos kontaktus"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -3311,8 +3410,8 @@ msgstr "Telefons"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_crm_phone_validation
-msgid "Phone Validation"
-msgstr "Phone Validation"
+msgid "Phone Formatting"
+msgstr ""
 
 #. module: crm
 #. openerp-web
@@ -3452,7 +3551,7 @@ msgstr "Probable Turnover"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
 msgid "Product"
-msgstr "Product"
+msgstr "Produkts"
 
 #. module: crm
 #. openerp-web
@@ -3464,7 +3563,7 @@ msgstr "Product Demonstration"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Products"
-msgstr "Products"
+msgstr "Produkti"
 
 #. module: crm
 #. openerp-web
@@ -3579,7 +3678,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm.crm_menu_report
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Reporting"
-msgstr "Reporting"
+msgstr "Atskaites"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_requirements
@@ -3744,7 +3843,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage_sequence
 msgid "Sequence"
-msgstr "Secība"
+msgstr "Sērija"
 
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
@@ -3897,7 +3996,7 @@ msgstr "Stāvoklis"
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
 msgid "Stage Changed"
-msgstr "Posms mainīts"
+msgstr "Stāvoklis mainīts"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_stage_name
@@ -3913,7 +4012,7 @@ msgstr "Posma meklēšana"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_stage
 msgid "Stage changed"
-msgstr "Posms mainīts"
+msgstr "Stāvoklis mainīts"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_stage
@@ -4271,7 +4370,7 @@ msgstr "Šodienas aktivitātes"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_1
 msgid "Too expensive"
-msgstr "Pārāk dārgi"
+msgstr "Too expensive"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_total_revenue
@@ -4330,7 +4429,7 @@ msgstr "Nepiešķirtie pavedieni"
 #: code:addons/crm/models/crm_team.py:211
 #, python-format
 msgid "Undefined"
-msgstr "Nenoteikts"
+msgstr "Undefined"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4544,7 +4643,7 @@ msgstr "We hope this process helped you bring your sales vision to life."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_website
 msgid "Website"
-msgstr "Website"
+msgstr "Tīkla vietne"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website

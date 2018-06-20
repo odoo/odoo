@@ -601,6 +601,10 @@ var FormRenderer = BasicRenderer.extend({
 
         var $result = $('<div/>', {class: 'o_group'});
         var colSize = Math.max(1, Math.round(12 / (parseInt(node.attrs.col, 10) || 2)));
+        if (node.attrs.string) {
+            var $sep = $('<div/>', {class: 'o_horizontal_separator'}).text(node.attrs.string);
+            $result.append($sep);
+        }
         $result.append(_.map(node.children, function (child) {
             if (child.tag === 'newline') {
                 return $('<br/>');

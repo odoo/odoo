@@ -19,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
 msgid "<strong>Questions</strong>"
-msgstr ""
+msgstr "<strong>Запитання</strong>"
 
 #. module: website_event_questions
 #: model:event.question,title:website_event_questions.event_question_2
@@ -93,7 +93,7 @@ msgstr "Подія"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_answer_id
 msgid "Event Answer"
-msgstr ""
+msgstr "Відповідь заходу"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -131,7 +131,7 @@ msgstr "Групувати за"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: website_event_questions
 #: model:ir.model.fields,help:website_event_questions.field_event_question_is_individual
@@ -199,6 +199,7 @@ msgstr "Запитання"
 #, python-format
 msgid "Question should belong to either event category or event but not both"
 msgstr ""
+"Питання має належати до будь-якої категорії подій або події, але не обидва"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
@@ -219,7 +220,7 @@ msgstr "Аналіз запитань"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_type_use_questions
 msgid "Questions to Attendees"
-msgstr ""
+msgstr "Запитання для учасників"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_attendee_id

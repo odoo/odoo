@@ -6,3 +6,6 @@
       warehouse = self.browse(ref('stock.' + wh_ref))
       #Force the rewriting of route and rule
       warehouse.write({'buy_to_resupply': True})
+    partner_id = ref('stock.res_partner_company_1')
+    warehouse = self.search([('partner_id', '=', partner_id)])
+    warehouse.write({'buy_to_resupply': True})

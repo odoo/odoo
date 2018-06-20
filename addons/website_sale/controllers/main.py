@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import http, tools, _
 from odoo.http import request
@@ -10,7 +10,9 @@ from odoo.addons.base.ir.ir_qweb.fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
+from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -116,7 +118,19 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
+class Website(Website):
+    @http.route()
+    def get_switchable_related_views(self, key):
+        views = super(Website, self).get_switchable_related_views(key)
+        if key == 'website_sale.product':
+            if not request.env.user.has_group('product.group_product_variant'):
+                view_product_variants = request.env.ref('website_sale.product_variants')
+                views[:] = [v for v in views if v['id'] != view_product_variants.id]
+        return views
+
+
 class WebsiteSale(http.Controller):
+
     def _get_compute_currency_and_context(self):
         pricelist_context = dict(request.env.context)
         pricelist = False
@@ -204,6 +218,11 @@ class WebsiteSale(http.Controller):
         else:
             ppg = PPG
 
+        if category:
+            category = request.env['product.public.category'].search([('id', '=', int(category))], limit=1)
+            if not category:
+                raise NotFound()
+
         attrib_list = request.httprequest.args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
@@ -220,9 +239,6 @@ class WebsiteSale(http.Controller):
         url = "/shop"
         if search:
             post["search"] = search
-        if category:
-            category = request.env['product.public.category'].browse(int(category))
-            url = "/shop/category/%s" % slug(category)
         if attrib_list:
             post['attrib'] = attrib_list
 
@@ -231,6 +247,7 @@ class WebsiteSale(http.Controller):
 
         parent_category_ids = []
         if category:
+            url = "/shop/category/%s" % slug(category)
             parent_category_ids = [category.id]
             current_category = category
             while current_category.parent_id:
@@ -740,9 +757,11 @@ class WebsiteSale(http.Controller):
             bootstrap_formatting= True
         )
 
-        acquirers = request.env['payment.acquirer'].search(
-            [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
-        )
+        domain = expression.AND([
+            ['&', ('website_published', '=', True), ('company_id', '=', order.company_id.id)],
+            ['|', ('specific_countries', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
+        ])
+        acquirers = request.env['payment.acquirer'].search(domain)
 
         values['access_token'] = order.access_token
         values['form_acquirers'] = [acq for acq in acquirers if acq.payment_flow == 'form' and acq.view_template_id]

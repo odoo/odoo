@@ -3,23 +3,25 @@
 # * hr_payroll
 # 
 # Translators:
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Andrey Skabelin <inactive+a.skabelin@transifex.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Andrey Skabelin, 2017
+# Martin Trigaux, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-16 15:45+0000\n"
+"PO-Revision-Date: 2018-03-16 15:45+0000\n"
+"Last-Translator: Gennady Marchenko <gennadym@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,6 +175,11 @@ msgid "All Children Rules"
 msgstr "Все дочерние правила"
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.ALW
+msgid "Allowance"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
@@ -214,6 +221,16 @@ msgid ""
 msgstr ""
 "Примените это правило для вычислений если условие справедливо. Вы можете для"
 " основы установить значение > 1000."
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.BASIC
+msgid "Basic"
+msgstr "Основной"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
+msgid "Basic Salary"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
@@ -283,7 +300,7 @@ msgstr "Дочернее определение"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Choose a Payroll Localization"
-msgstr ""
+msgstr "Выберите локализацию расчетного листа"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
@@ -314,7 +331,7 @@ msgstr "Код"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
 msgid "Code:"
-msgstr ""
+msgstr "Код:"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -332,6 +349,7 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
 msgstr "Вклад организации"
@@ -408,6 +426,16 @@ msgid "Contribution Registers"
 msgstr "Регистрации выплат"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
@@ -460,6 +488,11 @@ msgstr "Дата с"
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
 msgstr "До даты"
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.DED
+msgid "Deduction"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
@@ -633,7 +666,7 @@ msgstr ""
 #: code:addons/hr_payroll/report/report_contribution_register.py:34
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "Не найдены данные в форме, отчет не сформирован"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
@@ -662,11 +695,27 @@ msgid "Generate payslips for all selected employees"
 msgstr "Сгенерировать платежные ведомости для всех выбранных сотрудников"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:hr_payroll.GROSS
+msgid "Gross"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "Группировать по"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -737,7 +786,7 @@ msgstr "Внутреннее примечание"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
 msgid "Is a Blocking Reason?"
-msgstr ""
+msgstr "Является причиной блокировки?"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
@@ -850,6 +899,11 @@ msgid "Maximum Range"
 msgstr "Максимальный период"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
 msgid "Minimum Range"
@@ -880,7 +934,17 @@ msgid "Name"
 msgstr "Название"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:197
+#: model:hr.salary.rule.category,name:hr_payroll.NET
+msgid "Net"
+msgstr "Чистая"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:199
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Обычные рабочие дни оплачиваются 100%"
@@ -982,22 +1046,22 @@ msgstr "Платёжная ведомость"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Entries"
-msgstr ""
+msgstr "Строки платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll Rules"
-msgstr ""
+msgstr "Правила платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
 msgid "Payroll Structures"
-msgstr "Структуры платежной ведомости"
+msgstr "Структура платежной ведомости"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll rules that apply to your country"
-msgstr ""
+msgstr "Правила составления платежной ведомости в вашей стране"
 
 #. module: hr_payroll
 #: model:ir.actions.report,name:hr_payroll.action_report_payslip
@@ -1012,6 +1076,7 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "В платежной ведомости \"дата от\" должна быть раньше \"Даты до\"."
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -1058,11 +1123,6 @@ msgstr "Строки платежных ведомостей в реестре �
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
 msgstr "Название платежной ведомости"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
-msgid "Payslip Run"
-msgstr "Записи расчётного листка"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1118,12 +1178,22 @@ msgstr "Период"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Post payroll slips in accounting"
-msgstr ""
+msgstr "Отправить расчетники в бухгалтерию"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "Печать"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0

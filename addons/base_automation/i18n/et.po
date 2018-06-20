@@ -3,10 +3,11 @@
 # * base_automation
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
+# Martin Trigaux, 2017
+# Marek Pontus, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
 msgid ""
 msgstr ""
@@ -50,7 +51,7 @@ msgstr "Teha tegevused"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_type
 msgid "Action Type"
-msgstr "Toimingu tüüp"
+msgstr "Toimingu liik"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_active
@@ -218,7 +219,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_create_date
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -560,6 +561,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Arvutades päevapõhist ajatingimust on võimalik kasutada kalendrit, et "
+"arvutada välja kuupäev tööpäevade alusel."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_sequence
@@ -567,6 +570,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+"Kui tegemist on mitme tegevusega, siis nende käivitamise järjekord sõltub "
+"järjestusest. Madalam arv vastab kõrgemale prioriteedile."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_id
@@ -574,6 +579,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
+"Millal peaks tingimus käivituma.\n"
+"                                  Kui olemas, siis kontrollitakse planeerijaga. Kui puudub, siis kontrollitakse loomisel ja uuendamisel."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_active
@@ -586,6 +593,8 @@ msgid ""
 "Write Python code that the action will execute. Some variables are available"
 " for use; help about pyhon expression is given in the help tab."
 msgstr ""
+"Kirjuta phyton koodi, mis tegevus käivitatakse. Mõned muutujad on saadaval "
+"kasutuseks, python väljendi abi leiab abi vahekaardilt."
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server

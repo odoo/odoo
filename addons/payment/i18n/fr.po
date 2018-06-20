@@ -29,13 +29,14 @@
 # matthieu gaillet <matthieu.gaillet@lebrass.be>, 2017
 # e2f <projects@e2f.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
+# Cécile Collart <cco@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,7 +278,7 @@ msgstr "Montant"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_authorize_implemented
 msgid "Authorize Mechanism Supported"
-msgstr "Mécanisme d'autorisation pris en charge"
+msgstr "Mécanisme Authorize pris en charge"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -349,17 +350,17 @@ msgstr "Impossible de configurer le paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
 msgid "Capture Amount Manually"
-msgstr "Capturer le montant manuellement"
+msgstr "Récupérer le montant manuellement"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "Capturer la transaction"
+msgstr "Récupérer la transaction"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_capture_manually
 msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Capturer le montant depuis Odoo une fois l'acheminement effectué."
+msgstr "Récupérez le montant depuis Odoo une fois l'acheminement effectué."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -833,7 +834,7 @@ msgid ""
 "of capturing the amount) are not available."
 msgstr ""
 "Notez que les jetons issus d'acquéreurs pouvant uniquement autoriser les "
-"transactions (et non capturer le montant) ne sont pas disponibles."
+"transactions (et non récupérer le montant) ne sont pas disponibles."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_payment_flow
@@ -1040,7 +1041,7 @@ msgstr "Veuillez sélectionner une méthode de paiement."
 #: code:addons/payment/static/src/js/payment_form.js:308
 #, python-format
 msgid "Please select the option to add a new payment method."
-msgstr ""
+msgstr "Veuillez sélectionner l'option d'ajouter un nouveau mode de paiement."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -1278,6 +1279,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Cette option permet aux clients d'enregistrer leur carte de crédit en tant "
+"que moyen de paiement et de l'utiliser pour un achat ultérieur. Si vous "
+"gérez des abonnements (facturation récurrente), vous en avez besoin pour "
+"facturer automatiquement le client lorsque vous émettez une facture."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
@@ -1334,7 +1339,7 @@ msgstr "Frais de port international variables (en pourcentage)"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_verified
 msgid "Verified"
-msgstr "Vérifiée"
+msgstr "Vérifié"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_website_published

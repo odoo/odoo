@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"POT-Creation-Date: 2018-04-27 14:51+0000\n"
+"PO-Revision-Date: 2018-04-27 14:51+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2018\n"
 "Language-Team: Galician (https://www.transifex.com/odoo/teams/41243/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 msgid ""
 "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -36,7 +37,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -53,7 +54,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid ""
 "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -66,7 +67,7 @@ msgid ""
 "% if object.origin:\n"
 "    (RFQ origin: ${object.origin})\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -134,6 +135,7 @@ msgstr ""
 msgid ""
 "<html>\n"
 "                <head></head>\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -149,7 +151,7 @@ msgid ""
 "                                  </span>\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\">\n"
-"                                  <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
 "                              </td>\n"
 "                            </tr>\n"
 "                          </table>\n"
@@ -175,16 +177,16 @@ msgid ""
 "                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px;\">\n"
 "                            <tr>\n"
 "                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                ${user.company_id.name}<br/>\n"
-"                                ${user.company_id.phone or ''}\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
 "                              </td>\n"
 "                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                                % if user.company_id.email:\n"
-"                                <a href=\"mailto:${user.company_id.email}\" style=\"text-decoration:none; color: white;\">${user.company_id.email}</a><br/>\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
 "                                % endif\n"
-"                                % if user.company_id.website:\n"
-"                                    <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                                        ${user.company_id.website}\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
 "                                    </a>\n"
 "                                % endif\n"
 "                              </td>\n"
@@ -328,7 +330,7 @@ msgstr ""
 #: code:addons/purchase/controllers/portal.py:53
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #. module: purchase
 #: selection:res.company,po_lock:0
@@ -386,7 +388,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_average
 msgid "Average Price"
-msgstr ""
+msgstr "Prezo medio"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_default_purchase_method
@@ -427,14 +429,14 @@ msgstr ""
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr ""
+msgstr "Mensaxe de bloqueo"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:73
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
-msgstr ""
+msgstr "Mercar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_stock_warehouse_buy_pull_id
@@ -546,7 +548,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
 msgid "Configuration"
-msgstr ""
+msgstr "Configuración"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -566,7 +568,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_control
@@ -671,12 +673,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_display_name
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Amosar nome"
 
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Feito"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
@@ -857,7 +859,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line___last_update
 #: model:ir.model.fields,field_description:purchase.field_purchase_report___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificación en"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_write_uid
@@ -927,7 +929,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
 msgid "Manager"
-msgstr ""
+msgstr "Xestor"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -961,13 +963,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Mensaxe para o pedido de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Mensaxe para a liña do pedido de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation_amount
@@ -977,7 +979,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Regra de inventario mínimo"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company_po_double_validation_amount
@@ -1011,7 +1013,7 @@ msgstr ""
 #: code:addons/purchase/controllers/portal.py:44
 #, python-format
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:43
@@ -1028,7 +1030,7 @@ msgstr ""
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "Sen mensaxe"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1045,7 +1047,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
@@ -1162,7 +1164,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_product_product_property_account_creditor_price_difference
 #: model:ir.model.fields,field_description:purchase.field_product_template_property_account_creditor_price_difference
 msgid "Price Difference Account"
-msgstr ""
+msgstr "Conta para a diferencia de prezo"
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_price_per_supplier
@@ -1201,7 +1203,7 @@ msgstr "Produto"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr ""
+msgstr "Categorías de produto"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_category
@@ -1262,7 +1264,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Purchase"
-msgstr ""
+msgstr "Compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_module_purchase_requisition
@@ -1314,7 +1316,7 @@ msgstr ""
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #, python-format
 msgid "Purchase Order"
-msgstr ""
+msgstr "Orde de Compra"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1335,7 +1337,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Liña pedido de compra"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1412,7 +1414,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 #: model:ir.ui.view,arch_db:purchase.view_warehouse_orderpoint_purchase_form
 msgid "Purchases"
-msgstr ""
+msgstr "Compras"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1508,7 +1510,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Reference"
-msgstr ""
+msgstr "Referencia"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_uom
@@ -1561,14 +1563,14 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
 msgid "Reservation"
-msgstr ""
+msgstr "Reserva"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_create_uid
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_user_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
@@ -1584,7 +1586,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_date_planned
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Data planificada"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -1607,6 +1609,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Se selecciona a opción \"Aviso\" notificarase ós usuarios coa mensaxe, se "
+"selecciona \"Mensaxe de bloqueo\" lanzarase unha excepción coa mensaxe e "
+"bloquearase o fluxo. Débese escribir a mensaxe no campo seguinte."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1636,13 +1641,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr ""
+msgstr "Establecer como borrador"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: model:ir.ui.menu,name:purchase.menu_purchase_general_settings
 msgid "Settings"
-msgstr ""
+msgstr "Configuración"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1670,7 +1675,7 @@ msgstr "Estado"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movemento de stock"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
@@ -1691,7 +1696,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
 msgid "Tax"
-msgstr ""
+msgstr "Imposto"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_tax
@@ -1782,6 +1787,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
 msgstr ""
+"Esta conta empregarase para anota-la diferencia entre os prezos de compra e "
+"coste"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1845,7 +1852,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
-msgstr ""
+msgstr "Para aprobar"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1879,7 +1886,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transferir"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:362
@@ -1925,7 +1932,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Untaxed"
-msgstr ""
+msgstr "Base"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_amount_untaxed
@@ -1958,7 +1965,7 @@ msgstr ""
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings_company_currency_id
@@ -2014,7 +2021,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "Volume"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -2026,35 +2033,35 @@ msgstr ""
 #: model:ir.model,name:purchase.model_stock_warehouse
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_picking_type_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "Aviso"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:268
 #: code:addons/purchase/models/purchase.py:808
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "Aviso para %s"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr ""
+msgstr "Aviso no pedido de compra"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr ""
+msgstr "Aviso cando merque este produto"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_warning_purchase
 msgid "Warnings"
-msgstr ""
+msgstr "Avisos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_website_url

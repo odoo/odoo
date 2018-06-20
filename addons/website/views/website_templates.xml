@@ -74,7 +74,7 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.is_visible and submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
+    <li t-if="submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
@@ -124,8 +124,8 @@
                 and main_object.website_meta_description or website_meta_description"/>
             <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
                 and main_object.website_meta_keywords or website_meta_keywords"/>
-            <meta t-if="meta_description" name="description" t-att-content="meta_description"/>
-            <meta t-if="meta_keywords" name="keywords" t-att-content="meta_keywords"/>
+            <meta t-if="meta_description or editable" name="description" t-att-content="meta_description"/>
+            <meta t-if="meta_keywords or editable" name="keywords" t-att-content="meta_keywords"/>
 
             <!-- OpenGraph tags for Facebook sharing -->
             <meta property="og:title" t-att-content="additional_title" />

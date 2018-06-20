@@ -112,8 +112,20 @@ var CalendarView = AbstractView.extend({
         //if quick_add = is NOT False and IS specified in view, we this one for widgets.QuickCreate'
         this.controllerParams.quickAddPop = (!('quick_add' in attrs) || utils.toBoolElse(attrs.quick_add+'', true));
         this.controllerParams.disableQuickCreate =  params.disable_quick_create || !this.controllerParams.quickAddPop;
-        // If this field is set ot true, we don't open the event in form view, but in a popup with the view_id passed by this parameter
-        this.controllerParams.formViewId = !attrs.form_view_id || !utils.toBoolElse(attrs.form_view_id, true) ? false : attrs.form_view_id;
+
+        // If form_view_id is set, then the calendar view will open a form view
+        // with this id, when it needs to edit or create an event.
+        this.controllerParams.formViewId =
+            attrs.form_view_id ? parseInt(attrs.form_view_id, 10) : false;
+        if (!this.controllerParams.formViewId && params.action) {
+            var formViewDescr = _.find(params.action.views, function (v) {
+                return v[1] ===  'form';
+            });
+            if (formViewDescr) {
+                this.controllerParams.formViewId = formViewDescr[0];
+            }
+        }
+
         this.controllerParams.readonlyFormViewId = !attrs.readonly_form_view_id || !utils.toBoolElse(attrs.readonly_form_view_id, true) ? false : attrs.readonly_form_view_id;
         this.controllerParams.eventOpenPopup = utils.toBoolElse(attrs.event_open_popup || '', false);
         this.controllerParams.mapping = mapping;

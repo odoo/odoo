@@ -441,3 +441,12 @@ class ResPartner(models.Model):
         action['domain'] = literal_eval(action['domain'])
         action['domain'].append(('partner_id', 'child_of', self.id))
         return action
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        company = self.env['res.company']
+        if self.company_id:
+            company = self.company_id
+        else:
+            company = self.env.user.company_id
+        return {'domain': {'property_account_position_id': [('company_id', 'in', [company.id, False])]}}

@@ -7,7 +7,7 @@
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Mustafa Rawi <mustafa@cubexco.com>, 2017
 # AMAAL RU <Fabu1410@yahoo.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2017
@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"POT-Creation-Date: 2018-03-16 15:45+0000\n"
+"PO-Revision-Date: 2018-03-16 15:45+0000\n"
 "Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -179,6 +179,11 @@ msgid "All Children Rules"
 msgstr "جميع قواعد الفرعي"
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.ALW
+msgid "Allowance"
+msgstr "بدل"
+
+#. module: hr_payroll
 #: selection:hr.payslip.line,condition_select:0
 #: selection:hr.salary.rule,condition_select:0
 msgid "Always True"
@@ -219,6 +224,16 @@ msgid ""
 "condition like basic > 1000."
 msgstr ""
 "طبق هذه القاعدة للحساب في حالة كانت صحيحة. يمكنك تحديد شرط مثل الأساس >1000"
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.BASIC
+msgid "Basic"
+msgstr "أساسي"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
+msgid "Basic Salary"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
@@ -337,6 +352,7 @@ msgid "Company"
 msgstr "الشركة"
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
 msgstr "مساهمة الشركة"
@@ -413,6 +429,16 @@ msgid "Contribution Registers"
 msgstr "تسجيلات مساهمة"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
@@ -465,6 +491,11 @@ msgstr "التاريخ من"
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
 msgstr "التاريخ للإنتهاء"
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.DED
+msgid "Deduction"
+msgstr "مقتطع"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
@@ -635,7 +666,7 @@ msgstr "على سبيل المثال، ادخل 50.0 لتطبيق نسبة 50%"
 #: code:addons/hr_payroll/report/report_contribution_register.py:34
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
-msgstr ""
+msgstr "بعض بيانات النموذج فارغة، لا يمكن طباعة هذا التقارير."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
@@ -664,11 +695,27 @@ msgid "Generate payslips for all selected employees"
 msgstr "إنشاء قسائم دفع الرواتب لجميع الموظفين الذين تم تحديدهم"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:hr_payroll.GROSS
+msgid "Gross"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "تجميع حسب"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -850,6 +897,11 @@ msgid "Maximum Range"
 msgstr "الحد الأقصى"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_min
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_min
 msgid "Minimum Range"
@@ -880,7 +932,17 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:197
+#: model:hr.salary.rule.category,name:hr_payroll.NET
+msgid "Net"
+msgstr "الصفي"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:199
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "أيام العمل العادية المدفوعة بنسبة 100٪"
@@ -1012,6 +1074,7 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "ظرف المرتب \"بداية التاريخ\" يجب ان تكون قبل \"نهاية التاريخ\""
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -1058,11 +1121,6 @@ msgstr "خطوط قسيمه الدفع بتسجيل المساهمه "
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
 msgstr "اسم قسيمه الدفع "
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
-msgid "Payslip Run"
-msgstr "تنفيذ قسائم الدفع"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1124,6 +1182,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Print"
 msgstr "طباعة"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0

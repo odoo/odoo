@@ -149,6 +149,9 @@ class ProductProduct(models.Model):
         ('barcode_uniq', 'unique(barcode)', "A barcode can only be assigned to one product !"),
     ]
 
+    def _get_invoice_policy(self):
+        return False
+
     def _compute_product_price(self):
         prices = {}
         pricelist_id_or_name = self._context.get('pricelist')
@@ -219,6 +222,7 @@ class ProductProduct(models.Model):
         for supplier_info in self.seller_ids:
             if supplier_info.name.id == self._context.get('partner_id'):
                 self.code = supplier_info.product_code or self.default_code
+                break
         else:
             self.code = self.default_code
 
@@ -227,9 +231,10 @@ class ProductProduct(models.Model):
         for supplier_info in self.seller_ids:
             if supplier_info.name.id == self._context.get('partner_id'):
                 product_name = supplier_info.product_name or self.default_code
+                self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
+                break
         else:
-            product_name = self.name
-        self.partner_ref = '%s%s' % (self.code and '[%s] ' % self.code or '', product_name)
+            self.partner_ref = self.name_get()[0][1]
 
     @api.one
     @api.depends('image_variant', 'product_tmpl_id.image')
@@ -428,7 +433,12 @@ class ProductProduct(models.Model):
                     limit2 = (limit - len(products)) if limit else False
                     products += self.search(args + [('name', operator, name), ('id', 'not in', products.ids)], limit=limit2)
             elif not products and operator in expression.NEGATIVE_TERM_OPERATORS:
-                products = self.search(args + ['&', ('default_code', operator, name), ('name', operator, name)], limit=limit)
+                domain = expression.OR([
+                    ['&', ('default_code', operator, name), ('name', operator, name)],
+                    ['&', ('default_code', '=', False), ('name', operator, name)],
+                ])
+                domain = expression.AND([args, domain])
+                products = self.search(domain, limit=limit)
             if not products and operator in positive_operators:
                 ptrn = re.compile('(\[(.*?)\])')
                 res = ptrn.search(name)

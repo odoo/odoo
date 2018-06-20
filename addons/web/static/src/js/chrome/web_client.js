@@ -93,6 +93,10 @@ return AbstractWebClient.extend({
     bind_hashchange: function() {
         var self = this;
         $(window).bind('hashchange', this.on_hashchange);
+        var didHashChanged = false;
+        $(window).one('hashchange', function () {
+            didHashChanged = true;
+        });
 
         var state = $.bbq.getState(true);
         if (_.isEmpty(state) || state.action === "login") {
@@ -103,6 +107,9 @@ return AbstractWebClient.extend({
                         args: [[session.uid], ['action_id']],
                     })
                     .done(function(result) {
+                        if (didHashChanged) {
+                            return;
+                        }
                         var data = result[0];
                         if(data.action_id) {
                             self.action_manager.do_action(data.action_id[0]);
@@ -139,7 +146,7 @@ return AbstractWebClient.extend({
                     self.action_manager.do_load_state(state, !!self._current_state).then(function () {
                         var action = self.action_manager.get_inner_action();
                         if (action) {
-                            self.menu.open_action(action.action_descr.id);
+                            self.menu.open_action(action.action_descr.id, state.menu_id);
                         }
                     });
                 }
@@ -160,7 +167,7 @@ return AbstractWebClient.extend({
                     var completed = $.Deferred();
                     $.when(self.action_manager.do_action(result, {
                         clear_breadcrumbs: true,
-                        action_menu_id: self.menu.current_menu,
+                        action_menu_id: options.id,
                     })).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
                     }).always(function() {

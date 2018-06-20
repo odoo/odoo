@@ -3,12 +3,12 @@
 # * account_asset
 # 
 # Translators:
-# Martin Trigaux, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
+# Martin Trigaux, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
-# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Marek Pontus, 2017
 msgid ""
 msgstr ""
@@ -200,7 +200,7 @@ msgstr "Vara kategooria"
 #: code:addons/account_asset/models/account_asset.py:286
 #, python-format
 msgid "Asset created"
-msgstr "Loodud vara"
+msgstr "Vara on loodud"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
@@ -404,7 +404,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:account_asset.field_asset_depreciation_confirmation_wizard_create_date
 #: model:ir.model.fields,field_description:account_asset.field_asset_modify_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_depreciated_value
@@ -626,12 +626,12 @@ msgstr "Kogusumma"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value
 msgid "Gross Value"
-msgstr "Koguväärtus"
+msgstr "Soetusmaksumus"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 msgid "Gross value of asset"
-msgstr "Varade koguväärtus"
+msgstr "Varade soetusmaksumus"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -647,7 +647,7 @@ msgstr "Grupeeri..."
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_group_entries
 msgid "Group Journal Entries"
-msgstr "Grupeeri andmikukanded"
+msgstr "Grupeeri andmike kanded"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_id
@@ -710,7 +710,7 @@ msgstr "Andmik"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
-msgstr "Andmikukanded"
+msgstr "Andmike kanded"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset___last_update
@@ -918,7 +918,7 @@ msgstr "Jääk"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value_residual
 msgid "Residual Value"
-msgstr "Hetkeväärtus"
+msgstr "Jääkmaksumus"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -939,7 +939,7 @@ msgstr "Müük"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Jääkväärtus"
+msgstr "Realiseerimisväärtus"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -1003,8 +1003,8 @@ msgid ""
 "This depreciation is already linked to a journal entry! Please post or "
 "delete it."
 msgstr ""
-"See amortisatsioon on juba seotud andmikukandega! Palun postita või kustuta "
-"see."
+"See amortisatsioon on juba seotud andmiku kandega! Palun postita või kustuta"
+" see."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard

@@ -14,7 +14,7 @@ class Website(models.Model):
     _inherit = 'website'
 
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
-    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
+    currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', related_sudo=False, string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
     salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
@@ -149,8 +149,11 @@ class Website(models.Model):
 
     @api.model
     def sale_get_payment_term(self, partner):
-        DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
-        return partner.property_payment_term_id.id or self.env.ref(DEFAULT_PAYMENT_TERM, False).id
+        return (
+            partner.property_payment_term_id or
+            self.env.ref('account.account_payment_term_immediate', False) or
+            self.env['account.payment.term'].sudo().search([('company_id', '=', self.company_id.id)], limit=1)
+        ).id
 
     @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):

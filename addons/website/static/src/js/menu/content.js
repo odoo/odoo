@@ -147,7 +147,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
            },
          };
          if (self.page.date_publish) {
-            datepickersOptions.defaultDate = self.page.date_publish;
+            datepickersOptions.defaultDate = time.str_to_datetime(self.page.date_publish);
          }
 
          this.$("#date_publish_container").datetimepicker(datepickersOptions);
@@ -174,9 +174,15 @@ var PagePropertiesDialog = widget.Dialog.extend({
         var context = weContext.get();
         var url = $(".o_page_management_info #page_url").val();
 
-        var date_publish = $(".o_page_management_info #date_publish").val();
+        var $date_publish = $(".o_page_management_info #date_publish");
+        $date_publish.closest(".form-group").removeClass('has-error');
+        var date_publish = $date_publish.val();
         if (date_publish != "") {
-            date_publish = time.datetime_to_str(new Date(date_publish));
+            date_publish = this._parse_date(date_publish);
+            if (!date_publish) {
+                $date_publish.closest(".form-group").addClass('has-error');
+                return;
+            }
         }
         var params = {
             id: self.page.id,
@@ -198,7 +204,7 @@ var PagePropertiesDialog = widget.Dialog.extend({
             kwargs: {
                 context: context
             },
-        }).then(function () {
+        }).then(function (url) {
             // If from page manager: reload url, if from page itself: go to (possibly) new url
             if (self._getMainObject().model == 'website.page')
                 window.location.href = url.toLowerCase();
@@ -270,6 +276,28 @@ var PagePropertiesDialog = widget.Dialog.extend({
             model: m[1],
             id: m[2] | 0,
         };
+    },
+    /**
+     * Converts a string representing the browser datetime
+     * (exemple: Albanian: '2018-Qer-22 15.12.35.')
+     * to a string representing UTC in Odoo's datetime string format
+     * (exemple: '2018-04-22 13:12:35').
+     *
+     * The time zone of the datetime string is assumed to be the one of the
+     * browser and it will be converted to UTC (standard for Odoo).
+     *
+     * @private
+     * @param {String} value A string representing a datetime.
+     * @returns {String|false} A string representing an UTC datetime if the given value is valid, false otherwise.
+     */
+    _parse_date: function (value) {
+        var datetime = moment(value, time.getLangDatetimeFormat(), true);
+        if (datetime.isValid()) {
+            return time.datetime_to_str(datetime.toDate());
+        }
+        else {
+            return false;
+        }
     },
 
     //--------------------------------------------------------------------------

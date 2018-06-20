@@ -7,16 +7,18 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Levent Karakaş <levent@mektup.at>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
+# Umur Akın <umura@projetgrup.com>, 2018
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2017\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,18 +161,20 @@ msgstr "Görünüm Adı"
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
 msgid "Europe"
-msgstr ""
+msgstr "Avrupa"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_favorite_user_ids
 msgid "Favorite Members"
-msgstr ""
+msgstr "Favori Üyeler"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_is_favorite
 msgid ""
 "Favorite teams to display them in the dashboard and access them easily."
 msgstr ""
+"Favori takımlarınızı panelde görüntüleyebilir ve onlara kolayca "
+"erişebilirsiniz."
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -213,6 +217,8 @@ msgid ""
 "If set, this sales channel will be used for sales and assignations related "
 "to this partner"
 msgstr ""
+"Eğer ayarlanırsa, bu satış kanalı, satış ve iş ortağı ile ilgili atamalar "
+"için kullanılacaktır."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -220,6 +226,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the sales "
 "channel without removing it."
 msgstr ""
+"Eğer etkin alan yanlış olarak ayarlanırsa, bu satış kanalını kaldırmadan "
+"gizlemenize izin verecektir."
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -254,7 +262,7 @@ msgstr "Son Hafta"
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_period:0
 msgid "Last Year"
-msgstr ""
+msgstr "Geçen Yıl"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_type:0
@@ -280,7 +288,7 @@ msgstr "Favorilerim"
 #: code:addons/sales_team/models/crm_team.py:255
 #, python-format
 msgid "Not Defined"
-msgstr ""
+msgstr "Tanımlanmamış"
 
 #. module: sales_team
 #: selection:crm.team,dashboard_graph_model:0
@@ -319,6 +327,8 @@ msgid ""
 "Sales Channel the user is member of. Used to compute the members of a sales "
 "channel through the inverse one2many"
 msgstr ""
+"Satış kanalı kullanıcı üyesidir. Ters one2many üzerinden satış kanalı "
+"üyelerini hesaplamak için kullanılır."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
@@ -354,7 +364,7 @@ msgstr "Ayarlar"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_is_favorite
 msgid "Show on dashboard"
-msgstr ""
+msgstr "Panelde göster"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -369,7 +379,7 @@ msgstr "Satış Ekip Üyeleri"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
 msgid "The color of the channel"
-msgstr ""
+msgstr "Kanalın rengi"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_reply_to
@@ -377,27 +387,29 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by Odoo about "
 "cases in this sales channel"
 msgstr ""
+"Odoo tarafından bu satış kanalındaki vakalarla ilgili  gönderilen tüm "
+"e-postaların 'Yanıt Ver' bölümünde yer alan e-posta adresi"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_model
 msgid "The graph this channel will display in the Dashboard.\n"
-msgstr ""
+msgstr "Bu kanal grafiği panel üzerinde gösterilecek.\n"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_period
 msgid "The time period this channel's dashboard graph will consider."
-msgstr ""
+msgstr "Bu kanalın panel zaman aralığı grafiği göz önüne alınacaktır. "
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_dashboard_graph_type
 msgid "The type of graph this channel will display in the dashboard."
-msgstr ""
+msgstr "Bu kanalın grafik türü panel üzerinde gösterilecek."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_team_type
 msgid ""
 "The type of this channel, it will define the resources this channel uses."
-msgstr ""
+msgstr "Bu kanalın türü, kanalın kullandığı kaynakları tanımlayacaktır."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_dashboard_graph_type
@@ -418,6 +430,8 @@ msgid ""
 "Use sales channels to organize your sales departments. \n"
 "                    Each channel will work with a separate pipeline."
 msgstr ""
+"Satış departmanınızı organize etmek için satış kanallarını kullanın\n"
+"Her kanal ayrı kanallar ile çalışır."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads

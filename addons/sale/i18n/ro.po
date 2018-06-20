@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
+"POT-Creation-Date: 2018-04-27 14:48+0000\n"
+"PO-Revision-Date: 2018-04-27 14:48+0000\n"
 "Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -97,7 +97,7 @@ msgstr "# de comenzi"
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "# Comenzii de Vânzare"
+msgstr "# Comenzii Vânzare"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -145,7 +145,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -251,13 +251,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
@@ -279,13 +272,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Done</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
@@ -300,13 +286,27 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Paid</span>"
 msgstr ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Platita</span>"
+"fa-fw fa-check\"/> Plătită</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Done</span>"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -330,6 +330,7 @@ msgstr "<strong>Data:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
 msgstr ""
 
@@ -366,7 +367,7 @@ msgstr "<strong>Cantitate</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr ""
+msgstr "<strong>Data ofertă:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -464,7 +465,7 @@ msgstr "Avans: %s"
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "All Channels Sales Orders"
-msgstr ""
+msgstr "Comenzi din toate canalele"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
@@ -475,7 +476,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "All sales orders grouped by sales channels"
-msgstr ""
+msgstr "Toate comenzile de vânzare grupate după canale de vânzări"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -501,13 +502,13 @@ msgstr "Valoare"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
 msgid "Amount Invoiced"
-msgstr ""
+msgstr "Valoare facturată"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr ""
+msgstr "Valoare de facturat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
@@ -610,7 +611,7 @@ msgstr "Anulat(ă)"
 #. module: sale
 #: model:ir.ui.menu,name:sale.product_menu_catalog
 msgid "Catalog"
-msgstr ""
+msgstr "Catalog"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
@@ -624,6 +625,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to set an invoicing target for this sales channel."
 msgstr ""
+"Bifați această casetă pentru a seta o țintă de facturare pentru acest canal "
+"de vânzări."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -941,7 +944,7 @@ msgstr "Produs cu plata în avans"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Down Payments"
-msgstr ""
+msgstr "Avans"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1019,7 +1022,7 @@ msgstr "Facturat"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Activități viitoare"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1152,6 +1155,9 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Venit din factură pentru luna curentă. Aceasta este suma pe care canalul de "
+"vânzări la facturat luna aceasta. Acesta este folosit pentru a calcula rata "
+"de evoluție a venitului curent și a venitului țintă din afișarea kanban ."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1252,7 +1258,7 @@ msgstr "Adresă de facturare"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr "Adresă de facturare şi livrare:"
+msgstr "Adresă de facturare și livrare:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
@@ -1302,7 +1308,7 @@ msgstr "Ultima actualizare pe"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Activități întârziate"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
@@ -1450,18 +1456,14 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
-msgstr ""
+"Rețineți că, odată ce o Ofertă devine o Comandă de vânzări, aceasta va fi "
+"mutată din lista Oferte în lista Comenzi de vânzare."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1470,6 +1472,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
+"Rețineți că, odată ce o Ofertă devine o Comandă de vânzări, aceasta va fi "
+"mutată din lista Oferte în lista Comenzi de vânzare."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1648,7 +1652,7 @@ msgstr "Comenzi"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Comenzi de facturat"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1670,7 +1674,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Other Information"
-msgstr "Alte informaţii"
+msgstr "Alte informații"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -1700,11 +1704,6 @@ msgid "Payment"
 msgstr "Plată"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Payment Acquirers"
-msgstr "Colectori plăți"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
 msgid "Payment Terms"
 msgstr "Termene plată"
@@ -1727,6 +1726,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
+"Vă rugăm să definiți contul de venituri pentru acest produs \"%s\" (id:%d) -"
+" sau pentru această categorie: \"%s\"."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1829,7 +1830,7 @@ msgstr "Categorie produs"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Imagine produs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty
@@ -1900,7 +1901,7 @@ msgstr "Cantitate"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr ""
+msgstr "Cantitate:"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1926,7 +1927,7 @@ msgstr "Ofertă / Comandă"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Date"
-msgstr ""
+msgstr "Data ofertă"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2069,13 +2070,13 @@ msgstr "Analiza vânzări"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Channel"
-msgstr ""
+msgstr "Canal de vânzare"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Channels"
-msgstr ""
+msgstr "Canale de vânzări"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2124,7 +2125,7 @@ msgstr "Linie comandă vânzare"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Poziţii comenzi de vânzare"
+msgstr "Poziții comenzi de vânzare"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2228,6 +2229,14 @@ msgid "Sell and purchase products in different units of measure"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Vinde produse digitale - asigură conținut ce poate fi descărcat din portalul"
+" pentru clienți"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
@@ -2308,6 +2317,7 @@ msgstr "Setări"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your sales settings ..."
 msgstr ""
+"Configurați termenii și condiții implicite în setările dvs. de vânzări ..."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2323,6 +2333,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Afișați toate înregistrările care au data următoarei acțiuni în trecut"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -2411,6 +2422,8 @@ msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
 msgstr ""
+"Obiectivul veniturilor din facturare pentru luna curentă. Aceasta este suma "
+"estimată de canalul de vânzări de a fi facturată în această lună."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
@@ -2612,12 +2625,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Acest raport realizează o analiză pe oferta de preţ. Analiză verifică "
-"veniturile din vânzări şi va permite să le grupaţi şi filtraţi după diferite"
-" criterii (agent de vânzări, partener, produse, etc). Utilizaţi acest raport"
+"Acest raport realizează o analiză pe oferta de preț. Analiză verifică "
+"veniturile din vânzări și va permite să le grupați și filtrați după diferite"
+" criterii (agent de vânzări, partener, produse, etc). Utilizați acest raport"
 " pentru a efectua o analiză privind vânzările care nu au fost facturate "
-"încă. Dacă doriţi să analizaţi cifra de afaceri realizată, ar trebui să "
-"utilizaţi raportul de analiză facturi din rapoarte contabilitate."
+"încă. Dacă doriți să analizați cifra de afaceri realizată, ar trebui să "
+"utilizați raportul de analiză facturi din rapoarte contabilitate."
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -2668,6 +2681,22 @@ msgstr "Total taxe incluse"
 #: model:ir.model.fields,field_description:sale.field_product_template_service_type
 msgid "Track Service"
 msgstr "Serviciu de urmărire"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
+msgid "USPS"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:570
+#, python-format
+msgid "Uncategorized"
+msgstr "Neclasificat"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -2798,6 +2827,8 @@ msgid ""
 "You can not remove a sales order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
+"Nu puteți să ștergeți o line de comandă de vânzare.\n"
+"Abandonați modificările și setați cantitatea pe zero."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
@@ -2820,18 +2851,14 @@ msgid "Your Order has been confirmed."
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
+"Următoarele acțiuni ar trebui să urmeze eficient: confirmați oferta într-o "
+"comandă de vânzare, livrați apoi creați factura și colectați plata."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2839,6 +2866,13 @@ msgstr ""
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
+msgstr ""
+"Următoarele acțiuni ar trebui să urmeze eficient: confirmați oferta într-o "
+"comandă de vânzare, livrați apoi creați factura și colectați plata."
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
+msgid "bpost"
 msgstr ""
 
 #. module: sale

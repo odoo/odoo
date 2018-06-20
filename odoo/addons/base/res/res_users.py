@@ -4,14 +4,17 @@ import pytz
 import datetime
 import itertools
 import logging
+import hmac
 
 from collections import defaultdict
 from itertools import chain, repeat
 from lxml import etree
 from lxml.builder import E
+from hashlib import sha256
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
+from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, pycompat
@@ -375,6 +378,8 @@ class Users(models.Model):
             db = self._cr.dbname
             for id in self.ids:
                 self.__uid_cache[db].pop(id, None)
+        if any(key in values for key in self._get_session_token_fields()):
+            self._invalidate_session_cache()
 
         return res
 
@@ -385,6 +390,7 @@ class Users(models.Model):
         db = self._cr.dbname
         for id in self.ids:
             self.__uid_cache[db].pop(id, None)
+        self._invalidate_session_cache()
         return super(Users, self).unlink()
 
     @api.model
@@ -462,8 +468,12 @@ class Users(models.Model):
                     user.sudo(user_id).check_credentials(password)
                     user.sudo(user_id)._update_last_login()
         except AccessDenied:
-            _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False
+
+        status = "successful" if user_id else "failed"
+        ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
+        _logger.info("Login %s for db:%s login:%s from %s", status, db, login, ip)
+
         return user_id
 
     @classmethod
@@ -509,6 +519,34 @@ class Users(models.Model):
             cls.__uid_cache[db][uid] = passwd
         finally:
             cr.close()
+
+    def _get_session_token_fields(self):
+        return {'id', 'login', 'password', 'active'}
+
+    @tools.ormcache('sid')
+    def _compute_session_token(self, sid):
+        """ Compute a session token given a session id and a user id """
+        # retrieve the fields used to generate the session token
+        session_fields = ', '.join(sorted(self._get_session_token_fields()))
+        self.env.cr.execute("""SELECT %s, (SELECT value FROM ir_config_parameter WHERE key='database.secret')
+                                FROM res_users
+                                WHERE id=%%s""" % (session_fields), (self.id,))
+        if self.env.cr.rowcount != 1:
+            self._invalidate_session_cache()
+            return False
+        data_fields = self.env.cr.fetchone()
+        # generate hmac key
+        key = (u'%s' % (data_fields,)).encode('utf-8')
+        # hmac the session id
+        data = sid.encode('utf-8')
+        h = hmac.new(key, data, sha256)
+        # keep in the cache the token
+        return h.hexdigest()
+
+    @api.multi
+    def _invalidate_session_cache(self):
+        """ Clear the sessions cache """
+        self._compute_session_token.clear_cache(self)
 
     @api.model
     def change_password(self, old_passwd, new_passwd):
@@ -752,7 +790,16 @@ class GroupsView(models.Model):
             xml = E.field(E.group(*(xml1), col="2"), E.group(*(xml2), col="4"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
             xml_content = etree.tostring(xml, pretty_print=True, encoding="unicode")
-            view.with_context(lang=None).write({'arch': xml_content, 'arch_fs': False})
+            if not view.check_access_rights('write',  raise_exception=False):
+                # erp manager has the rights to update groups/users but not
+                # to modify ir.ui.view
+                if self.env.user.has_group('base.group_erp_manager'):
+                    view = view.sudo()
+
+            new_context = dict(view._context)
+            new_context.pop('install_mode_data', None)  # don't set arch_fs for this computed view
+            new_context['lang'] = None
+            view.with_context(new_context).write({'arch': xml_content})
 
     def get_application_groups(self, domain):
         """ Return the non-share groups that satisfy ``domain``. """

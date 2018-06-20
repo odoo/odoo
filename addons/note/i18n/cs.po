@@ -3,27 +3,31 @@
 # * note
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2018
+# Michal Veselý <michal@veselyberanek.net>, 2018
+# Jiří P., 2018
+# Chris <krystof.reklamy13@gmail.com>, 2018
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Jan Horzinka <jan.horzinka@centrum.cz>, 2018\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2018\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -38,7 +42,7 @@ msgstr ""
 #. module: note
 #: model:ir.actions.act_window,help:note.note_tag_action
 msgid "Click to add a new tag."
-msgstr ""
+msgstr "Klepnutím přidat novou značku."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -49,12 +53,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note_color
 #: model:ir.model.fields,field_description:note.field_note_tag_color
 msgid "Color Index"
-msgstr ""
+msgstr "Barevný index"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -73,7 +77,7 @@ msgstr "Vytvořeno"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_date_done
 msgid "Date done"
-msgstr ""
+msgstr "Datum dokončení"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
@@ -95,7 +99,7 @@ msgstr ""
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Budoucí činnosti"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -133,7 +137,7 @@ msgstr "Naposled upraveno"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Zpožděné činnosti"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -144,19 +148,19 @@ msgstr ""
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Moje činnosti"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr ""
+msgstr "Nové"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
@@ -184,13 +188,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_04
 msgid "Notes"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
-msgstr ""
+msgstr "Majitel"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
@@ -207,17 +211,18 @@ msgstr "Číselná řada"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Zobrazit všechny záznamy, které mají následující datum akce před dneškem"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr ""
+msgstr "Fáze"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_name
 msgid "Stage Name"
-msgstr ""
+msgstr "Název fáze"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
@@ -229,7 +234,7 @@ msgstr ""
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr ""
+msgstr "Fáze"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -264,23 +269,23 @@ msgstr "Štítky"
 #. module: note
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr ""
+msgstr "Tento týden"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
-msgstr ""
+msgstr "Dnes"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
-msgstr ""
+msgstr "Dnešní činnosti"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
-msgstr ""
+msgstr "Zítra"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -295,12 +300,12 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "Používá se pro poznámku ke stavu objednávky"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

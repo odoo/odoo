@@ -3,15 +3,18 @@
 # * base_address_city
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eneko <eastigarraga@codesyntax.com>, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Esther Martín Menéndez <esthermartin001@gmail.com>, 2018
+# Gorka Toledo <gorka.toledo@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:52+0000\n"
-"PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Eneko <eastigarraga@codesyntax.com>, 2018\n"
+"POT-Creation-Date: 2018-03-15 07:58+0000\n"
+"PO-Revision-Date: 2018-03-15 07:58+0000\n"
+"Last-Translator: Gorka Toledo <gorka.toledo@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,28 +38,26 @@ msgid "Cities"
 msgstr ""
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:36
 #: model:ir.model,name:base_address_city.model_res_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
-#: model:ir.ui.view,arch_db:base_address_city.view_city_filter
-#: model:ir.ui.view,arch_db:base_address_city.view_city_tree
-msgid "City"
-msgstr ""
-
-#. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
 #: model:ir.model.fields,field_description:base_address_city.field_res_users_city_id
-msgid "Company"
-msgstr "Enpresa"
+#: model:ir.ui.view,arch_db:base_address_city.view_city_filter
+#: model:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
+msgid "City"
+msgstr "Herria"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktua"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
+#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
 msgid "Country"
-msgstr ""
+msgstr "Herrialdea"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
@@ -111,7 +112,7 @@ msgstr "Last Updated on"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_name
 msgid "Name"
-msgstr ""
+msgstr "Izena"
 
 #. module: base_address_city
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
@@ -121,9 +122,9 @@ msgstr ""
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
 msgid "State"
-msgstr ""
+msgstr "Egoera"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
 msgid "Zip"
-msgstr ""
+msgstr "Posta kodea"

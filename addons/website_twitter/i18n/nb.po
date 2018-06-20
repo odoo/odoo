@@ -3,8 +3,8 @@
 # * website_twitter
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2017
+# Jorunn D. Newth, 2017
 # Viktor Basso <viktor@voit.no>, 2017
 # Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
 msgid ""
@@ -24,7 +24,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.website_twitter_snippet
 msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter-strøm</span>"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
@@ -45,6 +45,8 @@ msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
 "tweets are protected."
 msgstr ""
+"Brukernavn og passord mangler eller er feil. Tweets fra brukeren kan være "
+"beskyttet."
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
@@ -87,7 +89,7 @@ msgstr "ID"
 #: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
-msgstr ""
+msgstr "Ingen nettoppkobling"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet___last_update
@@ -283,6 +285,8 @@ msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
 " or choose a different screen name."
 msgstr ""
+"Twitterbruker @%(username)s har færre enn 12 favoritt-tweeter. Legg til "
+"flere eller velg en annen Twitter-bruker."
 
 #. module: website_twitter
 #: model:ir.actions.server,name:website_twitter.ir_cron_twitter_actions_ir_actions_server

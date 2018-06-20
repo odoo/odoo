@@ -33,8 +33,7 @@ class TestTimesheetHolidays(TestTimesheet):
         # leave dates : from next monday to next wednesday (to avoid crashing tests on weekend, when
         # there is no work days in working calendar)
         # NOTE: second and millisecond can add a working days
-        today = datetime.combine(datetime.today(), time.min)
-        self.leave_start_datetime = today.replace(hour=7) + relativedelta(weeks=0, days=1, weekday=0)
+        self.leave_start_datetime = datetime(2018, 2, 5, 7, 0, 0, 0)  # this is monday
         self.leave_end_datetime = self.leave_start_datetime + relativedelta(days=3)
 
         # all company have those internal project/task (created by default)

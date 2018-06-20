@@ -13,13 +13,14 @@
 # Egon Raamat <egon@avalah.ee>, 2017
 # Gert Valdek <gert@airobot.ee>, 2017
 # Marek Pontus, 2018
+# Ants Peetsalu <ants@avalah.ee>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Marek Pontus, 2018\n"
+"POT-Creation-Date: 2018-04-27 14:48+0000\n"
+"PO-Revision-Date: 2018-04-27 14:48+0000\n"
+"Last-Translator: Ants Peetsalu <ants@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -127,7 +128,7 @@ msgstr "${object.subject}"
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
@@ -146,7 +147,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -250,13 +251,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
@@ -276,13 +270,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Done</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
@@ -297,6 +284,13 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
@@ -304,9 +298,16 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Done</span>"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>Esialgse arve nr </span>"
+msgstr "<span>Pro forma arve nr </span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -325,8 +326,9 @@ msgstr "<strong>Kuupäev:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
-msgstr ""
+msgstr "<strong>Aegumiskuupäev:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -519,7 +521,7 @@ msgstr "Analüütiline konto"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr ""
+msgstr "Müükide analüütiline konto"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
@@ -703,7 +705,7 @@ msgstr "Kupongid ja soodustused"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoices"
-msgstr "Loo müügiarve"
+msgstr "Loo arve"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -732,7 +734,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_date
@@ -824,7 +826,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "Tarnitud kogused"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
@@ -979,7 +981,7 @@ msgstr "Elektronkirja koostamise viisard"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Aegumiskuupäev"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -995,7 +997,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Finantspositsioon"
+msgstr "Maksupositsioon"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1118,7 +1120,7 @@ msgstr "Arve rida"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_invoice_lines
 msgid "Invoice Lines"
-msgstr "Müügiarve read"
+msgstr "Arve read"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
@@ -1192,7 +1194,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "Müügiarved"
+msgstr "Arved"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
@@ -1215,7 +1217,7 @@ msgstr ""
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr "Müügiarved: maksudeta kokku"
+msgstr "Arved: maksudeta kokku"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1296,7 +1298,7 @@ msgstr "Viimati uuendatud"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr "Ületähtaja tegevused"
+msgstr "Üle tähtaja tegevused"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
@@ -1322,7 +1324,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Lock"
-msgstr ""
+msgstr "Lukusta"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_auto_done_setting
@@ -1332,7 +1334,7 @@ msgstr "Lukusta kinnitatud tellimused"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr ""
+msgstr "Lukustatud"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1360,6 +1362,8 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Sea tellimusele (pakkumisele) käsitsi aegumiskuupäev või muidu määratakse "
+"kuupäev automaatselt malli alusel kui online tellimus on paigaldatud."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_margin
@@ -1444,6 +1448,7 @@ msgid "No longer edit orders once confirmed"
 msgstr "Ära muuda kinnitatud tellimusi"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1451,13 +1456,6 @@ msgid ""
 msgstr ""
 "Kui pakkumisest saab müügitellimus, siis see liigutatakse pakkumiste\n"
 "                nimekirjast müügitellimuste nimekirja."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1581,7 +1579,7 @@ msgstr "Tellimuse viide"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
 msgid "Order Status"
-msgstr "Korralduse olek"
+msgstr "Tellimuse olek"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:218
@@ -1603,14 +1601,14 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Ordered Qty"
-msgstr ""
+msgstr "Tellitud kogus"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:821
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #, python-format
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "Tellitud kogus"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
@@ -1668,7 +1666,7 @@ msgstr "Muu info"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "ESIALGNE arve"
+msgstr "Pro forma arve"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
@@ -1680,22 +1678,17 @@ msgstr "Partner"
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "Partneri riik"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "Partneri riik"
 
 #. module: sale
 #: selection:res.config.settings,portal_confirmation_options:0
 msgid "Payment"
 msgstr "Makse"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Payment Acquirers"
-msgstr "Pangalingid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1790,12 +1783,12 @@ msgstr "Prindi"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "Esialgne arve"
+msgstr "Pro forma arve"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "Esialgsed müügiarved"
+msgstr "Pro forma arved"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -1871,7 +1864,7 @@ msgstr "Arveldatud kogus"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "Qty Ordered"
-msgstr ""
+msgstr "Tellitud kogus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
@@ -1914,7 +1907,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr "Pakkumine / Korraldus"
+msgstr "Pakkumine / tellimus"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
@@ -2108,7 +2101,7 @@ msgstr "Müügitellimus kinnitatud"
 #: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn
 #: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn
 msgid "Sales Order Line"
-msgstr "Müügikorralduse rida"
+msgstr "Müügitellimuse rida"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_product_sale_list
@@ -2116,7 +2109,7 @@ msgstr "Müügikorralduse rida"
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
-msgstr "Müügikorralduse read"
+msgstr "Müügitellimuse rida"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2182,7 +2175,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Otsi müügitellimust"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
@@ -2220,6 +2213,12 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Müü ja osta tooteid erinevates mõõtühikutes"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Müü mitu toodet ühes pakendis"
@@ -2227,7 +2226,7 @@ msgstr "Müü mitu toodet ühes pakendis"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "Saada ESIALGNE arve"
+msgstr "Saada PRO FORMA arve"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2646,6 +2645,22 @@ msgid "Track Service"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
+msgid "UPS"
+msgstr "UPS"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
+msgid "USPS"
+msgstr "USPS"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:570
+#, python-format
+msgid "Uncategorized"
+msgstr "Kategoriseerimata"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2679,7 +2694,7 @@ msgstr "Mõõtühikud"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unlock"
-msgstr ""
+msgstr "Lukusta lahti"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2694,7 +2709,7 @@ msgstr "Maksudeta summa"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr "Maksudeta kokku"
+msgstr "Ilma maksudeta kokku"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2715,7 +2730,7 @@ msgstr "Kehtiv kuni"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr "Ruumala"
+msgstr "Maht"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -2792,6 +2807,7 @@ msgid "Your Order has been confirmed."
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
@@ -2799,13 +2815,6 @@ msgid ""
 msgstr ""
 "Kui pakkumine on koostatud, siis kinnita müügitellimus,\n"
 "                seejärel koosta arve ning oota makse laekumist."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2816,6 +2825,11 @@ msgid ""
 msgstr ""
 "Kui pakkumine on koostatud, siis kinnita müügitellimus, seejärel koosta arve"
 " ning oota makse laekumist."
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
+msgid "bpost"
+msgstr "bpost"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

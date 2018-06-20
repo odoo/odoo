@@ -67,6 +67,12 @@
                     <t t-call-assets="web_editor.summernote" t-css="false"/>
                     <t t-call-assets="web_editor.assets_editor" t-css="false"/>
                     <t t-call-assets="web.report_assets_editor" t-css="false"/>
+
+                    <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+                    <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+                    <script type="text/javascript" src="/web_editor/static/src/js/iframe.js"></script>
+                    <script t-if="enable_editor and inline_mode" type="text/javascript" src="/web_editor/static/src/js/inline.js"></script>
                 </t>
             </head>
             <body class="container">

@@ -3,15 +3,17 @@
 # * hr_payroll
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Andre de Kock <adekock11@gmail.com>, 2017
+# Jessica Dowd <dowd.jess@gmail.com>, 2018
+# Somarie, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Andre de Kock <adekock11@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-03-16 15:45+0000\n"
+"PO-Revision-Date: 2018-03-16 15:45+0000\n"
+"Last-Translator: Somarie, 2018\n"
 "Language-Team: Afrikaans (https://www.transifex.com/odoo/teams/41243/af/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +25,7 @@ msgstr ""
 #: code:addons/hr_payroll/models/hr_salary_rule.py:41
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
@@ -87,7 +89,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>Epos</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -99,7 +101,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>Naam</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -145,7 +147,7 @@ msgstr "Aktief"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Voeg 'n interne nota by..."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
@@ -155,6 +157,11 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
 msgid "All Children Rules"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.ALW
+msgid "Allowance"
 msgstr ""
 
 #. module: hr_payroll
@@ -199,6 +206,16 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.BASIC
+msgid "Basic"
+msgstr "Basies"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_basic
+msgid "Basic Salary"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
 msgid "Belgium Payroll"
 msgstr ""
@@ -239,7 +256,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7804
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -291,7 +308,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
@@ -315,6 +332,7 @@ msgid "Company"
 msgstr "Maatskappy"
 
 #. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.COMP
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Company Contribution"
 msgstr ""
@@ -343,12 +361,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Instelling"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Confirm"
-msgstr ""
+msgstr "Bevestig"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_contract_id
@@ -356,7 +374,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_contract_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
 msgid "Contract"
-msgstr ""
+msgstr "Kontrak"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
@@ -388,6 +406,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_filter
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_tree
 msgid "Contribution Registers"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_convanceallowance1
+msgid "Conveyance Allowance"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_ca_gravie
+msgid "Conveyance Allowance For Gravie"
 msgstr ""
 
 #. module: hr_payroll
@@ -428,7 +456,7 @@ msgstr "Geskep op"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_credit_note
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_credit_note
 msgid "Credit Note"
-msgstr ""
+msgstr "Kredietnota"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_date_from
@@ -442,6 +470,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule.category,name:hr_payroll.DED
+msgid "Deduction"
 msgstr ""
 
 #. module: hr_payroll
@@ -512,7 +545,7 @@ msgstr "Vertoningsnaam"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -529,7 +562,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 msgid "Draft"
-msgstr ""
+msgstr "Konsep"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -547,7 +580,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_employee_id
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Employee"
-msgstr ""
+msgstr "Werknemer"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
@@ -577,7 +610,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Employees"
-msgstr ""
+msgstr "Werknemers"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_salary_rule.py:36
@@ -619,7 +652,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "General"
-msgstr ""
+msgstr "Algemene"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
@@ -638,11 +671,27 @@ msgid "Generate payslips for all selected employees"
 msgstr ""
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_sales_commission
+msgid "Get 1% of sales"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_taxable
+#: model:hr.salary.rule.category,name:hr_payroll.GROSS
+msgid "Gross"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Group By"
 msgstr "Groepeer deur"
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_houserentallowance1
+msgid "House Rent Allowance"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
@@ -704,7 +753,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
 msgid "Internal Note"
-msgstr ""
+msgstr "Interne Nota"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
@@ -805,12 +854,17 @@ msgstr ""
 #. module: hr_payroll
 #: model:res.groups,name:hr_payroll.group_hr_payroll_manager
 msgid "Manager"
-msgstr ""
+msgstr "Bestuurder"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_meal_voucher
+msgid "Meal Voucher"
 msgstr ""
 
 #. module: hr_payroll
@@ -844,7 +898,17 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:197
+#: model:hr.salary.rule.category,name:hr_payroll.NET
+msgid "Net"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_rule_net
+msgid "Net Salary"
+msgstr ""
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:199
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr ""
@@ -852,12 +916,12 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
 msgid "Number of Days"
-msgstr ""
+msgstr "Hoeveelheid Dae"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
@@ -878,7 +942,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Ouer"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
@@ -941,7 +1005,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
-msgstr ""
+msgstr "Loondienst"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -976,6 +1040,7 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -1021,11 +1086,6 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
-msgid "Payslip Run"
 msgstr ""
 
 #. module: hr_payroll
@@ -1077,7 +1137,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
-msgstr ""
+msgstr "Periode"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
@@ -1090,12 +1150,22 @@ msgid "Print"
 msgstr "Druk"
 
 #. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_professionaltax1
+msgid "Professional Tax"
+msgstr ""
+
+#. module: hr_payroll
+#: model:hr.salary.rule,name:hr_payroll.hr_salary_rule_providentfund1
+msgid "Provident Fund"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.payslip.line,amount_select:0
 #: selection:hr.salary.rule,amount_select:0
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_python_compute
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_python_compute
 msgid "Python Code"
-msgstr ""
+msgstr "Python Kode"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_python
@@ -1152,7 +1222,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_number
 msgid "Reference"
-msgstr ""
+msgstr "Verwysing"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1173,7 +1243,7 @@ msgstr ""
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
 msgid "Rejected"
-msgstr ""
+msgstr "Afgekeur"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
@@ -1300,7 +1370,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "Stellings"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -1505,4 +1575,4 @@ msgstr "res.config.settings"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage_base
 msgid "result will be affected to a variable"
-msgstr ""
+msgstr "resultaat sal geaffekteer word tot 'n veranderlike"

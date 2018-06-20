@@ -13,18 +13,19 @@
 # Wojtek Warczakowski <w.warczakowski@gmail.com>, 2017
 # Jaroslaw Kaczmarski, 2017
 # zieloo <zieloo@gmail.com>, 2017
+# Tomasz Leppich <t.leppich@gmail.com>, 2017
 # Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2017
 # Paweł Michoń <michon.pawel@wp.pl>, 2017
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
-# Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -214,6 +215,7 @@ msgstr ""
 #, python-format
 msgid " This channel is private. People must be invited to join it."
 msgstr ""
+"Ten kanał jest prywatny. Osoby muszą być zaproszone aby do niego należeć"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_days
@@ -270,7 +272,7 @@ msgstr "%s dołączył do sieci %s."
 #: code:addons/mail/static/src/xml/client_action.xml:211
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #. openerp-web
@@ -1238,7 +1240,7 @@ msgstr "Konwersacje"
 #: model:ir.model.fields,help:mail.field_res_partner_message_bounce
 #: model:ir.model.fields,help:mail.field_res_users_message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Licznik liczby bounced wiadomości e-mail dla tego kontaktu"
 
 #. module: mail
 #. openerp-web
@@ -2118,7 +2120,7 @@ msgstr "Tylko obserwatorzy"
 #: code:addons/mail/static/src/xml/followers.xml:24
 #, python-format
 msgid "Following"
-msgstr "Obserwowany"
+msgstr "Obserwujący"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_icon
@@ -2866,7 +2868,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "Obserwatorzy kanału"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
@@ -3349,7 +3351,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:137
 #, python-format
 msgid "New Message"
-msgstr ""
+msgstr "Nowa Wiadomość"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
@@ -3500,7 +3502,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:22
 #, python-format
 msgid "No activities planned."
-msgstr ""
+msgstr "Brak zaplanowanych działań."
 
 #. module: mail
 #. openerp-web
@@ -4178,7 +4180,7 @@ msgstr "Zaplanowane"
 #: code:addons/mail/static/src/xml/activity.xml:6
 #, python-format
 msgid "Planned activities"
-msgstr ""
+msgstr "Zaplanowane działania"
 
 #. module: mail
 #. openerp-web
@@ -4228,6 +4230,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Zasady publikowania wiadomości na dokumencie za pomocą poczty elektronicznej.\n"
+"- wszyscy: każdy może publikować\n"
+"- partnerzy: tylko uwierzytelnieni partnerzy\n"
+"- obserwatorzy: tylko następcy powiązanego dokumentu lub członkowie następujących kanałów\n"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_user_assigned
@@ -4237,7 +4243,7 @@ msgstr "Zasilane przez"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_previous_type_ids
 msgid "Preceding Activities"
-msgstr ""
+msgstr "Działania poprzedzające"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -4302,7 +4308,7 @@ msgstr "Odp:"
 #. module: mail
 #: selection:mail.notification,email_status:0
 msgid "Ready to Send"
-msgstr ""
+msgstr "Gotowe do wysłania"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -4332,7 +4338,7 @@ msgstr "Zalecany typ czynności"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_next_type_ids
 msgid "Recommended Next Activities"
-msgstr ""
+msgstr "Rekomendowane kolejne działania"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_force_thread_id
@@ -4503,7 +4509,7 @@ msgstr "Zapisz jako nowy szablon"
 #: code:addons/mail/static/src/js/chat_window.js:40
 #, python-format
 msgid "Say something"
-msgstr ""
+msgstr "Powiedz coś"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4534,7 +4540,7 @@ msgstr "Zaplanowana data"
 #: model:ir.model.fields,field_description:mail.field_mail_mail_scheduled_date
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Scheduled Send Date"
-msgstr ""
+msgstr "Zaplanowana data wysłania"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -4598,7 +4604,7 @@ msgstr "Wyślij wiadomość"
 #: code:addons/mail/static/src/xml/chatter.xml:53
 #, python-format
 msgid "Send message"
-msgstr ""
+msgstr "Wyślij wiadomość"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_email_send
@@ -4639,7 +4645,7 @@ msgstr "Wysłane"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_email
 msgid "Sent by Email"
-msgstr ""
+msgstr "Wyślij przez email"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_sequence
@@ -4935,6 +4941,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Model (rodzaj dokumentu Odoo), któremu odpowiada ten alias. Każda "
+"przychodząca wiadomość e-mail, która nie odpowiada istniejącemu rekordowi, "
+"spowoduje utworzenie nowego rekordu tego modelu (np. Zadanie projektu)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_name
@@ -4945,6 +4954,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Nazwa aliasu e-mail, np. \"jobs\", jeśli chcesz przechwytywać wiadomości "
+"e-mail dla <jobs@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_user_id
@@ -5344,7 +5355,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:322
 #, python-format
 msgid "Uploading"
-msgstr ""
+msgstr "wysyłanie"
 
 #. module: mail
 #. openerp-web
@@ -5388,7 +5399,7 @@ msgstr "Użytkownik"
 #: code:addons/mail/static/src/xml/extended_chat_window.xml:8
 #, python-format
 msgid "User name"
-msgstr ""
+msgstr "Nazwa użytkownika"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -5420,7 +5431,7 @@ msgstr "Widok"
 #: code:addons/mail/models/mail_thread.py:668
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "Widok %s"
 
 #. module: mail
 #. openerp-web
@@ -5599,14 +5610,14 @@ msgstr "Wypisałeś się z <b>%s</b>."
 #: code:addons/mail/static/src/xml/client_action.xml:217
 #, python-format
 msgid "You:"
-msgstr ""
+msgstr "Ty:"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_field.js:83
 #, python-format
 msgid "Your message has not been sent."
-msgstr ""
+msgstr "Twoja wiadomość nie została wysłana."
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:30
@@ -5716,7 +5727,7 @@ msgstr "ir.autovacuum"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "mail.alias.mixin"
-msgstr ""
+msgstr "mail.alias.mixin"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:943
@@ -5873,7 +5884,7 @@ msgstr "tego dokumentu"
 #: code:addons/mail/models/mail_thread.py:966
 #, python-format
 msgid "unknown error"
-msgstr ""
+msgstr "nieznany błąd"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:906

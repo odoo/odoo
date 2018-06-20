@@ -7,19 +7,21 @@
 # Saba Khmaladze <skhmaladze@uglt.org>, 2018
 # Giorgi Melitauri <gmelitauri@live.com>, 2018
 # Gizo Kobakhidze <040168@gmail.com>, 2018
+# Temur, 2018
+# Nika Chikhradze <nika@globaltravel.ge>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:43+0000\n"
-"PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-04-27 14:48+0000\n"
+"PO-Revision-Date: 2018-04-27 14:48+0000\n"
+"Last-Translator: Nika Chikhradze <nika@globaltravel.ge>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ka\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -47,7 +49,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -140,7 +142,7 @@ msgid ""
 "<html>\n"
 "                <head></head>\n"
 "                % set record = ctx.get('record')\n"
-"                % set company = record and record.company_id or user.company_id\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -244,13 +246,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_my_orders
-msgid ""
-"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
-"check\"/><span class=\"hidden-xs\"> Done</span></span>"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
@@ -268,13 +263,6 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
-"Done</span>"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.portal_order_page
-msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
@@ -287,10 +275,24 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-success hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid ""
 "<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
 "fa-fw fa-check\"/> Paid</span>"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success\"><i class=\"fa fa-fw fa-check\"/> "
+"Done</span>"
 msgstr ""
 
 #. module: sale
@@ -315,6 +317,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration Date:</strong>"
 msgstr ""
 
@@ -480,7 +483,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Amount"
-msgstr ""
+msgstr "სულ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
@@ -504,7 +507,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "ანალიტიკური ანგარიში"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -766,7 +769,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
-msgstr ""
+msgstr "კლიენტები"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_date_order
@@ -954,7 +957,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Download"
-msgstr ""
+msgstr "ჩამოტვირთვა"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1407,7 +1410,7 @@ msgstr "სახელი"
 #: code:addons/sale/models/sale.py:277 code:addons/sale/models/sale.py:279
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "ახალი"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1417,13 +1420,13 @@ msgstr ""
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "No"
-msgstr ""
+msgstr "არა"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
-msgstr ""
+msgstr "შეტყობინება არ არის"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1431,17 +1434,11 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -1673,11 +1670,6 @@ msgid "Payment"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Payment Acquirers"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
 msgid "Payment Terms"
 msgstr ""
@@ -1797,7 +1789,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
-msgstr ""
+msgstr "პროდუქტის კატეგორია"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_image
@@ -1807,14 +1799,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "პროდუქტის რაოდენობა"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_tmpl_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "პროდუქტის შაბლონი"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product
@@ -1975,7 +1967,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:139
 #, python-format
 msgid "Reference"
-msgstr ""
+msgstr "წყარო"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -2168,7 +2160,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
 msgid "Section"
-msgstr ""
+msgstr "სექცია"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_layout
@@ -2194,6 +2186,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
 
 #. module: sale
@@ -2233,7 +2231,7 @@ msgstr "მიმდევრობა"
 #. module: sale
 #: model:sale.layout_category,name:sale.sale_layout_cat_1
 msgid "Services"
-msgstr ""
+msgstr "სერვისები"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
@@ -2281,7 +2279,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Shipping"
-msgstr ""
+msgstr "ტრანსპორტირება"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
@@ -2333,7 +2331,7 @@ msgstr ""
 #. module: sale
 #: selection:res.config.settings,portal_confirmation_options:0
 msgid "Signature"
-msgstr ""
+msgstr "ხელმოწერა"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:211
@@ -2361,7 +2359,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:140
 #, python-format
 msgid "Stage"
-msgstr ""
+msgstr "ეტაპი"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2374,7 +2372,7 @@ msgstr "სტატუსი"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
 #: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
 msgid "Subtotal"
-msgstr ""
+msgstr "ქვეჯამი"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced_target
@@ -2415,7 +2413,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr ""
+msgstr "გადასახადები"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
@@ -2595,7 +2593,7 @@ msgstr "დღევანდელი აქტივობები"
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
@@ -2616,11 +2614,27 @@ msgid "Track Service"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_ups
+msgid "UPS"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_usps
+msgid "USPS"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/models/sale.py:570
+#, python-format
+msgid "Uncategorized"
+msgstr "კატეგორიის გარეშე"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
-msgstr ""
+msgstr "ერთეულის ფასი"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2691,13 +2705,13 @@ msgstr ""
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Warning"
-msgstr ""
+msgstr "გაფრთხილება"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:1006
 #, python-format
 msgid "Warning for %s"
-msgstr ""
+msgstr "გაფრთხილება %s გამო"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -2713,7 +2727,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_warning_sale
 msgid "Warnings"
-msgstr ""
+msgstr "გაფრთხილებები"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -2762,17 +2776,11 @@ msgid "Your Order has been confirmed."
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale
@@ -2781,6 +2789,11 @@ msgstr ""
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery_bpost
+msgid "bpost"
 msgstr ""
 
 #. module: sale

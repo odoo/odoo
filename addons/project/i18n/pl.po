@@ -19,13 +19,14 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2017
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2017
 # Tomasz Leppich <t.leppich@gmail.com>, 2018
+# Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2018\n"
+"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2018\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,6 +139,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Autologowanie</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>YTwoja aplikacja do projektów w Odoo działa</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Co teraz?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Spróbuj utworzyć zadanie wysyłając maila na </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Zaproś nowych użytkowników</span></a></span>\n"
+"                                        <span>do współpracy</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Odkryj </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">planistę projeku,</span></a></span>\n"
+"                                <span> aby aktywować dodatkowe funkcje</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Śledź godziny w kartach pracy,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Planuj zadania i zasoby z prognozowaniem,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Sprawdź raportowanie i konsole,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Fakturuj zadania lub pracę nad problemami,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>I dużo więcej...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Potrzebujesz pomocy?</span>\n"
+"                                <span style=\"font-style:italic;\">Nie jesteś sam</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Pomożemy ci. Skontaktuj się z nami na \n"
+"                                <a href=\"https://www.odoo.com/help\">forum pomocy</a> jeśli masz pytanie. \n"
+"                                Możesz również odkryć, jak najlepiej stosować Odoo przy projektach z naszą </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Dokumentacją użytkownika</span></a>\n"
+"                                </span><span> albo z naszą </span>\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">Documentacją API </span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Powodzenia w poznawaniu Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- Zespół Odoo<br/>PS: Ludzie polubili Odoo, sprawdź </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">co oni mówią o nim.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -148,6 +250,11 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Drogi ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Dziękujemy za zgłoszenie.<br /></p>\n"
+"<p>Jeśli masz jakieś pytania, proszę daj nam znać</p>\n"
+"<p>Serdecznie pozdrawiamy,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -163,12 +270,12 @@ msgstr "# Zadań"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Dni roboczych do przypisania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Dni roboczych do zamknięcia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -206,6 +313,8 @@ msgstr "1. Ucz się o zadaniach, kwestiach i liście obecności."
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
+"2. Teraz poświęć trochę czasu, <strong>aby wymienić projekty, których "
+"potrzebujesz:</strong>"
 
 #. module: project
 #. openerp-web
@@ -215,13 +324,15 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Przypisz zadanie</b> do kogoś. <i>Możesz stworzyć i zaprosić nowego "
+"użytkownika od ręki.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:80
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr ""
+msgstr "<b>Kliknij \"Zapisz\"</b>, aby zastosować zmiany do zadania."
 
 #. module: project
 #. openerp-web
@@ -229,6 +340,8 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
+"<b>Przesuwaj zadanie</b> pomiędzy kolumnami w trakcie pracy w poszczególnych"
+" etapach"
 
 #. module: project
 #. openerp-web
@@ -245,7 +358,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Dodaj gwiazdkę</b> aby wyznaczyć priorytety dla zespołu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -290,6 +403,8 @@ msgstr "<span class=\"fa fa-comment-o\"/> Czat na stronie"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
 msgstr ""
+"<span class=\"fa fa-envelope-o\"/> Skontaktuj się mailowo z naszym ekspertem"
+" od projektu"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -356,6 +471,10 @@ msgid ""
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Przez Chrome extension</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1030,7 +1149,7 @@ msgstr "Archiwalne"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Przypisz do mnie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -1081,7 +1200,7 @@ msgstr "Załącznik"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Załącznik, który nie pochodzi z wiadomości."
 
 #. module: project
 #: code:addons/project/models/project.py:109
@@ -1124,7 +1243,7 @@ msgstr "Podstawowe"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Basic Management"
-msgstr ""
+msgstr "Podstawowe zarządzanie"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1187,7 +1306,7 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Buzz lub ustawiony jako zrobione"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -1222,11 +1341,13 @@ msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
 msgstr ""
+"Wybierz <b>Nazwę projektu</b>. (np. Nowa strona internetowa, Product "
+"Development, Przyjęcie firmowe, etc.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Choose a Project Email"
-msgstr ""
+msgstr "Wybierz email dla projektu"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_subtask_project_id
@@ -1241,14 +1362,14 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Clear description and purpose"
-msgstr ""
+msgstr "Jasny opis i cel"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr ""
+msgstr "Kliknij kartę, aby uzyskać szczegółowe informacje na temat zadania."
 
 #. module: project
 #. openerp-web
@@ -1257,13 +1378,15 @@ msgstr ""
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
+"Kliknij kartę, aby <b>przejść do projektu</b> i rozpocząć organizowanie "
+"zadań."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:64
 #, python-format
 msgid "Click on this button to modify the task."
-msgstr ""
+msgstr "Kliknij ten przycisk, aby zmodyfikować zadanie."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_tags_action
@@ -1273,12 +1396,12 @@ msgstr "Kliknij, aby dodać nowy znacznik."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr ""
+msgstr "Kliknij, aby dodać etap w lejku zadań."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr ""
+msgstr "Kliknij, aby utworzyć nowy projekt."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1290,7 +1413,7 @@ msgstr "Indeks kolorów"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Communication campaign"
-msgstr ""
+msgstr "Kampania komunikacyjna"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1331,11 +1454,13 @@ msgid ""
 "Congratulations on choosing Odoo Project to help running your company more "
 "efficiently!"
 msgstr ""
+"Gratulujemy wyboru Projektu Odoo, dzięki któremu Twoja firma będzie "
+"wydajniejsza!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Congratulations, you're done !"
-msgstr ""
+msgstr "Gratulacje, wszystko skończyłeś!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1406,7 +1531,7 @@ msgstr "Utwórz nowy projekt."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Utwórz nowe zadanie"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1414,21 +1539,23 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
+"Utwórz zadanie przez wysłane emaila do aliasu projektu z jednym z Twoich "
+"współpracowników w CC"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create at least 3 tasks"
-msgstr ""
+msgstr "Utwórz przynajmniej 3 nowe zadania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr ""
+msgstr "Twórz automatycznie faktury na podstawie czasu i materiału."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create the Projects"
-msgstr ""
+msgstr "Utwórz projekty"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_create_uid
@@ -1482,17 +1609,17 @@ msgstr "Bieżąca karta pracy"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr ""
+msgstr "Aktualny etap zadania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Current stage of this task"
-msgstr ""
+msgstr "Aktualny etap zadania"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "Obecnie nie zaplanowano żadnej aktywności."
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -1512,40 +1639,40 @@ msgstr "Adres klienta"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer Service"
-msgstr ""
+msgstr "Obsługa klienta"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr ""
+msgstr "Poproszono klienta o opinie"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:92
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr ""
+msgstr "Klient anulował naprawę"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Customer has reported new issue"
-msgstr ""
+msgstr "Klient zgłosił nowy problem"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer service has found new issue"
-msgstr ""
+msgstr "Obsługa klienta znalazła nowy problem"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr ""
+msgstr "Zgłoszenia wsparcia klienta"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1654,14 +1781,14 @@ msgstr "Nazwa wyświetlana"
 #: code:addons/project/static/src/js/web_planner_project.js:35
 #, python-format
 msgid "Distribute"
-msgstr ""
+msgstr "Rozprowadź"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:43
 #, python-format
 msgid "Distribution is completed"
-msgstr ""
+msgstr "Rozprowadzanie jest zakończone"
 
 #. module: project
 #. openerp-web
@@ -1681,6 +1808,8 @@ msgid ""
 "Don't create a Project for different locations (this could isolate teams "
 "that work at different locations)."
 msgstr ""
+"Nie twórz projektu dla różnych lokalizacji (może to odizolować zespoły "
+"pracujące w różnych lokalizacjach)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1799,7 +1928,7 @@ msgstr "Przykłady"
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Expert advice has been requested"
-msgstr ""
+msgstr "Zwrócono się o porady ekspertów"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
@@ -1833,19 +1962,19 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Feedback from customer requested"
-msgstr ""
+msgstr "Klient został poproszony o opinię"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:27
 #, python-format
 msgid "Finally task is deployed"
-msgstr ""
+msgstr "W końcu zadanie zostało wdrożone "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr ""
+msgstr "Złożony w Kanban"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1864,7 +1993,7 @@ msgstr "Obserwowane przeze mnie"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr ""
+msgstr "Dla pracowników"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1952,7 +2081,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
-msgstr ""
+msgstr "Powodzenia!"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1973,7 +2102,7 @@ msgstr ""
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Szary"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
@@ -2000,7 +2129,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "Tu możesz utworzyć nowe zadanie"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -2120,17 +2249,17 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Implement"
-msgstr ""
+msgstr "Implementuj"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
-msgstr ""
+msgstr "Popraw"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr ""
+msgstr "Popraw współpracę z klientami"
 
 #. module: project
 #: model:project.task,legend_normal:project.project_task_1
@@ -2230,7 +2359,7 @@ msgstr "Wersja problemu"
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Issue is being worked on"
-msgstr ""
+msgstr "Praca w toku"
 
 #. module: project
 #. openerp-web
@@ -2376,7 +2505,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
 msgid "Let's create your first project."
-msgstr ""
+msgstr "Utwórz swój pierwszy projekt."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2410,7 +2539,7 @@ msgstr "Niski"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Główne załączniki"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2449,7 +2578,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Marketing Department"
-msgstr ""
+msgstr "Dział marketingu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
@@ -2459,22 +2588,22 @@ msgstr "Członkowie"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "Połącz zaznaczone zadania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Połącz zadania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "Dołącz do istniejącego zadania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
-msgstr ""
+msgstr "Bardziej efektywna komunikacja pomiędzy pracownikami"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2489,7 +2618,7 @@ msgstr "Moje ulubione"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Moje śledzone zadania"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -2512,7 +2641,7 @@ msgstr "Nazwa"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Nazwa zadania:"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -2551,7 +2680,7 @@ msgstr "Dodano nową naprawę"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "Nazwa nowego zadania"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:30
@@ -2609,12 +2738,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Liczba dni roboczych do otwarcia zadania"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Liczba dni roboczych do zamknięcia zadania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -2772,11 +2901,15 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Zasady publikowania wiadomości na dokumencie za pomocą poczty elektronicznej.\n"
+"- wszyscy: każdy może publikować\n"
+"- partnerzy: tylko uwierzytelnieni partnerzy\n"
+"- obserwatorzy: tylko następcy powiązanego dokumentu lub członkowie następujących kanałów\n"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
-msgstr ""
+msgstr "Przygotuj"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_priority
@@ -2934,7 +3067,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Gotowe na następny etap"
 
 #. module: project
 #. openerp-web
@@ -2987,7 +3120,7 @@ msgstr ""
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of ${object.name}"
-msgstr ""
+msgstr "Pzyjęcie ${object.name}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
@@ -2997,7 +3130,7 @@ msgstr "ID wątku rekordu"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Colory rekordu"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3036,12 +3169,12 @@ msgstr "Pozostałe godziny"
 #: code:addons/project/static/src/js/project.js:69
 #, python-format
 msgid "Remove Cover Image"
-msgstr ""
+msgstr "Usuń zdjęcie główne"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
-msgstr ""
+msgstr "Warsztat naprawczy"
 
 #. module: project
 #. openerp-web
@@ -3088,7 +3221,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
-msgstr ""
+msgstr "Metodologia Scrum"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
@@ -3099,7 +3232,7 @@ msgstr "Szukaj"
 #: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Szukaj <span class=\"nolabel\"> (w treści)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3110,25 +3243,25 @@ msgstr "Szukaj projektu"
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Szukaj we wszystkich"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Szukaj w klientach"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Szukaj w wiadomościach"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Szukaj w etapach"
 
 #. module: project
 #. openerp-web
@@ -3163,14 +3296,14 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
-msgstr ""
+msgstr "Dodaj zdjęcie"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project.js:61
 #, python-format
 msgid "Set a Cover Image"
-msgstr ""
+msgstr "Dodaj zdjęcie"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -3188,12 +3321,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Share files and manage versions"
-msgstr ""
+msgstr "Udostępniaj pliki i zarządzaj wersjami"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_is_favorite
 msgid "Show Project on dashboard"
-msgstr ""
+msgstr "Pokaż projekt na konsoli"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -3565,6 +3698,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Model (rodzaj dokumentu Odoo), któremu odpowiada ten alias. Każda "
+"przychodząca wiadomość e-mail, która nie odpowiada istniejącemu rekordowi, "
+"spowoduje utworzenie nowego rekordu tego modelu (np. Zadanie projektu)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_name
@@ -3572,6 +3708,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Nazwa aliasu e-mail, np. \"jobs\", jeśli chcesz przechwytywać wiadomości "
+"e-mail dla <jobs@example.odoo.com>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_user_id
@@ -3594,12 +3732,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "Brak projektów."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "Brak zadań"
 
 #. module: project
 #. openerp-web
@@ -3655,6 +3793,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
+"Ten etap jest zwinięty w widoku kanban, kiedy nie ma rekordów do "
+"wyświetlenia w tym etapie."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
@@ -3695,12 +3835,12 @@ msgstr "Oszacowanie czasu dla zadań"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Zarządzanie czasem"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Planowanie czasu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_hr_timesheet
@@ -3870,7 +4010,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "Zobacz statystyki dla tygodnia"
 
 #. module: project
 #: code:addons/project/models/project.py:201
@@ -3892,7 +4032,7 @@ msgstr "Widoczny dla klientów obserwatorów"
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Customer"
-msgstr ""
+msgstr "Czekaj. Klient"
 
 #. module: project
 #. openerp-web
@@ -3900,7 +4040,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:83
 #, python-format
 msgid "Wait. Expert"
-msgstr ""
+msgstr "Czekaj. Ekspert"
 
 #. module: project
 #. openerp-web
@@ -3992,7 +4132,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Work has started"
-msgstr ""
+msgstr "Praca się zaczęła"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_resource_calendar_id
@@ -4002,32 +4142,32 @@ msgstr "Czas pracy"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Czas pracy do przypisania"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Czas pracy do zamknięcia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Dni robocze do przypisania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Dni robocze do zamknięcia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Godziny pracy do przypisania"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Godziny pracy do zamknięcia"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -4037,7 +4177,7 @@ msgstr "Nakład pracy"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Wpisz datę"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -4143,12 +4283,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "np. impreza służbowa"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
-msgstr ""
+msgstr "itp.."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban

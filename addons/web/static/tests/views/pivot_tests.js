@@ -960,4 +960,78 @@ QUnit.module('Views', {
 
         pivot.destroy();
     });
+
+    QUnit.test('Row and column groupbys plus a domain', function (assert) {
+        assert.expect(3);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+        });
+
+        // Set a column groupby
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        pivot.$('.o_field_selection li[data-field=customer] a').click();
+
+        // Set a Row groupby
+        pivot.$('tbody .o_pivot_header_cell_closed').click();
+        pivot.$('.o_pivot_field_menu li[data-field=product_id] a').click();
+
+        // Set a domain
+        pivot.update({domain: [['product_id', '=', 41]]});
+
+        var expectedContext = {pivot_column_groupby: ['customer'],
+                               pivot_measures: ['foo'],
+                               pivot_row_groupby: ['product_id']};
+
+        // Mock 'save as favorite'
+        assert.deepEqual(pivot.getContext(), expectedContext,
+            'The pivot view should have the right context');
+
+        var $xpadHeader = pivot.$('tbody .o_pivot_header_cell_closed[data-original-title=Product]');
+        assert.equal($xpadHeader.length, 1,
+            'There should be only one product line because of the domain');
+
+        assert.equal($xpadHeader.text(), 'xpad',
+            'The product should be the right one');
+
+        pivot.destroy();
+    });
+
+    QUnit.test('parallel data loading should discard all but the last one', function (assert) {
+        assert.expect(2);
+
+        var def;
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                      '<field name="foo" type="measure"/>' +
+                  '</pivot>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        def = $.Deferred();
+        pivot.update({groupBy: ['product_id']});
+        pivot.update({groupBy: ['product_id', 'customer']});
+        def.resolve();
+
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,
+            "should have 6 cells");
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows");
+        pivot.destroy();
+    });
 });});
