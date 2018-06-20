@@ -2559,7 +2559,7 @@ var BasicModel = AbstractModel.extend({
                     count: ids.length,
                     context: record.context,
                     fieldsInfo: fieldsInfo,
-                    fields: view ? view.viewFields : fieldInfo.relatedFields,
+                    fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
                     modelName: field.relation,
                     res_ids: ids,
