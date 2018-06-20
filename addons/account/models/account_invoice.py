@@ -540,7 +540,7 @@ class AccountInvoice(models.Model):
             date_invoice = fields.Date.context_today(self)
         if not self.payment_term_id:
             # When no payment term defined
-            self.date_due = self.date_due or self.date_invoice
+            self.date_due = self.date_due or date_invoice
         else:
             pterm = self.payment_term_id
             pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
