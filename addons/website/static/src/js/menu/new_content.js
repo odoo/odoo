@@ -14,7 +14,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         new_page: '_createNewPage',
     }),
     events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.events || {}, {
-        'click > a': '_onMenuToggleClick',
+        'click > a, #o_new_content_menu_choices': '_onMenuToggleClick',
     }),
 
     /**
@@ -65,6 +65,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
     /**
      * Called when the menu's toggle button is clicked -> Opens the menu.
+     * Or when there is a click outside the menu's options -> Closes the menu
      *
      * @private
      * @param {Event} ev
