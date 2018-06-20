@@ -366,15 +366,6 @@
     </xpath>
 </template>
 <template id="slide_detail_view" name="Slide Detailed View">
-    <t t-set="head">
-        <t t-if="not private">
-            <meta property="og:title" t-att-content="slide.name" />
-            <meta property="og:type" content="website" />
-            <meta property="og:url" t-att-content="slide.website_url" />
-            <meta property="og:image" t-attf-content="#{request.httprequest.host_url}/web/image/slide.slide/#{slide.id}/image_thumb"/>
-            <meta property="og:description" t-att-content="slide.description" />
-        </t>
-    </t>
     <t t-call="website.layout">
         <t t-set="main_object" t-value="slide"/>
         <div class="container mt16">
