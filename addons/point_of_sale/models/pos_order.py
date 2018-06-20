@@ -125,6 +125,8 @@ class PosOrder(models.Model):
             pos_session.refresh()
 
         if not float_is_zero(pos_order['amount_return'], prec_acc):
+            payment_date = fields.Datetime.now()
+            payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
             cash_journal_id = pos_session.cash_journal_id.id
             if not cash_journal_id:
                 # Select for change one of the cash journals used in this
@@ -143,7 +145,7 @@ class PosOrder(models.Model):
                 cash_journal_id = cash_journal[0].id
             order.add_payment({
                 'amount': -pos_order['amount_return'],
-                'payment_date': fields.Datetime.now(),
+                'payment_date': payment_date,
                 'payment_name': _('return'),
                 'journal': cash_journal_id,
             })
@@ -1093,10 +1095,10 @@ class ReportSaleDetails(models.AbstractModel):
                 SELECT aj.name, sum(amount) total
                 FROM account_bank_statement_line AS absl,
                      account_bank_statement AS abs,
-                     account_journal AS aj 
+                     account_journal AS aj
                 WHERE absl.statement_id = abs.id
-                    AND abs.journal_id = aj.id 
-                    AND absl.id IN %s 
+                    AND abs.journal_id = aj.id
+                    AND absl.id IN %s
                 GROUP BY aj.name
             """, (tuple(st_line_ids),))
             payments = self.env.cr.dictfetchall()
