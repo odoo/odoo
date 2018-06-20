@@ -62,31 +62,14 @@ class StripeTest(StripeCommon):
         # ----------------------------------------
         # Test: button direct rendering
         # ----------------------------------------
-        form_values = {
-            'amount': 320.0,
-            'currency': 'EUR',
-            'address_line1': 'Huge Street 2/543',
-            'address_city': 'Sin City',
-            'address_country': 'Belgium',
-            'email': 'norbert.buyer@example.com',
-            'address_zip': '1000',
-            'name': 'Norbert Buyer',
-            'phone': '0032 12 34 56 78'
-        }
 
         # render the button
-        res = self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values)
-        post_url = "https://checkout.stripe.com/checkout.js"
-        email = "norbert.buyer@example.com"
+        res = self.stripe.render('SO404', 320.0, self.currency_euro.id, values=self.buyer_values).decode('utf-8')
+        popup_script_src = 'script src="https://checkout.stripe.com/checkout.js"'
         # check form result
-        if "https://checkout.stripe.com/checkout.js" in res[0]:
-            self.assertEqual(post_url, 'https://checkout.stripe.com/checkout.js', 'Stripe: wrong form POST url')
+        self.assertIn(popup_script_src, res, "Stripe: popup script not found in template render")
         # Generated and received
-        if email in res[0]:
-            self.assertEqual(
-                email, form_values.get('email'),
-                'Stripe: wrong value for input %s: received %s instead of %s' % (email, email, form_values.get('email'))
-            )
+        self.assertIn(self.buyer_values.get('partner_email'), res, 'Stripe: email input not found in rendered template')
 
     @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")
     def test_30_stripe_form_management(self):
