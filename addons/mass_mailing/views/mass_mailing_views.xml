@@ -12,7 +12,7 @@
             parent="mass_mailing_menu_root" sequence="100"/>
 
         <!--  MAILING LIST CONTACT (REL) -->
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_contact_rel_list_contact_tree">
+        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_list_rel_list_contact_tree">
             <field name="name">mail.mass_mailing.list_contact_rel.list_contact.tree</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="arch" type="xml">
@@ -27,7 +27,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_mail_mass_mailing_list_contact_rel_form">
+        <record model="ir.ui.view" id="view_mail_mass_mailing_contact_list_rel_form">
             <field name="name">mail.mass_mailing.list_contact_rel.form</field>
             <field name="model">mail.mass_mailing.list_contact_rel</field>
             <field name="priority">10</field>
@@ -193,7 +193,6 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -244,8 +243,8 @@
             <field name="domain">[('list_id', 'in', [active_id])]</field>
             <field name="context">{'search_default_valid_recipients': 1, 'default_list_id': active_id}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new recipient
+              <p class='o_view_nocontent_smiling_face'>Add a contact in your address book</p><p>
+                Odoo helps you to easily track all activities related to a customer.
               </p>
             </field>
         </record>
@@ -280,7 +279,7 @@
                     <field name="name"/>
                     <field name="create_date"/>
                     <field name="contact_nbr"/>
-                    <field name="opt_out_contact_ids" string="Opt Out" domain="[('opt_out', '=', True)]"/>
+                    <field name="opted_out_contact_count" string="Opted Out Contacts"/>
                 </tree>
             </field>
         </record>
@@ -472,20 +471,20 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': [('ignored', '=', 0)]}">
+                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': [('invalid', '=', 0)]}">
                         <p>
                             <button class="btn-link"
                                     name="%(action_view_mail_mail_statistics_mailing_list)d"
                                     type="action"
-                                    context="{'search_default_filter_ignored': True}">
+                                    context="{'search_default_filter_invalid': True}">
                                 <strong>
-                                    <field name="ignored" class="oe_inline"/>
-                                    email(s) have been ignored and will not be sent.
+                                    <field name="invalid" class="oe_inline"/>
+                                    email(s) have been invalidated and will not be sent.
                                 </strong>
                             </button>
                         </p>
                     </div>
-                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': ['|', ('scheduled', '=', 0), ('ignored','!=',0)]}">
+                    <div class="oe_form_box_info bg-info oe_text_center" attrs="{'invisible': ['|', ('scheduled', '=', 0), ('invalid','!=',0)]}">
                         <p>
                             <button class="btn-link"
                                     name="%(action_view_mail_mail_statistics_mailing_list)d"

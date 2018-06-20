@@ -67,7 +67,7 @@ class TestAccessRights(common.TransactionCase):
         # mass mailing user can see a blacklist entry
         self.blacklist_entry.sudo(self.user_mm_user).read()
         # mass mailing user can edit a blacklist entry
-        self.blacklist_entry.sudo(self.user_mm_user).write({'name': 'test'})
+        self.blacklist_entry.sudo(self.user_mm_user).write({'reason': 'test'})
         # mass mailing user can create a blacklist entry
         self.env['mail.mass_mailing.blacklist'].sudo(self.user_mm_user).create({
             'email': 'another@black.list',
@@ -99,7 +99,7 @@ class TestAccessRights(common.TransactionCase):
         # Test on mass mailing contact
         # ============================
         self.blacklist_contact_entry.sudo(self.user_mm_user).read()
-        self.blacklist_contact_entry.sudo(self.user_mm_user).write({'name': 'test'})
+        self.blacklist_contact_entry.sudo(self.user_mm_user).write({'reason': 'test'})
         self.env['mail.mass_mailing.blacklist'].sudo(self.user_mm_user).create({
             'email': 'again_another@black.list',
         })
@@ -129,7 +129,7 @@ class TestAccessRights(common.TransactionCase):
             self.blacklist_entry.sudo(self.user_portal).read()
         # Portal user can't edit a blacklist entry
         with self.assertRaises(AccessError):
-            self.blacklist_entry.sudo(self.user_portal).write({'name': 'test'})
+            self.blacklist_entry.sudo(self.user_portal).write({'reason': 'test'})
         # Portal user can't create a blacklist entry
         with self.assertRaises(AccessError):
             self.env['mail.mass_mailing.blacklist'].sudo(self.user_portal).create({
@@ -157,7 +157,7 @@ class TestAccessRights(common.TransactionCase):
             self.blacklist_entry.sudo(self.user_employee).read()
         # Employee can't edit a blacklist entry
         with self.assertRaises(AccessError):
-            self.blacklist_entry.sudo(self.user_employee).write({'name': 'test'})
+            self.blacklist_entry.sudo(self.user_employee).write({'reason': 'test'})
         # Employee can't create a blacklist entry
         with self.assertRaises(AccessError):
             self.env['mail.mass_mailing.blacklist'].sudo(self.user_employee).create({

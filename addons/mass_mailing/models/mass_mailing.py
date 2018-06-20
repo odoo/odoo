@@ -46,7 +46,7 @@ class MassMailingOptOutContactList(models.Model):
     """
     _name = 'mail.mass_mailing.list_contact_rel'
     _description = 'Mass Mailing List Contact Relation'
-    _table = 'mass_mailing_list_contact_rel'
+    _table = 'mail_mass_mailing_contact_list_rel'
     _rec_name = 'contact_id'
 
     contact_id = fields.Many2one('mail.mass_mailing.contact', required=True, string='Contact', ondelete='cascade')
@@ -98,9 +98,10 @@ class MassMailingList(models.Model):
     create_date = fields.Datetime(string='Creation Date')
     contact_nbr = fields.Integer(compute="_compute_contact_nbr", string='Number of Contacts')
     contact_ids = fields.Many2many(
-        'mail.mass_mailing.contact', 'mass_mailing_list_contact_rel', 'list_id', 'contact_id',
+        'mail.mass_mailing.contact', 'mail_mass_mailing_contact_list_rel', 'list_id', 'contact_id',
         string='Contact Lists')
-    opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Mailing Contact')
+    opted_out_contact_count = fields.Integer(compute="_compute_opt_out_contact_count")
+    # opt_out_contact_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'list_id', string='Mailing Contact')
 
     # Compute number of contacts non opt-out, blacklisted and not invalid for a mailing list
     def _compute_contact_nbr(self):
@@ -108,9 +109,9 @@ class MassMailingList(models.Model):
             select
                 list_id, count(*)
             from
-                mass_mailing_list_contact_rel r
+                mail_mass_mailing_contact_list_rel r
                 left join mail_mass_mailing_contact c on (r.contact_id=c.id)
-            where r.opt_out = false
+            where COALESCE(r.opt_out,FALSE) = FALSE
                 AND c.email NOT IN (select email from mail_mass_mailing_blacklist)
                 AND substring(c.email, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
             group by
@@ -120,11 +121,28 @@ class MassMailingList(models.Model):
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
 
+    # Compute number of opted out contacts
+    @api.depends('contact_ids')
+    def _compute_opt_out_contact_count(self):
+        self.env.cr.execute('''
+                select
+                    list_id, count(*)
+                from
+                    mail_mass_mailing_contact_list_rel r
+                    left join mail_mass_mailing_contact c on (r.contact_id=c.id)
+                where COALESCE(r.opt_out,FALSE) = TRUE
+                group by
+                    list_id
+            ''')
+        data = dict(self.env.cr.fetchall())
+        for mailing_list in self:
+            mailing_list.opted_out_contact_count = data.get(mailing_list.id, 0)
+
     @api.model
     def create(self, vals):
         result = super(MassMailingList, self).create(vals)
         if 'contact_ids' in vals:
-            opt_out_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('contact_id', 'in', result.contact_ids.mapped('id'))])
+            opt_out_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('contact_id', 'in', result.contact_ids.ids)])
             for rec in opt_out_list_contacts:
                 rec.opt_out = False
         return result
@@ -158,7 +176,7 @@ class MassMailingList(models.Model):
         # Put destination is sources lists if not already the case
         src_lists |= self
         self.env.cr.execute("""
-            INSERT INTO mass_mailing_list_contact_rel (contact_id, list_id)
+            INSERT INTO mail_mass_mailing_contact_list_rel (contact_id, list_id)
             SELECT st.contact_id AS contact_id, %s AS list_id
             FROM
                 (
@@ -169,7 +187,7 @@ class MassMailingList(models.Model):
                     row_number() OVER (PARTITION BY email ORDER BY email) AS rn
                 FROM
                     mail_mass_mailing_contact contact,
-                    mass_mailing_list_contact_rel contact_list_rel,
+                    mail_mass_mailing_contact_list_rel contact_list_rel,
                     mail_mass_mailing_list mailing_list
                 WHERE contact.id=contact_list_rel.contact_id
                 AND COALESCE(contact_list_rel.opt_out,FALSE) = FALSE
@@ -181,7 +199,7 @@ class MassMailingList(models.Model):
                     SELECT 1
                     FROM
                         mail_mass_mailing_contact contact2,
-                        mass_mailing_list_contact_rel contact_list_rel2
+                        mail_mass_mailing_contact_list_rel contact_list_rel2
                     WHERE contact2.email = contact.email
                     AND contact_list_rel2.contact_id = contact2.id
                     AND contact_list_rel2.list_id = %s
@@ -194,22 +212,8 @@ class MassMailingList(models.Model):
 
     @api.multi
     def action_view_recipients_from_list(self):
-        domain = [('list_id', 'in', [self.id])]
-        context = {'search_default_valid_recipients': 1, 'default_list_id': self.id}
-        action = {
-            'name': _("%s Recipients") % self.name,
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'tree,form,graph',
-            'view_id': False,
-            'res_model': 'mail.mass_mailing.list_contact_rel',
-            'target': 'current',
-            'domain': domain,
-            'context': context,
-            'help': _("""<p class='o_view_nocontent_smiling_face'>Create a contact in your address book</p><p>
-                            Odoo helps you to easily track all activities related to a customer.
-                        </p>""")
-        }
+        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts_from_list').read()[0]
+        action['display_name'] = _("%s Recipients") % self.name
         return action
 
     @api.multi
@@ -223,7 +227,7 @@ class MassMailingContact(models.Model):
     be able to deal with large contact list to email without bloating the partner
     base."""
     _name = 'mail.mass_mailing.contact'
-    _inherit = ['mail.thread', 'mail.mass_mailing.blacklist.mixin', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.mass_mailing.blacklist.mixin']
     _description = 'Mass Mailing Contact'
     _order = 'email'
     _rec_name = 'email'
@@ -234,15 +238,16 @@ class MassMailingContact(models.Model):
     email = fields.Char(required=True)
     create_date = fields.Datetime(string='Creation Date')
     list_ids = fields.Many2many(
-        'mail.mass_mailing.list', 'mass_mailing_list_contact_rel',
+        'mail.mass_mailing.list', 'mail_mass_mailing_contact_list_rel',
         'contact_id', 'list_id', string='Mailing Lists')
     opt_out_list_ids = fields.One2many('mail.mass_mailing.list_contact_rel', 'contact_id', string='Mailing List')
     message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
 
-    # Override _email_field_name from the blacklist mixin
-    _email_field_name = ['email']
+    # Override method from the blacklist mixin
+    def _blacklist_get_email_field_name(self):
+        return ['email']
 
     _sql_constraints = [
         ('unique_email', 'unique (email)', 'Email address already exists!')
@@ -257,7 +262,7 @@ class MassMailingContact(models.Model):
     def create(self, vals):
         result = super(MassMailingContact, self).create(vals)
         if 'list_ids' in vals:
-            for rec in result.opt_out_list_ids.filtered(lambda r: r.list_id.id in result.list_ids.mapped('id')):
+            for rec in result.opt_out_list_ids.filtered(lambda r: r.list_id.id in result.list_ids.ids):
                 rec.opt_out = False
         return result
 
@@ -364,7 +369,7 @@ class MassMailingCampaign(models.Model):
                 COUNT(s.id) AS total,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.invalid is not null THEN 1 ELSE null END) AS invalid,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
                 COUNT(CASE WHEN s.id is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
@@ -382,7 +387,7 @@ class MassMailingCampaign(models.Model):
         """, (tuple(self.ids), ))
 
         for row in self.env.cr.dictfetchall():
-            total = (row['total'] - row['ignored']) or 1
+            total = (row['total'] - row['invalid']) or 1
             row['delivered'] = row['sent'] - row['bounced']
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
@@ -512,7 +517,7 @@ class MassMailing(models.Model):
     statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
-    ignored = fields.Integer(compute="_compute_statistics")
+    invalid = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
@@ -557,7 +562,7 @@ class MassMailing(models.Model):
                 COUNT(s.id) AS total,
                 COUNT(CASE WHEN s.sent is not null THEN 1 ELSE null END) AS sent,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null THEN 1 ELSE null END) AS scheduled,
-                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.ignored is not null THEN 1 ELSE null END) AS ignored,
+                COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is null AND s.invalid is not null THEN 1 ELSE null END) AS invalid,
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
                 COUNT(CASE WHEN s.sent is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
@@ -576,7 +581,7 @@ class MassMailing(models.Model):
                 m.id
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
-            total = (row.pop('total') - row['ignored']) or 1
+            total = (row.pop('total') - row['invalid']) or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
             row['clicks_ratio'] = 100.0 * row['clicked'] / total
@@ -698,10 +703,10 @@ class MassMailing(models.Model):
                     for rec in opt_out_records:
                         if rec.list_id.id == list_id and rec.opt_out != value:
                             rec.write({'opt_out': value})
-                            if value:
-                                record.sudo().message_post(body=_('Subscribed to %s mailing list' % (rec.list_id.name)))
+                            if not value:
+                                record.sudo().message_post(body=_('The recipient subscribed to %s mailing list' % (rec.list_id.name)))
                             else:
-                                record.sudo().message_post(body=_('Unsubscribed from %s mailing list' % (rec.list_id.name)))
+                                record.sudo().message_post(body=_('The recipient unsubscribed from %s mailing list' % (rec.list_id.name)))
             else:
                 record.write({'opt_out': value})
 

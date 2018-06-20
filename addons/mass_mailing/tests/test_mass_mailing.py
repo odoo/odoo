@@ -18,8 +18,8 @@ class TestAccessRights(common.TransactionCase):
         self.mailing_contact_5 = mass_mailing_contacts.create({'name': 'test email 5', 'email': 'test5@email.com'})
 
         # create blacklist record
-        mail_blacklist.create({'name': self.mailing_contact_3.name, 'email': self.mailing_contact_3.email})
-        mail_blacklist.create({'name': self.mailing_contact_4.name, 'email': self.mailing_contact_4.email})
+        mail_blacklist.create({'email': self.mailing_contact_3.email})
+        mail_blacklist.create({'email': self.mailing_contact_4.email})
 
         # create mass mailing record
         self.mass_mailing = mass_mailing.create({
@@ -43,7 +43,8 @@ class TestAccessRights(common.TransactionCase):
                                                                  mass_mailing_seen_list=self.mass_mailing._get_seen_list()).create(
             composer_values)
         composer.send_mail()
-        self.assertEqual(self.mass_mailing.ignored, 2, 'blacklist ignored email number incorrect, should be equals to 2')
+        self.assertEqual(self.mass_mailing.invalid, 2,
+                         'blacklist invalidated email number incorrect, should be equals to 2')
 
     def test_02_mass_mail_simple_opt_out(self):
         mass_mailing_contacts = self.env['mail.mass_mailing.contact']
@@ -91,8 +92,8 @@ class TestAccessRights(common.TransactionCase):
             mass_mailing_seen_list=self.mass_mailing._get_seen_list(),
             mass_mailing_unsubscribed_list=self.mass_mailing._get_unsubscribed_list()).create(composer_values)
         composer.send_mail()
-        self.assertEqual(self.mass_mailing.ignored, 1,
-                         'Opt Out ignored email number incorrect, should be equals to 1')
+        self.assertEqual(self.mass_mailing.invalid, 1,
+                         'Opt Out invalid email number incorrect, should be equals to 1')
 
     def test_03_mass_mail_multi_opt_out(self):
         mass_mailing_contacts = self.env['mail.mass_mailing.contact']
@@ -148,8 +149,8 @@ class TestAccessRights(common.TransactionCase):
             mass_mailing_unsubscribed_list=self.mass_mailing._get_unsubscribed_list()).create(composer_values)
         composer.send_mail()
         # if user is opt_out on One list but not on another, send the mail anyway
-        self.assertEqual(self.mass_mailing.ignored, 0,
-                         'Opt Out ignored email number incorrect, should be equals to 0')
+        self.assertEqual(self.mass_mailing.invalid, 0,
+                         'Opt Out invalid email number incorrect, should be equals to 0')
 
 
 class TestOnResPartner(common.TransactionCase):
@@ -201,5 +202,5 @@ class TestOnResPartner(common.TransactionCase):
             mass_mailing_unsubscribed_list=self.mass_mailing._get_unsubscribed_list()).create(composer_values)
         composer.send_mail()
         # if user is opt_out on One list but not on another, send the mail anyway
-        self.assertEqual(self.mass_mailing.ignored, 2,
-                         'Opt Out ignored email number incorrect, should be equals to 2')
+        self.assertEqual(self.mass_mailing.invalid, 2,
+                         'Opt Out invalid email number incorrect, should be equals to 2')

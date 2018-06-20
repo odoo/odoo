@@ -24,7 +24,6 @@
         <field name="arch" type="xml">
             <tree string="Email Blacklist">
                 <field name="create_date" string="Blacklist Date"/>
-                <field name="name"/>
                 <field name="email"/>
                 <field name="reason"/>
             </tree>
@@ -37,12 +36,6 @@
         <field name="arch" type="xml">
             <form string="Add Email Blacklist">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. John Smith"/>
-                        </h1>
-                    </div>
                     <group>
                         <group>
                             <field name="email"/>
@@ -53,6 +46,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -62,7 +59,6 @@
         <field name="model">mail.mass_mailing.blacklist</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name"/>
                 <field name="email"/>
             </search>
         </field>

@@ -53,5 +53,5 @@ class TestMassMailOnLead(common.TransactionCase):
             mass_mailing_unsubscribed_list=self.mass_mailing._get_unsubscribed_list()).create(composer_values)
         composer.send_mail()
         # if user is opt_out on One list but not on another, send the mail anyway
-        self.assertEqual(self.mass_mailing.ignored, 2,
-            'Opt Out ignored email number incorrect, should be equals to 2')
+        self.assertEqual(self.mass_mailing.invalid, 2,
+            'Opt Out invalid email number incorrect, should be equals to 2')

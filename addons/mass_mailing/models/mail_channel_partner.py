@@ -9,8 +9,9 @@ class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
     _inherit = ['mail.channel.partner', 'mail.mass_mailing.blacklist.mixin']
 
-    # Override _email_field_name from the blacklist mixin
-    _email_field_name = ['partner_email']
+    # Override method from the blacklist mixin
+    def _blacklist_get_email_field_name(self):
+        return ['partner_email']
 
 
 class Channel(models.Model):

@@ -104,8 +104,8 @@ class MassMailController(http.Controller):
     @route('/mail/mailing/blacklist/check', type='json', auth='none')
     def check_blacklist(self, email):
         if email:
-            record = request.env['mail.mass_mailing.blacklist'].sudo().search([('email', '=ilike', email)])
-            if record.email:
+            record = request.env['mail.mass_mailing.blacklist'].sudo().with_context(active_test=False).search([('email', '=ilike', email)])
+            if record['active']:
                 return 'found'
             return 'not found'
         return 'error'
@@ -113,22 +113,21 @@ class MassMailController(http.Controller):
     @route('/mail/mailing/blacklist/add', type='json', auth='none')
     def add_to_blacklist(self, email):
         if email:
-            record = request.env['mail.mass_mailing.blacklist'].sudo().search([('email', '=ilike', email)])
-            if not record.email:
-                request.env['mail.mass_mailing.blacklist'].sudo().create({
-                    'email': email,
-                    'reason': "The recipient has added himself in the blacklist using the unsubscription page."
-                })
-                return 'success'
-            return 'found'
+            if self.check_blacklist(email) == 'not found':
+                if request.env['mail.mass_mailing.blacklist'].sudo()._toggle_blacklist(email, None, True):
+                    return 'success'
+                else:
+                    return 'error'
+            else:
+                return 'found'
         return 'error'
 
     @route('/mail/mailing/blacklist/remove', type='json', auth='none')
     def remove_from_blacklist(self, email):
         if email:
-            record = request.env['mail.mass_mailing.blacklist'].sudo().search([('email', '=ilike', email)])
-            if record.email:
-                record.sudo().unlink()
-                return 'success'
-            return 'not found'
+            if self.check_blacklist(email) == 'found':
+                if not request.env['mail.mass_mailing.blacklist'].sudo()._toggle_blacklist(email, None, True):
+                    return 'success'
+            else:
+                return 'not found'
         return 'error'

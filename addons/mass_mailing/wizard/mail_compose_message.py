@@ -86,9 +86,9 @@ class MailComposeMessage(models.TransientModel):
                     'res_id': res_id,
                     'mass_mailing_id': mass_mailing.id
                 }
-                # propagate ignored state to stat when still-born
+                # propagate invalid state to stat when still-born
                 if mail_values.get('state', None) == 'cancel':
-                    stat_vals['ignored'] = fields.Datetime.now()
+                    stat_vals['invalid'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
                     'statistics_ids': [(0, 0, stat_vals)],

@@ -8,5 +8,6 @@ class Partner(models.Model):
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.mass_mailing.blacklist.mixin']
 
-    # Override _email_field_name from the blacklist mixin
-    _email_field_name = ['email']
+    # Override method from the blacklist mixin
+    def _blacklist_get_email_field_name(self):
+        return ['email']
