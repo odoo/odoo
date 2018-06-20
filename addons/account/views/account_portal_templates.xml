@@ -72,20 +72,20 @@
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <div class="row mt16 o_portal_invoice_sidebar">
                 <!-- Sidebar -->
-                <div class="col-md-3 col-sm-4 hidden-print">
+                <div class="col-md-3 hidden-print">
                     <div class="bs-sidebar mb16" id="sidebar_content">
-                        <div class="text-center o_account_portal_sidebar">
-                            <h2><strong><span t-field="invoice.amount_total"/></strong></h2>
+                        <div class="text-center pt16 o_account_portal_sidebar">
+                            <h2 class="media-heading"><strong><span t-field="invoice.amount_total"/></strong></h2>
                             <div class="mb4" t-if="invoice.state != 'paid'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.date_due"/></div>
                         </div>
                         <div class="o_payment_button">
-                            <div class="text-center mb8 ml16 mr16 mb8 o_download_pdf">
-                                <a class="btn btn-default o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
-                                <a class="btn btn-default hidden-xs hidden-sm o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
+                            <div class="text-center mb8 ml16 mr16 o_download_pdf">
+                                <a class="btn btn-default btn-block btn-sm o_download_btn" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" title="Download"><i class="fa fa-download"/> Download</a>
+                                <a class="btn btn-default btn-block btn-sm hidden-xs hidden-sm o_print_btn o_portal_invoice_print" t-att-href="'/my/invoices/pdf/%s?%s&amp;print=true' % (invoice.id, keep_query())" id="print_invoice_report" title="Print"><i class="fa fa-print"/> Print</a>
                             </div>
                         </div>
                         <hr t-if="invoice.user_id" class="mt0 mb0"/>
-                        <div class="mb8 ml16 container">
+                        <div class="pb8 ml16 mr16 container">
                             <t t-if="invoice.user_id">
                                 <div><strong>Your Contact:</strong></div>
                                 <img class="img-circle mr4 pull-left o_portal_contact_img" t-if="invoice.user_id.image" t-attf-src="data:image/png;base64,#{invoice.user_id.image}"/>
@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <!-- Page Content -->
-                <div id="invoice_content" class="col-md-9 col-sm-8 o_portal_page_content hidden-print">
+                <div id="invoice_content" class="col-md-9 o_portal_page_content hidden-print">
                     <t t-if="error or warning" t-call="account.portal_invoice_error"/>
                     <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
                     <div class="o_portal_html_view">
