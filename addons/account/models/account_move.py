@@ -1449,8 +1449,6 @@ class AccountPartialReconcile(models.Model):
             if move_date < move.date:
                 move_date = move.date
             for line in move.line_ids:
-                #TOCHECK: normal and cash basis taxes shouldn't be mixed together (on the same invoice line for example) as it will
-                # create reporting issues. Not sure of the behavior to implement in that case, though.
                 if not line.tax_exigible:
                     percentage_before = percentage_before_rec[move.id]
                     percentage_after = line._get_matched_percentage()[move.id]
@@ -1500,7 +1498,7 @@ class AccountPartialReconcile(models.Model):
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the base
-                        for tax in line.tax_ids:
+                        for tax in line.tax_ids.filtered(lambda t: t.tax_exigibility == 'on_payment'):
                             account_id = self._get_tax_cash_basis_base_account(line, tax)
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
