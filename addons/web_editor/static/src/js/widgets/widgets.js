@@ -1581,21 +1581,21 @@ var CropImageDialog = Dialog.extend({
         this.$media = $(this.media);
         var srcSplit = this.$media.attr('src').split('?');
         var src = srcSplit[0];
+        this.aspectRatioList = [
+            [_t("Free"), '0/0', 0],
+            ["16:9", '16/9', 16 / 9],
+            ["4:3", '4/3', 4 / 3],
+            ["1:1", '1/1', 1],
+            ["2:3", '2/3', 2 / 3],
+        ];
         this.imageData = {
             initialSrc: src,
             src: src, // the original src for cropped DB images will be fetched later
             srcParams: $.deparam(srcSplit[1] || ''),
             mimetype: _.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg', // the mimetype for DB images will be fetched later
-            aspectRatio: this.$media.data('aspectRatio') || 0,
+            aspectRatio: this.$media.data('aspectRatio') || this.aspectRatioList[0][1],
             isExternalImage: src[0] !== '/' && src.indexOf(window.location.host) < 0,
         };
-        this.aspectRatioList = [
-            [_t("Free"), 0],
-            ['16:9', 16 / 9],
-            ['4:3', 4 / 3],
-            ['1:1', 1],
-            ['2:3', 2 / 3],
-        ];
         this.options = _.extend({
             title: _t("Crop Image"),
             buttons: this.imageData.isExternalImage ? [{
@@ -1652,10 +1652,19 @@ var CropImageDialog = Dialog.extend({
     start: function () {
         this.$cropperImage = this.$('.o_cropper_image');
         if (this.$cropperImage.length) {
+            var data = this.$media.data();
+            var ratio = 0;
+            for (var i = 0 ; i < this.aspectRatioList.length ; i++) {
+                if (this.aspectRatioList[i][1] === data.aspectRatio) {
+                    ratio = this.aspectRatioList[i][2];
+                    break;
+                }
+            }
             this.$cropperImage.cropper({
                 viewMode: 1,
                 autoCropArea: 1,
-                data: _.pick(this.$media.data(), 'aspectRatio', 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
+                aspectRatio: ratio,
+                data: _.pick(data, 'x', 'y', 'width', 'height', 'rotate', 'scaleX', 'scaleY')
             });
         }
         return this._super.apply(this, arguments);
@@ -1800,8 +1809,8 @@ var CropImageDialog = Dialog.extend({
             case 'ratio':
                 $option.siblings().removeClass('active');
                 $option.addClass('active');
-                this.imageData.aspectRatio = value;
-                this.$cropperImage.cropper('setAspectRatio', this.imageData.aspectRatio);
+                this.imageData.aspectRatio = $option.data('label');
+                this.$cropperImage.cropper('setAspectRatio', value);
                 break;
             case 'zoom':
             case 'rotate':
