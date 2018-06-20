@@ -20,23 +20,23 @@ tour.register('shop_sale_coupon', {
             content: "click on 'Show # found'",
             trigger: "#customize-menu a:contains(Show # found)",
         },
-        /* 1. Buy 1 iPad Mini, enable coupon code & insert 10% code */
+        /* 1. Buy 1 Large Cabinet, enable coupon code & insert 10% code */
         {
-            content: "type iPad Mini in search",
+            content: "type Large Cabinet in search",
             trigger: 'form input[name="search"]',
-            run: "text iPad Mini",
+            run: "text Large Cabinet",
         },
         {
             content: "start search",
             trigger: 'form:has(input[name="search"]) .oe_search_button',
         },
         {
-            content: "select iPad Mini",
+            content: "select Large Cabinet",
             extra_trigger: '.oe_search_found', // Wait to be on search results or it sometimes throws concurent error (sent search form + click on product on /shop)
-            trigger: '.oe_product_cart a:contains("iPad Mini")',
+            trigger: '.oe_product_cart a:contains("Large Cabinet")',
         },
         {
-            content: "add 3 iPad Mini into cart",
+            content: "add 3 Large Cabinet into cart",
             trigger: '#product_details input[name="add_qty"]',
             run: "text 3",
         },
@@ -72,30 +72,30 @@ tour.register('shop_sale_coupon', {
             trigger: '.reward_product:contains("10.0 % discount on total amount")',
             run: function () {}, // it's a check
         },
-        /* 2. Add some iPad to get a free one, play with quantity */
+        /* 2. Add some cabinet to get a free one, play with quantity */
         {
-            content: "add more iPad Mini into cart",
+            content: "add more Large Cabinet into cart",
             trigger: '#cart_products input.js_quantity',
             run: "text 4",
         },
         {
             content: "check reduction amount got recomputed",
             extra_trigger: '.oe_currency_value:contains("96.00")', // For some reason, "-96.00" won't work
-            trigger: '.reward_product:contains("Free Product - iPad Mini")',
+            trigger: '.reward_product:contains("Free Product - Large Cabinet")',
             run: function () {}, // it's a check
         },
         {
-            content: "remove one iPad from cart",
+            content: "remove one cabinet from cart",
             trigger: '#cart_products a.js_add_cart_json:first',
         },
         {
             content: "check free product is removed",
-            trigger: '#wrap:not(:has(.reward_product:contains("Free Product - iPad Mini")))',
+            trigger: '#wrap:not(:has(.reward_product:contains("Free Product - Large Cabinet")))',
             run: function () {}, // it's a check
         },
         /* 3. Empty cart and disable coupon */
         {
-            content: "remove iPad Mini from cart",
+            content: "remove Large Cabinet from cart",
             trigger: '#cart_products input.js_quantity:first',
             run: "text 0",
         },
