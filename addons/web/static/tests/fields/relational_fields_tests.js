@@ -9219,7 +9219,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('onchange in a one2Many, but not in main record, with non inline view', function (assert) {
+    QUnit.test('onchange in a one2many with non inline view on an existing record', function (assert) {
         assert.expect(6);
 
         this.data.partner.fields.sequence = {string: 'Sequence', type: 'integer'};
@@ -9253,6 +9253,53 @@ QUnit.module('relational_fields', {
         testUtils.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
                                 {position: 'top'});
         assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('onchange in a one2many with non inline view on a new record', function (assert) {
+        assert.expect(8);
+
+        this.data.turtle.onchanges = {
+            display_name: function (obj) {
+                if (obj.display_name) {
+                    obj.turtle_int = 44;
+                }
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="turtles"/></form>',
+            archs: {
+                'turtle,false,list': '<tree editable="bottom">' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtle_int"/>' +
+                    '</tree>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // add a row and trigger the onchange
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_data_row .o_field_widget[name=display_name]').val('a name').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row .o_field_widget[name=turtle_int]').val(), "44",
+            "should have triggered the onchange");
+
+        assert.verifySteps([
+            'load_views', // load sub list
+            'default_get', // main record
+            'onchange', // main record
+            'default_get', // sub record
+            'onchange', // sub record
+            'onchange', // edition of display_name of sub record
+        ]);
+
         form.destroy();
     });
 
