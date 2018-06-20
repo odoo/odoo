@@ -243,6 +243,10 @@ function applyOverDescendants(node, func) {
             func(node);
             applyOverDescendants(node, func);
         }
+        var $node = $(node);
+        if (node.nodeName === 'A' && $node.hasClass('btn') && !$node.children().length && $(node).parents('.o_outlook_hack').length)  {
+            node = $(node).parents('.o_outlook_hack')[0];
+        }
         node = node.nextSibling;
     }
 }
