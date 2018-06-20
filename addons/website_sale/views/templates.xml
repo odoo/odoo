@@ -496,19 +496,6 @@
                     </div>
                 </section>
                 <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
-                <t t-set="head">
-                    <!-- Facebook and linkedin sharing data -->
-                    <meta property="og:type" content="website" />
-                    <meta property="og:url" t-att-content="request.httprequest.url" />
-                    <meta property="og:image" t-attf-content="#{request.httprequest.url_root}web/image/product.template/#{product.id}/image" />
-                    <meta property="og:description" t-att-content="product.description_sale" />
-                    <!--  Twitter sharing data -->
-                    <meta name="twitter:card" content="summary_large_image" />
-                    <meta name="twitter:site" t-attf-content="@#{res_company.name}" />
-                    <meta name="twitter:title" t-att-content="product.name" />
-                    <meta name="twitter:description" t-att-content="product.description_sale" />
-                    <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}web/image/product.template/#{product.id}/image" />
-                </t>
             </div>
         </t>
     </template>
