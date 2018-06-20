@@ -301,40 +301,6 @@ Best Regards,'''))
         }
 
     @api.model
-    def setting_opening_move_action(self):
-        """ Called by the 'Initial Balances' button of the setup bar."""
-        company = self.env.user.company_id
-
-        # If the opening move has already been posted, we open its form view
-        if company.opening_move_posted():
-            form_view_id = self.env.ref('account.setup_posted_move_form').id
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Initial Balances'),
-                'view_mode': 'form',
-                'res_model': 'account.move',
-                'target': 'new',
-                'res_id': company.account_opening_move_id.id,
-                'views': [[form_view_id, 'form']],
-            }
-
-        # Otherwise, we open a custom wizard to post it.
-        company.create_op_move_if_non_existant()
-        new_wizard = self.env['account.opening'].create({'company_id': company.id})
-        view_id = self.env.ref('account.setup_opening_move_wizard_form').id
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Initial Balances'),
-            'view_mode': 'form',
-            'res_model': 'account.opening',
-            'target': 'new',
-            'res_id': new_wizard.id,
-            'views': [[view_id, 'form']],
-            'context': {'check_move_validity': False},
-        }
-
-    @api.model
     def setting_hide_setup_bar(self):
         """ Called by the cross button of the setup bar, to close it."""
         self.env.user.company_id.account_setup_bar_closed = True
