@@ -1103,6 +1103,7 @@ var MediaDialog = Dialog.extend({
     }),
     custom_events: _.extend({}, Dialog.prototype.custom_events || {}, {
         save_request: '_onSaveRequest',
+        update_control_panel: '_updateControlPanel',
     }),
 
     /**
@@ -1768,5 +1769,6 @@ return {
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
     CropImageDialog: CropImageDialog,
+    ImageWidget: ImageWidget,
 };
 });
