@@ -125,10 +125,7 @@ class AccountInvoiceLine(models.Model):
                 qty_done = sum([uom_obj._compute_qty_obj(x.uom_id, x.quantity, x.product_id.uom_id) for x in s_line.invoice_lines if x.invoice_id.state in ('open', 'paid')])
                 quantity = uom_obj._compute_qty_obj(self.uom_id, self.quantity, self.product_id.uom_id)
                 # Put moves in fixed order by date executed
-                moves = self.env['stock.move']
-                for procurement in s_line.procurement_ids:
-                    moves |= procurement.move_ids
-                moves.sorted(lambda x: x.date)
+                moves = s_line.mapped('procurement_ids.move_ids').sorted(lambda x: x.date)
                 # Go through all the moves and do nothing until you get to qty_done
                 # Beyond qty_done we need to calculate the average of the price_unit
                 # on the moves we encounter.
