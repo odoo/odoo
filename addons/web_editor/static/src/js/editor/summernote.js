@@ -1919,6 +1919,19 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
     if (!r) return;
     r = dom.merge(node, r.sc, r.so, r.ec, r.eo, null, true);
     range.create(r.sc, r.so, r.ec, r.eo).select();
+    r = range.create();
+    if (!r) return;
+    var startPoint = r.getStartPoint();
+    var endPoint = r.getEndPoint();
+    var nodes = [];
+    dom.walkPoint(startPoint, endPoint, function (point) {
+      nodes.push(point.node);
+    });
+    _.each(list.unique(nodes), function (node) {
+        if (node.parentNode.tagName === 'P') {
+            node.parentNode.style.lineHeight = null;
+        }
+    });
     event.preventDefault();
     return false;
 };
@@ -2126,6 +2139,16 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
           font.style.fontSize = "inherit";
           if (!isNaN(size) && Math.abs(parseInt(dom.getComputedStyle(font).fontSize, 10)-size)/size > 0.05) {
             font.style.fontSize = size + "px";
+          }
+          var parentNode = font.parentNode;
+          if (parentNode.tagName === 'P') {
+              var childHeight = _.map(parentNode.children, function (childNode) {
+                  return parseInt(childNode.style.fontSize);
+              });
+              parentNode.style.lineHeight = null;
+              if (!_.some(parentNode.childNodes, function (node) {return node.nodeType === 3;}) && size !== 'Default' && size < parseInt(dom.getComputedStyle(parentNode).fontSize)) {
+                  parentNode.style.lineHeight = _.str.sprintf("%s%s", _.max(childHeight), 'px');
+              }
           }
         }
       }
