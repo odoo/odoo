@@ -33,6 +33,7 @@ class ResConfigSettings(models.TransientModel):
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
     module_website_version = fields.Boolean("A/B Testing")
+    module_website_unsplash = fields.Boolean("Unsplash Image Library")
     module_website_links = fields.Boolean(string="Link Trackers")
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
