@@ -52,7 +52,9 @@
                         <div class="content-group" attrs="{'invisible': [('iface_tipproduct', '=', False)]}">
                             <div class="mt16">
                                 <label string="Tip Product" for="tip_product_id" class="o_light_label"/>
-                                <field name="tip_product_id"/>
+                                <field name="tip_product_id"
+                                       domain="[('available_in_pos', '=', True)]"
+                                       context="{'default_available_in_pos': True}"/>
                             </div>
                         </div>
                     </div>
