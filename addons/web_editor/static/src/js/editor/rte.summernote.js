@@ -798,11 +798,6 @@ eventHandler.attach = function (oLayoutInfo, options) {
         eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
 
-    if (oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
-        oLayoutInfo.editor().on('click', 'img', function (event) {
-            $(event.target).trigger("dblclick");
-        });
-    }
     oLayoutInfo.editable().on('mousedown', function (e) {
         if (dom.isImg(e.target) && dom.isContentEditable(e.target)) {
             range.createFromNode(e.target).select();
