@@ -229,6 +229,215 @@ class TestWarehouse(TestStockCommon):
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
         self.assertEqual(len(quant), 1)
 
+    def test_resupply_route(self):
+        """ Simulate a resupply chain between warehouses.
+        Stock -> transit -> Dist. -> transit -> Shop -> Customer
+        Create the move from Shop to Customer and ensure that all the pull
+        rules are triggered in order to complete the move chain to Stock.
+        """
+        warehouse_stock = self.env['stock.warehouse'].create({
+            'name': 'Stock.',
+            'code': 'STK',
+        })
+
+        warehouse_distribution = self.env['stock.warehouse'].create({
+            'name': 'Dist.',
+            'code': 'DIST',
+            'default_resupply_wh_id': warehouse_stock.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_stock.id])]
+        })
+
+        warehouse_shop = self.env['stock.warehouse'].create({
+            'name': 'Shop',
+            'code': 'SHOP',
+            'default_resupply_wh_id': warehouse_distribution.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_distribution.id])]
+        })
+
+        route_stock_to_dist = warehouse_distribution.resupply_route_ids
+        route_dist_to_shop = warehouse_shop.resupply_route_ids
+
+        # Change the procure_method on the pull rules between dist and shop
+        # warehouses. Since mto and resupply routes are both on product it will
+        # select one randomly between them and if it select the resupply it is
+        # 'make to stock' and it will not create the picking between stock and
+        # dist warehouses.
+        route_dist_to_shop.pull_ids.write({'procure_method': 'make_to_order'})
+
+        product = self.env['product.product'].create({
+            'name': 'Fakir',
+            'type': 'product',
+            'route_ids': [(4, route_id) for route_id in [route_stock_to_dist.id, route_dist_to_shop.id, self.env.ref('stock.route_warehouse0_mto').id]],
+        })
+
+        picking_out = self.env['stock.picking'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': warehouse_shop.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': warehouse_shop.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'warehouse_id': warehouse_shop.id,
+            'procure_method': 'make_to_order',
+        })
+        picking_out.action_confirm()
+
+        moves = self.env['stock.move'].search([('product_id', '=', product.id)])
+        # Shop/Stock -> Customer
+        # Transit -> Shop/Stock
+        # Dist/Stock -> Transit
+        # Transit -> Dist/Stock
+        # Stock/Stock -> Transit
+        self.assertEqual(len(moves), 5, 'Invalid moves number.')
+        self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_stock.lot_stock_id.id)]))
+        self.assertTrue(self.env['stock.move'].search([('location_dest_id', '=', warehouse_distribution.lot_stock_id.id)]))
+        self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_distribution.lot_stock_id.id)]))
+        self.assertTrue(self.env['stock.move'].search([('location_dest_id', '=', warehouse_shop.lot_stock_id.id)]))
+        self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_shop.lot_stock_id.id)]))
+
+    def test_mutiple_resupply_warehouse(self):
+        """ Simulate the following situation:
+        - 2 shops with stock are resupply by 2 distinct warehouses
+        - Shop Namur is resupply by the warehouse stock Namur
+        - Shop Wavre is resupply by the warehouse stock Wavre
+        - Simulate 2 moves for the same product but in different shop.
+        This test ensure that the move are supplied by the correct distribution
+        warehouse.
+        """
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        warehouse_distribution_wavre = self.env['stock.warehouse'].create({
+            'name': 'Stock Wavre.',
+            'code': 'WV',
+        })
+
+        warehouse_shop_wavre = self.env['stock.warehouse'].create({
+            'name': 'Shop Wavre',
+            'code': 'SHWV',
+            'default_resupply_wh_id': warehouse_distribution_wavre.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_distribution_wavre.id])]
+        })
+
+        warehouse_distribution_namur = self.env['stock.warehouse'].create({
+            'name': 'Stock Namur.',
+            'code': 'NM',
+        })
+
+        warehouse_shop_namur = self.env['stock.warehouse'].create({
+            'name': 'Shop Namur',
+            'code': 'SHNM',
+            'default_resupply_wh_id': warehouse_distribution_namur.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_distribution_namur.id])]
+        })
+
+        route_shop_namur = warehouse_shop_namur.resupply_route_ids
+        route_shop_wavre = warehouse_shop_wavre.resupply_route_ids
+
+        # The product contains the 2 resupply routes.
+        product = self.env['product.product'].create({
+            'name': 'Fakir',
+            'type': 'product',
+            'route_ids': [(4, route_id) for route_id in [route_shop_namur.id, route_shop_wavre.id, self.env.ref('stock.route_warehouse0_mto').id]],
+        })
+
+        # Add 1 quant in each distribution warehouse.
+        self.env['stock.quant']._update_available_quantity(product, warehouse_distribution_wavre.lot_stock_id, 1.0)
+        self.env['stock.quant']._update_available_quantity(product, warehouse_distribution_namur.lot_stock_id, 1.0)
+
+        # Create the move for the shop Namur. Should create a resupply from
+        # distribution warehouse Namur.
+        picking_out_namur = self.env['stock.picking'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': warehouse_shop_namur.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_out_namur.id,
+            'location_id': warehouse_shop_namur.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+            'warehouse_id': warehouse_shop_namur.id,
+            'procure_method': 'make_to_order',
+        })
+        picking_out_namur.action_confirm()
+
+        # Validate the picking
+        # Dist. warehouse Namur -> transit Location -> Shop Namur
+        picking_stock_transit = self.env['stock.picking'].search([('location_id', '=', warehouse_distribution_namur.lot_stock_id.id)])
+        self.assertTrue(picking_stock_transit)
+        picking_stock_transit.action_assign()
+        picking_stock_transit.move_lines[0].quantity_done = 1.0
+        picking_stock_transit.action_done()
+
+        picking_transit_shop_namur = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_namur.lot_stock_id.id)])
+        self.assertTrue(picking_transit_shop_namur)
+        picking_transit_shop_namur.action_assign()
+        picking_transit_shop_namur.move_lines[0].quantity_done = 1.0
+        picking_transit_shop_namur.action_done()
+
+        picking_out_namur.action_assign()
+        picking_out_namur.move_lines[0].quantity_done = 1.0
+        picking_out_namur.action_done()
+
+        # Check that the correct quantity has been provided to customer
+        self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 1)
+        # Ensure there still no quants in distribution warehouse
+        self.assertEqual(len(self.env['stock.quant']._gather(product, warehouse_distribution_namur.lot_stock_id)), 0)
+
+        # Create the move for the shop Wavre. Should create a resupply from
+        # distribution warehouse Wavre.
+        picking_out_wavre = self.env['stock.picking'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': warehouse_shop_wavre.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_out_wavre.id,
+            'location_id': warehouse_shop_wavre.lot_stock_id.id,
+            'location_dest_id': customer_location.id,
+            'warehouse_id': warehouse_shop_wavre.id,
+            'procure_method': 'make_to_order',
+        })
+        picking_out_wavre.action_confirm()
+
+        # Validate the picking
+        # Dist. warehouse Wavre -> transit Location -> Shop Wavre
+        picking_stock_transit = self.env['stock.picking'].search([('location_id', '=', warehouse_distribution_wavre.lot_stock_id.id)])
+        self.assertTrue(picking_stock_transit)
+        picking_stock_transit.action_assign()
+        picking_stock_transit.move_lines[0].quantity_done = 1.0
+        picking_stock_transit.action_done()
+
+        picking_transit_shop_wavre = self.env['stock.picking'].search([('location_dest_id', '=', warehouse_shop_wavre.lot_stock_id.id)])
+        self.assertTrue(picking_transit_shop_wavre)
+        picking_transit_shop_wavre.action_assign()
+        picking_transit_shop_wavre.move_lines[0].quantity_done = 1.0
+        picking_transit_shop_wavre.action_done()
+
+        picking_out_wavre.action_assign()
+        picking_out_wavre.move_lines[0].quantity_done = 1.0
+        picking_out_wavre.action_done()
+
+        # Check that the correct quantity has been provided to customer
+        self.assertEqual(self.env['stock.quant']._gather(product, customer_location).quantity, 2)
+        # Ensure there still no quants in distribution warehouse
+        self.assertEqual(len(self.env['stock.quant']._gather(product, warehouse_distribution_wavre.lot_stock_id)), 0)
 
 class TestResupply(TestStockCommon):
     def setUp(self):
