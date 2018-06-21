@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Demo of B2B (business-to-business) Taxable supplies made to other registered person.-->
+    <record id="demo_invoice_b2b" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_invoice_b2b_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2b"/>
+        <field name="product_id" ref="product.product_product_8"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">40000</field>
+        <field name="quantity">2</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 14),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_b2b_line_2" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2b"/>
+        <field name="product_id" ref="product.product_product_9"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_9').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">400</field>
+        <field name="quantity">3</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_b2b_line_3" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2b"/>
+        <field name="product_id" ref="product.product_product_10"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_10').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">300</field>
+        <field name="quantity">4</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id),
+                '|',
+                    ('children_tax_ids.amount', '=', 9),
+                    '&amp;',
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.cess_group').id),
+                    ('children_tax_ids.amount','=', 5)
+                ], limit=2).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_b2b')]"/>
+    </function>
+    
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_b2b')]"/>
+    </function>
+
+    <!-- Demo of B2CS (business to consumer small) Taxable supplies made to other unregistered Person and below INR 2.5 lakhs invoice value.-->
+    <record id="demo_invoice_b2cs" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_invoice_b2cs_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_16').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2cs"/>
+        <field name="product_id" ref="product.product_product_16"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_16').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_16').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">1500</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_b2cs_line_2" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_20').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2cs"/>
+        <field name="product_id" ref="product.product_product_20"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_20').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_20').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">2300</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_b2cs_line_3" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_22').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2cs"/>
+        <field name="product_id" ref="product.product_product_22"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_22').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_22').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">2600</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 2.5),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_b2cs_line_4" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_24').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2cs"/>
+        <field name="product_id" ref="product.product_product_24"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_24').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_24').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">1655</field>
+        <field name="quantity">2</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 2.5),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_b2cs')]"/>
+    </function>
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_b2cs')]"/>
+    </function>
+
+    <!-- Demo of B2CL (business to consumer small) Taxable supplies made to other unregistered Person and below INR 2.5 lakhs invoice value.-->
+    <record id="demo_invoice_b2cl" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer_out_state"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_invoice_b2cl_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_b2cl"/>
+        <field name="product_id" ref="product.consu_delivery_01"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">90000</field>
+        <field name="quantity">3</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id),
+                ('amount','=', 18),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_b2cl')]"/>
+    </function>
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_b2cl')]"/>
+    </function>
+
+    <!-- Demo of EXP(Export) supplies including supplies to SEZ/SEZ Developer or deemed exports.-->
+    <record id="demo_invoice_exp" model="account.invoice">
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+        <field name="l10n_in_export_type">export_with_igst</field>
+        <field name="journal_id" model="account.journal"
+            eval="obj().search([
+                ('type', '=', 'sale'),
+                ('l10n_in_import_export', '=', True),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.journal').id)], limit=1).id
+                or obj().search([('type', '=', 'sale')], limit=1).id"/>
+        <field name="l10n_in_shipping_bill_number">999704</field>
+        <field name="l10n_in_shipping_bill_date" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="l10n_in_shipping_port_code_id" ref="l10n_in.port_code_inixy1"/>
+    </record>
+
+    <record id="demo_invoice_exp_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_4').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_exp"/>
+        <field name="product_id" ref="product.product_product_4"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_4').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_4').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">8000</field>
+        <field name="quantity">30</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.igst_group').id),
+                ('amount','=', 18),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_exp')]"/>
+    </function>
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_exp')]"/>
+    </function>
+
+    <!-- Demo of exemp(Nil Rated, Exempted and Non GST supplies). Set Nill rated and Exempted tax in line.-->
+    <record id="demo_invoice_nill" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-01'"/>
+    </record>
+
+    <record id="demo_invoice_nill_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_1').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_nill"/>
+        <field name="product_id" ref="product.product_product_1"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_1').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_1').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">25000</field>
+        <field name="quantity">2</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.exempt_group').id),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_nill_line_2" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_5').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_nill"/>
+        <field name="product_id" ref="product.product_product_5"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_5').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_5').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">400</field>
+        <field name="quantity">1</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('tax_group_id', '=', obj().env.ref('l10n_in.nil_rated_group').id),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_nill')]"/>
+    </function>
+    
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_nill')]"/>
+    </function>
+
+    <!-- Demo of cdnr(Credit/ Debit Note for registered person). Create credit note for demo b2b invoice.-->
+    <record id="demo_invoice_cdnr" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="l10n_in_reseller_partner_id" ref="l10n_in.res_partner_reseller"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_refund</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="refund_invoice_id" ref="l10n_in.demo_invoice_b2b"/>
+    </record>
+
+    <record id="demo_invoice_cdnr_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_cdnr"/>
+        <field name="product_id" ref="product.product_product_8"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_8').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">40000</field>
+        <field name="quantity">2</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 14),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_cdnr_line_2" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_cdnr"/>
+        <field name="product_id" ref="product.product_product_9"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_9').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_9').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">400</field>
+        <field name="quantity">3</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+    <record id="demo_invoice_cdnr_line_3" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_cdnr"/>
+        <field name="product_id" ref="product.product_product_10"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.product_product_10').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line"  eval="obj().env.ref('product.product_product_10').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">300</field>
+        <field name="quantity">4</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                    ('type_tax_use', '=', 'sale'),
+                    ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id),
+                '|',
+                    ('children_tax_ids.amount', '=', 9),
+                    '&amp;',
+                    ('tax_group_id', '=', obj().env.ref('l10n_in.cess_group').id),
+                    ('children_tax_ids.amount','=', 5)
+                ], limit=2).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_cdnr')]"/>
+    </function>
+    
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_cdnr')]"/>
+    </function>
+
+    <!-- Demo of cdnr(Credit/ Debit Note for unregistered person). Create credit note for demo b2cl invoice.-->
+    <record id="demo_invoice_cdnur" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_unregistered_customer"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_refund</field>
+        <field name="date_invoice" eval="time.strftime('%Y-%m')+'-02'"/>
+        <field name="refund_invoice_id" ref="l10n_in.demo_invoice_b2cl"/>
+    </record>
+
+    <record id="demo_invoice_cdnur_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_cdnur"/>
+        <field name="product_id" ref="product.consu_delivery_01"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">90000</field>
+        <field name="quantity">3</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_cdnur')]"/>
+    </function>
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_cdnur')]"/>
+    </function>
+
+    <!-- Demo of atadj(Advance adjustments). When invoice is reconcile against Advance payment.
+    Reconciled invoice consideration for which payment have been recived in the past months.-->
+    <record id="demo_invoice_atadj" model="account.invoice">
+        <field name="partner_id" ref="l10n_in.res_partner_registered_customer"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="payment_term_id" ref="account.account_payment_term"/>
+        <field name="type">out_invoice</field>
+        <field name="date_invoice" eval="(datetime.now() + relativedelta(months=1)).strftime('%Y-%m-01')"/>
+    </record>
+
+    <record id="demo_invoice_atadj_line_1" model="account.invoice.line">
+        <field name="name" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').partner_ref"/>
+        <field name="invoice_id" ref="demo_invoice_atadj"/>
+        <field name="product_id" ref="product.consu_delivery_01"/>
+        <field name="uom_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').uom_id.id"/>
+        <field name="account_id" model="account.invoice.line" eval="obj().env.ref('product.consu_delivery_01').categ_id.property_account_income_categ_id.id"/>
+        <field name="price_unit">2000</field>
+        <field name="quantity">3</field>
+        <field name="invoice_line_tax_ids" model="account.tax"
+            eval="[(6, 0, obj().search([
+                ('type_tax_use', '=', 'sale'),
+                ('children_tax_ids.amount','=', 9),
+                ('company_id', '=', obj().env['res.company']._company_default_get('account.tax').id)], limit=1).ids)]"/>
+    </record>
+
+    <function model="account.invoice" name="_onchange_invoice_line_ids">
+        <value eval="[ref('demo_invoice_atadj')]"/>
+    </function>
+
+    <function model="account.invoice" name="action_invoice_open">
+        <value eval="[ref('demo_invoice_atadj')]"/>
+    </function>
+
+    <!-- Reconciled demo payment with demo invoice of atadj(Advance adjustments)-->
+    <function model="account.invoice" name="assign_outstanding_credit">
+        <value eval="[ref('demo_invoice_atadj')]"/>
+        <value model="account.move.line" eval="obj().search([
+            ('credit', '>', 0),
+            ('debit', '=', 0),
+            ('payment_id','=', obj().env.ref('l10n_in.demo_payment_at').id)
+            ], limit=1).id"/>
+    </function>
+
+</odoo>
