@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
 
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
-        help="Email sent to customer at the end of the checkout process")
+        help="Email sent to customer at the end of the checkout process", readonly=True)
 
     automatic_invoice = fields.Boolean("Automatic Invoice",
                                        help="The invoice is generated automatically and available in the customer portal "
