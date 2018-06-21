@@ -370,16 +370,17 @@ class Web_Editor(http.Controller):
 
         # Check if the file to save had already been modified
         custom_attachment = IrAttachment.search([("url", "=", custom_url)])
+        datas = base64.b64encode((content or "\n").encode("utf-8"))
         if custom_attachment:
             # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": base64.b64encode(content.encode("utf-8"))})
+            custom_attachment.write({"datas": datas})
         else:
             # If not, create a new attachment to copy the original LESS file content, with its modifications
             IrAttachment.create(dict(
                 name = custom_url,
                 type = "binary",
                 mimetype = "text/less",
-                datas = base64.b64encode(content.encode("utf-8")),
+                datas = datas,
                 datas_fname = url.split("/")[-1],
                 url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
                                   # is quite of an hack. This allows to fetch the "datas" field by adding
