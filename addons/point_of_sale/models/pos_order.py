@@ -417,8 +417,10 @@ class PosOrder(models.Model):
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
         price_unit = product._get_anglo_saxon_price_unit()
         if product._get_invoice_policy() == "delivery":
-            moves = self.filtered(lambda o: o.partner_id.id == partner_id).mapped('picking_id.move_lines').filtered(lambda m: m.product_id.id == product.id)
-            moves.sorted(lambda x: x.date)
+            moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
+                .mapped('picking_id.move_lines')\
+                .filtered(lambda m: m.product_id.id == product.id)\
+                .sorted(lambda x: x.date)
             average_price_unit = product._compute_average_price(0, quantity, moves)
             price_unit = average_price_unit or price_unit
         # In the SO part, the entries will be inverted by function compute_invoice_totals
