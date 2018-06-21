@@ -11,23 +11,19 @@ var session = require('web.session');
 var SupportMessage = Message.extend({
     /**
      * @override
-     * @param {Class} parent
-     * @param {Object} data
-     * @param {Array} [data.author_id=[]]
      */
-    init: function (parent, data) {
-        data.author_id = data.author_id || [];
-        if (data.author_id !== this.call('mail_service', 'getOdoobotID')) {
-            if (!data.author_id[0]) {
+    init: function () {
+        this._super.apply(this, arguments);
+        if (this._serverAuthorID !== this.call('mail_service', 'getOdoobotID')) {
+            if (!this._serverAuthorID[0]) {
                 // the author is the client
-                data.author_id = [session.partner_id, session.name];
+                this._serverAuthorID = [session.partner_id, session.name];
             } else {
                 // the author is the operator
                 // prevent from conflicting with partners of this instance
-                data.author_id[0] = -1;
+                this._serverAuthorID[0] = -1;
             }
         }
-        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
