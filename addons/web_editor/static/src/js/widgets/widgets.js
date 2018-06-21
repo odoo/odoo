@@ -1768,5 +1768,6 @@ return {
     MediaDialog: MediaDialog,
     LinkDialog: LinkDialog,
     CropImageDialog: CropImageDialog,
+    ImageWidget: ImageWidget,
 };
 });
