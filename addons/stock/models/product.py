@@ -26,6 +26,7 @@ class Product(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
+
         digits=dp.get_precision('Product Unit of Measure'),
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
@@ -133,11 +134,11 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            domain_move_in += [('date', '>=', from_date)]
-            domain_move_out += [('date', '>=', from_date)]
+            domain_move_in += [('date_expected', '>=', from_date)]
+            domain_move_out += [('date_expected', '>=', from_date)]
         if to_date:
-            domain_move_in += [('date', '<=', to_date)]
-            domain_move_out += [('date', '<=', to_date)]
+            domain_move_in += [('date_expected', '<=', to_date)]
+            domain_move_out += [('date_expected', '<=', to_date)]
 
         Move = self.env['stock.move']
         Quant = self.env['stock.quant']
