@@ -561,8 +561,17 @@ var DateTimePicker = function ($, moment) {
         };
 
         DateTimePicker.prototype._notifyEvent = function _notifyEvent(e) {
-            if (e.type === DateTimePicker.Event.CHANGE && e.date && e.date.isSame(e.oldDate) || !e.date && !e.oldDate) {
+            // /!\ ODOO FIX: these next conditions have been modified by odoo
+            // FIXME should write a test about the tricky case this handles
+            if (!e.date && !e.oldDate) {
                 return;
+            }
+            if (e.type === DateTimePicker.Event.CHANGE) {
+                // check _isUTC flag to ensure that we are not comparing apples and oranges
+                var bothUTC = e.date && e.oldDate && e.date._isUTC === e.oldDate._isUTC;
+                if (bothUTC && e.date.isSame(e.oldDate)) {
+                    return;
+                }
             }
             this._element.trigger(e);
         };
@@ -1855,6 +1864,11 @@ var TempusDominusBootstrap4 = function ($) {
                 parent = self._element;
                 self._element.children().first().after(self.widget);
             }
+
+            // /!\ ODOO FIX: the 3 next lines have been *added* by odoo
+            var parentOffset = parent.offset();
+            position.top = offset.top - parentOffset.top;
+            position.left = offset.left - parentOffset.left;
 
             // Top and bottom logic
             if (vertical === 'auto') {
