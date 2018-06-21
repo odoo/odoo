@@ -14,7 +14,7 @@ from odoo import fields, tools
 from odoo.tools.pycompat import string_types, to_text
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.addons.base.ir.ir_qweb.qweb import escape
+from .qweb import escape
 import psycopg2
 from odoo.tools import func, misc
 
