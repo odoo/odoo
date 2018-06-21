@@ -35,8 +35,11 @@ odoo.define("website_sale.tour_shop", function (require) {
     }, {
         trigger: "#wrap img.product_detail_img",
         extra_trigger: ".product_price .o_is_inline_editable .oe_currency_value:not(:containsExact(1.00))",
-        content: _t("Click here to set an image describing your product."),
+        content: _t("Double click here to set an image describing your product."),
         position: "top",
+        run: function (actions) {
+            actions.dblclick();
+        },
     }, {
         trigger: ".o_select_media_dialog .o_upload_image_button",
         content: _t("Upload an image from your local library."),
