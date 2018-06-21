@@ -675,7 +675,7 @@ class PurchaseOrderLine(models.Model):
             'name': self.name or '',
             'product_id': self.product_id.id,
             'product_uom': self.product_uom.id,
-            'date': self.order_id.date_order,
+            'date': self.date_planned,
             'date_expected': self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': self.order_id._get_destination_location(),
@@ -1062,7 +1062,7 @@ class ProcurementOrder(models.Model):
             if not po:
                 vals = procurement._prepare_purchase_order(partner)
                 po = self.env['purchase.order'].create(vals)
-                name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or procurement.move_dest_id.raw_material_production_id and procurement.move_dest_id.raw_material_production_id.name or "")
+                name = (procurement.group_id and (procurement.group_id.name + ":") or "") + (procurement.name != "/" and procurement.name or "")
                 message = _("This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
                 po.message_post(body=message)
                 cache[domain] = po
@@ -1075,7 +1075,7 @@ class ProcurementOrder(models.Model):
                         po.write({'origin': po.origin})
                 else:
                     po.write({'origin': procurement.origin})
-                name = (self.group_id and (self.group_id.name + ":") or "") + (self.name != "/" and self.name or self.move_dest_id.raw_material_production_id and self.move_dest_id.raw_material_production_id.name or "")
+                name = (self.group_id and (self.group_id.name + ":") or "") + (self.name != "/" and self.name or "")
                 message = _("This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>") % (procurement.id, name)
                 po.message_post(body=message)
             if po:
