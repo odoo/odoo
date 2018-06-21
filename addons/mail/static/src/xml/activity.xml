@@ -51,7 +51,7 @@
                                 </dl>
                             </div>
                         </div>
-                        <div t-if="activity.note" class="o_thread_message_note small">
+                        <div t-if="activity.note" t-attf-class="o_thread_message_#{activity.activity_decoration} #{activity.activity_decoration ? 'alert alert-' + activity.activity_decoration : ''} small">
                             <t t-raw="activity.note"/>
                         </div>
                         <div class="o_thread_message_tools btn-group">

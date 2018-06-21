@@ -6,6 +6,7 @@ import pytz
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
+from odoo.tools import pycompat
 
 
 class MailActivityType(models.Model):
@@ -34,6 +35,10 @@ class MailActivityType(models.Model):
         'Planned in', default=0,
         help='Number of days before executing the action. It allows to plan the action deadline.')
     icon = fields.Char('Icon', help="Font awesome icon e.g. fa-tasks")
+    decoration_type = fields.Selection([
+        ('warning', 'Alert'),
+        ('danger', 'Error')], string="Decoration Type",
+        help="Change the background color of the related activities of this type.")
     res_model_id = fields.Many2one(
         'ir.model', 'Model', index=True,
         domain=['&', ('is_mail_thread', '=', True), ('transient', '=', False)],
@@ -85,6 +90,7 @@ class MailActivity(models.Model):
         'mail.activity.type', 'Activity',
         domain="['|', ('res_model_id', '=', False), ('res_model_id', '=', res_model_id)]", ondelete='restrict')
     activity_category = fields.Selection(related='activity_type_id.category')
+    activity_decoration = fields.Selection(related='activity_type_id.decoration_type')
     icon = fields.Char('Icon', related='activity_type_id.icon')
     summary = fields.Char('Summary')
     note = fields.Html('Note')

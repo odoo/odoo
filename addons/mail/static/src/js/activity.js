@@ -201,8 +201,12 @@ var Activity = AbstractActivityField.extend({
      */
     _render: function () {
         _.each(this._activities, function (activity) {
-            if (activity.note) {
+            var note = mailUtils.parseAndTransform(activity.note || '', mailUtils.inline);
+            var is_blank = (/^\s*$/).test(note);
+            if (!is_blank) {
                 activity.note = mailUtils.parseAndTransform(activity.note, mailUtils.addLink);
+            } else {
+                activity.note = '';
             }
         });
         var activities = setDelayLabel(this._activities);
