@@ -79,41 +79,6 @@ class ReportAgedPartnerBalance(models.AbstractModel):
         if not partner_ids:
             return [], [], []
 
-        # This dictionary will store the not due amount of all partners
-        undue_amounts = {}
-        query = '''SELECT l.id
-                FROM account_move_line AS l, account_account, account_move am
-                WHERE (l.account_id = account_account.id) AND (l.move_id = am.id)
-                    AND (am.state IN %s)
-                    AND (account_account.internal_type IN %s)
-                    AND (COALESCE(l.date_maturity,l.date) >= %s)\
-                    AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
-                AND (l.date <= %s)
-                AND l.company_id IN %s'''
-        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
-        aml_ids = cr.fetchall()
-        aml_ids = aml_ids and [x[0] for x in aml_ids] or []
-        for line in self.env['account.move.line'].browse(aml_ids):
-            partner_id = line.partner_id.id or False
-            if partner_id not in undue_amounts:
-                undue_amounts[partner_id] = 0.0
-            line_amount = line.balance
-            if line.balance == 0:
-                continue
-            for partial_line in line.matched_debit_ids:
-                if partial_line.max_date <= date_from:
-                    line_amount += partial_line.amount
-            for partial_line in line.matched_credit_ids:
-                if partial_line.max_date <= date_from:
-                    line_amount -= partial_line.amount
-            if not self.env.user.company_id.currency_id.is_zero(line_amount):
-                undue_amounts[partner_id] += line_amount
-                lines[partner_id].append({
-                    'line': line,
-                    'amount': line_amount,
-                    'period': 6,
-                })
-
         # Use one query per period and store results in history (a list variable)
         # Each history will contain: history[1] = {'<partner_id>': <partner_debit-credit>}
         history = []
@@ -140,7 +105,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
                         AND ''' + dates_query + '''
                     AND (l.date <= %s)
-                    AND l.company_id IN %s'''
+                    AND l.company_id IN %s
+                    ORDER BY COALESCE(l.date_maturity, l.date)'''
             cr.execute(query, args_list)
             partners_amount = {}
             aml_ids = cr.fetchall()
@@ -167,6 +133,42 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                         'period': i + 1,
                         })
             history.append(partners_amount)
+
+        # This dictionary will store the not due amount of all partners
+        undue_amounts = {}
+        query = '''SELECT l.id
+                FROM account_move_line AS l, account_account, account_move am
+                WHERE (l.account_id = account_account.id) AND (l.move_id = am.id)
+                    AND (am.state IN %s)
+                    AND (account_account.internal_type IN %s)
+                    AND (COALESCE(l.date_maturity,l.date) >= %s)\
+                    AND ((l.partner_id IN %s) OR (l.partner_id IS NULL))
+                AND (l.date <= %s)
+                AND l.company_id IN %s
+                ORDER BY COALESCE(l.date_maturity, l.date)'''
+        cr.execute(query, (tuple(move_state), tuple(account_type), date_from, tuple(partner_ids), date_from, tuple(company_ids)))
+        aml_ids = cr.fetchall()
+        aml_ids = aml_ids and [x[0] for x in aml_ids] or []
+        for line in self.env['account.move.line'].browse(aml_ids):
+            partner_id = line.partner_id.id or False
+            if partner_id not in undue_amounts:
+                undue_amounts[partner_id] = 0.0
+            line_amount = line.balance
+            if line.balance == 0:
+                continue
+            for partial_line in line.matched_debit_ids:
+                if partial_line.max_date <= date_from:
+                    line_amount += partial_line.amount
+            for partial_line in line.matched_credit_ids:
+                if partial_line.max_date <= date_from:
+                    line_amount -= partial_line.amount
+            if not self.env.user.company_id.currency_id.is_zero(line_amount):
+                undue_amounts[partner_id] += line_amount
+                lines[partner_id].append({
+                    'line': line,
+                    'amount': line_amount,
+                    'period': 6,
+                })
 
         for partner in partners:
             if partner['partner_id'] is None:
