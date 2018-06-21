@@ -924,10 +924,10 @@ class StockMove(models.Model):
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
-                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id, package_id=forced_package_id)
+                    available_quantity = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id, package_id=forced_package_id, owner_id=move.restrict_partner_id)
                     if available_quantity <= 0:
                         continue
-                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, owner_id=move.restrict_partner_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=move.product_id.uom_id.rounding):
                         continue
                     if need == taken_quantity:

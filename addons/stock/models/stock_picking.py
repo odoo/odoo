@@ -438,6 +438,11 @@ class Picking(models.Model):
             else:
                 picking.show_validate = True
 
+    @api.onchange('owner_id')
+    def onchange_picking_owner(self):
+        if self.picking_type_code != 'incoming' and self.move_lines.filtered(lambda l: l.reserved_availability > 0.0):
+            raise UserError(_('You cannot change the owner as there are products reserved in this operation. Please unreserve the products first.'))
+
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
         if self.picking_type_id:
@@ -517,6 +522,9 @@ class Picking(models.Model):
                         pickings_to_not_autoconfirm |= picking
                         break
             (self - pickings_to_not_autoconfirm)._autoconfirm_picking()
+        if 'owner_id' in vals:
+            for picking in self.filtered(lambda l: l.move_lines or l.move_line_ids):
+                picking._assign_owner()
         return res
 
     @api.multi
@@ -524,13 +532,6 @@ class Picking(models.Model):
         self.mapped('move_lines')._action_cancel()
         self.mapped('move_lines').unlink() # Checks if moves are not done
         return super(Picking, self).unlink()
-
-    # Actions
-    # ----------------------------------------
-
-    @api.one
-    def action_assign_owner(self):
-        self.move_line_ids.write({'owner_id': self.owner_id.id})
 
     @api.multi
     def do_print_picking(self):
@@ -547,7 +548,16 @@ class Picking(models.Model):
         # call `_action_assign` on every confirmed move which location_id bypasses the reservation
         self.filtered(lambda picking: picking.location_id.usage in ('supplier', 'inventory', 'production') and picking.state == 'confirmed')\
             .mapped('move_lines')._action_assign()
+        for picking in self.filtered(lambda l: l.move_line_exist and l.owner_id):
+            picking._assign_owner()
         return True
+
+    def _assign_owner(self):
+        self.ensure_one()
+        if self.picking_type_code == 'incoming':
+            self.move_line_ids.write({'owner_id': self.owner_id.id})
+        else:
+            self.move_lines.write({'restrict_partner_id': self.owner_id.id})
 
     @api.multi
     def action_assign(self):
