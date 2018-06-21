@@ -135,11 +135,17 @@ class AccountChartTemplate(models.Model):
         '''
         digits = self.code_digits
         prefix = self.transfer_account_code_prefix or ''
+        # Flatten the hierarchy of chart templates.
+        chart_template = self
+        chart_templates = self
+        while chart_template.parent_id:
+            chart_templates += chart_template.parent_id
+            chart_template = chart_template.parent_id
         new_code = ''
         for num in range(1, 100):
             new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
             rec = self.env['account.account.template'].search(
-                [('code', '=', new_code), '|', ('chart_template_id', 'child_of', self.id), ('chart_template_id', 'parent_of', self.id)], limit=1)
+                [('code', '=', new_code), ('chart_template_id', 'in', chart_templates.ids)], limit=1)
             if not rec:
                 break
         else:
