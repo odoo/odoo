@@ -125,8 +125,6 @@ class PosOrder(models.Model):
             pos_session.refresh()
 
         if not float_is_zero(pos_order['amount_return'], prec_acc):
-            payment_date = fields.Datetime.now()
-            payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
             cash_journal_id = pos_session.cash_journal_id.id
             if not cash_journal_id:
                 # Select for change one of the cash journals used in this
@@ -145,7 +143,7 @@ class PosOrder(models.Model):
                 cash_journal_id = cash_journal[0].id
             order.add_payment({
                 'amount': -pos_order['amount_return'],
-                'payment_date': payment_date,
+                'payment_date': fields.Date.context_today(self),
                 'payment_name': _('return'),
                 'journal': cash_journal_id,
             })
