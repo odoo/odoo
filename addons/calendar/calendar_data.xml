@@ -140,7 +140,7 @@
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
                                                         <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                            : ${object.event_id.description}
+                                                            : ${object.event_id.description.replace('\n', '<br/>')|safe}
                                                         </div>
                                                     % endif
                                                 </td>
@@ -265,7 +265,7 @@
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
                                                         <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                            : ${object.event_id.description}
+                                                            : ${object.event_id.description.replace('\n', '<br/>')|safe}
                                                         </div>
                                                     % endif
                                                 </td>
@@ -389,7 +389,7 @@
                                                 <td style="vertical-align:text-top;">
                                                     % if object.event_id.description :
                                                         <div style="font-family: Lucida Grande', Ubuntu, Arial, Verdana, sans-serif;">
-                                                            : ${object.event_id.description}
+                                                            : ${object.event_id.description.replace('\n', '<br/>')|safe}
                                                         </div>
                                                     % endif
                                                 </td>
