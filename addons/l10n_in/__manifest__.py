@@ -21,16 +21,31 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'account_tax_python',
     ],
     'data': [
+        'security/l10n_in_security.xml',
+        'security/ir.model.access.csv',
         'data/account_data.xml',
         'data/l10n_in_chart_data.xml',
         'data/account_tax_template_data.xml',
         'data/account_fiscal_position_data.xml',
+        'data/l10n_in.port.code.csv',
         'data/res_country_state_data.xml',
-        'data/account_chart_template_data.xml',
+        'data/uom_data.xml',
+        'views/account_invoice_views.xml',
+        'views/account_journal_views.xml',
+        'views/res_config_settings_views.xml',
         'views/product_template_view.xml',
+        'views/port_code_views.xml',
         'views/report_invoice.xml',
         'views/res_company_view.xml',
         'views/res_country_state_view.xml',
         'views/res_partner_views.xml',
+        'views/account_tax_views.xml',
+        'views/uom_uom_views.xml',
+        'data/account_chart_template_data.xml'
     ],
+    'demo': [
+        'data/res_partner_demo.xml',
+        'data/account_payment_demo.xml',
+        'data/account_invoice_demo.xml'
+    ]
 }
