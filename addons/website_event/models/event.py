@@ -30,9 +30,10 @@ class Event(models.Model):
         # we don't allow public user to see participating label
         if self.env.user != self.env.ref('base.public_user'):
             email = self.env.user.partner_id.email
+            EventRegistration = self.env['event.registration'].sudo()
             for event in self:
                 domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
-                event.is_participating = self.env['event.registration'].search_count(domain)
+                event.is_participating = EventRegistration.search_count(domain)
 
     @api.multi
     @api.depends('name')
