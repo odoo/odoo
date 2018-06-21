@@ -149,5 +149,16 @@
         <field name="domain_force">[('invoice_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+
+    <!-- Billing user must have right to create/delete analytic lines related to account move lines -->
+    <record id="account_analytic_line_billing" model="ir.rule">
+        <field name="name">Create/Delete Analytic Lines with Account Move Lines</field>
+        <field name="model_id" ref="account.model_account_analytic_line"/>
+        <field name="domain_force">[('move_id', '!=', False)]</field>
+        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
 </data>
 </odoo>
