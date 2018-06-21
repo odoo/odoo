@@ -5,21 +5,27 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td>
-                <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
-                <a t-if="not tx_ids and invoice.state == 'open' and invoice.type == 'out_invoice'" t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
+                <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+                <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
+                <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
+                    t-att-href="'/my/invoices/%s#portal_pay' % invoice.id" alt="Pay Now" class="btn btn-xs btn-primary">
                     <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
                 </a>
             </td>
         </xpath>
-        <xpath expr="//t[@t-foreach='invoices']/tr/td[@id='tx_status']" position="replace">
-            <td id="tx_status">
-                <t t-if="invoice.state == 'open' and invoice.get_portal_last_transaction().state not in  ['authorized', 'done', 'cancel']">
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
+            <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
+            <td class="tx_status">
+                <t t-if="invoice.state == 'open' and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.acquirer_id.provider in ('transfer', 'manual')))">
                     <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Waiting for Payment</span></span>
                 </t>
-                <t t-if="invoice.state == 'open' and invoice.get_portal_last_transaction().state == 'authorized'">
+                <t t-if="invoice.state == 'open' and last_tx.state == 'authorized'">
                     <span class="label label-success"><i class="fa fa-fw fa-check"/><span class="hidden-xs"> Authorized</span></span>
                 </t>
-                <t t-if="invoice.state == 'paid' or invoice.get_portal_last_transaction().state == 'done'">
+                <t t-if="invoice.state == 'open' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
+                  <span class="label label-warning"><span class="hidden-xs"> Pending</span></span>
+                </t>
+                <t t-if="invoice.state == 'paid' or last_tx.state == 'done'">
                     <span class="label label-default"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
@@ -62,13 +68,18 @@
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='sidebar_content']//div[hasclass('o_download_pdf')]" position="before">
-            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
+            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
             <div class="mb8 ml16 mr16">
-                <a t-if="not tx_ids and invoice.state == 'open' and invoice.amount_total"
+                <a t-if="invoice.state == 'open' and invoice.amount_total and invoice.type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
                     class="btn btn-primary btn-block" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-arrow-circle-right"/> Pay Now
                 </a>
-                <a t-if="(tx_ids and invoice.state == 'paid') or (not tx_ids and invoice.state == 'paid')"
+                <a t-if="tx_ids and not pending_manual_txs and invoice.state != 'paid'"
+                    class="btn btn-warning btn-block" disabled="disabled">
+                    <i class="fa fa-check-circle"/> Pending
+                </a>
+                <a t-if="invoice.state == 'paid'"
                     class="btn btn-success btn-block" disabled="disabled">
                     <i class="fa fa-check-circle"/> Paid
                 </a>
