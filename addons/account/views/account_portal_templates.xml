@@ -46,7 +46,7 @@
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
-                        <td id="tx_status">
+                        <td class="tx_status">
                             <t t-if="invoice.state == 'open'">
                                 <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Waiting for Payment</span></span>
                             </t>
@@ -81,7 +81,7 @@
                                     <span t-else="1" t-field="invoice.amount_total"/>
                                 </strong>
                             </h2>
-                            <div class="mb4" t-if="invoice.state != 'paid'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.date_due"/></div>
+                            <div class="mb4" t-if="invoice.state != 'paid' and invoice.type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.date_due"/></div>
                         </div>
                         <div class="o_payment_button">
                             <div class="text-center mb8 ml16 mr16 o_download_pdf">
