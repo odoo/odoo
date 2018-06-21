@@ -25,6 +25,9 @@ var _t = core._t;
 var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html_text',
     supportedFieldTypes: ['html'],
+    custom_events: _.extend({}, basic_fields.DebouncedField.prototype.custom_events, {
+        navigation_move: '_onNavigationMove',
+    }),
 
     /**
      * @override
@@ -299,6 +302,21 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
                 .on('click', this._onTranslate.bind(this));
         }
         return $();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Keyboard events is disrupting summernote editor's default behavior.
+     * so here not bubbling up keyboard events for editor.
+     *
+     * @override
+     * @private
+     */
+    _onNavigationMove: function (ev) {
+        ev.stopPropagation();
     },
 
 });
