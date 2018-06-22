@@ -255,8 +255,13 @@ img.o_we_custom_image {
 // Portal specific
 .o_portal {
     .breadcrumb {
+        background-color: rgba(0, 0, 0, 0);
         margin-bottom: 0px;
         display: inline-block;
+    }
+
+    .record_pager {
+        padding: 8px 0px;
     }
 
     > tbody.o_portal_report_tbody {
@@ -391,4 +396,22 @@ img.o_we_custom_image {
 
 .label-optional {
     font-weight: normal;
+}
+
+.o_portal_sidebar {
+    .bs-sidebar {
+        position: relative;
+        width: 100%;
+        border-radius: 5px;
+        background-color: $navbar-default-bg;
+    }
+    .o_portal_contact_img {
+        width: 3.7em;
+        height: 3.7em;
+    }
+    .o_portal_html_view {
+        border: 1px solid $gray-lighter-dark;
+        border-radius: 5px;
+        padding-right: 1px;
+    }
 }

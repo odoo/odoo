@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+from werkzeug.exceptions import NotFound
+
 from odoo import http, _
-from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
@@ -46,7 +49,8 @@ class PortalAccount(CustomerPortal):
             'invoice': invoice,
         }
         if access_token:
-            values['no_breadcrumbs'] = True
+            # force breadcrumbs even if access_token to `invite` users to register if they click on it
+            values['no_breadcrumbs'] = False
             values['access_token'] = access_token
 
         if kwargs.get('error'):
@@ -55,6 +59,9 @@ class PortalAccount(CustomerPortal):
             values['warning'] = kwargs['warning']
         if kwargs.get('success'):
             values['success'] = kwargs['success']
+
+        history = request.session.get('my_invoices_history', [])
+        values.update(get_records_pager(history, invoice))
 
         return values
 
@@ -93,6 +100,8 @@ class PortalAccount(CustomerPortal):
         )
         # content according to pager and archive selected
         invoices = AccountInvoice.search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
+        request.session['my_invoices_history'] = invoices.ids[:100]
+
         values.update({
             'date': date_begin,
             'invoices': invoices,
@@ -115,7 +124,10 @@ class PortalAccount(CustomerPortal):
         values = self._invoice_get_page_view_values(invoice_sudo, access_token, **kw)
         return request.render("account.portal_invoice_page", values)
 
-    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="public", website=True)
+    @http.route([
+        '/my/invoices/pdf/<int:invoice_id>',
+        '/my/invoices/html/<int:invoice_id>/<string:access_token>'
+    ], type='http', auth="public", website=True)
     def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
         try:
             invoice_sudo = self._invoice_check_access(invoice_id, access_token)
@@ -124,12 +136,20 @@ class PortalAccount(CustomerPortal):
 
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
-        pdf = request.env.ref('account.account_invoices').sudo().render_qweb_pdf([invoice_sudo.id])[0]
-        pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
-        ]
-        return request.make_response(pdf, headers=pdfhttpheaders)
+        accountInvoiceReport = request.env.ref('account.account_invoices').sudo()
+        report_type = kw.get('report_type', 'pdf')
+        method_name = 'render_qweb_%s' % (report_type)
+        if hasattr(accountInvoiceReport, method_name):
+            invoice_report = getattr(accountInvoiceReport, method_name)([invoice_sudo.id], data={'report_type': report_type})[0]
+            reporthttpheaders = [
+                ('Content-Type', 'application/pdf' if report_type == 'pdf' else 'text/html'),
+                ('Content-Length', len(invoice_report)),
+            ]
+            if report_type == 'pdf' and not kw.get('print'):
+                filename = "%s.pdf" % (re.sub('\W+', '-', invoice_sudo._get_printed_report_name()))
+                reporthttpheaders.append(('Content-Disposition', http.content_disposition(filename)))
+            return request.make_response(invoice_report, headers=reporthttpheaders)
+        raise NotFound()
 
     # ------------------------------------------------------------
     # My Home

@@ -23,28 +23,31 @@
                         <span t-field="o.number"/>
                     </h2>
 
+                    <!-- HTML Preview for mobile responsive -->
+                    <t t-set="o_grid_layout" t-value="'col-xs-2'"/>
+                    <t t-if="type_html" t-set="o_grid_layout" t-value="'col-sm-2 col-xs-6'"/>
                     <div class="row mt32 mb32">
-                        <div class="col-xs-2" t-if="o.name" name="description">
+                        <div t-att-class="o_grid_layout" t-if="o.name" name="description">
                             <strong>Description:</strong>
                             <p t-field="o.name"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.date_invoice" name="invoice_date">
+                        <div t-att-class="o_grid_layout" t-if="o.date_invoice" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p t-field="o.date_invoice"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')" name="due_date">
+                        <div t-att-class="o_grid_layout" t-if="o.date_due and o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')" name="due_date">
                             <strong>Due Date:</strong>
                             <p t-field="o.date_due"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.origin" name="origin">
+                        <div t-att-class="o_grid_layout" t-if="o.origin" name="origin">
                             <strong>Source:</strong>
                             <p t-field="o.origin"/>
                         </div>
-                        <div class="col-xs-2" t-if="o.partner_id.ref" name="customer_code">
+                        <div t-att-class="o_grid_layout" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p t-field="o.partner_id.ref"/>
                         </div>
-                        <div name="reference" class="col-xs-2" t-if="o.reference">
+                        <div name="reference" t-att-class="o_grid_layout" t-if="o.reference">
                             <strong>Reference:</strong>
                             <p t-field="o.reference"/>
                         </div>
@@ -57,8 +60,43 @@
                     <!-- if Rounding Method is computed per line -->
                     <t t-set="display_taxamount"
                        t-value="o.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
+                    <!-- HTML Preview for mobile responsive -->
+                    <div t-if="type_html" id="invoice_line" class="row mr0 ml0 visible-xs hidden-print">
+                        <table class='table table-condensed'>
+                            <colgroup>
+                                <col width='50%' />
+                                <col width='25%' />
+                                <col width='25%' />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-right">Quantity</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tr t-foreach="o.invoice_line_ids" t-as="line">
+                                <td>
+                                    <span t-field="line.name"/>
+                                    <t t-if="display_discount">
+                                        <div>
+                                            With a <span t-field="l.discount"/>% discount
+                                        </div>
+                                    </t>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.quantity"/>
+                                    <span t-field="line.uom_id"  groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.price_subtotal"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-                    <table class="table table-condensed" name="invoice_line_table">
+                    <table t-attf-class="table table-condensed #{'' if not type_html else 'hidden-xs'}" name="invoice_line_table">
                         <thead>
                             <tr>
                                 <th>Description</th>
@@ -115,7 +153,7 @@
 
                     <div class="clearfix">
                         <div id="total" class="row">
-                            <div class="col-xs-4 pull-right">
+                            <div t-attf-class="col-sm-4 pull-right #{'col-xs-4' if not type_html else ''}">
                                 <table class="table table-condensed" style="min-width: 250px;max-width: 400px;">
                                     <tr class="border-black" style="border-bottom:1px solid #dddddd;">
                                         <td><strong>Subtotal</strong></td>

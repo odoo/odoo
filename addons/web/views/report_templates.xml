@@ -19,10 +19,13 @@
 
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 
+
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_standard.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_background.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_boxed.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/layout_clean.scss"/>
+
     </template>
 
     <template id="report_assets_pdf">
@@ -173,7 +176,7 @@
                     <li t-if="company.vat"><i class="fa fa-building-o"/><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div class="text-muted">
+                <div t-if="not type_html" class="text-muted">
                     Page:
                     <span class="page"/>
                     of
@@ -212,7 +215,7 @@
                     <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
                 </ul>
                 <div t-field="company.report_footer"/>
-                <div>
+                <div t-if="not type_html">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
@@ -254,7 +257,7 @@
                     <h4 class="mt0 mb0 text-uppercase" t-field="company.report_header"/>
                 </div>
                 <div class="col-xs-1">
-                    <ul class="list-inline pagenumber pull-right text-center">
+                    <ul t-if="not type_html" class="list-inline pagenumber pull-right text-center">
                         <li><strong><span class="page"/></strong></li>
                     </ul>
                 </div>
@@ -288,7 +291,7 @@
             <t t-raw="0" />
         </div>
 
-        <div class="footer">
+        <div class="footer o_standard_footer">
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
                     <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
@@ -301,7 +304,7 @@
                     <span t-field="company.report_footer"/>
                 </div>
 
-                <div class="text-muted">
+                <div t-if="not type_html" class="text-muted">
                     Page: <span class="page"/> / <span class="topage"/>
                 </div>
             </div>
