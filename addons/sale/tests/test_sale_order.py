@@ -185,7 +185,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so._create_analytic_account()
 
         company = self.env.ref('base.main_company')
-        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Test', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
+        journal = self.env['account.journal'].create({'name': 'Purchase Journal - Testing', 'code': 'STPJ', 'type': 'purchase', 'company_id': company.id})
         invoice_vals = {
             'name': '',
             'type': 'in_invoice',
