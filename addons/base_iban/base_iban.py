@@ -46,10 +46,11 @@ class ResPartnerBank(models.Model):
     @api.one
     @api.depends('acc_number')
     def _compute_acc_type(self):
-        try:
-            validate_iban(self.acc_number)
+        iban = normalize_iban(self.acc_number)
+        country_code = iban[:2].lower() if iban else ''
+        if iban and country_code in _map_iban_template:
             self.acc_type = 'iban'
-        except ValidationError:
+        else:
             super(ResPartnerBank, self)._compute_acc_type()
 
     def get_bban(self):
