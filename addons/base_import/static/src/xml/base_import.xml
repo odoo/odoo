@@ -14,11 +14,11 @@
                     <div class="input-group">
                       <input type="text" class="oe_import_file_show form-control" placeholder="No file chosen..."/>
                       <span class="input-group-btn">
-                        <label class="btn btn-primary" for="my-file-selector">
+                        <button class="btn btn-primary">
                         <input accept=".csv, .xls, .xlsx, .xlsm, .ods" id-attf-id="file_#{_id}"
                        name="file" id="my-file-selector" class="oe_import_file" type="file" style="display:none;"/>
                         Load File
-                        </label>
+                        </button>
                       </span>
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default oe_import_file_reload" disabled="disabled">Reload File</button>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="template-import mt24 hidden">
                         <h5>
-                            <a href="#" class="import-link fa fa-download"></a>
+                            <a href="#" class="import-link fa fa-download" aria-label="Download" title="Download"></a>
                         </h5>
                     </div>
                 </div>

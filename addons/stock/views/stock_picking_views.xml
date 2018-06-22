@@ -640,7 +640,7 @@
                                             <div class="o_secondary"><field class="o_secondary"  name="warehouse_id"/></div>
                                         </div>
                                         <div class="o_kanban_manage_button_section">
-                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                         </div>
                                     </div>
                                     <div class="container o_kanban_card_content">
@@ -690,40 +690,40 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><div class="container o_kanban_card_manage_pane dropdown-menu">
+                                    </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                         <div class="row">
                                             <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                                <div class="o_kanban_card_manage_title">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
                                                     <span>View</span>
                                                 </div>
-                                                <div>
+                                                <div role="menuitem">
                                                     <a name="get_stock_picking_action_picking_type" type="object">All</a>
                                                 </div>
-                                                <div>
+                                                <div role="menuitem">
                                                     <a name="%(action_picking_tree_ready)d" type="action">Ready</a>
                                                 </div>
-                                                <div>
+                                                <div role="menuitem">
                                                     <a name="get_action_picking_tree_waiting" type="object">Waiting</a>
                                                 </div>
                                             </div>
                                             <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                                <div class="o_kanban_card_manage_title">
+                                                <div role="menuitem" class="o_kanban_card_manage_title">
                                                     <span>New</span>
                                                 </div>
-                                                <div>
+                                                <div role="menuitem">
                                                     <a name="%(action_picking_form)d" type="action" context="{'default_immediate_transfer': True}">Immediate Transfer</a>
                                                 </div>
-                                                <div>
+                                                <div role="menuitem">
                                                     <a name="%(action_picking_form)d" type="action">Planned Transfer</a>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                            <div class="col-xs-8">
-                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            <div class="col-xs-8" role="menuitem" aria-haspopup="true">
+                                                <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
                                             </div>
-                                            <div class="col-xs-4 text-right">
+                                            <div role="menuitem" class="col-xs-4 text-right">
                                                 <a type="edit">Settings</a>
                                             </div>
                                         </div>

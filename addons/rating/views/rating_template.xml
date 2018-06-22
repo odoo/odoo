@@ -10,11 +10,11 @@
                 </t>
                 <div class="container">
                     <div class="text-center" style="margin-top:128px">
-                        <i class="fa fa-check-circle fa-5x text-success" />
+                        <i class="fa fa-check-circle fa-5x text-success" role="img" aria-label="Thank you!" title="Thank you!"/>
                     </div>
                     <h2 class="text-center">We appreciate your feedback!</h2>
                     <div class="text-center">
-                        <a t-att-href="web_base_url" class="btn btn-primary">Go to our website</a>
+                        <a role="button" t-att-href="web_base_url" class="btn btn-primary">Go to our website</a>
                     </div>
                 </div>
             </t>
@@ -31,7 +31,7 @@
                         <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
                         <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
                         <div class="pull-left">
-                            <img t-attf-src='/rating/static/src/img/rating_#{rate}.png'/>
+                            <img t-attf-src='/rating/static/src/img/rating_#{rate}.png' t-att-alt="rate.name"/>
                         </div>
                         <div style="margin-left: 80px;">
                             you are <b t-esc="rate_name"></b><br/>

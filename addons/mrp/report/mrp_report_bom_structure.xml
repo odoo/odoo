@@ -79,13 +79,13 @@
                 <td>
                     <span t-att-style="space_td"/>
                     <t t-if="l['child_bom']">
-                        <span t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right"/>
+                        <span t-att-data-function="'get_bom'" class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" role="img" aria-label="Unfold" title="Unfold"/>
                     </t>
                     <span t-att-class="None if l['child_bom'] else 'o_mrp_bom_no_fold'">
                         <a t-att-data-res-id="l['prod_id']" t-att-data-model="'product.product'" class="o_mrp_bom_action"><t t-esc="l['prod_name']"/></a>
                     </span>
                     <t t-if="l['phantom_bom']">
-                        <span class="fa fa-dropbox" title="This is a BoM of type Kit!"/>
+                        <span class="fa fa-dropbox" title="This is a BoM of type Kit!" role="img" aria-label="This is a BoM of type Kit!"/>
                     </t>
                 </td>
                 <td><span><t t-esc="l['prod_qty']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></span></td>
@@ -103,7 +103,7 @@
             <tr class="o_mrp_bom_report_line o_mrp_bom_cost" t-att-data-id="'operation-' + str(data['bom'].id)" t-att-data-bom-id="data['bom'].id" t-att-parent_id="data['bom'].id" t-att-data-qty="data['bom_qty']" t-att-data-level="data['level']">
                 <td>
                     <span t-att-style="space_td"/>
-                    <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'"/>
+                    <span class="o_mrp_bom_unfoldable fa fa-fw fa-caret-right" t-att-data-function="'get_operations'" role="img" aria-label="Unfold" title="Unfold"/>
                     Operations
                 </td>
                 <td>

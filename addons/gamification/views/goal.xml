@@ -150,15 +150,15 @@
                             <div class="o_kanban_content">
                                 <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
                                 <div class="pull-left">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" />
                                 </div>
                                 <field name="user_id" />
                                 <div class="o_goal_state_block">
                                     <t t-if="record.definition_display.raw_value == 'boolean'">
                                         <div class="o_goal_state text-center">
-                                            <t t-if="record.state.raw_value=='reached'"><i class="o_green fa fa-check fa-3x" title="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o fa-3x" title="Goal in Progress"/></t>
-                                            <t t-if="record.state.raw_value=='failed'"><i class="o_red fa fa-times fa-3x" title="Goal Failed"/></t>
+                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="o_green fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="o_red fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
                                         </div>
                                     </t>
                                     <t t-if="record.definition_display.raw_value == 'progress'">

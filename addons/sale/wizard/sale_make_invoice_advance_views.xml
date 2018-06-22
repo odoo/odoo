@@ -20,8 +20,8 @@
                         <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
                             <field name="amount"
                                 attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
-                            <label string="%%"
-                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+                            <span
+                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline">%</span>
                         </div>
                         <field name="deposit_account_id" class="oe_inline"
                             attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>

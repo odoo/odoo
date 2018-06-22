@@ -3,11 +3,11 @@
     <t t-extend="mail.chat.ActivityMenuPreview">
         <t t-jquery="t[t-foreach*='activities'][t-as*='activity']" t-operation="after">
             <div class="o_note_show">
-                <a class="btn btn-block text-center">Add new note</a>
+                <a role="button" class="btn btn-block text-center">Add new note</a>
             </div>
             <div class="o_note o_mail_channel_preview hidden">
                 <div class="o_mail_channel_image o_mail_channel_app">
-                    <img src="/note/static/description/icon.png"/>
+                    <img src="/note/static/description/icon.png" alt="Channel"/>
                 </div>
                 <div class="o_channel_info">
                     <div class="o_channel_title">
@@ -15,7 +15,7 @@
                         <div class="o_note_datetime"/>
                         <span class="ml4">
                             <a class="o_note_set_datetime text-muted">
-                                <span class="fa fa-clock-o"/>
+                                <span class="fa fa-clock-o" role="img" aria-label="Set date and time" title="Set date and time"/>
                             </a>
                         </span>
                     </div>

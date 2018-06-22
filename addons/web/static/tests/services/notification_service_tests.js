@@ -45,7 +45,7 @@ QUnit.module('Services', {
         });
         var $notification = $('body .o_notification_manager .o_notification');
         assert.strictEqual(_.str.trim($notification.html().replace(/\s+/g, ' ')),
-            "<div class=\"o_notification_title\"> <span class=\"o_icon fa fa-3x fa-lightbulb-o\"></span> a </div> <div class=\"o_notification_content\">b</div>",
+            "<div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-lightbulb-o\" title=\"Notification undefined\"></span> a </div> <div class=\"o_notification_content\">b</div>",
             "should display notification");
         assert.strictEqual($notification.find('.o_close').length, 0, "should not display the close button in ");
         setTimeout(function () {
@@ -68,7 +68,7 @@ QUnit.module('Services', {
         });
         var $notification = $('body .o_notification_manager .o_notification');
         assert.strictEqual(_.str.trim($notification.html().replace(/\s+/g, ' ')),
-            "<div class=\"o_notification_title\"> <span class=\"o_icon fa fa-3x fa-exclamation\"></span> a </div> <div class=\"o_notification_content\">b</div>",
+            "<div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-exclamation\" title=\"Notification undefined\"></span> a </div> <div class=\"o_notification_content\">b</div>",
             "should display notification");
         view.destroy();
         setTimeout(done);
@@ -184,7 +184,7 @@ QUnit.module('Services', {
         var $notification = $('body .o_notification_manager .o_notification');
         assert.strictEqual($notification.eq(0).find('.o_close').length, 1, "should display the close button in notification");
         assert.strictEqual(_.str.trim($notification.eq(0).html().replace(/\s+/g, ' ')),
-            "<a class=\"fa fa-times o_close\" href=\"#\"></a> <div class=\"o_notification_title\"> <span class=\"o_icon fa fa-3x fa-question-circle-o\"></span> a0 </div> <div class=\"o_notification_content\">b0</div> <div class=\"o_buttons\"> <button type=\"button\" class=\"btn btn-sm btn-primary\"> <span>accept0</span> </button><button type=\"button\" class=\"btn btn-sm btn-default\"> <span>refuse0</span> </button> </div>",
+            "<a aria-label=\"Close\" class=\"fa fa-times o_close\" href=\"#\" title=\"Close\"></a> <div class=\"o_notification_title\"> <span role=\"img\" aria-label=\"Notification undefined\" class=\"o_icon fa fa-3x fa-question-circle-o\" title=\"Notification undefined\"></span> a0 </div> <div class=\"o_notification_content\">b0</div> <div class=\"o_buttons\"> <button type=\"button\" class=\"btn btn-sm btn-primary\"> <span>accept0</span> </button><button type=\"button\" class=\"btn btn-sm btn-default\"> <span>refuse0</span> </button> </div>",
             "should display notification");
 
         $notification.find('.o_buttons button:contains(accept0)').click();

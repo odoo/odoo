@@ -99,7 +99,7 @@
     <!-- Back Button to redirect in form view of survey -->
     <template id="back" name="Back">
         <div groups="website.group_website_publisher" t-ignore="true" class="pull-right">
-            <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
+            <a role="button" t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form" class="btn btn-default">Back to Survey</a>
         </div>
     </template>
 
@@ -114,7 +114,7 @@
                 <header>
                     <div><title>Odoo</title></div>
                     <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo"/>
+                        <img t-attf-src="/web/binary/company_logo" alt="Logo"/>
                     </div>
                 </header>
                 <div id="wrap" class="oe_structure oe_empty"/>
@@ -146,7 +146,7 @@
                     <div class='jumbotron mt32'>
                         <h1 t-field='survey.title' />
                         <div t-field='survey.description' class="oe_no_empty"/>
-                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
+                        <a role="button" class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
                             Start Survey
                         </a>
                     </div>
@@ -197,7 +197,7 @@
                     <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                     <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                     <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
-                    <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                    <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
                 </div>
             </t>
             <div class="text-center mt16 mb16">
@@ -208,15 +208,15 @@
         </form>
 
         <!-- Modal used to display error message, i.c.o. ajax error -->
-        <div class="modal fade" id="AJAXErrorModal" role="dialog" aria-labelledby="AJAXErrorModal" aria-hidden="true" >
+        <div role="dialog" class="modal fade" id="AJAXErrorModal" >
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                    <header class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
                         <h4 class="modal-title">A problem has occured</h4>
-                    </div>
-                    <div class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+                    </header>
+                    <main class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></main>
+                    <footer class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></footer>
                 </div>
             </div>
         </div>
@@ -363,7 +363,7 @@
                                         <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                                         <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                                         <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
-                                        <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                                        <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
                                     </div>
                                 </t>
                                 <hr/>

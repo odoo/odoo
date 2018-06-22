@@ -206,7 +206,7 @@ QUnit.module('relational_fields', {
 
         form.$('.o_external_button').click(); // click on the external button (should do an RPC)
 
-        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: custom label',
+        assert.strictEqual($('[role="dialog"] .modal-title').text().trim(), 'Open: custom label',
                         "dialog title should display the custom string label");
 
         // TODO: test that we can edit the record in the dialog, and that the value is correctly
@@ -246,7 +246,7 @@ QUnit.module('relational_fields', {
         // click on the external button (should do an RPC)
         form.$('.o_external_button').click();
         // save and close modal
-        $('.modal .modal-footer .btn-primary:first').click();
+        $('footer.modal-footer .btn-primary:first').click();
         // save form
         form.$buttons.find('.o_form_button_save').click();
         // click next on pager
@@ -315,10 +315,10 @@ QUnit.module('relational_fields', {
         // click on the external button (should do an RPC)
         form.$('.o_external_button').click();
 
-        $('.modal input[name="foo"]').val('brandon').trigger('input');
+        $('[role="dialog"] input[name="foo"]').val('brandon').trigger('input');
 
         // save and close modal
-        $('.modal .modal-footer .btn-primary:first').click();
+        $('footer.modal-footer .btn-primary:first').click();
         // save form
         form.$buttons.find('.o_form_button_save').click();
         // click next on pager
@@ -372,7 +372,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
             "should still have an open record button");
         form.$('input.o_input').trigger('focusout');
-        assert.strictEqual($('.modal button:contains(Create and edit)').length, 0,
+        assert.strictEqual($('[role="dialog"] button:contains(Create and edit)').length, 0,
             "there should not be a quick create modal");
 
         form.destroy();
@@ -471,10 +471,10 @@ QUnit.module('relational_fields', {
         // open the many2one in form view and change something
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_external_button').click();
-        $('.modal-body input[name="other_field"]').val('wood').trigger('input');
+        $('main.modal-body input[name="other_field"]').val('wood').trigger('input');
 
         // save the modal and make sure an onchange is triggered
-        $('.modal .modal-footer .btn-primary').first().click();
+        $('footer.modal-footer .btn-primary').first().click();
         assert.verifySteps(['read', 'get_formview_id', 'load_views', 'read', 'write', 'onchange', 'read']);
 
         // save the main record, and check that no extra rpcs are done (record
@@ -572,20 +572,20 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').click();
         // click on 'Search More' (mouseenter required by ui-autocomplete)
         $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();
-        assert.ok($('.modal .o_list_view').length, "should have opened a list view in a modal");
-        assert.ok(!$('.modal .o_list_view .o_list_record_selector').length,
+        assert.ok($('[role="dialog"] .o_list_view').length, "should have opened a list view in a modal");
+        assert.ok(!$('[role="dialog"] .o_list_view .o_list_record_selector').length,
             "there should be no record selector in the list view");
-        assert.ok(!$('.modal .modal-footer .o_select_button').length,
+        assert.ok(!$('footer.modal-footer .o_select_button').length,
             "there should be no 'Select' button in the footer");
-        assert.ok($('.modal tbody tr').length > 10, "list should contain more than 10 records");
+        assert.ok($('[role="dialog"] tbody tr').length > 10, "list should contain more than 10 records");
         // filter the list using the searchview
-        $('.modal .o_searchview_input').trigger({type: 'keypress', which: 80}); // P
-        $('.modal .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
-        assert.strictEqual($('.modal tbody tr').length, 10,
+        $('[role="dialog"] .o_searchview_input').trigger({type: 'keypress', which: 80}); // P
+        $('[role="dialog"] .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
+        assert.strictEqual($('[role="dialog"] tbody tr').length, 10,
             "list should be restricted to records containing a P (10 records)");
         // choose a record
-        $('.modal tbody tr:contains(Partner 20)').click(); // choose record 'Partner 20'
-        assert.ok(!$('.modal').length, "should have closed the modal");
+        $('[role="dialog"] tbody tr:contains(Partner 20)').click(); // choose record 'Partner 20'
+        assert.ok(!$('[role="dialog"]').length, "should have closed the modal");
         assert.ok(!$dropdown.is(':visible'), 'should have closed the dropdown');
         assert.strictEqual(form.$('.o_field_many2one input').val(), 'Partner 20',
                     'value of the m2o should have been correctly updated');
@@ -1690,7 +1690,7 @@ QUnit.module('relational_fields', {
             form.$('.o_data_cell').click();
             form.$('.o_external_button').click();
 
-            var $modal = $('.modal-dialog');
+            var $modal = $('[role="dialog"]');
             assert.equal($modal.length, 1,
                 'There should be 1 modal opened');
 
@@ -1702,7 +1702,7 @@ QUnit.module('relational_fields', {
                                   {position: 'top'});
 
             // Saving the modal and then the original model
-            $modal.find('.modal-footer .btn-primary').click();
+            $modal.find('footer.modal-footer .btn-primary').click();
             form.$buttons.find('.o_form_button_save').click();
 
             assert.verifySteps(['onchange sequence', 'partner_type write']);
@@ -1900,7 +1900,7 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').focus();
         form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
 
-        $('.modal .modal-footer .btn-primary').first().click();
+        $('footer.modal-footer .btn-primary').first().click();
 
         form.destroy();
     });
@@ -1928,14 +1928,14 @@ QUnit.module('relational_fields', {
 
         // cancel the many2one creation with Cancel button
         form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
-        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual($('[role="dialog"]').length, 1, "there should be one opened modal");
+        $('footer.modal-footer .btn:contains(Cancel)').click();
         assert.strictEqual(form.$('.o_field_many2one input').val(), "",
             'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
 
         // cancel the many2one creation with Close button
         form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
-        $('.modal .modal-header button').click();
+        $('header.modal-header button').click();
         assert.strictEqual(form.$('.o_field_many2one input').val(), "",
             'the many2one should not set a value as its creation has been cancelled (with Close button)');
 
@@ -1944,16 +1944,16 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
         assert.strictEqual(form.$('input').val(), "xphone", "should have selected xphone");
         form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
-        assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
-        $('.modal .modal-footer .btn:contains(Cancel)').click();
+        assert.strictEqual($('[role="dialog"]').length, 1, "there should be one opened modal");
+        $('footer.modal-footer .btn:contains(Cancel)').click();
         assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
             'should have restored the many2one with its previous selected value (xphone)');
 
         // confirm the many2one creation
         form.$('.o_field_many2one input').focus();
         form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('blur');
-        $('.modal .modal-footer .btn-primary').click();
-        assert.strictEqual($('.modal .o_form_view').length, 1,
+        $('footer.modal-footer .btn-primary').click();
+        assert.strictEqual($('[role="dialog"] .o_form_view').length, 1,
             'a new modal should be opened and contain a form view');
 
         form.destroy();
@@ -1976,7 +1976,7 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').focus();
         form.$('.o_field_many2one input').val('new partner').trigger('keyup').trigger('focusout');
 
-        assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+        assert.strictEqual($('[role="dialog"]').length, 0, "should not display the create modal");
         form.destroy();
     });
 
@@ -2019,14 +2019,14 @@ QUnit.module('relational_fields', {
             "there should be an external button displayed");
 
         form.$('.o_field_many2one .o_external_button').click();
-        assert.strictEqual($('.modal .o_form_view.o_form_readonly').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_form_view.o_form_readonly').length, 1,
             "there should be a readonly form view opened");
 
-        $('.modal .o_form_button_cancel').click();
+        $('[role="dialog"] .o_form_button_cancel').click();
 
         form.$('.o_field_many2one input').val('new product').trigger('keyup').trigger('focusout');
 
-        assert.strictEqual($('.modal').length, 0, "should not display the create modal");
+        assert.strictEqual($('[role="dialog"]').length, 0, "should not display the create modal");
         form.destroy();
     });
 
@@ -2143,10 +2143,10 @@ QUnit.module('relational_fields', {
             }));
             concurrency.delay(0).then(function() {
                 $input.blur();
-                assert.strictEqual($('.modal').length, 1,
+                assert.strictEqual($('[role="dialog"]').length, 1,
                     "should have one modal in body");
                 // Check that discarding clears $input
-                $('.modal .o_form_button_cancel').click();
+                $('[role="dialog"] .o_form_button_cancel').click();
                 assert.strictEqual($input.val(), '',
                     "the field should be empty");
                 form.destroy();
@@ -2202,7 +2202,7 @@ QUnit.module('relational_fields', {
                 which: $.ui.keyCode.ENTER,
                 keyCode: $.ui.keyCode.ENTER,
             }));
-            assert.strictEqual($('div.modal').length, 0, "should not have any modal in DOM");
+            assert.strictEqual($('[role="dialog"]').length, 0, "should not have any modal in DOM");
             assert.verifySteps(['name_search', 'onchange', 'write', 'read']);
             list.destroy();
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
@@ -2258,7 +2258,7 @@ QUnit.module('relational_fields', {
                 keyCode: $.ui.keyCode.ENTER,
             }));
             def.resolve();
-            assert.strictEqual($('div.modal').length, 0, "should not have any modal in DOM");
+            assert.strictEqual($('[role="dialog"]').length, 0, "should not have any modal in DOM");
             assert.verifySteps(['name_search', 'onchange', 'write', 'read']);
             list.destroy();
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
@@ -2409,15 +2409,15 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_data_row td:contains(first record)').click();
         form.$('.o_external_button').click();
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "should have one modal in body");
 
         // Changing the 'trululu' value
-        $('.modal input[name="display_name"]').val('test').trigger('input');
-        $('.modal button.btn-primary').click();
+        $('[role="dialog"] input[name="display_name"]').val('test').trigger('input');
+        $('[role="dialog"] button.btn-primary').click();
 
         // Test whether the value has changed
-        assert.strictEqual($('.modal').length, 0,
+        assert.strictEqual($('[role="dialog"]').length, 0,
             "the modal should be closed");
         assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
             "the partner name should have been updated to 'test'");
@@ -2504,7 +2504,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.btn.btn-primary.btn-sm.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
 
-        var $modal = $('.modal-dialog.modal-lg');
+        var $modal = $('.modal-lg');
 
         assert.equal($modal.length, 1,
             'There should be one modal');
@@ -2532,7 +2532,7 @@ QUnit.module('relational_fields', {
         // Third round: re-add 1 records
         form.$('.o_field_x2many_list_row_add a').click();
 
-        $modal = $('.modal-dialog.modal-lg');
+        $modal = $('.modal-lg');
 
         assert.equal($modal.length, 1,
             'There should be one modal');
@@ -3370,7 +3370,7 @@ QUnit.module('relational_fields', {
         assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "blurp#21#22#23#24#25#26#27#28#29",
             "should display the records in order with the changes");
 
-        $('.modal .modal-footer button:first').click();
+        $('footer.modal-footer button:first').click();
 
         assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
             "should cancel changes and display the records in order");
@@ -3402,7 +3402,7 @@ QUnit.module('relational_fields', {
         assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#39#40#41#42#43#44#45#46#47",
             "should display the records in order after resequence");
 
-        $('.modal .modal-footer button:first').click();
+        $('footer.modal-footer button:first').click();
 
         assert.equal(form.$('.o_field_one2many td[class="o_data_cell"]').text(), "#20#21#22#23#24#25#26#27#28#29",
             "should cancel changes and display the records in order");
@@ -3750,62 +3750,62 @@ QUnit.module('relational_fields', {
         // in its relation
         form.$('.o_data_row').click();
 
-        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
-        assert.strictEqual($('.modal .o_data_row').length, 0,
+        assert.strictEqual($('[role="dialog"]').length, 1, "should have opened a dialog");
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 0,
             "there should be no record in the one2many in the dialog");
 
         // add a many2many subrecord
-        $('.modal .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual($('.modal').length, 2,
+        assert.strictEqual($('[role="dialog"]').length, 2,
             "should have opened a second dialog");
 
         // select a many2many subrecord
-        $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+        $('[role="dialog"]:nth(1) .o_list_view .o_data_cell:first').click();
 
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "second dialog should be closed");
-        assert.strictEqual($('.modal .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 1,
             "there should be one record in the one2many in the dialog");
-        assert.notOk($('.modal .o_x2m_control_panel .o_cp_pager div').is(':visible'),
+        assert.notOk($('[role="dialog"] .o_x2m_control_panel .o_cp_pager div').is(':visible'),
             'm2m pager should be hidden');
 
         // click on 'Save & Close'
-        $('.modal .modal-footer .btn-primary:first').click();
+        $('footer.modal-footer .btn-primary:first').click();
 
-        assert.strictEqual($('.modal').length, 0, "dialog should be closed");
+        assert.strictEqual($('[role="dialog"]').length, 0, "dialog should be closed");
 
         // reopen o2m record, and another m2m subrecord in its relation, but
         // discard the changes
         form.$('.o_data_row').click();
 
-        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
-        assert.strictEqual($('.modal .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1, "should have opened a dialog");
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 1,
             "there should be one record in the one2many in the dialog");
 
         // add another m2m subrecord
-        $('.modal .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual($('.modal').length, 2,
+        assert.strictEqual($('[role="dialog"]').length, 2,
             "should have opened a second dialog");
 
-        $('.modal:nth(1) .o_list_view .o_data_cell:first').click();
+        $('[role="dialog"]:nth(1) .o_list_view .o_data_cell:first').click();
 
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "second dialog should be closed");
-        assert.strictEqual($('.modal .o_data_row').length, 2,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 2,
             "there should be two records in the one2many in the dialog");
 
         // click on 'Discard'
-        $('.modal .modal-footer .btn-default').click();
+        $('footer.modal-footer .btn-default').click();
 
-        assert.strictEqual($('.modal').length, 0, "dialog should be closed");
+        assert.strictEqual($('[role="dialog"]').length, 0, "dialog should be closed");
 
         // reopen o2m record to check that second changes have properly been discarded
         form.$('.o_data_row').click();
 
-        assert.strictEqual($('.modal').length, 1, "should have opened a dialog");
-        assert.strictEqual($('.modal .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1, "should have opened a dialog");
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 1,
             "there should be one record in the one2many in the dialog");
 
         form.destroy();
@@ -4158,8 +4158,8 @@ QUnit.module('relational_fields', {
         checkRead = true;
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o-kanban-button-new').click();
-        $('.modal input').val('new record').trigger('input');
-        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        $('[role="dialog"] input').val('new record').trigger('input');
+        $('footer.modal-footer .btn-primary:first').click(); // save and close
         // checks
         assert.strictEqual(readIDs, undefined, "should not have read any record");
         assert.strictEqual(form.$('span:contains(new record)').length, 0,
@@ -4195,8 +4195,8 @@ QUnit.module('relational_fields', {
         readIDs = undefined;
         // add and delete a record in page 1
         form.$('.o-kanban-button-new').click();
-        $('.modal input').val('new record page 1').trigger('input');
-        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        $('[role="dialog"] input').val('new record page 1').trigger('input');
+        $('footer.modal-footer .btn-primary:first').click(); // save and close
         assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 11)').length,
             1, 'first record should be the one with id 11 (next checks rely on that)');
         form.$('.delete_icon:first').click();
@@ -4210,8 +4210,8 @@ QUnit.module('relational_fields', {
         readIDs = undefined;
         form.$('.delete_icon:first').click();
         form.$('.o-kanban-button-new').click();
-        $('.modal input').val('new record page 2').trigger('input');
-        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        $('[role="dialog"] input').val('new record page 2').trigger('input');
+        $('footer.modal-footer .btn-primary:first').click(); // save and close
         assert.strictEqual(readIDs, undefined, "should not have read any record");
         // checks
         assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
@@ -4255,13 +4255,13 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
         $('input[name="turtle_int"]').val('5').trigger('input');
-        $('.modal-footer button.btn-primary').first().click();
+        $('footer.modal-footer button.btn-primary').first().click();
         assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '5',
             'should display 5 in the foo field');
         form.$('tbody tr:eq(1) td.o_data_cell').click();
 
         $('input[name="turtle_int"]').val('3').trigger('input');
-        $('.modal-footer button.btn-primary').first().click();
+        $('footer.modal-footer button.btn-primary').first().click();
         assert.strictEqual(form.$('tbody tr:eq(1) td.o_data_cell').text(), '3',
             'should now display 3 in the foo field');
         form.destroy();
@@ -4358,7 +4358,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_cancel').click();
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
             "changes shouldn't have been discarded yet, waiting for user confirmation");
-        $('.modal .modal-footer .btn-primary').click();
+        $('footer.modal-footer .btn-primary').click();
         assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
             "display name of first record in o2m list should be 'relational record 1'");
 
@@ -4557,15 +4557,15 @@ QUnit.module('relational_fields', {
         // edit existing subrecord
         form.$('.oe_kanban_global_click').click();
 
-        $('.modal .o_form_view input').val('new name').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save
+        $('[role="dialog"] .o_form_view input').val('new name').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save
         assert.strictEqual(form.$('.o_kanban_record span:first').text(), 'new name',
             'value of subrecord should have been updated');
 
         // create a new subrecord
         form.$('.o-kanban-button-new').click();
-        $('.modal .o_form_view input').val('new subrecord 1').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save and close
+        $('[role="dialog"] .o_form_view input').val('new subrecord 1').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save and close
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 2,
             'should contain 2 records');
         assert.strictEqual(form.$('.o_kanban_record:nth(1) span').text(), 'new subrecord 1',
@@ -4573,10 +4573,10 @@ QUnit.module('relational_fields', {
 
         // create two new subrecords
         form.$('.o-kanban-button-new').click();
-        $('.modal .o_form_view input').val('new subrecord 2').trigger('input');
-        $('.modal .modal-footer .btn-primary:nth(1)').click(); // save and new
-        $('.modal .o_form_view input').val('new subrecord 3').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save and close
+        $('[role="dialog"] .o_form_view input').val('new subrecord 2').trigger('input');
+        $('footer.modal-footer .btn-primary:nth(1)').click(); // save and new
+        $('[role="dialog"] .o_form_view input').val('new subrecord 3').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save and close
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 4,
             'should contain 4 records');
 
@@ -4742,8 +4742,8 @@ QUnit.module('relational_fields', {
         // edit existing subrecord
         form.$('.o_list_view tbody tr:first() td:eq(1)').click();
 
-        $('.modal .o_form_view input').val('new name').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save
+        $('[role="dialog"] .o_form_view input').val('new name').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
             'value of subrecord should have been updated');
         assert.strictEqual(nbWrite, 0, "should not have write anything in DB");
@@ -4789,9 +4789,9 @@ QUnit.module('relational_fields', {
             '"Add an item" link should not be available in readonly');
 
         form.$('.o_list_view tbody td:first()').click();
-        assert.ok($('.modal .o_form_readonly').length,
+        assert.ok($('[role="dialog"] .o_form_readonly').length,
             'in readonly, clicking on a subrecord should open it in readonly in a dialog');
-        $('.modal .o_form_button_cancel').click(); // close the dialog
+        $('[role="dialog"] .o_form_button_cancel').click(); // close the dialog
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -4800,7 +4800,7 @@ QUnit.module('relational_fields', {
 
         // edit existing subrecord
         form.$('.o_list_view tbody td:first()').click();
-        assert.strictEqual($('.modal').length, 0,
+        assert.strictEqual($('[role="dialog"]').length, 0,
             'in edit, clicking on a subrecord should not open a dialog');
         assert.ok(form.$('.o_list_view tbody tr:first()').hasClass('o_selected_row'),
             'first row should be in edition');
@@ -4898,7 +4898,7 @@ QUnit.module('relational_fields', {
 
         // cancel the edition
         form.$buttons.find('.o_form_button_cancel').click();
-        $('.modal-footer button.btn-primary').first().click();
+        $('footer.modal-footer button.btn-primary').first().click();
         assert.strictEqual(form.$('tr.o_data_row').length, 1,
             "should have 1 data rows");
 
@@ -5054,7 +5054,7 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_cancel').click();
 
         // confirm the discard operation
-        $('.modal .modal-footer .btn-primary').click(); // click on confirm
+        $('footer.modal-footer .btn-primary').click(); // click on confirm
 
         assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
             "pager should still be visible");
@@ -5129,7 +5129,7 @@ QUnit.module('relational_fields', {
             "pager should still display the correct total");
 
         // click on cancel
-        $('.modal .modal-footer .btn-default').click(); // click on cancel
+        $('footer.modal-footer .btn-default').click(); // click on cancel
 
         assert.strictEqual(form.$('.o_cp_pager').text().trim(), '1-3 / 4',
             "pager should again display the correct total");
@@ -5169,7 +5169,7 @@ QUnit.module('relational_fields', {
 
         // discard
         form.$buttons.find('.o_form_button_cancel').click();
-        $('.modal .modal-footer .btn-primary').click();
+        $('footer.modal-footer .btn-primary').click();
 
         assert.strictEqual(form.$('tr.o_data_row').length, 1,
             "should have 1 data row");
@@ -5216,17 +5216,17 @@ QUnit.module('relational_fields', {
 
         // click elsewhere,
         form.$('label.o_form_label').click();
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             'a confirmation model should be opened');
 
         // click on cancel, the line should still be selected
-        $('.modal .modal-footer button.btn-default').click();
+        $('footer.modal-footer button.btn-default').click();
         assert.strictEqual(form.$('tr.o_data_row.o_selected_row').length, 1,
             "should still have 1 selected data row");
 
         // click elsewhere, and click on ok (on the confirmation dialog)
         form.$('label.o_form_label').click();
-        $('.modal .modal-footer button.btn-primary').click();
+        $('footer.modal-footer button.btn-primary').click();
         assert.strictEqual(form.$('tr.o_data_row').length, 0,
             "should have 0 data rows (invalid line has been discarded");
 
@@ -5427,17 +5427,17 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual($('.modal .o_data_row.o_selected_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_data_row.o_selected_row').length, 1,
             "there should be a row in edition in the dialog");
 
         // trigger keydown ESCAPE in the edited row
-        $('.modal .o_data_cell input').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        $('[role="dialog"] .o_data_cell input').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
 
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "dialog should still be open");
-        assert.strictEqual($('.modal .o_data_row').length, 0,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 0,
             "the row should have been removed");
 
         form.destroy();
@@ -6042,8 +6042,8 @@ QUnit.module('relational_fields', {
 
         // click to create a subrecord
         form.$('tbody td.o_field_x2many_list_row_add a').click();
-        $('.modal input').val('new record').trigger('input');
-        $('.modal .modal-footer button:eq(0)').click(); // save and close
+        $('[role="dialog"] input').val('new record').trigger('input');
+        $('footer.modal-footer button:eq(0)').click(); // save and close
 
         assert.ok(!form.$('.o_x2m_control_panel .o_cp_pager div').is(':visible'),
             'o2m pager should be hidden');
@@ -6098,14 +6098,14 @@ QUnit.module('relational_fields', {
 
         form.$('tbody td.o_field_x2many_list_row_add a').click();
 
-        $('.modal .o_field_many2one input').click();
+        $('[role="dialog"] .o_field_many2one input').click();
 
-        var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
+        var $dropdown = $('[role="dialog"] .o_field_many2one input').autocomplete('widget');
 
         $dropdown.find('li:eq(1) a').mouseenter();
         $dropdown.find('li:eq(1) a').click();
 
-        $('.modal .modal-footer button:eq(0)').click(); // save and close
+        $('footer.modal-footer button:eq(0)').click(); // save and close
 
         assert.strictEqual(form.$('tbody td:contains(xpad)').length, 1,
             "should display 'xpad' on a td");
@@ -6157,16 +6157,16 @@ QUnit.module('relational_fields', {
         form.$('tbody td.o_field_x2many_list_row_add a').click();
 
         // write in the many2one field, value = 37 (xphone)
-        $('.modal .o_field_many2one input').click();
-        var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
+        $('[role="dialog"] .o_field_many2one input').click();
+        var $dropdown = $('[role="dialog"] .o_field_many2one input').autocomplete('widget');
         $dropdown.find('li:eq(0) a').mouseenter();
         $dropdown.find('li:eq(0) a').click();
 
         // write in the integer field
-        $('.modal .modal-body input.o_field_widget').val('123').trigger('input');
+        $('main.modal-body input.o_field_widget').val('123').trigger('input');
 
         // save and close
-        $('.modal .modal-footer button:eq(0)').click();
+        $('footer.modal-footer button:eq(0)').click();
 
         assert.strictEqual(form.$('tbody td:contains(xphone)').length, 1,
             "should display 'xphone' in a td");
@@ -6174,28 +6174,28 @@ QUnit.module('relational_fields', {
         // reopen the record in form view
         form.$('tbody td:contains(xphone)').click();
 
-        assert.strictEqual($('.modal .modal-body input').val(), "xphone",
+        assert.strictEqual($('main.modal-body input').val(), "xphone",
             "should display 'xphone' in an input");
 
-        $('.modal .modal-body input.o_field_widget').val('456').trigger('input');
+        $('main.modal-body input.o_field_widget').val('456').trigger('input');
 
         // discard
-        $('.modal .modal-footer span:contains(Discard)').click();
+        $('footer.modal-footer span:contains(Discard)').click();
 
         // reopen the record in form view
         form.$('tbody td:contains(xphone)').click();
 
-        assert.strictEqual($('.modal .modal-body input.o_field_widget').val(), "123",
+        assert.strictEqual($('main.modal-body input.o_field_widget').val(), "123",
             "should display 123 (previous change has been discarded)");
 
         // write in the many2one field, value = 41 (xpad)
-        $('.modal .o_field_many2one input').click();
-        $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
+        $('[role="dialog"] .o_field_many2one input').click();
+        $dropdown = $('[role="dialog"] .o_field_many2one input').autocomplete('widget');
         $dropdown.find('li:eq(1) a').mouseenter();
         $dropdown.find('li:eq(1) a').click();
 
         // save and close
-        $('.modal .modal-footer button:eq(0)').click();
+        $('footer.modal-footer button:eq(0)').click();
 
         assert.strictEqual(form.$('tbody td:contains(xpad)').length, 1,
             "should display 'xpad' in a td");
@@ -6245,7 +6245,7 @@ QUnit.module('relational_fields', {
         form.$('tr.o_data_row:eq(0) td:contains(xphone)').click();
 
         // write in the many2one field
-        $('.modal .o_field_many2one input').click();
+        $('[role="dialog"] .o_field_many2one input').click();
 
         form.destroy();
     });
@@ -6513,29 +6513,29 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual($('.modal .o_data_row').length, 2,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 2,
             "sould have 2 records in the select view (the last one is not displayed because it is already selected)");
 
-        $('.modal .o_data_row:first .o_list_record_selector input').click();
-        $('.modal .o_select_button').click();
+        $('[role="dialog"] .o_data_row:first .o_list_record_selector input').click();
+        $('[role="dialog"] .o_select_button').click();
         $('.o_form_button_save').click();
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
 
-        assert.strictEqual($('.modal .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 1,
             "sould have 1 record in the select view");
 
-        $('.modal-footer button:eq(1)').click();
-        $('.modal input.o_field_widget[name="turtle_foo"]').val('tototo').trigger('input');
-        $('.modal input.o_field_widget[name="turtle_int"]').val(50).trigger('input');
-        var $many2one = $('.modal [name="product_id"] input').click();
+        $('footer.modal-footer button:eq(1)').click();
+        $('[role="dialog"] input.o_field_widget[name="turtle_foo"]').val('tototo').trigger('input');
+        $('[role="dialog"] input.o_field_widget[name="turtle_int"]').val(50).trigger('input');
+        var $many2one = $('[role="dialog"] [name="product_id"] input').click();
         var $dropdown = $many2one.autocomplete('widget');
         $dropdown.find('li:first a').mouseenter();
         $dropdown.find('li:first a').click();
 
-        $('.modal-footer button:contains(&):first').click();
+        $('footer.modal-footer button:contains(&):first').click();
 
-        assert.strictEqual($('.modal').length, 0, "sould close the modals");
+        assert.strictEqual($('[role="dialog"]').length, 0, "sould close the modals");
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
@@ -6593,34 +6593,34 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_data_row:first').click();
-        assert.strictEqual($('.modal .modal-title').first().text().trim(), 'Open: one2many turtle field',
+        assert.strictEqual($('[role="dialog"] .modal-title').first().text().trim(), 'Open: one2many turtle field',
             "modal should use the python field string as title");
-        $('.modal .o_form_button_cancel').click();
+        $('[role="dialog"] .o_form_button_cancel').click();
         form.$buttons.find('.o_form_button_edit').click();
 
         // edit the first one2many record
         form.$('.o_data_row:first').click();
-        var $many2one = $('.modal [name="product_id"] input').click();
+        var $many2one = $('[role="dialog"] [name="product_id"] input').click();
         var $dropdown = $many2one.autocomplete('widget');
         $dropdown.find('li:first a').mouseenter();
         $dropdown.find('li:first a').click();
-        $('.modal-footer button:first').click();
+        $('footer.modal-footer button:first').click();
 
         $('.o_form_button_save').click(); // don't save anything because the one2many does not change
 
         // add a one2many record
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_data_row:first .o_list_record_selector input').click();
-        $('.modal .o_select_button').click();
+        $('[role="dialog"] .o_data_row:first .o_list_record_selector input').click();
+        $('[role="dialog"] .o_select_button').click();
 
         // edit the second one2many record
         form.$('.o_data_row:eq(1)').click();
-        $many2one = $('.modal [name="product_id"] input').click();
+        $many2one = $('[role="dialog"] [name="product_id"] input').click();
         $dropdown = $many2one.autocomplete('widget');
         $dropdown.find('li:first a').mouseenter();
         $dropdown.find('li:first a').click();
-        $('.modal-footer button:first').click();
+        $('footer.modal-footer button:first').click();
 
         $('.o_form_button_save').click();
 
@@ -6812,10 +6812,10 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_field_x2many_list_row_add a').click();
-        $('.modal-footer button.btn-primary').first().click();
+        $('footer.modal-footer button.btn-primary').first().click();
 
-        assert.strictEqual($('.modal').length, 1, "should still have an open modal");
-        assert.strictEqual($('.modal tbody label.o_field_invalid').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1, "should still have an open modal");
+        assert.strictEqual($('[role="dialog"] tbody label.o_field_invalid').length, 1,
             "should have displayed invalid fields");
         form.destroy();
     });
@@ -7011,9 +7011,9 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_field_one2many .o_field_x2many_list_row_add a').click();
-        assert.strictEqual($('.modal').length, 1, "form view dialog should be opened");
-        $('.modal-body input[name="model_name"]').val('partner').trigger('input');
-        $('.modal-footer button:first').click();
+        assert.strictEqual($('[role="dialog"]').length, 1, "form view dialog should be opened");
+        $('main.modal-body input[name="model_name"]').val('partner').trigger('input');
+        $('footer.modal-footer button:first').click();
 
         assert.strictEqual(form.$('.o_field_one2many tbody tr:first').text(), "coucouhas changed[]",
             "the onchange should create one new record and remove the existing");
@@ -7112,9 +7112,9 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row:first').click();
 
-        assert.strictEqual($('.modal .o_field_widget').text(), "xphone",
+        assert.strictEqual($('[role="dialog"] .o_field_widget').text(), "xphone",
             'should display the form view dialog with the many2one value');
-        $('.modal-footer button').click(); // close the modal
+        $('footer.modal-footer button').click(); // close the modal
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -7368,7 +7368,7 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row:first').click();
 
-        assert.strictEqual($('.modal .o_field_widget[name="partner_ids"] .o_list_view').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_field_widget[name="partner_ids"] .o_list_view').length, 1,
             'should display many2many list view in the modal');
 
         form.destroy();
@@ -7400,7 +7400,7 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row:first').click();
 
-        assert.strictEqual($('.modal .o_field_widget[name="turtle_foo"]').text(), 'blip',
+        assert.strictEqual($('[role="dialog"] .o_field_widget[name="turtle_foo"]').text(), 'blip',
             'should open the modal and display the form field');
 
         form.destroy();
@@ -7449,14 +7449,14 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row:first').click(); // edit first record
 
-        var $input = $('.modal .o_field_many2manytags input');
+        var $input = $('[role="dialog"] .o_field_many2manytags input');
         $input.click(); // opens the dropdown
         $input.autocomplete('widget').find('li').click(); // add 'first record'
 
         // add a many2many tag and save
-        $('.modal .o_field_x2many_list_row_add a').click();
-        $('.modal .o_field_widget[name=name]').val('test').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_field_widget[name=name]').val('test').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save
 
         form.$buttons.find('.o_form_button_save').click();
 
@@ -7510,13 +7510,13 @@ QUnit.module('relational_fields', {
         form.$('.o_external_button').click();
 
         // click on add, to add a new partner in the m2m
-        $('.modal .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
 
         // select the partner_type 'gold' (this closes the 2nd modal)
-        $('.modal td:contains(gold)').click();
+        $('[role="dialog"] td:contains(gold)').click();
 
         // confirm the changes in the modal
-        $('.modal .modal-footer .btn-primary').click();
+        $('footer.modal-footer .btn-primary').click();
 
         form.$buttons.find('.o_form_button_save').click();
         form.destroy();
@@ -7585,7 +7585,7 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row:first').click();
 
-        assert.strictEqual($('.modal .o_field_widget[name="turtle_foo"]').text(), 'blip',
+        assert.strictEqual($('[role="dialog"] .o_field_widget[name="turtle_foo"]').text(), 'blip',
             'should open the modal and display the form field');
 
         form.destroy();
@@ -8080,7 +8080,7 @@ QUnit.module('relational_fields', {
         // try to add a second line and check that it is correctly waiting
         // for the onchange to return
         form.$('.o_field_x2many_list_row_add a').click();
-        assert.strictEqual($('.modal').length, 0, "no modal should be displayed");
+        assert.strictEqual($('[role="dialog"]').length, 0, "no modal should be displayed");
         assert.strictEqual($('.o_field_invalid').length, 0,
             "no field should be marked as invalid");
         assert.strictEqual(form.$('.o_data_row').length, 1,
@@ -8384,11 +8384,11 @@ QUnit.module('relational_fields', {
 
         form.$('.o_data_row td:first').click(); // open the record
 
-        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"]').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_field_many2manytags[name="timmy"]').length, 1,
             "timmy should be displayed in the form view");
-        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .badge').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_field_many2manytags[name="timmy"] .badge').length, 1,
             "m2mtags should contain one tag");
-        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
+        assert.strictEqual($('[role="dialog"] .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
             'gold', "tag name should have been correctly loaded");
 
         form.destroy();
@@ -8464,10 +8464,10 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_field_x2many_list_row_add a').click();
-        $('.modal .o_data_cell input').val('new record').trigger('input');
+        $('[role="dialog"] .o_field_x2many_list_row_add a').click();
+        $('[role="dialog"] .o_data_cell input').val('new record').trigger('input');
         checkOnchange = true;
-        $('.modal .modal-footer .btn-primary').click(); // save (should trigger the onchange)
+        $('footer.modal-footer .btn-primary').click(); // save (should trigger the onchange)
 
         form.destroy();
     });
@@ -8788,7 +8788,7 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row.o_selected_row').length, 1,
             "line should not have been removed and should still be in edition");
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "a confirmation dialog should be opened");
         assert.ok(form.$('.o_field_widget[name=int_field]').hasClass('o_field_invalid'),
             "should indicate that int_field is invalid");
@@ -8986,9 +8986,9 @@ QUnit.module('relational_fields', {
         // open the new subrecord to check the value of the nested o2m, and to
         // ensure that it will be saved
         form.$('.o_data_cell:first').click();
-        assert.strictEqual($('.modal .o_data_cell').text(), 'test nested',
+        assert.strictEqual($('[role="dialog"] .o_data_cell').text(), 'test nested',
             "should have added the new row to the nested one2many");
-        $('.modal .modal-footer .btn-primary').click();
+        $('footer.modal-footer .btn-primary').click();
 
         form.$buttons.find('.o_form_button_save').click();
 
@@ -9276,26 +9276,26 @@ QUnit.module('relational_fields', {
 
         // add a new record
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_field_widget').val('new record').trigger('input');
-        $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+        $('[role="dialog"] .o_field_widget').val('new record').trigger('input');
+        $('footer.modal-footer .btn-primary:first').click(); // Save & Close
 
         assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new record',
             "should display the new record");
 
         // reopen freshly added record and edit it
         form.$('.o_data_row .o_data_cell').click();
-        $('.modal .o_field_widget').val('new record edited').trigger('input');
+        $('[role="dialog"] .o_field_widget').val('new record edited').trigger('input');
 
         // save it, and choose to directly create another record
-        $('.modal .modal-footer .btn-primary:nth(1)').click(); // Save & New
+        $('footer.modal-footer .btn-primary:nth(1)').click(); // Save & New
 
-        assert.strictEqual($('.modal').length, 1,
+        assert.strictEqual($('[role="dialog"]').length, 1,
             "the model should still be open");
-        assert.strictEqual($('.modal .o_field_widget').text(), '',
+        assert.strictEqual($('[role="dialog"] .o_field_widget').text(), '',
             "should have cleared the input");
 
-        $('.modal .o_field_widget').val('another new record').trigger('input');
-        $('.modal .modal-footer .btn-primary:first').click(); // Save & Close
+        $('[role="dialog"] .o_field_widget').val('another new record').trigger('input');
+        $('footer.modal-footer .btn-primary:first').click(); // Save & Close
 
         assert.strictEqual(form.$('.o_data_row .o_data_cell').text(),
             'new record editedanother new record', "should display the two records");
@@ -9461,19 +9461,19 @@ QUnit.module('relational_fields', {
         // edit existing subrecord
         form.$('.oe_kanban_global_click:first()').click();
 
-        $('.modal .o_form_view input').val('new name').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save
+        $('[role="dialog"] .o_form_view input').val('new name').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save
         assert.strictEqual(form.$('.o_kanban_record:first() span').text(), 'new name',
             'value of subrecord should have been updated');
 
         // add subrecords
         // -> single select
         form.$('.o_field_many2many .o-kanban-button-new').click();
-        assert.ok($('.modal .o_list_view').length, "should have opened a list view in a modal");
-        assert.strictEqual($('.modal .o_list_view tbody .o_list_record_selector').length, 3,
+        assert.ok($('[role="dialog"] .o_list_view').length, "should have opened a list view in a modal");
+        assert.strictEqual($('[role="dialog"] .o_list_view tbody .o_list_record_selector').length, 3,
             "list view should contain 3 records");
-        $('.modal .o_list_view tbody tr:contains(red)').click(); // select red
-        assert.ok(!$('.modal .o_list_view').length, "should have closed the modal");
+        $('[role="dialog"] .o_list_view tbody tr:contains(red)').click(); // select red
+        assert.ok(!$('[role="dialog"] .o_list_view').length, "should have closed the modal");
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 3,
             'kanban should now contain 3 records');
         assert.ok(form.$('.o_kanban_record:contains(red)').length,
@@ -9481,23 +9481,23 @@ QUnit.module('relational_fields', {
 
         // -> multiple select
         form.$('.o_field_many2many .o-kanban-button-new').click();
-        assert.ok($('.modal .o_select_button').prop('disabled'), "select button should be disabled");
-        assert.strictEqual($('.modal .o_list_view tbody .o_list_record_selector').length, 2,
+        assert.ok($('[role="dialog"] .o_select_button').prop('disabled'), "select button should be disabled");
+        assert.strictEqual($('[role="dialog"] .o_list_view tbody .o_list_record_selector').length, 2,
             "list view should contain 2 records");
-        $('.modal .o_list_view thead .o_list_record_selector input').click(); // select all
-        $('.modal .o_select_button').click(); // validate selection
-        assert.ok(!$('.modal .o_select_button').prop('disabled'), "select button should be enabled");
-        assert.ok(!$('.modal .o_list_view').length, "should have closed the modal");
+        $('[role="dialog"] .o_list_view thead .o_list_record_selector input').click(); // select all
+        $('[role="dialog"] .o_select_button').click(); // validate selection
+        assert.ok(!$('[role="dialog"] .o_select_button').prop('disabled'), "select button should be enabled");
+        assert.ok(!$('[role="dialog"] .o_list_view').length, "should have closed the modal");
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 5,
             'kanban should now contain 5 records');
         // -> created record
         form.$('.o_field_many2many .o-kanban-button-new').click();
-        $('.modal .modal-footer .btn-primary:nth(1)').click(); // click on 'Create'
-        assert.ok($('.modal .o_form_view.o_form_editable').length,
+        $('footer.modal-footer .btn-primary:nth(1)').click(); // click on 'Create'
+        assert.ok($('[role="dialog"] .o_form_view.o_form_editable').length,
             "should have opened a form view in edit mode, in a modal");
-        $('.modal .o_form_view input').val('A new type').trigger('input');
-        $('.modal:nth(1) .modal-footer .btn-primary:first()').click(); // click on 'Save & Close'
-        assert.ok(!$('.modal').length, "should have closed both modals");
+        $('[role="dialog"] .o_form_view input').val('A new type').trigger('input');
+        $('[role="dialog"]:nth(1) footer .btn-primary:first()').click(); // click on 'Save & Close'
+        assert.ok(!$('[role="dialog"]').length, "should have closed both modals");
         assert.strictEqual(form.$('.o_kanban_record:not(.o_kanban_ghost)').length, 6,
             'kanban should now contain 6 records');
         assert.ok(form.$('.o_kanban_record:contains(A new type)').length,
@@ -9592,7 +9592,7 @@ QUnit.module('relational_fields', {
             'delete icon should be visible in edit');
 
         form.$('.o-kanban-button-new').click(); // click on 'Add'
-        assert.strictEqual($('.modal .modal-footer .btn-primary').length, 1, // only button 'Select'
+        assert.strictEqual($('footer.modal-footer .btn-primary').length, 1, // only button 'Select'
             '"Create" button should not be available in the modal');
 
         form.destroy();
@@ -9655,19 +9655,19 @@ QUnit.module('relational_fields', {
         // edit existing subrecord
         form.$('.o_list_view tbody tr:first()').click();
 
-        $('.modal .o_form_view input').val('new name').trigger('input');
-        $('.modal .modal-footer .btn-primary').click(); // save
+        $('[role="dialog"] .o_form_view input').val('new name').trigger('input');
+        $('footer.modal-footer .btn-primary').click(); // save
         assert.strictEqual(form.$('.o_list_view tbody td:first()').text(), 'new name',
             'value of subrecord should have been updated');
 
         // add new subrecords
         form.$('.o_field_x2many_list_row_add a').click();
-        assert.strictEqual($('.modal .o_list_view').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_list_view').length, 1,
             "a modal should be open");
-        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_list_view .o_data_row').length, 1,
             "the list should contain one row");
-        $('.modal .o_list_view .o_data_row').click(); // select a record
-        assert.strictEqual($('.modal .o_list_view').length, 0,
+        $('[role="dialog"] .o_list_view .o_data_row').click(); // select a record
+        assert.strictEqual($('[role="dialog"] .o_list_view').length, 0,
             "the modal should be closed");
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
             'should contain 3 subrecords');
@@ -9758,7 +9758,7 @@ QUnit.module('relational_fields', {
 
         // edit existing subrecord
         form.$('.o_list_view tbody td:first()').click();
-        assert.ok(!$('.modal').length,
+        assert.ok(!$('[role="dialog"]').length,
             'in edit, clicking on a subrecord should not open a dialog');
         assert.ok(form.$('.o_list_view tbody tr:first()').hasClass('o_selected_row'),
             'first row should be in edition');
@@ -9776,12 +9776,12 @@ QUnit.module('relational_fields', {
 
         // add new subrecords
         form.$('.o_field_x2many_list_row_add a').click();
-        assert.strictEqual($('.modal .o_list_view').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_list_view').length, 1,
             "a modal should be open");
-        assert.strictEqual($('.modal .o_list_view .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_list_view .o_data_row').length, 1,
             "the list should contain one row");
-        $('.modal .o_list_view .o_data_row').click(); // select a record
-        assert.strictEqual($('.modal .o_list_view').length, 0,
+        $('[role="dialog"] .o_list_view .o_data_row').click(); // select a record
+        assert.strictEqual($('[role="dialog"] .o_list_view').length, 0,
             "the modal should be closed");
         assert.strictEqual(form.$('.o_list_view td.o_list_number').length, 3,
             'should contain 3 subrecords');
@@ -10048,7 +10048,7 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_data_row:first').click(); // add a first record to the relation
+        $('[role="dialog"] .o_data_row:first').click(); // add a first record to the relation
 
         assert.strictEqual(form.$('.o_data_row').length, 1,
             "the record should have been added to the relation");
@@ -10056,7 +10056,7 @@ QUnit.module('relational_fields', {
             "inner m2m should have been fetched and correctly displayed");
 
         form.$('.o_field_x2many_list_row_add a').click();
-        $('.modal .o_data_row:first').click(); // add a second record to the relation
+        $('[role="dialog"] .o_data_row:first').click(); // add a second record to the relation
 
         assert.strictEqual(form.$('.o_data_row').length, 2,
             "the second record should have been added to the relation");
@@ -10109,13 +10109,13 @@ QUnit.module('relational_fields', {
         });
 
         form.$('.o_field_x2many_list_row_add a').click();
-        assert.strictEqual($('.modal .o_data_row').length, 1,
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 1,
             "should contain only one row (gold)");
 
-        $('.modal .o_searchview_input').trigger({type: 'keypress', which: 115}); // s
-        $('.modal .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
+        $('[role="dialog"] .o_searchview_input').trigger({type: 'keypress', which: 115}); // s
+        $('[role="dialog"] .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
 
-        assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
+        assert.strictEqual($('[role="dialog"] .o_data_row').length, 0, "should contain no row");
 
         form.destroy();
     });
@@ -10149,8 +10149,8 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('td.o_data_cell:first').click();
 
-        $('.modal-body input[type="checkbox"]').click();
-        $('.modal .modal-footer .btn-primary').first().click();
+        $('main.modal-body input[type="checkbox"]').click();
+        $('footer.modal-footer .btn-primary').first().click();
 
         // there is nothing left to save -> should not do a 'write' RPC
         form.$buttons.find('.o_form_button_save').click();
@@ -10806,9 +10806,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > button').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > span:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > button:contains("gold")').length,
             "should contain newly added tag 'gold'");
 
         form.destroy();
@@ -10841,18 +10841,18 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 2,
             "should contain 2 tags");
-        assert.ok(form.$('span:contains(gold)').length,
+        assert.ok(form.$('button:contains(gold)').length,
             'should have fetched and rendered gold partner tag');
-        assert.ok(form.$('span:contains(silver)').length,
+        assert.ok(form.$('button:contains(silver)').length,
             'should have fetched and rendered silver partner tag');
-        assert.strictEqual(form.$('span:first()').data('color'), 2,
+        assert.strictEqual(form.$('button:first()').data('color'), 2,
             'should have correctly fetched the color');
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 2,
             "should still contain 2 tags in edit mode");
         assert.ok(form.$('.o_tag_color_2 .o_badge_text:contains(gold)').length,
             'first tag should still contain "gold" and be color 2 in edit mode');
@@ -10867,46 +10867,46 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li a:contains("red")').length, 1,
             "autocomplete dropdown should contain 'red'");
         $input.autocomplete('widget').find('li').click(); // add 'red'
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 3,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 3,
             "should contain 3 tags");
-        assert.ok(form.$('.o_field_many2manytags > span:contains("red")').length,
+        assert.ok(form.$('.o_field_many2manytags > button:contains("red")').length,
             "should contain newly added tag 'red'");
-        assert.ok(form.$('.o_field_many2manytags > span[data-color=8]:contains("red")').length,
+        assert.ok(form.$('.o_field_many2manytags > button[data-color=8]:contains("red")').length,
             "should have fetched the color of added tag");
 
         // remove tag with id 14
-        form.$('.o_field_many2manytags span[data-id=14] .o_delete').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 2,
+        form.$('.o_field_many2manytags button[data-id=14] .o_delete').click();
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 2,
             "should contain 2 tags");
-        assert.ok(!form.$('.o_field_many2manytags > span:contains("silver")').length,
+        assert.ok(!form.$('.o_field_many2manytags > button:contains("silver")').length,
             "should not contain tag 'silver' anymore");
 
         // save the record (should do the write RPC with the correct commands)
         form.$buttons.find('.o_form_button_save').click();
 
         // checkbox 'Hide in Kanban'
-        $input = form.$('.o_field_many2manytags span[data-id=13]'); // selects 'red' tag
+        $input = form.$('.o_field_many2manytags button[data-id=13]'); // selects 'red' tag
         $input.click(); // opens the colorpicker dropdown
-        assert.ok(form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox'), "should have a checkbox in the colorpicker dropdown menu");
+        assert.ok(form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox'), "should have a checkbox in the colorpicker dropdown menu");
 
         $input.click();
-        var $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input');
+        var $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input');
         assert.notOk($checkBox.is(':checked'), "should have unticked checkbox in colorpicker dropdown menu");
 
         $checkBox.mousedown();
-        $input = form.$('.o_field_many2manytags span[data-id=13]'); // refresh
+        $input = form.$('.o_field_many2manytags button[data-id=13]'); // refresh
         assert.equal($input.data('color'), "0", "should become transparent when toggling on checkbox");
 
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
         assert.ok($checkBox.is(':checked'), "should have a ticked checkbox in colorpicker dropdown menu after mousedown");
 
         $checkBox.mousedown();
-        $input = form.$('.o_field_many2manytags span[data-id=13]'); // refresh
+        $input = form.$('.o_field_many2manytags button[data-id=13]'); // refresh
         assert.equal($input.data('color'), "8", "should revert to old color when toggling off checkbox");
 
         $input.click();
-        $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
+        $checkBox = form.$('.o_field_many2manytags button[data-id=13] .o_colorpicker .o_checkbox input'); // refresh
         assert.notOk($checkBox.is(':checked'), "should have an unticked checkbox in colorpicker dropdown menu after 2nd click");
 
         // TODO: it would be nice to test the behaviors of the autocomplete dropdown
@@ -10939,9 +10939,9 @@ QUnit.module('relational_fields', {
                 return this._super.apply(this, arguments);
             }
         });
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('span:contains(gold)').length,
+        assert.ok(form.$('button:contains(gold)').length,
             'should have fetched and rendered gold partner tag');
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -10954,9 +10954,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li a:contains("silver")').length, 1,
             "autocomplete dropdown should contain 'silver'");
         $input.autocomplete('widget').find('li').click(); // add 'silver'
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 2,
             "should contain 2 tags");
-        assert.ok(form.$('.o_field_many2manytags > span:contains("silver")').length,
+        assert.ok(form.$('.o_field_many2manytags > button:contains("silver")').length,
             "should contain newly added tag 'silver'");
 
         form.destroy();
@@ -10989,9 +10989,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags > span:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags > button:contains("gold")').length,
             "should contain newly added tag 'gold'");
 
         // save the record (should do the write RPC with the correct commands)
@@ -11016,20 +11016,20 @@ QUnit.module('relational_fields', {
         });
 
         // First checks that default color 0 is rendered as 0 color
-        assert.ok(form.$('span:first()').is('.o_tag_color_0'),
+        assert.ok(form.$('button:first()').is('.o_tag_color_0'),
             'first tag color should be 0');
 
         // Update the color in readonly
-        form.$('span:first()').click();
+        form.$('button:first()').click();
         $('.o_colorpicker a[data-color="1"]').trigger('mousedown'); // choose color 1
-        assert.strictEqual(form.$('span:first()').data('color'), 1,
+        assert.strictEqual(form.$('button:first()').data('color'), 1,
             'should have correctly updated the color (in readonly)');
 
         // Update the color in edit
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('span:first()').click();
+        form.$('button:first()').click();
         $('.o_colorpicker a[data-color="6"]').trigger('mousedown'); // choose color 6
-        assert.strictEqual(form.$('span:first()').data('color'), 6,
+        assert.strictEqual(form.$('button:first()').data('color'), 6,
             'should have correctly updated the color (in edit)');
         form.destroy();
     });
@@ -11136,14 +11136,14 @@ QUnit.module('relational_fields', {
         form.$('.o_field_many2one input').click();
         $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
 
-        $('.modal .o_search_options .fa-bars').click();
-        $('.modal .o_search_options .o_group_by_menu a:contains(Bar)').click(); // group by 'Bar'
+        $('[role="dialog"] .o_search_options .fa-bars').click();
+        $('[role="dialog"] .o_search_options .o_group_by_menu a:contains(Bar)').click(); // group by 'Bar'
 
-        $('.modal .o_group_header:first').click();
-        assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 7,
+        $('[role="dialog"] .o_group_header:first').click();
+        assert.strictEqual($('[role="dialog"] tbody:nth(1) .o_data_row').length, 7,
             "should display 7 records in the first page");
-        $('.modal .o_group_header:first .o_pager_next').click();
-        assert.strictEqual($('.modal tbody:nth(1) .o_data_row').length, 1,
+        $('[role="dialog"] .o_group_header:first .o_pager_next').click();
+        assert.strictEqual($('[role="dialog"] tbody:nth(1) .o_data_row').length, 1,
             "should display 1 record in the second page");
 
         form.destroy();
@@ -11167,7 +11167,7 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
         });
-        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > span').length, 100,
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] > button').length, 100,
             'should have rendered 100 tags');
         form.destroy();
     });
@@ -11192,14 +11192,14 @@ QUnit.module('relational_fields', {
         });
 
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 1,
             "should contain one tag");
 
         // update foo, which will trigger an onchange and update timmy
         // -> m2mtags input should not have taken the focus
         form.$('input:first').focus();
         form.$('input:first').val('trigger onchange').trigger('input');
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 0,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 0,
             "should contain no tags");
         assert.strictEqual(form.$('input:first').get(0), document.activeElement,
             "foo input should have kept the focus");
@@ -11207,14 +11207,14 @@ QUnit.module('relational_fields', {
         // add a tag -> m2mtags input should still have the focus
         form.$('.o_field_many2manytags input').click(); // opens the dropdown
         form.$('.o_field_many2manytags input').autocomplete('widget').find('li:first').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 1,
             "should contain a tag");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");
 
         // remove a tag -> m2mtags input should still have the focus
         form.$('.o_field_many2manytags .o_delete').click();
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 0,
+        assert.strictEqual(form.$('.o_field_many2manytags > button').length, 0,
             "should contain no tags");
         assert.strictEqual(form.$('.o_field_many2manytags input').get(0), document.activeElement,
             "m2m tags input should have kept the focus");
@@ -11700,8 +11700,8 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('.o_field_x2many_list_row_add a').click();
-        var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
-        $('.modal input').val('new record').trigger('keydown');
+        var $dropdown = $('[role="dialog"] .o_field_many2one input').autocomplete('widget');
+        $('[role="dialog"] input').val('new record').trigger('keydown');
         concurrency.delay(0).then(function () {
             $dropdown.find('li:first()').click(); // quick create 'new record'
             assert.verifySteps(['name_create']);
@@ -11747,7 +11747,7 @@ QUnit.module('relational_fields', {
         $cell_o2m.click();
 
         // In modal
-        var $modal = $('.modal-dialog.modal-lg');
+        var $modal = $('.modal-lg');
         assert.equal($modal.length, 1,
             'there should be one modal opened');
 
@@ -11793,7 +11793,7 @@ QUnit.module('relational_fields', {
         form.$('.o_data_cell').click();
 
         // In modal
-        var $modal = $('.modal-dialog.modal-lg');
+        var $modal = $('.modal-lg');
         assert.equal($modal.length, 1,
             'there should be one modal opened');
 
@@ -11881,9 +11881,9 @@ QUnit.module('relational_fields', {
 
         form.$('.o_external_button').click(); // click on the external button (should do an RPC)
 
-        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: custom label',
+        assert.strictEqual($('[role="dialog"] .modal-title').text().trim(), 'Open: custom label',
                         "dialog title should display the custom string label");
-        $('.modal .o_form_button_cancel').click();
+        $('[role="dialog"] .o_form_button_cancel').click();
 
         form.$('.o_field_widget select').val('partner_type').trigger('change');
         assert.strictEqual(form.$('.o_field_widget input').val(), "",
@@ -12096,7 +12096,7 @@ QUnit.module('relational_fields', {
         // Add a record in the list
         x2mList.find('.o_field_x2many_list_row_add a').click();
 
-        var modal = $('.modal-dialog.modal-lg');
+        var modal = $('.modal-lg');
 
         var nameInput = modal.find('input.o_input[name=display_name]');
         nameInput.val('michelangelo').trigger('input');

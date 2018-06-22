@@ -6,18 +6,16 @@
             <div class='screen-content'>
                 <div class='top-content'>
                     <span class='button back'>
-                        <i class='fa fa-angle-double-left'></i>
-                        Back
+                        <span class='fa fa-angle-double-left'> Back</span>
                     </span>
                     <h1>Bill Printing</h1>
                     <span class='button next'>
-                        Ok 
-                        <i class='fa fa-angle-double-right'></i>
+                        <span class='fa fa-suffix-angle-double-right'> Ok</span>
                     </span>
                 </div>
                 <div class="centered-content">
                     <div class="button print">
-                        <i class='fa fa-print'></i> Print 
+                        <span class='fa fa-print'> Print</span>
                     </div>
                     <div class="pos-receipt-container">
                     </div>
@@ -28,15 +26,14 @@
 
     <t t-name="PrintBillButton">
         <span class="control-button order-printbill">
-            <i class="fa fa-print"></i>
-            Bill
+            <span class="fa fa-print"> Bill</span>
         </span>
     </t>
 
     <t t-name="BillReceipt">
         <receipt align='center' width='40' value-thousands-separator='' >
             <t t-if='receipt.company.logo'>
-                <img t-att-src='receipt.company.logo' />
+                <img t-att-src='receipt.company.logo' alt="Logo"/>
                 <br/>
             </t>
             <t t-if='!receipt.company.logo'>

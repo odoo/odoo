@@ -24,14 +24,14 @@
                                 <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
                                     <div class="o_setting_left_pane"/>
                                     <div class="o_setting_right_pane">
-                                        <label string="Fiscal Localization"/>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                        <span class="o_form_label">Fiscal Localization</span>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                         <div class="text-muted">
                                             Taxes, fiscal positions, chart of accounts &amp; legal statements for your country
                                         </div>
                                         <div class="content-group">
                                             <div class="row mt16">
-                                                <label string="Package" class="col-md-3 o_light_label"/>
+                                                <label for="chart_template_id" string="Package" class="col-md-3 o_light_label"/>
                                                 <field name="chart_template_id" widget="selection"/>
                                             </div>
                                             <div>
@@ -49,7 +49,7 @@
                                         <field name="account_hide_setup_bar" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string='Hide the Configuration Steps bar'/>
+                                        <label for="account_hide_setup_bar" string='Hide the Configuration Steps bar'/>
                                         <div class="text-muted">
                                             Deactivate the "Configuration Steps" bar on the dashboard
                                         </div>
@@ -62,8 +62,8 @@
                             <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
-                                    <label string='Default Taxes'/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="o_form_label">Default Taxes</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Default taxes applied to local transactions
                                     </div>
@@ -82,7 +82,7 @@
                             <div class="col-xs-12 col-md-6 o_setting_box" id="rounding_method" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
-                                    <label string="Rounding Method"/>
+                                    <span class="o_form_label">Rounding Method</span>
                                     <div class="text-muted">
                                         How total tax amount is computed in orders and invoices
                                     </div>
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="account_taxcloud_right_pane">
                                     <label for="module_account_taxcloud" string="TaxCloud"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Compute tax rates based on U.S. ZIP codes
                                     </div>
@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="tax_exigibility"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Allow to configure taxes using cash basis
                                     </div>
@@ -138,8 +138,8 @@
                             <div class="col-xs-12 col-md-6 o_setting_box">
                                 <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
-                                    <label string="Main Currency"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="o_form_label">Main Currency</span>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Main currency of your company
                                     </div>
@@ -223,7 +223,7 @@
                                     <field name="module_account_payment"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Online Payment"/>
+                                    <label for="module_account_payment" string="Online Payment"/>
                                     <div class="text-muted">
                                         Let your customers pay their invoices online
                                     </div>
@@ -234,7 +234,7 @@
                                     <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Batch Payments"/>
+                                    <label for="module_account_batch_deposit" string="Batch Payments"/>
                                     <div class="text-muted">
                                         Group payments into a single batch to ease the reconciliation process
                                     </div>
@@ -246,7 +246,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_direct_debit_right_pane">
                                     <label string="SEPA Direct Debit (SDD)" for="module_account_sepa"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Collect customer payments in one-click using Euro SEPA Service
                                     </div>
@@ -267,7 +267,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Checks" for="module_account_check_printing"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted" id="print_bills_payment">
                                         Print checks to pay your vendors
                                     </div>
@@ -279,7 +279,7 @@
                                 </div>
                                 <div class="o_setting_right_pane" name="sepa_right_pane">
                                     <label for="module_account_sepa"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
                                     <div class="text-muted">
                                         Pay your bills in one-click using Euro SEPA Service
                                     </div>
@@ -295,7 +295,7 @@
                                         <field name="module_account_yodlee" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="Automatic Import"/>
+                                        <label for="module_account_yodlee" string="Automatic Import"/>
                                         <div class="text-muted">
                                             Import your bank statements automatically
                                         </div>
@@ -306,7 +306,7 @@
                                         <field name="module_account_bank_statement_import_csv" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="CSV Import"/>
+                                        <label for="module_account_bank_statement_import_csv" string="CSV Import"/>
                                         <div class="text-muted">
                                             Import your bank statements in CSV
                                         </div>
@@ -317,7 +317,7 @@
                                         <field name="module_account_bank_statement_import_qif" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="QIF Import"/>
+                                        <label for="module_account_bank_statement_import_qif" string="QIF Import"/>
                                         <div class="text-muted">
                                             Import your bank statements in QIF
                                         </div>
@@ -328,7 +328,7 @@
                                         <field name="module_account_bank_statement_import_ofx" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="OFX Import"/>
+                                        <label for="module_account_bank_statement_import_ofx" string="OFX Import"/>
                                         <div class="text-muted">
                                             Import your bank statements in OFX
                                         </div>
@@ -339,7 +339,7 @@
                                         <field name="module_account_bank_statement_import_camt" widget="upgrade_boolean"/>
                                     </div>
                                     <div class="o_setting_right_pane">
-                                        <label string="CAMT Import"/>
+                                        <label for="module_account_bank_statement_import_camt" string="CAMT Import"/>
                                         <div class="text-muted">
                                             Import your bank statements in CAMT.053
                                         </div>
@@ -405,7 +405,7 @@
                                     <field name="module_product_margin"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Margin Analysis"/>
+                                    <label for="module_product_margin" string="Margin Analysis"/>
                                     <div class="text-muted">
                                         Monitor your product margins from invoices
                                     </div>

@@ -690,7 +690,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
-    $('.modal .arrow.arrow-right.move_next span').click();
+    $('[role="dialog"] .arrow.arrow-right.move_next span').click();
     assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
@@ -1172,8 +1172,8 @@ QUnit.test('followers widget: follow/unfollow, edit subtypes', function (assert)
 
     // click to unfollow
     form.$('.o_followers_follow_button').click(); // click to open the dropdown
-    assert.ok($('.modal').length, 'a confirm modal should be opened');
-    $('.modal .modal-footer .btn-primary').click(); // click on 'OK'
+    assert.ok($('[role="dialog"]').length, 'a confirm modal should be opened');
+    $('footer.modal-footer .btn-primary').click(); // click on 'OK'
     assert.strictEqual(form.$('.o_followers_count').text(), "0", 'should have no followers');
     assert.ok(form.$('.o_followers_follow_button.o_followers_notfollow').length,
         'should display the "Follow" button');
@@ -1366,9 +1366,9 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     }).then(function (form) {
         // should read it 3 times (1 with the form view, one with the form dialog and one after save)
         assert.verifySteps([[12, 14], [14], [14]]);
-        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').length, 2,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
             "two tags should be present");
-        var firstTag = form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').first();
+        var firstTag = form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').first();
         assert.strictEqual(firstTag.find('.o_badge_text').text(), "gold",
             "tag should only show display_name");
         assert.strictEqual(firstTag.find('.o_badge_text').attr('title'), "coucou@petite.perruche",
@@ -1377,16 +1377,16 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         done();
     });
 
-    assert.strictEqual($('.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
+    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
         "the opened modal should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will render the form view)
-    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('.modal-footer .btn-primary').click();
+    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('footer.modal-footer .btn-primary').click();
 });
 
 QUnit.test('fieldmany2many tags email (edition)', function (assert) {
@@ -1421,7 +1421,7 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     });
 
     assert.verifySteps([[12]]);
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').length, 1,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 1,
         "should contain one tag");
 
     // add an other existing tag
@@ -1429,18 +1429,18 @@ QUnit.test('fieldmany2many tags email (edition)', function (assert) {
     $input.click(); // opens the dropdown
     $input.autocomplete('widget').find('li:first').click(); // add 'silver'
 
-    assert.strictEqual($('.modal-body.o_act_window').length, 1,
+    assert.strictEqual($('main.modal-body.o_act_window').length, 1,
         "there should be one modal opened to edit the empty email");
-    assert.strictEqual($('.modal-body.o_act_window input[name="display_name"]').val(), "silver",
-        "the opened modal should be a form view dialog with the partner_type 14");
-    assert.strictEqual($('.modal-body.o_act_window input[name="email"]').length, 1,
+    assert.strictEqual($('main.modal-body input[name="display_name"]').val(), "silver",
+        "the opened modal in edit mode should be a form view dialog with the partner_type 14");
+    assert.strictEqual($('main.modal-body input[name="email"]').length, 1,
         "there should be an email field in the modal");
 
     // set the email and save the modal (will rerender the form view)
-    $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
-    $('.modal-footer .btn-primary').click();
+    $('main.modal-body input[name="email"]').val('coucou@petite.perruche').trigger('input');
+    $('footer.modal-footer .btn-primary').click();
 
-    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] span.o_tag_color_0').length, 2,
+    assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] button.o_tag_color_0').length, 2,
         "should contain the second tag");
     // should have read [14] three times: when opening the dropdown, when opening the modal, and
     // after the save

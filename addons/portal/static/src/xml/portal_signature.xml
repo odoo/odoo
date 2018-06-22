@@ -9,7 +9,7 @@
             <div class="panel panel-default mt16 mb0" id="o_portal_sign_draw">
                 <div class="panel-heading">
                     <div class="pull-right">
-                        <a id="o_portal_sign_clear" class="btn btn-xs">Clear</a>
+                        <a role="button" id="o_portal_sign_clear" class="btn btn-xs">Clear</a>
                     </div>
                     <strong>Draw your signature</strong>
                 </div>
@@ -21,7 +21,7 @@
         </form>
     </t>
     <t t-name="portal.portal_signature_success">
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success" role="status">
             <strong>Thank You !</strong><br />
             <span t-esc="widget.success"/>
             <a t-att-href="widget.redirect_url">Click here to see your document.</a>

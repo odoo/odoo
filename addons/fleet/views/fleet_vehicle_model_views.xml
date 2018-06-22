@@ -25,7 +25,7 @@
                                     <templates>
                                         <t t-name="kanban-box">
                                             <div style="position: relative">
-                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block"><i class="fa fa-times text-danger"/></a>
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block" aria-label="Delete" title="Delete"><i class="fa fa-times text-danger"/></a>
                                                 <div class="oe_module_vignette">
                                                     <div class="oe_module_desc o_kanban_record_title">
                                                         <field name="name"/>
@@ -125,7 +125,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override">
                             <a type="open" href="#" class="o_kanban_image oe_kanban_action">
-                                <img t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.raw_value)" class="img-responsive" style="width:100px;"/>
+                                <img alt="Open" t-att-src="kanban_image('fleet.vehicle.model.brand', 'image_small', record.id.raw_value)" class="img-responsive" style="width:100px;"/>
                             </a>
                             <div class="oe_kanban_details">
                                 <h4 class="oe_partner_heading">

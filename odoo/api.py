@@ -56,6 +56,7 @@ from decorator import decorator
 from werkzeug.local import Local, release_local
 
 from odoo.tools import frozendict, classproperty, StackMap
+from odoo.exceptions import CacheMiss
 
 _logger = logging.getLogger(__name__)
 
@@ -958,7 +959,11 @@ class Cache(object):
     def get(self, record, field):
         """ Return the value of ``field`` for ``record``. """
         key = field.cache_key(record)
-        value = self._data[field][record.id][key]
+        try:
+            value = self._data[field][record.id][key]
+        except KeyError:
+            raise CacheMiss(record, field)
+
         return value.get() if isinstance(value, SpecialValue) else value
 
     def set(self, record, field, value):

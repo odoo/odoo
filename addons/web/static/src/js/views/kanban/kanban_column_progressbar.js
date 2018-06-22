@@ -166,6 +166,9 @@ var KanbanColumnProgressBar = Widget.extend({
             if (count > 0) {
                 $bar.addClass('o_bar_has_records');
                 $bar.css('width', (count * 100 / self.groupCount) + '%');
+                $bar.attr('aria-valuemin', 0);
+                $bar.attr('aria-valuemax', self.groupCount);
+                $bar.attr('aria-valuenow', count);
             } else {
                 $bar.css('width', '');
             }

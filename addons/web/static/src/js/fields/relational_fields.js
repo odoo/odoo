@@ -1867,7 +1867,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var $target = $(ev.currentTarget);
         var color = $target.data('color');
         var id = $target.data('id');
-        var tag = this.$("span.badge[data-id='" + id + "']");
+        var tag = this.$("button.badge[data-id='" + id + "']");
         var currentColor = tag.data('color');
         var changes = {};
 

@@ -22,7 +22,7 @@
                                     </div>
                                     <div class="content-group" attrs="{'invisible': ['|', ('use_mailgateway', '=',  False), ('alias_domain', 'in', ['localhost', '', False])]}">
                                         <div class="mt16">
-                                            <label string="Email Alias" class="o_light_label"/>
+                                            <label for="expense_alias_prefix" string="Email Alias" class="o_light_label"/>
                                             <field name="expense_alias_prefix" class="oe_inline"/>
                                             <span>@</span>
                                             <field name="alias_domain"  class="oe_inline" readonly="1"/>

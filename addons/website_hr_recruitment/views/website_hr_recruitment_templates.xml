@@ -57,7 +57,7 @@
                                         }'/>
                                     <span t-if="not job.website_published" class="label label-danger">unpublished</span>
                                     <div class="text-muted">
-                                        <i class="fa fa-clock-o"/> <span t-field="job.write_date"/>
+                                        <i class="fa fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/> <span t-field="job.write_date"/>
                                     </div>
                                 </div>
                             </li>
@@ -79,7 +79,7 @@
             <section class="mb16 bg-white">
                 <div class="container">
                     <div class="pull-right">
-                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg pull-right mt32 mb4">Apply Now!</a>
+                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg pull-right mt32 mb4">Apply Now!</a>
                     </div>
                     <label class="mb0 mt16"><a href="/jobs">Jobs</a></label> /
                     <h1 class="mb0 mt0" t-field="job.name"/>
@@ -96,7 +96,7 @@
             <div class="oe_structure">
                 <section class="o_job_bottom_bar mt32 mb32">
                     <div class="text-center">
-                        <a t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
+                        <a role="button" t-attf-href="/jobs/apply/#{job.id}" class="btn btn-primary btn-lg">Apply Now!</a>
                     </div>
                 </section>
             </div>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                <span class="btn btn-primary btn-lg o_website_form_send">Submit</span>
+                                <a href="#" role="button" class="btn btn-primary btn-lg o_website_form_send">Submit</a>
                                 <span id="o_website_form_result"></span>
                             </div>
                         </div>
@@ -306,44 +306,36 @@
         <div class="container">
             <div class="row">
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-heart"/>
-                    <h4 class="mb0 mt8">Benefits</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-heart">Benefits</h4>
                     <p>Healthcare, dental, vision, life insurance, Flexible Spending Account (FSA), Health Savings Account (HSA)</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-sun-o"/>
-                    <h4 class="mt8 mb0">PTOs</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-sun-o">PTOs</h4>
                     <p>Vacation, Sick, and paid leaves</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-car"/>
-                    <h4 class="mt8 mb0">Save on commute</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-car">Save on commute</h4>
                     <p>Pre-tax commuter benefitsbr <br/>(parking and transit) </p>
                     </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-check-circle"/>
-                    <h4 class="mb0 mt8">Discount Programs</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-check-circle">Discount Programs</h4>
                     <p>Brand-name product and services in categories like travel, electronics, health, fitness, cellular, and more</p>
                 </div>
             </div><div class="row">
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-map-marker"/>
-                    <h4 class="mb0 mt8">Prime location</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-map-marker">Prime location</h4>
                     <p>Only a couple blocs from BART, Caltrain, Highway 101, carpool pickup, and Bay Bridge.</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-calendar"/>
-                    <h4 class="mt8 mb0">Sponsored Events</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-calendar">Sponsored Events</h4>
                     <p>Tuesday Dinners, Monthly Lunch Mixers, Monthly Happy Hour, Annual day event</p>
                 </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-futbol-o"/>
-                    <h4 class="mt8 mb0">Sport Activity</h4>
+                    <h4 class="mt8 mb0 fa fa-2x fa-futbol-o">Sport Activity</h4>
                     <p>Play any sport with colleagues and the bill is covered</p>
                     </div>
                 <div class="text-center col-md-3 mt16 mb16">
-                    <span class="fa fa-2x fa-coffee"/>
-                    <h4 class="mb0 mt8">Eat &amp; Drink</h4>
+                    <h4 class="mb0 mt8 fa fa-2x fa-coffee">Eat &amp; Drink</h4>
                     <p>Peet's and Philz coffee provided all day to order and pantry snacks</p>
                 </div>
             </div>
@@ -355,24 +347,24 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12 col-md-6 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_3.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_3.jpg"/>
                 </div>
                 <div class="col-sm-6 col-md-3 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_2.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_2.jpg"/>
                 </div>
                 <div class="col-sm-6 col-md-3 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_4.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_4.jpg"/>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-3 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_6.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_6.jpg"/>
                 </div>
                 <div class="col-sm-6 col-md-3 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_5.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_5.jpg"/>
                 </div>
                 <div class="col-sm-12 col-md-6 mt16 mb16">
-                    <img class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_1.jpg"/>
+                    <img alt="" class="img img-responsive" src="/website_hr_recruitment/static/src/img/job_image_1.jpg"/>
                 </div>
             </div>
         </div>
@@ -413,10 +405,10 @@
                                         <h4 class="mt0" t-field="responsible.name"/>
                                         <p t-field="responsible.function"/>
                                         <t t-if='responsible.email'>
-                                            <i class="fa fa-envelope"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
+                                            <i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
                                         </t>
                                         <t t-if='responsible.phone'>
-                                            <br/><i class="fa fa-phone"></i> <span t-field="responsible.phone"/>
+                                            <br/><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>
                                         </t>
                                     </div>
                                     <div class="col-md-12 mt32 text-center">
@@ -431,7 +423,7 @@
                                 <div class="col-md-12 text-center mt32 mb32">
                                     In the meantime,
                                     <h3 class="mt8 mb32">Look around on our website:</h3>
-                                    <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                                    <a role="button" href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
                                 </div>
                             </div>
                         </div>
@@ -506,7 +498,7 @@
 <!-- User Navbar -->
 <template id="content_new_job_offer" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="hr_recruitment.group_hr_recruitment_manager"><a href="/jobs/add" class="js_link2post"><i class="fa fa-briefcase"/><p>New Job Offer</p></a></li>
+        <li groups="hr_recruitment.group_hr_recruitment_manager"><a href="/jobs/add" class="js_link2post"><p class="fa fa-briefcase">New Job Offer</p></a></li>
     </xpath>
 </template>
 

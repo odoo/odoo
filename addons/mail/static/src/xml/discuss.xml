@@ -9,7 +9,7 @@
                 <t t-if="widget.notification_bar">
                     <div class="o_mail_annoying_notification_bar">
                         <span class="o_mail_request_permission">Odoo needs your permission to <a href="#"> enable desktop notifications</a>.</span>
-                        <span class="fa fa-close"></span>
+                        <span class="fa fa-close" role="button" aria-label="Close" title="Close"></span>
                     </div>
                 </t>
             </div>
@@ -19,13 +19,13 @@
         <div class="o_mail_chat_sidebar">
             <div t-attf-class="o_mail_chat_title_main o_mail_chat_channel_item #{(active_channel_id === 'channel_inbox') ? 'o_active': ''}"
                  data-channel-id="channel_inbox">
-                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
+                <span class="o_channel_name fa fa-inbox mr8">Inbox</span>
                 <t t-set="counter" t-value="needaction_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
             <div t-attf-class="o_mail_chat_title_main o_mail_chat_title_starred o_mail_chat_channel_item #{(active_channel_id === 'channel_starred') ? 'o_active': ''}"
                  data-channel-id="channel_starred">
-                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
+                <span class="o_channel_name fa fa-star-o mr8">Starred</span>
                 <t t-set="counter" t-value="starred_counter"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
             </div>
@@ -87,10 +87,10 @@
         <t t-if="!disable_add_channel || !empty">
             <div class="o_mail_sidebar_title">
                 <h4 t-att-class="channel_type == 'public' ? 'o_mail_open_channels' : ''">
-                    <i t-if="channel_icon" t-attf-class="mr4 fa-fw fa #{channel_icon}"></i>
+                    <i t-if="channel_icon" t-attf-class="mr4 fa-fw fa #{channel_icon}" role="img" aria-label="Channel" title="Channel"></i>
                     <b><t t-esc="channel_title"/></b>
                 </h4>
-                <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}"/>
+                <span t-if="!disable_add_channel" class="fa fa-plus o_add" title="Add" t-attf-data-type="#{channel_type}" role="img" aria-label="Add"/>
             </div>
         </t>
     </t>
@@ -111,21 +111,21 @@
                     </span>
                     <span t-if="display_hash" class="o_mail_hash">#</span>
                     <t t-esc="channel.name"/>
-                    <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
+                    <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email" role="img" aria-label="Send by mail"/>
                 </span>
                 <span t-attf-class="fa fa-cog o_mail_channel_settings"
-                      title="Channel settings" t-att-data-channel-id="channel.id"/>
+                      title="Channel settings" role="img" aria-label="Channel settings" t-att-data-channel-id="channel.id"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-if="! channel.group_based_subscription" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
-                      title="Leave this channel" t-att-data-channel-id="channel.id"/>
+                      title="Leave this channel" role="img" aria-label="Leave this channel" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
     </t>
 
     <t t-name="mail.chat.UserStatus">
-        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
-        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
-        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
+        <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+        <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+        <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
     </t>
 
     <t t-name="mail.chat.MessageSentSnackbar">
@@ -174,20 +174,16 @@
             <div class="o_mail_chat_content"/>
             <div class="o_mail_mobile_tabs">
                 <div class="o_mail_mobile_tab" data-type="channel_inbox">
-                    <span class="fa fa-inbox"/>
-                    <span class="o_tab_title">Inbox</span>
+                    <span class="o_tab_title fa fa-inbox">Inbox</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="dm">
-                    <span class="fa fa-user"/>
-                    <span class="o_tab_title">Chat</span>
+                    <span class="o_tab_title fa fa-user">Chat</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="public">
-                    <span class="fa fa-users"/>
-                    <span class="o_tab_title">Channels</span>
+                    <span class="o_tab_title fa fa-users">Channels</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="private">
-                    <span class="fa fa-eye-slash"/>
-                    <span class="o_tab_title">Private Channels</span>
+                    <span class="o_tab_title fa fa-eye-slash">Private Channels</span>
                 </div>
             </div>
         </div>
@@ -212,9 +208,9 @@
         <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
              t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
             <div t-attf-class="o_mail_channel_image #{channel.model? 'o_mail_channel_app' : ''}">
-                <img class="o_mail_channel_image" t-att-src="channel.image_src"/>
-                <i t-if="channel.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
-                <i t-if="channel.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
+                <img class="o_mail_channel_image" t-att-src="channel.image_src" alt="Channel"/>
+                <i t-if="channel.status === 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+                <i t-if="channel.status === 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
             </div>
             <div class="o_channel_info">
                 <div class="o_channel_title">
@@ -228,7 +224,7 @@
                 </div>
                 <div t-if="channel.last_message" class="o_last_message_preview">
                     <t t-if="channel.last_message.is_author">
-                        <span class="fa fa-mail-reply"/> You:
+                        <span class="fa fa-mail-reply" role="img" aria-label="Reply"/> You:
                     </t>
                     <t t-else="">
                         <t t-if="channel.last_message.displayed_author">

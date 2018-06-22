@@ -527,7 +527,7 @@ ListRenderer.include({
     _renderRows: function () {
         var $rows = this._super();
         if (this.addCreateLine) {
-            var $a = $('<a href="#">').text(_t("Add a line"));
+            var $a = $('<a href="#" role="button">').text(_t("Add a line"));
             var $td = $('<td>')
                         .attr('colspan', this._getNumberOfCols())
                         .addClass('o_field_x2many_list_row_add')
@@ -923,9 +923,9 @@ ListRenderer.include({
 
         // ignore clicks in modals, except if the list is in a modal, and the
         // click is performed in that modal
-        var $clickModal = $(event.target).closest('.modal');
+        var $clickModal = $(event.target).closest('[role="dialog"]');
         if ($clickModal.length) {
-            var $listModal = this.$el.closest('.modal');
+            var $listModal = this.$el.closest('[role="dialog"]');
             if ($clickModal.prop('id') !== $listModal.prop('id')) {
                 return;
             }

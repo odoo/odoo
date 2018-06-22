@@ -42,7 +42,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                <span class="btn btn-primary btn-lg o_website_form_send">Send</span>
+                                <a href="#" role="button" class="btn btn-primary btn-lg o_website_form_send">Send</a>
                                 <span id="o_website_form_result"></span>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                         <h1>Thanks!</h1>
                         <div class="row">
                             <div class="col-md-8">
-                                <div class="alert alert-success">
+                                <div class="alert alert-success" role="status">
                                     Your message has been sent successfully.
                                     <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
                                 </div>
@@ -75,8 +75,8 @@
                                     If you have an emergency, do not hesitate to contact us by phone:
                                 </p>
                                 <ul class="list-unstyled">
-                                    <li><i class="fa fa-phone"></i> : <span t-field="res_company.phone"/></li>
-                                    <li><i class="fa fa-envelope"></i> : <span t-field="res_company.email"/></li>
+                                    <li><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> : <span t-field="res_company.phone"/></li>
+                                    <li><i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> : <span t-field="res_company.email"/></li>
                                 </ul>
                             </div>
                             <div class="col-md-4">

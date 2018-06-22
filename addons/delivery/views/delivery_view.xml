@@ -275,7 +275,7 @@
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
-                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" aria-hidden="true" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
+                            <field name="carrier_id" domain="[('id', 'in', available_carrier_ids)]" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" role="img" aria-label="Rating OK" title="Rating OK" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
                           </div>
                           <div>
                             <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}" force_save="1"/>
@@ -283,7 +283,7 @@
                             <button name="set_delivery_line" string="Set price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"/>
                             <field name='delivery_rating_success' invisible="1" force_save="1"/>
                           </div>
-                          <div class="alert alert-info" role="alert" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
+                          <div class="alert alert-info" role="status" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
                             <field name='delivery_message' force_save="1"/>
                           </div>
                       </div>
@@ -301,7 +301,7 @@
             <field name="arch" type="xml">
                 <form string="Trackers URL">
                     <group>
-                        <div class="alert alert-info">
+                        <div class="alert alert-info" role="status">
                             <p>You have multiple URL, they should be available in the chatter.</p>
                         </div>
                     </group>

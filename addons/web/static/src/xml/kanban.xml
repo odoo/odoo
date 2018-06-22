@@ -9,18 +9,19 @@
 </t>
 
 <t t-name="KanbanView.Group">
-    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id"
+        role="feed" t-attf-aria-labelledby="kanban_header_#{widget.id or widget.db_id}">
         <div class="o_kanban_header">
             <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
-                <span class="o_column_title"><t t-esc="widget.title"/></span>
-                <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+                <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                        <li><a role="menuitem" class="o_kanban_toggle_fold" href="#">Fold</a></li>
                         <t t-if="widget.grouped_by_m2o">
-                            <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
-                            <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                            <li t-if="widget.editable and widget.id"><a role="menuitem" class="o_column_edit" href="#">Edit Stage</a></li>
+                            <li t-if="widget.deletable and widget.id"><a role="menuitem" class="o_column_delete" href="#">Delete</a></li>
                         </t>
                         <t t-if="widget.has_active_field">
                             <li><a class="o_column_archive_records" href="#">Archive All</a></li>
@@ -28,7 +29,7 @@
                         </t>
                     </ul>
                 </span>
-                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
@@ -44,7 +45,7 @@
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
         <div class="o_quick_create_folded">
-            <span class="o_kanban_add_column"><i class="fa fa-plus"/></span>
+            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
             <span class="o_kanban_title">Add a Column</span>
         </div>
         <div class="o_quick_create_unfolded">
@@ -56,7 +57,7 @@
                     </span>
                 </div>
                 <t t-if="widget.examples">
-                    <span class="btn-link o_kanban_examples">Examples</span>
+                    <a href="#" role="button" class="btn-link o_kanban_examples">Examples</a>
                 </t>
                 <span class="o_discard_msg text-muted pull-right">Esc to discard</span>
             </div>
@@ -76,9 +77,18 @@
 </t>
 
 <t t-name="KanbanColorPicker">
-    <li t-foreach="12" t-as="color">
-        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
-    </li>
+    <li><a role="menuitem" href="#" data-color="0" class="oe_kanban_color_0" title="No color" aria-label="No color"/></li>
+    <li><a role="menuitem" href="#" data-color="1" class="oe_kanban_color_1" title="Red" aria-label="Red"/></li>
+    <li><a role="menuitem" href="#" data-color="2" class="oe_kanban_color_2" title="Orange" aria-label="Orange"/></li>
+    <li><a role="menuitem" href="#" data-color="3" class="oe_kanban_color_3" title="Yellow" aria-label="Yellow"/></li>
+    <li><a role="menuitem" href="#" data-color="4" class="oe_kanban_color_4" title="Light blue" aria-label="Light blue"/></li>
+    <li><a role="menuitem" href="#" data-color="5" class="oe_kanban_color_5" title="Dark purple" aria-label="Dark purple"/></li>
+    <li><a role="menuitem" href="#" data-color="6" class="oe_kanban_color_6" title="Salmon pink" aria-label="Salmon pink"/></li>
+    <li><a role="menuitem" href="#" data-color="7" class="oe_kanban_color_7" title="Medium blue" aria-label="Medium blue"/></li>
+    <li><a role="menuitem" href="#" data-color="8" class="oe_kanban_color_8" title="Dark blue" aria-label="Dark blue"/></li>
+    <li><a role="menuitem" href="#" data-color="9" class="oe_kanban_color_9" title="Fushia" aria-label="Fushia"/></li>
+    <li><a role="menuitem" href="#" data-color="10" class="oe_kanban_color_10" title="Green" aria-label="Green"/></li>
+    <li><a role="menuitem" href="#" data-color="11" class="oe_kanban_color_11" title="Purple" aria-label="Purple"/></li>
 </t>
 
 <t t-name="GraphCustomTooltip">
@@ -103,6 +113,7 @@
                 <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' active progress-bar-striped' : ''}"
                     t-att-data-filter="color"
                     t-attf-data-original-title="#{count} #{color}"
+                    aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="count*100" role="progressbar"
                     t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
             </t>
         </div>
@@ -116,7 +127,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="examples" t-as="example">
                 <li t-att-class="example_index == 0 and 'active' or None">
-                    <a data-toggle="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
+                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
                 </li>
             </t>
         </ul>
@@ -124,7 +135,7 @@
     <div class="o_kanban_examples_dialog_content">
         <div class="tab-content">
             <t t-foreach="examples" t-as="example">
-                <div t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
+                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
                     <div t-if="example.description" class="o_kanban_examples_description">
                         <t t-raw="example.description"/> <!-- description is supposed to be properly escaped -->
                     </div>
@@ -147,7 +158,7 @@
     <div class="o_kanban_examples_ghost">
         <div class="o_ghost_content"/>
         <div class="o_ghost_content o_ghost_tag"/>
-        <img class="pull-right o_ghost_avatar" src="/base/static/img/avatar.png"/>
+        <img class="pull-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
     </div>
 </t>
 

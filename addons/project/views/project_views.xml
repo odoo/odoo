@@ -236,7 +236,7 @@
                                     </div>
                                     <div class="col-xs-4">
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -309,36 +309,36 @@
                                                 </span>
                                             </div>
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
-                                                <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
+                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
                                             <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
                                                 <b>
                                                     <t t-if="record.percentage_satisfaction_project.value == -1">
-                                                        <i class="fa fa-smile-o"/> No rating yet
+                                                        <span class="fa fa-smile-o"> No rating yet</span>
                                                     </t>
                                                     <t t-if="record.percentage_satisfaction_project.value != -1">
                                                         <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
-                                                            <i class="fa fa-smile-o"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
+                                                            <i class="fa fa-smile-o" role="img" aria-label="Percentage of satisfaction" title="Percentage of satisfaction"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
                                                         </a>
                                                     </t>
                                                 </b>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager">
+                                    <div class="o_kanban_card_manage_pane dropdown-menu" groups="project.group_project_manager" role="menu">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div>
+                                            <div role="menuitem">
                                                 <a type="edit">Edit</a>
                                             </div>
-                                            <div t-if="record.rating_status.raw_value != 'no'">
+                                            <div role="menuitem" t-if="record.rating_status.raw_value != 'no'">
                                                 <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
-                                        <div class="o_no_padding_kanban_colorpicker">
-                                            <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        <div role="menuitem" aria-haspopup="true" class="o_no_padding_kanban_colorpicker">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                         </div>
                                     </div>
-                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" /></a>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                     <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" force_save="1" /></span>
                                 </div>
 
@@ -552,17 +552,17 @@
                                         </small>
                                     </div>
                                     <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                            <span class="fa fa-ellipsis-v" aria-hidden="true"/>
+                                        <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <span class="fa fa-ellipsis-v"/>
                                         </a>
-                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                            <li t-if="widget.editable"><a type="set_cover">Set Cover Image</a></li>
-                                            <li t-if="widget.editable"><a type="edit">Edit Task</a></li>
-                                            <li t-if="widget.deletable"><a type="delete">Delete</a></li>
-                                            <li class="divider"></li>
-                                            <li class="dropdown-header">Record's Colour</li>
-                                            <li>
-                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li t-if="widget.editable"><a role="menuitem" type="set_cover">Set Cover Image</a></li>
+                                            <li t-if="widget.editable"><a role="menuitem" type="edit">Edit Task</a></li>
+                                            <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
+                                            <li role="separator" class="divider"></li>
+                                            <li role="separator" class="dropdown-header">Record's Colour</li>
+                                            <li role="menuitem" aria-haspopup="true">
+                                                <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                             </li>
                                         </ul>
                                     </div>
@@ -578,17 +578,17 @@
                                         <field name="priority" widget="priority"/>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <b t-if="record.rating_ids.raw_value.length">
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
-                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied" role="img" aria-label="Happy face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied" role="img" aria-label="Neutral face"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -777,17 +777,23 @@
                                 You can define here labels that will be displayed for the state instead
                                 of the default labels.
                             </p>
-                            <label for="legend_normal" string=" " class="o_status oe_project_kanban_legend"/>
+                            <label for="legend_normal" string=" " class="o_status oe_project_kanban_legend"
+                                title="Task in progress. Click to block or set as done."
+                                aria-label="Task in progress. Click to block or set as done." role="img"/>
                             <field name="legend_normal" nolabel="1"/>
-                            <label for="legend_blocked" string=" " class="o_status o_status_red oe_project_kanban_legend"/>
+                            <label for="legend_blocked" string=" " class="o_status o_status_red oe_project_kanban_legend"
+                                title="Task is blocked. Click to unblock or set as done."
+                                aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
                             <field name="legend_blocked" nolabel="1"/>
-                            <label for="legend_done" string=" " class="o_status o_status_green oe_project_kanban_legend"/>
+                            <label for="legend_done" string=" " class="o_status o_status_green oe_project_kanban_legend"
+                                title="This step is done. Click to block or set in progress."
+                                aria-label="This step is done. Click to block or set in progress." role="img"/>
                             <field name="legend_done" nolabel="1"/>
 
                             <p class="text-muted" colspan="2">
                                 You can also give a tooltip about the use of the stars available in the kanban and form views.
                             </p>
-                            <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on oe_project_kanban_legend"/>
+                            <label for="legend_priority" string=" " class="fa fa-star fa-lg o_star_on oe_project_kanban_legend" aria-label="Legend priority" title="Legend priority" role="img"/>
                             <field name="legend_priority" nolabel="1"/>
 
                             <p class="text-muted" colspan="2">

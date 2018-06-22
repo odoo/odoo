@@ -305,14 +305,14 @@
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <ul class="dropdown-menu" role="menu">
                                         <t t-if="widget.deletable">
-                                            <li><a type="delete">Delete</a></li>
+                                            <li><a role="menuitem" type="delete">Delete</a></li>
                                         </t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
                                     </ul>
                                 </div>
                                 <div class="o_event_left">
@@ -327,8 +327,7 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <i class="fa fa-clock-o"/>
-                                        <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <b class="fa fa-clock-o">To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">

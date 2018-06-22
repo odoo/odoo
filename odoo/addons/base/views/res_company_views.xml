@@ -73,7 +73,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="text-center">
-                                    <i class="fa fa-building" aria-hidden="true"></i> <strong><field name="name"/></strong>
+                                    <i class="fa fa-building" role="img" aria-label="Enterprise" title="Enterprise"></i> <strong><field name="name"/></strong>
                                 </div>
                                 <hr class="mt4 mb4"/>
                                 <div class="row">
@@ -129,7 +129,7 @@
             <field name="arch" type="xml">
                 <field name="logo" position="before">
                     <div class="row">
-                        <div class="alert alert-warning ml8 mr8" role="alert" attrs="{'invisible': [('logo','!=',False)]}">
+                        <div class="alert alert-warning ml8 mr8" role="status" attrs="{'invisible': [('logo','!=',False)]}">
                             Update your company details and upload your logo to get a beautiful document.
                         </div>
                     </div>

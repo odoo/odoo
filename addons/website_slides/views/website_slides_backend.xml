@@ -256,7 +256,7 @@
                                     <field name="group_ids" widget="many2many_tags" attrs="{'invisible':[('visibility', '=', 'public')], 'required':[('visibility', 'in',('private', 'partial'))]}"/>
                                 </group>
                                 <group attrs="{'invisible':[('visibility','in',('public'))]}" colspan="4">
-                                        <label string="Error Message"/>
+                                        <label for="access_error_msg" string="Error Message"/>
                                         <field name="access_error_msg" colspan="4" nolabel="1"/>
                                 </group>
                             </page>

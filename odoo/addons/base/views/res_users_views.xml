@@ -64,7 +64,7 @@
                             <field name="users" context="{'search_default_no_share':1}"/>
                         </page>
                         <page string="Inherited">
-                            <label string="Users added to this group are automatically added in the following groups."/>
+                            <label for="implied_ids" string="Users added to this group are automatically added in the following groups."/>
                             <field name="implied_ids"/>
                         </page>
                         <page string="Menus">
@@ -162,7 +162,7 @@
                                 <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
                             </button>
                         </div>
-                        <div class="alert alert-info text-center o_form_header" attrs="{'invisible': [('active', '=', True)]}">
+                        <div class="alert alert-info text-center o_form_header" attrs="{'invisible': [('active', '=', True)]}" role="alert">
                           <a class="close" data-dismiss="alert" href="#" aria-hidden="true">x</a>
                           <div>
                             <strong>The contact linked to this user is still active</strong>
@@ -283,17 +283,17 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('res.users', 'image_medium', record.id.raw_value)"/>
+                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_medium', record.id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
-                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" aria-hidden="true"></i></li>
-                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle"></i></li>
+                                        <li class="text-success pull-right mb4" t-if="record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i></li>
+                                        <li class="text-danger pull-right mb4" t-if="!record.active.raw_value"><i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i></li>
                                         <li class="mb4">
                                             <strong><field name="name"/></strong>
                                         </li>
                                         <li class="badge pull-right mb4" t-if="record.lang.raw_value"><field name="lang"/></li>
-                                        <li class="mb4" t-if="record.login.raw_value"><i class="fa fa-envelope"/> <field name="login"/></li>
+                                        <li class="mb4" t-if="record.login.raw_value" title="Login"><i class="fa fa-envelope" role="img" aria-label="Login"/> <field name="login"/></li>
                                     </ul>
                                 </div>
                             </div>

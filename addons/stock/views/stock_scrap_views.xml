@@ -86,7 +86,7 @@
                                         <span t-esc="record.name.value"/>
                                     </strong>
                                     <strong t-if="record.date_expected.value" class="col-xs-6 text-right">
-                                        <i class="fa fa-clock-o"/><span t-esc="record.date_expected.value"/>
+                                        <i class="fa fa-clock-o" role="img" aria-label="Expected date" title="Expected date"/><span t-esc="record.date_expected.value"/>
                                     </strong>
                                     <div class="col-xs-12">
                                         <span t-esc="record.product_id.value"/>

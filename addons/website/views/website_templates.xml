@@ -70,7 +70,7 @@
     <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
         'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
         ">
-        <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <a role="menuitem" t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
@@ -234,7 +234,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
-            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+            <span t-field="res_company.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
     </xpath>
 </template>
@@ -336,8 +336,8 @@
         <li groups="website.group_website_publisher">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
-                <i class="fa fa-plus-circle"/>
-                Add a language...
+                <span class="fa fa-plus-circle">
+                    Add a language...</span>
             </a>
         </li>
     </ul>
@@ -355,7 +355,7 @@
             <ul class="dropdown-menu" role="menu" t-att-aria-labelledby="'dopprod-%s' % object.id">
                 <t t-raw="0"/>
                 <li t-if="publish_edit">
-                    <a t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
+                    <a role="menuitem" t-attf-href="/web#return_label=Website&amp;view_type=form&amp;model=#{object._name}&amp;id=#{object.id}&amp;action=#{action}"
                     title='Edit in backend'>Edit</a>
                 </li>
             </ul>
@@ -402,12 +402,12 @@
     - 'loading': on the container/modal when the new css is loading
 -->
 <template id="website.theme_customize" name="Theme Modal for Customization">
-  <div id="theme_customize_modal" class="modal fade">
+  <div role="dialog" id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header text-center">
+            <header class="modal-header text-center">
                 <h4 class="modal-title">Please install a theme in order to customize your website.</h4>
-            </div>
+            </header>
           </div>
       </div>
   </div>
@@ -486,8 +486,8 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
-                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                    <p>
                      Note: To hide this page, uncheck it from the top Customize menu.
                    </p>
@@ -578,7 +578,7 @@
         <div class="container">
             <div class="well mt32">
                 <p>This page does not exist, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                <a role="button" class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>
@@ -739,15 +739,15 @@
             </script>
         </head>
         <body>
-            <div id="reset_template_confirmation" class="modal" tabindex="-1" role="dialog" aria-hidden="true" t-ignore="true">
+            <div role="dialog" id="reset_template_confirmation" class="modal" tabindex="-1" aria-hidden="true" t-ignore="true">
                 <div class="modal-dialog">
                     <form class="form-horizontal" role="form">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <header class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                             <h3 class="modal-title">Reset templates</h3>
-                        </div>
-                        <div class="modal-body">
+                        </header>
+                        <main class="modal-body">
                             <div class="form-group mb0">
                                 <label for="page-name" class="col-sm-9">
                                     <p>The selected templates will be reset to their factory settings.</p>
@@ -757,11 +757,11 @@
                                     <input type="text" class="form-control" required="required" placeholder="yes"/>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
+                        </main>
+                        <footer class="modal-footer">
                             <input type="submit" value="Confirm" class="btn btn-primary"/>
-                            <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                        </div>
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                        </footer>
                     </div>
                     </form>
                 </div>
@@ -785,7 +785,7 @@
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                     </div>
                     <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_exception and editable">
+                        <div class="alert alert-danger" t-if="qweb_exception and editable" role="alert">
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>
@@ -849,12 +849,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
     </address>
     <t t-if="res_company.google_map_img()">
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
-           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
+           <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
         </a>
     </t>
 </template>
@@ -865,7 +865,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
         </div>
         <span class="input-group-btn">
-           <button type="submit" class="btn btn-default oe_search_button"><i class="fa fa-search"/></button>
+           <button type="submit" class="btn btn-default oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </span>
     </div>
 </template>
@@ -888,13 +888,13 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
               <button class="btn btn-default" type="button" data-toggle="dropdown">
-                  <span class="fa fa-sort fa-lg" />
+                  <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
                   <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                  <span class="caret"></span>
+                  <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
               </button>
-              <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+              <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
                   <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                      <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                      <a role="menuitem" t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
                           <span t-esc="searchbar_sortings[option].get('label')"/>
                       </a>
                   </li>
@@ -915,25 +915,25 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <tr class="active">
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page published?" class="fa fa-eye" aria-hidden="true"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
                       <th class="col-sm-3 col-md-2"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">
                       <tr>
-                          <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
+                          <td><i t-if="page.is_homepage" class="fa fa-home" role="img" aria-label="Home" title="Home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
                           <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.menu_ids else 'Not checked'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
                           <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" role="img" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.website_indexed else 'Not checked'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
                           <td class="text-right">
-                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
-                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
-                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
-                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                              <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page" aria-label="Manage this page"></a>
+                              <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend" aria-label="Edit code in backend"></a>
+                              <a class="mr4 fa fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page" aria-label="Clone this page"></a>
+                              <a class="fa fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page" aria-label="Delete this page"></a>
                           </td>
                       </tr>
                   </t>

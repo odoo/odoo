@@ -3,13 +3,13 @@
         <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
             <t t-set="payment_tx_id" t-value="order.get_portal_last_transaction()"/>
             <t t-if="order.amount_total and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and payment_tx_id and payment_tx_id.state != 'done'" name="portal_confirmation_pay">
-                <a class="btn btn-primary ml8 pull-right" href="#portal_pay">
-                    <i class="fa fa-arrow-circle-right"/> Pay Now
+                <a class="btn btn-primary ml8 pull-right" href="#portal_pay" role="button">
+                    <span class="fa fa-arrow-circle-right"> Pay Now</span>
                 </a>
             </t>
             <t t-if="invoices and order.state in ('sale', 'done') and portal_confirmation == 'pay'">
-                <a class="btn btn-primary ml8 pull-right" disabled="disabled">
-                    <i class="fa fa-check-circle"/> Done
+                <a role="button" class="btn btn-primary ml8 pull-right" disabled="disabled">
+                    <span class="fa fa-check-circle"> Done</span>
                 </a>
             </t>
         </xpath>
@@ -52,10 +52,10 @@
                         <span t-esc="tx.reference"/>
                         <span class="text-muted" t-field="tx.create_date"/>
                         <t t-if="tx.state == 'done'">
-                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
+                            <span class="label label-success orders_label_text_align"><span class="fa fa-fw fa-check"> Done</span></span>
                         </t>
                         <t t-if="tx.state != 'done'">
-                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <span class="label label-info orders_label_text_align"><span class="fa fa-fw fa-clock-o"> Waiting</span></span>
                             <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
                         </t>
                     </div>

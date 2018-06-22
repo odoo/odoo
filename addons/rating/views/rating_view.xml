@@ -69,7 +69,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png" />
+                                    <img t-attf-src="/rating/static/src/img/rating_#{record.rating.raw_value}.png" t-att-alt="record.rating.name"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong>
@@ -96,7 +96,7 @@
                                             on <field name="create_date" />
                                         </li>
                                     </ul>
-                                    <i t-if="record.feedback.raw_value" class="fa fa-comment pull-right mt4" t-attf-title="Feedback:\n#{record.feedback.raw_value}" />
+                                    <i t-if="record.feedback.raw_value" class="fa fa-comment pull-right mt4" t-attf-title="Feedback:\n#{record.feedback.raw_value}"  t-attf-aria-label="Feedback:\n#{record.feedback.raw_value}" role="img"/>
                                 </div>
                             </div>
                         </t>

@@ -1,7 +1,7 @@
 <template>
     <div t-name="CalendarView" class="o_calendar_container">
         <div class="o_calendar_view">
-            <div class="o_calendar_buttons"/>
+            <div class="o_calendar_buttons" role="toolbar" aria-label="Calendar toolbar"/>
             <div class="o_calendar_widget" />
         </div>
         <div class="o_calendar_sidebar_container hidden-xs">
@@ -44,17 +44,17 @@
                         <input type="checkbox" name="selection" t-att-checked="(filter.active ? true : undefined)"/><span/>
                     </div>
                     <t t-if="filter.value == 'all'">
-                        <span><i class="fa fa-users fa-fw o_cal_avatar"/></span>
+                        <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
                     </t>
                     <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
-                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar"/>
+                        <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
                     </t>
                     <t t-set="color" t-value="widget.getColor(filter.color_index)"/>
                     <span t-if="typeof color === 'number'" t-attf-class="color_filter o_underline_color_#{widget.getColor(filter.color_index)}"><t t-esc="filter.label"/></span>
                     <span t-elif="color" t-attf-style="border-bottom: 4px solid #{color};"><t t-esc="filter.label"/></span>
                     <span t-else=""><t t-esc="filter.label"/></span>
                     <t t-if="filter.id">
-                        <span class="o_remove fa fa-times" title="Remove this favorite from the list"/>
+                        <span class="o_remove fa fa-times" title="Remove this favorite from the list" role="img" aria-label="Remove this favorite from the list"/>
                    </t>
                 </div>
             </div>
@@ -64,9 +64,9 @@
     <t t-name="CalendarView.buttons">
         <div class="o_calendar_buttons">
             <t t-if="!isMobile">
-                <button class="o_calendar_button_prev btn btn-sm btn-primary"><span class="fa fa-arrow-left"/></button>
+                <button class="o_calendar_button_prev btn btn-sm btn-primary" aria-label="Previous" title="Previous"><span class="fa fa-arrow-left"/></button>
                 <button class="o_calendar_button_today btn btn-sm btn-primary">Today</button>
-                <button class="o_calendar_button_next btn btn-sm btn-primary"><span class="fa fa-arrow-right"/></button>
+                <button class="o_calendar_button_next btn btn-sm btn-primary" aria-label="Next" title="Next"><span class="fa fa-arrow-right"/></button>
             </t>
             <div class="btn-group btn-group-sm">
                 <button type="button" class="o_calendar_button_day btn btn-sm btn-default">Day</button>
@@ -78,15 +78,15 @@
 
     <t t-name="CalendarView.TodayButtonMobile">
         <span class="fa-stack o_calendar_button_today">
-            <i class="fa fa-calendar-o fa-stack-2x"></i>
+            <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"></i>
             <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
         </span>
     </t>
 
-    <div t-name="CalendarView.quick_create" class="o_calendar_quick_create">
+    <main t-name="CalendarView.quick_create" class="o_calendar_quick_create">
         <div class="form-group">
             <label for='name' class='control-label'>Summary:</label>
             <input type='text' name='name' class="o_input" t-att-value="widget.dataTemplate.name or None"/>
         </div>
-    </div>
+    </main>
 </template>

@@ -471,10 +471,10 @@ QWeb2.Engine = (function() {
                     if (this.debug && window.console) {
                         console.log(code);
                     }
-                    this.tools.exception("Error evaluating template: " + error, { template: name });
+                    this.tools.exception("Error evaluating template: " + error, { template: template });
                 }
                 if (!tcompiled) {
-                    this.tools.exception("Error evaluating template: (IE?)" + error, { template: name });
+                    this.tools.exception("Error evaluating template: (IE?)" + error, { template: template });
                 }
                 this.compiled_templates[template] = tcompiled;
                 return this.render(template, dict);

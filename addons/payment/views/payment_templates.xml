@@ -128,20 +128,20 @@
                             <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
                             <span class="payment_option_name" t-esc="pm.name"/>
                             <t t-if="pm.verified">
-                                <i class="fa fa-check text-success" title="This payment method is verified by our system."></i>
+                                <i class="fa fa-check text-success" title="This payment method is verified by our system." role="img" aria-label="Ok"></i>
                             </t>
                             <t t-else="">
-                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system."></i>
+                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system." role="img" aria-label="Not verified"></i>
                             </t>
                         </label>
                         <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-xs pull-right">
-                            <i class="fa fa-trash"></i> Delete
+                            <span class="fa fa-trash"> Delete</span>
                         </button>
                     </div>
                 </t>
             </div>
             <div t-if='back_button_txt' class="pull-left">
-                <a t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-default'">
+                <a role="button" t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-default'">
                     <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
                     <t t-esc="back_button_txt"/>
                 </a>

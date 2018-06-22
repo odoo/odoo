@@ -71,12 +71,12 @@ odoo.define('payment.payment_form', function (require) {
                         $(element).trigger("focusout");
                         if (element.dataset.isRequired && element.value.length === 0) {
                                 $(element).closest('div.form-group').addClass('has-error');
-                                $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field">' + _.str.escapeHTML("The value is invalid.") + '</div>');
+                                $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>');
                                 wrong_input = true;
                         }
                         else if ($(element).closest('div.form-group').hasClass('has-error')) {
                             wrong_input = true;
-                            $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field">' + _.str.escapeHTML("The value is invalid.") + '</div>');
+                            $(element).closest('div.form-group').append('<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>');
                         }
                     });
 
@@ -234,13 +234,13 @@ odoo.define('payment.payment_form', function (require) {
                     $(element).trigger("focusout");
                     if (element.dataset.isRequired && element.value.length === 0) {
                             $(element).closest('div.form-group').addClass('has-error');
-                            var message = '<div style="color: red" class="o_invalid_field">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                            var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
                             $(element).closest('div.form-group').append(message);
                             wrong_input = true;
                     }
                     else if ($(element).closest('div.form-group').hasClass('has-error')) {
                         wrong_input = true;
-                        var message = '<div style="color: red" class="o_invalid_field">' + _.str.escapeHTML("The value is invalid.") + '</div>';
+                        var message = '<div style="color: red" class="o_invalid_field" aria-invalid="true">' + _.str.escapeHTML("The value is invalid.") + '</div>';
                         $(element).closest('div.form-group').append(message);
                     }
                 });

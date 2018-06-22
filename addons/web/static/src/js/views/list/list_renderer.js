@@ -549,6 +549,10 @@ var ListRenderer = BasicRenderer.extend({
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
             .addClass(field.sortable && 'o_column_sortable');
 
+        if (isNodeSorted) {
+            $th.attr('aria-sort', order[0].asc ? 'ascending': 'descending');
+        }
+
         if (field.type === 'float' || field.type === 'integer' || field.type === 'monetary') {
             $th.css({textAlign: 'right'});
         }

@@ -74,7 +74,7 @@
                     <div t-if="not no_breadcrumbs" class="row">
                         <div t-attf-class="col-sm-12">
                             <ol t-if="page_name != 'home'" class="breadcrumb o_portal_submenu">
-                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                                 <li t-if="page_name == 'my_details'">Your Details</li>
                             </ol>
                             <t t-call='portal.record_pager'/>
@@ -94,7 +94,7 @@
                                     <t t-call="portal.portal_contact"/>
                                 </div>
                                 <div class="o_portal_my_details">
-                                    <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                    <h3 class="page-header">Your Details <a role="button" href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
                                 </div>
                                 <div class="o_my_archives" t-if="archive_groups">
@@ -276,7 +276,7 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-12">
-                              <div t-if="error_message" class="alert alert-danger">
+                              <div t-if="error_message" class="alert alert-danger" role="alert">
                                   <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                               </div>
                             </div>
@@ -343,8 +343,7 @@
                         </div>
                         <div class="clearfix">
                             <button type="submit" class="btn btn-primary pull-right mb32 ">
-                                Confirm
-                                <span class="fa fa-long-arrow-right" />
+                                <span class="fa fa-long-arrow-right">Confirm</span>
                             </button>
                         </div>
                     </div>
@@ -356,8 +355,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
           <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
         </t>
     </template>

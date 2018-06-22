@@ -17,12 +17,13 @@ var _t = core._t;
  *   always exists during the lifecycle of the dialog.
  **/
 var Dialog = Widget.extend({
+    tagName: 'main',
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
     custom_events: _.extend({}, Widget.prototype.custom_events, {
         focus_control_button: '_onFocusControlButton',
     }),
     events: _.extend({} , Widget.prototype.events, {
-        'keydown .modal-footer button':'_onFooterButtonKeyDown',
+        'keydown footer.modal-footer button':'_onFooterButtonKeyDown',
     }),
     /**
      * @param {Widget} parent
@@ -92,7 +93,7 @@ var Dialog = Widget.extend({
                     self.$modal.find('.modal-dialog').addClass('modal-sm');
                     break;
             }
-            self.$footer = self.$modal.find(".modal-footer");
+            self.$footer = self.$modal.find("footer");
             self.set_buttons(self.buttons);
             self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
         });
@@ -168,7 +169,17 @@ var Dialog = Widget.extend({
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
-            self.$modal.find(".modal-body").replaceWith(self.$el);
+            var $main = self.$modal.find("main:first");
+            if ($main.length === 0) {
+                $main = self.$modal.find(".modal-body:first");
+            }
+            if (self.$el.tagName !== 'MAIN') {
+                self.$el.removeClass(".modal-body");
+                self.$el = $('<main class="modal-body"/>').append(self.$el);
+            }
+            $main.replaceWith(self.$el);
+            self.$modal.attr('open', true);
+            self.$modal.removeAttr("aria-hidden");
             self.$modal.modal('show');
             self._opened.resolve();
         });
@@ -201,11 +212,13 @@ var Dialog = Widget.extend({
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
         if (this.$modal) {
             this.$modal.modal('hide');
+            this.$modal.removeAttr('open');
+            this.$modal.attr('aria-hidden', true);
             this.$modal.remove();
         }
 
         if (!isFocusSet) {
-            var modals = $('body > .modal').filter(':visible');
+            var modals = $('body > [role="dialog"]').filter(':visible');
             if (modals.length) {
                 modals.last().focus();
                 // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
@@ -287,9 +300,9 @@ Dialog.alert = function (owner, message, options) {
     return new Dialog(owner, _.extend({
         size: 'medium',
         buttons: buttons,
-        $content: $('<div>', {
+        $content: $('<main role="alert"/>').append($('<p>', {
             text: message,
-        }),
+        })),
         title: _t("Alert"),
     }, options)).open({shouldFocusButtons:true});
 };
@@ -312,9 +325,9 @@ Dialog.confirm = function (owner, message, options) {
     return new Dialog(owner, _.extend({
         size: 'medium',
         buttons: buttons,
-        $content: $('<div>', {
+        $content: $('<main role="alert">').append($('<p>', {
             text: message,
-        }),
+        })),
         title: _t("Confirmation"),
     }, options)).open({shouldFocusButtons:true});
 };
@@ -345,7 +358,7 @@ Dialog.safeConfirm = function (owner, message, options) {
             text: message,
         });
     }
-    $content = $('<div/>').append($content, $securityCheck);
+    $content = $('<main role="alert"/>').append($content, $securityCheck);
 
     var buttons = [
         {

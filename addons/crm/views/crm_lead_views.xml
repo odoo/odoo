@@ -189,14 +189,14 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class="oe_kanban_mail_new" title="Unread Messages"><i class="fa fa-comments" aria-label="Messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -324,15 +324,15 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a class="dropdown-toggle btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
-                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Restore</a></li>
-                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit</a></li></t>
+                                        <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
+                                        <li t-if="! record.active.value"><a role="menuitem" name="action_set_active" type="object">Restore</a></li>
+                                        <li t-if="record.active.value"><a role="menuitem" name="action_set_unactive" type="object">Archive</a></li>
+                                        <li role="menuitem" aria-haspopup="true"><ul class="oe_kanban_colorpicker" data-field="color" role="menu"/></li>
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
@@ -350,12 +350,12 @@
                                         <div class="oe_kanban_bottom_left">
                                             <field name="priority" widget="priority" groups="base.group_user"/>
                                             <t t-if="record.message_needaction_counter.raw_value">
-                                                <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                                <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages" role="img"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                             </t>
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <div class="oe_kanban_bottom_right">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
                                 </div>

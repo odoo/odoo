@@ -163,8 +163,8 @@
                 </li>
             </xpath>
             <xpath expr="//hr" position="before">
-                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id" role="status">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                     This question has been included in the <a href="/forum/how-to">official documentation</a>.
                 </div>
             </xpath>
@@ -214,7 +214,7 @@
                                 <div class="col-md-offset-3 col-md-8">
                                     <button class="btn btn-primary">Push to documentation</button>
                                     <span class="text-muted">or</span>
-                                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                    <a role="button" class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
                                 </div>
                             </div>
                         </form>

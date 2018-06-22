@@ -59,7 +59,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                                 </div>
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
@@ -68,7 +68,7 @@
                                         }'/>
                                 </t>
                                 <div class="text-muted" t-if="event.event_type_id">
-                                    <i class="fa fa-tag"></i> <span t-field="event.event_type_id"/>
+                                    <i class="fa fa-tag" role="img" aria-label="Event type" title="Event type"></i> <span t-field="event.event_type_id"/>
                                 </div>
                             </div>
                         </li>
@@ -93,13 +93,13 @@
         <div class="row">
             <div class="col-md-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded"/>
+                    <img src="/website_event/static/src/img/openerp_enterprise_of_the_year.png" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Photos of Past Events</a></div>
                 </div>
             </div>
             <div class="col-md-12 mb16">
                 <div class="oe_demo">
-                    <img src="/website_event/static/src/img/training.jpg" class="img-rounded"/>
+                    <img src="/website_event/static/src/img/training.jpg" class="img-rounded" alt=""/>
                     <div class="text-center"><a href="/event">Our Trainings</a></div>
                 </div>
             </div>
@@ -130,10 +130,7 @@
             <div class="col-md-12 mb16 mt16 country_events">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
-                        <h1>
-                            <i class="fa fa-flag fa-5x"></i>
-                        </h1>
-                        <h1>Events from Your Country</h1>
+                        <h1 class="fa fa-flag fa-5x">Events from Your Country</h1>
                     </div>
                 </div>
             </div>
@@ -271,7 +268,7 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
+                <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
@@ -304,7 +301,7 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <div t-if="event.state == 'done' or not registrable" class="alert alert-info">Registration for this event is now closed</div>
+            <div t-if="event.state == 'done' or not registrable" class="alert alert-info" role="status">Registration for this event is now closed</div>
             <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
             <hr/>
@@ -337,7 +334,7 @@
                     <div class="panel-body">
                         <t t-if="event.google_map_img()">
                             <a t-att-href="event.google_map_link()" target="_BLANK">
-                               <img t-att-src="event.google_map_img()" width="100%%"/>
+                               <img t-att-src="event.google_map_img()" width="100%%" alt="Google Maps"/>
                             </a>
                         </t>
                         <t t-else="1">
@@ -356,8 +353,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <span class="fa fa-clock-o"> From</span> <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
+                        <span class="fa fa-clock-o"> To</span> <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
@@ -466,7 +463,7 @@
                 </div>
             </div>
         </form>
-        <div t-if="not buy" class="alert alert-info">
+        <div t-if="not buy" class="alert alert-info" role="status">
             <t t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
                 Event registration not yet started.
             </t>
@@ -475,8 +472,8 @@
             </t>
             <t t-if="uid">
                 <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
-                    <i class="fa fa-plus-circle"></i>
-                    <em>Configure and Launch Event Registration</em>
+                    <span class="fa fa-plus-circle">
+                        <em>Configure and Launch Event Registration</em></span>
                 </a>
             </t>
         </div>
@@ -525,16 +522,16 @@
 </template>
 
 <template id="registration_attendee_details" name="Registration Attendee Details">
-    <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
+    <div role="dialog" id="modal_attendees_registration" class="modal fade" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <header class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
                         <h4 class="modal-title" id="myModalLabel"><strong>Attendees</strong></h4>
-                    </div>
-                    <div class="modal-body">
+                    </header>
+                    <main class="modal-body">
                         <div class="container">
                             <t t-set="counter_type" t-value="1"/>
                             <t t-set="counter" t-value="0"/>
@@ -563,13 +560,13 @@
                                 <t t-set="counter_type" t-value="counter_type + 1"/>
                             </t>
                         </div>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <div class="pull-left">
                             <button type="submit" class="btn btn-primary">Continue</button>
                             <button type="button" class="btn btn-default js_goto_event" data-dismiss="modal">Cancel Registration</button>
                         </div>
-                    </div>
+                    </footer>
                 </div>
             </form>
         </div>
@@ -586,13 +583,13 @@
                 </div>
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
-                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
+                    <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div id="add_to_calendar" class="mt4">
-                        <a class="btn btn-primary mr8" t-att-href="iCal_url">
-                            <i class="fa fa-fw fa-arrow-right"/>Add to iCal/Outlook
+                        <a role="button" class="btn btn-primary mr8" t-att-href="iCal_url">
+                            <span class="fa fa-fw fa-arrow-right">Add to iCal/Outlook</span>
                         </a>
-                        <a class="btn btn-primary" t-att-href="google_url" target='_blank'>
-                            <i class="fa fa-fw fa-arrow-right"/>Add to Google Calendar
+                        <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
+                            <span class="fa fa-fw fa-arrow-right">Add to Google Calendar</span>
                         </a>
                     </div>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
@@ -617,9 +614,9 @@
                             <t t-foreach="attendees" t-as="attendee">
                                 <tr>
                                     <td><t t-esc="attendee.id"/></td>
-                                    <td><i class="fa fa-user"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
-                                    <td><i class="fa fa-envelope"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
-                                    <td><i class="fa fa-phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
+                                    <td><i class="fa fa-user" role="img" aria-label="Name" title="Name"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
+                                    <td><i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
+                                    <td><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
                                 </tr>
                             </t>
                         </tbody>
@@ -640,7 +637,7 @@
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
-                    <i class="fa fa-flag fa-5x text-muted"></i>
+                    <i class="fa fa-flag fa-5x text-muted" title="Local Events" role="img" aria-label="Local Events"></i>
                 </div>
                 <span class="oe_snippet_thumbnail_title">Local Events</span>
             </div>
@@ -648,7 +645,7 @@
                 <div class="country_events_list">
                     <div class="text-muted text-left">
                         <div>
-                            <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                            <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         </div>
                         <div>Events in visitor's country</div>
                     </div>
@@ -673,22 +670,22 @@
             <div class="country_events_list">
                 <div>
                     <t t-if="country">
-                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')"></img>
+                        <img class="img-rounded img-responsive" t-att-src="website.image_url(country, 'image')" alt=""></img>
                         <h4><b>Events: <span t-esc="country.name"></span></b></h4>
                     </t>
                     <t t-if="not country">
-                        <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg"></img>
+                        <img class="img-rounded img-responsive" src="/website_event/static/src/img/world_map.jpg" alt=""></img>
                         <h4><b>Upcoming Events</b></h4>
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
                         <t t-if="not event_dict['event'].website_published">
-                            <span class="label label-danger"><i class="fa fa-ban"></i></span>
+                            <span class="label label-danger" role="img" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
                         </t>
                         <t t-if="event_dict['event'].address_id">
-                            <i class="fa fa-map-marker" title="It is a physical event"></i>
+                            <i class="fa fa-map-marker" title="It is a physical event" role="img" aria-label="It is a physical event"></i>
                         </t>
                         <t t-if="not event_dict['event'].address_id">
-                            <i class="fa fa-cloud" title="It is an online event"></i>
+                            <i class="fa fa-cloud" title="It is an online event" role="img" aria-label="It is an online event"></i>
                         </t>
                         <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
                     </div>
@@ -719,7 +716,7 @@
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><p class="fa fa-glass">New Event</p></a></li>
     </xpath>
 </template>
 </odoo>

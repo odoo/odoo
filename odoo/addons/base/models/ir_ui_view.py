@@ -338,8 +338,11 @@ actual arch.
                     # A <data> element is a wrapper for multiple root nodes
                     view_docs = view_docs[0]
                 for view_arch in view_docs:
-                    if not valid_view(view_arch):
-                        raise ValidationError(_('Invalid view definition'))
+                    check = valid_view(view_arch)
+                    if not check:
+                        raise ValidationError(_('Invalid view %s definition in %s') % (view.name, view.arch_fs))
+                    if check == "Warning":
+                        _logger.warning(_('Invalid view %s definition in %s \n%s'), view.name, view.arch_fs, view.arch)
         return True
 
     @api.constrains('type', 'groups_id')

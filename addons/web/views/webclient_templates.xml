@@ -39,6 +39,7 @@
 
         <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome-suffix.css"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap-datetimepicker/src/scss/_bootstrap-datetimepicker.scss"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
         <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
@@ -331,7 +332,7 @@
             <div class="row">
                 <div class="col-md-6 col-md-offset-3 o_database_list">
                     <div class="text-center">
-                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo"/>
                     </div>
                     <t t-raw="0"/>
                     <div class="text-center" t-if="not disable_footer">
@@ -355,7 +356,7 @@
                     <div class="input-group">
                         <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
                         <span class="input-group-btn">
-                          <a href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database"></i></a>
+                          <a role="button" href="/web/database/selector" class="btn btn-default">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
                         </span>
                     </div>
                 </div>
@@ -370,10 +371,10 @@
                     <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
-                <p class="alert alert-danger" t-if="error">
+                <p class="alert alert-danger" t-if="error" role="alert">
                     <t t-esc="error"/>
                 </p>
-                <p class="alert alert-success" t-if="message">
+                <p class="alert alert-success" t-if="message" role="status">
                     <t t-esc="message"/>
                 </p>
 
@@ -386,13 +387,13 @@
     </template>
 
     <template id="web.menu">
-        <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;">
+        <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;" role="menu">
             <li t-foreach="menu_data['children']" t-as="menu">
                 <t t-call="web.menu_link"/>
             </li>
             <li id="menu_more_container" class="dropdown" style="display: none;">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
-                <ul id="menu_more" class="dropdown-menu"></ul>
+                <a role="menuitem" aria-haspopup="true" href="#" class="dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More <b class="caret"></b></a>
+                <ul id="menu_more" class="dropdown-menu" role="menu"></ul>
             </li>
         </ul>
 
@@ -402,7 +403,7 @@
     <template id="web.menu_secondary">
         <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
             <span class="oe_logo_edit">Edit Company data</span>
-            <img src='/web/binary/company_logo'/>
+            <img src='/web/binary/company_logo' alt="Logo"/>
         </a>
         <div class="o_sub_menu_content">
             <t t-foreach="menu_data['children']" t-as="menu">
@@ -432,6 +433,7 @@
     <template id="web.menu_link">
         <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
         <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
+            role="menuitem"
             t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
             t-att-data-menu="menu['id']"
             t-att-data-menu-xmlid="menu.get('xmlid')"
@@ -690,23 +692,25 @@
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
 
-            <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <t t-call="web.menu"/>
-                </div>
-            </nav>
+            <header id="oe_main_menu_navbar">
+                <nav class="navbar navbar-inverse" groups="base.group_user,base.group_portal">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <t t-call="web.menu"/>
+                    </div>
+                </nav>
+            </header>
             <div class="o_main">
-                <div class="o_sub_menu" groups="base.group_user,base.group_portal">
+                <aside class="o_sub_menu" groups="base.group_user,base.group_portal" aria-label="Submenu">
                     <t t-call="web.menu_secondary"/>
-                </div>
-                <div class="o_main_content"/>
+                </aside>
+                <main class="o_main_content"/>
             </div>
         </t>
     </template>
