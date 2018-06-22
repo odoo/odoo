@@ -75,7 +75,7 @@ class AccountInvoice(models.Model):
             vals['acquirer_id'] = acquirer.id
 
         vals.update({
-            'amount': sum(self.mapped('amount_total')),
+            'amount': sum(self.mapped('residual')),
             'currency_id': currency.id,
             'partner_id': partner.id,
             'invoice_ids': [(6, 0, self.ids)],
