@@ -89,16 +89,17 @@ class TestORM(TransactionCase):
     @mute_logger('odoo.models')
     def test_search_read(self):
         partner = self.env['res.partner']
+        user = self.env['res.users']
 
         # simple search_read
-        partner.create({'name': 'MyPartner1'})
+        partner1 = partner.create({'name': 'MyPartner1'})
         found = partner.search_read([('name', '=', 'MyPartner1')], ['name'])
         self.assertEqual(len(found), 1)
         self.assertEqual(found[0]['name'], 'MyPartner1')
         self.assertIn('id', found[0])
 
         # search_read correct order
-        partner.create({'name': 'MyPartner2'})
+        partner2 = partner.create({'name': 'MyPartner2'})
         found = partner.search_read([('name', 'like', 'MyPartner')], ['name'], order="name")
         self.assertEqual(len(found), 2)
         self.assertEqual(found[0]['name'], 'MyPartner1')
@@ -107,6 +108,39 @@ class TestORM(TransactionCase):
         self.assertEqual(len(found), 2)
         self.assertEqual(found[0]['name'], 'MyPartner2')
         self.assertEqual(found[1]['name'], 'MyPartner1')
+
+        # Order by chained many2one fields, with and without auto_join
+        parent1 = partner.create({'name': 'Parent1'})
+        parent2 = partner.create({'name': 'Parent2'})
+        partner1.write({'parent_id': parent2.id})
+        partner2.write({'parent_id': parent1.id})
+        user1 = user.create({'login': 'partner1', 'partner_id': partner1.id})
+        user2 = user.create({'login': 'partner2', 'partner_id': partner2.id})
+        user3 = user.create({'login': 'parent1', 'partner_id': parent1.id})
+        self.assertEqual(user.search(
+            [('id', 'in', (user1.id, user2.id))], order='partner_id.parent_id.name').ids, [user2.id, user1.id])
+        self.assertEqual(user.search(
+            [('id', 'in', (user1.id, user2.id))], order='parent_id.name').ids, [user2.id, user1.id])
+        self.assertEqual(user.search(
+            [('id', 'in', (user1.id, user2.id))], order='partner_id.parent_id.name desc').ids, [user1.id, user2.id])
+        self.assertEqual(user.search([('id', 'in', (user1.id, user2.id))], order='partner_id.parent_id').ids,
+                         [user2.id, user1.id])
+        self.assertEqual(user.search(
+            [('id', 'in', (user1.id, user2.id))], order='partner_id.parent_id desc').ids, [user1.id, user2.id])
+        # Search results include users with partners without a parent
+        self.assertIn(user3, user.search([], order='partner_id.parent_id.name desc'))
+        partner._fields['parent_id'].auto_join = False
+        self.assertEqual(user.search(
+            [('partner_id.parent_id.name', 'in', ('Parent1', 'Parent2'))], order='partner_id.parent_id.name').ids,
+                         [user2.id, user1.id])
+        partner._fields['parent_id'].auto_join = True
+        self.assertEqual(user.search(
+            [('partner_id.parent_id.name', 'in', ('Parent1', 'Parent2'))], order='partner_id.parent_id.name').ids,
+                         [user2.id, user1.id])
+        parent1.write({'name': 'zzzzParent1'})
+        self.assertEqual(user.search(
+            [('id', 'in', (user1.id, user2.id))], order='partner_id.parent_id.name').ids,
+                        [user1.id, user2.id])
 
         # search_read that finds nothing
         found = partner.search_read([('name', '=', 'Does not exists')], ['name'])

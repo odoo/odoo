@@ -63,7 +63,7 @@ _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
 _unlink = logging.getLogger(__name__ + '.unlink')
 
-regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
+regex_order = re.compile('^(\s*([a-z0-9:_.]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
@@ -3622,7 +3622,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return '"%s"."%s"' % (table_alias, field)
 
     @api.model
-    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
+    def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen, m2o_order=None):
         """
         Add possibly missing JOIN to ``query`` and generate the ORDER BY clause for m2o fields,
         either native m2o fields or function/related fields that are stored, including
@@ -3646,7 +3646,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # figure out the applicable order_by for the m2o
         dest_model = self.env[field.comodel_name]
-        m2o_order = dest_model._order
+        m2o_order = m2o_order or dest_model._order
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
@@ -3669,9 +3669,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             order_split = order_part.strip().split(' ')
             order_field = order_split[0].strip()
             order_direction = order_split[1].strip().upper() if len(order_split) == 2 else ''
+            m2o_order = None
             if reverse_direction:
                 order_direction = 'ASC' if order_direction == 'DESC' else 'DESC'
-            do_reverse = order_direction == 'DESC'
+            if '.' in order_field:
+                order_field, m2o_order = order_field.split('.', 1)
+                m2o_order = '%s %s' % (m2o_order, order_direction)
+                do_reverse = False
+            else:
+                do_reverse = order_direction == 'DESC'
 
             field = self._fields.get(order_field)
             if not field:
@@ -3686,7 +3692,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     key = (field.model_name, field.comodel_name, order_field)
                     if key not in seen:
                         seen.add(key)
-                        order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
+                        order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen,
+                                                                         m2o_order=m2o_order)
                 elif field.store and field.column_type:
                     qualifield_name = self._inherits_join_calc(alias, order_field, query, implicit=False, outer=True)
                     if field.type == 'boolean':
