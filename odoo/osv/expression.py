@@ -872,7 +872,10 @@ class expression(object):
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]
                 leaf.add_join_context(parent_model, parent_fname, 'id', parent_fname)
-                push(leaf)
+                if model._fields[model._inherits[parent_model._name]].auto_join:
+                    push(create_substitution_leaf(leaf, (left, operator, right), parent_model))
+                else:
+                    push(leaf)
 
             elif left == 'id' and operator in HIERARCHY_FUNCS:
                 ids2 = to_ids(right, model, leaf.leaf)

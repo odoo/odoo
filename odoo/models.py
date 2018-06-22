@@ -3886,7 +3886,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # log_access enabled, so that 'create_uid' is always there.
             domain = [('create_uid', '=', self._uid)]
             tquery = self._where_calc(domain, active_test=False)
-            apply_rule(tquery.where_clause, tquery.where_clause_params, tquery.tables)
+            apply_rule(query, tquery)
             return
 
         # apply main rules on the object
