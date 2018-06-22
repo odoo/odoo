@@ -2376,6 +2376,36 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
+    def _get_mro_has_field_relation(self, model, name):
+        for mro in type(model).__mro__:
+            # Check that mro class is an Odoo Model
+            if not hasattr(mro, '_abstract'):
+                continue
+            # As this model is present in mro, we don't test it
+            if not mro._name or mro._name == model._name:
+                continue
+            # Field name was found in mro class
+            if name in mro.__dict__:
+                field = mro.__dict__[name]
+                # We don't know if field type was something else
+                if isinstance(field, Many2many):
+                    return self.relation == field.args.get('relation')
+        return False
+
+    def _check_relation(self, model, name):
+        if self._get_mro_has_field_relation(model, name):
+            _logger.debug(
+                _('The relation property of field %s (%s) was not defined or '
+                  'has the same value as in one of its inherited model. '
+                  'It will be redefined.') % (name, model))
+            self.relation = False
+
+    def _setup_attrs(self, model, name):
+        super(Many2many, self)._setup_attrs(model, name)
+        # We check if stored field
+        if self.store:
+            self._check_relation(model, name)
+
     def _setup_regular_base(self, model):
         super(Many2many, self)._setup_regular_base(model)
         if self.store:
