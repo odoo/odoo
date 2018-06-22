@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="website_urls_wizard_form" model="ir.ui.view">
+            <field name="name">Website URLs</field>
+            <field name="model">website.urls.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="website_urls">
+                        <tree create="0" delete="0" editable="bottom">
+                            <field name="display_goto" invisible="1"/>
+                            <field name="url"/>
+                            <field name="published"/>
+                            <button type="object" string="View on website" name="action_goto" icon="fa-sign-out" attrs="{'invisible': [('display_goto', '=', False)]}"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button string="Save" name="action_save" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -135,6 +135,7 @@ response = request.render("website.template_partner_comment", {
             <field name="name">Home</field>
             <field name="type">qweb</field>
             <field name="key">website2.homepage</field>
+            <field name="website_id" ref="website.website2"/>
             <field name="arch" type="xml">
                 <t name="Home" priority="29" t-name="website2.homepage">
                   <t t-call="website.layout">
@@ -223,14 +224,10 @@ response = request.render("website.template_partner_comment", {
         <record id="website2" model="website">
             <field name="homepage_id" ref="website2_homepage_page" />
         </record>
-        <record id="website2_main_menu" model="website.menu">
-            <field name="name">Top Menu</field>
-            <field name="website_id" ref="website2"/>
-        </record>
         <record id="website2_menu_homepage" model="website.menu">
             <field name="name">Home</field>
             <field name="url">/</field>
-            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
             <field name="website_id" ref="website2"/>
             <field name="page_id" ref="website2_homepage_page" />
@@ -238,7 +235,7 @@ response = request.render("website.template_partner_comment", {
         <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
             <field name="url">/contactus</field>
-            <field name="parent_id" ref="website.website2_main_menu"/>
+            <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="website2"/>
             <field name="page_id" ref="website2_contactus_page" />

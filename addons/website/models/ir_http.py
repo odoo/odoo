@@ -117,9 +117,16 @@ class Http(models.AbstractModel):
     @classmethod
     def _serve_page(cls):
         req_page = request.httprequest.path
+        page_domain = [('url', '=', req_page), '|', ('view_id.website_id', '=', False), ('view_id.website_id', '=', request.website.id)]
 
-        domain = [('url', '=', req_page), '|', ('website_ids', 'in', request.website.id), ('website_ids', '=', False)]
-        pages = request.env['website.page'].search(domain)
+        published_domain = page_domain + [('website_ids', 'in', request.website.id)]
+        pages = request.env['website.page'].search(published_domain)
+
+        if not pages:
+            # Since there are no published pages, try to find a page
+            # that could potentially be published.
+            unpublished_domain = page_domain + [('website_ids', 'not in', request.website.id)]
+            pages = request.env['website.page'].search(unpublished_domain)
 
         if not request.website.is_publisher():
             pages = pages.filtered('is_visible')
@@ -239,7 +246,7 @@ class Http(models.AbstractModel):
         env = env or request.env
         obj = None
         if xmlid:
-            obj = env.ref(xmlid, False)
+            obj = cls._xmlid_to_obj(env, xmlid)
         elif id and model in env:
             obj = env[model].browse(int(id))
         if obj and 'website_published' in obj._fields:
@@ -250,6 +257,17 @@ class Http(models.AbstractModel):
             filename_field=filename_field, download=download, mimetype=mimetype,
             default_mimetype=default_mimetype, access_token=access_token, env=env)
 
+    @classmethod
+    def _xmlid_to_obj(cls, env, xmlid):
+        website_id = env['website'].get_current_website()
+        if website_id and website_id.installed_theme_id:
+            obj = env['ir.attachment'].search([('key', '=', xmlid), ('theme_id', '=', website_id.installed_theme_id.id)])
+            if obj:
+                obj = obj[0]  # todo jov why?
+                logger.info('returned website-specific attachment for %s (ID: %s)', xmlid, obj.ids)
+                return obj
+
+        return super(Http, cls)._xmlid_to_obj(env, xmlid)
 
 class ModelConverter(ModelConverter):
 

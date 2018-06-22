@@ -10,12 +10,24 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <div class="app_settings_block" data-string="Website" string="Website" data-key="website" groups="website.group_website_designer">
-                            <field name="website_id" invisible="1"/>
+                            <h2>Select the Website to Configure</h2>
+                            <div class="row mt16 o_settings_container" id="website_selection_settings">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="website">
+                                    <div class="o_setting_right_pane">
+                                        <label string="Website"/>
+                                        <div class="text-muted">
+                                            Settings on this page will apply to this website
+                                        </div>
+                                        <field name="website_id"/>
+                                    </div>
+                                </div>
+                            </div>
                             <h2>Website</h2>
                             <div class="row mt16 o_settings_container" id="webmaster_settings">
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="domain_setting">
                                     <div class="o_setting_right_pane">
                                         <label string="Website Title"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific."/>
                                         <div class="text-muted">
                                             Name and favicon of your website
                                         </div>
@@ -34,6 +46,7 @@
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="languages_setting">
                                     <div class="o_setting_right_pane">
                                         <label for="language_ids"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific."/>
                                         <div class="text-muted">
                                             Languages available on your website
                                         </div>
@@ -58,6 +71,7 @@
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label for="has_google_analytics"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific."/>
                                         <div class="text-muted">
                                             Track visits in Google Analytics
                                         </div>
@@ -142,6 +156,7 @@
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label for="auth_signup_uninvited"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific."/>
                                         <div class="text-muted">
                                             Let your customers log in to see their documents
                                         </div>
@@ -161,6 +176,7 @@
                                     </div>
                                     <div class="o_setting_right_pane">
                                         <label for="cdn_activated" string="Content Delivery Network (CDN)"/>
+                                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific."/>
                                         <div class="text-muted">
                                             Use a CDN to optimize the availability of your website's content
                                         </div>

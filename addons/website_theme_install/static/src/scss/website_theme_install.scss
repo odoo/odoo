@@ -94,18 +94,16 @@
             }
         }
 
-        &:not(.o_theme_installed) {
-            .o_theme_preview_top:hover {
-                @include o-transition(all, .3s);
-                @include o-transform(translateY(-10px));
-                border-color: darken($o-theme-kanban-gray, 26%);
-                box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
+        .o_theme_preview_top:hover {
+            @include o-transition(all, .3s);
+            @include o-transform(translateY(-10px));
+            border-color: darken($o-theme-kanban-gray, 26%);
+            box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
-                .o_button_area {
-                    opacity: 1;
-                    visibility: visible;
-                    @include o-transition(opacity, 0.2s, ease, 0.1s);
-                }
+            .o_button_area {
+                opacity: 1;
+                visibility: visible;
+                @include o-transition(opacity, 0.2s, ease, 0.1s);
             }
         }
     }

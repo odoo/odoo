@@ -237,6 +237,12 @@
             <field name="partner_id" position="after">
                 <field name="can_directly_mark_as_paid" invisible="1"/>
             </field>
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|',('can_directly_mark_as_paid', '=', True), ('state', 'not in', ['sent'])]}</attribute>
+            </xpath>
+            <field name="origin" position="after">
+                <field name="website_id"/>
+            </field>
         </field>
     </record>
 

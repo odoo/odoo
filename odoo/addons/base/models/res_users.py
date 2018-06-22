@@ -524,6 +524,10 @@ class Users(models.Model):
         # extra records will be deleted by the periodical garbage collection
         self.env['res.users.log'].create({}) # populated by defaults
 
+    @api.model
+    def _get_login_domain(self, login):
+        return [('login', '=', login)]
+
     @classmethod
     def _login(cls, db, login, password):
         if not password:
@@ -532,7 +536,7 @@ class Users(models.Model):
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-                user = self.search([('login', '=', login)])
+                user = self.search(self._get_login_domain(login))
                 if user:
                     user_id = user.id
                     user.sudo(user_id).check_credentials(password)

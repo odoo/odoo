@@ -236,6 +236,9 @@ class Website(Home):
         )
         pages = Page.search(domain, order=sort_order, limit=50, offset=pager['offset'])
 
+        # only include pages if they are the most specific one available
+        pages = pages.filtered(pages._is_most_specific_page)
+
         values = {
             'pager': pager,
             'pages': pages,
