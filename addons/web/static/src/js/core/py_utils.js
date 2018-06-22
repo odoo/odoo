@@ -407,6 +407,35 @@ function formatAST(ast, lbp) {
     throw new Error("Unimplemented python construct");
 }
 
+/**
+ * Normalize a domain, at the level of the AST.
+ *
+ * Note: this function does not evaluate anything inside the domain.  This is
+ * actually quite critical because this allows the manipulation of unevaluated
+ * (dynamic) domains.
+ *
+ * @param {PyJS AST} domain valid AST representing a domain
+ * @returns {PyJS AST} normalized domain AST
+ */
+function normalizeDomain(domain) {
+    var expected = 1;
+    for (var i = 0; i < domain.first.length; i++) {
+        var value = domain.first[i].value;
+        if (value === '&' || value === '|') {
+            expected++;
+        } else if (value !== '!') {
+            expected--;
+        }
+    }
+    var andOperator = py.tokenize("'&'")[0];
+
+    if (expected < 0) {
+        domain.first.unshift.apply(domain.first, _.times(Math.abs(expected), _.constant(andOperator)));
+    }
+
+    return domain;
+}
+
 return {
     context: pycontext,
     ensure_evaluated: ensure_evaluated,
@@ -414,6 +443,7 @@ return {
     eval_domains_and_contexts: eval_domains_and_contexts,
     py_eval: py_eval,
     formatAST: formatAST,
+    normalizeDomain: normalizeDomain,
 };
 
 });
