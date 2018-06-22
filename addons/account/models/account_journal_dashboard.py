@@ -116,12 +116,12 @@ class account_journal(models.Model):
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
             if i == 0:
-                query += "("+select_sql_clause+" and date < '"+start_date.strftime(DF)+"')"
+                query += "("+select_sql_clause+" and date_due < '"+start_date.strftime(DF)+"')"
             elif i == 5:
-                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date_due >= '"+start_date.strftime(DF)+"')"
             else:
                 next_date = start_date + timedelta(days=7)
-                query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
+                query += " UNION ALL ("+select_sql_clause+" and date_due >= '"+start_date.strftime(DF)+"' and date_due < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
 
         self.env.cr.execute(query, query_args)
