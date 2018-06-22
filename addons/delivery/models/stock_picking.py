@@ -184,21 +184,20 @@ class StockPicking(models.Model):
             carrier_trackers = json.loads(self.carrier_tracking_url)
         except ValueError:
             carrier_trackers = self.carrier_tracking_url
-
-        if len(carrier_trackers) > 1:
+        else:
             msg = "Tracking links for shipment: <br/>"
             for tracker in carrier_trackers:
                 msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
             self.message_post(body=msg)
             return self.env.ref('delivery.act_delivery_trackers_url').read()[0]
-        else:
-            client_action = {
-                'type': 'ir.actions.act_url',
-                'name': "Shipment Tracking Page",
-                'target': 'new',
-                'url': self.carrier_tracking_url,
-            }
-            return client_action
+
+        client_action = {
+            'type': 'ir.actions.act_url',
+            'name': "Shipment Tracking Page",
+            'target': 'new',
+            'url': self.carrier_tracking_url,
+        }
+        return client_action
 
     @api.one
     def cancel_shipment(self):
