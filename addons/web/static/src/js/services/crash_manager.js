@@ -41,7 +41,8 @@ var CrashManager = core.Class.extend({
             core.bus.trigger('connection_lost');
             this.connection_lost = true;
             var timeinterval = setInterval(function() {
-                ajax.jsonRpc('/web/webclient/version_info').then(function() {
+                var options = {shadow: true};
+                ajax.jsonRpc('/web/webclient/version_info', 'call', {}, options).then(function () {
                     clearInterval(timeinterval);
                     core.bus.trigger('connection_restored');
                     self.connection_lost = false;
