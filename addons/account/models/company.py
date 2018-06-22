@@ -295,6 +295,7 @@ Best Regards,'''))
             'name': _('Chart of Accounts'),
             'res_model': 'account.account',
             'view_mode': 'tree',
+            'limit': 99999999,
             'search_view_id': self.env.ref('account.view_account_search').id,
             'views': [[view_id, 'list']],
             'domain': domain,
