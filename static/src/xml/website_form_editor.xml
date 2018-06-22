@@ -3,24 +3,24 @@
 
     <!-- Generic Modal Layout -->
     <t t-name="website_form_editor.modal">
-        <div class="modal fade">
+        <div role="dialog" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <header class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&amp;times;</span>
+                            <span>&amp;times;</span>
                         </button>
                         <h4 class="modal-title"><t t-esc="modal_title"/></h4>
-                    </div>
-                    <div class="modal-body">
+                    </header>
+                    <main class="modal-body">
                         <form class="form-horizontal" role="form">
                             <t t-raw="modal_body"/>
                         </form>
-                    </div>
-                    <div class="modal-footer">
+                    </main>
+                    <footer class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary" id="modal-save">Save</button>
-                    </div>
+                    </footer>
                 </div>
             </div>
         </div>
