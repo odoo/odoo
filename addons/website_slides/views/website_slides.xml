@@ -198,7 +198,7 @@
             </t>
             <section t-if="not channel.promoted_slide_id and not tag and not slide_type and not search and not is_public_user and not category and display_channel_settings" class="wrap mt16 mb0" groups="website.group_website_designer">
                 <div class="container">
-                    <div class="alert alert-danger alert-dismissable mb0">
+                    <div class="alert alert-danger alert-dismissable mb0" role="alert">
                         <button type="button" class="close o_slides_hide_channel_settings" t-att-data-channel-id="channel.id" data-dismiss="alert">x</button>
                         <p>
                             Review your channel settings to promote your most viewed or recent published presentation
@@ -261,7 +261,7 @@
                         </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" t-if="slide_type or category or tag">
-                            <div class="alert alert-success mb0" role="alert" t-if="tag">
+                            <div class="alert alert-success mb0" role="status" t-if="tag">
                                 Results for <strong t-esc="tag.name"/>
                             </div>
                             <t t-call="website_slides.slides_grid_view"/>
@@ -310,7 +310,7 @@
                     </div>
                 </div>
                 <div class="container mt16" t-if="slides">
-                    <div class="alert alert-success mb0" role="alert">
+                    <div class="alert alert-success mb0" role="status">
                         <b t-esc="len(slides)"/> results found for the given criteria <b><t t-esc="search"/></b>
                     </div>
                     <div class="row mt0">
@@ -384,7 +384,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                     <div t-if="private" class="mb16">
-                        <h3 class="alert alert-danger">
+                        <h3 class="alert alert-danger" role="alert">
                             <i class="fa fa-exclamation-triangle"></i> This <t t-esc="slide.slide_type"/> is private
                         </h3>
                         <t t-if="slide.channel_id.access_error_msg">

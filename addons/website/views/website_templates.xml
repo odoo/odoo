@@ -481,7 +481,7 @@
                     Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                    <p>
                      Note: To hide this page, uncheck it from the top Customize menu.
@@ -773,7 +773,7 @@
                         <h1 class="container mt32"><t t-esc="status_code"/>: <t t-esc="status_message"/></h1>
                     </div>
                     <div class="container" t-if="views">
-                        <div class="alert alert-danger" t-if="qweb_exception and editable">
+                        <div class="alert alert-danger" t-if="qweb_exception and editable" role="alert">
                             <h4>Template fallback</h4>
                             <p>An error occured while rendering the template <code t-esc="qweb_exception.qweb['template']"/>.</p>
                             <p>If this error is caused by a change of yours in the templates, you have the possibility to reset one or more templates to their <strong>factory settings</strong>.</p>

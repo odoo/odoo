@@ -34,7 +34,7 @@
             </section>
         </div>
         <div class="container mt32">
-            <div t-if="'unsubscribe' in request.params" class="col-md-offset-9 col-md-3 alert alert-info">
+            <div t-if="'unsubscribe' in request.params" class="col-md-offset-9 col-md-3 alert alert-info" role="status">
                <h3>Need to unsubscribe? It's right here! <span class="fa fa-2x fa-arrow-down pull-right"></span></h3>
             </div>
             <div class="row mt8" t-foreach="groups" t-as="group">

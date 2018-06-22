@@ -112,12 +112,12 @@
         <div id="wrap" class="container">
             <div class="row mb16">
                 <div class="col-sm-9">
-                    <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable">
+                    <div t-foreach="notifications or []" t-as="notification" class="alert alert-success alert-dismissable" role="status">
                         <button type="button" class="close notification_close" t-att-id="notification.id" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                         <div t-field="notification.body"/>
                         <a t-attf-href="/forum/#{ slug(forum) }/user/#{ user.id }#badges" class="fa fa-arrow-right">View Your Badges</a>
                     </div>
-                    <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable">
+                    <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" class="alert alert-danger alert-dismissable" role="alert">
                         <button type="button" class="close validation_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                         <div>
                             <p>
@@ -126,7 +126,7 @@
                             </p>
                         </div>
                     </div>
-                    <div t-if="validation_email_done" class="alert alert-success alert-dismissable">
+                    <div t-if="validation_email_done" class="alert alert-success alert-dismissable" role="status">
                         <button type="button" class="close validated_email_close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                         <div>
                             <p>Congratulations! Your email has just been validated. You may now participate to our forums.</p>
@@ -757,12 +757,12 @@
         <meta name="twitter:image" t-attf-content="#{request.httprequest.url_root}forum/user/#{question.create_uid.id}/avatar"/>
     </t>
     <t t-call="website_forum.header">
-        <div class="alert alert-info text-center" role="alert" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
+        <div class="alert alert-info text-center" role="status" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <p class='text-muted mb16'>This post is currently awaiting moderation and not yet published... Do you want <i>Accept</i> or <i>Reject</i> this post ?</p>
             <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">Accept <i class="fa fa-check"/></a>
             <a t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">Reject <i class="fa fa-times"/></a>
         </div>
-        <div class="alert alert-info text-center" role="alert" t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate">
+        <div class="alert alert-info text-center" role="status" t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate">
             Waiting for validation
         </div>
         <div t-attf-class="question #{can_bump and 'oe_js_bump' or ''}" t-att-data-type="question.post_type" t-att-data-last-update="question.write_date" t-att-data-id="question.id">
@@ -775,7 +775,7 @@
                     </div>
                 </t>
             </div>
-            <div t-attf-class="question-block #{not question.active and 'alert alert-danger' or ''}">
+            <div t-attf-class="question-block #{not question.active and 'alert alert-danger' or ''}" role="alert">
                 <h1 class="mt0 mb0">
                     <t t-if="question.post_type == 'link'">
                         <a t-att-href="question.content_link">
@@ -812,7 +812,7 @@
                     <span> • </span><span t-field="question.views"/> views
                 </div>
 
-                <div class="alert alert-info text-center" t-if="question.state == 'close'">
+                <div class="alert alert-info text-center" t-if="question.state == 'close'" role="status">
                     <p class="mt16">
                         <b>The <i t-field="question.post_type"/> has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
                     </p>
@@ -1339,7 +1339,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required">
+                        <div t-if="email_required" class="alert alert-danger alert-dismissable oe_forum_email_required" role="alert">
                             <button type="button" class="close" data-dismiss="alert">x</button>
                             <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
                         </div>

@@ -5,7 +5,7 @@
             <field name="model">base.gengo.translations</field>
             <field name="arch" type="xml">
                 <form string="Gengo Request Form">
-                    <div class="alert alert-warning text-center" attrs="{'invisible': [('authorized_credentials', '=', True)]}">
+                    <div class="alert alert-warning text-center" attrs="{'invisible': [('authorized_credentials', '=', True)]}" role="alert">
                         <label string="Gengo Public or Private keys are wrong or missing."/>
                         <button type="object" name="open_company" string="Click here to Configure Gengo Parameters" icon="fa-cogs" class="oe_inline oe_link"/>
                         <field name="authorized_credentials" invisible="1"/>

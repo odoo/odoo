@@ -254,7 +254,7 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-12">
-                              <div t-if="error_message" class="alert alert-danger">
+                              <div t-if="error_message" class="alert alert-danger" role="alert">
                                   <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                               </div>
                             </div>

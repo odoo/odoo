@@ -323,10 +323,10 @@
                     <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>
 
-                <p class="alert alert-danger" t-if="error">
+                <p class="alert alert-danger" t-if="error" role="alert">
                     <t t-esc="error"/>
                 </p>
-                <p class="alert alert-success" t-if="message">
+                <p class="alert alert-success" t-if="message" role="status">
                     <t t-esc="message"/>
                 </p>
 

@@ -882,7 +882,7 @@
                             <div class="row">
                                 <div class="col-md-12 o_website_sale_rightfit">
                                     <h2 class="mb8 mt8">Shopping Cart</h2>
-                                    <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info"> <!-- abandoned cart choices -->
+                                    <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info" role="alert"> <!-- abandoned cart choices -->
                                         <t t-if="abandoned_proceed">
                                             <p>Your previous cart has already been completed.</p>
                                             <p t-if="website_sale_order">Please proceed your current cart.</p>
@@ -1250,7 +1250,7 @@
                     <div class="row">
                         <div class="col-md-offset-2 col-lg-8 col-sm-9" t-if="errors">
                             <t t-foreach="errors" t-as="error">
-                                <div class="alert alert-danger" t-if="error">
+                                <div class="alert alert-danger" t-if="error" role="alert">
                                     <h4>
                                         <t t-esc="error[0]" />
                                     </h4>
@@ -1478,7 +1478,7 @@
                                     </table>
                                     <t t-call="website_sale.payment_confirmation_status" />
                                     <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited') == 'True' and request.website.is_public_user()">
-                                        <p class='alert alert-info mt16'>
+                                        <p class='alert alert-info mt16' role="status">
                                             <a t-att-href='order.partner_id.signup_prepare() and order.partner_id.signup_url' class='btn btn-primary'>Sign Up</a>
                                              Now to Follow Your Order
                                         </p>

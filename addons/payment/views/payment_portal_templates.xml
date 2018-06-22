@@ -46,7 +46,7 @@
             <div class="wrap">
                 <div class="container o_website_payment">
                     <h1>Payment</h1>
-                    <div t-if="error_msg" class="alert alert-danger col-md-7">
+                    <div t-if="error_msg" class="alert alert-danger col-md-7" role="alert">
                         <t t-esc="error_msg"/>
                     </div>
                     <div class="row mt32 mb32">
@@ -58,7 +58,7 @@
                                 <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                                 <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference"/>
                             </t>
-                            <div t-if="not (s2s_acquirers or form_acquirers)" class="alert alert-danger">
+                            <div t-if="not (s2s_acquirers or form_acquirers)" class="alert alert-danger" role="alert">
                                 <p>No payment acquirer found.</p>
                                 <p>Please configure a payment acquirer.</p>
                             </div>
@@ -78,7 +78,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-horizontal">
-                                <div t-attf-class="alert alert-#{status}" t-raw="message"/>
+                                <div t-attf-class="alert alert-#{status}" t-raw="message" role="status"/>
                                 <div class="form-group">
                                     <label for="form_partner_name" class="col-sm-3 control-label">From</label>
                                     <div class="col-sm-9">
@@ -118,7 +118,7 @@
             <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable" role="status">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
@@ -131,7 +131,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
         </div>
-        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
             Your payment has been authorized.
             <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>

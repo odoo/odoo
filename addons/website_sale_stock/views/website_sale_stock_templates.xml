@@ -58,7 +58,7 @@
         </xpath>
         <xpath expr="//div[hasclass('js_cart_lines')]" position="after">
           <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_stock_warning(clear=False)' class="alert alert-warning">
+            <div t-if='website_sale_order._get_stock_warning(clear=False)' class="alert alert-warning" role="alert">
               <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
             </div>
           </t>
@@ -80,7 +80,7 @@
     <xpath expr="//table[@id='cart_products']" position="after">
         <t t-if='website_sale_order'>
           <t t-set='warning' t-value='website_sale_order._get_stock_warning(clear=False)' />
-          <div t-if='warning' class="alert alert-warning">
+          <div t-if='warning' class="alert alert-warning" role="alert">
             <strong>Warning!</strong> <t t-esc='website_sale_order._get_stock_warning()'/>
           </div>
         </t>

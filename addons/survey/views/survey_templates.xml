@@ -136,7 +136,7 @@
                     <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                     <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                     <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
-                    <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                    <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
                 </div>
             </t>
             <div class="text-center mt16 mb16">
@@ -308,7 +308,7 @@
                                         <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
                                         <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
                                         <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
-                                        <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                                        <div class="js_errzone alert alert-danger" style="display:none;" role="alert"></div>
                                     </div>
                                 </t>
                                 <hr/>

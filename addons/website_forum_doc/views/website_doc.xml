@@ -171,7 +171,7 @@
                 </li>
             </xpath>
             <xpath expr="//hr" position="before">
-                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id">
+                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id" role="status">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
                     This question has been included in the <a href="/forum/how-to">official documentation</a>.
                 </div>

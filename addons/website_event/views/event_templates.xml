@@ -311,7 +311,7 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <div t-if="event.state == 'done' or not registrable" class="alert alert-info">Registration for this event is now closed</div>
+            <div t-if="event.state == 'done' or not registrable" class="alert alert-info" role="status">Registration for this event is now closed</div>
             <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
             <hr/>
@@ -473,7 +473,7 @@
                 </div>
             </div>
         </form>
-        <div t-if="not buy" class="alert alert-info">
+        <div t-if="not buy" class="alert alert-info" role="status">
             <t t-if="event.state == 'draft'" itemprop="availability" content="http://schema.org/OutOfStock">
                 Event registration not yet started.
             </t>

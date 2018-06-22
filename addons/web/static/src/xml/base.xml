@@ -148,7 +148,7 @@
 
     <t t-set="errUID" t-value="_.uniqueId()"/>
     <button class="btn btn-sm btn-link" t-att-data-target="'#o_error_detail' + errUID" data-toggle="collapse">See details</button>
-    <div t-att-id="'o_error_detail' + errUID" class="collapse alert alert-danger o_error_detail">
+    <div t-att-id="'o_error_detail' + errUID" class="collapse alert alert-danger o_error_detail" role="alert">
         <pre><t t-esc="error.message"/></pre>
         <pre><t t-esc="error.data.debug"/></pre>
     </div>

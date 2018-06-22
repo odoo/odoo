@@ -35,7 +35,7 @@
                                 <input type='hidden' name="token" t-att-value="widget.options['token']" t-if="widget.options['token']"/>
                                 <input type='hidden' name="sha_in" t-att-value="widget.options['sha_in']" t-if="widget.options['sha_in']"/>
                                 <input type='hidden' name="sha_time" t-att-value="widget.options['sha_time']" t-if="widget.options['sha_time']"/>
-                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;">
+                                <div class="alert alert-danger mt8 mb0 o_portal_chatter_composer_error" style="display:none;" role="alert">
                                     Oops! Something went wrong. Try to reload the page and log in.
                                 </div>
                                 <button t-attf-class="o_portal_chatter_composer_btn btn btn-primary mt8 o_website_message_post_helper" type="submit">Send</button>
