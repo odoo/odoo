@@ -56,7 +56,10 @@ class SaleReport(models.Model):
             (select sum(t.volume*l.qty/u.factor) from pos_order_line l
                join product_product p on (l.product_id=p.id)
                left join product_template t on (p.product_tmpl_id=t.id)
-               left join uom_uom u on (u.id=t.uom_id)) AS volume
+               left join uom_uom u on (u.id=t.uom_id)) AS volume,
+            l.discount as discount,
+            sum((l.price_unit * l.discount / 100.0 / COALESCE(cr.rate, 1.0))) as discount_amount,
+            NULL as order_id
         '''
 
         for field in fields.keys():
