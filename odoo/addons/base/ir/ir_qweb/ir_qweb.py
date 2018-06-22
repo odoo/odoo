@@ -51,7 +51,21 @@ class IrQWeb(models.AbstractModel, QWeb):
             if method.startswith('render_'):
                 _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
-        context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
+        def jsonable(val):
+            try:
+                json.dumps(val)
+                return True
+            except Exception:
+                return False
+
+        context = {
+            key: val
+            for key, val in self.env.context.items()
+            if isinstance(key, pycompat.string_types) and not key.startswith('_')
+            if jsonable(val)
+        }
+        context['dev_mode'] = 'qweb' in tools.config['dev_mode']
+        # context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
         return super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
@@ -160,7 +174,7 @@ class IrQWeb(models.AbstractModel, QWeb):
                 value=ast.Call(
                     func=ast.Attribute(
                         value=ast.Name(id='self', ctx=ast.Load()),
-                        attr='_get_asset',
+                        attr='_get_asset_nodes',
                         ctx=ast.Load()
                     ),
                     args=[
@@ -272,15 +286,28 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
+    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
+        return AssetsBundle(xmlid, files, remains=remains, env=env)
+
+    # compatibility to remove after v11 - DEPRECATED
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', keys=("website_id",)),
+    )
+    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
+        files, remains = self._get_asset_content(xmlid, options)
+        asset = self.get_asset_bundle(xmlid, files, remains, env=self.env)
+        return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
+
     @tools.conditional(
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
         tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', 'css', 'js', 'debug', 'async', keys=("website_id",)),
     )
-    def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
+    def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, env=self.env)
+        asset = self.get_asset_bundle(xmlid, files, env=self.env)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async=async)
 
