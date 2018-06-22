@@ -286,6 +286,9 @@ class IrQWeb(models.AbstractModel, QWeb):
 
     # method called by computing code
 
+    def get_asset_bundle(self, xmlid, files, remains=None, env=None):
+        return AssetsBundle(xmlid, files, remains=remains, env=env)
+
     # compatibility to remove after v11 - DEPRECATED
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
@@ -293,7 +296,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, remains, env=self.env)
+        asset = self.get_asset_bundle(xmlid, files, remains, env=self.env)
         return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
 
     @tools.conditional(
@@ -304,7 +307,7 @@ class IrQWeb(models.AbstractModel, QWeb):
     )
     def _get_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, env=self.env)
+        asset = self.get_asset_bundle(xmlid, files, env=self.env)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async=async)
 
