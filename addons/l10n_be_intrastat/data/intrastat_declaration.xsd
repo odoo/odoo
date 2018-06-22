@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:tns="http://www.onegate.eu/2010-01-01" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" targetNamespace="http://www.onegate.eu/2010-01-01" elementFormDefault="qualified" version="1.0">
+  <xs:element name="DeclarationReport">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Administration" type="tns:AdministrationType"/>
+        <xs:element name="Report" type="tns:ReportType" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="AdministrationType">
+    <xs:sequence>
+      <xs:element name="From" type="tns:FromType"/>
+      <xs:element name="To" type="xs:string"/>
+      <xs:element name="Domain" type="xs:string"/>
+      <xs:element name="Response" type="tns:ResponseDataType" minOccurs="0"/>
+      <xs:element name="CustomParameters" type="tns:CustomParametersType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="creationTime" type="xs:dateTime"/>
+  </xs:complexType>
+  <xs:complexType name="FromType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="declarerType" type="xs:string"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ResponseDataType">
+    <xs:sequence>
+      <xs:element name="Email" type="xs:string" minOccurs="0"/>
+      <xs:element name="Language" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="feedback" type="xs:boolean"/>
+  </xs:complexType>
+  <xs:complexType name="CustomParametersType">
+    <xs:sequence>
+      <xs:element name="Dim" type="tns:DimensionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DimensionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="prop" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ReportType">
+    <xs:sequence>
+      <xs:element name="Data" type="tns:DataType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="date" type="xs:string" use="required"/>
+    <xs:attribute name="code" type="xs:string" use="required"/>
+    <xs:attribute name="action" type="tns:ActionType"/>
+    <xs:attribute name="close" type="xs:boolean"/>
+  </xs:complexType>
+  <xs:complexType name="DataType">
+    <xs:sequence>
+      <xs:element name="Dim" type="tns:DimensionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Item" type="tns:ItemType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="action" type="tns:ActionType"/>
+    <xs:attribute name="form" type="xs:string"/>
+    <xs:attribute name="close" type="xs:boolean"/>
+  </xs:complexType>
+  <xs:complexType name="ItemType">
+    <xs:sequence>
+      <xs:element name="Dim" type="tns:DimensionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="groupid" type="xs:string"/>
+  </xs:complexType>
+  <xs:simpleType name="ActionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="append"/>
+      <xs:enumeration value="replace"/>
+	  <xs:enumeration value="nihil"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

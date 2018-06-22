@@ -5,10 +5,12 @@ import base64
 from xml.etree import ElementTree as ET
 from collections import namedtuple
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, tools, _
 from odoo.tools.pycompat import text_type
+from odoo.tools.xml_utils import _check_with_xsd
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
+INTRASTAT_XSD = 'l10n_be_intrastat/data/intrastat_declaration.xsd'
 
 
 class XmlDeclaration(models.TransientModel):
@@ -88,6 +90,10 @@ class XmlDeclaration(models.TransientModel):
 
         #Get xml string with declaration
         data_file = ET.tostring(decl, encoding='UTF-8', method='xml')
+
+        # Check the generated xml with the legal xsd.
+        with tools.file_open(INTRASTAT_XSD, 'rb') as xsd:
+            _check_with_xsd(data_file, xsd)
 
         #change state of the wizard
         self.write({'name': 'intrastat_%s%s.xml' % (self.year, self.month),
