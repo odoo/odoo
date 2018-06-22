@@ -44,7 +44,7 @@
                         <input type="checkbox" name="selection" t-att-checked="(filter.active ? true : undefined)"/><span/>
                     </div>
                     <t t-if="filter.value == 'all'">
-                        <span><i class="fa fa-users fa-fw o_cal_avatar" aria-label="Avatar" title="Avatar"/></span>
+                        <span><i class="fa fa-users fa-fw o_cal_avatar" role="img" aria-label="Avatar" title="Avatar"/></span>
                     </t>
                     <t t-if="widget.avatar_field &amp;&amp; (filter.value != 'all')">
                         <img t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cal_avatar" alt="Avatar"/>
@@ -54,7 +54,7 @@
                     <span t-elif="color" t-attf-style="border-bottom: 4px solid #{color};"><t t-esc="filter.label"/></span>
                     <span t-else=""><t t-esc="filter.label"/></span>
                     <t t-if="filter.id">
-                        <span class="o_remove fa fa-times" title="Remove this favorite from the list" aria-label="Remove this favorite from the list"/>
+                        <span class="o_remove fa fa-times" title="Remove this favorite from the list" role="img" aria-label="Remove this favorite from the list"/>
                    </t>
                 </div>
             </div>
@@ -78,7 +78,7 @@
 
     <t t-name="CalendarView.TodayButtonMobile">
         <span class="fa-stack o_calendar_button_today">
-            <i class="fa fa-calendar-o fa-stack-2x" aria-label="Today" title="Today"></i>
+            <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today"></i>
             <strong class="o_calendar_text fa-stack-1x"><t t-esc="moment().date()"/></strong>
         </span>
     </t>

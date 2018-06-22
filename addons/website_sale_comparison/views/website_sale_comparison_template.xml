@@ -104,7 +104,7 @@
                             <t t-foreach="specs.keys()" t-as="spec">
                                 <t t-if="len(specs.keys())&gt;1">
                                     <tr class="success text-left breadcrumb clickable" data-toggle="collapse" t-att-data-target="'.'+spec.split()[0]">
-                                        <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
+                                        <th t-att-colspan="len(products) + 1"><i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><t t-esc="spec"/></th>
                                     </tr>
                                 </t>
                                 <tr t-foreach="specs[spec].keys()" t-as="att" t-att-class="'collapse in ' + spec.split()[0]">
@@ -140,7 +140,7 @@
             </div>
             <div class="col-sm-1 col-xs-1 mt32">
                 <a href='#' class="o_remove" title="Remove" t-att-data-product_product_id="product.id">
-                    <i class="fa fa-trash" aria-label="Remove"></i>
+                    <i class="fa fa-trash" role="img" aria-label="Remove"></i>
                 </a>
             </div>
         </div>

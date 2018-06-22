@@ -377,7 +377,7 @@
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                     <div t-if="private" class="mb16">
                         <h3 class="alert alert-danger" role="alert">
-                            <i class="fa fa-exclamation-triangle" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private
+                            <i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private
                         </h3>
                         <t t-if="slide.channel_id.access_error_msg">
                             <div t-field="slide.channel_id.access_error_msg" class="well oe_no_empty"/>
@@ -457,7 +457,7 @@
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
-                                            <i class="fa fa-thumbs-up fa-1x" aria-label="Likes" title="Likes"/>
+                                            <i class="fa fa-thumbs-up fa-1x" role="img" aria-label="Likes" title="Likes"/>
                                             <t t-esc="slide.likes"/>
                                         </span>
                                         <span
@@ -468,7 +468,7 @@
                                             t-att-data-slide-id="slide.id"
                                             tabindex="0"
                                             data-toggle="popover">
-                                            <i class="fa fa-thumbs-down fa-1x" aria-label="Dislikes" title="Dislikes"/>
+                                            <i class="fa fa-thumbs-down fa-1x" role="img" aria-label="Dislikes" title="Dislikes"/>
                                             <t t-esc="slide.dislikes"/>
                                         </span>
                                     </div>

@@ -313,7 +313,7 @@
                                     </div>
                                 </div>
                                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" aria-label="Mobile" title="Mobile"/><field name="partner_mobile"/><br/></t>
+                                <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4" role="img" aria-label="Mobile" title="Mobile"/><field name="partner_mobile"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
                                         <div class="pull-left mr4" groups="base.group_user">
@@ -323,12 +323,12 @@
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <a name="action_get_attachment_tree_view" type="object">
-                                            <span title='Documents'><i class='fa fa-book' aria-label="Documents"/>
+                                            <span title='Documents'><i class='fa fa-book' role="img" aria-label="Documents"/>
                                                 <t t-esc="record.attachment_number.raw_value"/>
                                             </span>
                                         </a>

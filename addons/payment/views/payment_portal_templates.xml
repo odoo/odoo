@@ -9,7 +9,7 @@
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
-                                <li><a href="/my/home"><i class="fa fa-home" aria-label="Home" title="Home"/></a></li>
+                                <li><a href="/my/home"><i class="fa fa-home" role="img" aria-label="Home" title="Home"/></a></li>
                                 <li>Payment Methods</li>
                             </ol>
                         </div>
@@ -101,7 +101,7 @@
                                     <a role="button" t-attf-class="btn btn-#{status} pull-right" href="/my/home"><span class="fa fa-arrow-circle-right"> Back to My Account</span></a>
                                 </div>
                                 <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
-                                    <span t-field="tx.acquirer_id.image_small" t-att-title="tx.acquirer_id.name" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                    <span t-field="tx.acquirer_id.image_small" t-att-title="tx.acquirer_id.name" role="img" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                     <span>Processed by <t t-esc="tx.acquirer_id.name"/>.</span>
                                 </div>
                             </div>

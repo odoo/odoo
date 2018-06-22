@@ -52,11 +52,11 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished" aria-label="Unpublished"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished" role="img" aria-label="Unpublished"/>
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar mr8" aria-label="Post date" title="Post date"> <span t-field="post.post_date"/></span>
+                            <span class="fa fa-calendar mr8" role="img" aria-label="Post date" title="Post date"> <span t-field="post.post_date"/></span>
                             <span class="fa fa-folder-open"> In
                                 <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
                                 <span t-field="post.blog_id"/>
@@ -150,7 +150,7 @@
                                 <t t-if="blog_post.visits &gt; 1">views</t>
                             </span>
                             <span t-if="not blog_post.website_published" class="label label-danger">unpublished</span>
-                            <span class="fa fa-tags" aria-label="Tags" title="Tags"/>
+                            <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
 
                             <!-- To display tags //no options -->
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
@@ -234,7 +234,7 @@
                     <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
                     <p class="post-meta text-muted text-center" name="blog_post_data"/>
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
-                        <span class="fa fa-tags" aria-label="Tags" title="Tags"/>
+                        <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                             <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
                         </t>
@@ -390,7 +390,7 @@
 <template id="tag_category" name="Tags List">
     <ul class="nav nav-pills ml16">
         <t t-if="tags">
-            <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag' aria-label="Tag category" title="Tag category"/> <t t-esc='categ_title' /></div>
+            <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag' role="img" aria-label="Tag category" title="Tag category"/> <t t-esc='categ_title' /></div>
             <t t-foreach="tags" t-as="tag">
                 <t t-if="tag.post_ids">
                     <li t-att-class="tag.id in active_tag_ids and 'active' or None">
@@ -439,7 +439,7 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="year">
                 <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="blog_post_year_collapse mt8">
-                    <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4" aria-label="Next year" title="Next year"/><span t-esc="year"/>
+                    <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4" role="img" aria-label="Next year" title="Next year"/><span t-esc="year"/>
                 </li>
                 <ul t-attf-class="blog_post_year collapse nav nav-pills nav-stacked #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">

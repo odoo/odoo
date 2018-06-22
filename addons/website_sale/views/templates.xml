@@ -304,7 +304,7 @@
         <li t-att-class="'active' if categ.id == int(category or 0) else None">
             <i t-if="categ.child_id" t-attf-class="text-primary fa #{'fa-chevron-down' if categ.id in parent_category_ids else 'fa-chevron-right'}"
                t-attf-title="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"
-               t-attf-aria-label="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}"/>
+               t-attf-aria-label="#{'Unfold' if categ.id in parent_category_ids else 'Fold'}" role="img"/>
             <a t-att-href="keep('/shop/category/' + slug(categ), category=0)" t-field="categ.name"></a>
             <ul t-if="categ.child_id" class="nav nav-pills nav-stacked nav-hierarchy" t-att-style="'display:block;' if categ.id in parent_category_ids else 'display:none;'">
                 <t t-foreach="categ.child_id" t-as="categ">
@@ -439,10 +439,10 @@
 
                                 <t t-if="len(image_ids) or variant_img">
                                     <a class="carousel-control left" href="#o-carousel-product" role="button" data-slide="prev" >
-                                        <span class="fa fa-chevron-left" aria-label="Previous" title="Previous"/>
+                                        <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
                                     </a>
                                     <a class="carousel-control right" href="#o-carousel-product" role="button" data-slide="next">
-                                        <span class="fa fa-chevron-right" aria-label="Next" title="Next"/>
+                                        <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
                                     </a>
                                 </t>
                               </div>
@@ -1378,7 +1378,7 @@
             <div class="panel-body row">
                 <div class='toggle_summary col-md-12 hidden-lg'>
                     <b>Your order: </b> <span t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.pricelist_id.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border pull-right' aria-label="Details" title="Details"></span>
+                    <span class='fa fa-chevron-down fa-border pull-right' role="img" aria-label="Details" title="Details"></span>
                 </div>
 
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="well well-lg">

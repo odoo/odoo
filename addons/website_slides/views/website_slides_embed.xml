@@ -27,7 +27,7 @@
                 <body t-if="private" style="position: inherit;">
                     <title><t t-esc="slide.name"/></title>
                     <div class="slide-private-view">
-                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
                         <div t-field="slide.channel_id.access_error_msg" />
                     </div>
                 </body>
@@ -111,7 +111,7 @@
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 hide o_slide_navigation_buttons">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center"></div>
                                     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 text-center">
-                                        <span id="first" title="First slide" aria-label="First slide">
+                                        <span id="first" title="First slide" role="img" aria-label="First slide">
                                             <i class="fa fa-step-backward fa-2x"></i>
                                         </span>
                                     </div>
@@ -134,9 +134,9 @@
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 pull-right text-right">
                                     <a t-if="slide.download_security and not is_embedded" target="_top" t-attf-href="/slides/slide/#{slug(slide)}/download" title="Download" id="download">
-                                        <i class="fa fa-download fa-2x" aria-label="Download"></i>
+                                        <i class="fa fa-download fa-2x" role="img" aria-label="Download"></i>
                                     </a>
-                                    <span id="fullscreen" title="View fullscreen" aria-label="Fullscreen">
+                                    <span id="fullscreen" title="View fullscreen" role="img" aria-label="Fullscreen">
                                         <i class="fa fa-arrows-alt fa-2x"></i>
                                     </span>
                                 </div>
@@ -161,7 +161,7 @@
                 <body>
                     <title><t t-esc="slide.name"/></title>
                     <div class="slide-private-view">
-                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
+                        <h3 style="border-bottom: 1px solid !important;padding-bottom: 10px;"><i class="fa fa-exclamation-triangle" role="img" aria-label="Attention" title="Attention"></i> This <t t-esc="slide.slide_type"/> is private.</h3>
                         <div t-field="slide.channel_id.access_error_msg" />
                     </div>
                 </body>

@@ -118,14 +118,14 @@
     <div t-attf-class="o_notification #{widget.className}" t-translation="off" role="alertdialog">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#" title="Close" aria-label="Close"/>
         <div class="o_notification_title">
-            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
+            <span t-attf-class="o_icon fa fa-3x #{widget.icon}" role="img" t-attf-aria-label="Notification #{widget.name}" t-attf-title="Notification #{widget.name}"/>
             <t t-raw="widget.title"/>
         </div>
         <div class="o_notification_content" t-if="widget.message"><t t-raw="widget.message"/></div>
         <div t-if="widget.buttons.length" class="o_buttons">
             <button t-foreach="widget.buttons" t-as="button" t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-default'}" type="button">
                 <t t-if="button.icon">
-                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" t-att-aria-label="button.name" t-att-title="button.name"/>
+                    <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
                     <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
                 </t>
                 <span><t t-esc="button.text"/></span>
@@ -351,7 +351,7 @@
                     </t>
                     <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url or '#'">
                         <t t-raw="item.label"/>
-                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" aria-label="Delete this attachment"/>
+                        <span t-if="section.name == 'files' and widget.options.editable and !item.callback" class="fa fa-trash-o o_sidebar_delete_attachment" t-att-data-id="item.id" title="Delete this attachment" role="img" aria-label="Delete this attachment"/>
                     </a>
                 </li>
                 <li role="menuitem" t-if="section.name == 'files' and widget.options.editable" class="o_sidebar_add_attachment">
@@ -591,12 +591,12 @@
 </t>
 <t t-name="FieldDomain.content">
     <div t-if="hasModel" class="o_field_domain_panel">
-        <i class="fa fa-arrow-right" aria-label="Domain" title="Domain"/>
+        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain"/>
 
         <button t-if="isValid" class="btn btn-xs btn-default o_domain_show_selection_button" type="button">
             <t t-esc="nbRecords"/> record(s)
         </button>
-        <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" aria-label="Warning" title="Warning"/> Invalid domain</span>
+        <span t-else="" class="text-warning" role="alert"><i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> Invalid domain</span>
 
         <button t-if="inDialogEdit" class="btn btn-xs btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
@@ -686,7 +686,7 @@
                 <t t-if="_.contains(['in', 'not in'], widget.operator)">
                     <div class="o_domain_leaf_value_input">
                         <span class="badge" t-foreach="widget.displayValue" t-as="val">
-                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" aria-label="Remove tag" title="Remove tag"/>
+                            <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
@@ -731,9 +731,9 @@
     </div>
     <div t-if="!widget.options.readonly" class="o_field_selector_popover hidden" tabindex="0">
         <div class="o_field_selector_popover_header text-center">
-            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" aria-label="Previous"/>
+            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
             <div class="o_field_selector_title"/>
-            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" aria-label="Close"/>
+            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
         </div>
         <div class="o_field_selector_popover_body">
             <ul class="o_field_selector_page"/>
@@ -746,7 +746,7 @@
 <t t-name="ModelFieldSelector.value">
     <t t-foreach="chain" t-as="fieldName">
         <t t-if="fieldName_index > 0">
-            <i class="fa fa-chevron-right" aria-label="Followed by" title="Followed by"/>
+            <i class="fa fa-chevron-right" role="img" aria-label="Followed by" title="Followed by"/>
         </t>
         <span class="o_field_selector_chain_part">
             <t t-set="fieldInfo" t-value="_.findWhere(pages[fieldName_index], {'name': fieldName})"/>
@@ -761,7 +761,7 @@
             t-att-data-name="line.name">
             <t t-esc="line.string"/>
             <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
-            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" aria-label="Relation to follow" title="Relation to follow"/>
+            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
         </li>
     </t>
 </ul>
@@ -830,7 +830,7 @@
         <t t-set="color" t-value="el[colorField] || 0"/>
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
         <button t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
-            <span class="o_badge_text"><span t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
+            <span class="o_badge_text"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             <a t-if="!readonly" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </button>
     </t>
@@ -896,15 +896,15 @@
     <t t-set="disabled" t-value="!clickable"/>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Current state" aria-pressed="true"
         class="btn btn-sm o_arrow_button btn-primary disabled" t-if="i.selected" aria-current="step">
-        <t t-esc="i.display_name" t-attf-aria-label="#{i.display_name} is current state"/>
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" disabled="disabled" title="Not active state" aria-pressed="false"
         class="btn btn-sm o_arrow_button btn-default disabled" t-if="!i.selected and disabled">
-        <t t-esc="i.display_name" t-attf-aria-label="#{i.display_name} is not current state"/>
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="#{i.display_name} is not current state"/>
     </button>
     <button type="button" t-att-data-value="i.id" title="Not active state, click to change it" aria-pressed="false"
         class="btn btn-sm o_arrow_button btn-default" t-if="!i.selected and !disabled">
-        <t t-esc="i.display_name" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
+        <t t-esc="i.display_name" role="img" t-attf-aria-label="Click to change current state to #{i.display_name}"/>
     </button>
 </t>
 <t t-name="FieldBinaryImage">
@@ -1028,7 +1028,7 @@
         <div t-foreach="widget.uploadingFiles" t-as="file" class="oe_attachment">
             <div>Uploading...</div>
             <a t-att-title="file.name" t-att-aria-label="file.name" t-att-name="file.name" class="o_image">
-                <i class="fa fa-spinner fa-spin fa-5x fa-fw" aria-label="Loading, please wait..." title="Loading, please wait..."></i>
+                <i class="fa fa-spinner fa-spin fa-5x fa-fw" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."></i>
             </a>
             <div><t t-esc="file.name"/></div>
         </div>
@@ -1104,7 +1104,7 @@
 
 
 <div t-name="SearchView" class="o_searchview" role="search" aria-autocomplete="list">
-    <span class="o_searchview_more fa" title="Advanced Search..." aria-label="Advanced Search..."/>
+    <span class="o_searchview_more fa" title="Advanced Search..." role="img" aria-label="Advanced Search..."/>
     <div class="o_searchview_input_container"/>
 </div>
 <t t-name="SearchViewMobile">
@@ -1126,13 +1126,13 @@
 </t>
 
 <input t-name="SearchView.InputView" type="text" class="o_searchview_input" accesskey="Q" placeholder="Search..." role="searchbox" aria-haspopup="true"/>
-<div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet" aria-label="search">
+<div t-name="SearchView.FacetView" tabindex="0" class="o_searchview_facet" role="img" aria-label="search">
     <span t-if="widget.model.has('icon')" t-att-class="'fa ' + widget.model.get('icon') + ' o_searchview_facet_label'"/>
     <span t-if="!widget.model.has('icon')" class="o_searchview_facet_label">
         <t t-esc="widget.model.get('category')"/>
     </span>
     <div class="o_facet_values"/>
-    <div class="fa fa-sm fa-remove o_facet_remove" aria-label="Remove" title="Remove"/>
+    <div class="fa fa-sm fa-remove o_facet_remove" role="img" aria-label="Remove" title="Remove"/>
 </div>
 <span t-name="SearchView.FacetView.Value">
     <t t-esc="widget.model.get('label') + (widget.intervalLabel ? (': ' + widget.intervalLabel) : '')"/>
@@ -1219,7 +1219,7 @@
                     </option>
                 </t>
             </select>
-            <span class="o_searchview_extended_delete_prop fa fa-trash-o" aria-label="Delete" title="Delete"/>
+            <span class="o_searchview_extended_delete_prop fa fa-trash-o" role="img" aria-label="Delete" title="Delete"/>
         </span>
         <select class="o_input o_searchview_extended_prop_op"/>
         <span class="o_searchview_extended_prop_value"/>
@@ -1257,7 +1257,7 @@
             <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Use by default</span>
         </li>
         <li role="menuitem" class="o_save_name">
-            <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Share with all users </span><span class="fa fa-users" aria-label="Users" title="Users"/>
+            <span><div class="o_checkbox"><input type="checkbox"/><span/></div> Share with all users </span><span class="fa fa-users" role="img" aria-label="Users" title="Users"/>
         </li>
         <li class="o_save_name">
             <button role="menuitem" type="button" class="btn btn-primary btn-sm">Save</button>
@@ -1318,7 +1318,7 @@
     class="o_export_tree_item"
     tabindex="-1" role="treeitem"> <!-- tabindex make the div focusable -->
     <span t-if="field.children &amp;&amp; (field.id).split('/').length != 3"
-          class="o_expand_parent fa fa-plus" aria-label="Expand parents" title="Expand parents"/>
+          class="o_expand_parent fa fa-plus" role="img" aria-label="Expand parents" title="Expand parents"/>
     <span class="o_tree_column" t-att-title="debug and field.id or None"><t t-esc="field.string"/></span>
 </div>
 <t t-name="Export.SaveList">
@@ -1345,7 +1345,7 @@
     </div>
 </t>
 <t t-name="Spinner">
-    <div class="o_spinner"><i class="fa fa-spinner fa-spin" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
+    <div class="o_spinner"><i class="fa fa-spinner fa-spin" role="img" aria-label="Loading, please wait..." title="Loading, please wait..."/></div>
 </t>
 <t t-name="M2ODialog">
     <div>

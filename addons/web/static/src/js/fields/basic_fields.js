@@ -397,7 +397,7 @@ var LinkButton = AbstractField.extend({
         if (this.value) {
             var className = this.attrs.icon || 'fa-globe';
 
-            this.$el.html("<span />");
+            this.$el.html("<span role='img'/>");
             this.$el.addClass("fa "+ className);
             this.$el.attr('title', this.value);
             this.$el.attr('aria-label', this.value);
@@ -1668,7 +1668,7 @@ var FavoriteWidget = AbstractField.extend({
      */
     _render: function () {
         var tip = this.value ? _t('Remove from Favorites') : _t('Add to Favorites');
-        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s"></i></a>' : '<a href="#"><i class="fa %s" aria-label="%s"> %s</i></a>';
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s" aria-label="%s" role="img"></i></a>' : '<a href="#"><i class="fa %s" role="img" aria-label="%s"> %s</i></a>';
         this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', tip, tip));
     },
 

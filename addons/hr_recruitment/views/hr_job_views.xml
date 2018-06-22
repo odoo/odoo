@@ -30,11 +30,11 @@
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
-                                        <small> <i class="fa fa-envelope-o" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
+                                        <small> <i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/> </small>
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" aria-label="Manage" title="Manage"/></a>
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -47,7 +47,7 @@
                                     <div name="kanban_boxes" class="row o_recruitment_kanban_boxes">
                                         <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block">
                                             <a name="action_get_attachment_tree_view" type="object">
-                                                <span title='Documents'><i class='fa fa-book' aria-label="Documents"/>
+                                                <span title='Documents'><i class='fa fa-book' role="img" aria-label="Documents"/>
                                                 </span>
                                             </a>
                                         </div>

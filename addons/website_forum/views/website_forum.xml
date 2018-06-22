@@ -88,7 +88,7 @@
                                 <t t-call="website.website_search_box"/>
                                 <span class="dropdown" groups="base.group_erp_manager">
                                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                        <i class="fa fa-cog" aria-label="Dropdown menu" title="Dropdown menu"/>
+                                        <i class="fa fa-cog" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
                                     </button>
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                         <li><a role="menuitem" tabindex="-1" t-attf-href="/forum/#{slug(forum)}/edit_welcome_message?enable_editor=1">Design Welcome Message</a></li>
@@ -240,7 +240,7 @@
             <t t-if="question.post_type == 'link'" >
                 <a title="Redirect to external link" aria-label="External link" t-att-href="question.content_link" class="text-muted"><i class="fa fa-external-link forum_link"/></a>
             </t>
-            <span t-if="question.has_validated_answer" title="Question has accepted answer" aria-label="Question has accepted answer"><i class="fa fa-check-circle oe_answer_true"/></span>
+            <span t-if="question.has_validated_answer" title="Question has accepted answer" role="img" aria-label="Question has accepted answer"><i class="fa fa-check-circle oe_answer_true"/></span>
         </div>
         <div><t t-raw="post_content"/></div>
         <t t-foreach="question.tag_ids" t-as="question_tag">
@@ -250,9 +250,9 @@
             </a>
         </t>
         <small class="text-muted">
-            <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" aria-label="Question" t-att-title="question.post_type.capitalize()" />
-            <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" aria-label="Discussion" t-att-title="question.post_type.capitalize()" />
-            <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" aria-label="Link" t-att-title="question.post_type.capitalize()" />
+            <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" role="img" aria-label="Question" t-att-title="question.post_type.capitalize()" />
+            <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" role="img" aria-label="Discussion" t-att-title="question.post_type.capitalize()" />
+            <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" role="img" aria-label="Link" t-att-title="question.post_type.capitalize()" />
             <span>By </span><span t-field="question.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}' style="display: inline-block;"/>
             <span> • </span><span t-field="question.write_date" t-options='{"format":"short"}'/>
             <span> • </span><span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
@@ -389,7 +389,7 @@
                 <div t-if="not forums" class="well">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
-                        <div class="fa fa-5x fa-comment mb16" aria-label="Forum" title="Forum"/>
+                        <div class="fa fa-5x fa-comment mb16" role="img" aria-label="Forum" title="Forum"/>
                         <div t-field="forum.name"/>
                     </a>
                 </div>
@@ -806,9 +806,9 @@
                 </div>
                 <div class="text-muted mb16">
                     <t t-set="type_labels" t-value="dict(question._fields['post_type']._description_selection(question.env))"/>
-                    <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" aria-label="Question" t-att-title="type_labels[question.post_type]" />
-                    <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" aria-label="Discussion" t-att-title="type_labels[question.post_type]" />
-                    <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" aria-label="Link" t-att-title="type_labels[question.post_type]" />
+                    <i t-if="question.post_type == 'question'" t-attf-class="fa fa-question-circle" role="img" aria-label="Question" t-att-title="type_labels[question.post_type]" />
+                    <i t-if="question.post_type == 'discussion'" t-attf-class="fa fa-comments-o" role="img" aria-label="Discussion" t-att-title="type_labels[question.post_type]" />
+                    <i t-if="question.post_type == 'link'" t-attf-class="fa fa-link" role="img" aria-label="Link" t-att-title="type_labels[question.post_type]" />
                     <span>By </span>
                     <a t-att-href="(question.create_uid.id == request.session.uid or question.create_uid.sudo().website_published) and '/forum/%s/user/%s' % (slug(forum), question.create_uid.id) or None"
                         t-field="question.create_uid"
@@ -1160,7 +1160,7 @@
         </nav>
         <div class="row">
             <div class="col-sm-3 mt16 o_js_forum_tag_follow" t-foreach="tags" t-as="tag">
-                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
+                <span><t t-esc="tag.posts_count"/>&amp;nbsp;&amp;nbsp;<i class='fa fa-times' title="Close" role="img" aria-label="Close"/>&amp;nbsp;&amp;nbsp;</span>
                 <a t-attf-href="/forum/#{ slug(forum) }/tag/#{ slug(tag) }/questions?{{ keep_query( filters='tag') }}"
                         t-attf-class="label #{'label-primary' if tag.message_is_follower else 'label-default'}">
                     <span t-field="tag.name"/>
@@ -1194,9 +1194,9 @@
             <tr t-foreach="badges" t-as="badge">
                 <td>
                     <span class="badge pull-left">
-                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" aria-label="Gold badge"/>
-                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" aria-label="Silver badge"/>
-                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" aria-label="Bronwe badge"/>
+                        <span t-if="badge.level == 'gold'" class="fa fa-circle badge-gold" title="Gold badge" role="img" aria-label="Gold badge"/>
+                        <span t-if="badge.level == 'silver'" class="fa fa-circle badge-silver" title="Silver badge" role="img" aria-label="Silver badge"/>
+                        <span t-if="badge.level == 'bronze'" class="fa fa-circle badge-bronze" title="Bronze badge" role="img" aria-label="Bronwe badge"/>
                         <span> </span><span t-field="badge.name"/>
                     </span>
                 </td><td>
@@ -1278,11 +1278,11 @@
                     <div>
                         <b> badges:</b>
                         <span>
-                            <span class="fa fa-circle badge-gold" aria-label="Gold badge" title="Gold badge"/>
+                            <span class="fa fa-circle badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
                             <span t-esc="user.gold_badge" class="ml4"/>
-                            <span class="fa fa-circle badge-silver ml8" aria-label="Silver badge" title="Silver badge"/>
+                            <span class="fa fa-circle badge-silver ml8" role="img" aria-label="Silver badge" title="Silver badge"/>
                             <span t-esc="user.silver_badge" class="ml4" />
-                            <span class="fa fa-circle badge-bronze ml8" aria-label="Bronze badge" title="Bronze badge"/>
+                            <span class="fa fa-circle badge-bronze ml8" role="img" aria-label="Bronze badge" title="Bronze badge"/>
                             <span t-esc="user.bronze_badge" class="ml4" />
                         </span>
                     </div>
@@ -1410,9 +1410,9 @@
                 </tr><tr>
                     <td>votes</td>
                     <td>
-                        <span class="fa fa-thumbs-up" aria-label="Positive votes" title="Positive votes"/>
+                        <span class="fa fa-thumbs-up" role="img" aria-label="Positive votes" title="Positive votes"/>
                         <span t-esc="up_votes"/>
-                        <span class="fa fa-thumbs-down" aria-label="Negative votes" title="Negative votes"/>
+                        <span class="fa fa-thumbs-down" role="img" aria-label="Negative votes" title="Negative votes"/>
                         <span t-esc="down_votes"/>
                     </td>
                 </tr>
@@ -1533,9 +1533,9 @@
         <tr t-foreach="user.badge_ids" t-as="badge">
             <td>
                 <span class="badge pull-left">
-                    <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold" aria-label="Gold badge" title="Gold badge"/>
-                    <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver" aria-label="Silver badge" title="Silver badge"/>
-                    <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze" aria-label="Bronze badge" title="Bronze badge"/>
+                    <span t-if="badge.badge_id.level == 'gold'" class="fa fa-circle badge-gold" role="img" aria-label="Gold badge" title="Gold badge"/>
+                    <span t-if="badge.badge_id.level == 'silver'" class="fa fa-circle badge-silver" role="img" aria-label="Silver badge" title="Silver badge"/>
+                    <span t-if="badge.badge_id.level == 'bronze'" class="fa fa-circle badge-bronze" role="img" aria-label="Bronze badge" title="Bronze badge"/>
                     <span t-field="badge.badge_id.name"/>
                 </span>
             </td><td>
@@ -1555,8 +1555,8 @@
 <template id="user_votes">
     <div t-foreach="vote_post" t-as="vote">
         <t t-esc="vote.post_id.create_date"/>
-        <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" aria-label="Positive vote" title="Positive vote"/>
-        <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" aria-label="Negative vote" title="Negative vote"/>
+        <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
+        <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
         <t t-if="vote.post_id.parent_id">
             <a t-attf-href="/forum/#{ slug(forum) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
         </t>

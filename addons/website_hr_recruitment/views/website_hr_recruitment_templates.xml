@@ -57,7 +57,7 @@
                                         }'/>
                                     <span t-if="not job.website_published" class="label label-danger">unpublished</span>
                                     <div class="text-muted">
-                                        <i class="fa fa-clock-o" title="Publication date" aria-label="Publication date"/> <span t-field="job.write_date"/>
+                                        <i class="fa fa-clock-o" title="Publication date" role="img" aria-label="Publication date"/> <span t-field="job.write_date"/>
                                     </div>
                                 </div>
                             </li>
@@ -405,10 +405,10 @@
                                         <h4 class="mt0" t-field="responsible.name"/>
                                         <p t-field="responsible.function"/>
                                         <t t-if='responsible.email'>
-                                            <i class="fa fa-envelope" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
+                                            <i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <a t-attf-href="mailto:#{responsible.email}" t-esc="responsible.email"/>
                                         </t>
                                         <t t-if='responsible.phone'>
-                                            <br/><i class="fa fa-phone" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>
+                                            <br/><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <span t-field="responsible.phone"/>
                                         </t>
                                     </div>
                                     <div class="col-md-12 mt32 text-center">

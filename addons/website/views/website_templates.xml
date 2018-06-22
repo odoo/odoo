@@ -234,7 +234,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
-            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-aria-label="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
+            <span t-field="res_company.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
     </xpath>
 </template>
@@ -849,7 +849,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
     </address>
     <t t-if="res_company.google_map_img()">
@@ -888,9 +888,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
           </form>
           <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
               <button class="btn btn-default" type="button" data-toggle="dropdown">
-                  <span class="fa fa-sort fa-lg" aria-label="Sort" title="Sort"/>
+                  <span class="fa fa-sort fa-lg" role="img" aria-label="Sort" title="Sort"/>
                   <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
-                  <span class="caret" aria-label="Dropdown menu" title="Dropdown menu"></span>
+                  <span class="caret" role="img" aria-label="Dropdown menu" title="Dropdown menu"></span>
               </button>
               <ul class="dropdown-menu" role="menu" aria-labelledby="portal_searchbar_sortby">
                   <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
@@ -915,20 +915,20 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     <tr class="active">
                       <th>Name</th>
                       <th>Url</th>
-                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page published?" aria-label="Is the page published?" class="fa fa-eye"></i></th>
-                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" role="img" aria-label="Is the page included in the main menu?" class="fa fa-thumb-tack"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page published?" role="img" aria-label="Is the page published?" class="fa fa-eye"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" role="img" aria-label="Is the page indexed by search engines?" class="fa fa-globe"></i></th>
                       <th class="col-sm-3 col-md-2"></th>
                     </tr>
                   </thead>
                   <t t-foreach="pages" t-as="page">
                       <tr>
-                          <td><i t-if="page.is_homepage" class="fa fa-home" aria-label="Home" title="Home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
+                          <td><i t-if="page.is_homepage" class="fa fa-home" role="img" aria-label="Home" title="Home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
                           <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" t-att-aria-label="'Checked' if page.menu_ids else 'Not checked'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.menu_ids else 'Not checked'" t-att-title="'Checked' if page.menu_ids else 'Not checked'"></i></td>
                           <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
-                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
-                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" t-att-aria-label="'Checked' if page.website_indexed else 'Not checked'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
+                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" role="img" t-att-aria-label="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" role="img" t-att-aria-label="'Checked' if page.website_indexed else 'Not checked'" t-att-title="'Checked' if page.website_indexed else 'Not checked'"></i></td>
                           <td class="text-right">
                               <a class="mr4 fa fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page" aria-label="Manage this page"></a>
                               <a class="mr4 fa fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend" aria-label="Edit code in backend"></a>

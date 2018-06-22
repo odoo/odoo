@@ -81,7 +81,7 @@
             </caption>
             <thead>
                 <tr>
-                    <td class="cell_action"><span class="toggle_match fa fa-cog" aria-label="Settings" title="Settings"></span></td>
+                    <td class="cell_action"><span class="toggle_match fa fa-cog" aria-label="Settings" role="img" title="Settings"></span></td>
                     <td class="cell_account_code"><t t-esc="state.st_line.account_code"/></td>
                     <td class="cell_due_date"><t t-esc="state.st_line.date"/></td>
                     <td class="cell_label"><t t-if="state.st_line.name" t-esc="state.st_line.name"/> <t t-if="state.st_line.amount_currency_str"> (<t t-esc="state.st_line.amount_currency_str"/>)</t></td>
@@ -120,7 +120,7 @@
     </t>
     <t t-jquery=".accounting_view thead tr" t-operation="replace">
         <tr>
-            <td class="cell_action"><span class="toggle_match fa fa-cog" aria-label="Settings" title="Settings"></span></td>
+            <td class="cell_action"><span class="toggle_match fa fa-cog" aria-label="Settings" role="img" title="Settings"></span></td>
             <td colspan="3"><span/><span t-if="state.last_time_entries_checked">Last Reconciliation: <t t-esc="state.last_time_entries_checked"/></span></td>
             <td colspan="2"><t t-esc="state.st_line.account_code"/></td>
             <td class="cell_info_popover"></td>
@@ -130,12 +130,12 @@
 
 <t t-name="reconciliation.line.balance">
     <tr t-if="state.balance.amount_currency &amp;&amp; !(state.reconciliation_proposition[0] || {}).partial_reconcile">
-        <td class="cell_action"><span class="toggle_create fa fa-play" aria-label="Run" title="Run"></span></td>
+        <td class="cell_action"><span role="img" class="toggle_create fa fa-play" aria-label="Run" title="Run"></span></td>
         <td class="cell_account_code"><t t-esc="state.balance.account_code"/></td>
         <td class="cell_due_date"></td>
         <td class="cell_label"><t t-if="state.balance.amount_currency &lt; 0">Create Write-off</t><t t-elif="state.st_line.partner_id">Open balance</t><t t-else="">Choose counterpart</t></td>
-        <td class="cell_left"><t t-if="state.balance.amount_currency &lt; 0"><span t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str" t-att-aria-label="state.balance.amount_currency_str" t-att-title="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
-        <td class="cell_right"><t t-if="state.balance.amount_currency &gt; 0"><span t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str" t-att-aria-label="state.balance.amount_currency_str" t-att-title="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_left"><t t-if="state.balance.amount_currency &lt; 0"><span role="img" t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str" t-att-aria-label="state.balance.amount_currency_str" t-att-title="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
+        <td class="cell_right"><t t-if="state.balance.amount_currency &gt; 0"><span role="img" t-if="state.balance.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{state.balance.currency_id%8} line_info_button fa fa-money" t-att-data-content="state.balance.amount_currency_str" t-att-aria-label="state.balance.amount_currency_str" t-att-title="state.balance.amount_currency_str"/><t t-raw="state.balance.amount_str"/></t></td>
         <td class="cell_info_popover"></td>
     </tr>
 </t>
@@ -144,8 +144,8 @@
 <div t-name="reconciliation.line.match">
     <div class="match_controls">
         <input class="filter" placeholder="Filter..." type="text" value=""/>
-        <span class="pull-right fa fa-chevron-right disabled" aria-label="Previous" title="Previous"></span>
-        <span class="pull-right fa fa-chevron-left disabled" aria-label="Next" title="Next"></span>
+        <span class="pull-right fa fa-chevron-right disabled" role="img" aria-label="Previous" title="Previous"></span>
+        <span class="pull-right fa fa-chevron-left disabled" role="img" aria-label="Next" title="Next"></span>
     </div>
     <table>
         <tbody>
@@ -163,7 +163,7 @@
             <p t-if="!state.reconcileModels.length" style="color: #bbb;">To speed up reconciliation, define <a style="cursor: pointer;" class="reconcile_model_create">reconciliation models</a>.</p>
         </div>
         <div class="dropdown pull-right">
-            <a data-toggle="dropdown" href="#"><span class="fa fa-cog" aria-label="Settings"/></a>
+            <a data-toggle="dropdown" href="#"><span class="fa fa-cog" role="img" aria-label="Settings"/></a>
             <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-label="Presets config">
                 <li><a role="menuitem" class="reconcile_model_create" href="#">Create model</a></li>
                 <li><a role="menuitem" class="reconcile_model_edit" href="#">Modify models</a></li>
@@ -212,7 +212,7 @@
 
 <t t-name="reconciliation.line.mv_line">
     <tr t-if="line.display !== false" t-attf-class="mv_line #{line.already_paid ? ' already_reconciled' : ''} #{line.__invalid ? 'invalid' : ''} #{line.is_tax ? 'is_tax' : ''}" t-att-data-line-id="line.id" t-att-data-selected="selected">
-        <td class="cell_action"><span class="fa fa-add-remove" aria-label="Set" title="Set"/></td>
+        <td class="cell_action"><span class="fa fa-add-remove" role="img" aria-label="Set" title="Set"/></td>
         <td class="cell_account_code"><t t-esc="line.account_code"/></td>
         <td class="cell_due_date"><t t-esc="line.date_maturity === false ? line.date : line.date_maturity"/></td>
         <td class="cell_label">
@@ -225,8 +225,8 @@
             <t t-if="line.ref &amp;&amp; line.ref.length"> : </t>
             <t t-esc="line.ref"/>
         </td>
-        <td class="cell_left"><t t-if="line.amount &lt; 0"><span t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
-        <td class="cell_right"><t t-if="line.amount &gt; 0"><span t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
+        <td class="cell_left"><t t-if="line.amount &lt; 0"><span role="img" t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
+        <td class="cell_right"><t t-if="line.amount &gt; 0"><span role="img" t-if="line.amount_currency_str" t-attf-class="o_multi_currency o_multi_currency_color_#{line.currency_id%8} line_info_button fa fa-money" t-att-data-content="line.amount_currency_str" t-att-aria-label="line.amount_currency_str" t-att-title="line.amount_currency_str"/><t t-raw="line.amount_str"/></t></td>
         <td class="cell_info_popover"></td>
     </tr>
 </t>
@@ -266,7 +266,7 @@
 
 <t t-name="reconciliation.notification">
     <div t-att-class="'notification alert-dismissible alert alert-' + type" role="alert">
-        <button type="button" class="close" data-dismiss="alert"><span aria-label="Close" title="Close" class="fa fa-times"></span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span title="Close" class="fa fa-times"></span></button>
         <t t-esc="message" />
         <t t-if="details !== undefined">
             <a class="fa fa-external-link" rel="do_action" href="#" aria-label="External link" title="External link"

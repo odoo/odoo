@@ -7,7 +7,7 @@
             <div class="container js_surveyresult">
                 <t t-call="survey.back" />
                 <div class="jumbotron mt32">
-                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right " aria-label="Chart" title="Chart"/></h1>
+                    <h1><span t-field="survey.title" /> <span style="font-size:1.5em;" class="fa fa-bar-chart-o pull-right " role="img" aria-label="Chart" title="Chart"/></h1>
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
                 <div class="panel panel-default hidden-print">
@@ -20,7 +20,7 @@
                             <span class="label label-primary only_left_radius filter-all">All surveys</span><span class="label label-default only_right_radius filter-finished">Finished surveys</span>
                         </span>
                         <span t-foreach="filter_display_data" t-as="filter_data">
-                            <span class="label label-primary only_left_radius"><i class="fa fa-filter" aria-label="Filter" title="Filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
+                            <span class="label label-primary only_left_radius"><i class="fa fa-filter" role="img" aria-label="Filter" title="Filter"></i></span><span class="label label-primary no_radius" t-esc="filter_data['question_text']"></span><span class="label label-success only_right_radius" t-esc="' > '.join(filter_data['labels'])"></span>
                         </span>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                                 <td class="survey_answer">
                                     <span t-esc="round(user_input['count']*100.0/(input_summary['answered'] or 1),2)"></span> %
                                     <span t-esc="user_input['count']" class="label label-primary">Vote</span>
-                                    <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']" aria-label="Filter question" title="Filter question"/>
+                                    <i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-answer_id="user_input['answer_id']" role="img" aria-label="Filter question" title="Filter question"/>
                                 </td>
                             </tr>
                         </tbody>
@@ -233,7 +233,7 @@
                             </td>
                             <td class="survey_answer" t-foreach="matrix_result['answers']" t-as="answer_id">
                                 <span t-esc="round(matrix_result['result'][(row_id,answer_id)]*100.0/(input_summary['answered'] or 1),2)"></span> %
-                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" aria-label="Survey filter" title="Survey filter"></i>
+                                <span class="label label-primary" t-esc="matrix_result['result'][(row_id,answer_id)]"></span><i class="fa fa-filter text-primary invisible survey_filter" t-att-data-question_id="question.id" t-att-data-row_id="row_id" t-att-data-answer_id="answer_id" role="img" aria-label="Survey filter" title="Survey filter"></i>
                             </td>
                         </tr>
                     </tbody>
@@ -320,7 +320,7 @@
                 <div class="jumbotron mt32">
                     <h2 class="text-muted">
                         <span>
-                            <i style="font-size:1.8em" class="fa fa-users pull-right" aria-label="No answer" title="No answer"></i>
+                            <i style="font-size:1.8em" class="fa fa-users pull-right" role="img" aria-label="No answer" title="No answer"></i>
                         </span>
                         Sorry, No one answered this survey yet
                     </h2>

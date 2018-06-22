@@ -126,7 +126,7 @@
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" aria-label="External link" title="External link"/></button></h3>
+            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
             <ul class="nav">
                 <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
                     style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
@@ -339,7 +339,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12">
-                            <span class="pull-right" title="Rating" t-attf-aria-label="Rating: #{lead.priority} on 3">
+                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
                                 <t t-foreach="range(1, 4)" t-as="i">
                                     <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
                                 </t>
@@ -360,13 +360,13 @@
                                     <span t-if="not lead.partner_name" itemprop="name" t-field="lead.contact_name"/>
                                 </div>
                                 <div t-if="lead.phone">
-                                    <span class="fa fa-phone" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="lead.phone" />
                                 </div>
                                 <div t-if="lead.mobile">
-                                    <span class="fa fa-mobile" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
+                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="telephone" t-field="lead.mobile" />
                                 </div>
                                 <div t-if="lead.email_from">
-                                    <span class="fa fa-envelope" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="lead.email_from" />
                                 </div>
                             </address>
                         </div>
@@ -525,9 +525,9 @@
                                 <strong>Expected Closing: <span t-field="opportunity.date_deadline" /></strong>
                         </div>
                         <div class="col-md-4">
-                            <span class="pull-right" title="Rating" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
+                            <span class="pull-right" title="Rating" role="img" t-attf-aria-label="Rating: #{opportunity.priority} on 4">
                                 <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" t-att-aria-label="'Star %d of 3' % i"/>
+                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(opportunity.priority) else '-o'}" role="img" t-att-aria-label="'Star %d of 3' % i"/>
                                 </t>
                             </span>
                         </div>
@@ -625,13 +625,13 @@
                                     <span t-if="not opportunity.partner_name" itemprop="name" t-field="opportunity.contact_name" />
                                 </div>
                                 <div t-if="opportunity.phone">
-                                    <span class="fa fa-phone" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="opportunity.phone" />
+                                    <span class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span itemprop="telephone" t-field="opportunity.phone" />
                                 </div>
                                 <div t-if="opportunity.mobile">
-                                    <span class="fa fa-mobile" aria-label="Mobile" title="Mobile"/> <span itemprop="mobile" t-field="opportunity.mobile" />
+                                    <span class="fa fa-mobile" role="img" aria-label="Mobile" title="Mobile"/> <span itemprop="mobile" t-field="opportunity.mobile" />
                                 </div>
                                 <div t-if="opportunity.email_from">
-                                    <span class="fa fa-envelope" aria-label="Email" title="Email"/> <span itemprop="email" t-field="opportunity.email_from" />
+                                    <span class="fa fa-envelope" role="img" aria-label="Email" title="Email"/> <span itemprop="email" t-field="opportunity.email_from" />
                                 </div>
                             </address>
                         </div>
@@ -704,7 +704,7 @@
                                                         <label>Deadline: </label>
                                                         <div class='input-group date'>
                                                             <input type="text" name="date_deadline" t-att-value="opportunity.date_deadline" class="form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                            <span class="input-group-addon"><span class="fa fa-calendar" aria-label="Calendar"></span></span>
+                                                            <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar"></span></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -725,7 +725,7 @@
                                                 <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class='input-group date'>
                                                     <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
-                                                    <span class="input-group-addon"><span class="fa fa-calendar" aria-label="Calendar" title="Calendar"></span></span>
+                                                    <span class="input-group-addon"><span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span></span>
                                                 </div>
                                             </div>
                                         </main>

@@ -59,7 +59,7 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                                 </div>
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
@@ -68,7 +68,7 @@
                                         }'/>
                                 </t>
                                 <div class="text-muted" t-if="event.event_type_id">
-                                    <i class="fa fa-tag" aria-label="Event type" title="Event type"></i> <span t-field="event.event_type_id"/>
+                                    <i class="fa fa-tag" role="img" aria-label="Event type" title="Event type"></i> <span t-field="event.event_type_id"/>
                                 </div>
                             </div>
                         </li>
@@ -268,7 +268,7 @@
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
             <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
+                <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
                 <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
             </h4>
@@ -583,7 +583,7 @@
                 </div>
                 <div class="col-md-9 mt16">
                     <h4><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h4>
-                    <i class="fa fa-clock-o" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
+                    <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div id="add_to_calendar" class="mt4">
                         <a role="button" class="btn btn-primary mr8" t-att-href="iCal_url">
                             <span class="fa fa-fw fa-arrow-right">Add to iCal/Outlook</span>
@@ -614,9 +614,9 @@
                             <t t-foreach="attendees" t-as="attendee">
                                 <tr>
                                     <td><t t-esc="attendee.id"/></td>
-                                    <td><i class="fa fa-user" aria-label="Name" title="Name"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
-                                    <td><i class="fa fa-envelope" aria-label="Email" title="Email"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
-                                    <td><i class="fa fa-phone" aria-label="Phone" title="Phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
+                                    <td><i class="fa fa-user" role="img" aria-label="Name" title="Name"></i> <t t-if='attendee.name'><t t-esc="attendee.name"/></t><t t-if='not attendee.name'>N/A</t></td>
+                                    <td><i class="fa fa-envelope" role="img" aria-label="Email" title="Email"></i> <t t-if='attendee.email'><t t-esc="attendee.email"/></t><t t-if='not attendee.email'>N/A</t></td>
+                                    <td><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"></i> <t t-if='attendee.phone'><t t-esc="attendee.phone"/></t><t t-if='not attendee.phone'>N/A</t></td>
                                 </tr>
                             </t>
                         </tbody>
@@ -637,7 +637,7 @@
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
-                    <i class="fa fa-flag fa-5x text-muted" title="Local Events" aria-label="Local Events"></i>
+                    <i class="fa fa-flag fa-5x text-muted" title="Local Events" role="img" aria-label="Local Events"></i>
                 </div>
                 <span class="oe_snippet_thumbnail_title">Local Events</span>
             </div>
@@ -679,13 +679,13 @@
                     </t>
                     <div t-foreach="events[:5]" t-as="event_dict" class="oe_website_overflow_ellipsis mb8">
                         <t t-if="not event_dict['event'].website_published">
-                            <span class="label label-danger" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
+                            <span class="label label-danger" role="img" aria-label="Attention: not published" title="Not published"><i class="fa fa-ban"></i></span>
                         </t>
                         <t t-if="event_dict['event'].address_id">
-                            <i class="fa fa-map-marker" title="It is a physical event" aria-label="It is a physical event"></i>
+                            <i class="fa fa-map-marker" title="It is a physical event" role="img" aria-label="It is a physical event"></i>
                         </t>
                         <t t-if="not event_dict['event'].address_id">
-                            <i class="fa fa-cloud" title="It is an online event" aria-label="It is an online event"></i>
+                            <i class="fa fa-cloud" title="It is an online event" role="img" aria-label="It is an online event"></i>
                         </t>
                         <b><span t-esc="event_dict['date']"/>: <span><a t-att-href="event_dict['url']"><t t-esc="event_dict['event'].name"/></a></span></b>
                     </div>

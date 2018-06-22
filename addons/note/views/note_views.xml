@@ -106,8 +106,8 @@
                     </ul>
                 </div>
                   <span>
-                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" aria-label="Opened" title="Opened"/></a>
-                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" aria-label="Closed" title="Closed"/></a>
+                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/></a>
+                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">

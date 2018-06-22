@@ -355,8 +355,8 @@
     <template id="record_pager" name="Portal Record Pager">
         <t t-if='prev_record or next_record'>
           <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
-            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-label="Previous" title="Previous"></i></a>
-            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-label="Next" title="Previous"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" role="img" aria-label="Previous" title="Previous"></i></a>
+            <a role="button" t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" role="img" aria-label="Next" title="Previous"></i></a>
           </div>
         </t>
     </template>

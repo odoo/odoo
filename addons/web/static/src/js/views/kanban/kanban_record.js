@@ -384,7 +384,7 @@ var KanbanRecord = Widget.extend({
             var colorHelp = _.str.sprintf(_t("Card color: %s"), this._getColorname(this.recordData[color_field]));
             var colorClass = this._getColorClassname(this.recordData[color_field]);
             this.$el.addClass(colorClass);
-            this.$el.prepend('<span title="' + colorHelp + '" aria-label="' + colorHelp +'" class="oe_kanban_color_help"/>');
+            this.$el.prepend('<span title="' + colorHelp + '" aria-label="' + colorHelp +'" role="img" class="oe_kanban_color_help"/>');
         }
     },
     /**

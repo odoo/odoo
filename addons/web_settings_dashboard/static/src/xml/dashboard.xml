@@ -24,7 +24,7 @@
 
     <t t-name="DashboardApps">
         <div class="text-center o_web_settings_dashboard_apps">
-            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;" aria-label="Browse Apps" title="Browse Apps"></i>
+            <i class="fa fa-cog fa-4x text-muted o_browse_apps" style="cursor: pointer;" role="img" aria-label="Browse Apps" title="Browse Apps"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="installed_apps" t-value="widget.data.installed_apps"/>
                 <t t-if="installed_apps">
@@ -58,7 +58,7 @@
 
     <t t-name="DashboardInvitations">
         <div class="text-center o_web_settings_dashboard_invitations">
-            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;" aria-label="Access rights" title="Access rights"></i>
+            <i class="fa fa-users fa-4x text-muted o_web_settings_dashboard_access_rights" style="cursor: pointer;" role="img" aria-label="Access rights" title="Access rights"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-set="active_users" t-value="widget.data.active_users"></t>
                 <t t-set="pending_users" t-value="widget.data.pending_users"></t>
@@ -94,7 +94,7 @@
 
     <t t-name="DashboardShare">
         <div class="text-center o_web_settings_dashboard_share">
-            <i class="fa fa-share-alt fa-4x text-muted" aria-label="Share" title="Share"/>
+            <i class="fa fa-share-alt fa-4x text-muted" role="img" aria-label="Share" title="Share"/>
             <div class="o_web_settings_dashboard_header">Share the Love</div>
             <div>
                 <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
@@ -155,7 +155,7 @@
 
     <t t-name="DashboardTranslations">
         <div class="text-center o_web_settings_dashboard_translations mt8">
-            <i class="fa fa-globe fa-4x text-muted" aria-label="Translations" title="Translations"></i>
+            <i class="fa fa-globe fa-4x text-muted" role="img" aria-label="Translations" title="Translations"></i>
             <div class="o_web_settings_dashboard_header">
                 Translations
             </div>
@@ -172,7 +172,7 @@
 
     <t t-name="DashboardCompany">
         <div class="text-center o_web_settings_dashboard_company mt8">
-            <i class="fa fa-suitcase fa-4x text-muted" aria-label="Company" title="Company"></i>
+            <i class="fa fa-suitcase fa-4x text-muted" role="img" aria-label="Company" title="Company"></i>
             <div class="o_web_settings_dashboard_header">
                 <t t-esc="widget.data.company_name"></t>
             </div>

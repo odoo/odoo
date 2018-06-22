@@ -105,13 +105,13 @@
                                     </div>
                                     <div class="col-xs-4 text-right">
                                         <span class="badge">
-                                            <strong><i class="fa fa-money" aria-label="Amount" title="Amount"/> <field name="amount"/></strong>
+                                            <strong><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount"/></strong>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <i class="fa fa-clock-o" aria-label="Date" title="Date"/>
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/>
                                         <t t-esc="record.date.value"/>
                                     </div>
                                     <div class="col-xs-6">
@@ -213,9 +213,9 @@
               </p><p>
                 Here you can see today's orders grouped by vendors.
               </p><p>
-                Click on the <span class="fa fa-phone text-success" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-                Click on the <span class="fa fa-check text-success" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-                Click on the <span class="fa fa-times-circle text-danger" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
+                Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -234,9 +234,9 @@
               </p><p>
                 Summary of all lunch orders, grouped by vendor and by date.
               </p><p>
-                Click on the <span class="fa fa-phone text-success" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
-                Click on the <span class="fa fa-check text-success" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
-                Click on the <span class="fa fa-times-circle text-danger" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
+                Click on the <span class="fa fa-phone text-success" role="img" aria-label="Order button" title="Order button"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success" role="img" aria-label="Receive button" title="Receive button"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger" role="img" aria-label="Cancel button" title="Cancel button"/> red X to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -390,22 +390,22 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <i class="fa fa-money" aria-label="Money" title="Money"/> <field name="price"/>
+                                        <i class="fa fa-money" role="img" aria-label="Money" title="Money"/> <field name="price"/>
                                     </div>
                                     <div class="col-xs-6 text-right">
-                                        <i class="fa fa-clock-o" aria-label="Date" title="Date"/> <field name="date"/>
+                                        <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date"/>
                                     </div>
                                 </div>
                                 <div class="row mt4">
                                     <div class="col-xs-6">
                                         <a class="btn btn-xs btn-success" role="button" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-phone" aria-label="Order button" title="Order button"/>
+                                            <i class="fa fa-phone" role="img" aria-label="Order button" title="Order button"/>
                                         </a>
                                         <a class="btn btn-xs btn-info" role="button" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-check" aria-label="Receive button" title="Receive button"/>
+                                            <i class="fa fa-check" role="img" aria-label="Receive button" title="Receive button"/>
                                         </a>
                                         <a class="btn btn-xs btn-danger" role="button" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
-                                            <i class="fa fa-times" aria-label="Cancel button" title="Cancel button"/>
+                                            <i class="fa fa-times" role="img" aria-label="Cancel button" title="Cancel button"/>
                                         </a>
                                     </div>
                                     <div class="col-xs-6">

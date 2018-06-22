@@ -108,7 +108,7 @@
                         </td>
                         <td>
                             <t t-if="order.state == 'done'">
-                                <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check" aria-label="Done" title="Done"></i><span class="hidden-xs"> Done</span></span>
+                                <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check" role="img" aria-label="Done" title="Done"></i><span class="hidden-xs"> Done</span></span>
                             </t>
                         </td>
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
@@ -158,7 +158,7 @@
                         </a>
                     </t>
                     <a target="_blank" t-att-href="'/my/orders/pdf/%s?%s' % (order.id, keep_query())" class="ml8 pull-right mt4 mr8" title="Download">
-                        <i class="fa fa-download fa-2x" aria-label="Download"/>
+                        <i class="fa fa-download fa-2x" role="img" aria-label="Download"/>
                     </a>
                 </div>
               </div>
@@ -188,7 +188,7 @@
                       <t t-foreach="invoices" t-as="i">
                         <t t-set="report_url" t-value="'/my/invoices/pdf/%s?%s' % (i.id, 'access_token=%s' % i.access_token if access_token else '')"/>
                         <div>
-                          <a t-att-href="report_url"><span class="fa fa-download" aria-label="Download" title="Download"/></a>
+                          <a t-att-href="report_url"><span class="fa fa-download" role="img" aria-label="Download" title="Download"/></a>
                           <a t-att-href="report_url"><span t-esc="i.number"/></a>
                           <span class="text-muted" t-field="i.date_invoice"/>
                           <t t-if="i.state == 'paid'">

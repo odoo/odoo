@@ -9,7 +9,7 @@
             <div class="o_followers_title_box">
                 <button class="btn btn-sm btn-link dropdown-toggle" title="Dropdown menu - Followers"
                         data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-user" aria-label="Dropdown menu - Followers"></i>
+                    <i class="fa fa-user" role="img" aria-label="Dropdown menu - Followers"></i>
                     <span class="o_followers_count"/>
                 </button>
                 <ul class="dropdown-menu o_followers_list" role="menu"></ul>
@@ -21,7 +21,7 @@
                         <span class="fa fa-times o_followers_unfollow"> Unfollow</span>
                         <span class="fa fa-check o_followers_following"> Following</span>
                     </button><button class="btn btn-sm btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="fa fa-bell" aria-label="Alarm menu" title="Alarm menu"/>
+                        <span class="fa fa-bell" role="img" aria-label="Alarm menu" title="Alarm menu"/>
                     </button>
                     <ul class="dropdown-menu" role="menu"/>
                 </div>
@@ -42,12 +42,12 @@
                t-att-data-oe-id="record.res_id"><t t-esc="record.name"/></a>
             <i t-if="record.is_editable" class="fa fa-pencil o_edit_subtype hide"
                title="Edit subscription"
-               aria-label="Edit subscription"
+               aria-label="Edit subscription" role="img"
                t-att-data-follower-id="record.id"
                t-att-data-oe-id="record.res_id"
                t-att-data-oe-model="record.res_model"/>
             <i t-if="widget.isEditable" class="fa fa-remove o_remove_follower"
-               aria-label="Remove this follower"
+               aria-label="Remove this follower" role="img"
                title="Remove this follower"/>
         </li>
     </t>
@@ -81,7 +81,7 @@
             <span t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')">
                 <t t-esc="record.name"/>
             </span>
-            <i t-if="display_warning" class="fa fa-warning text-warning" aria-label="Warning" title="Warning"/>
+            <i t-if="display_warning" class="fa fa-warning text-warning" role="img" aria-label="Warning" title="Warning"/>
         </li>
     </t>
     <t t-name="mail.Followers.subtypes.warning">
