@@ -48,10 +48,10 @@
                                         <p>
                                             <span class="o_website_links_short_url" id="short_url"><span id="short-url-host"><t t-esc="short_url_host"/></span><span id="o_website_links_code"><t t-esc="code"/></span></span>
                                             <span class="o_website_links_edit_tools" style="display:none;">
-                                                <a class="o_website_links_ok_edit btn btn-xs btn-primary" href="#">ok</a> or 
+                                                <a role="button" class="o_website_links_ok_edit btn btn-xs btn-primary" href="#">ok</a> or 
                                                 <a class="o_website_links_cancel_edit" href="#">cancel</a>
                                             </span>
-                                            <a class="o_website_links_edit_code"><span class="fa fa-pencil gray"></span></a>
+                                            <a class="o_website_links_edit_code" aria-label="Edit code" title="Edit code"><span class="fa fa-pencil gray"></span></a>
                                             <a class="copy-to-clipboard" t-att-data-clipboard-text="short_url">copy</a>
                                             
                                         </p>
@@ -107,9 +107,9 @@
                         <h1 class="page-header">Statistics
                             <small class="pull-right hidden-xs mt16" id="filters">
                                 <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
-                                    <li class="active"><a href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
-                                    <li><a href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
-                                    <li><a href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
+                                    <li class="active"><a aria-controls="all_time_charts" href="#all_time_charts" role="tab" data-toggle="tab">All Time</a></li>
+                                    <li><a aria-controls="last_month_charts" href="#last_month_charts" role="tab" data-toggle="tab">Last Month</a></li>
+                                    <li><a aria-controls="last_week_charts" href="#last_week_charts" role="tab" data-toggle="tab">Last Week</a></li>
                                 </ul>
                             </small>
                         </h1>
@@ -119,7 +119,7 @@
                                 <div class="tab-content">
 
                                     <!-- All Time Charts -->
-                                    <div class="tab-pane active" id="all_time_charts">
+                                    <div role="tabpanel" class="tab-pane active" id="all_time_charts">
                                         <div class="row">
                                             <div class="col-sm-7 website_links_click_chart" id="all_time_clicks_chart">
                                                 <h3 class="title"></h3>
@@ -133,7 +133,7 @@
                                     </div>
 
                                     <!-- Last Month Charts -->
-                                    <div class="tab-pane" id="last_month_charts">
+                                    <div role="tabpanel" class="tab-pane" id="last_month_charts">
                                         <div class="row">
                                             <div class="col-sm-7 website_links_click_chart" id="last_month_clicks_chart">
                                                 <h3 class="title"></h3>
@@ -147,7 +147,7 @@
                                     </div>
 
                                     <!-- Last Week Charts -->
-                                    <div class="tab-pane" id="last_week_charts">
+                                    <div role="tabpanel" class="tab-pane" id="last_week_charts">
                                         <div class="row">
                                             <div class="col-sm-7 website_links_click_chart" id="last_week_clicks_chart">
                                                 <h3 class="title"></h3>

@@ -90,9 +90,9 @@ QUnit.module('Views', {
             res_id: 1,
         }).open();
 
-        assert.notOk($('div.modal .modal-body button').length,
+        assert.notOk($('main.modal-body button').length,
             "should not have any button in body");
-        assert.strictEqual($('div.modal .modal-footer button').length, 1,
+        assert.strictEqual($('footer.modal-footer button').length, 1,
             "should have only one button in footer");
         parent.destroy();
     });
@@ -118,7 +118,7 @@ QUnit.module('Views', {
             res_id: 1,
         }).open();
 
-        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+        assert.strictEqual($('[role="dialog"] button.btn-primary').length, 1,
             "should have 1 buttons in modal");
 
         $('.o_field_x2many_list_row_add a').click();
@@ -127,7 +127,7 @@ QUnit.module('Views', {
             keyCode: $.ui.keyCode.ESCAPE,
         }));
 
-        assert.strictEqual($('div.modal button.btn-primary').length, 1,
+        assert.strictEqual($('[role="dialog"] button.btn-primary').length, 1,
             "should still have 1 buttons in modal");
         parent.destroy();
     });
@@ -334,14 +334,14 @@ QUnit.module('Views', {
         form.$('.o_field_widget .o_field_many2one[name=instrument] input').click();
         $('ul.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content li.o_m2o_dropdown_option').first().click();
 
-        var $modal = $('.modal-dialog.modal-lg');
+        var $modal = $('.modal-lg');
 
         assert.equal($modal.length, 1,
             'There should be one modal');
 
         $modal.find('.o_field_x2many_list_row_add a').click();
 
-        var $modals = $('.modal-dialog.modal-lg');
+        var $modals = $('.modal-lg');
 
         assert.equal($modals.length, 2,
             'There should be two modals');
@@ -351,7 +351,7 @@ QUnit.module('Views', {
 
         $second_modal.find('.o_select_button').click();
 
-        $modal = $('.modal-dialog.modal-lg');
+        $modal = $('.modal-lg');
 
         assert.equal($modal.length, 1,
             'There should be one modal');

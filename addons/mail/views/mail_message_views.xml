@@ -154,7 +154,7 @@
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
                                                 <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1" alt="Download"/>
                                                 </div>
                                             </a>
                                         </div>

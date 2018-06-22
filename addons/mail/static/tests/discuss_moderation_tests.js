@@ -551,7 +551,7 @@ QUnit.test('moderator: discard pending moderation message (reject without explan
         // check discard dialog prompt
         assert.strictEqual($('.modal-dialog').length, 1,
             "a dialog should be prompt to the moderator on click discard");
-        assert.strictEqual($('.modal-body').text(),
+        assert.strictEqual($('.modal-body:first').text(),
             "You are going to discard 1 message. Do you confirm the action?",
             "should warn the user on discard action");
         assert.strictEqual($('.modal-footer button').length, 2,

@@ -90,7 +90,7 @@
                             <label for="schedule_date"/>
                             <div class="o_row">
                                 <field name="schedule_date"/>
-                                <label string="for"/>
+                                <label for="duration" string="for"/>
                                 <field name="duration" class="oe_inline"/> hours
                             </div>
                             <field name="priority" widget="priority"/>
@@ -134,13 +134,13 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
-                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                <ul class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
+                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
@@ -156,7 +156,7 @@
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
                                         <div class="o_kanban_inline_block ml4 mr4">
                                             <field name="activity_ids" widget="kanban_activity" />
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     </div>
                                 </div>
                             </div>
@@ -431,15 +431,15 @@
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown">
 
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <t t-if="widget.editable"><li><a type="edit">Edit...</a></li></t>
-                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header">Record Colour</li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                <ul class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><li><a role="menuitem" type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.deletable"><li><a role="menuitem" type="delete">Delete</a></li></t>
+                                    <li role="separator" class="divider"></li>
+                                    <li role="separator" class="dropdown-header">Record Colour</li>
+                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
@@ -462,7 +462,7 @@
                                         <div class="o_kanban_inline_block">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" width="27" height="27" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
                             </div>
@@ -654,7 +654,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                <img t-att-src="kanban_image('res.users', 'image_small', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                             </div>
                             <div class="row mt4">
                                 <div class="col-xs-6">
@@ -825,7 +825,7 @@
                                         </a></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content">
@@ -872,38 +872,38 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div><div class="container o_kanban_card_manage_pane dropdown-menu">
+                            </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_view">
-                                        <div class="o_kanban_card_manage_title">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>View</span>
                                         </div>
-                                        <div>
+                                        <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
                                                 All
                                             </a>
                                         </div>
-                                        <div>
+                                        <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_todo': 1}">
                                                 To Do
                                             </a>
                                         </div>
-                                        <div>
+                                        <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_progress': 1}">
                                                 In Progress
                                             </a>
                                         </div>
-                                        <div>
+                                        <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_done': 1}">
                                                 Done
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col-xs-6 o_kanban_card_manage_section o_kanban_manage_new">
-                                        <div class="o_kanban_card_manage_title">
+                                        <div role="menuitem" class="o_kanban_card_manage_title">
                                             <span>Reporting</span>
                                         </div>
-                                        <div>
+                                        <div role="menuitem">
                                             <a name="%(maintenance_request_action_reports)d" type="action" context="{'search_default_maintenance_team_id': active_id}">
                                             Maintenance Requests
                                             </a>
@@ -911,10 +911,10 @@
                                     </div>
                                 </div>
                                 <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
-                                    <div class="col-xs-8">
-                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    <div class="col-xs-8" role="menuitem" aria-haspopup="true">
+                                        <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
-                                    <div class="col-xs-4 text-right">
+                                    <div role="menuitem" class="col-xs-4 text-right">
                                         <a type="edit">Settings</a>
                                     </div>
                                 </div>

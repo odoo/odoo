@@ -24,10 +24,10 @@
                       <td t-att-data-id="a.get('id')" t-att-data-model="a['model']" t-att-data-model_id="a['model_id']" t-att-class="tdclass" t-att-data-level="a['level']">
                         <t t-if="column == 1">
                             <t t-if="a.get('unfoldable') and not a.get('is_used')">
-                                <span t-att-data-id="a['id']" class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right"></i></span>
+                                <span t-att-data-id="a['id']" class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right" role="img" aria-label="Unfold" title="Unfold"></i></span>
                             </t>
                             <t t-if="a.get('is_used')">
-                                <span class="o_stock_reports_stream" title="Traceability Report"><i class="fa fa-fw fa-level-up fa-rotate-270"></i></span>
+                                <span role="img" class="o_stock_reports_stream" title="Traceability Report" aria-label="Traceability Report"><i class="fa fa-fw fa-level-up fa-rotate-270"></i></span>
                             </t>
                         </t>
                         <t t-if="a['reference'] == c">

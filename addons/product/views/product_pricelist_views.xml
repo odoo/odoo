@@ -58,7 +58,7 @@
                     <group col="6" attrs="{'invisible':[('compute_price', '!=', 'formula')]}">
                         <field name="base" colspan="6"/>
 
-                        <label string="New Price ="/>
+                        <span class="o_form_label">New Price =</span>
                         <div>
                             <span attrs="{'invisible':[('base', '!=', 'list_price')]}">Public Price  -  </span>
                             <span attrs="{'invisible':[('base', '!=', 'standard_price')]}">Cost  -  </span>
@@ -119,7 +119,7 @@
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                     </div>
-                                    <strong><i class="fa fa-money" aria-hidden="true"></i> <field name="currency_id"/></strong>
+                                    <strong><i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/></strong>
                                 </div>
                             </div>
                         </t>

@@ -9,8 +9,8 @@
 
           <li class='dropdown-submenu'>
             <a tabindex="-1" href="#">Size</a>
-            <ul class="dropdown-menu" name="size">
-              <li><a href="#">
+            <ul class="dropdown-menu" role="menu" name="size">
+              <li><a role="menuitem" href="#">
                 <table>
                   <tr><td class="selected"></td><td></td><td></td><td></td></tr>
                   <tr><td></td><td></td><td></td><td></td></tr>
@@ -20,18 +20,18 @@
               </a></li>
             </ul>
           </li>
-          <li class='dropdown-submenu'>
+          <li class='dropdown-submenu' role="menuitem" aria-haspopup="true">
             <a tabindex="-1" href="#">Styles</a>
-            <ul class="dropdown-menu" name="style">
+            <ul class="dropdown-menu" role="menu" name="style">
             </ul>
           </li>
-          <li class='dropdown-submenu'>
+          <li class='dropdown-submenu' role="menuitem" aria-haspopup="true">
               <a tabindex="-1" href="#">Promote</a>
-              <ul class="dropdown-menu" data-no-preview="true">
-                  <li data-go_to="top"><a>Push to top</a></li>
-                  <li data-go_to="up"><a>Push up</a></li>
-                  <li data-go_to="down"><a>Push down</a></li>
-                  <li data-go_to="bottom"><a>Push to bottom</a></li>
+              <ul class="dropdown-menu" role="menu" data-no-preview="true">
+                  <li data-go_to="top"><a role="menuitem">Push to top</a></li>
+                  <li data-go_to="up"><a role="menuitem">Push up</a></li>
+                  <li data-go_to="down"><a role="menuitem">Push down</a></li>
+                  <li data-go_to="bottom"><a role="menuitem">Push to bottom</a></li>
               </ul>
           </li>
         </div>

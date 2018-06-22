@@ -12,8 +12,8 @@
                 <button name="%(hr_attendance_action_employee)d"
                     class="oe_stat_button"
                     type="action" attrs="{'invisible': [('attendance_state', '=', False)]}">
-                    <div id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}"/>
-                    <div id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
+                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-user o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info">
                         <span class="o_stat_text">Attendance</span>
                     </div>
@@ -55,15 +55,15 @@
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)" alt="Employee"/>
                         </div>
                         <div class="oe_kanban_details">
                             <div id="textbox">
                                 <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                                 </div>
                                 <strong>
                                     <field name="name"/>
@@ -93,10 +93,10 @@
             <field name="name" position="replace">
                 <div>
                     <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_in'">
-                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green"></span>
+                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                     </div>
                     <div class="pull-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red"></span>
+                        <span id="oe_hr_attendance_status" class="fa fa-user oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
                     </div>
                     <strong>
                         <field name="name" placeholder="Employee's Name"/>

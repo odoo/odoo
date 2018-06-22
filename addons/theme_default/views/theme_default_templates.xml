@@ -19,18 +19,18 @@
 
 <template id="customize_modal" inherit_id="website.theme_customize" name="theme_default modal">
   <xpath expr="div" position="replace">
-    <div id="theme_customize_modal" class="modal fade">
+    <div role="dialog" id="theme_customize_modal" class="modal fade">
       <div class="modal-dialog">
           <div class="modal-content">
 
               <div class="loading_backdrop"></div>
-              <div class="modal-header text-center">
+              <header class="modal-header text-center">
                   <button type="button" class="close">×</button>
-                  <!-- <a class="btn btn-primary" href="/web#return_label=Website&amp;action=website.action_module_theme">Click here to change theme</a> -->
+                  <!-- <a role="button" class="btn btn-primary" href="/web#return_label=Website&amp;action=website.action_module_theme">Click here to change theme</a> -->
                   <hr style="margin: 20px -10px 10px -10px;"/>
                   <h4 class="modal-title">Customize this default theme</h4>
-              </div>
-              <div class="modal-body">
+              </header>
+              <main class="modal-body">
                   <h5 class="modal-h5">LAYOUT</h5>
                   <table name="layout">
                       <tr>
@@ -114,7 +114,7 @@
                           </td>
                       </tr>
                   </table>
-              </div>
+              </main>
           </div>
       </div>
   </div>

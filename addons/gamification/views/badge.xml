@@ -111,7 +111,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="o_kanban_gamification oe_kanban_global_click #{record.stat_my.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
                             <div class="o_kanban_image">
-                                <img t-att-src="kanban_image('gamification.badge', 'image', record.id.raw_value)" t-att-title="record.name.value"/>
+                                <img t-att-src="kanban_image('gamification.badge', 'image', record.id.raw_value)" t-att-title="record.name.value" t-att-alt="record.name.value"/>
                             </div>
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title"><field name="name"/></strong>
@@ -132,7 +132,7 @@
                                     <em><field name="description"/></em>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner">
-                                            <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner"/>
+                                            <img width="24" height="24" class="oe_kanban_avatar" t-att-src="kanban_image('res.users', 'image_small', owner)" t-att-data-member_id="owner" alt="Owner"/>
                                         </t>
                                     </div>
                                 </div>
@@ -165,7 +165,7 @@
                         <div class="oe_kanban_card oe_kanban_global_click oe_kanban_badge oe_kanban_color_white o_kanban_gamification">
                             <div class="o_kanban_content">
                                 <div class="o_kanban_image">
-                                    <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.badge_id.raw_value)" t-att-title="record.badge_name.value" /></a>
+                                    <a type="open"><img t-att-src="kanban_image('gamification.badge', 'image', record.badge_id.raw_value)" t-att-title="record.badge_name.value" t-att-alt="record.badge_name.value" /></a>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <h4 class="mt0 mb0">

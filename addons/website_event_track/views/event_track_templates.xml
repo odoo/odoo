@@ -119,7 +119,7 @@
         <div id="left_column">
         </div>
         <div class="col-md-9">
-            <div class="alert alert-warning" t-if="not len(tracks)">
+            <div class="alert alert-warning" t-if="not len(tracks)" role="alert">
                 No tracks found!
             </div>
             <div class="row mb32" t-foreach="tracks" t-as="track">

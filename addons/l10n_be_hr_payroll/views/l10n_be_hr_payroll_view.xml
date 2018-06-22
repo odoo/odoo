@@ -62,7 +62,7 @@
                     <field name="car_atn" attrs="{'invisible': [('transport_mode_car', '=', False)]}" invisible="1"/>
                     <field name="transport_employer_cost" invisible="1"/>
                     <field name="transport_mode_public"/>
-                    <label string="Public Transport" attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_label"/>
+                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_label">Public Transport</span>
                     <div attrs="{'invisible': [('transport_mode_public', '=', False)]}" name="public_transport_div">
                         <div>
                             <label for="public_transport_employee_amount" class="oe_inline"/>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <field name="transport_mode_others"/>
-                    <label string="Other" attrs="{'invisible': [('transport_mode_others', '=', False)]}" name="others_label"/>
+                    <span class="o_form_label" attrs="{'invisible': [('transport_mode_others', '=', False)]}" name="others_label">Other</span>
                     <div attrs="{'invisible': [('transport_mode_others', '=', False)]}" class="o_row" name="others_div">
                         <field name="others_reimbursed_amount" class="oe_inline" nolabel="1"/>
                         <span>/ month</span>

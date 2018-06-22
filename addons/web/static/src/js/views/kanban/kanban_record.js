@@ -17,7 +17,21 @@ var widgetRegistry = require('web.widget_registry');
 var _t = core._t;
 var QWeb = core.qweb;
 
-var NB_KANBAN_RECORD_COLORS = 12;
+var KANBAN_RECORD_COLORS = [
+    _t('No color'),
+    _t('Red'),
+    _t('Orange'),
+    _t('Yellow'),
+    _t('Light blue'),
+    _t('Dark purple'),
+    _t('Salmon pink'),
+    _t('Medium blue'),
+    _t('Dark blue'),
+    _t('Fushia'),
+    _t('Green'),
+    _t('Purple'),
+];
+var NB_KANBAN_RECORD_COLORS = KANBAN_RECORD_COLORS.length;
 
 var KanbanRecord = Widget.extend({
     events: {
@@ -125,6 +139,17 @@ var KanbanRecord = Widget.extend({
             return index % NB_KANBAN_RECORD_COLORS;
         }
         return 0;
+    },
+    /**
+     * Computes a color name from value
+     *
+     * @private
+     * @param {number | string} variable
+     * @returns {integer} the color name
+     */
+    _getColorname: function (variable) {
+        var colorID = this._getColorID(variable);
+        return KANBAN_RECORD_COLORS[colorID];
     },
     /**
      * @private
@@ -284,6 +309,7 @@ var KanbanRecord = Widget.extend({
     _render: function () {
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex",0);
+        this.$el.attr('role', 'article');
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
             this.$el.hasClass('oe_kanban_global_click_edit')) {
@@ -338,6 +364,7 @@ var KanbanRecord = Widget.extend({
             kanban_image: this._getImageURL.bind(this),
             kanban_color: this._getColorClassname.bind(this),
             kanban_getcolor: this._getColorID.bind(this),
+            kanban_getcolorname: this._getColorname.bind(this),
             kanban_compute_domain: this._computeDomain.bind(this),
             read_only_mode: this.read_only_mode,
             record: this.record,
@@ -354,8 +381,10 @@ var KanbanRecord = Widget.extend({
     _setupColor: function () {
         var color_field = this.$el.attr('color');
         if (color_field && color_field in this.fields) {
+            var colorHelp = _.str.sprintf(_t("Card color: %s"), this._getColorname(this.recordData[color_field]));
             var colorClass = this._getColorClassname(this.recordData[color_field]);
             this.$el.addClass(colorClass);
+            this.$el.prepend('<span title="' + colorHelp + '" aria-label="' + colorHelp +'" role="img" class="oe_kanban_color_help"/>');
         }
     },
     /**

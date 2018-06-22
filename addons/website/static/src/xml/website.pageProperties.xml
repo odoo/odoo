@@ -40,12 +40,12 @@
 
 <div t-name="website.pagesMenu.page_info" class="o_page_management_info">
     <form class="form-horizontal">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#basic_page_info">Name</a></li>
-            <li><a data-toggle="tab" href="#advances_page_info">Publish</a></li>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a aria-controls="basic_page_info" data-toggle="tab" href="#basic_page_info" role="tab">Name</a></li>
+            <li><a aria-controls="advances_page_info" data-toggle="tab" href="#advances_page_info" role="tab">Publish</a></li>
         </ul>
         <div class="tab-content mt16">
-            <div id="basic_page_info" class="tab-pane fade in active">
+            <div role="tabpanel" id="basic_page_info" class="tab-pane fade in active">
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="page_name">Page Name</label>
                     <div class="col-sm-9">
@@ -85,7 +85,7 @@
                     </div>
                 </div>
             </div>
-            <div id="advances_page_info" class="tab-pane fade">
+            <div role="tabpanel" id="advances_page_info" class="tab-pane fade">
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_menu">Show in Top Menu</label>
                     <div class="col-sm-2">
@@ -111,7 +111,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="is_indexed">
                         Indexed
-                        <i class="fa fa-question-circle-o" title="Hide this page from search results" aria-hidden="true"></i>
+                        <i class="fa fa-question-circle-o" title="Hide this page from search results" role="img" aria-label="Info"></i>
                     </label>
                     <div class="col-sm-2">
                         <a>
@@ -126,10 +126,10 @@
                     <label class="control-label col-sm-3" for="is_published">Publish</label>
                     <div class="col-sm-2">
                         <a>
-                            <label class="o_switch js_publish_btn" for="is_published" >
+                            <button class="o_switch js_publish_btn">
                                 <input type="checkbox" t-att-checked="widget.page.website_published ? true : undefined" id="is_published"/>
                                 <span/>
-                            </label>
+                            </button>
                         </a>
                     </div>
                 </div>
@@ -139,7 +139,7 @@
                         <div class='input-group date' id='date_publish_container'>
                             <input type='text' class="form-control" name="date_publish" id="date_publish" />
                             <span class="input-group-addon">
-                                <span class="fa fa-calendar"></span>
+                                <span class="fa fa-calendar" role="img" aria-label="Publish date" title="Publish date"></span>
                             </span>
                         </div>
                     </div>

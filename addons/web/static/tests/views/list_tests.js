@@ -880,7 +880,7 @@ QUnit.module('Views', {
         list.sidebar.$('a:contains(Delete)').click();
         assert.ok($('body').hasClass('modal-open'), 'body should have modal-open clsss');
 
-        $('body .modal-dialog button span:contains(Ok)').click();
+        $('body [role="dialog"] button span:contains(Ok)').click();
 
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
         list.destroy();
@@ -916,13 +916,13 @@ QUnit.module('Views', {
 
         assert.verifySteps(['/web/dataset/search_read']);
         list.sidebar.$('a:contains(Archive)').click();
-        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
-        $('.modal .modal-footer .btn-default').click(); // Click on 'Cancel'
+        assert.strictEqual($('[role="dialog"]').length, 1, 'a confirm modal should be displayed');
+        $('footer.modal-footer .btn-default').click(); // Click on 'Cancel'
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 4, "still should have 4 records");
 
         list.sidebar.$('a:contains(Archive)').click();
-        assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
-        $('.modal .modal-footer .btn-primary').click(); // Click on 'Ok'
+        assert.strictEqual($('[role="dialog"]').length, 1, 'a confirm modal should be displayed');
+        $('footer.modal-footer .btn-primary').click(); // Click on 'Ok'
         assert.strictEqual(list.$('tbody td.o_list_record_selector').length, 3, "should have 3 records");
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/write', '/web/dataset/search_read']);
         list.destroy();
@@ -2759,10 +2759,10 @@ QUnit.module('Views', {
         list.$('.o_data_cell:first').click();
         list.$('input[name="foo"]').val("hello").trigger('input');
         list.$buttons.find('.o_list_button_discard').click();
-        assert.strictEqual($('.modal:visible').length, 1,
+        assert.strictEqual($('[role="dialog"]:visible').length, 1,
             "a modal to ask for discard should be visible");
 
-        $('.modal:visible .btn-primary').click();
+        $('[role="dialog"]:visible .btn-primary').click();
         assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
             "first cell should still contain 'yop'");
 
@@ -3555,7 +3555,7 @@ QUnit.module('Views', {
         // delete a record
         list.$('.o_data_row:first .o_list_record_selector input').click();
         list.sidebar.$('a:contains(Delete)').click();
-        $('.modal .modal-footer .btn-primary').click(); // confirm
+        $('footer.modal-footer .btn-primary').click(); // confirm
 
         assert.verifySteps([
             'create',

@@ -2,7 +2,7 @@
 <odoo>
         <template id="auth_oauth.providers" name="OAuth Providers">
             <div t-foreach="providers" t-as="p">
-                <a t-att-href="p['auth_link']" class="btn btn-link">
+                <a t-att-href="p['auth_link']" class="btn btn-link" role="button">
                     <i t-att-class="p['css_class']"/>
                     <t t-esc="p['body']"/>
                 </a>

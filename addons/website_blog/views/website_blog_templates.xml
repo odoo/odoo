@@ -23,8 +23,8 @@
         <div id="wrap">
             <div class="oe_structure"/>
             <section class="container">
-                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">
-                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher" role="status">
+                   <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
                    <p>
                    This page is great to improve your <strong>Search Engine Optimization</strong>;
                    You can review titles, keywords and descriptions of all blogs at once.
@@ -52,11 +52,11 @@
                         <h4>
                             <a t-attf-href="#{blog_url('', ['blog', 'post'], blog=post.blog_id, post=post)}" t-field="post.name"></a>
                             <span t-if="not post.website_published" class="text-warning">
-                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished"/>
+                                <span class="fa fa-exclamation-triangle ml8" title="Unpublished" role="img" aria-label="Unpublished"/>
                             </span>
                         </h4>
                         <div class="text-muted">
-                            <span class="fa fa-calendar mr8"> <span t-field="post.post_date"/></span>
+                            <span class="fa fa-calendar mr8" role="img" aria-label="Post date" title="Post date"> <span t-field="post.post_date"/></span>
                             <span class="fa fa-folder-open"> In
                                 <a class="mr8" t-attf-href="#{blog_url(blog=post.blog_id)}">
                                 <span t-field="post.blog_id"/>
@@ -150,17 +150,17 @@
                                 <t t-if="blog_post.visits &gt; 1">views</t>
                             </span>
                             <span t-if="not blog_post.website_published" class="label label-danger">unpublished</span>
-                            <span class="fa fa-tags"/>
+                            <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
 
                             <!-- To display tags //no options -->
                             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                                 <a class="mr8" t-attf-href="#{blog_url(tag=one_tag.id, date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
                             </t>
                             <div class="o_sharing_links">
-                                <a class="fa fa-twitter-square o_twitter"></a>
-                                <a class="fa fa-facebook-square o_facebook"></a>
-                                <a class="fa fa-linkedin-square o_linkedin"></a>
-                                <a class="fa fa-google-plus-square o_google"></a>
+                                <a class="fa fa-twitter-square o_twitter" aria-label="Twitter" title="Twitter"></a>
+                                <a class="fa fa-facebook-square o_facebook" aria-label="Facebook" title="Facebook"></a>
+                                <a class="fa fa-linkedin-square o_linkedin" aria-label="LinkedIn" title="LinkedIn"></a>
+                                <a class="fa fa-google-plus-square o_google" aria-label="Google Plus" title="Google Plus"></a>
                             </div>
                             <hr/>
                         </div>
@@ -234,13 +234,13 @@
                     <h2 t-field="blog_post.subtitle" placeholder="Subtitle"/>
                     <p class="post-meta text-muted text-center" name="blog_post_data"/>
                     <p class="post-meta text-muted text-center" t-if="len(blog_post.tag_ids)">
-                        <span class="fa fa-tags"/>
+                        <span class="fa fa-tags" role="img" aria-label="Tags" title="Tags"/>
                         <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                             <a class="label label-primary mr8" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
                         </t>
                     </p>
                     <div t-if="'cover_full' in blog_post_cover_properties.get('resize_class', '')" id="blog_angle_down">
-                        <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4"/></strong>
+                        <strong><a href="#blog_content" class="fa fa-angle-down fa-3x fa-inverse mt4" aria-label="To blog content" title="To blog content"/></strong>
                     </div>
                 </div>
             </t>
@@ -249,10 +249,10 @@
         <div id="blog_content" t-field="blog_post.content" class="blog_content mt32"/>
 
         <div class="o_blog_post_complete o_sharing_links">
-            <a class="fa fa-twitter-square o_twitter_complete" id="o_twitter_complete"></a>
-            <a class="fa fa-facebook-square o_facebook_complete" id="o_facebook_complete"></a>
-            <a class="fa fa-linkedin-square o_linkedin_complete" id="o_linkedin_complete"></a>
-            <a class="fa fa-google-plus-square o_google_complete" id="o_google_complete"></a>
+            <a class="fa fa-twitter-square o_twitter_complete" id="o_twitter_complete" aria-label="Twitter" title="Twitter"></a>
+            <a class="fa fa-facebook-square o_facebook_complete" id="o_facebook_complete" aria-label="Facebook" title="Facebook"></a>
+            <a class="fa fa-linkedin-square o_linkedin_complete" id="o_linkedin_complete" aria-label="LinkedIn" title="LinkedIn"></a>
+            <a class="fa fa-google-plus-square o_google_complete" id="o_google_complete" aria-label="Google Plus" title="Google Plus"></a>
         </div>
         <t t-set='head'>
             <t t-raw='head or ""'/>
@@ -324,7 +324,7 @@
                             "fields": ["name"]
                         }'/>
                     </div>
-                    <p class="mt32">Read Next <span class="fa fa-long-arrow-right"/></p>
+                    <p class="mt32 fa fa-suffix-long-arrow-right">Read Next </p>
                 </div>
             </t>
         </t>
@@ -390,7 +390,7 @@
 <template id="tag_category" name="Tags List">
     <ul class="nav nav-pills ml16">
         <t t-if="tags">
-            <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag'/> <t t-esc='categ_title' /></div>
+            <div t-if='not hide_title' class='text-muted mt8'><i class='fa fa-tag' role="img" aria-label="Tag category" title="Tag category"/> <t t-esc='categ_title' /></div>
             <t t-foreach="tags" t-as="tag">
                 <t t-if="tag.post_ids">
                     <li t-att-class="tag.id in active_tag_ids and 'active' or None">
@@ -439,15 +439,15 @@
         <ul class="nav nav-pills nav-stacked">
             <t t-foreach="nav_list" t-as="year">
                 <li data-toggle="collapse" t-att-data-target="'#' + year" aria-expanded="false" class="blog_post_year_collapse mt8">
-                    <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4"/><span t-esc="year"/>
+                    <i t-attf-class="fa #{'fa-chevron-down' if not date and year_index == 0 else 'fa-chevron-right'} mr4" role="img" aria-label="Next year" title="Next year"/><span t-esc="year"/>
                 </li>
                 <ul t-attf-class="blog_post_year collapse nav nav-pills nav-stacked #{not date and year_index == 0 and 'in'}" t-att-id="year" role="menu">
                     <t t-foreach="nav_list[year]" t-as="months">
                         <li t-if="months['date_begin'] == date" class="active">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=False, date_end=False)}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                         <li t-else="1">
-                            <a t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
+                            <a role="menuitem" t-ignore="True" t-attf-href="#{blog_url(date_begin=months['date_begin'], date_end=months['date_end'])}"><t t-esc="months['month']"/><span class="pull-right badge" t-esc="months['post_date_count']"/></a>
                         </li>
                     </t>
                 </ul>
@@ -493,13 +493,13 @@
                 Participate on our social stream.
             </p>
             <h2 class="mt4">
-                <a t-att-href="website.social_facebook" t-if="website.social_facebook"><i class="fa fa-facebook-square"/></a>
-                <a t-att-href="website.social_twitter" t-if="website.social_twitter"><i class="fa fa-twitter"/></a>
-                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin"><i class="fa fa-linkedin"/></a>
-                <a t-att-href="website.social_youtube" t-if="website.social_youtube"><i class="fa fa-youtube-play"/></a>
-                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus"><i class="fa fa-google-plus-square"/></a>
-                <a t-att-href="website.social_github" t-if="website.social_github"><i class="fa fa-github"/></a>
-                <a t-att-href="'/blog/%s/feed' % (blog.id)"><i class="fa fa-rss-square"/></a>
+                <a t-att-href="website.social_facebook" t-if="website.social_facebook" aria-label="Facebook" title="Facebook"><i class="fa fa-facebook-square"/></a>
+                <a t-att-href="website.social_twitter" t-if="website.social_twitter" aria-label="Twitter" title="Twitter"><i class="fa fa-twitter"/></a>
+                <a t-att-href="website.social_linkedin" t-if="website.social_linkedin" aria-label="LinkedIn" title="LinkedIn"><i class="fa fa-linkedin"/></a>
+                <a t-att-href="website.social_youtube" t-if="website.social_youtube" aria-label="Youtube" title="Youtube"><i class="fa fa-youtube-play"/></a>
+                <a t-att-href="website.social_googleplus" t-if="website.social_googleplus" aria-label="Google Plus" title="Google Plus"><i class="fa fa-google-plus-square"/></a>
+                <a t-att-href="website.social_github" t-if="website.social_github" aria-label="Github" title="Github"><i class="fa fa-github"/></a>
+                <a t-att-href="'/blog/%s/feed' % (blog.id)" aria-label="RSS" title="RSS"><i class="fa fa-rss-square"/></a>
             </h2>
         </section>
     </xpath>
@@ -552,7 +552,7 @@
 <!-- User Navbar -->
 <template id="content_new_blogpost" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_blog_post"><i class="fa fa-rss"/><p>New Blog Post</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_blog_post"><p class="fa fa-rss">New Blog Post</p></a></li>
     </xpath>
 </template>
 

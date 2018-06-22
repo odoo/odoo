@@ -3,7 +3,7 @@
 <t t-name="DashBoard">
     <div class="oe_dashboard_links">
         <button type="button" class="button oe_dashboard_link_change_layout" title="Change Layout..">
-            <img src="/board/static/src/img/layout_1-1-1.png" width="16" height="16"/>
+            <img src="/board/static/src/img/layout_1-1-1.png" width="16" height="16" alt=""/>
             <span> Change Layout </span>
         </button>
     </div>
@@ -37,8 +37,8 @@
         </p>
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
-                <img t-attf-src="/board/static/src/img/layout_#{layout}.png"/>
-                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
+                <img t-attf-src="/board/static/src/img/layout_#{layout}.png" alt=""/>
+                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success" aria-label='Layout' role="img" title="Layout"/>
             </li>
         </ul>
     </div>

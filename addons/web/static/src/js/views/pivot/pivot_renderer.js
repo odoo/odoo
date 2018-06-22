@@ -96,6 +96,11 @@ var PivotRenderer = AbstractRenderer.extend({
                     $cell.data('id', cell.id).data('measure', cell.measure);
                     if (cell.id === this.state.sortedColumn.id && cell.measure === this.state.sortedColumn.measure) {
                         $cell.addClass('o_pivot_measure_row_sorted_' + this.state.sortedColumn.order);
+                        if (this.state.sortedColumn.order == 'asc') {
+                            $cell.attr('aria-sorted', 'ascending');
+                        } else {
+                            $cell.attr('aria-sorted', 'descending');
+                        }
                     }
                 }
                 $row.append($cell);

@@ -235,11 +235,11 @@
                 <field name="has_outstanding" invisible="1"/>
                 <sheet string="Vendor Bill">
                     <div>
-                        <label string="Draft Bill" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}"/>
-                        <label string="- First Number:" attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}"/>
-                        <label string="Draft Credit Note" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}"/>
-                        <label string="Bill " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}"/>
-                        <label string="Credit Note " attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}"/>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_invoice')]}">Draft Bill</span>
+                        <span class="o_form_label" attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">- First Number:</span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state','!=','draft'), ('type','!=','in_refund')]}">Draft Credit Note</span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_invoice')]}">Bill </span>
+                        <span class="o_form_label" attrs="{'invisible': ['|',('state', '=', 'draft'), ('type','!=','in_refund')]}">Credit Note </span>
                         <h1 class="mt0">
                             <field name="number" class="oe_inline" attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
@@ -387,15 +387,15 @@
                 <sheet string="Invoice">
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <label string="Credit Note" attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}"/>
+                    <span class="o_form_label"> attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}">Credit Note</span>
                     <h1 class="mt0">
                         <div attrs="{'invisible': [('sequence_number_next_prefix','!=',False)]}">
-                            <label string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
-                            <label string="Draft Credit Note" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_refund')]}"/>
+                            <label for="number" string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
+                            <label for="number" string="Draft Credit Note" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_refund')]}"/>
                             <field name="number" readonly="1" class="oe_inline" attrs="{'invisible': [('state','in',('draft',))]}"/>
                         </div>
                         <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
-                            <label string="Invoice Number:"/><br/>
+                            <label for="sequence_number_next_prefix" string="Invoice Number:"/><br/>
                             <field name="sequence_number_next_prefix" class="oe_inline"/>
                             <field name="sequence_number_next" class="oe_inline"/>
                         </div>

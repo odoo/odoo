@@ -112,7 +112,7 @@
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
-                                <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
+                                <p class='alert alert-warning' role="status"> This event is linked to a recurrence...<br/>
                                     <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
                                 </p>
                             </group>

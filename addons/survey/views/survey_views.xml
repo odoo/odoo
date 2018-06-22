@@ -239,15 +239,15 @@
                         <div t-name="kanban-box" t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                <a role="button" class="dropdown-toggle btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
                                 </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <li><a type="edit">Edit Survey</a></li>
-                                    <li t-if="widget.deletable"><a type="delete">Delete</a></li>
-                                    <li class="divider"/>
-                                    <li>Color</li>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a role="menuitem" type="edit">Edit Survey</a></li>
+                                    <li t-if="widget.deletable"><a role="menuitem" type="delete">Delete</a></li>
+                                    <li role="separator" class="divider"/>
+                                    <li role="separator">Color</li>
+                                    <li role="menuitem" aria-haspopup="true"><ul role="menu" class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
                             <div class="o_kanban_record_top">
@@ -411,30 +411,30 @@
                                 <div class="col-md-6 col-md-offset-3 o_preview_questions">
                                     <!-- Multiple Lines Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'free_text')]}">
-                                            <i class="fa fa-align-justify fa-4x"/>
+                                            <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
                                     </div>
                                     <!-- Single Line Text Zone -->
                                     <div attrs="{'invisible': [('type', '!=', 'textbox')]}">
-                                        <i class="fa fa-minus fa-4x"/>
+                                        <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
                                     </div>
                                     <!-- Numerical Value -->
                                     <div attrs="{'invisible': [('type', '!=', 'numerical_box')]}">
-                                        <i class="fa fa-2x">123..</i>
+                                        <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123..</i>
                                     </div>
                                     <!-- Date and Time -->
                                     <div attrs="{'invisible': [('type', '!=', 'date')]}">
                                         <p class="o_datetime">YYYY-MM-DD
-                                            <i class="fa fa-calendar fa-2x"/>
+                                            <i class="fa fa-calendar fa-2x" role="img" aria-label="Calendar" title="Calendar"/>
                                         </p>
                                     </div>
                                     <!-- Multiple choice: only one answer -->
-                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}">
+                                    <div attrs="{'invisible': [('type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer" title="Multiple choice with one answer">
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-dot-circle-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-circle-o  fa-lg"/> answer</div>
                                     </div>
                                     <!-- Multiple choice: multiple answers allowed -->
-                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}">
+                                    <div attrs="{'invisible': [('type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers" title="Multiple choice with multiple answers">
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-check-square-o fa-lg"/> answer</div>
                                         <div class="row"><i class="fa fa-square-o fa-lg"/> answer</div>
@@ -449,21 +449,21 @@
                                         </div>
                                         <div class="row o_matrix_row">
                                             <div class="col-md-3">Row1</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
                                             <div class="col-md-3">Row2</div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
                                         </div>
                                         <div class="row o_matrix_row">
                                             <div class="col-md-3">Row3</div>
-                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
-                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg"/></div>
+                                            <div class="col-md-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                            <div class="col-md-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
                                         </div>
                                     </div>
                                 </div>
