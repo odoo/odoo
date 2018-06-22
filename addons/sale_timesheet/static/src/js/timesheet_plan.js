@@ -5,7 +5,7 @@ var AbstractAction = require('web.AbstractAction');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var data = require('web.data');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var SearchView = require('web.SearchView');
 
 var _t = core._t;
@@ -297,7 +297,7 @@ var ProjectPlan = AbstractAction.extend(ControlPanelMixin, {
         event.stopPropagation();
         var session = this.getSession();
         // group by are disabled, so we don't take care of them
-        var result = pyeval.eval_domains_and_contexts({
+        var result = pyUtils.eval_domains_and_contexts({
             domains: event.data.domains,
             contexts: [session.user_context].concat(event.data.contexts)
         });

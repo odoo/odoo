@@ -9,7 +9,7 @@ var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -6477,7 +6477,7 @@ QUnit.module('Views', {
                 '</form>',
             intercepts: {
                 execute_action: function (event) {
-                    var effectDescription = pyeval.py_eval(event.data.action_data.effect);
+                    var effectDescription = pyUtils.py_eval(event.data.action_data.effect);
                     assert.deepEqual(effectDescription, {message: 'Congrats!'}, "should have correct effect description");
                 }
             }
