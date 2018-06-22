@@ -1289,7 +1289,7 @@
             <field name="model">account.move.line</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false">
+                <tree string="Journal Items" create="false" default_order="date desc">
                     <field name="date"/>
                     <field name="move_id" required="0" groups="account.group_account_user"/>
                     <field name="journal_id" options='{"no_open":True}'/>
