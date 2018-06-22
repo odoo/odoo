@@ -7,8 +7,8 @@ var time = require('web.time');
 
 
 QUnit.assert.checkAST = function (expr, message) {
-    var ast = py.parse(py.tokenize(expr));
-    var formattedAST = pyUtils.formatAST(ast);
+    var ast = pyUtils._getPyJSAST(expr);
+    var formattedAST = pyUtils._formatAST(ast);
     this.pushResult({
         result: expr === formattedAST,
         actual: formattedAST,
@@ -1045,7 +1045,7 @@ QUnit.module('core', function () {
         assert.deepEqual(result, ['foo', 'bar', 'grault']);
     });
 
-    QUnit.module('pyutils (formatAST)');
+    QUnit.module('pyutils (_formatAST)');
 
     QUnit.test("basic values", function (assert) {
         assert.expect(6);
@@ -1159,13 +1159,11 @@ QUnit.module('core', function () {
         assert.checkAST(expr);
     });
 
-    QUnit.module('pyutils (normalizeDomain)');
+    QUnit.module('pyutils (_normalizeDomain)');
 
-    QUnit.assert.checkNormalization = function (domainStr, normalizedDomain) {
-        normalizedDomain = normalizedDomain || domainStr;
-        var domainAST = py.parse(py.tokenize(domainStr));
-        var normalizedDomainAST = pyUtils.normalizeDomain(domainAST);
-        var result = pyUtils.formatAST(normalizedDomainAST);
+    QUnit.assert.checkNormalization = function (domain, normalizedDomain) {
+        normalizedDomain = normalizedDomain || domain;
+        var result = pyUtils.normalizeDomain(domain);
         this.pushResult({
             result: result === normalizedDomain,
             actual: result,
@@ -1195,6 +1193,49 @@ QUnit.module('core', function () {
         assert.checkNormalization(
             "['!', ('a', '=', 1), ('b', '=', 2)]",
             "['&', '!', ('a', '=', 1), ('b', '=', 2)]"
+        );
+    });
+
+    QUnit.module('pyutils (assembleDomains)');
+
+    QUnit.assert.checkAssemble = function (domains, operator, domain) {
+        domain = pyUtils.normalizeDomain(domain);
+        var result = pyUtils.assembleDomains(domains, operator);
+        this.pushResult({
+            result: result === domain,
+            actual: result,
+            expected: domain
+        });
+    };
+
+    QUnit.test("assemble domains", function (assert) {
+        assert.expect(6);
+
+        assert.checkAssemble([], '&', "[]");
+        assert.checkAssemble(
+            ["[('a', '=', '1'), ('b', '!=', 2)]"],
+            'AND',
+            "['&',('a', '=', '1'), ('b', '!=', 2)]"
+        );
+        assert.checkAssemble(
+            ["[('a', '=', '1')]", "[]"],
+            'AND',
+            "[('a', '=', '1')]"
+        );
+        assert.checkAssemble(
+            ["[('a', '=', '1')]", "[('b', '<=', 3)]"],
+            'AND',
+            "['&',('a', '=', '1'),('b','<=', 3)]"
+        );
+        assert.checkAssemble(
+            ["[('a', '=', '1'), ('c', 'in', [4, 5])]", "[('b', '<=', 3)]"],
+            'OR',
+            "['|', '&',('a', '=', '1'),('c', 'in', [4, 5]),('b','<=', 3)]"
+        );
+        assert.checkAssemble(
+            ["[('user_id', '=', uid)]"],
+            null,
+            "[('user_id', '=', uid)]"
         );
     });
 

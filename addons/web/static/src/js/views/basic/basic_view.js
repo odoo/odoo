@@ -216,7 +216,7 @@ var BasicView = AbstractView.extend({
                 attrs.decorations = attrs.decorations || [];
                 attrs.decorations.push({
                     className: 'text-' + splitKey[1],
-                    expression: py.parse(py.tokenize(value))
+                    expression: pyUtils._getPyJSAST(value),
                 });
             }
         });
