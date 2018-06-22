@@ -1159,6 +1159,45 @@ QUnit.module('core', function () {
         assert.checkAST(expr);
     });
 
+    QUnit.module('pyutils (normalizeDomain)');
+
+    QUnit.assert.checkNormalization = function (domainStr, normalizedDomain) {
+        normalizedDomain = normalizedDomain || domainStr;
+        var domainAST = py.parse(py.tokenize(domainStr));
+        var normalizedDomainAST = pyUtils.normalizeDomain(domainAST);
+        var result = pyUtils.formatAST(normalizedDomainAST);
+        this.pushResult({
+            result: result === normalizedDomain,
+            actual: result,
+            expected: normalizedDomain
+        });
+    };
+
+
+    QUnit.test("return simple (normalized) domains", function (assert) {
+        assert.expect(3);
+
+        assert.checkNormalization("[]");
+        assert.checkNormalization("[('a', '=', 1)]");
+        assert.checkNormalization("['!', ('a', '=', 1)]");
+    });
+
+    QUnit.test("properly add the & in a non normalized domain", function (assert) {
+        assert.expect(1);
+        assert.checkNormalization(
+            "[('a', '=', 1), ('b', '=', 2)]",
+            "['&', ('a', '=', 1), ('b', '=', 2)]"
+        );
+    });
+
+    QUnit.test("normalize domain with ! operator", function (assert) {
+        assert.expect(1);
+        assert.checkNormalization(
+            "['!', ('a', '=', 1), ('b', '=', 2)]",
+            "['&', '!', ('a', '=', 1), ('b', '=', 2)]"
+        );
+    });
+
 });
 
 });
