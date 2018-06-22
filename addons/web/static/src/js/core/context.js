@@ -2,7 +2,7 @@ odoo.define('web.Context', function (require) {
 "use strict";
 
 var Class = require('web.Class');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var Context = Class.extend({
     init: function () {
@@ -24,7 +24,7 @@ var Context = Class.extend({
         return this;
     },
     eval: function () {
-        return pyeval.eval('context', this);
+        return pyUtils.eval('context', this);
     },
     /**
      * Set the evaluation context to be used when we actually eval.

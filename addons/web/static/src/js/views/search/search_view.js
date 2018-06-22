@@ -7,7 +7,7 @@ var core = require('web.core');
 var FavoriteMenu = require('web.FavoriteMenu');
 var FiltersMenu = require('web.FiltersMenu');
 var GroupByMenu = require('web.GroupByMenu');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var search_inputs = require('web.search_inputs');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -683,7 +683,7 @@ var SearchView = Widget.extend({
             var category = 'filters';
             if (item.attrs.context) {
                 try {
-                    var context = pyeval.eval('context', item.attrs.context);
+                    var context = pyUtils.eval('context', item.attrs.context);
                     if (context.group_by) {
                         category = 'group_by';
                         item.attrs.fieldName = context.group_by.split(':')[0];

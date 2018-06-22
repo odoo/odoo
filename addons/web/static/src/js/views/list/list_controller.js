@@ -11,7 +11,7 @@ var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -67,7 +67,7 @@ var ListController = BasicController.extend({
         if (this.$('thead .o_list_record_selector input').prop('checked')) {
             var searchData = this.searchView.build_search_data();
             var userContext = this.getSession().user_context;
-            var results = pyeval.eval_domains_and_contexts({
+            var results = pyUtils.eval_domains_and_contexts({
                 domains: searchData.domains,
                 contexts: [userContext].concat(searchData.contexts),
                 group_by_seq: searchData.groupbys || []

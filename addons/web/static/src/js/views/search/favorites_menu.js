@@ -4,7 +4,7 @@ odoo.define('web.FavoriteMenu', function (require) {
 var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -105,7 +105,7 @@ return Widget.extend({
                 controllerContext = ctx;
             },
         });
-        var results = pyeval.eval_domains_and_contexts({
+        var results = pyUtils.eval_domains_and_contexts({
                 domains: search.domains,
                 contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
                 group_by_seq: search.groupbys || [],

@@ -6,7 +6,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Domain = require('web.Domain');
 var FavoriteMenu = require('web.FavoriteMenu');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 
 var QWeb = core.qweb;
 
@@ -30,7 +30,7 @@ FavoriteMenu.include({
             list_view = _.findWhere(controller.widget.actionViews, {type: 'list'}),
             list_view_id = list_view ? list_view.viewID : false,
             domain = [],
-            groupbys = pyeval.eval('groupbys', sv_data.groupbys).join(" "),
+            groupbys = pyUtils.eval('groupbys', sv_data.groupbys).join(" "),
             ds = new data.DataSet(this, 'google.drive.config');
 
         _.each(sv_data.domains, function (d) {
