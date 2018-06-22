@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -19,3 +19,8 @@ class ResConfigSettings(models.TransientModel):
     crm_default_user_id = fields.Many2one(
         'res.users', string='Default Salesperson', related='website_id.crm_default_user_id', domain=[('share', '=', False)],
         help='Default salesperson for new leads created through the Contact Us form.')
+
+    @api.onchange('crm_default_user_id')
+    def _onchange_crm_default_user_id(self):
+        if self.crm_default_user_id.sale_team_id:
+            self.crm_default_team_id = self.crm_default_user_id.sale_team_id
