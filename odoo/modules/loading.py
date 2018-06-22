@@ -75,10 +75,27 @@ def load_demo(cr, package, idref, mode, report=None):
     """
     Loads demo data for the specified package.
     """
-    has_demo = hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed')
-    if has_demo:
-        load_data(cr, idref, mode, kind='demo', package=package, report=report)
-    return has_demo
+    if not package.should_have_demo():
+        return False
+
+    try:
+        _logger.info("Module %s: loading demo", package.name)
+        with cr.savepoint():
+            load_data(cr, idref, mode, kind='demo', package=package, report=report)
+        return True
+    except Exception as e:
+        # If we could not install demo data for this module
+        _logger.warning(
+            "Module %s demo data failed to install, installed without demo data",
+            package.name, exc_info=True)
+
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        todo = env.ref('base.demo_failure_todo', raise_if_not_found=False)
+        Failure = env.get('ir.demo_failure')
+        if todo and Failure is not None:
+            todo.state = 'open'
+            Failure.create({'module_id': package.id, 'error': str(e)})
+        return False
 
 
 def force_demo(cr):
@@ -205,10 +222,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.data))
             load_data(cr, idref, mode, kind='data', package=package, report=report)
-            demo_loaded = load_demo(cr, package, idref, mode, report)
-            if demo_loaded:
-                cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
-                module.invalidate_cache(['demo'])
+            demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode, report)
+            cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
+            module.invalidate_cache(['demo'])
 
             migrations.migrate_module(package, 'post')
 

@@ -516,7 +516,7 @@ class Module(models.Model):
         _logger.info('getting next %s', Todos)
         active_todo = Todos.search([('state', '=', 'open')], limit=1)
         if active_todo:
-            _logger.info('next action is %s', active_todo)
+            _logger.info('next action is "%s"', active_todo.name)
             return active_todo.action_launch()
         return {
             'type': 'ir.actions.act_url',

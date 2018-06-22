@@ -661,17 +661,18 @@ class IrActionsTodo(models.Model):
         return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     @api.multi
-    def action_launch(self, context=None):
+    def action_launch(self):
         """ Launch Action of Wizard"""
         self.ensure_one()
 
         self.write({'state': 'done'})
 
         # Load action
-        action = self.env[self.action_id.type].browse(self.action_id.id)
+        action_type = self.action_id.type
+        action = self.env[action_type].browse(self.action_id.id)
 
         result = action.read()[0]
-        if action._name != 'ir.actions.act_window':
+        if action_type != 'ir.actions.act_window':
             return result
         result.setdefault('context', '{}')
 
