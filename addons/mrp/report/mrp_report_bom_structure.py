@@ -108,6 +108,7 @@ class ReportBomStructure(models.AbstractModel):
         components, total = self._get_bom_lines(bom, bom_quantity, product, line_id, level)
         lines['components'] = components
         lines['total'] += total
+        lines['lines'] = []
         return lines
 
     def _get_bom_lines(self, bom, bom_quantity, product, line_id, level):
