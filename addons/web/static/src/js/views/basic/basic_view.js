@@ -15,7 +15,7 @@ var BasicController = require('web.BasicController');
 var BasicModel = require('web.BasicModel');
 var config = require('web.config');
 var fieldRegistry = require('web.field_registry');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 
 var BasicView = AbstractView.extend({
@@ -222,7 +222,7 @@ var BasicView = AbstractView.extend({
         });
 
         if (!_.isObject(attrs.options)) { // parent arch could have already been processed (TODO this should not happen)
-            attrs.options = attrs.options ? pyeval.py_eval(attrs.options) : {};
+            attrs.options = attrs.options ? pyUtils.py_eval(attrs.options) : {};
         }
 
         if (attrs.on_change && !field.onChange) {

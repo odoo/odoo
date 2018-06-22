@@ -5,7 +5,7 @@ var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
@@ -416,7 +416,7 @@ var ManyToOneField = CharField.extend({
     expand: function (needle) {
         var self = this;
         // FIXME: "concurrent" searches (multiple requests, mis-ordered responses)
-        var context = pyeval.eval(
+        var context = pyUtils.eval(
             'contexts', [this.searchview.dataset.get_context()]);
         var args = this.attrs.domain;
         if (typeof args === 'string') {
@@ -458,7 +458,7 @@ var ManyToOneField = CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        var context = pyeval.eval('contexts', [this.searchview.dataset.get_context()]);
+        var context = pyUtils.eval('contexts', [this.searchview.dataset.get_context()]);
 
         return this._rpc({
                 model: this.attrs.relation,
@@ -524,7 +524,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
         if (!(this instanceof GroupbyGroup) &&
               _(filters).all(function (f) {
                   if (!f.attrs.context) { return false; }
-                  var c = pyeval.eval('context', f.attrs.context);
+                  var c = pyUtils.eval('context', f.attrs.context);
                   return !_.isEmpty(c.group_by);})) {
             return new GroupbyGroup(filters, parent, intervalMapping);
         }

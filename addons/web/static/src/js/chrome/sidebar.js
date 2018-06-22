@@ -3,7 +3,7 @@ odoo.define('web.Sidebar', function (require) {
 
 var Context = require('web.Context');
 var core = require('web.core');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -146,7 +146,7 @@ var Sidebar = Widget.extend({
                     activeIdsContext.active_domain = env.domain;
                 }
 
-                var context = pyeval.eval('context', new Context(env.context, activeIdsContext));
+                var context = pyUtils.eval('context', new Context(env.context, activeIdsContext));
                 self._rpc({
                     route: '/web/action/load',
                     params: {

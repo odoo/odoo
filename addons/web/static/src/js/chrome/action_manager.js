@@ -19,7 +19,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var framework = require('web.framework');
-var pyeval = require('web.pyeval');
+var pyUtils = require('web.py_utils');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -781,9 +781,9 @@ var ActionManager = Widget.extend({
     _preprocessAction: function (action, options) {
         // ensure that the context and domain are evaluated
         var context = new Context(this.userContext, options.additional_context, action.context);
-        action.context = pyeval.eval('context', context);
+        action.context = pyUtils.eval('context', context);
         if (action.domain) {
-            action.domain = pyeval.eval('domain', action.domain, action.context);
+            action.domain = pyUtils.eval('domain', action.domain, action.context);
         }
 
         action._originalAction = JSON.stringify(action);
