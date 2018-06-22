@@ -46,6 +46,11 @@ class SaleReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
+    discount = fields.Float('Discount %', readonly=True)
+    discount_amount = fields.Float('Discount Amount', readonly=True)
+
+    order_id = fields.Integer('Order ID', readonly=True)
+
     def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
         with_ = """currency_rate as (%s) %s""" % (self.env['res.currency']._select_companies_rates(), with_clause)
 
@@ -78,7 +83,10 @@ class SaleReport(models.Model):
             partner.country_id as country_id,
             partner.commercial_partner_id as commercial_partner_id,
             sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
-            sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
+            sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume,
+            l.discount as discount,
+            sum((l.price_unit * l.discount / 100.0 / COALESCE(cr.rate, 1.0))) as discount_amount,
+            s.id as order_id
         """
 
         for field in fields.values():
@@ -117,7 +125,9 @@ class SaleReport(models.Model):
             s.team_id,
             p.product_tmpl_id,
             partner.country_id,
-            partner.commercial_partner_id %s
+            partner.commercial_partner_id,
+            l.discount,
+            s.id %s
         """ % (groupby)
 
         return 'WITH %s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % (with_, select_, from_, groupby_)
