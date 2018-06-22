@@ -1589,10 +1589,10 @@ var CropImageDialog = Dialog.extend({
         ];
         this.imageData = {
             imageSrc: src,
-            originalSrc: src, // the original src for cropped DB images will be fetched later
-            mimetype: _.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg', // the mimetype for DB images will be fetched later
+            originalSrc: this.$media.data('crop:originalSrc') || src, // the original src for cropped DB images will be fetched later
+            mimetype: this.$media.data('crop:mimetype') || (_.str.endsWith(src, '.png') ? 'image/png' : 'image/jpeg'), // the mimetype for DB images will be fetched later
             aspectRatio: this.$media.data('aspectRatio') || this.aspectRatioList[0][1],
-            isExternalImage: src[0] !== '/' && src.indexOf(window.location.host) < 0,
+            isExternalImage: src.substr(0, 5) !== 'data:' && src[0] !== '/' && src.indexOf(window.location.host) < 0,
         };
         this.options = _.extend({
             title: _t("Crop Image"),
