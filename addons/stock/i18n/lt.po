@@ -4451,6 +4451,11 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
+"Pakuotės dažniausiai sukuriamos perkėlimo metu vykdomomis operacijomis ir "
+"gali turėti kelis skirtingus produktus. Vėliau galite dar kartą panaudoti "
+"pakuotę, kad perkeltumėte jos turinį kitur arba supakuotumėte ją į kitą, "
+"didesnę pakuotę. Pakuotė taip pat gali būti išpakuota ir vėl bus galima "
+"kontroliuoti jos buvusį turinį kaip atskirus vienetus."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4542,6 +4547,10 @@ msgid ""
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
+"Periodinės inventorizacijos naudojamos suskaičiuoti produktus\n"
+"pasiekiamus lokacijose. Galite naudoti jas kartą per metus, kai\n"
+"darote generalinę inventorizaciją, ar kai jums to prireikia, kad\n"
+"palaikytumėte turimą produkto inventoriaus lygį."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4703,7 +4712,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:139
 #, python-format
 msgid "Please specify at least one non-zero quantity."
-msgstr ""
+msgstr "Nurodykite bent vieną teigiamą kiekį."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_lot_plus_visible
@@ -4761,6 +4770,8 @@ msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
 msgstr ""
+"Šio paėmimo prioritetas. Rankinis reikšmės nustatymas čia nustatys jį kaip "
+"prioritetą prieš kitus perkėlimus."
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_order
@@ -5518,6 +5529,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr ""
+"Šiems papildymo sandėliams bus sukurti maršrutai ir jūs galėsite pasirinkti "
+"juos prie produktų ar produktų kategorijų"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5799,7 +5812,7 @@ msgstr "Trumpas pavadinimas"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_code
 msgid "Short name used to identify your warehouse"
-msgstr ""
+msgstr "Trumpas jūsų sandėlio pavadinimas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_string_availability_info
@@ -5875,22 +5888,30 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_inventory_partner_id
 msgid "Specify Owner to focus your inventory on a particular Owner."
 msgstr ""
+"Nurodykite savininką, kad sukoncentruotumėte savo inventorių į tam tikrą "
+"savininką."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_package_id
 msgid "Specify Pack to focus your inventory on a particular Pack."
 msgstr ""
+"Nurodykite pakuotę, kad sukoncentruotumėte savo inventorių į tam tikrą "
+"pakuotę."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_category_id
 msgid ""
 "Specify Product Category to focus your inventory on a particular Category."
 msgstr ""
+"Nurodykite produkto kategoriją, kad sukoncentruotumėte savo inventorių į tam"
+" tikrą kategoriją."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_product_id
 msgid "Specify Product to focus your inventory on a particular Product."
 msgstr ""
+"Nurodykite produktą, kad sukoncentruotumėte savo inventorių į tam tikrą "
+"produktą."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_pack_operation_details_form_save
@@ -6083,6 +6104,8 @@ msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
 msgstr ""
+"Techninis laukas, nurodantis, kurį sandėlį naudoti kito įsigijimo maršruto "
+"pasirinkimui (jei naudoti)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company_internal_transit_location_id
@@ -6090,6 +6113,8 @@ msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
 msgstr ""
+"Techninis laukas, naudojamas papildymo maršrutams tarp sandėlių, kurie "
+"priklauso šiai kompanijai"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_restrict_lot_id
@@ -6502,6 +6527,9 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+"Šis meniu suteikia jums pilną inventoriaus operacijų\n"
+"tam tikram produktui sekamumą. Galite filtruoti produktą,\n"
+"kad pamatytumėte visus jo praeities ar ateities judėjimus."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_quality
@@ -7175,6 +7203,8 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form.  It will take priority over the Warehouse route. "
 msgstr ""
+"Kai pažymėta, produkto formos inventoriaus skiltyje maršrutas bus "
+"pasirenkamas. Tai turės aukštesnį prioritetą nei Sandėlio maršrutas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route_product_categ_selectable
@@ -7245,7 +7275,7 @@ msgstr ""
 #: code:addons/stock/models/stock_production_lot.py:37
 #, python-format
 msgid "You are not allowed to create a lot for this picking type"
-msgstr ""
+msgstr "Jums neleidžiama šiam paėmimo tipui sukurti partijos"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_routes_form

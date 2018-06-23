@@ -8,13 +8,14 @@
 # Martin Trigaux, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Albena Mincheva <albena_vicheva@abv.bg>, 2018
+# Maria Boyadjieva <marabo2000@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Albena Mincheva <albena_vicheva@abv.bg>, 2018\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2018\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +48,12 @@ msgstr "Номер на сметка"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type_control_ids
 msgid "Account Types Allowed"
-msgstr ""
+msgstr "Позволени видове сметки"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_control_ids
 msgid "Accounts Allowed"
-msgstr ""
+msgstr "Признати/допуснати сметки"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -68,12 +69,12 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At least one inbound"
-msgstr ""
+msgstr "Поне един входящ"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At least one outbound"
-msgstr ""
+msgstr "Поне един изходящ"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
@@ -110,7 +111,7 @@ msgstr "Ред на банков отчет"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
-msgstr ""
+msgstr "Принадлежат на текущата компания на ползвателя"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -132,6 +133,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " refunds made from this journal"
 msgstr ""
+"Отметнете това поле, ако не желаете да споделяте същата последователност за "
+"фактури и възстановявания на суми, направени от този счетоводен регистър"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -139,6 +142,9 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
+"Отметнете това поле, ако желаете да позволите отмяната на вписванията, "
+"отнасящи се до този счетоводен регистър, или на фактурата, отнасяща се до "
+"този счетоводен регистър."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -188,7 +194,7 @@ msgstr ""
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid "Dedicated Refund Sequence"
-msgstr ""
+msgstr "Специализирана последователност при обезщетянаване"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -469,6 +475,8 @@ msgstr "Валутата използвана за да се въведе отч
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
 msgstr ""
+"Вписванията в този счетоводен регистър ще бъдат назовани посредством този "
+"префикс."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
