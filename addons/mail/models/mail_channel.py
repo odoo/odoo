@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from email.utils import formataddr
 
 import re
 import uuid
@@ -9,7 +8,7 @@ import uuid
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import ormcache
+from odoo.tools import ormcache, format_address
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -233,7 +232,7 @@ class Channel(models.Model):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
-                'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
+                'email_to': ','.join(format_address((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
                 'recipient_ids': [],
             }
         return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)

@@ -20,12 +20,11 @@ except ImportError:
 
 from collections import namedtuple
 from email.message import Message
-from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
 
 from odoo import _, api, exceptions, fields, models, tools
-from odoo.tools import pycompat
+from odoo.tools import pycompat, format_address
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -784,7 +783,7 @@ class MailThread(models.AbstractModel):
             for res_id in aliases:
                 email_name = '%s%s' % (company_name, doc_names.get(res_id) and (' ' + doc_names[res_id]) or '')
                 email_addr = aliases[res_id]
-                res[res_id] = formataddr((email_name, email_addr))
+                res[res_id] = format_address((email_name, email_addr))
         left_ids = set(res_ids).difference(set(aliases))
         if left_ids:
             res.update(dict((res_id, default) for res_id in res_ids))
