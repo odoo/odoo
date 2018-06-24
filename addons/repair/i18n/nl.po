@@ -80,6 +80,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data>Beste ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                Hier is uw reparatie order ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (met referentie: ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != 'none':\n"
+"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>U kan op deze e-mail reageren indien u vragen hebt.</p>\n"
+"                <p>Bedankt,</p>\n"
+"            </data>"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.report_repairorder
@@ -234,7 +248,7 @@ msgstr "Maak factuur"
 #. module: repair
 #: model:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "Create a new reparation order"
-msgstr ""
+msgstr "Maak een nieuw reparatie order aan"
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_make_invoice
@@ -885,7 +899,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "Dit is de locatie waar het te repareren product zich bevind."
 
 #. module: repair
 #: model:ir.ui.view,arch_db:repair.view_cancel_repair
