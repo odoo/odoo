@@ -8,7 +8,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 
-from odoo.addons import decimal_precision as dp
 
 from odoo.tools import float_compare
 
@@ -73,16 +72,16 @@ class ProductProduct(models.Model):
     # price: total price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_product_price',
-        digits=dp.get_precision('Product Price'), inverse='_set_product_price')
+        digits='Product Price', inverse='_set_product_price')
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         help="This is the sum of the extra price of all attributes")
     # lst_price: catalog value + extra, context dependent (uom)
     lst_price = fields.Float(
         'Public Price', compute='_compute_product_lst_price',
-        digits=dp.get_precision('Product Price'), inverse='_set_product_lst_price',
+        digits='Product Price', inverse='_set_product_lst_price',
         help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.")
 
     default_code = fields.Char('Internal Reference', index=True)
@@ -106,13 +105,13 @@ class ProductProduct(models.Model):
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         groups="base.group_user",
         help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
                "Also used as a base price for pricelists. "
                "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume')
-    weight = fields.Float('Weight', digits=dp.get_precision('Stock Weight'))
+    weight = fields.Float('Weight', digits='Stock Weight')
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -772,7 +771,7 @@ class SupplierInfo(models.Model):
         'Quantity', default=0.0, required=True,
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
     price = fields.Float(
-        'Price', default=0.0, digits=dp.get_precision('Product Price'),
+        'Price', default=0.0, digits='Product Price',
         required=True, help="The price to purchase a product")
     company_id = fields.Many2one(
         'res.company', 'Company',

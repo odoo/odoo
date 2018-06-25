@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
@@ -286,7 +285,7 @@ class InventoryLine(models.Model):
         required=True, readonly=True)
     product_qty = fields.Float(
         'Counted Quantity',
-        digits=dp.get_precision('Product Unit of Measure'), default=0)
+        digits='Product Unit of Measure', default=0)
     categ_id = fields.Many2one(related='product_id.categ_id', store=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
@@ -303,10 +302,10 @@ class InventoryLine(models.Model):
     state = fields.Selection('Status', related='inventory_id.state')
     theoretical_qty = fields.Float(
         'Theoretical Quantity',
-        digits=dp.get_precision('Product Unit of Measure'), readonly=True)
+        digits='Product Unit of Measure', readonly=True)
     difference_qty = fields.Float('Difference', compute='_compute_difference',
         help="Indicates the gap between the product's theoretical quantity and its newest quantity.",
-        readonly=True, digits=dp.get_precision('Product Unit of Measure'))
+        readonly=True, digits='Product Unit of Measure')
     inventory_date = fields.Datetime('Inventory Date', readonly=True,
         default=fields.Datetime.now,
         help="Last date at which the On Hand Quantity has been computed.")

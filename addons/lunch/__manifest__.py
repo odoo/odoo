@@ -4,7 +4,7 @@
     'name': 'Lunch',
     'sequence': 120,
     'version': '1.0',
-    'depends': ['decimal_precision', 'mail'],
+    'depends': ['mail'],
     'category': 'Human Resources/Lunch',
     'summary': 'Handle lunch orders of your employees',
     'description': """

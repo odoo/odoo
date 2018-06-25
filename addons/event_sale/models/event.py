@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
-from odoo.addons import decimal_precision as dp
 from odoo.tools import float_is_zero
 
 
@@ -77,11 +76,11 @@ class EventTicket(models.Model):
         required=True, domain=[("event_ok", "=", True)],
         default=_default_product_id)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
-    price = fields.Float(string='Price', digits=dp.get_precision('Product Price'))
+    price = fields.Float(string='Price', digits='Product Price')
     deadline = fields.Date(string="Sales End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
 
-    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits=dp.get_precision('Product Price'))
+    price_reduce = fields.Float(string="Price Reduce", compute="_compute_price_reduce", digits='Product Price')
     price_reduce_taxinc = fields.Float(compute='_get_price_reduce_tax', string='Price Reduce Tax inc')
     # seats fields
     seats_availability = fields.Selection([('limited', 'Limited'), ('unlimited', 'Unlimited')],
