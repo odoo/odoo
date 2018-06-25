@@ -32,7 +32,7 @@ class StockMoveLine(models.Model):
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'), copy=False)
     package_id = fields.Many2one('stock.quant.package', 'Source Package', ondelete='restrict')
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
-    lot_id = fields.Many2one('stock.production.lot', 'Lot')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     lot_name = fields.Char('Lot/Serial Number')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
