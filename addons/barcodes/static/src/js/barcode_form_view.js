@@ -298,14 +298,14 @@ FormController.include({
      * @param {DOM Object} target
      * @returns {Deferred}
      */
-    _barcodeScanned: function (barcode, target) {
+    _barcodeScanned: function (event) {
         var self = this;
         return this.barcodeMutex.exec(function () {
             var prefixed = _.any(BarcodeEvents.ReservedBarcodePrefixes,
-                    function (reserved) {return barcode.indexOf(reserved) === 0;});
+                    function (reserved) {return event.data.barcode.indexOf(reserved) === 0;});
             var hasCommand = false;
             var defs = [];
-            if (! $.contains(target, self.el)) {
+            if (! $.contains(event.data.target, self.el)) {
                 return;
             }
             for (var k in self.activeBarcode) {
@@ -319,16 +319,16 @@ FormController.include({
                     if (prefixed) {
                         hasCommand = true;
                     }
-                    defs.push(self._barcodeActiveScanned(method, barcode, activeBarcode));
+                    defs.push(self._barcodeActiveScanned(method, event.data.barcode, activeBarcode));
                 }
             }
             if (prefixed && !hasCommand) {
-                self.do_warn(_t('Error: Barcode command is undefined'), barcode);
+                self.do_warn(_t('Error: Barcode command is undefined'), event.data.barcode);
             }
             return self.alive($.when.apply($, defs)).then(function () {
                 if (!prefixed) {
                     // remember the barcode scanned for the quantity listener
-                    self.current_barcode = barcode;
+                    self.current_barcode = event.data.barcode;
                     // redraw the view if we scanned a real barcode (required if
                     // we manually apply the change in JS, e.g. incrementing the
                     // quantity)

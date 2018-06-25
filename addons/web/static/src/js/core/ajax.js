@@ -26,7 +26,7 @@ function genericJsonRpc (fct_name, params, settings, fct) {
     };
     var xhr = fct(data);
     var result = xhr.pipe(function(result) {
-        core.bus.trigger('rpc:result', data, result);
+        core.bus.trigger('rpc:result', {req: data, resp: result});
         if (result.error !== undefined) {
             if (result.error.data.arguments[0] !== "bus.Bus not available in test mode") {
                 if (result.error.data.exception_type === "user_error") {
