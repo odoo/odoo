@@ -515,7 +515,7 @@ var ChatManager =  AbstractService.extend({
         if ('ids' in options) {
             // get messages from their ids (chatter is the main use case)
             return this._fetchDocumentMessages(options.ids, options).then(function (result) {
-                self.markAsRead(options.ids);
+                self.markAsRead({msg_ids: options.ids});
                 return result;
             });
         }
@@ -647,9 +647,9 @@ var ChatManager =  AbstractService.extend({
      * @param  {Array} msgIDs list of messages ids
      * @return {$.Promise}
      */
-    markAsRead: function (msgIDs) {
+    markAsRead: function (event) {
         var self = this;
-        var ids = _.filter(msgIDs, function (id) {
+        var ids = _.filter(event.msg_ids, function (id) {
             var message = _.findWhere(self.messages, {id: id});
             // If too many messages, not all are fetched, and some might not be found
             return !message || message.is_needaction;
@@ -1971,7 +1971,8 @@ var ChatManager =  AbstractService.extend({
      * @private
      * @param  {Array} notifications
      */
-    _onNotification: function (notifications) {
+    _onNotification: function (event) {
+        var notifications = event.data;
         var self = this;
         var unsubscribedNotif = _.find(notifications, function (notif) {
             return notif[1].info === "unsubscribe";
