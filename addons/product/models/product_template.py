@@ -3,7 +3,6 @@
 
 import itertools
 
-from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
@@ -69,27 +68,27 @@ class ProductTemplate(models.Model):
     # price: total template price, context dependent (partner, pricelist, quantity)
     price = fields.Float(
         'Price', compute='_compute_template_price', inverse='_set_template_price',
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     # list_price: catalog price, user defined
     list_price = fields.Float(
         'Sale Price', default=1.0,
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         help="Price at which the product is sold to customers.")
     # lst_price: catalog price for template, but including extra for variants
     lst_price = fields.Float(
         'Public Price', related='list_price', readonly=False,
-        digits=dp.get_precision('Product Price'))
+        digits='Product Price')
     standard_price = fields.Float(
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
-        digits=dp.get_precision('Product Price'), groups="base.group_user",
+        digits='Product Price', groups="base.group_user",
         help = "Cost used for stock valuation in standard price and as a first price to set in average/FIFO.")
 
     volume = fields.Float(
-        'Volume', compute='_compute_volume', inverse='_set_volume', digits=dp.get_precision('Volume'), store=True)
+        'Volume', compute='_compute_volume', inverse='_set_volume', digits='Volume', store=True)
     volume_uom_name = fields.Char(string='Volume unit of measure label', compute='_compute_volume_uom_name', default=_get_default_volume_uom)
     weight = fields.Float(
-        'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
+        'Weight', compute='_compute_weight', digits='Stock Weight',
         inverse='_set_weight', store=True)
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
 

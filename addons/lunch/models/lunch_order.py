@@ -3,7 +3,6 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.addons import decimal_precision as dp
 
 
 class LunchOrder(models.Model):
@@ -29,7 +28,7 @@ class LunchOrder(models.Model):
                               default=lambda self: self.env.uid)
     note = fields.Text('Notes')
     price = fields.Float('Total Price', compute='_compute_total_price', readonly=True, store=True,
-                         digits=dp.get_precision('Account'))
+                         digits='Account')
     active = fields.Boolean('Active', default=True)
     state = fields.Selection([('new', 'To Order'),
                               ('ordered', 'Ordered'),
