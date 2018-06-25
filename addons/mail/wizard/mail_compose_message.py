@@ -455,7 +455,7 @@ class MailComposer(models.TransientModel):
         for res_id in res_ids:
             results[res_id] = {
                 'subject': subjects[res_id] if subjects else False,
-                'body': bodies[res_id] if subjects else False,
+                'body': bodies[res_id] if bodies else False,
                 'email_from': emails_from[res_id],
                 'reply_to': replies_to[res_id],
             }
