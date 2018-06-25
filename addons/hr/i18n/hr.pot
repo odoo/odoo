@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:75
+#: code:addons/hr/models/hr.py:76
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -24,12 +24,6 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "<span class=\"o_unfollow\">Unfollow</span>\n"
-"                                    <span class=\"o_following\">Following</span>"
 msgstr ""
 
 #. module: hr
@@ -48,9 +42,26 @@ msgid "<span>To Do</span>"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 msgid "Active"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
+msgid "Activity State"
 msgstr ""
 
 #. module: hr
@@ -60,9 +71,24 @@ msgid "Add a new employee"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
+msgid "Alias Contact Security"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
+msgstr ""
+
+#. module: hr
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Employees"
+msgstr ""
+
+#. module: hr
+#: selection:mail.alias,alias_contact:0
+msgid "Authenticated Partners"
 msgstr ""
 
 #. module: hr
@@ -105,6 +131,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_employee__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -165,6 +192,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday
 msgid "Date of Birth"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
+msgid "Define the schedule of resource"
 msgstr ""
 
 #. module: hr
@@ -271,15 +303,20 @@ msgid "Enter here the private address of the employee, not the one linked to you
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:310
+#: code:addons/hr/models/hr.py:279
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:187
+#: code:addons/hr/models/hr.py:188
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
+
+#. module: hr
+#: selection:mail.alias,alias_contact:0
+msgid "Everyone"
 msgstr ""
 
 #. module: hr
@@ -298,13 +335,30 @@ msgid "Female"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "Follow"
+msgid "Followers"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
-msgid "Followers"
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_channel_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_channel_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: hr
+#: selection:mail.alias,alias_contact:0
+msgid "Followers only"
 msgstr ""
 
 #. module: hr
@@ -352,6 +406,20 @@ msgid "Identification No"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_unread
+#: model:ir.model.fields,help:hr.field_hr_employee__message_unread
+#: model:ir.model.fields,help:hr.field_hr_job__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
 msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
 msgstr ""
@@ -364,6 +432,13 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Recruitment"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
+msgid "Is Follower"
 msgstr ""
 
 #. module: hr
@@ -470,6 +545,9 @@ msgid "Members"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr ""
@@ -482,6 +560,21 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
 msgid "Nationality (Country)"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+msgid "Next Activity Type"
 msgstr ""
 
 #. module: hr
@@ -500,6 +593,13 @@ msgid "Notes"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
 msgstr ""
@@ -510,8 +610,22 @@ msgid "Number of hired employees for this job position during recruitment phase.
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_hr_department__message_unread_counter
+#: model:ir.model.fields,help:hr.field_hr_employee__message_unread_counter
+#: model:ir.model.fields,help:hr.field_hr_job__message_unread_counter
+msgid "Number of unread messages"
 msgstr ""
 
 #. module: hr
@@ -537,6 +651,11 @@ msgid "Other Information ..."
 msgstr ""
 
 #. module: hr
+#: selection:hr.employee,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
 msgid "Parent Department"
 msgstr ""
@@ -549,6 +668,20 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image
 msgid "Photo"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
+msgid "Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+""
 msgstr ""
 
 #. module: hr
@@ -604,6 +737,16 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
 msgid "Requirements"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_id
+msgid "Resource"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
+msgid "Responsible User"
 msgstr ""
 
 #. module: hr
@@ -686,6 +829,14 @@ msgid "Status"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Stop Recruitment"
 msgstr ""
@@ -736,16 +887,31 @@ msgid "This field holds the image used as photo for the employee, limited to 102
 msgstr ""
 
 #. module: hr
+#: selection:hr.employee,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_unread
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_unread
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 #: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__message_unread_counter
+#: model:ir.model.fields,field_description:hr.field_hr_employee__message_unread_counter
+#: model:ir.model.fields,field_description:hr.field_hr_job__message_unread_counter
+msgid "Unread Messages Counter"
 msgstr ""
 
 #. module: hr
@@ -836,6 +1002,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_phone
 msgid "Work Phone"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__resource_calendar_id
+msgid "Working Hours"
 msgstr ""
 
 #. module: hr

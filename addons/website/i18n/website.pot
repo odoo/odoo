@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:13+0000\n"
+"PO-Revision-Date: 2018-06-25 08:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,9 +65,9 @@ msgid "' did not match any pages."
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:727
-#: code:addons/website/models/website.py:729
-#: code:addons/website/models/website.py:747
+#: code:addons/website/models/website.py:733
+#: code:addons/website/models/website.py:735
+#: code:addons/website/models/website.py:753
 #, python-format
 msgid "(copy)"
 msgstr ""
@@ -871,6 +871,11 @@ msgid "Created on"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
+msgid "Customer Account"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Customize"
 msgstr ""
@@ -885,6 +890,13 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/banner.js:32
 #, python-format
 msgid "Customize any block through this menu. Try to change the background of the banner."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/menu/edit.js:75
+#, python-format
+msgid "DRAG BUILDING BLOCKS HERE"
 msgstr ""
 
 #. module: website
@@ -1142,6 +1154,7 @@ msgid "Explain the benefits you offer. Don't write about products or\n"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr ""
@@ -1236,6 +1249,11 @@ msgstr ""
 msgid "Founder and chief visionary, Tony is the driving force behind Company. He loves\n"
 "                                to keep his hands full by participating in the development of the software,\n"
 "                                marketing and the Customer Experience strategies."
+msgstr ""
+
+#. module: website
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
 msgstr ""
 
 #. module: website
@@ -1376,6 +1394,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Group By"
 msgstr ""
 
@@ -1456,6 +1475,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_redirect__id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__id
 msgid "ID"
+msgstr ""
+
+#. module: website
+#: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
+msgid "ID of the action if defined in a XML file"
 msgstr ""
 
 #. module: website
@@ -1872,12 +1896,12 @@ msgstr ""
 
 #. module: website
 #: selection:website.redirect,type:0
-msgid "Moved permanently"
+msgid "Moved permanently (301)"
 msgstr ""
 
 #. module: website
 #: selection:website.redirect,type:0
-msgid "Moved temporarily"
+msgid "Moved temporarily (302)"
 msgstr ""
 
 #. module: website
@@ -2022,6 +2046,11 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.backend.xml:5
 #, python-format
 msgid "On Website"
+msgstr ""
+
+#. module: website
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
 msgstr ""
 
 #. module: website
@@ -2180,18 +2209,13 @@ msgid "Panels are a great tool to compare offers or to emphasize on\n"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu__parent_left
-msgid "Parent Left"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_id
 msgid "Parent Menu"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_menu__parent_right
-msgid "Parent Right"
+#: model:ir.model.fields,field_description:website.field_website_menu__parent_path
+msgid "Parent Path"
 msgstr ""
 
 #. module: website
@@ -2317,6 +2341,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_redirect__type
+#: model:ir.ui.view,arch_db:website.view_redirect_search
 msgid "Redirection Type"
 msgstr ""
 
@@ -2394,6 +2419,11 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.menu_search
 msgid "Search Menus"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.view_redirect_search
+msgid "Search Redirect"
 msgstr ""
 
 #. module: website
@@ -2515,13 +2545,13 @@ msgid "Social Media"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:218
+#: code:addons/website/controllers/main.py:219
 #, python-format
 msgid "Sort by Name"
 msgstr ""
 
 #. module: website
-#: code:addons/website/controllers/main.py:217
+#: code:addons/website/controllers/main.py:218
 #, python-format
 msgid "Sort by Url"
 msgstr ""
@@ -2646,19 +2676,6 @@ msgid "The following error was raised in the website controller"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,help:website.field_blog_post__website_url
-#: model:ir.model.fields,help:website.field_delivery_carrier__website_url
-#: model:ir.model.fields,help:website.field_event_event__website_url
-#: model:ir.model.fields,help:website.field_event_track__website_url
-#: model:ir.model.fields,help:website.field_hr_employee__website_url
-#: model:ir.model.fields,help:website.field_hr_job__website_url
-#: model:ir.model.fields,help:website.field_im_livechat_channel__website_url
-#: model:ir.model.fields,help:website.field_product_template__website_url
-#: model:ir.model.fields,help:website.field_res_partner__website_url
-#: model:ir.model.fields,help:website.field_res_partner_grade__website_url
-#: model:ir.model.fields,help:website.field_res_partner_tag__website_url
-#: model:ir.model.fields,help:website.field_slide_channel__website_url
-#: model:ir.model.fields,help:website.field_slide_slide__website_url
 #: model:ir.model.fields,help:website.field_website_page__website_url
 #: model:ir.model.fields,help:website.field_website_published_mixin__website_url
 msgid "The full URL to access the document through the website."
@@ -2946,15 +2963,6 @@ msgid "Views which inherit from this one"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post__website_published
-#: model:ir.model.fields,field_description:website.field_event_track__website_published
-#: model:ir.model.fields,field_description:website.field_hr_employee__website_published
-#: model:ir.model.fields,field_description:website.field_hr_job__website_published
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel__website_published
-#: model:ir.model.fields,field_description:website.field_product_template__website_published
-#: model:ir.model.fields,field_description:website.field_res_partner__website_published
-#: model:ir.model.fields,field_description:website.field_slide_channel__website_published
-#: model:ir.model.fields,field_description:website.field_slide_slide__website_published
 #: model:ir.model.fields,field_description:website.field_website_page__website_published
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_published
 msgid "Visible in Website"
@@ -3101,20 +3109,7 @@ msgid "Website Title"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_post__website_url
-#: model:ir.model.fields,field_description:website.field_delivery_carrier__website_url
-#: model:ir.model.fields,field_description:website.field_event_event__website_url
-#: model:ir.model.fields,field_description:website.field_event_track__website_url
-#: model:ir.model.fields,field_description:website.field_hr_employee__website_url
-#: model:ir.model.fields,field_description:website.field_hr_job__website_url
-#: model:ir.model.fields,field_description:website.field_im_livechat_channel__website_url
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_url
-#: model:ir.model.fields,field_description:website.field_product_template__website_url
-#: model:ir.model.fields,field_description:website.field_res_partner__website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_grade__website_url
-#: model:ir.model.fields,field_description:website.field_res_partner_tag__website_url
-#: model:ir.model.fields,field_description:website.field_slide_channel__website_url
-#: model:ir.model.fields,field_description:website.field_slide_slide__website_url
 #: model:ir.model.fields,field_description:website.field_website_page__website_url
 #: model:ir.model.fields,field_description:website.field_website_published_mixin__website_url
 msgid "Website URL"
@@ -3138,66 +3133,21 @@ msgid "Website menu"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog__website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_post__website_meta_description
-#: model:ir.model.fields,field_description:website.field_blog_tag__website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_event__website_meta_description
-#: model:ir.model.fields,field_description:website.field_event_track__website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc__website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_forum__website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_post__website_meta_description
-#: model:ir.model.fields,field_description:website.field_forum_tag__website_meta_description
-#: model:ir.model.fields,field_description:website.field_hr_job__website_meta_description
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_public_category__website_meta_description
-#: model:ir.model.fields,field_description:website.field_product_template__website_meta_description
-#: model:ir.model.fields,field_description:website.field_res_partner__website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_channel__website_meta_description
-#: model:ir.model.fields,field_description:website.field_slide_slide__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_post__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_blog_tag__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_event__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_event_track__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_forum__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_post__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_forum_tag__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_hr_job__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_public_category__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_product_template__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_res_partner__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_channel__website_meta_keywords
-#: model:ir.model.fields,field_description:website.field_slide_slide__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
 msgstr ""
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_blog_blog__website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_post__website_meta_title
-#: model:ir.model.fields,field_description:website.field_blog_tag__website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_event__website_meta_title
-#: model:ir.model.fields,field_description:website.field_event_track__website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_documentation_toc__website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_forum__website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_post__website_meta_title
-#: model:ir.model.fields,field_description:website.field_forum_tag__website_meta_title
-#: model:ir.model.fields,field_description:website.field_hr_job__website_meta_title
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_public_category__website_meta_title
-#: model:ir.model.fields,field_description:website.field_product_template__website_meta_title
-#: model:ir.model.fields,field_description:website.field_res_partner__website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_channel__website_meta_title
-#: model:ir.model.fields,field_description:website.field_slide_slide__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"

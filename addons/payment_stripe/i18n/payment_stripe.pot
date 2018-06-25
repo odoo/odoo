@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,21 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "A relative or absolute URL pointing to a square image of your brand or product. As defined in your Stripe profile. See: https://stripe.com/docs/checkout"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
 msgstr ""
 
 #. module: payment_stripe
@@ -74,6 +89,21 @@ msgid "Just one more second, confirming your payment..."
 msgstr ""
 
 #. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr ""
@@ -91,9 +121,29 @@ msgid "Payment error"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:175
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:176
 #, python-format
 msgid "Perhaps the problem can be solved by double-checking your credit card details, or contacting your bank?"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
+msgid "Provider"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
 msgstr ""
 
 #. module: payment_stripe
@@ -107,27 +157,32 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:173
+#: code:addons/payment_stripe/models/payment.py:174
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:185
+#: code:addons/payment_stripe/models/payment.py:186
 #, python-format
 msgid "Stripe: %s orders found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:181
+#: code:addons/payment_stripe/models/payment.py:182
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:171
+#: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
 msgstr ""
 
 #. module: payment_stripe
