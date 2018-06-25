@@ -53,36 +53,37 @@ except ImportError:
 
 SLEEP_INTERVAL = 60     # 1 min
 
-class essaiRequestHandler(werkzeug.serving.WSGIRequestHandler):
+
+class PerfWSGIRequestHandler(werkzeug.serving.WSGIRequestHandler):
 
     @property
     def query_count(self):
         if hasattr(self, 'environ'):
             r = self.environ.get('werkzeug.request')
-            if hasattr(r,'query_count'):
+            if hasattr(r, 'query_count'):
                 return r.query_count
         return 0
 
     def handle(self):
-        self.times_start = os.times()
-        return super(essaiRequestHandler, self).handle()
+        self.perf_start = time.perf_counter()
+        return super(PerfWSGIRequestHandler, self).handle()
 
     def send_response(self, *args, **kwargs):
-        self.times_stop = os.times()
-        return super(essaiRequestHandler, self).send_response(*args, **kwargs)
+        self.perf_duration = time.perf_counter() - self.perf_start
+        return super(PerfWSGIRequestHandler, self).send_response(*args, **kwargs)
 
     def log(self, type, message, *args):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
         args = list(args)
-        message += ' %d/%.4f/%.4f/%.4f'
+        message += ' %d/%.4f'
         args.append(self.query_count)
-        args.append(self.times_stop.system - self.times_start.system)
-        args.append(self.times_stop.user - self.times_start.user)
-        args.append(self.times_stop.elapsed - self.times_start.elapsed)
-        super(essaiRequestHandler, self).log(type, message, *args)
-  
-werkzeug.serving.WSGIRequestHandler = essaiRequestHandler
+        args.append(self.perf_duration)
+        super(PerfWSGIRequestHandler, self).log(type, message, *args)
+
+
+werkzeug.serving.WSGIRequestHandler = PerfWSGIRequestHandler
+
 
 def memory_info(process):
     """ psutil < 2.0 does not have memory_info, >= 3.0 does not have
