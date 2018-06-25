@@ -330,7 +330,13 @@ var Thread = Widget.extend({
     _onAttachmentView: function (event) {
         event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
-        if (activeAttachmentID) {
+        var check = true;
+        debugger;
+        this.is_video = _.findWhere(this.attachments, { id: activeAttachmentID });
+        if (this.is_video && this.is_video.mimetype.match("video") && $.browser.safari){
+            check = false;
+        }
+        if (activeAttachmentID && check) {
             var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
             attachmentViewer.appendTo($('body'));
         }
