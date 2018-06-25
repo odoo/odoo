@@ -17,3 +17,4 @@ from . import test_tax
 from . import test_account_move_taxes_edition
 from . import test_templates_consistency
 from . import test_account_fiscal_year
+from . import test_account_all_l10n
