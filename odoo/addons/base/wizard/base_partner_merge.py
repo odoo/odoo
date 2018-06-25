@@ -292,7 +292,7 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # Make the company of all related users consistent
         for user in partner_ids.mapped('user_ids'):
-            user.write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
+            user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
                         'company_id': dst_partner.company_id.id})
 
         # call sub methods to do the merge
