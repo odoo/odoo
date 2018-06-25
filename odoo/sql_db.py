@@ -165,6 +165,8 @@ class Cursor(object):
         self.sql_log = _logger.isEnabledFor(logging.DEBUG)
 
         self.sql_log_count = 0
+        self.sql_perf_duration = 0.0
+        self.sql_perf_start = time.perf_counter()
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initialisations
@@ -239,6 +241,7 @@ class Cursor(object):
 
         # simple query count is always computed
         self.sql_log_count += 1
+        self.sql_perf_duration = time.perf_counter() - self.sql_perf_start
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:

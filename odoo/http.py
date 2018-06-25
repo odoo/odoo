@@ -213,6 +213,7 @@ class WebRequest(object):
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
         self.httprequest.query_count = self.cr.sql_log_count
+        self.httprequest.query_perf_duration = self.cr.sql_perf_duration
 
     @property
     def cr(self):
