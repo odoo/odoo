@@ -4,7 +4,6 @@
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
-from odoo.addons import decimal_precision as dp
 
 
 class StockMoveLine(models.Model):
@@ -14,7 +13,7 @@ class StockMoveLine(models.Model):
     production_id = fields.Many2one('mrp.production', 'Production Order')
     lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number')
     lot_produced_qty = fields.Float(
-        'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
+        'Quantity Finished Product', digits='Product Unit of Measure',
         help="Informative, not used in matching")
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 

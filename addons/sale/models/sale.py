@@ -12,7 +12,6 @@ from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare
 
 
-from odoo.addons import decimal_precision as dp
 
 from werkzeug.urls import url_encode
 
@@ -1117,23 +1116,23 @@ class SaleOrderLine(models.Model):
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
         ], string='Invoice Status', compute='_compute_invoice_status', store=True, readonly=True, default='no')
-    price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0)
+    price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
-    price_reduce = fields.Float(compute='_get_price_reduce', string='Price Reduce', digits=dp.get_precision('Product Price'), readonly=True, store=True)
+    price_reduce = fields.Float(compute='_get_price_reduce', string='Price Reduce', digits='Product Price', readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_reduce_taxinc = fields.Monetary(compute='_get_price_reduce_tax', string='Price Reduce Tax inc', readonly=True, store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
 
-    discount = fields.Float(string='Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
+    discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
 
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict')
     product_template_id = fields.Many2one('product.template', string='Product Template', related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
-    product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
+    product_uom_qty = fields.Float(string='Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     product_uom = fields.Many2one('uom.uom', string='Unit of Measure')
     product_custom_attribute_value_ids = fields.One2many('product.attribute.custom.value', 'sale_order_line_id', string='User entered custom product attribute values')
 
@@ -1155,14 +1154,14 @@ class SaleOrderLine(models.Model):
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
              "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
-    qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', compute_sudo=True, store=True, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
-    qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered = fields.Float('Delivered Quantity', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', compute_sudo=True, store=True, digits='Product Unit of Measure', default=0.0)
+    qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits='Product Unit of Measure', default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True, readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
         compute='_get_invoice_qty', string='Invoiced Quantity', store=True, readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'))
+        digits='Product Unit of Measure')
 
     untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', compute_sudo=True, store=True)
     untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', compute_sudo=True, store=True)

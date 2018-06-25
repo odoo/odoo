@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
@@ -243,7 +242,7 @@ class ProductTemplateAttributeValue(models.Model):
     price_extra = fields.Float(
         string='Attribute Price Extra',
         default=0.0,
-        digits=dp.get_precision('Product Price'),
+        digits='Product Price',
         help="""Price Extra: Extra price for the variant with
         this attribute value on sale price. eg. 200 price extra, 1000 + 200 = 1200.""")
     exclude_for = fields.One2many(

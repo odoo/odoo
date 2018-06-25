@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_round
 
@@ -39,7 +38,7 @@ class MrpBom(models.Model):
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Unit of Measure'), required=True)
+        digits='Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id, oldname='product_uom', required=True,
@@ -229,7 +228,7 @@ class MrpBomLine(models.Model):
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', readonly=False)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'), required=True)
+        digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Product Unit of Measure',
         default=_get_default_product_uom_id,
@@ -369,7 +368,7 @@ class MrpByProduct(models.Model):
     product_id = fields.Many2one('product.product', 'By-product', required=True)
     product_qty = fields.Float(
         'Quantity',
-        default=1.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
+        default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
     operation_id = fields.Many2one('mrp.routing.workcenter', 'Produced in Operation')

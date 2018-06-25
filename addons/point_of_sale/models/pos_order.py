@@ -11,7 +11,6 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.addons import decimal_precision as dp
 from odoo.osv.expression import AND
 
 _logger = logging.getLogger(__name__)
@@ -1022,7 +1021,7 @@ class PosOrderLine(models.Model):
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
     price_unit = fields.Float(string='Unit Price', digits=0)
-    qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), default=1)
+    qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
     price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,
         readonly=True, required=True)
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
