@@ -64,14 +64,6 @@ class PerfWSGIRequestHandler(werkzeug.serving.WSGIRequestHandler):
                 return r.query_count
         return 0
 
-    @property
-    def query_perf_duration(self):
-        if hasattr(self, 'environ'):
-            r = self.environ.get('werkzeug.request')
-            if hasattr(r, 'query_perf_duration'):
-                return r.query_perf_duration
-        return 0.0
-
     def handle(self):
         self.perf_start = time.perf_counter()
         return super(PerfWSGIRequestHandler, self).handle()
@@ -84,9 +76,8 @@ class PerfWSGIRequestHandler(werkzeug.serving.WSGIRequestHandler):
         # here we can override the  log method to add custom fields in the
         # werkzeug log line
         args = list(args)
-        message += ' %d/%.4f/%.4f'
+        message += ' %d/%.4f'
         args.append(self.query_count)
-        args.append(self.query_perf_duration)
         args.append(self.perf_duration)
         super(PerfWSGIRequestHandler, self).log(type, message, *args)
 
