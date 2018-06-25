@@ -12650,6 +12650,61 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many column visiblity depends on onchange of parent field', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[0].bar = false;
+
+        this.data.partner.onchanges.p = function (obj) {
+            // set bar to true when line is added.
+            if (obj.p.length > 1 && obj.p[1][2].foo == 'New line') {
+                obj.bar = true;
+            }
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="bar"/>' +
+                        '</group>' +
+                        '<notebook>' +
+                            '<page string="Partner page">' +
+                                '<field name="p">' +
+                                    '<tree editable="bottom">' +
+                                        '<field name="foo"/>' +
+                                        '<field name="int_field" attrs="{\'column_invisible\': [(\'parent.bar\', \'=\', False)]}"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // when bar is false so there should be 1 column
+        assert.strictEqual(form.$('th').length, 1,
+            "should be only 1 column ('foo') in the one2many");
+        assert.strictEqual(form.$('.o_list_view .o_data_row').length, 1, "should contains one row");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // add new o2m record
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_one2many input:first').focus();
+        form.$('.o_field_one2many input:first').val('New line').trigger('input');
+
+        form.$el.click(); // click outside to save a line
+
+        assert.strictEqual(form.$('th').length, 2, "should be 2 columns('foo + int_field') after add a new line");
+        form.destroy();
+    });
+
     QUnit.test('one2many column_invisible on view not inline', function (assert) {
         assert.expect(4);
 
