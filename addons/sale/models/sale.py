@@ -1231,3 +1231,7 @@ class SaleOrderLine(models.Model):
             so_line.write({'qty_delivered': qty})
 
         return True
+
+    def _is_delivery(self):
+        self.ensure_one()
+        return False
