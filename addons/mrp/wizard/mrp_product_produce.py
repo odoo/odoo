@@ -44,7 +44,7 @@ class MrpProductProduce(models.TransientModel):
     product_id = fields.Many2one('product.product', 'Product')
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
-    lot_id = fields.Many2one('stock.production.lot', string='Lot')
+    lot_id = fields.Many2one('stock.production.lot', string='Lot/Serial Number')
     produce_line_ids = fields.One2many('mrp.product.produce.line', 'product_produce_id', string='Product to Track')
     product_tracking = fields.Selection(related="product_id.tracking")
 
@@ -173,7 +173,7 @@ class MrpProductProduceLine(models.TransientModel):
     product_produce_id = fields.Many2one('mrp.product.produce')
     product_id = fields.Many2one('product.product', 'Product')
     product_tracking = fields.Selection(related="product_id.tracking")
-    lot_id = fields.Many2one('stock.production.lot', 'Lot')
+    lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number')
     qty_to_consume = fields.Float('To Consume', digits=dp.get_precision('Product Unit of Measure'))
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure')
     qty_done = fields.Float('Consumed')
