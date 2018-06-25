@@ -387,7 +387,7 @@
                 <sheet string="Invoice">
                     <div class="oe_button_box" name="button_box">
                     </div>
-                    <span class="o_form_label"> attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}">Credit Note</span>
+                    <span class="o_form_label" attrs="{'invisible': ['|',('state','=','draft'), ('type','!=','out_refund')]}">Credit Note</span>
                     <h1 class="mt0">
                         <div attrs="{'invisible': [('sequence_number_next_prefix','!=',False)]}">
                             <label for="number" string="Draft Invoice" attrs="{'invisible': ['|',('state','not in',('draft',)), ('type','!=','out_invoice')]}"/>
