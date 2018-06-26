@@ -425,12 +425,19 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('handles "history_back" event', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var actionManager = createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            intercepts: {
+                do_action: function (event) {
+                    var descr = {tag: "home", type: "ir.actions.client"};
+                    assert.deepEqual(event.data.action, descr,
+                        "home client action should be called when there is no controller stack");
+                },
+            },
         });
 
         actionManager.doAction(4);
@@ -441,6 +448,9 @@ QUnit.module('ActionManager', {
             "there should be one controller in the breadcrumbs");
         assert.strictEqual($('.o_control_panel .breadcrumb li').text(), 'Partners Action 4',
             "breadcrumbs should display the display_name of the action");
+
+        // this will call client action home as there is no controller stack length > 1
+        actionManager.trigger_up('history_back');
 
         actionManager.destroy();
     });
