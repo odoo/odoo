@@ -300,7 +300,7 @@
                       </div>
 
                       <!-- modal relative to the actions Accept/Reject/Cancel -->
-                      <div role="dialog" class="modal fade" id="modalaccept" aria-hidden="true">
+                      <div role="dialog" class="modal fade" id="modalaccept">
                         <div class="modal-dialog" t-if="not quotation.require_payment and not need_payment">
                            <form id="accept" method="POST" t-att-data-order-id="quotation.id" t-att-data-token="quotation.access_token" class="js_accept_json modal-content js_website_submit_form">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
@@ -356,7 +356,7 @@
                         </div>
                       </div>
 
-                      <div role="dialog" class="modal fade" id="modaldecline" aria-hidden="true">
+                      <div role="dialog" class="modal fade" id="modaldecline">
                         <div class="modal-dialog">
                           <form id="decline" method="POST" t-attf-action="/quote/#{quotation.id}/#{quotation.access_token}/decline" class="modal-content">
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
