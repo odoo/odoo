@@ -12631,6 +12631,41 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('add a line should not crash if orderedResIDs is not set', function (assert) {
+        // There is no assertion, the code will just crash before the bugfix.
+        assert.expect(0);
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<header>' +
+                        '<button name="action_invoice_open" type="object" string="Validate" class="oe_highlight"/>' +
+                    '</header>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    event.data.on_fail();
+                },
+            },
+        });
+
+        $('button[name="action_invoice_open"]').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
 });
 });
 });
