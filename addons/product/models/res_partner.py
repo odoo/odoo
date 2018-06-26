@@ -18,7 +18,8 @@ class Partner(models.Model):
     def _compute_product_pricelist(self):
         for p in self:
             if not isinstance(p.id, models.NewId):  # if not onchange
-                p.property_product_pricelist = self.env['product.pricelist']._get_partner_pricelist(p.id)
+                company = self.env.context.get('force_company', False) or self.env.user.company_id.id or None
+                p.property_product_pricelist = self.env['product.pricelist'].sudo()._get_partner_pricelist(p.id, company_id=company)
 
     @api.one
     def _inverse_product_pricelist(self):
