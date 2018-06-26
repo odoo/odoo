@@ -234,8 +234,8 @@ var ChatterComposer = composer.BasicComposer.extend({
                 context: context,
             };
             self.do_action(action, {
-                on_close: self.trigger_up.bind(self, 'need_refresh'),
-            }).then(self.trigger_up.bind(self, 'close_composer'));
+                on_close: self.trigger.bind(self, 'need_refresh'),
+            }).then(self.trigger.bind(self, 'close_composer'));
         });
     }
 });

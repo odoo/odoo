@@ -294,7 +294,7 @@ var Chatter = Widget.extend({
                     });
                 });
             });
-            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
+            self._composer.on('need_refresh', self, self.trigger.bind(self, 'reload'));
             self._composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
             self.$el.addClass('o_chatter_composer_active');
