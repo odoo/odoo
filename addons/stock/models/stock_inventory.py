@@ -352,6 +352,7 @@ class InventoryLine(models.Model):
         digits=dp.get_precision('Product Unit of Measure'), readonly=True, store=True)
     inventory_location_id = fields.Many2one(
         'stock.location', 'Inventory Location', related='inventory_id.location_id', related_sudo=False)
+    product_tracking = fields.Selection('Tracking', related='product_id.tracking', readonly=True)
 
     @api.one
     @api.depends('location_id', 'product_id', 'package_id', 'product_uom_id', 'company_id', 'prod_lot_id', 'partner_id')
