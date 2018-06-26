@@ -207,6 +207,15 @@ var MessagingMenu = Widget.extend({
             var model = $(ev.currentTarget).data('model');
             var domain = [['model', '=', model], ['res_id', '=', resID]];
             this.call('chat_manager', 'markAllAsRead', channel, domain);
+        } else if (channelID === 'mail_failure') {
+            var unread_counter = $(ev.currentTarget).data('unread_counter');
+            var model = $(ev.currentTarget).data('model');
+            this.do_action('mail.mail_resend_cancel_action', {
+                additional_context: {
+                    default_model: model,
+                    unread_counter: unread_counter
+                }
+            });
         } else {
             this.call('chat_manager', 'markChannelAsSeen', channel);
         }
