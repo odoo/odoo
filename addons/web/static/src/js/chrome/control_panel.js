@@ -131,7 +131,7 @@ var ControlPanel = Widget.extend({
      */
     update: function(event) {
         var status = event.data ? event.data.cp_status : event;
-        var options = event.data ? event.data.options : {};
+        var options = event.data ? event.data.options : event.options;
         this.bus.updateIndex++;
 
         this._toggle_visibility(!status.hidden);
