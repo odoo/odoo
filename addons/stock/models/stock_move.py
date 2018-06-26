@@ -529,7 +529,7 @@ class StockMove(models.Model):
             'name': self.rule_id and self.rule_id.name or "/",
             'origin': origin,
             'company_id': self.company_id.id,
-            'date_planned': self.date,
+            'date_planned': self.date_expected,
             'product_id': self.product_id.id,
             'product_qty': self.product_uom_qty,
             'product_uom': self.product_uom.id,
