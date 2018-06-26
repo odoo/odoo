@@ -58,6 +58,17 @@ class SaleOrder(models.Model):
         else:
             return 0
 
+    @api.model_cr_context
+    def _init_column(self, column_name):
+        if column_name != 'access_token':
+            super(SaleOrder, self)._init_column(column_name)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(random()::text || clock_timestamp()::text)::uuid
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._table, 'column_name': column_name}
+            self.env.cr.execute(query)
+
     access_token = fields.Char(
         'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
         required=True)
