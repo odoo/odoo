@@ -452,7 +452,7 @@
             <t t-if="event.state != 'draft'">
                 Event registration is closed.
             </t>
-            <t t-if="uid">
+            <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <i class="fa fa-plus-circle"><a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event"> <em>Configure and Launch Event Registration</em></a></i>
             </t>
         </div>
