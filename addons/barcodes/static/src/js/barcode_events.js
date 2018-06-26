@@ -87,7 +87,7 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
 
             // Dispatch a barcode_scanned DOM event to elements that have barcode_events="true" set.
             if (this.buffered_key_events[0].target.getAttribute("barcode_events") === "true")
-                $(this.buffered_key_events[0].target).trigger('barcode_scanned', barcode);
+                $(this.buffered_key_events[0].target).trigger('barcode_scanned', {barcode: barcode});
         } else {
             this.resend_buffered_keys();
         }

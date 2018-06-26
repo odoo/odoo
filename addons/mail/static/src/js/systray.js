@@ -187,7 +187,9 @@ var MessagingMenu = Widget.extend({
         } else {
             var channel = this.call('chat_manager', 'getChannel', channelID);
             if (channel) {
-                this.call('chat_manager', 'openChannel', channel);
+                this.call('chat_manager', 'openChannel', {data: {
+                    channel: channel
+                }});
             }
         }
     },

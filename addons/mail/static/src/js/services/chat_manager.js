@@ -701,8 +701,8 @@ var ChatManager =  AbstractService.extend({
      *
      * @param  {Object} channel
      */
-    openChannel: function (channel) {
-        this.chatBus.trigger(this.discussOpen ? 'open_channel' : 'detach_channel', channel);
+    openChannel: function (event) {
+        this.chatBus.trigger(this.discussOpen ? 'open_channel' : 'detach_channel', event.data.channel);
     },
     /**
      * Prepares and sends a message to the server:

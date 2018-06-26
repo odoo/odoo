@@ -439,7 +439,8 @@ var ChatWindowManager =  AbstractService.extend({
      * @param {Object} channel
      * @param {integer} channel.id
      */
-    _onDetachChannel: function (channel) {
+    _onDetachChannel: function (event) {
+        var channel = event.data;
         var chatSession = _.findWhere(this.chatSessions, {id: channel.id});
         if (!chatSession || chatSession.window.folded) {
             this.call('chat_manager', 'detachChannel', channel.id);
