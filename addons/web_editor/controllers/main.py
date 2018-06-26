@@ -244,7 +244,7 @@ class Web_Editor(http.Controller):
     ## @param bundles - True if the bundles views must be fetched (default to False)
     ## @param bundles_restriction - Names of the bundle in which to look for less files (if empty, search in all of them)
     ## @returns a dictionary with views info in the views key and style info in the less key
-    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user")
+    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_less=True, bundles=False, bundles_restriction=[]):
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
