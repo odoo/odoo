@@ -33,7 +33,7 @@ function get_fc_defaultOptions() {
 
     // adapt format for fullcalendar v1.
     // see http://fullcalendar.io/docs1/utilities/formatDate/
-    var conversions = [['YYYY', 'yyyy'], ['YY', 'y'], ['DDDD', 'dddd'], ['DD', 'dd']];
+    var conversions = [['YYYY', 'yyyy'], ['YY', 'yy'], ['DDDD', 'dddd'], ['DD', 'dd']];
     _.each(conversions, function(conv) {
         dateFormat = dateFormat.replace(conv[0], conv[1]);
     });
