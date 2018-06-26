@@ -12,7 +12,7 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     production_id = fields.Many2one('mrp.production', 'Production Order')
-    lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot')
+    lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot/Serial Number')
     lot_produced_qty = fields.Float(
         'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
         help="Informative, not used in matching")
