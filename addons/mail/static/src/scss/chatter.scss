@@ -14,7 +14,7 @@
         position: relative;
         margin: $grid-gutter-width*0.5 0 0;
         padding: 0;
-        @include o-flex-display;
+        display: flex;
 
         > .btn {
             height: $o-statusbar-height + 1;
@@ -24,7 +24,7 @@
         > .o_followers {
             height: $o-statusbar-height + 1;
             border-bottom: 1px solid transparent;
-            @include o-flex(1,1,auto);
+            flex: 1 1 auto;
         }
     }
 

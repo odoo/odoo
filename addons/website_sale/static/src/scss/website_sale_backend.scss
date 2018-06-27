@@ -6,18 +6,18 @@
         background: none;
         margin: 0 0 $grid-gutter-width*0.2;
         padding: $o-mail-attachment-margin;
-        @include o-flex(0, 1, 50%);
+        flex: 0 1 50%;
 
         @media (min-width: $screen-sm-min) {
-            @include o-flex(0, 0, percentage(1/3));
+            flex: 0 0 percentage(1/3);
         }
 
         @media (min-width: $screen-md-min) {
-            @include o-flex(0, 0, percentage(1/5));
+            flex: 0 0 percentage(1/5);
         }
 
         @media (min-width: $screen-lg-min){
-            @include o-flex(0, 0, percentage(1/6));
+            flex: 0 0 percentage(1/6);
         }
 
         .o_image_box {

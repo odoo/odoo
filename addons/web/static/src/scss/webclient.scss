@@ -33,8 +33,8 @@
         }
 
         .o_notification_title {
-            @include o-flex-display;
-            @include o-align-items(center);
+            display: flex;
+            align-items: center;
 
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             padding: 10px 10px 10px 20px;
@@ -104,7 +104,7 @@ div.o_boolean_toggle {
         background-color: $o-brand-optional;
 
         &:before {
-            @include translate(14px, 0px);
+            transform: translate(14px, 0px);
         }
     }
 }

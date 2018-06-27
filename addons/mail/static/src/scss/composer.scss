@@ -14,8 +14,8 @@
 
 .o_thread_composer {
     position: relative;
-    @include o-flex(0, 0, auto);
-    @include o-flex-display;
+    flex: 0 0 auto;
+    display: flex;
     margin: 1px 0;
     border-top: none;
     background: $gray-lighter;
@@ -30,11 +30,11 @@
     }
 
     .o_composer_subject {
-        @include o-flex-display;
+        display: flex;
         padding-bottom: 5px;
 
         > input {
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             padding: 5px;
             margin-right: 30px;
         }
@@ -100,7 +100,7 @@
         }
 
         .o_chatter_composer_info, .o_composer_suggested_partners {
-            @include o-flex(0, 0, 100%);
+            flex: 0 0 100%;
             margin-bottom: $o-mail-chatter-gap*0.5;
         }
 
@@ -137,10 +137,10 @@
         }
 
         &:not(.o_chat_inline_composer) {
-            @include o-flex-flow(row, wrap);
+            flex-flow: row wrap;
 
             .o_composer_container, .o_composer_button_send {
-                @include o-flex(1, 0, 100%);
+                flex: 1 0 100%;
             }
             .o_composer, .o_composer_subject {
                 padding: $o-mail-chatter-gap $o-mail-chatter-gap 0;
@@ -152,7 +152,7 @@
 
         &.o_chat_inline_composer {
             .o_composer_container {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
             .o_composer {
                 padding: $o-mail-chatter-gap $o-mail-chatter-gap 0 $o-mail-chatter-gap;
@@ -165,26 +165,26 @@
                 }
             }
             .o_composer_input {
-                @include o-flex-display();
-                @include o-flex-flow(row, wrap);
+                display: flex;
+                flex-flow: row wrap;
             }
             .o_composer_text_field {
-                @include o-flex(1, 1, 50%);
+                flex: 1 1 50%;
                 margin: 0;
                 padding: 0;
             }
             .o_chatter_composer_tools {
-                @include o-flex(0, 1, auto);
+                flex: 0 1 auto;
             }
             .o_composer_attachments_list {
-                @include o-flex(1, 0, 100%);
+                flex: 1 0 100%;
             }
 
             .o_chatter_composer_tools {
                 border: none;
                 border-left: 1px solid $gray-lighter-dark;
                 padding-left: $o-mail-chatter-gap*0.5;
-                @include o-transform(translateY(-$o-mail-chatter-gap*0.5));
+                transform: translateY(-$o-mail-chatter-gap*0.5);
             }
 
             .o_composer_button_send {
@@ -210,15 +210,15 @@
             }
         }
         .o_composer_input {
-            @include o-flex-display();
-            @include o-flex-flow(row, nowrap);
+            display: flex;
+            flex-flow: row nowrap;
 
             textarea.o_composer_text_field {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
 
             .o_chatter_composer_tools {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
             @media (max-width: $screen-xs-max) {
                 .o_composer_button_send {
@@ -255,8 +255,8 @@ $o-mail-attachment-margin: 5px;
 
 .o_attachments_list, .o_attachments_previews {
     margin: 0 (-$o-mail-attachment-margin) 0;
-    @include o-flex-display;
-    @include o-flex-flow(row, wrap);
+    display: flex;
+    flex-flow: row wrap;
 }
 
 .o_attachment {
@@ -311,9 +311,9 @@ $o-mail-attachment-margin: 5px;
 
     .o_attachment_uploaded, .o_attachment_delete {
         @include o-position-absolute(0, 0, 0, $left: auto);
-        @include o-flex-display();
-        @include o-align-items(center);
-        @include o-justify-content(center);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 45px;
     }
 
@@ -322,8 +322,8 @@ $o-mail-attachment-margin: 5px;
         color: white;
         cursor: pointer;
         font-size: 20px;
-        @include o-transform(translateX(100%));
-        @include o-transition(all, 0.3s);
+        transform: translateX(100%);
+        transition: all 0.3s ease 0s;
 
         &:hover {
             background: $brand-primary;
@@ -349,8 +349,8 @@ $o-mail-attachment-margin: 5px;
     }
 
     &:hover .o_attachment_delete {
-        @include o-transition(all, 0.1s);
-        @include o-transform(translateX(0));
+        transition: all 0.1s ease 0s;
+        transform: translateX(0);
     }
 }
 
@@ -382,20 +382,20 @@ $o-mail-attachment-margin: 5px;
                 @include o-position-absolute(0, 0, 0, 0);
                 background-size: cover;
                 background-position: center;
-                @include o-transform(scale(1.05));
-                @include o-transition(all, 0.3s);
+                transform: scale(1.05);
+                transition: all 0.3s ease 0s;
             }
 
             &:hover .o_attachment_image {
-                @include o-transform(scale(1));
+                transform: scale(1);
             }
         }
 
         .o_image_overlay {
             @include o-position-absolute($top: 0, $left: 0, $right:0, $bottom:0);
             @include o-hover-opacity($default-opacity: 0, $hover-opacity: 1);
-            @include o-linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
-            @include o-transition(all, 0.3s);
+            background-image: linear-gradient(180deg, rgba(black, 0.2), rgba(black, 0.9));
+            transition: all 0.3s ease 0s;
             padding: 10px;
 
             .o_attachment_title {
@@ -468,9 +468,9 @@ $o-mail-attachment-margin: 5px;
             .o_viewer_zoomer {
                 width: 100%;
                 height: 100%;
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 45px 0;
 
                 img {
@@ -500,7 +500,7 @@ $o-mail-attachment-margin: 5px;
 
         .o_viewer_toolbar {
             @include o-position-absolute($left: 50%, $bottom: $grid-gutter-width*0.5);
-            @include o-transform(translate(-50%, -50%));
+            transform: translate(-50%, -50%);
             overflow: hidden;
             border-radius: 4px;
             background-color: rgba(black, 0.4);

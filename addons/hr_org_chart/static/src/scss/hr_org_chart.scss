@@ -12,14 +12,14 @@
 // SMALL DESKTOP LAYOUT
 @media screen and (min-width: $screen-sm-min) {
     #o_employee_container {
-        @include o-flex-display;
+        display: flex;
         width: 100%;
     }
     #o_employee_main {
-        @include o-flex(1, 1, 60%);
+        flex: 1 1 60%;
     }
     #o_employee_right {
-        @include o-flex(0, 1, 35%);
+        flex: 0 1 35%;
         margin-left: 2%;
         padding-left: 2%;
         border-left: 1px solid $o-hr-org-chart-border-color;
@@ -33,14 +33,14 @@
 // MEDIUM DESKTOP LAYOUT
 @media screen and (min-width: $screen-md-min){
     #o_employee_right {
-        @include o-flex(0, 1, 33%);
+        flex: 0 1 33%;
     }
 }
 
 // LARGE DESKTOP LAYOUT
 @media screen and (min-width: $screen-lg-min){
     #o_employee_right {
-        @include o-flex(0, 1, 30%);
+        flex: 0 1 30%;
     }
 }
 

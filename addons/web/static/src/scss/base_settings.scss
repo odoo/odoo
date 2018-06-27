@@ -9,8 +9,8 @@
 
 // Use a very specif selector to overwrite generic form-view rules
 .o_form_view.o_form_nosheet.o_base_settings {
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     padding: 0px;
 }
 
@@ -19,18 +19,18 @@
     height: 100%;
 
     @media (max-width: $screen-xs-max) {
-        @include o-flex-flow(column, nowrap);
+        flex-flow: column nowrap;
     }
 
     .o_control_panel {
         .o_panel {
-            @include o-flex-display;
-            @include o-flex-flow(row, wrap);
+            display: flex;
+            flex-flow: row wrap;
             margin-bottom: $o-sheet-vpadding*0.5;
             width: 100%;
 
             .title, .o_setting_search {
-                @include o-flex(1, 0, auto);
+                flex: 1 0 auto;
                 width: $screen-xs-min*0.5;
             }
 
@@ -70,26 +70,26 @@
     }
 
     .o_setting_container {
-        @include o-flex-display;
-        @include o-flex(1, 1, auto);
+        display: flex;
+        flex: 1 1 auto;
 
         overflow: auto;
 
         @media (max-width: $screen-xs-max) {
-            @include o-flex-flow(column, nowrap);
+            flex-flow: column nowrap;
         }
 
         .settings_tab {
-            @include o-flex-display;
-            @include o-flex(0, 0, auto);
-            @include o-flex-flow(column, nowrap);
+            display: flex;
+            flex: 0 0 auto;
+            flex-flow: column nowrap;
             background: $gray-dark;
             overflow: auto;
             padding-top: $o-horizontal-padding*0.5;
 
             @media (max-width: $screen-xs-max) {
-                @include o-flex(0, 0, $o-base-settings-mobile-tabs-height);
-                @include o-inline-flex-display;
+                flex: 0 0 $o-base-settings-mobile-tabs-height;
+                display: inline-flex;
                 position: relative;
                 overflow: hidden;
                 padding: 0;
@@ -105,7 +105,7 @@
             }
 
             .tab {
-                @include o-flex-display;
+                display: flex;
                 padding: 0 $o-horizontal-padding*2 0 $o-horizontal-padding;
                 height: 40px;
                 color: $gray-lighter-darker;
@@ -128,8 +128,8 @@
                     font-size: 14px;
                     font-weight: 500;
                     line-height: inherit;
-                    @include o-transition(0.2s, all);
-                    @include o-transform(translate3d(0,0,0));
+                    transition: 0.2s all ease 0s;
+                    transform: translate3d(0,0,0);
 
                     .app_name {
                         display: block;
@@ -142,7 +142,7 @@
                         opacity: 0;
                         @include o-position-absolute(auto, 0, 0, 0);
                         @include size(100%, 3px);
-                        @include o-transition(0.2s, all);
+                        transition: 0.2s all ease 0s;
                     }
 
                     &.previous, &.before {
@@ -171,7 +171,7 @@
 
         .settings {
             position: relative;
-            @include o-flex(1, 1, 100%);
+            flex: 1 1 100%;
             background-color: $o-view-background-color;
             overflow: auto;
 
@@ -196,7 +196,7 @@
             }
 
             .settingSearchHeader {
-                @include o-flex-display;
+                display: flex;
                 margin: 30px 0 10px;
                 @include o-base-settings-horizontal-padding;
                 background-color: $gray-lighter;

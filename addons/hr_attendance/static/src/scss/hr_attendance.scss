@@ -38,14 +38,14 @@
 }
 
 .o_hr_attendance_kiosk_mode_container {
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
-    @include o-justify-content(flex-start);
-    @include o-align-items(center);
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
     @include o-position-absolute(0, 0, 0, 0);
 
     @media (min-width: $screen-sm-min) {
-        @include o-justify-content(center);
+        justify-content: center;
     }
 }
 
@@ -58,7 +58,7 @@
     @media (max-width: $screen-xs-max) {
         overflow: hidden;
         padding: 0 2em 2em;
-        @include o-flex(1,0,auto);
+        flex: 1 0 auto;
     }
 
     @media (min-width: $screen-sm-min) {
@@ -68,13 +68,13 @@
         width: 100%;
         border-radius: 0.2em;
         font-size: 1.2em;
-        @include o-animation(fadeInDownSmall, .3s);
+        animation: fadeInDownSmall .3s;
     }
 
     .o_hr_attendance_kiosk_welcome_row {
         @media (min-width: $screen-sm-min){
-            @include o-flex-display();
-            @include o-align-items(center);
+            display: flex;
+            align-items: center;
         }
         @media (max-width: $screen-sm-max){
             > div {
@@ -110,7 +110,7 @@
         }
 
         .hidden-xs.btn-default {
-            @include o-transform(translate(-50%, -50%));
+            transform: translate(-50%, -50%);
             @include o-position-absolute(0, $left:0);
             @include square(2em);
             border-radius: 50%;
@@ -130,7 +130,7 @@
     }
 
     .o_hr_attendance_user_badge {
-         @include o-skew-gradient(#77717e, #c9a8a9);
+        background: linear-gradient(linear, left top, right bottom, #77717e, #c9a8a9);
 
         img {
             background: white;
@@ -149,11 +149,11 @@
             border-radius: .2em .2em 0 0;
             border-top: 1px solid fade-out(white, 0.8);
             @include o-position-absolute(auto, 0, 100%, 0);
-            @include o-transform(translateY(3px));
+            transform: translateY(3px);
 
             img {
                 @include square(80px);
-                @include o-transform(translateX(-50%)translateY(35%));
+                transform: translateX(-50%)translateY(35%);
                 @include o-position-absolute($bottom: 0);
             }
         }

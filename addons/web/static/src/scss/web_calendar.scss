@@ -6,7 +6,7 @@
 .o_calendar_container {
     height: 100%;
     @include o-webclient-padding($top: $o-horizontal-padding/2, $bottom: $o-horizontal-padding/2);
-    @include o-flex-display;
+    display: flex;
 
     @for $index from 1 through $o-nb-calendar-colors {
         .o_calendar_color_#{$index} {
@@ -28,7 +28,7 @@
     }
 
     .o_calendar_view {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         min-width: 0;
 
         .o_calendar_widget {
@@ -62,7 +62,7 @@
     }
 
     .o_calendar_sidebar_container {
-        @include o-flex(0, 0, $o-horizontal-padding);
+        flex: 0 0 $o-horizontal-padding;
         position: relative;
 
         &.o_sidebar_hidden {
@@ -97,13 +97,13 @@
             padding: 0;
 
             .ui-widget-header {
-                @include o-flex-display;
+                display: flex;
                 background: none;
                 background-color: lighten($o-brand-secondary, 30%);
                 border-radius: 0;
 
                 .ui-datepicker-prev, .ui-datepicker-next {
-                    @include o-flex(0, 0, auto);
+                    flex: 0 0 auto;
                     position: static;
                     cursor: pointer;
                     padding: 2px;
@@ -133,7 +133,7 @@
                     }
                 }
                 .ui-datepicker-title {
-                    @include o-flex(0, 0, auto);
+                    flex: 0 0 auto;
                     order: 2;
                     display: inline-block;
                     margin: 0 10px;

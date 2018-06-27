@@ -39,11 +39,11 @@
 
             .modal-content {
                 max-height: 100%;
-                @include o-flex-display;
-                @include o-flex-flow(column, nowrap);
+                display: flex;
+                flex-flow: column nowrap;
 
                 .modal-header, .modal-footer {
-                    @include o-flex(0, 0, auto);
+                    flex: 0 0 auto;
                 }
 
                 .modal-body {
@@ -54,15 +54,15 @@
 
                     &.o_dialog_error {
                         overflow: visible;
-                        @include o-flex-display;
-                        @include o-flex-flow(column, nowrap);
+                        display: flex;
+                        flex-flow: column nowrap;
 
                         > .alert, > button {
-                            @include o-flex(0, 0, auto);
+                            flex: 0 0 auto;
                         }
 
                         > .o_error_detail {
-                            @include o-flex(1, 1, auto);
+                            flex: 1 1 auto;
                             min-height: 0;
                             overflow: auto;
                         }
