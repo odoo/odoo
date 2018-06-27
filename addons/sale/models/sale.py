@@ -1239,3 +1239,8 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
+
+
+    def _is_delivery(self):
+        self.ensure_one()
+        return False
