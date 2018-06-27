@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
+from odoo import api, models, fields, _
+from odoo.exceptions import ValidationError
+
 
 # ---------------------------------------------------------
 # Account Financial Report
@@ -11,6 +13,10 @@ from odoo import api, models, fields
 class account_financial_report(models.Model):
     _name = "account.financial.report"
     _description = "Account Report"
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        self.account_report_id = False
 
     @api.multi
     @api.depends('parent_id', 'parent_id.level')
@@ -63,3 +69,13 @@ class account_financial_report(models.Model):
         (6, 'Smallest Text'),
         ], 'Financial Report Style', default=0,
         help="You can set up here the format you want this record to be displayed. If you leave the automatic formatting, it will be computed based on the financial reports hierarchy (auto-computed field 'level').")
+
+    @api.constrains('account_report_id', 'parent_id')
+    def _check_parent_id(self):
+        for report in self:
+            if not all([report._check_recursion(),
+                        report._check_recursion(parent='account_report_id')]):
+                raise ValidationError(_('Error! You cannot create recursive hierarchy of Account Report(s).'))
+            if report.account_report_id and report.parent_id \
+                    and report.account_report_id.id == report.parent_id.id:
+                raise ValidationError(_('Error! Parent and Report Value cannot be same.'))
