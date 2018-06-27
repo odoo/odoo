@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-06-27 09:23+0000\n"
+"PO-Revision-Date: 2018-06-27 09:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
 msgid "\n"
 "<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
+"% if object.partner_id.is_company and object.partner_id.child_ids:\n"
 "    ${object.partner_id.child_ids[0].name}\n"
 "% else :\n"
 "    ${object.partner_id.name}\n"
@@ -49,7 +49,7 @@ msgstr ""
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
 msgid "\n"
-"<p>Dear ${object.partner_id.name} \n"
+"<p>Dear ${object.partner_id.name}\n"
 "% if object.partner_id.parent_id:\n"
 "    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
@@ -72,7 +72,7 @@ msgid "\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:87
+#: code:addons/purchase/models/stock.py:88
 #, python-format
 msgid " Buy"
 msgstr ""
@@ -120,7 +120,7 @@ msgstr ""
 #: model:mail.template,body_html:purchase.mail_template_data_notification_email_purchase_order
 msgid "<html>\n"
 "                <head></head>\n"
-"                % set company = record and record.company_id or or ctx.get('company')\n"
+"                % set company = record and record.company_id or ctx.get('company')\n"
 "                <body style=\"margin: 0; padding: 0;\">\n"
 "                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed\" summary=\"o_mail_notification\">\n"
 "                    <tbody>\n"
@@ -275,6 +275,12 @@ msgid "Add Purchase Order"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:931
+#, python-format
+msgid "All stock moves have been cancelled for this procurement."
+msgstr ""
+
+#. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
 msgstr ""
@@ -366,7 +372,7 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:578
+#: code:addons/purchase/models/purchase.py:598
 #, python-format
 msgid "Billed Quantity"
 msgstr ""
@@ -394,8 +400,8 @@ msgid "Blocking Message"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:835
-#: code:addons/purchase/models/stock.py:81
+#: code:addons/purchase/models/purchase.py:862
+#: code:addons/purchase/models/stock.py:82
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -422,13 +428,13 @@ msgid "Calls for tenders are used when you want to generate requests for quotati
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:851
+#: code:addons/purchase/models/purchase.py:878
 #, python-format
 msgid "Can not cancel a procurement related to a purchase order. Please cancel the purchase order first."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:84
+#: code:addons/purchase/models/stock.py:85
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -446,7 +452,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:701
+#: code:addons/purchase/models/purchase.py:728
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -502,7 +508,7 @@ msgid "Company"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:297
+#: code:addons/purchase/models/purchase.py:305
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -685,7 +691,7 @@ msgid "Extended Filters"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:556
+#: code:addons/purchase/models/purchase.py:576
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -948,7 +954,7 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:996
+#: code:addons/purchase/models/purchase.py:1052
 #, python-format
 msgid "No vendor associated to product %s. Please set one to fix this procurement."
 msgstr ""
@@ -1021,7 +1027,7 @@ msgid "Order of Day"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:575
+#: code:addons/purchase/models/purchase.py:595
 #, python-format
 msgid "Ordered Quantity"
 msgstr ""
@@ -1032,7 +1038,7 @@ msgid "Ordered quantities"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:835
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -1282,7 +1288,7 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:703
+#: code:addons/purchase/models/purchase.py:730
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1394,7 +1400,7 @@ msgid "Received Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:597
 #, python-format
 msgid "Received Quantity"
 msgstr ""
@@ -1639,7 +1645,7 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:571
+#: code:addons/purchase/models/purchase.py:591
 #, python-format
 msgid "The ordered quantity has been decreased. Do not forget to take it into account on your bills and receipts."
 msgstr ""
@@ -1711,25 +1717,25 @@ msgid "This note will be displayed for vendors."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:1024
+#: code:addons/purchase/models/purchase.py:1069
 #, python-format
 msgid "This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:1037
+#: code:addons/purchase/models/purchase.py:1082
 #, python-format
 msgid "This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:197
+#: code:addons/purchase/models/account_invoice.py:207
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:211
+#: code:addons/purchase/models/account_invoice.py:221
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1783,13 +1789,13 @@ msgid "Transfer"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:346
+#: code:addons/purchase/models/purchase.py:354
 #, python-format
 msgid "Unable to cancel purchase order %s as some receptions have already been done."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:349
+#: code:addons/purchase/models/purchase.py:357
 #, python-format
 msgid "Unable to cancel this purchase order. You must first cancel related vendor bills."
 msgstr ""
@@ -1942,8 +1948,8 @@ msgid "Warning"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:253
-#: code:addons/purchase/models/purchase.py:769
+#: code:addons/purchase/models/purchase.py:261
+#: code:addons/purchase/models/purchase.py:796
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -1969,7 +1975,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:809
+#: code:addons/purchase/models/purchase.py:836
 #, python-format
 msgid "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."
@@ -1996,7 +2002,7 @@ msgid "You must define a product for everything you purchase, whether\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:386
+#: code:addons/purchase/models/purchase.py:394
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr ""

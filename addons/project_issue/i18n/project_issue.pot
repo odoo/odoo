@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2018-06-27 09:23+0000\n"
+"PO-Revision-Date: 2018-06-27 09:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,7 @@ msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
+#: model:ir.model.fields,field_description:project_issue.field_res_users_issue_count
 msgid "# Issues"
 msgstr ""
 
@@ -105,6 +106,26 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_addmenustothemodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinhrms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_logicalerrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_outputincorrect0
+msgid "Blocked"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Buzz or set as done"
 msgstr ""
 
 #. module: project_issue
@@ -339,6 +360,26 @@ msgid "ID"
 msgstr ""
 
 #. module: project_issue
+#: model:project.issue,legend_normal:project_issue.crm_case_addmenustothemodule0
+#: model:project.issue,legend_normal:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_normal:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_normal:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_normal:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_normal:project_issue.crm_case_improvereportsinhrms0
+#: model:project.issue,legend_normal:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_normal:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_normal:project_issue.crm_case_logicalerrorinprogram0
+#: model:project.issue,legend_normal:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_normal:project_issue.crm_case_outputincorrect0
+#: model:project.issue,legend_normal:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_normal:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_normal:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_normal:project_issue.crm_case_programmingerror0
+#: model:project.issue,legend_normal:project_issue.crm_case_programnotgivingproperoutput0
+msgid "In Progress"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_name
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -495,6 +536,18 @@ msgid "My Next Issue Activities"
 msgstr ""
 
 #. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
+#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
+#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
+#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
+#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
+msgid "Need functional or technical help"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "New"
 msgstr ""
@@ -524,6 +577,14 @@ msgstr ""
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
+msgid "Not validated"
 msgstr ""
 
 #. module: project_issue
@@ -607,6 +668,22 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on Issues"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_addmenustothemodule0
+#: model:project.issue,legend_done:project_issue.crm_case_createnewobject0
+#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinhrms0
+#: model:project.issue,legend_done:project_issue.crm_case_outputincorrect0
+#: model:project.issue,legend_done:project_issue.crm_case_pagenotfound0
+#: model:project.issue,legend_done:project_issue.crm_case_problemloadingpage0
+#: model:project.issue,legend_done:project_issue.crm_case_programmingerror0
+msgid "Ready for Next Stage"
+msgstr ""
+
+#. module: project_issue
+#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
+msgid "Ready to reopen"
 msgstr ""
 
 #. module: project_issue
