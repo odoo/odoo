@@ -215,7 +215,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
         var self = this;
 
         function status(){
-            self.connection.rpc('/hw_proxy/status_json',{},{timeout:2500})
+            self.connection.rpc('/hw_proxy/status_json',{},{shadow: true, timeout:2500})
                 .then(function(driver_status){
                     self.set_connection_status('connected',driver_status);
                 },function(){
@@ -239,7 +239,7 @@ var ProxyDevice  = core.Class.extend(mixins.PropertiesMixin,{
             callbacks[i](params);
         }
         if(this.get('status').status !== 'disconnected'){
-            return this.connection.rpc('/hw_proxy/' + name, params || {});
+            return this.connection.rpc('/hw_proxy/' + name, params || {}, {shadow: true});
         }else{
             return (new $.Deferred()).reject();
         }
@@ -588,7 +588,7 @@ var BarcodeReader = core.Class.extend({
         this.remote_active = 1;
 
         function waitforbarcode(){
-            return self.proxy.connection.rpc('/hw_proxy/scanner',{},{timeout:7500})
+            return self.proxy.connection.rpc('/hw_proxy/scanner',{},{shadow: true, timeout:7500})
                 .then(function(barcode){
                     if(!self.remote_scanning){
                         self.remote_active = 0;

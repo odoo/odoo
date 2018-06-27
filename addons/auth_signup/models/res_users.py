@@ -155,5 +155,5 @@ class ResUsers(models.Model):
         sup = super(ResUsers, self)
         if not default or not default.get('email'):
             # avoid sending email to the user we are duplicating
-            sup = super(ResUsers, self.with_context(reset_password=False))
+            sup = super(ResUsers, self.with_context(no_reset_password=True))
         return sup.copy(default=default)
