@@ -263,6 +263,17 @@
             </field>
         </record>
 
+        <record id="view_quant_package_packaging_tree" model="ir.ui.view">
+            <field name="name">stock.quant.package.packaging.tree</field>
+            <field name="model">stock.quant.package</field>
+            <field name="inherit_id" ref="stock.view_quant_package_tree"/>
+            <field name="arch" type="xml">
+                <field name="display_name" position="after">
+                    <field name="packaging_id"/>
+                </field>
+            </field>
+        </record>
+
         <record id="view_order_form_with_carrier" model="ir.ui.view">
             <field name="name">delivery.sale.order.form.view.with_carrier</field>
             <field name="model">sale.order</field>
