@@ -45,6 +45,11 @@
                                         [<span t-esc="product.code"/>]
                                     </t> 
                                     <span t-esc="product.name"/>
+                                    <span t-foreach="product.attribute_value_ids" t-as="attribute_value">
+                                        <span t-if="attribute_value_first">-</span>
+                                        <span t-if="not attribute_value_last" t-esc="attribute_value.name+','"/>
+                                        <span t-else="" t-esc="attribute_value.name"/>
+                                    </span>
                                 </td>
                                 <t t-foreach="data['quantities']" t-as="quantity">
                                     <td><strong t-esc="categ_data['prices'][product.id][quantity]"
