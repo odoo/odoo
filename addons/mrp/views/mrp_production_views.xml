@@ -64,6 +64,9 @@
                             </div>
                         </button>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button type="object" name="action_view_mo_delivery" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="base.group_user">
+                            <field name="delivery_count" widget="statinfo" string="Picking"/>
+                        </button>
                         <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="scrap_count"/></span>
