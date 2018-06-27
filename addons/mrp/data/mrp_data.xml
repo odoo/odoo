@@ -83,14 +83,6 @@
             <field name="sequence">0</field>
         </record>
 
-        <function model="ir.model.data" name="_update_xmlids">
-            <value model="base" eval="[{
-                'xml_id': 'mrp.picking_type_manufacturing',
-                'record': obj().env.ref('stock.warehouse0').manu_type_id,
-                'noupdate': True,
-            }]"/>
-        </function>
-
     </data>
 
 </odoo>
