@@ -284,6 +284,7 @@
             <field name="model">stock.location.route</field>
             <field name="arch" type="xml">
                 <search string="Route">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>
