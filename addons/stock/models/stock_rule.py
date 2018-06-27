@@ -186,6 +186,12 @@ class StockRule(models.Model):
         move._action_confirm()
         return True
 
+    def _get_custom_move_fields(self):
+        """ The purpose of this method is to be override in order to easily add
+        fields from procurement 'values' argument to move data.
+        """
+        return []
+
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.
         This function assumes that the given procurement has a rule (action == 'pull' or 'pull_push') set on it.
@@ -199,7 +205,7 @@ class StockRule(models.Model):
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
         qty_left = product_qty
-        return {
+        move_values = {
             'name': name[:2000],
             'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or values['company_id'].id,
             'product_id': product_id.id,
@@ -221,6 +227,10 @@ class StockRule(models.Model):
             'propagate': self.propagate,
             'priority': values.get('priority', "1"),
         }
+        for field in self._get_custom_move_fields():
+            if field in values:
+                move_values[field] = values.get(field)
+        return move_values
 
     def _log_next_activity(self, product_id, note):
         existing_activity = self.env['mail.activity'].search([('res_id', '=',  product_id.product_tmpl_id.id), ('res_model_id', '=', self.env.ref('product.model_product_template').id),

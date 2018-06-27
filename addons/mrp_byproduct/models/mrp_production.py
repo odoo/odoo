@@ -30,6 +30,8 @@ class MrpProduction(models.Model):
                 'warehouse_id': production.location_dest_id.get_warehouse().id,
                 'origin': production.name,
                 'unit_factor': qty1 / (production.product_qty - production.qty_produced),
+                'propagate': self.propagate,
+                'group_id': self.move_dest_ids and self.move_dest_ids.mapped('group_id')[0].id or self.procurement_group_id.id,
                 'subproduct_id': sub_product.id
             }
             move = Move.create(data)

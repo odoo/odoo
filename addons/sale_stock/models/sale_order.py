@@ -310,7 +310,7 @@ class SaleOrderLine(models.Model):
             'date_planned': date_planned,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
-            'partner_dest_id': self.order_id.partner_shipping_id
+            'partner_id': self.order_id.partner_shipping_id.id,
         })
         for line in self.filtered("order_id.commitment_date"):
             date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
@@ -406,7 +406,7 @@ class SaleOrderLine(models.Model):
         else:
             mto_route = False
             try:
-                mto_route = self.env['stock.warehouse']._get_mto_route()
+                mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
             except UserError:
                 # if route MTO not found in ir_model_data, we treat the product as in MTS
                 pass

@@ -45,13 +45,10 @@ class ProcurementGroup(models.Model):
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
-        result = super(StockRule, self)._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
-        if values.get('sale_line_id', False):
-            result['sale_line_id'] = values['sale_line_id']
-        if values.get('partner_dest_id'):
-            result['partner_id'] = values['partner_dest_id'].id
-        return result
+    def _get_custom_move_fields(self):
+        fields = super(StockRule, self)._get_custom_move_fields()
+        fields += ['sale_line_id', 'partner_id']
+        return fields
 
 
 class StockPicking(models.Model):

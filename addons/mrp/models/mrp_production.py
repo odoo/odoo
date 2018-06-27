@@ -164,6 +164,31 @@ class MrpProduction(models.Model):
     is_locked = fields.Boolean('Is Locked', default=True, copy=False)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        for order in self:
+            order.picking_ids = self.env['stock.picking'].search([
+                ('group_id', '=', order.procurement_group_id.id),
+            ])
+            order.delivery_count = len(order.picking_ids)
+
+    def action_view_mo_delivery(self):
+        """ This function returns an action that display picking related to
+        manufacturing order orders. It can either be a in a list or in a form
+        view, if there is only one picking to show.
+        """
+        self.ensure_one()
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):
@@ -433,12 +458,12 @@ class MrpProduction(models.Model):
     @api.multi
     def _adjust_procure_method(self):
         try:
-            mto_route = self.env['stock.warehouse']._get_mto_route()
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', 'Make To Order')
         except:
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.route_from_categ_ids
+            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
             # TODO: optimize with read_group?
             pull = self.env['stock.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id), ('action', '!=', 'push')], limit=1)
@@ -576,7 +601,8 @@ class MrpProduction(models.Model):
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             raw_moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             (finish_moves | raw_moves)._action_cancel()
-
+            picking_ids = production.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            picking_ids.action_cancel()
         self.write({'state': 'cancel', 'is_locked': True})
         return True
 

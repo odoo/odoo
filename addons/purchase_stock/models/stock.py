@@ -115,43 +115,25 @@ class StockWarehouse(models.Model):
                                      help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
 
-    @api.multi
-    def _get_buy_pull_rule(self):
-        buy_route_id = self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False)
-        if not buy_route_id:
-            buy_route_id = self.env['stock.location.route'].search([('name', 'like', _('Buy'))], limit=1)
-        if not buy_route_id:
-            raise UserError(_("Can't find any Buy route. Please create a route with the 'Buy' action for your receipts operation types."))
-
-        return {
-            'name': self._format_routename(_(' Buy')),
-            'location_id': self.in_type_id.default_location_dest_id.id,
-            'route_id': buy_route_id.id,
-            'action': 'buy',
-            'picking_type_id': self.in_type_id.id,
-            'warehouse_id': self.id,
-            'group_propagation_option': 'none',
-        }
-
-    @api.multi
-    def create_routes(self):
-        res = super(StockWarehouse, self).create_routes() # super applies ensure_one()
-        if self.buy_to_resupply:
-            res['buy_pull_id'] = self._create_buy_rule()
-        return res
-
-    @api.multi
-    def write(self, vals):
-        if 'buy_to_resupply' in vals:
-            if vals.get("buy_to_resupply"):
-                for warehouse in self:
-                    if not warehouse.buy_pull_id:
-                        vals['buy_pull_id'] = self._create_buy_rule()
-            else:
-                for warehouse in self:
-                    if warehouse.buy_pull_id:
-                        warehouse.buy_pull_id.unlink()
-        return super(StockWarehouse, self).write(vals)
+    def _get_global_route_rules_values(self):
+        rules = super(StockWarehouse, self)._get_global_route_rules_values()
+        location_id = self.in_type_id.default_location_dest_id
+        rules.update({
+            'buy_pull_id': {
+                'depends': ['reception_steps', 'buy_to_resupply'],
+                'create_values': {
+                    'action': 'buy',
+                    'picking_type_id': self.in_type_id.id,
+                    'route_id': self._find_global_route('purchase.route_warehouse0_buy', 'Buy').id
+                },
+                'update_values': {
+                    'active': self.buy_to_resupply,
+                    'name': self._format_rulename(location_id, False, 'Buy'),
+                    'location_id': location_id.id,
+                }
+            }
+        })
+        return rules
 
     @api.multi
     def _get_all_routes(self):
@@ -168,18 +150,6 @@ class StockWarehouse(models.Model):
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res
 
-    @api.multi
-    def _update_routes(self):
-        res = super(StockWarehouse, self)._update_routes()
-        for warehouse in self:
-            if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
-                warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
-        return res
-
-    def _create_buy_rule(self):
-        buy_pull_vals = self._get_buy_pull_rule()
-        buy_pull = self.env['stock.rule'].create(buy_pull_vals)
-        return buy_pull.id
 
 class ReturnPicking(models.TransientModel):
     _inherit = "stock.return.picking"

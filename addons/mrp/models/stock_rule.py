@@ -66,7 +66,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_qty': product_qty,
             'product_uom_id': product_uom.id,
-            'location_src_id': self.location_src_id.id or location_id.id,
+            'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, values)),

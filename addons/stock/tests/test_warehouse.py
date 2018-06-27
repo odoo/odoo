@@ -332,7 +332,6 @@ class TestWarehouse(TestStockCommon):
 
         route_shop_namur = warehouse_shop_namur.resupply_route_ids
         route_shop_wavre = warehouse_shop_wavre.resupply_route_ids
-
         # The product contains the 2 resupply routes.
         product = self.env['product.product'].create({
             'name': 'Fakir',
