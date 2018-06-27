@@ -26,6 +26,7 @@ import werkzeug
 
 import openerp
 from openerp import api
+from openerp.service import security
 from openerp.modules.registry import RegistryManager
 
 _logger = logging.getLogger(__name__)
@@ -291,7 +292,7 @@ class HttpCase(TransactionCase):
         session.db = db
         session.uid = uid
         session.login = user
-        session.password = password
+        session.session_token = uid and security.compute_session_token(session, self.env)
         session.context = Users.context_get(self.cr, uid) or {}
         session.context['uid'] = uid
         session._fix_lang(session.context)
