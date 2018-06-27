@@ -4,6 +4,7 @@
 import ldap
 import logging
 from ldap.filter import filter_format
+import re
 
 from odoo import api, fields, models, tools
 from odoo.tools.pycompat import to_native
@@ -96,7 +97,9 @@ class CompanyLDAP(models.Model):
 
         entry = False
         try:
-            filter = filter_format(conf['ldap_filter'], (login,))
+            pattern = r"[^%](%s)"
+            match_count = re.findall(pattern, conf['ldap_filter']).__len__()
+            filter = filter_format(conf['ldap_filter'], (login,) * match_count)
         except TypeError:
             _logger.warning('Could not format LDAP filter. Your filter should contain one \'%s\'.')
             return False
