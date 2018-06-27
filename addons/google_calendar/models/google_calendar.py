@@ -508,6 +508,8 @@ class GoogleCalendar(models.AbstractModel):
 
         if single_event_dict.get("recurrence", False):
             rrule = [rule for rule in single_event_dict["recurrence"] if rule.startswith("RRULE:")][0][6:]
+            if rrule and 'UNTIL' not in rrule and 'COUNT' not in rrule:
+                rrule += ';UNTIL=22001231T000000Z'
             result['rrule'] = rrule
         if type == "write":
             res = CalendarEvent.browse(event['id']).write(result)
