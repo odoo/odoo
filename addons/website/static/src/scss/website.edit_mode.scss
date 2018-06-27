@@ -5,8 +5,8 @@
     font-family: Roboto, $font-family-sans-serif;
 
     .o_tooltip_container {
-        @include o-inline-flex-display;
-        @include o-align-items(center);
+        display: inline-flex;
+        align-items: center;
 
         > .o_tooltip {
             @include o-position-absolute;
@@ -33,7 +33,7 @@
         display: inline-block;
     }
     .btn, &.btn {
-        @include user-select(auto);
+        user-select: auto;
         cursor: text!important;
     }
     /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
@@ -65,7 +65,7 @@
 
 /* Prevent the text contents of draggable elements from being selectable. */
 [draggable] {
-    @include user-select(none);
+    user-select: none;
 }
 
 .oe_editable:focus,

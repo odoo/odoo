@@ -39,15 +39,15 @@
 
     // Flex fields (inline)
     &.o_field_many2one, &.o_field_radio, &.o_field_many2manytags, &.o_field_percent_pie, &.o_field_monetary, &.o_field_binary_file {
-        @include o-inline-flex-display;
+        display: inline-flex;
         > span, > button {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
         }
     }
 
     // Dropdowns input (many2one, ...)
     .o_input_dropdown {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         position: relative;
         width: 100%;
 
@@ -75,28 +75,28 @@
     // Monetary
     &.o_field_monetary {
         &.o_input {
-            @include o-align-items(baseline);
+            align-items: baseline;
 
             > input {
                 width: 100px;
-                @include o-flex(1, 0, auto);
+                flex: 1 0 auto;
             }
         }
     }
 
     // Many2many tags
     &.o_field_many2manytags {
-        @include o-flex-flow(row, wrap);
-        @include o-align-items(baseline);
+        flex-flow: row wrap;
+        align-items: baseline;
 
         > .o_field_widget {
-            @include o-flex(1, 0, 100px);
+            flex: 1 0 100px;
             position: initial;
             max-width: 100%;
         }
 
         > .badge {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             border: 0;
             font-size: 12px;
             color: white;
@@ -261,12 +261,12 @@
         }
 
         .o_radio_item {
-            @include o-flex(0, 0, auto);
-            @include o-flex-display;
-            @include o-align-items(center);
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
 
             > input {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 margin: 0 $o-form-spacing-unit 0 0;
             }
             > label {
@@ -281,7 +281,7 @@
         }
 
         &.o_vertical {
-            @include o-flex-flow(column, nowrap);
+            flex-flow: column nowrap;
             .o_radio_item {
                 margin-bottom: $o-form-spacing-unit;
             }
@@ -290,7 +290,7 @@
 
     // Percent pie
     &.o_field_percent_pie {
-        @include o-align-items(center);
+        align-items: center;
 
         > .o_pie {
             position: relative;
@@ -311,7 +311,7 @@
 
             .o_mask {
                 @include o-position-absolute(0, 0);
-                @include o-transform-origin(0);
+                transform-origin: 0;
                 width: 50%;
                 height: 100%;
                 background-color: $o-view-background-color;
@@ -321,9 +321,9 @@
             }
 
             .o_pie_value {
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                display: flex;
+                justify-content: center;
+                align-items: center;
 
                 border-radius: 100%;
 

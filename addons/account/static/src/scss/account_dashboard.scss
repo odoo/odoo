@@ -5,9 +5,9 @@
     }
 
     .o_account_dashboard_header {
-        @include o-flex(1, 0, 100%);
-        @include o-flex-flow(column, nowrap);
-        @include o-align-self(flex-start);
+        flex: 1 0 100%;
+        flex-flow: column nowrap;
+        align-self: flex-start;
         width: 100%;
         height: auto; // cancel o_form_view height 100%, which hides the help tip message at the bottom of the screen
         min-height: 0%; // cancel o_form_view min-height 100%, which hides the help tip message at the bottom of the screen

@@ -84,7 +84,7 @@ $o-wsale-wizard-label-completed: $state-success-text;
 
         &.active {
             .progress-wizard-dot {
-                @include o-animation(fadeIn, 1s);
+                animation: fadeIn 1s ease 0s 1 normal none running;
                 background: $o-wsale-wizard-dot-active;
                 box-shadow: 0 0 0 $o-wsale-wizard-dot-active-glow - 1px $o-wsale-wizard-color-inner,
                             0 0 0 $o-wsale-wizard-dot-active-glow rgba($o-wsale-wizard-dot-active, 0.5);

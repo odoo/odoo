@@ -38,7 +38,7 @@
     }
 
     .o_thread_message {
-        @include o-flex-display;
+        display: flex;
         padding: 4px $o-horizontal-padding;
         margin-bottom: 0px;
 
@@ -48,7 +48,7 @@
         }
 
         .o_thread_message_sidebar {
-            @include o-flex(0, 0, $o-mail-thread-avatar-size);
+            flex: 0 0 $o-mail-thread-avatar-size;
             margin-right: 10px;
             margin-top: 2px;
             text-align: center;
@@ -99,7 +99,7 @@
         }
 
         .o_thread_message_core {
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;

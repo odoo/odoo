@@ -34,16 +34,16 @@
     @media (min-width: $screen-xs-min) {
         .o_row {
             &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
-                @include o-flex-display;
+                display: flex;
                 width: auto!important;
             }
 
-            @include o-align-items(baseline);
+            align-items: baseline;
             min-width: 50px;
             margin: 0 (-$o-form-spacing-unit/2);
 
             > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 width: auto!important;
                 margin-right: $o-form-spacing-unit/2;
                 margin-left: $o-form-spacing-unit/2;
@@ -57,7 +57,7 @@
                 padding-bottom: 0;
             }
             > .o_field_boolean {
-                @include o-align-self(center);
+                align-self: center;
             }
         }
     }
@@ -106,11 +106,11 @@
         @media (min-width: $screen-xs-min) {
             .o_row {
                 > .o_field_widget, > div {
-                    @include o-flex(1, 1, auto);
+                    flex: 1 1 auto;
                     width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
 
                     &.o_field_boolean, &.o_priority {
-                        @include o-flex(0, 0, auto);
+                        flex: 0 0 auto;
                         width: auto!important;
                     }
                 }
@@ -140,25 +140,25 @@
     // Statusbar
     .o_form_statusbar {
         position: relative; // Needed for the "More" dropdown
-        @include o-flex-display;
-        @include o-justify-content(space-between);
+        display: flex;
+        justify-content: space-between;
         padding-left: $o-horizontal-padding;
         border-bottom: 1px solid $gray-lighter-darker;
         background-color: $o-view-background-color;
 
         > .o_statusbar_buttons, > .o_statusbar_status {
-            @include o-flex-display;
-            @include o-align-items(center);
-            @include o-align-content(space-around);
+            display: flex;
+            align-items: center;
+            align-content: space-around;
         }
 
         > .o_field_widget {
-            @include o-align-self(center);
+            align-self: center;
             margin-bottom: 0px;
         }
 
         > .o_statusbar_buttons {
-            @include o-flex-flow(row, wrap);
+            flex-flow: row wrap;
 
             > .btn {
                 $o-statusbar-buttons-vmargin: 4px;
@@ -171,9 +171,9 @@
 
         > .o_statusbar_status {
             margin-left: auto;
-            @include o-flex-flow(row-reverse, wrap-reverse);
-            @include o-align-self(stretch);
-            @include o-align-items(stretch);
+            flex-flow: row-reverse wrap-reverse;
+            align-self: stretch;
+            align-items: stretch;
             overflow-x: hidden; // to prevent horizontal scroll due to last arrow
 
             > .o_arrow_button {
@@ -185,7 +185,7 @@
                 color: $gray;
                 border-width: 0 0 0;
                 border-radius: 0;
-                @include o-transition(all, 0.1s);
+                transition: all 0.1s ease 0s;
 
                 &:first-child {
                     padding-right: $o-horizontal-padding; // Compensate container padding
@@ -215,7 +215,7 @@
                     border-bottom: ceil($o-statusbar-height/2) solid transparent;
                     border-right: none;
                     border-left: $o-statusbar-arrow-width solid $o-view-background-color;
-                    @include o-transition(border, 0.2s);
+                    transition: border 0.2s ease 0s;
                     -moz-transform: scale(0.9999); // Smooth the triangle on firefox
                 }
 
@@ -349,7 +349,7 @@
             width: 100%;
 
             > .btn {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 padding: 0 10px;
             }
         }
@@ -361,7 +361,7 @@
             // Makes extra buttons (e.g. m2o external button) overflow on the
             // right padding of the parent element
             .o_input_dropdown {
-                @include o-flex(1, 0, auto);
+                flex: 1 0 auto;
             }
         }
 
@@ -463,7 +463,7 @@
 
             .o_field_widget {
                 text-align: right;
-                @include o-justify-content(flex-end);
+                justify-content: flex-end;
                 width: 100%;
             }
         }
@@ -484,7 +484,7 @@
     .o_address_format {
         width: 100%;
         .o_address_street, .o_address_country {
-            @include o-flex-display;
+            display: flex;
         }
 
         .o_address_city {
@@ -675,11 +675,11 @@ label.o_light_label, .o_light_label label {
         display: block;
 
         > tr {
-            @include o-flex-display;
-            @include o-flex-flow(row, wrap);
+            display: flex;
+            flex-flow: row wrap;
 
             > td {
-                @include o-flex(1, 0, auto);
+                flex: 1 0 auto;
                 display: block;
                 max-width: 100%;
                 padding: 0;
@@ -718,9 +718,9 @@ label.o_light_label, .o_light_label label {
 
 // Settings form views
 .o_settings_container {
-    @include o-flex-display;
-    @include o-flex(0, 1, auto);
-    @include o-flex-flow(row, wrap);
+    display: flex;
+    flex: 0 1 auto;
+    flex-flow: row wrap;
     .o_setting_box:visible:nth-child(odd) {
         clear: left;
     }

@@ -419,7 +419,11 @@ class AssetsBundle(object):
                         except psycopg2.Error:
                             pass
 
-        return '\n'.join(asset.minify() for asset in self.stylesheets)
+        css_content = '\n'.join(asset.minify() for asset in self.stylesheets)
+
+        # Post process the produced css to add required vendor prefixes here
+
+        return css_content
 
     def compile_css(self, compiler, source):
         """Sanitizes @import rules, remove duplicates @import rules, then compile"""

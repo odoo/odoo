@@ -17,7 +17,7 @@
     background-image: -o-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
 
-    @include o-animation(reward-fading, $reward-base-time * 0.5, ease-in-out, 0s, 1, normal, forwards);
+    animation: reward-fading ($reward-base-time * 0.5) ease-in-out 0s 1 normal forwards;
     @include o-position-absolute(20%, auto, auto, 50%);
     @include size($reward-size, $reward-size);
     @media (max-width: $screen-xs-max) {
@@ -26,15 +26,15 @@
 
     &.o_reward_fading {
         display: block;
-        @include o-animation(reward-fading-reverse, ($reward-base-time * 0.4), ease-in-out, 0s, 1, normal, forwards);
+        animation: reward-fading-reverse ($reward-base-time * 0.4) ease-in-out 0s 1 normal forwards;
 
         .o_reward_face_group {
-            @include o-animation(reward-jump-reverse, ($reward-base-time * 0.4), ease-in-out, 0s, 1, normal, forwards);
+            animation: reward-jump-reverse ($reward-base-time * 0.4) ease-in-out 0s 1 normal forwards;
         }
 
         .o_reward_rainbow {
             path {
-                @include o-animation(reward-rainbow-reverse, ($reward-base-time * 0.5), ease-out, 0s, 1, normal, forwards);
+                animation: reward-rainbow-reverse ($reward-base-time * 0.5) ease-out 0s 1 normal forwards;
             }
         }
 
@@ -51,13 +51,13 @@
             fill: none;
             stroke-linecap: round;
             stroke-width: 21px;
-            @include o-animation(reward-rainbow, ($reward-base-time ), ease-out, 0s, 1, normal, forwards);
+            animation: reward-rainbow $reward-base-time ease-out 0s 1 normal forwards;
         }
     }
 
     .o_reward_face_group {
         transform-origin: center;
-        @include o-animation(reward-jump, $reward-base-time * 0.8, ease-in-out);
+        animation: reward-jump $reward-base-time * 0.8 ease-in-out 0s 1 normal none running;
         @include o-position-absolute(6%, 0, 0, 0);
         @include size(100%, 60%);
     }
@@ -68,7 +68,7 @@
         position: relative;
         border-radius: 100%;
         background: center center / contain no-repeat;
-        @include o-animation(reward-float, $reward-base-time, ease-in-out, $reward-base-time, infinite, alternate);
+        animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate;
         @include size(34%, 56.67%);
     }
 
@@ -83,10 +83,10 @@
         svg {
             transform-origin: center center;
             @include o-position-absolute(28%, $left:3%);
-            @include o-animation(reward-stars, $reward-base-time, ease-in-out, 0s, infinite, alternate-reverse);
+            animation: reward-stars $reward-base-time ease-in-out 0s infinite alternate-reverse;
 
             &.star2, &.star4 {
-                @include o-animation(reward-stars, ($reward-base-time*1.2), ease-in-out, 0s, infinite, alternate);
+                animation: reward-stars ($reward-base-time*1.2) ease-in-out 0s infinite alternate;
             }
 
             &.star2 {
@@ -110,7 +110,7 @@
     .o_reward_thumbup {
         width: 40px;
         display: block;
-        @include o-animation(reward-scale, $reward-base-time * 0.5, ease-in-out, 0s, infinite, alternate);
+        animation: reward-scale ($reward-base-time * 0.5) ease-in-out 0s infinite alternate;
         @include o-position-absolute(63%, auto, auto, 65%);
     }
 
@@ -121,9 +121,9 @@
         margin-left: 15%;
 
         // Translate before animate
-        @include o-transform(translateY(5px));
+        transform: translateY(5px);
 
-        @include o-animation(reward-float, $reward-base-time, ease-in-out, $reward-base-time, infinite, alternate-reverse);
+        animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate-reverse;
         @include o-position-absolute(85%, auto, auto, 0%);
 
         .o_reward_thumb_right {
@@ -155,16 +155,16 @@
         }
 
         .o_reward_shadow_container {
-            @include o-transform(translateY(0px) rotateZ(0));
-            @include o-animation(reward-float, $reward-base-time, ease-in-out, $reward-base-time, infinite, alternate);
+            transform: translateY(0px) rotateZ(0);
+            animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate;
         }
 
         .o_reward_shadow {
             @include size(100%, 12px);
             background-color: #e7eaf0;
             border-radius: 100%;
-            @include o-transform(scale(0.8) rotateZ(0));
-            @include o-animation(reward-scale, $reward-base-time, ease-in-out, $reward-base-time, infinite, alternate);
+            transform: scale(0.8) rotateZ(0);
+            animation: reward-scale $reward-base-time ease-in-out $reward-base-time infinite alternate;
             @include o-position-absolute(auto, auto, -40px, 0);
         }
     }
@@ -187,25 +187,25 @@
 
 @keyframes reward-jump {
     0% {
-        @include o-transform(scale(0.5));
+        transform: scale(0.5);
     }
     50% {
-        @include o-transform(scale(1.05));
+        transform: scale(1.05);
     }
     to {
-        @include o-transform(scale(1));
+        transform: scale(1);
     }
 }
 
 @keyframes reward-jump-reverse {
     0% {
-        @include o-transform(scale(1));
+        transform: scale(1);
     }
     50% {
-        @include o-transform(scale(1.05));
+        transform: scale(1.05);
     }
     to {
-        @include o-transform(scale(0.5));
+        transform: scale(0.5);
     }
 }
 
@@ -226,30 +226,30 @@
 
 @keyframes reward-float {
     from {
-        @include o-transform(translateY(0px));
+        transform: translateY(0px);
     }
     to {
-        @include o-transform(translateY(5px));
+        transform: translateY(5px);
     }
 }
 
 @keyframes reward-stars {
     from {
-        @include o-transform(scale(0.3) rotate(0deg));
+        transform: scale(0.3) rotate(0deg);
     }
     50% {
-        @include o-transform(scale(1.0) rotate(20deg));
+        transform: scale(1.0) rotate(20deg);
     }
     to {
-        @include o-transform(scale(0.3) rotate(80deg));
+        transform: scale(0.3) rotate(80deg);
     }
 }
 
 @keyframes reward-scale {
     from {
-        @include o-transform(scale(0.8));
+        transform: scale(0.8);
     }
     to {
-        @include o-transform(scale(1.0));
+        transform: scale(1.0);
     }
 }

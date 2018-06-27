@@ -5,7 +5,7 @@
 }
 
 .o_searchview {
-    @include o-align-items(flex-end);
+    align-items: flex-end;
     position: relative;
     padding: 0 20px 1px 0;
 
@@ -15,25 +15,25 @@
     }
 
     .o_searchview_input_container {
-        @include o-flex-display;
-        @include o-flex-flow(row, wrap);
+        display: flex;
+        flex-flow: row wrap;
 
         .o_searchview_facet {
             $o-searchview-facet-remove-width: 18px;
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             max-width: 100%;
-            @include o-flex-display;
+            display: flex;
             position: relative;
             margin: 1px 3px 0 0;
 
             .o_searchview_facet_label {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 @include o-text-overflow;
                 padding: 0 3px;
                 color: white;
 
-                @include o-flex-display;
-                @include o-align-items(center);
+                display: flex;
+                align-items: center;
             }
 
             .o_facet_values {
@@ -43,10 +43,10 @@
                 }
             }
             .o_facet_remove {
-                @include o-flex(0, 0, auto);
-                @include o-flex-display;
-                @include o-justify-content(center);
-                @include o-align-items(center);
+                flex: 0 0 auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 @include o-position-absolute(0, 0, 0);
                 width: $o-searchview-facet-remove-width;
                 cursor: pointer;
@@ -54,7 +54,7 @@
         }
         .o_searchview_input {
             width: 100px;
-            @include o-flex(1, 0, auto);
+            flex: 1 0 auto;
         }
 
         .o_searchview_more {
@@ -107,7 +107,7 @@
 
     display: inline-block;
     cursor: pointer;
-    @include user-select(none);  // Prevent text selection when toggling the dropdowns
+    user-select: none;  // Prevent text selection when toggling the dropdowns
     > a { // dropdown togglers
         color: $o-main-text-color;
         &:hover {

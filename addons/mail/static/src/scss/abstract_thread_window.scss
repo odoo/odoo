@@ -1,8 +1,8 @@
 $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
 .o_thread_window {
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     position: fixed;
     width: $o-mail-thread-window-width;
     max-width: 100%;
@@ -28,8 +28,8 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .o_thread_window_header {
-        @include o-flex-display;
-        @include o-flex(0, 0, auto);
+        display: flex;
+        flex: 0 0 auto;
         color: white;
         padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
         border-radius: 3px 3px 0 0;
@@ -54,12 +54,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_thread_window_title {
             cursor: pointer;
-            @include o-flex(1, 1, auto);
+            flex: 1 1 auto;
             @include o-text-overflow;
         }
 
         .o_thread_window_buttons {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             .o_thread_window_close, .o_thread_window_expand {
                 color: white;
                 padding: 3px;
@@ -71,7 +71,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     .o_mail_thread {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         overflow: auto;
         -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
         .o_thread_date_separator {
