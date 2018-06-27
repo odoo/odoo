@@ -24,6 +24,7 @@ var QWeb = core.qweb;
 var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
+        discard_record_changes: '_onDiscardRecordChanges',
         reload_mail_fields: '_onReloadMailFields',
     },
     events: {
@@ -155,6 +156,37 @@ var Chatter = Widget.extend({
         }
     },
     /**
+     * Discard changes on the record.
+     *
+     * @private
+     * @returns {$.Deferred} resolved if successfully discarding changes on
+     *   the record, rejected otherwise
+     */
+    _discardChanges: function () {
+        var def = $.Deferred();
+        this.trigger_up('discard_changes', {
+            recordID: this.record.id,
+            onSuccess: def.resolve.bind(def),
+            onFailure: def.reject.bind(def),
+        });
+        return def;
+    },
+    /**
+     * Discard changes on the record if the message will reload the record
+     * after posting it
+     *
+     * @private
+     * @param {Object} message
+     * @return {$.Deferred} resolved if no reload or proceed to discard the
+     *   changes on the record, rejected otherwise
+     */
+    _discardOnReload: function (message) {
+        if (this._reloadAfterPost(message)) {
+            return this._discardChanges();
+        }
+        return $.when();
+    },
+    /**
      * @private
      */
     _disableChatter: function () {
@@ -199,11 +231,13 @@ var Chatter = Widget.extend({
                 self.composer.focus();
             }
             self.composer.on('post_message', self, function (message) {
-                self.fields.thread.postMessage(message).then(function () {
-                    self._closeComposer(true);
-                    if (self.postRefresh === 'always' || (self.postRefresh === 'recipients' && message.partner_ids.length)) {
-                        self.trigger_up('reload');
-                    }
+                self._discardOnReload(message).then(function () {
+                    self.fields.thread.postMessage(message).then(function () {
+                        self._closeComposer(true);
+                        if (self._reloadAfterPost(message)) {
+                            self.trigger_up('reload');
+                        }
+                    });
                 });
             });
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
@@ -214,6 +248,24 @@ var Chatter = Widget.extend({
             self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
             self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
         });
+    },
+    /**
+     * State if the record will be reloaded after posting a message.
+     * Useful to warn the user of unsaved changes if the record is dirty.
+     *
+     * @private
+     * @param {Object} message
+     * @param {Array} [message.partner_ids] list of recipients of a message
+     * @return {boolean} true if record will be reloaded after posting the
+     *   message, false otherwise
+     */
+    _reloadAfterPost: function (message) {
+        return this.postRefresh === 'always' ||
+                (
+                   this.postRefresh === 'recipients' &&
+                   message.partner_ids &&
+                   message.partner_ids.length
+                );
     },
     /**
      * @private
@@ -314,8 +366,16 @@ var Chatter = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Discard changes on the record.
+     * This is notified by the composer, when opening the full-composer.
+     *
      * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.proceed callback to tell to proceed
      */
+    _onDiscardRecordChanges: function (ev) {
+        this._discardChanges().then(ev.data.proceed);
+    },
     _onOpenComposerMessage: function () {
         var self = this;
         if (!this.suggested_partners_def) {

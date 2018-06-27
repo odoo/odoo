@@ -54,8 +54,8 @@ odoo.define('payment_stripe.stripe', function(require) {
                 }).done(function(data){
                     handler.isTokenGenerate = false;
                     window.location.href = data;
-                }).fail(function(){
-                    var msg = arguments && arguments[1] && arguments[1].data && arguments[1].data.arguments && arguments[1].data.arguments[0];
+                }).fail(function(data){
+                    var msg = data && data.data && data.data.message;
                     var wizard = $(qweb.render('stripe.error', {'msg': msg || _t('Payment error')}));
                     wizard.appendTo($('body')).modal({'keyboard': true});
                 });

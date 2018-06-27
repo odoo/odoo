@@ -611,6 +611,285 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
     form.destroy();
 });
 
+QUnit.test('chatter: discard changes on message post with post_refresh "always"', function (assert) {
+    // After posting a message that always reloads the record, if the record
+    // is dirty (= has some unsaved changes), we should warn the user that
+    // these changes will be lost if he proceeds.
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"' +
+                        ' options="{\'display_log_button\': True, \'post_refresh\': \'always\'}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // Make record dirty
+    form.$('.o_form_sheet input').val('trululu').trigger('input');
+
+    // Send a message
+    form.$('.o_chatter_button_new_message').click();
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+
+    var $modal = $('.modal-dialog');
+    assert.strictEqual($modal.length, 1, "should have a modal opened");
+    assert.strictEqual($modal.find('.modal-body').text(),
+        "The record has been modified, your changes will be discarded. Do you want to proceed?",
+        "should warn the user that any unsaved changes will be lost");
+
+    form.destroy();
+});
+
+QUnit.test('chatter: discard changes on message post without post_refresh', function (assert) {
+    // After posting a message, if the record is dirty and there are no
+    // post_refresh rule, it will not discard the changes on the record.
+    assert.expect(2);
+
+    var hasDiscardChanges = false; // set if `discard_changes` has been triggered up
+    var messages = [];
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"' +
+                        ' options="{\'display_log_button\': True}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
+            }
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
+            if (args.method === 'message_post') {
+                messages.push({
+                    attachment_ids: [],
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    date: moment().format('YYYY-MM-DD HH:MM:SS'), // now
+                    displayed_author: "Me",
+                    id: 42,
+                    is_note: args.kwargs.subtype === 'mail.mt_note',
+                    is_starred: false,
+                    model: 'partner',
+                    res_id: 2,
+                });
+                return $.when(42);
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            discard_changes: function () {
+                hasDiscardChanges = true; // should not do that
+            },
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // Make record dirty
+    form.$('.o_form_sheet input').val('trululu').trigger('input');
+
+    // Send a message
+    form.$('.o_chatter_button_new_message').click();
+    form.$('.oe_chatter .o_composer_text_field:first()').val("My first message");
+    form.$('.oe_chatter .o_composer_button_send').click();
+
+    var $modal = $('.modal-dialog');
+    assert.strictEqual($modal.length, 0, "should have no modal opened");
+    assert.notOk(hasDiscardChanges);
+
+    form.destroy();
+});
+
+QUnit.test('chatter: discard changes on message post with post_refresh "recipients"', function (assert) {
+    // After posting a message with mentions, the record will be reloaded,
+    // as the rpc `message_post` may make changes on some fields of the record.
+    // If the record is dirty (= has some unsaved changes), we should warn the
+    // user that these changes will be lost if he proceeds.
+    assert.expect(2);
+    var done = assert.async();
+
+    var getSuggestionsDef = $.Deferred();
+
+    var messages = [];
+    var bus = new Bus();
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"' +
+                        ' options="{\'display_log_button\': True, \'post_refresh\': \'recipients\'}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: [[42, "Me"]]});
+            }
+            if (args.method === 'get_mention_suggestions') {
+                getSuggestionsDef.resolve();
+                return $.when([{email: "me@odoo.com", id: 42, name: "Me"}]);
+            }
+            if (args.method === 'message_format') {
+                var requested_msgs = _.filter(messages, function (msg) {
+                    return _.contains(args.args[0], msg.id);
+                });
+                return $.when(requested_msgs);
+            }
+            if (args.method === 'message_post') {
+                messages.push({
+                    attachment_ids: [],
+                    author_id: ["42", "Me"],
+                    body: args.kwargs.body,
+                    date: moment().format('YYYY-MM-DD HH:MM:SS'), // now
+                    displayed_author: "Me",
+                    id: 42,
+                    is_note: args.kwargs.subtype === 'mail.mt_note',
+                    is_starred: false,
+                    model: 'partner',
+                    res_id: 2,
+                });
+                return $.when(42);
+            }
+            return this._super(route, args);
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // Make record dirty
+    form.$('.o_form_sheet input').val('trululu').trigger('input');
+
+    // create a new message
+    form.$('.o_chatter_button_new_message').click();
+
+    // Add a user as mention
+    form.$('.oe_chatter .o_composer_text_field:first()').val("@");
+
+    var $input = form.$('.oe_chatter .o_composer_text_field:first()');
+    $input.val('@');
+    // the cursor position must be set for the mention manager to detect that we are mentionning
+    $input[0].selectionStart = 1;
+    $input[0].selectionEnd = 1;
+    $input.trigger('keyup');
+
+    getSuggestionsDef
+        .then(concurrency.delay.bind(concurrency, 0))
+        .then(function () {
+            // click on mention
+            $input.trigger($.Event('keyup', {which: $.ui.keyCode.ENTER}));
+
+            // untick recipient as follower (prompts a res.partner form otherwise)
+            form.$('.o_checkbox input').prop('checked', false);
+
+            // send message
+            form.$('.oe_chatter .o_composer_button_send').click();
+
+            var $modal = $('.modal-dialog');
+            assert.strictEqual($modal.length, 1, "should have a modal opened");
+            assert.strictEqual($modal.find('.modal-body').text(),
+                "The record has been modified, your changes will be discarded. Do you want to proceed?",
+                "should warn the user that any unsaved changes will be lost");
+
+            form.destroy();
+            done();
+        });
+});
+
+QUnit.test('chatter: discard changes on opening full-composer', function (assert) {
+    // When we open the full-composer, any following operations by the user
+    // will reload the record (even closing the full-composer). Therefore,
+    // we should warn the user when we open the full-composer if the record
+    // is dirty (= has some unsaved changes).
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        services: this.services,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids" widget="mail_thread"' +
+                        ' options="{\'display_log_button\': True,' +
+                        ' \'post_refresh\': \'always\'}"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        session: {},
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        viewOptions: {
+            mode: 'edit',
+        },
+    });
+
+    // Make record dirty
+    form.$('.o_form_sheet input').val('trululu').trigger('input');
+
+    // Open full-composer
+    form.$('.o_chatter_button_new_message').click();
+    form.$('.o_composer_button_full_composer').click();
+
+    var $modal = $('.modal-dialog');
+    assert.strictEqual($modal.length, 1, "should have a modal opened");
+    assert.strictEqual($modal.find('.modal-body').text(),
+        "The record has been modified, your changes will be discarded. Do you want to proceed?",
+        "should warn the user that any unsaved changes will be lost");
+
+    form.destroy();
+});
+
 QUnit.test('chatter: Attachment viewer', function (assert) {
     assert.expect(6);
     this.data.partner.records[0].message_ids = [1];

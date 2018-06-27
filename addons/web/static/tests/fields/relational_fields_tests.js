@@ -143,10 +143,12 @@ QUnit.module('relational_fields', {
             user: {
                 fields: {
                     name: {string: "Name", type: "char"},
+                    partner_ids: {string: "one2many partners field", type: "one2many", relation: 'partner', relation_field: 'user_id'},
                 },
                 records: [{
                     id: 17,
                     name: "Aline",
+                    partner_ids: [1, 2],
                 }, {
                     id: 19,
                     name: "Christine",
@@ -1179,7 +1181,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('list in form: discard newly added element with empty required field (default_get)', function (assert) {
+    QUnit.test('item not dropped on discard with empty required field (default_get)', function (assert) {
         // This test simulates discarding a record that has been created with
         // one of its required field that is empty. When we discard the changes
         // on this empty field, it should not assume that this record should be
@@ -1323,7 +1325,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('list in form: discard newly added element with empty required field (onchange in default_get)', function (assert) {
+    QUnit.test('list in form: item not dropped on discard with empty required field (onchange in default_get)', function (assert) {
         // variant of the test "list in form: discard newly added element with
         // empty required field (default_get)", in which the `default_get`
         // performs an `onchange` at the same time. This `onchange` may create
@@ -1393,11 +1395,13 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('list in form: discard newly added element with empty required field (onchange after default_get)', function (assert) {
+    QUnit.test('list in form: item not dropped on discard with empty required field (onchange on list after default_get)', function (assert) {
         // discarding a record from an `onchange` in a `default_get` should not
-        // abandon the record. However, any `onchange` after `default_get`
-        // should be abandoned on discard
-        assert.expect(6);
+        // abandon the record. This should not be the case for following
+        // `onchange`, except if an onchange make some changes on the list:
+        // in particular, if an onchange make changes on the list such that
+        // a record is added, this record should not be dropped on discard
+        assert.expect(8);
 
         var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
@@ -1449,9 +1453,126 @@ QUnit.module('relational_fields', {
         // click off so that the required field still stay empty
         $('body').click();
 
+        // record should not be dropped
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should not have dropped record in the editable list");
+        assert.strictEqual($('td.o_data_cell').first().text(), "entry",
+            "should still have the correct displayed name");
+        assert.strictEqual($('td.o_data_cell.o_required_modifier').text(), "",
+            "should still have empty string in the required field");
+
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+        form.destroy();
+    });
+
+    QUnit.test('item dropped on discard with empty required field with "Add an item" (invalid on "ADD")', function (assert) {
+        // when a record in a list is added with "Add an item", it should
+        // always be dropped on discard if some required field are empty
+        // at the record creation.
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        // Click on "Add an item"
+        form.$('.o_field_x2many_list_row_add a').click();
+        var charField = form.$('.o_field_widget.o_field_char[name="display_name"]');
+        var requiredField = form.$('.o_field_widget.o_required_modifier[name="trululu"]');
+        charField.val("some text");
+        assert.strictEqual(charField.length, 1,
+            "should have a char field 'display_name' on this record");
+        assert.notOk(charField.hasClass('o_required_modifier'),
+            "the char field should not be required on this record");
+        assert.strictEqual(charField.val(), "some text",
+            "should have entered text in the char field on this record");
+        assert.strictEqual(requiredField.length, 1,
+            "should have a required field 'trululu' on this record");
+        assert.strictEqual(requiredField.val().trim(), "",
+            "should have empty string in the required field on this record");
+
+        // click on empty required field in editable list record
+        requiredField.click();
+        // click off so that the required field still stay empty
+        $('body').click();
+
         // record should be dropped
         assert.strictEqual(form.$('.o_data_row').length, 0,
             "should have dropped record in the editable list");
+
+        form.destroy();
+    });
+
+    QUnit.test('item not dropped on discard with empty required field with "Add an item" (invalid on "UPDATE")', function (assert) {
+        // when a record in a list is added with "Add an item", it should
+        // be temporarily added to the list when it is valid (e.g. required
+        // fields are non-empty). If the record is updated so that the required
+        // field is empty, and it is discarded, then the record should not be
+        // dropped.
+        assert.expect(8);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                            '<field name="trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "should initially not have any record in the list");
+
+        // Click on "Add an item"
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have a temporary record in the list");
+
+        var $inputEditMode = form.$('.o_field_widget.o_required_modifier[name="trululu"] input');
+        assert.strictEqual($inputEditMode.length, 1,
+            "should have a required field 'trululu' on this record");
+        assert.strictEqual($inputEditMode.val(), "",
+            "should have empty string in the required field on this record");
+
+        // add something to required field and leave edit mode of the record
+        $inputEditMode.click();
+        $('li.ui-menu-item').first().click();
+        $('body').click(); // leave edit mode on the line
+
+        var $inputReadonlyMode = form.$('.o_data_cell.o_required_modifier');
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should not have dropped valid record when leaving edit mode");
+        assert.strictEqual($inputReadonlyMode.text(), "first record",
+            "should have put some content in the required field on this record");
+
+        // remove the required field and leave edit mode of the record
+        $('.o_data_row').click(); // enter edit mode on the line
+        $inputEditMode.click();
+        $inputEditMode.val("");
+        $('body').click();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should not have dropped record in the list on discard (invalid on UPDATE)");
+        assert.strictEqual($inputReadonlyMode.text(), "first record",
+            "should keep previous valid required field content on this record");
 
         relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         form.destroy();
@@ -9188,7 +9309,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('onchange in a one2Many, but not in main record, with non inline view', function (assert) {
+    QUnit.test('onchange in a one2many with non inline view on an existing record', function (assert) {
         assert.expect(6);
 
         this.data.partner.fields.sequence = {string: 'Sequence', type: 'integer'};
@@ -9222,6 +9343,53 @@ QUnit.module('relational_fields', {
         testUtils.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
                                 {position: 'top'});
         assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('onchange in a one2many with non inline view on a new record', function (assert) {
+        assert.expect(8);
+
+        this.data.turtle.onchanges = {
+            display_name: function (obj) {
+                if (obj.display_name) {
+                    obj.turtle_int = 44;
+                }
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="turtles"/></form>',
+            archs: {
+                'turtle,false,list': '<tree editable="bottom">' +
+                        '<field name="display_name"/>' +
+                        '<field name="turtle_int"/>' +
+                    '</tree>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // add a row and trigger the onchange
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_data_row .o_field_widget[name=display_name]').val('a name').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row .o_field_widget[name=turtle_int]').val(), "44",
+            "should have triggered the onchange");
+
+        assert.verifySteps([
+            'load_views', // load sub list
+            'default_get', // main record
+            'onchange', // main record
+            'default_get', // sub record
+            'onchange', // sub record
+            'onchange', // edition of display_name of sub record
+        ]);
+
         form.destroy();
     });
 
@@ -9336,6 +9504,94 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_cell').text(), 'new name',
             "fields in the o2m list view should have been read as well");
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange affecting inline unopened list view', function (assert) {
+        // when we got onchange result for fields of record that were not
+        // already available because they were in a inline view not already
+        // opened, in a given configuration the change were applied ignoring
+        // existing data, thus a line of a one2many field inside a one2many
+        // field could be duplicated unexplectedly
+        assert.expect(5);
+
+        var numUserOnchange = 0;
+
+        this.data.user.onchanges = {
+            partner_ids: function (obj) {
+                if (numUserOnchange === 0) {
+                    // simulate proper server onchange after save of modal with new record
+                    obj.partner_ids = [
+                        [5],
+                        [1, 1, {
+                            display_name: 'first record',
+                            turtles: [
+                                [5],
+                                [1, 2, {'display_name': 'donatello'}],
+                            ],
+                        }],
+                        [1, 2, {
+                            display_name: 'second record',
+                            turtles: [
+                                [5],
+                                obj.partner_ids[1][2].turtles[0],
+                            ],
+                        }],
+                    ];
+                }
+                numUserOnchange++;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: '<form><sheet><group>' +
+                      '<field name="partner_ids">' +
+                          '<form>'+
+                              '<field name="turtles">' +
+                                  '<tree editable="bottom">' +
+                                      '<field name="display_name"/>' +
+                                  '</tree>' +
+                              '</field>' +
+                          '</form>' +
+                          '<tree>' +
+                              '<field name="display_name"/>' +
+                          '</tree>' +
+                      '</field>' +
+                  '</group></sheet></form>',
+            res_id: 17,
+        });
+
+        // add a turtle on second partner
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_row:eq(1)').click();
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal input[name="display_name"]').val('michelangelo').change();
+        $('.modal .btn-primary').click();
+        // open first partner so changes from previous action are applied
+        form.$('.o_data_row:eq(0)').click();
+        $('.modal .btn-primary').click();
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(numUserOnchange, 2,
+            'there should 2 and only 2 onchange from closing the partner modal');
+
+        form.$('.o_data_row:eq(0)').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            'only 1 turtle for first partner');
+        assert.strictEqual($('.modal .o_data_row').text(), 'donatello',
+            'first partner turtle is donatello');
+        $('.modal .o_form_button_cancel').click();
+
+        form.$('.o_data_row:eq(1)').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            'only 1 turtle for second partner');
+        assert.strictEqual($('.modal .o_data_row').text(), 'michelangelo',
+            'second partner turtle is michelangelo');
+        $('.modal .o_form_button_cancel').click();
 
         form.destroy();
     });

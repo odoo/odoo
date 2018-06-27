@@ -792,7 +792,7 @@ class StockMove(models.Model):
                 group_id = False
         return {
             'company_id': self.company_id,
-            'date_planned': self.date,
+            'date_planned': self.date_expected,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,

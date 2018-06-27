@@ -635,7 +635,11 @@ var FormController = BasicController.extend({
      */
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
-        this.saveRecord();
+        var self = this;
+        this._disableButtons();
+        this.saveRecord().always(function () {
+            self._enableButtons();
+        });
     },
     /**
      * This method is called when someone tries to sort a column, most likely
