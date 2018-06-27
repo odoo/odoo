@@ -58,7 +58,8 @@ class Invite(models.TransientModel):
                     'model': wizard.res_model,
                     'res_id': wizard.res_id,
                     'no_auto_thread': True,
+                    'add_sign': True,
                 })
-                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, send_after_commit=False, values={'add_sign': True})
+                new_partners.with_context(auto_delete=True)._notify(message, force_send=True, send_after_commit=False)
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}
