@@ -291,6 +291,10 @@ var ImageWidget = MediaWidget.extend({
         }
 
         var img = this.images[0];
+        if (!img) {
+            return this.media;
+        }
+
         var def = $.when();
         if (!img.access_token) {
             def = this._rpc({
@@ -1214,7 +1218,7 @@ var MediaDialog = Dialog.extend({
         }
 
         return $.when(this.active.save()).then(function (media) {
-            if (!self.media) {
+            if (!self.media && media) {
                 self.range.insertNode(media, true);
             }
             self.media = media;
@@ -1226,7 +1230,7 @@ var MediaDialog = Dialog.extend({
 
             // Update editor bar after image edition (in case the image change to icon or other)
             _.defer(function () {
-                if (!self.media.parentNode) {
+                if (!self.media || !self.media.parentNode) {
                     return;
                 }
                 range.createFromNode(self.media).select();
