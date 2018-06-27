@@ -584,8 +584,8 @@ class ProductCategory(models.Model):
         self.total_route_ids = routes
 
 
-class ProductUoM(models.Model):
-    _inherit = 'product.uom'
+class UoM(models.Model):
+    _inherit = 'uom.uom'
 
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it
@@ -601,4 +601,4 @@ class ProductUoM(models.Model):
                     " products with this UoM have already been moved or are "
                     "currently reserved."
                 ))
-        return super(ProductUoM, self).write(values)
+        return super(UoM, self).write(values)
