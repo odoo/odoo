@@ -209,7 +209,7 @@ var Dialog = Widget.extend({
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
             this.__closed = true;
-            this.trigger('closed', options);
+            this.trigger('closed', {arg: options});
         }
 
         if (this.isDestroyed()) {

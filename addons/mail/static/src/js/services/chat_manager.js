@@ -1071,7 +1071,7 @@ var ChatManager =  AbstractService.extend({
                 this._removeMessageFromChannel("channel_moderation", msg);
                 this.chatBus.trigger('update_moderation_counter');
             }
-            this.chatBus.trigger('update_message', msg);
+            this.chatBus.trigger('update_message', {message: msg});
         }
         return msg;
     },
@@ -1644,7 +1644,7 @@ var ChatManager =  AbstractService.extend({
                 }
                 message.needsModeration = false;
                 self._removeMessageFromChannel(message.res_id, message);
-                self.chatBus.trigger('update_message', message);
+                self.chatBus.trigger('update_message', {message: message});
                 }
             });
         this.chatBus.trigger('update_moderation_counter');
@@ -1680,7 +1680,7 @@ var ChatManager =  AbstractService.extend({
                     message.customer_email_status = "sent";
                 }
                 self._updateMessageNotificationStatus(updateMessage, message);
-                self.chatBus.trigger('update_message', message);
+                self.chatBus.trigger('update_message', {message: message});
             }
         });
         this.chatBus.trigger('update_needaction', this.needactionCounter);
