@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2018-06-27 09:24+0000\n"
+"PO-Revision-Date: 2018-06-27 09:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgid "<i class=\"fa fa-fw fa-times\"/> I'm not interested"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:194
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:192
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
 msgstr ""
@@ -121,6 +121,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -153,7 +154,7 @@ msgid "All Countries"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:267
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:265
 #, python-format
 msgid "All fields are required !"
 msgstr ""
@@ -198,6 +199,11 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_probability
 msgid "Avg Probability"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
+msgid "Bronze"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -487,7 +493,13 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Gives the probability to assign a lead to this partner. (0 means no assignation.)"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
+msgid "Gold"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -508,13 +520,13 @@ msgid "High"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:203
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: code:addons/website_crm_partner_assign/models/crm_lead.py:207
+#: code:addons/website_crm_partner_assign/models/crm_lead.py:205
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
 msgstr ""
@@ -531,16 +543,19 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
 msgid "Implementation References"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_count
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_count
 msgid "Implemented Count"
 msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
 
@@ -583,6 +598,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
 msgid "Latest Partner Review"
 msgstr ""
 
@@ -634,7 +650,8 @@ msgid "Leads Analysis"
 msgstr ""
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_10215
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_10221
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr ""
@@ -647,6 +664,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
 msgstr ""
 
@@ -731,6 +749,7 @@ msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
 msgid "Next Partner Review"
 msgstr ""
 
@@ -881,6 +900,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
 msgid "Partnership Date"
 msgstr ""
 
@@ -898,6 +918,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_planned_revenue
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Planned Revenue"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
+msgid "Platinum"
 msgstr ""
 
 #. module: website_crm_partner_assign
@@ -979,7 +1004,8 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation_sequence
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence_10218
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_sequence_10224
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_sequence
 msgid "Sequence"
 msgstr ""
 
@@ -993,6 +1019,11 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:70
 #, python-format
 msgid "Set an email address for the partner(s): %s"
+msgstr ""
+
+#. module: website_crm_partner_assign
+#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
+msgid "Silver"
 msgstr ""
 
 #. module: website_crm_partner_assign
