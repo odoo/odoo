@@ -16,10 +16,10 @@
 # Viktor Pogrebniak <vp@aifil.ru>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -213,20 +213,20 @@ msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
 "На указанный адрес было выслано письмо с инструкциями по сбросу пароля"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Другой пользователь уже зарегистрирован с этим адресом email."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:135
+#: code:addons/auth_signup/controllers/main.py:134
 #, python-format
 msgid "Authentication Failed."
 msgstr "Ошибка аутентификации."
@@ -237,7 +237,7 @@ msgid "Back to Login"
 msgstr "Войти"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:137
+#: code:addons/auth_signup/models/res_users.py:142
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "Невозможно отправить email: пользователь %s не имеет адреса email."
@@ -263,13 +263,13 @@ msgid "Contact"
 msgstr "Контакт"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "Невозможно создать новую учетную запись."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:82
+#: code:addons/auth_signup/controllers/main.py:81
 #, python-format
 msgid "Could not reset your password"
 msgstr "Невозможно сбросить Ваш пароль"
@@ -311,13 +311,7 @@ msgid "HTTP routing"
 msgstr "HTTP маршрутизация"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "If unchecked, only invited users may sign up."
-msgstr ""
-"Если не отмечено, только приглашенные пользователи могут зарегистрироваться"
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:113
+#: code:addons/auth_signup/controllers/main.py:112
 #, python-format
 msgid "Invalid signup token"
 msgstr "Неверный токен регистрации"
@@ -333,7 +327,7 @@ msgid "Never Connected"
 msgstr "Никогда не подключался"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:75
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr ""
@@ -359,7 +353,7 @@ msgid "Password reset"
 msgstr "Сброс пароля"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:123
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
@@ -370,7 +364,7 @@ msgid "Reset Password"
 msgstr "Сброс пароля"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:110
+#: code:addons/auth_signup/models/res_users.py:115
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Сброс пароля: неверное имя пользователя или email"
@@ -421,21 +415,39 @@ msgid "Signup URL"
 msgstr "URL регистрации"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:88
+#: code:addons/auth_signup/models/res_users.py:84
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:91
+#, python-format
+msgid "Signup: invalid template user"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:94
+#, python-format
+msgid "Signup: no login given for new user"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:96
+#, python-format
+msgid "Signup: no name or partner given for new user"
 msgstr ""
 
 #. module: auth_signup
@@ -449,7 +461,7 @@ msgid "Template user for new users created through signup"
 msgstr "Шаблон новых пользователей, созданных в процессе регистрации"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:120
 #, python-format
 msgid "The form was not properly filled in."
 msgstr ""

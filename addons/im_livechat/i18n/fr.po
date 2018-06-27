@@ -6,7 +6,6 @@
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux, 2016
 # Richard Mathot <rim@odoo.com>, 2016
-# Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
@@ -15,6 +14,7 @@
 # Xavier Symons <xsy@openerp.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
+# Shark McGnark <peculiarcheese@gmail.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
@@ -25,13 +25,16 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2017
 # e2f <projects@e2f.com>, 2018
 # fr rev <e2ffr02@hotmail.com>, 2018
+# fr trans <e2ftrans1@yahoo.com>, 2018
+# Miguel Vidali <mvidali129@gmail.com>, 2018
+# Micky Jault <micky037@hotmail.fr>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: fr rev <e2ffr02@hotmail.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:15+0000\n"
+"Last-Translator: Micky Jault <micky037@hotmail.fr>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +96,7 @@ msgstr "Êtes-vous dans la matrice?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:46
+#: code:addons/im_livechat/static/src/js/im_livechat.js:52
 #, python-format
 msgid "Ask something ..."
 msgstr "Demander quelquechose"
@@ -160,6 +163,7 @@ msgstr "<i/>"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: selection:mail.channel,channel_type:0
 msgid "Channel"
 msgstr "Canal"
 
@@ -180,9 +184,19 @@ msgid "Channel Rules"
 msgstr "Règles du canal"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__channel_type
+msgid "Channel Type"
+msgstr "Type de canal"
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
 msgstr "Canaux"
+
+#. module: im_livechat
+#: selection:mail.channel,channel_type:0
+msgid "Chat Discussion"
+msgstr "Discussion instantanée"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
@@ -191,7 +205,7 @@ msgstr "Placeholder pour la boîte de discussion"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:48
+#: code:addons/im_livechat/static/src/js/im_livechat.js:54
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Discutez en ligne avec un de nos collaborateurs"
@@ -240,6 +254,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid "Country"
 msgstr "Pays"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__create_date
+msgid "Create Date"
+msgstr "Date de création"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -427,7 +446,7 @@ msgstr "Heure de la date départ de la session"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:49
+#: code:addons/im_livechat/static/src/js/im_livechat.js:55
 #, python-format
 msgid "How may I help you?"
 msgstr "Comment puis-je vous aider ?"
@@ -544,6 +563,11 @@ msgid "Livechat Channel"
 msgstr "Salon de messagerie instantanée"
 
 #. module: im_livechat
+#: selection:mail.channel,channel_type:0
+msgid "Livechat Conversation"
+msgstr "Salon de discussion instantanée"
+
+#. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
 msgid ""
@@ -625,7 +649,7 @@ msgstr "Aucun historique trouvé"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:151
+#: code:addons/im_livechat/static/src/js/im_livechat.js:157
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
@@ -706,17 +730,38 @@ msgstr "Pourcentage de notes satisfaites au cours des 7 derniers jours"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
 msgstr "Évaluation"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Évaluation des derniers commentaires"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_image
+msgid "Rating Last Image"
+msgstr "Évaluation de la dernière image"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_value
+msgid "Rating Last Value"
+msgstr "Dernière évaluation"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
+msgid "Rating count"
+msgstr "Nombre d'évaluations"
+
+#. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:346
+#: code:addons/im_livechat/static/src/js/im_livechat.js:354
 #, python-format
-msgid "Rating: :rating_%d"
-msgstr "Note : :rating_%d"
+msgid "Rating: %s"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -737,6 +782,11 @@ msgstr "Évaluation : moyen"
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
 msgstr "Évaluations pour le canal d'assistance en ligne"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Reason of the rating"
+msgstr "Raison de l'évaluation"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -936,7 +986,7 @@ msgstr "Utilisateur"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:47
+#: code:addons/im_livechat/static/src/js/im_livechat.js:53
 #, python-format
 msgid "Visitor"
 msgstr "Visiteur"

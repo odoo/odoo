@@ -11,10 +11,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__active
@@ -33,7 +38,7 @@ msgstr "Actief"
 #: model:ir.actions.act_window,help:analytic.action_account_analytic_account_form
 #: model:ir.actions.act_window,help:analytic.action_analytic_account_form
 msgid "Add a new analytic account"
-msgstr ""
+msgstr "Voeg een nieuwe kostenplaats toe"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_tag_action
@@ -62,7 +67,7 @@ msgstr "Kostenplaats"
 #: model:ir.ui.view,arch_db:analytic.account_analytic_group_form_view
 #: model:ir.ui.view,arch_db:analytic.account_analytic_group_tree_view
 msgid "Analytic Account Groups"
-msgstr ""
+msgstr "Kostenplaatsen groepen"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -72,7 +77,7 @@ msgstr "Kostenplaatsen"
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_tags
 msgid "Analytic Accounting Tags"
-msgstr ""
+msgstr "Kostenplaats labels"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
@@ -140,6 +145,7 @@ msgstr "Verbonden relatie"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__balance
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Balance"
 msgstr "Saldo"
 
@@ -156,12 +162,12 @@ msgstr "Kostenplaatsenschema"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "Onderliggende"
 
 #. module: analytic
 #: model:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "Klik om een nieuwe kostenplaats groep aan te maken."
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -221,6 +227,7 @@ msgstr "Aangemaakt op"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__credit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Credit"
 msgstr "Credit"
 
@@ -242,6 +249,7 @@ msgstr "Datum"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
+#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Debit"
 msgstr "Debet"
 
@@ -259,6 +267,21 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Volgers (Kanalen)"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__group_id
@@ -282,6 +305,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid ""
 "If the active field is set to False, it will allow you to hide the account "
@@ -301,6 +334,11 @@ msgstr ""
 "In Odoo worden verkopen en projecten geïmplementeerd door gebruik\n"
 "te maken van kostenplaatsen. U kan kosten en opbrengsten eenvoudig\n"
 "vergelijken om uw marges te analyseren."
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
@@ -330,9 +368,9 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_left
-msgid "Left Parent"
-msgstr "Bovenliggende"
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
+msgid "Messages"
+msgstr "Berichten"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__name
@@ -352,9 +390,29 @@ msgid "No activity yet on this account"
 msgstr "Nog geen activiteit voor deze kostenplaats"
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: analytic
+#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Aantal ongelezen berichten"
+
+#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_id
 msgid "Parent"
 msgstr "Bovenliggend"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_path
+msgid "Parent Path"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__tag_id
@@ -397,11 +455,6 @@ msgstr ""
 "(bijv. herfactureren van reiskosten)."
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_group__parent_right
-msgid "Right Parent"
-msgstr "Bovenliggende"
-
-#. module: analytic
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Search Analytic Lines"
 msgstr "Zoek kostenplaats boekingen"
@@ -430,7 +483,7 @@ msgid ""
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/models/analytic_account.py:165
+#: code:addons/analytic/models/analytic_account.py:191
 #, python-format
 msgid ""
 "The selected account belongs to another company that the one you're trying "
@@ -446,6 +499,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
 msgid "Total"
 msgstr "Totaal"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Aantal ongelezen berichten"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id

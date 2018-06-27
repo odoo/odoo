@@ -16,10 +16,10 @@
 # Umur Akın <umura@projetgrup.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-06-25 08:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:15+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -87,7 +87,7 @@ msgstr "Matris içinde misin?"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:46
+#: code:addons/im_livechat/static/src/js/im_livechat.js:52
 #, python-format
 msgid "Ask something ..."
 msgstr "Birşey sorun ..."
@@ -158,6 +158,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
+#: selection:mail.channel,channel_type:0
 msgid "Channel"
 msgstr "Kanal"
 
@@ -178,9 +179,19 @@ msgid "Channel Rules"
 msgstr "Kanal Kuralları"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__channel_type
+msgid "Channel Type"
+msgstr "Ekip Türü"
+
+#. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels
 msgid "Channels"
 msgstr "Kanallar"
+
+#. module: im_livechat
+#: selection:mail.channel,channel_type:0
+msgid "Chat Discussion"
+msgstr "Sohbet Tartışma"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
@@ -189,7 +200,7 @@ msgstr "Sohbet Girişi Yer Tutucu"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:48
+#: code:addons/im_livechat/static/src/js/im_livechat.js:54
 #, python-format
 msgid "Chat with one of our collaborators"
 msgstr "Çalışanlarımızdan birisiyle sohbet edin"
@@ -237,6 +248,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
 msgid "Country"
 msgstr "Ülke"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__create_date
+msgid "Create Date"
+msgstr "Oluşturma Tarihi"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -418,7 +434,7 @@ msgstr "Oturumun başladığı günün saati"
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:49
+#: code:addons/im_livechat/static/src/js/im_livechat.js:55
 #, python-format
 msgid "How may I help you?"
 msgstr "Size nasıl yardımcı olabilirim?"
@@ -535,6 +551,11 @@ msgid "Livechat Channel"
 msgstr "Canlı Sohbet Kanalı"
 
 #. module: im_livechat
+#: selection:mail.channel,channel_type:0
+msgid "Livechat Conversation"
+msgstr "Canlı Sohbetler"
+
+#. module: im_livechat
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_channel_action
 #: model:ir.actions.act_window,help:im_livechat.im_livechat_report_operator_action
 msgid ""
@@ -615,7 +636,7 @@ msgstr ""
 
 #. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:151
+#: code:addons/im_livechat/static/src/js/im_livechat.js:157
 #, python-format
 msgid ""
 "None of our collaborators seems to be available, please try again later."
@@ -695,17 +716,38 @@ msgstr "Son 7 gündeki mutlu değerlendirme yüzdesi"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_rating_rating
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 #: model:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
 msgstr "Değerlendirme"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Son Geribildirimleri Derecelendirme "
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_image
+msgid "Rating Last Image"
+msgstr "Son Resmin Değerlendirilmesi"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_last_value
+msgid "Rating Last Value"
+msgstr "Değerlendirme Son Değer"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_count
+msgid "Rating count"
+msgstr "Değerlendirme sayısı"
+
+#. module: im_livechat
 #. openerp-web
-#: code:addons/im_livechat/static/src/js/im_livechat.js:346
+#: code:addons/im_livechat/static/src/js/im_livechat.js:354
 #, python-format
-msgid "Rating: :rating_%d"
-msgstr "Değerlendirme: :rating_%d"
+msgid "Rating: %s"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -726,6 +768,11 @@ msgstr "Puan: Fena Değil"
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
 msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_mail_channel__rating_last_feedback
+msgid "Reason of the rating"
+msgstr "Değerlendirme nedeni"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -919,7 +966,7 @@ msgstr "Kullanıcı"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/controllers/main.py:37
-#: code:addons/im_livechat/static/src/js/im_livechat.js:47
+#: code:addons/im_livechat/static/src/js/im_livechat.js:53
 #, python-format
 msgid "Visitor"
 msgstr "Ziyaretçi"

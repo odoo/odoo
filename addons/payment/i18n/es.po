@@ -32,10 +32,10 @@
 # Nicolás Broggi <rnbroggi@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Nicolás Broggi <rnbroggi@gmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -85,13 +85,13 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr "<i class=\"fa fa-trash\"/> Eliminar"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:113
+#: code:addons/payment/models/payment_acquirer.py:123
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
 msgstr "<i>Cancelar,</i> Su pago ha sido cancelado."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:109
+#: code:addons/payment/models/payment_acquirer.py:119
 #, python-format
 msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
@@ -101,7 +101,7 @@ msgstr ""
 "orden."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:117
+#: code:addons/payment/models/payment_acquirer.py:127
 #, python-format
 msgid ""
 "<i>Error,</i> Please be aware that an error occurred during the transaction."
@@ -113,7 +113,7 @@ msgstr ""
 "contactarnos si tiene alguna pregunta sobre el estado de su pedido."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:105
+#: code:addons/payment/models/payment_acquirer.py:115
 #, python-format
 msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
@@ -368,7 +368,7 @@ msgid "Cannot set-up the payment"
 msgstr "No se puede configurar el pago"
 
 #. module: payment
-#: code:addons/payment/controllers/portal.py:110
+#: code:addons/payment/controllers/portal.py:111
 #, python-format
 msgid "Cannot setup the payment."
 msgstr ""
@@ -580,7 +580,7 @@ msgstr "Mensaje de error"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:423
+#: code:addons/payment/static/src/js/payment_form.js:429
 #, python-format
 msgid "Error: "
 msgstr "Error: "
@@ -822,7 +822,7 @@ msgid "Messages"
 msgstr "Mensajes"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:389
+#: code:addons/payment/models/payment_acquirer.py:457
 #, python-format
 msgid "Missing partner reference when trying to create a new payment token"
 msgstr "Falta la referencia del cliente para crear un nuevo token de pago"
@@ -886,19 +886,19 @@ msgstr "Ogone"
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:427
+#: code:addons/payment/static/src/js/payment_form.js:433
 #, python-format
 msgid "Ok"
 msgstr "Aceptar"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:754
+#: code:addons/payment/models/payment_acquirer.py:826
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
 msgstr "Sólo se pueden capturar las transacciones en el estado Autorizado."
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:761
+#: code:addons/payment/models/payment_acquirer.py:833
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
 msgstr ""
@@ -1008,8 +1008,8 @@ msgid "Payment transaction failed (%s)"
 msgstr "Error en la transacción de pago (%s)"
 
 #. module: payment
-#: code:addons/payment/controllers/portal.py:129
-#: code:addons/payment/controllers/portal.py:133
+#: code:addons/payment/controllers/portal.py:131
+#: code:addons/payment/controllers/portal.py:135
 #, python-format
 msgid "Payment transaction failed."
 msgstr ""
@@ -1267,14 +1267,14 @@ msgid "Thanks Message"
 msgstr "Mensaje de agradecimiento"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:561
+#: code:addons/payment/models/payment_acquirer.py:629
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
 "¡Los medios de pago %s no están disponibles para el modo de captura manual!"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:554
+#: code:addons/payment/models/payment_acquirer.py:622
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "La referencia de la transacción de pago debe ser única"
@@ -1426,8 +1426,8 @@ msgstr "No podemos redirigirlo al formulario de pago."
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:181
 #, python-format
-msgid "We are not able to redirect you to the payment form.<"
-msgstr "No podemos redirigirlo al formulario de pago.<"
+msgid "We are not able to redirect you to the payment form. "
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -1597,3 +1597,8 @@ msgstr "tx_values: valores de la transacción"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr "user: registro del usuario actual"
+
+#. module: payment
+#: model:ir.model,name:payment.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

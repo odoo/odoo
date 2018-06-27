@@ -19,13 +19,17 @@
 # 老窦 北京 <2662059195@qq.com>, 2017
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Michael Chong <michaelchong2005@gmail.com>, 2018
+# SHOM <shanmuxin@yeah.net>, 2018
+# xiaobin wu <bd5dml@gmail.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f_cn c5 <jarvisn@ecinnovations.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +65,11 @@ msgstr "%s (副本)"
 #: model:ir.ui.view,arch_db:survey.page
 msgid "&amp;times;"
 msgstr "&amp;次数;"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.403
+msgid "403: Forbidden"
+msgstr "403: 禁止"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
@@ -248,9 +257,29 @@ msgid "A token must be unique!"
 msgstr "标记必须唯一！"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
 msgid "Active"
 msgstr "有效"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__active_domain
+msgid "Active domain"
+msgstr "有效域名"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
+msgid "Activity State"
+msgstr "活动状态"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -311,6 +340,13 @@ msgid "Answers"
 msgstr "答案"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__no_auto_thread
+msgid ""
+"Answers do not go in the original document discussion thread. This has an "
+"impact on the generated message-id."
+msgstr "答案不在原来的讨论区中，会对生成的讯息-id中有影响。"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
 msgstr "已归档"
@@ -328,6 +364,23 @@ msgid ""
 msgstr "附件是通过模型  / res_id 连接到文档中并通过该字段链接到消息上。"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_id
+msgid "Author"
+msgstr "作者"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_id
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "消息的作者。如果没设置，email_from 可能保存一个不匹配任何合作伙伴的电邮地址。"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__author_avatar
+msgid "Author's avatar"
+msgstr "作者头像"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.back
 msgid "Back to Survey"
 msgstr "回到调查"
@@ -336,6 +389,16 @@ msgstr "回到调查"
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
 msgstr "取消"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__channel_ids
+msgid "Channels"
+msgstr "频道"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__child_ids
+msgid "Child Messages"
+msgstr "下级信息"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -377,6 +440,7 @@ msgstr "颜色索引"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
+#: selection:survey.mail.compose.message,message_type:0
 msgid "Comment"
 msgstr "备注"
 
@@ -391,6 +455,11 @@ msgid "Comment Message"
 msgstr "评论消息"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "Company name"
+msgstr "公司名称"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
@@ -403,6 +472,11 @@ msgid "Compose Email"
 msgstr "撰写邮件"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__composition_mode
+msgid "Composition mode"
+msgstr "写作模式"
+
+#. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
 msgstr "配置"
@@ -411,6 +485,11 @@ msgstr "配置"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Constraints"
 msgstr "限制"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__body
+msgid "Contents"
+msgstr "内容"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -424,9 +503,19 @@ msgid "Copy, paste and share the web link below to your audience."
 msgstr "复制、粘贴并分享下面的链接给你的粉丝。"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "Copyright &amp;copy;"
+msgstr "Copyright &amp;copy;"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__date_create
 msgid "Create Date"
 msgstr "创建日期"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "Create a"
+msgstr "创建一个"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label__create_uid
@@ -458,6 +547,12 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__starred
+msgid "Current user has a starred notification linked to this message"
+msgstr "当前用户有一个打星号的提醒与此消息连接"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__date
 #: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
@@ -496,21 +591,26 @@ msgid "Delete"
 msgstr "刪除"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__auto_delete
+msgid "Delete Emails"
+msgstr "删除邮件"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__auto_delete_message
+msgid "Delete Message Copy"
+msgstr "删除消息副本"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__auto_delete
+msgid "Delete sent emails (mass mailing only)"
+msgstr "删除已发送邮件(仅限群发邮件)"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_page__description
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
 #: model:ir.model.fields,field_description:survey.field_survey_survey__description
 msgid "Description"
 msgstr "说明"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_kanban
-msgid "Design"
-msgstr "设计"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
-msgid "Design Survey"
-msgstr "设计调查"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_form
@@ -542,6 +642,13 @@ msgid "Display mode"
 msgstr "显示模式"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__auto_delete_message
+msgid ""
+"Do not keep a copy of the email in the document communication history (mass "
+"mailing only)"
+msgstr "不要在文档通信历史中保留电子邮件副本（仅限群发邮件）"
+
+#. module: survey
 #: model:survey.stage,name:survey.stage_draft
 msgid "Draft"
 msgstr "草稿"
@@ -563,6 +670,7 @@ msgstr "编辑问卷"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
+#: selection:survey.mail.compose.message,message_type:0
 msgid "Email"
 msgstr "Email"
 
@@ -570,6 +678,13 @@ msgstr "Email"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__email_template_id
 msgid "Email Template"
 msgstr "Email模板"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__email_from
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found and replaces the author_id field in the chatter."
+msgstr "发送者的电邮地址。当找不到业务伙伴的匹配的邮件时候，这个字段就被设置。并且在Chatter中的作者id被替换掉。"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -587,9 +702,29 @@ msgid "Existing contacts"
 msgstr "现有联系人"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred_partner_ids
+msgid "Favorited By"
+msgstr "收藏夹"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage__fold
 msgid "Folded in kanban view"
 msgstr "在看板视图中折叠"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -605,6 +740,11 @@ msgstr "自由文本"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_free_text
 msgid "Free Text answer"
 msgstr "自由文本答案"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__email_from
+msgid "From"
+msgstr "从"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_page_search
@@ -630,6 +770,16 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__token
 msgid "Identification token"
 msgstr "识别标记"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -665,6 +815,11 @@ msgid "Incorrect Email Address: %s"
 msgstr "不正确的Email地址: %s"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__parent_id
+msgid "Initial thread message."
+msgstr "初始化线程消息。"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
 msgid "Input must be an email"
 msgstr "输入必须是电子邮件"
@@ -673,6 +828,11 @@ msgstr "输入必须是电子邮件"
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
 msgstr "已发送邀请"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_closed
@@ -752,10 +912,25 @@ msgid "List of emails"
 msgstr "邮件列表"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__is_log
+msgid "Log an Internal Note"
+msgstr "记录内部备注"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__auth_required
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
 msgstr "需要登录"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_activity_type_id
+msgid "Mail Activity Type"
+msgstr "邮件活动类型"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mailing_list_ids
+msgid "Mailing List"
+msgstr "邮件列表"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -772,6 +947,21 @@ msgstr "必答问题"
 #: selection:survey.user_input,type:0
 msgid "Manually"
 msgstr "手工"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mass_mailing_id
+msgid "Mass Mailing"
+msgstr "群发邮件"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mass_mailing_campaign_id
+msgid "Mass Mailing Campaign"
+msgstr "群发邮件营销"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mass_mailing_name
+msgid "Mass Mailing Name"
+msgstr ""
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -819,6 +1009,38 @@ msgid "Maximum value"
 msgstr "最大值"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.403
+msgid "Maybe you were looking for"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__record_name
+msgid "Message Record Name"
+msgstr "消息记录名称"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_type
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr "消息类型：电子邮件用于电邮消息， 通知用于系统消息，评论用于其他消息，例如用户回复"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__message_id
+msgid "Message unique identifier"
+msgstr "消息唯一标识符"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_id
+msgid "Message-Id"
+msgstr "讯息-Id"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
 msgid "Minimum Date"
 msgstr "最小日期"
@@ -864,9 +1086,35 @@ msgid "Name"
 msgstr "名称"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__record_name
+msgid "Name get of the related document."
+msgstr "名称，获得相关单据。"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__needaction
+msgid "Need Action"
+msgstr "需要采取行动"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
 msgstr "新的"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -887,6 +1135,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:survey.action_survey_label_form
 msgid "No survey labels found"
 msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__no_auto_thread
+msgid "No threading for answers"
+msgstr "答案没有线程"
 
 #. module: survey
 #: model:ir.actions.act_window,help:survey.action_survey_user_input_line
@@ -915,9 +1168,29 @@ msgid "Not started yet"
 msgstr "尚未开始"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__notification_ids
+msgid "Notifications"
+msgstr "通知"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__notify
+msgid "Notify followers"
+msgstr "通知关注者"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__notify
+msgid "Notify followers of the document (mass post only)"
+msgstr "通知此单据的关注者(只用于批量发送)"
+
+#. module: survey
 #: selection:survey.user_input_line,answer_type:0
 msgid "Number"
 msgstr "号码"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__column_nb
@@ -931,6 +1204,11 @@ msgid "Number of completed surveys"
 msgstr "已完成的调查数量"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_sent_survey
 msgid "Number of sent surveys"
 msgstr "已发送调查者数量"
@@ -939,6 +1217,11 @@ msgstr "已发送调查者数量"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__tot_start_survey
 msgid "Number of started surveys"
 msgstr "已开始的调查数量"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -956,6 +1239,11 @@ msgid "Occurence"
 msgstr "发生"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "Odoo"
+msgstr "Odoo"
+
+#. module: survey
 #: selection:survey.question,matrix_subtype:0
 msgid "One choice per row"
 msgstr "每行一个选项"
@@ -965,6 +1253,16 @@ msgstr "每行一个选项"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "选项"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__mail_server_id
+msgid "Outgoing mail server"
+msgstr "出向邮件服务器"
+
+#. module: survey
+#: selection:survey.survey,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
@@ -994,6 +1292,11 @@ msgid "Pages"
 msgstr "页面"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__parent_id
+msgid "Parent Message"
+msgstr "上级消息"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 #: selection:survey.user_input,state:0
 msgid "Partially completed"
@@ -1011,12 +1314,22 @@ msgid "Partner Survey Mailing"
 msgstr "合作伙伴调查电子邮件"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__needaction_partner_ids
+msgid "Partners with Need Action"
+msgstr "需要采取行动的业务伙伴"
+
+#. module: survey
 #: model:survey.stage,name:survey.stage_permanent
 msgid "Permanent"
 msgstr "永久"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:164
+#: selection:survey.survey,activity_state:0
+msgid "Planned"
+msgstr "已安排"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:162
 #, python-format
 msgid "Please enter at least one valid recipient."
 msgstr "请至少输入一个可用的收件人。"
@@ -1113,6 +1426,43 @@ msgstr "Quizz 模式"
 #: selection:survey.question,display_mode:0
 msgid "Radio Buttons"
 msgstr "单选按钮"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_value
+msgid "Rating Value"
+msgstr "评级值"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__res_id
+msgid "Related Document ID"
+msgstr "相关单据ID"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__model
+msgid "Related Document Model"
+msgstr "相关的单据模型"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__rating_ids
+msgid "Related ratings"
+msgstr "相关评级"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__reply_to
+msgid ""
+"Reply email address. Setting the reply_to bypasses the automatic thread "
+"creation."
+msgstr "回复邮件地址。设置reply_to旁路线程自动创建。"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__reply_to
+msgid "Reply-To"
+msgstr "回复至"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__result_url
@@ -1279,6 +1629,14 @@ msgid "Skipped"
 msgstr "忽略"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__author_avatar
+msgid ""
+"Small-sized image of this contact. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "此联系人的小尺寸图像。自动缩放为64x64px 的图片，保留纵横比。此字段用于任何需要小图像的场合。"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid ""
 "Something went wrong while contacting survey server. <strong class=\"text-"
@@ -1299,6 +1657,11 @@ msgid "Stage"
 msgstr "阶段"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__starred
+msgid "Starred"
+msgstr "星标"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_init
 msgid "Start Survey"
 msgstr "开始调查"
@@ -1314,6 +1677,24 @@ msgid "Status"
 msgstr "状态"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subject
+msgid "Subject"
+msgstr "主题"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Subject..."
 msgstr "主题..."
@@ -1322,6 +1703,11 @@ msgstr "主题..."
 #: model:ir.ui.view,arch_db:survey.page
 msgid "Submit survey"
 msgstr "提交问卷"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__subtype_id
+msgid "Subtype"
+msgstr "子类型"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_suggested
@@ -1434,6 +1820,11 @@ msgid "Surveys"
 msgstr "调查"
 
 #. module: survey
+#: selection:survey.mail.compose.message,message_type:0
+msgid "System notification"
+msgstr "系统通知"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Test"
@@ -1482,7 +1873,7 @@ msgid "The answer you entered has an invalid format."
 msgstr "您输入的答案格式不正确。"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:139
+#: code:addons/survey/wizard/survey_email_compose_message.py:137
 #, python-format
 msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
@@ -1493,6 +1884,11 @@ msgstr "文本内容中不包含 '__URL__'.                     __URL__ 会被�
 #: sql_constraint:survey.user_input:0
 msgid "The deadline cannot be in the past"
 msgstr "截止日期不能是过去的时间。"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.403
+msgid "The page you were looking for could not be authorized."
+msgstr "你正在查找的网页可能未被授权。"
 
 #. module: survey
 #: code:addons/survey/models/survey.py:543
@@ -1555,11 +1951,29 @@ msgid "Title"
 msgstr "称谓"
 
 #. module: survey
+#: selection:survey.survey,activity_state:0
+msgid "Today"
+msgstr "今日"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Today Activities"
 msgstr "今天的活动"
 
 #. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__tracking_value_ids
+msgid ""
+"Tracked values are stored in a separate model. This field allow to "
+"reconstruct the tracking and to generate statistics on the model."
+msgstr "在单独的模型中存储跟踪值。该字段允许重建跟踪以及生成模型统计数据。"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__tracking_value_ids
+msgid "Tracking values"
+msgstr "追踪值"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__message_type
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
 msgstr "类型"
@@ -1580,11 +1994,27 @@ msgid "Types of answers"
 msgstr "答案类型"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Upcoming Activities"
 msgstr "即将开始的活动"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__use_active_domain
+msgid "Use active domain"
+msgstr "使用有效域"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message__template_id
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "使用模版"
@@ -1671,6 +2101,21 @@ msgid "Vote"
 msgstr "投票"
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message__is_log
+msgid "Whether the message is an internal note (comment mode only)"
+msgstr "该消息是否是一个内部备注(仅限评论模式)"
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD\n"
@@ -1717,6 +2162,11 @@ msgid "ans"
 msgstr "ans"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "free website"
+msgstr "免费的网站"
+
+#. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
 msgid "ir.autovacuum"
 msgstr "ir.autovacuum"
@@ -1740,3 +2190,13 @@ msgstr "点"
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
 msgstr "查看你的回答"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.403
+msgid "this page"
+msgstr ""
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.layout
+msgid "with"
+msgstr "使用"

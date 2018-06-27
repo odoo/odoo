@@ -27,10 +27,10 @@
 # Cécile Collart <cco@odoo.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -110,11 +110,15 @@ msgstr "<strong>Transporteur</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Shipping Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "<strong>Numéro de suivi</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Poids</strong>"
@@ -374,6 +378,7 @@ msgid "Fixed Price"
 msgstr "Forfait"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -728,7 +733,7 @@ msgstr ""
 "production."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:165
+#: code:addons/delivery/models/stock_picking.py:168
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -898,7 +903,7 @@ msgid "Width must be positive"
 msgstr "La largeur doit être positive"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:203
+#: code:addons/delivery/models/stock_picking.py:206
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -916,7 +921,7 @@ msgstr ""
 "confirmés."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:179
+#: code:addons/delivery/models/stock_picking.py:182
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "

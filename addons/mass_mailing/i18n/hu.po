@@ -8,10 +8,10 @@
 # gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:551
+#: code:addons/mass_mailing/models/mass_mailing.py:568
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -221,6 +221,11 @@ msgid "ALL DAY"
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__active
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__active
 msgid "Active"
@@ -357,6 +362,8 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__clicked
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__clicked
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__clicked
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Clicked"
 msgstr ""
@@ -624,7 +631,7 @@ msgid "Domain"
 msgstr "Tartomány"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 #, python-format
@@ -728,6 +735,21 @@ msgid "Fields"
 msgstr "Mezők"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__email_from
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__email_from
 msgid "From"
@@ -780,6 +802,16 @@ msgstr ""
 "az azonosító ID szükséges más műveletekhez és ellenőrzésekhez."
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
 msgid ""
 "If checked, recipients will be mailed only once for the whole campaign. This"
@@ -788,11 +820,16 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
 msgstr "Sorban"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
@@ -892,6 +929,12 @@ msgid "Mail ID (tech)"
 msgstr "Email azonosító ID (tech)"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mail_server_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_mail_server_id
+msgid "Mail Server"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mail_stat_id
@@ -926,7 +969,6 @@ msgstr ""
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mailing_list_ids
 msgid "Mailing List"
 msgstr "Levelezőlista"
 
@@ -1024,7 +1066,6 @@ msgstr "Tömeges levelezési kampány"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Mass Mailing"
 msgstr "Tömeges email küldés"
@@ -1041,7 +1082,6 @@ msgstr "Tömeges email küldés elemzése"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "Tömeges email küldési kampány"
@@ -1063,7 +1103,6 @@ msgstr "Tömeges email küldés címzett"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
 msgstr ""
 
@@ -1152,6 +1191,11 @@ msgid "Message-ID"
 msgstr "Üzenetazonosító ID"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "More"
 msgstr "Továbbiak"
@@ -1215,6 +1259,11 @@ msgid "No support"
 msgstr "Nincs támogatás"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__clicks_ratio
 msgid "Number of Clicks"
 msgstr "Kattintások száma"
@@ -1238,6 +1287,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__clicks_ratio
 msgid "Number of clicks"
 msgstr "Kattintások száma"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -1328,7 +1387,7 @@ msgstr ""
 "választva."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:742
+#: code:addons/mass_mailing/models/mass_mailing.py:759
 #, python-format
 msgid "Please select recipients."
 msgstr "Kérem válasszon címzettet."
@@ -1550,14 +1609,14 @@ msgid "Send to All"
 msgstr "Küldje el mindenkinek"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr "Elküldés"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__sent
@@ -1611,6 +1670,11 @@ msgstr "Forrás"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__name
 msgid "Source Name"
 msgstr "Forrásnév"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
+msgid "Specific Mail Server"
+msgstr ""
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -1671,7 +1735,7 @@ msgid "Tags"
 msgstr "Címkék"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:615
+#: code:addons/mass_mailing/models/mass_mailing.py:632
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1796,6 +1860,16 @@ msgid "Tracking"
 msgstr "Nyomonkövetés"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid "Unsubscribe"
@@ -1816,6 +1890,21 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "Use This Promo Code BEFORE 1st of August"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Use a specific mail server for mailings"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__mail_server_id
+#: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid ""
+"Use a specific mail server in priority. Otherwise Odoo relies on the first "
+"outgoing mail server available (based on their sequencing) as it does for "
+"normal mails."
 msgstr ""
 
 #. module: mass_mailing
@@ -1867,7 +1956,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:33
+#: code:addons/mass_mailing/controllers/main.py:38
 #, python-format
 msgid "You have been unsubscribed successfully"
 msgstr "Sikeresen leiratkozott."

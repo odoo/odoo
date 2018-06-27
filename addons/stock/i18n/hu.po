@@ -8,13 +8,14 @@
 # gezza <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
+# Ákos Nagy <akos.nagy@oregional.hu>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:09+0000\n"
-"PO-Revision-Date: 2018-03-22 14:09+0000\n"
-"Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
+"POT-Creation-Date: 2018-06-25 08:13+0000\n"
+"PO-Revision-Date: 2018-06-25 08:13+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:332
+#: code:addons/stock/models/stock_move.py:341
 #, python-format
 msgid ""
 "\n"
@@ -32,7 +33,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:333
+#: code:addons/stock/models/stock_move.py:342
 #, python-format
 msgid ""
 "\n"
@@ -41,13 +42,13 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:320
+#: code:addons/stock/models/stock_move.py:329
 #, python-format
 msgid " (%s reserved)"
 msgstr " (%s lefoglalt)"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:323
+#: code:addons/stock/models/stock_move.py:332
 #, python-format
 msgid " (reserved)"
 msgstr " (lefoglalt)"
@@ -69,7 +70,7 @@ msgid "#Products"
 msgstr "#Termékek"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:482
+#: code:addons/stock/models/stock_warehouse.py:486
 #, python-format
 msgid "%s: Supply Product from %s"
 msgstr "%s: Pótolja a terméket innen %s"
@@ -160,8 +161,8 @@ msgstr "<span><strong>Szállítási címek:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
-msgid "<span><strong>Partner Address:</strong></span>"
-msgstr ""
+msgid "<span><strong>Vendor Address:</strong></span>"
+msgstr "<span><strong>Beszállítók címei:</strong></span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -174,14 +175,16 @@ msgid "<span>New</span>"
 msgstr "<span>Új</span>"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_picking
-msgid "<span>No reservation or quantity done yet.</span>"
-msgstr ""
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span>View</span>"
 msgstr "<span>Nézet</span>"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid ""
+"<strong>\n"
+"                                            Product Barcode</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_head
@@ -192,15 +195,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Commitment Date</strong>"
-msgstr "<strong>Elkötelezettség dátuma</strong>"
-
-#. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Date</strong>"
 msgstr "<strong>Dátum</strong>"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid "<strong>From</strong>"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -211,6 +214,11 @@ msgstr "<strong>Leltárkészlet</strong>"
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Location</strong>"
 msgstr "<strong>Helyszín</strong>"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid "<strong>Lot/Serial Number</strong>"
+msgstr "<strong>Szett/Széria számr</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -225,8 +233,8 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_picking
-msgid "<strong>Order (Origin)</strong>"
-msgstr "<strong>Megrendelés (Származás)</strong>"
+msgid "<strong>Order</strong>"
+msgstr "<strong>Rendelés</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
@@ -236,6 +244,7 @@ msgstr "<strong>Csomag</strong>"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
+#: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product</strong>"
 msgstr "<strong>Termék</strong>"
 
@@ -252,6 +261,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_inventory
+#: model:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
 msgstr "<strong>Mennyiség</strong>"
 
@@ -271,18 +281,23 @@ msgid "<strong>The initial demand has been updated.</strong>"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid "<strong>To</strong>"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>Total Quantity</strong>"
 msgstr "<strong>Teljes mennyiség</strong>"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:115
+#: code:addons/stock/models/stock_inventory.py:122
 #, python-format
 msgid "A Pack"
 msgstr "Egy csomag"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:94
+#: code:addons/stock/models/stock_move_line.py:93
 #, python-format
 msgid "A done move line should never have a reserved quantity."
 msgstr ""
@@ -294,6 +309,7 @@ msgid "A serial number should only be linked to a single product."
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_template__type
 #: model:ir.model.fields,help:stock.field_stock_move__product_type
 msgid ""
 "A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
@@ -317,6 +333,12 @@ msgid "Action"
 msgstr "Akció"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_needaction
+msgid "Action Needed"
+msgstr "Művelet szükséges"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__active
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms__active
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -327,6 +349,16 @@ msgstr "Akció"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__active
 msgid "Active"
 msgstr "Aktív"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_ids
+msgid "Activities"
+msgstr "Tevékenységek"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
+msgid "Activity State"
+msgstr "Tevékenység állapota"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -387,6 +419,11 @@ msgid "Advanced: Apply Procurement Rules"
 msgstr "Haladó: Beszerzési szabály használata"
 
 #. module: stock
+#: selection:barcode.rule,type:0
+msgid "Alias"
+msgstr "Álnév"
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "All"
 msgstr "Összes"
@@ -414,10 +451,17 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:105
+#: code:addons/stock/models/stock_inventory.py:112
 #, python-format
 msgid "All products"
 msgstr "Minden termék"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.report_picking
+msgid ""
+"All products could not be reserved. Click on the \"Check Availability\" "
+"button to try to reserve products"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -425,9 +469,9 @@ msgid "All returned moves"
 msgstr "Összes visszatért mozgás"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:86
-#, python-format
-msgid "An incoming date cannot be set to an untracked product."
+#: model:ir.model.fields,help:stock.field_stock_location__putaway_strategy_id
+msgid ""
+"Allows to suggest the exact location (shelf) where to store the product."
 msgstr ""
 
 #. module: stock
@@ -454,6 +498,13 @@ msgstr "Raktárépületen alkalmazandó"
 #: model:ir.ui.view,arch_db:stock.view_procurement_rule_form
 msgid "Applied On"
 msgstr "Alkalmazott ekkor"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_product_replenish__route_ids
+msgid ""
+"Apply specific route(s) for the replenishment instead of product's default "
+"routes."
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_incoterms_view_search
@@ -542,6 +593,7 @@ msgid "Back Order of"
 msgstr "Visszamaradt tételek erről"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_ids
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
 msgstr "Visszamaradt megrendelések"
@@ -633,7 +685,7 @@ msgid "By Unique Serial Number"
 msgstr "Egyedi széria szám szerint"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:625
+#: code:addons/stock/models/stock_move.py:651
 #, python-format
 msgid ""
 "By changing this quantity here, you accept the new quantity as complete: "
@@ -700,13 +752,13 @@ msgid "Calendar View"
 msgstr "Naptárnézet"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:428
+#: code:addons/stock/models/stock_warehouse.py:432
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "Nem talál egyetlen vásárlói vagy beszállítói helyet sem."
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:477
+#: code:addons/stock/models/stock_warehouse.py:481
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "Nem talál egyetlen általános Gyártás rendelésre útvonalat."
@@ -728,13 +780,19 @@ msgid "Cancel Inventory"
 msgstr "Készlet megszakítása"
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.inventory,state:0 selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
 msgstr "Visszavont"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:268
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Cancelled Moves"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:277
 #, python-format
 msgid ""
 "Cannot set the done quantity from this stock move, work directly with the "
@@ -742,10 +800,20 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:482
+#: code:addons/stock/models/stock_move.py:500
 #, python-format
 msgid "Cannot unreserve a done move"
 msgstr "Nem tud foglalatlanná tenni egy elvégzett mozgatást."
+
+#. module: stock
+#: selection:barcode.rule,type:0
+msgid "Cashier"
+msgstr "Pénztáros"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
+msgid "Category"
+msgstr "Kategória"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__route_from_categ_ids
@@ -826,6 +894,11 @@ msgid "Choose your date"
 msgstr "Válassza ki a dátumát"
 
 #. module: stock
+#: selection:barcode.rule,type:0
+msgid "Client"
+msgstr "Ügyfél"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_incoterms__code
 msgid "Code"
 msgstr "Kód"
@@ -858,6 +931,11 @@ msgstr "Vállalatok"
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Company"
 msgstr "Vállalat"
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Completion Date"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -907,24 +985,20 @@ msgstr "Beállítások"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
 #: model:ir.ui.view,arch_db:stock.view_overprocessed_transfer
+#: model:ir.ui.view,arch_db:stock.view_product_replenish
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Confirm"
 msgstr "Megerősítés"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Confirmed"
-msgstr "Jóváhagyott"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
-msgid "Confirmed Moves"
-msgstr "Jóváhagyott mozgások"
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
 msgstr ""
+
+#. module: stock
+#: selection:product.template,type:0
+msgid "Consumable"
+msgstr "Fogyóeszköz"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
@@ -945,6 +1019,15 @@ msgstr "Tartalmaz"
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Content"
 msgstr "Tartalom"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_product_replenish__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"A mértékegységek közötti átváltás csak akkor valósul meg, ha ugyanabba a "
+"kategóriába tartoznak. Az átváltás az arányszámok alapján történik."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -1002,7 +1085,7 @@ msgid "Create Backorder"
 msgstr "Újrarendelés létrehozás"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:759
+#: code:addons/stock/models/stock_picking.py:760
 #, python-format
 msgid "Create Backorder?"
 msgstr "Hozzon létre Újrarendelést?"
@@ -1083,6 +1166,7 @@ msgstr "Létrehozott mozgások"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__create_uid
 #: model:ir.model.fields,field_description:stock.field_product_putaway__create_uid
 #: model:ir.model.fields,field_description:stock.field_product_removal__create_uid
+#: model:ir.model.fields,field_description:stock.field_product_replenish__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__create_uid
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__create_uid
@@ -1118,6 +1202,7 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__create_date
 #: model:ir.model.fields,field_description:stock.field_product_putaway__create_date
 #: model:ir.model.fields,field_description:stock.field_product_removal__create_date
+#: model:ir.model.fields,field_description:stock.field_product_replenish__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__create_date
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__create_date
@@ -1169,7 +1254,12 @@ msgid "Creation Date, usually the time of the order"
 msgstr "Létrehozás dátuma, általában a megrendelés ideje"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: selection:barcode.rule,type:0
+msgid "Credit Card"
+msgstr "Hitel kártya"
+
+#. module: stock
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Cross-Dock"
 msgstr "Ipari-út a raktárhoz"
@@ -1322,6 +1412,11 @@ msgid "Date Expected"
 msgstr "A várható érkezés dátuma"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_product_replenish__date_planned
+msgid "Date at which the replenishment should take place."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
 msgid "Date of Transfer"
 msgstr "Átvitel dátuma"
@@ -1421,19 +1516,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_location__putaway_strategy_id
-msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to store the products. This method can be enforced at the product "
-"category level, and a fallback is made on the parent locations if none is "
-"set here."
-msgstr ""
-"Meghatározza a termék tárolására vonatkozó pontos hely (polc) meghatározás "
-"javaslatának alapértelmezett módját. Ezt a módot erőltethetjük a termék "
-"kategória szintre, és egy a szülő helyére történő visszaesés lesz "
-"végrehajtva, ha itt nincs beállítva semmi."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
 "Defines the default method used for suggesting the exact location (shelf) "
@@ -1458,7 +1540,7 @@ msgid "Delay (days)"
 msgstr "Késedelem (napok)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:332
+#: code:addons/stock/models/product.py:331
 #, python-format
 msgid "Delivered Qty"
 msgstr "Szállított mennyiség"
@@ -1469,7 +1551,7 @@ msgid "Deliveries"
 msgstr "Szállítások"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:209
+#: code:addons/stock/models/stock_warehouse.py:213
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
@@ -1598,7 +1680,7 @@ msgid "Destination route"
 msgstr "Célállomás útvonala"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:460
+#: code:addons/stock/models/stock_move.py:469
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Detailed Operations"
@@ -1627,15 +1709,22 @@ msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
+#: model:ir.ui.view,arch_db:stock.view_product_replenish
 #: model:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Discard"
 msgstr "Elvetés"
+
+#. module: stock
+#: selection:barcode.rule,type:0
+msgid "Discounted Product"
+msgstr "Árengedményes termék"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__display_name
 #: model:ir.model.fields,field_description:stock.field_product_putaway__display_name
 #: model:ir.model.fields,field_description:stock.field_product_removal__display_name
+#: model:ir.model.fields,field_description:stock.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__display_name
@@ -1740,7 +1829,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:422
+#: code:addons/stock/models/stock_quant.py:433
 #, python-format
 msgid "Everything inside a package should be in the same location"
 msgstr "Egy csomagban lévő összes terméknek ugynazon a helyen kell lennie"
@@ -1813,9 +1902,9 @@ msgid "Fixed"
 msgstr "Állandó"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.view_putaway
-msgid "Fixed Locations Per Categories"
-msgstr "Fix hely kategóriánként"
+#: model:ir.model.fields,field_description:stock.field_product_putaway__product_location_ids
+msgid "Fixed Locations Per Product"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway__fixed_location_ids
@@ -1826,6 +1915,24 @@ msgstr "Fix helyek termék kategóriánként"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__group_id
 msgid "Fixed Procurement Group"
 msgstr "Lerögzített beszerzési csoport"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_follower_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_follower_ids
+msgid "Followers"
+msgstr "Követők"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_channel_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Követők (Csatornák)"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_partner_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Követők (Partnerek)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -1851,7 +1958,7 @@ msgstr ""
 "Egyéb esetben , beleértve azokat a termékeket, melyek bármely raktár helyen tároltak a 'belső' típussal megjelölve."
 
 #. module: stock
-#: code:addons/stock/models/product.py:327
+#: code:addons/stock/models/product.py:326
 #: model:ir.model.fields,field_description:stock.field_product_template__virtual_available
 #: model:ir.model.fields,field_description:stock.field_stock_move__availability
 #, python-format
@@ -1888,31 +1995,31 @@ msgid "Future Activities"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:330
+#: code:addons/stock/models/product.py:329
 #, python-format
 msgid "Future Deliveries"
 msgstr "Jövőbeni szállítások"
 
 #. module: stock
-#: code:addons/stock/models/product.py:335
+#: code:addons/stock/models/product.py:334
 #, python-format
 msgid "Future P&L"
 msgstr "Jövőbeni P&L"
 
 #. module: stock
-#: code:addons/stock/models/product.py:345
+#: code:addons/stock/models/product.py:344
 #, python-format
 msgid "Future Productions"
 msgstr "Jövőbeni gyártások"
 
 #. module: stock
-#: code:addons/stock/models/product.py:340
+#: code:addons/stock/models/product.py:339
 #, python-format
 msgid "Future Qty"
 msgstr "Jövőbeni mennyiség"
 
 #. module: stock
-#: code:addons/stock/models/product.py:322
+#: code:addons/stock/models/product.py:321
 #, python-format
 msgid "Future Receipts"
 msgstr "Jövőbeni beérkeztetések"
@@ -1991,6 +2098,16 @@ msgid "Has Scrap Moves"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__has_tracking
+msgid "Has Tracking"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
+msgid "Has variants"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
 msgid "Height (Z)"
 msgstr "Magasság (Z)"
@@ -2008,6 +2125,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__id
 #: model:ir.model.fields,field_description:stock.field_product_putaway__id
 #: model:ir.model.fields,field_description:stock.field_product_removal__id
+#: model:ir.model.fields,field_description:stock.field_product_replenish__id
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__id
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__id
@@ -2041,7 +2159,7 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:395
+#: code:addons/stock/models/stock_inventory.py:402
 #, python-format
 msgid "INV:"
 msgstr "INV:"
@@ -2060,6 +2178,18 @@ msgid ""
 msgstr ""
 "Ha egy termék nem található az elvárt helyén, állítsa be a leellenőrzött "
 "mennyiségét 0-ra és hozzon létre egy új sort a kijavított hellyel."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
@@ -2205,7 +2335,7 @@ msgid "Immediate Transfer"
 msgstr "Azonnali átvitel"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:722
+#: code:addons/stock/models/stock_picking.py:723
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "Azonnali Átvitel?"
@@ -2348,7 +2478,7 @@ msgid "Internal Reference"
 msgstr "Belső hivatkozás"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:231
+#: code:addons/stock/models/stock_warehouse.py:235
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
@@ -2372,19 +2502,19 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:240
+#: code:addons/stock/models/product.py:250
 #, python-format
 msgid "Invalid domain left operand %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:242
+#: code:addons/stock/models/product.py:252
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:244
+#: code:addons/stock/models/product.py:254
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr ""
@@ -2541,6 +2671,12 @@ msgid "Inventory of"
 msgstr "Készlete ennek"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_is_follower
+msgid "Is Follower"
+msgstr "Ő egy követő"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_locked
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_locked
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_locked
@@ -2574,14 +2710,14 @@ msgid "Is quantity done editable"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:258
+#: code:addons/stock/models/stock_quant.py:265
 #, python-format
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:260
+#: code:addons/stock/models/stock_quant.py:270
 #, python-format
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
@@ -2611,6 +2747,7 @@ msgstr "Utolsó 10 elvégzett kiválogatás"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule____last_update
 #: model:ir.model.fields,field_description:stock.field_product_putaway____last_update
 #: model:ir.model.fields,field_description:stock.field_product_removal____last_update
+#: model:ir.model.fields,field_description:stock.field_product_replenish____last_update
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty____last_update
@@ -2648,6 +2785,7 @@ msgstr "Utoljára frissítve ekkor"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__write_uid
 #: model:ir.model.fields,field_description:stock.field_product_putaway__write_uid
 #: model:ir.model.fields,field_description:stock.field_product_removal__write_uid
+#: model:ir.model.fields,field_description:stock.field_product_replenish__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__write_uid
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__write_uid
@@ -2683,6 +2821,7 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__write_date
 #: model:ir.model.fields,field_description:stock.field_product_putaway__write_date
 #: model:ir.model.fields,field_description:stock.field_product_removal__write_date
+#: model:ir.model.fields,field_description:stock.field_product_replenish__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__write_date
 #: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__write_date
@@ -2753,11 +2892,6 @@ msgstr ""
 "Hagyja el ezt a mezőt, ha ez az útvonal az összes vállalat közt megosztott"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location__parent_left
-msgid "Left Parent"
-msgstr "Baloldali szülő"
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__company_id
 #: model:ir.model.fields,help:stock.field_stock_quant__company_id
 msgid "Let this field empty if this location is shared between companies"
@@ -2784,7 +2918,7 @@ msgid "Locate"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:12
+#: code:addons/stock/models/barcode.py:12 selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_product_product__location_id
 #: model:ir.model.fields,field_description:stock.field_product_template__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__location_id
@@ -2795,9 +2929,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__location_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair__location_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__location_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild__location_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.stock_scrap_search_view
@@ -2861,7 +2993,7 @@ msgid "Logistics"
 msgstr "Logisztika"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:13
+#: code:addons/stock/models/barcode.py:13 selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__lot_id
 #, python-format
@@ -2898,11 +3030,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.quant_search_view
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
-#: model:ir.ui.view,arch_db:stock.report_picking
-#: model:ir.ui.view,arch_db:stock.view_move_line_form
 msgid "Lot/Serial Number"
 msgstr "Szett/Széria szám"
 
@@ -2931,7 +3060,7 @@ msgid "Lots/Serial Numbers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:543
+#: code:addons/stock/models/stock_warehouse.py:547
 #, python-format
 msgid "MTO"
 msgstr ""
@@ -2942,7 +3071,7 @@ msgid "MTO rule"
 msgstr "Gyártás megrendelésre (MTO) szabály"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:475
+#: code:addons/stock/models/stock_warehouse.py:479
 #: model:stock.location.route,name:stock.route_warehouse0_mto
 #, python-format
 msgid "Make To Order"
@@ -3047,6 +3176,12 @@ msgstr "Maximális mennyiség"
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
 msgstr "Üzenet a készletkiszedésről"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_ids
+msgid "Messages"
+msgstr "Üzenetek"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__method
@@ -3215,8 +3350,8 @@ msgid "New"
 msgstr "Új"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:175
-#: code:addons/stock/models/stock_picking.py:634
+#: code:addons/stock/models/stock_move_line.py:174
+#: code:addons/stock/models/stock_picking.py:641
 #, python-format
 msgid "New Move:"
 msgstr ""
@@ -3230,6 +3365,21 @@ msgstr "Raktári mennyiség"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Új átvitel"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
+msgid "Next Activity Summary"
+msgstr "Következő tevékenység összegzése"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3262,7 +3412,7 @@ msgid "No inventory found"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:400
+#: code:addons/stock/models/stock_move_line.py:408
 #, python-format
 msgid "No negative quantities allowed"
 msgstr "Nincs megengedve a negatív mennyiség"
@@ -3313,10 +3463,16 @@ msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:582
+#: code:addons/stock/models/stock_picking.py:589
 #, python-format
 msgid "Nothing to check the availability for."
 msgstr "Nincs hely, elérhetőség ellenőrzéséhez."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction_counter
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Műveletek száma"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__delay
@@ -3336,6 +3492,18 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location_path__delay
 msgid "Number of days needed to transfer the goods"
 msgstr "Termékek átviteléhez szükséges napok száma"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Üzenetek száma, melyek akciót igényelnek"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
+#: model:ir.model.fields,help:stock.field_stock_production_lot__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Olvasatlan üzenetek száma"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:75
@@ -3364,31 +3532,31 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:113
+#: code:addons/stock/models/stock_inventory.py:120
 #, python-format
 msgid "One Lot/Serial Number"
 msgstr "Egy Szett/Széria szám"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
+#: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One owner only"
 msgstr "Csak egy tulajdonos"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:106
+#: code:addons/stock/models/stock_inventory.py:113
 #, python-format
 msgid "One product category"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:111
+#: code:addons/stock/models/stock_inventory.py:118
 #, python-format
 msgid "One product for a specific owner"
 msgstr "Egy termék egy meghatározott tulajdonosnak"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:107
+#: code:addons/stock/models/stock_inventory.py:114
 #, python-format
 msgid "One product only"
 msgstr "Csak egy termék"
@@ -3550,6 +3718,11 @@ msgid "Output Location"
 msgstr "Feladási hely"
 
 #. module: stock
+#: selection:stock.picking,activity_state:0
+msgid "Overdue"
+msgstr "lejárt"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__overprocessed_product_name
 msgid "Overprocessed Product Name"
 msgstr ""
@@ -3588,7 +3761,7 @@ msgid "Owner of the quants"
 msgstr "Mennyiségek tualjdonosa"
 
 #. module: stock
-#: code:addons/stock/models/product.py:337
+#: code:addons/stock/models/product.py:336
 #, python-format
 msgid "P&L Qty"
 msgstr "P&L Mennyiség"
@@ -3601,7 +3774,7 @@ msgid "PRINT"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:216
+#: code:addons/stock/models/stock_warehouse.py:220
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__package_id
 #, python-format
 msgid "Pack"
@@ -3613,7 +3786,7 @@ msgid "Pack Type"
 msgstr "Csomagolás típusa"
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:14
+#: code:addons/stock/models/barcode.py:14 selection:barcode.rule,type:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__package_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__package_id
 #: model:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -3732,6 +3905,11 @@ msgid "Parent Location"
 msgstr "Főtelephely"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location__parent_path
+msgid "Parent Path"
+msgstr ""
+
+#. module: stock
 #: selection:procurement.group,move_type:0
 msgid "Partial"
 msgstr "Részleges"
@@ -3774,7 +3952,7 @@ msgid "Physical Packages"
 msgstr "Fizikai csomagok"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:224
+#: code:addons/stock/models/stock_warehouse.py:228
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__pick_ids
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__pick_ids
 #, python-format
@@ -3782,13 +3960,13 @@ msgid "Pick"
 msgstr "Kiválogat"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:435
+#: code:addons/stock/models/stock_warehouse.py:439
 #, python-format
 msgid "Pick + Pack + Ship"
 msgstr "Kiválogat + Csomagol + Szállít (Pick + Pack + Ship)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Pick + Ship"
 msgstr "Kiválogat + szállít"
@@ -3857,6 +4035,11 @@ msgid "Pivot"
 msgstr "Pivot kimutatás"
 
 #. module: stock
+#: selection:stock.picking,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Planned Transfer"
 msgstr ""
@@ -3868,7 +4051,7 @@ msgid "Please add some lines to move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1018
+#: code:addons/stock/models/stock_picking.py:1019
 #, python-format
 msgid "Please process some quantities to put in the pack first!"
 msgstr "Kérem egy pár mennyiség csomagba helyezését először!"
@@ -3890,9 +4073,19 @@ msgid "Preferred Packaging"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
+msgid "Preferred Routes"
+msgstr "Kedvező útvonal"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr ""
+
+#. module: stock
+#: selection:barcode.rule,type:0
+msgid "Priced Product"
+msgstr "Árazott termék"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -3995,15 +4188,17 @@ msgid "Produce Line"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:347
+#: code:addons/stock/models/product.py:346
 #, python-format
 msgid "Produced Qty"
 msgstr "Termelt mennyiség"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_id
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_id
+#: model:ir.model.fields,field_description:stock.field_stock_fixed_putaway_strat__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_id
@@ -4014,13 +4209,10 @@ msgstr "Termelt mennyiség"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__product_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair__product_id
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__product_id
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild__product_id
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 #: model:ir.ui.view,arch_db:stock.report_lot_barcode
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
-#: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4030,7 +4222,7 @@ msgid "Product"
 msgstr "Termék"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:178
+#: code:addons/stock/models/stock_location.py:175
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__categ_ids
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 #: model:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -4083,6 +4275,12 @@ msgid "Product Template"
 msgstr "Terméksablon"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_tmpl_id
+msgid "Product Tmpl"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_template__type
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_type
 msgid "Product Type"
 msgstr "Terméktípus"
@@ -4124,7 +4322,7 @@ msgid "Production Location"
 msgstr "Gyártási hely"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:168
+#: code:addons/stock/models/stock_location.py:165
 #: code:addons/stock/wizard/stock_quantity_history.py:29
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.actions.act_window,name:stock.product_template_action_product
@@ -4139,7 +4337,7 @@ msgid "Products"
 msgstr "Termékek"
 
 #. module: stock
-#: code:addons/stock/models/product.py:310
+#: code:addons/stock/models/product.py:309
 #, python-format
 msgid "Products: "
 msgstr "Termékek: "
@@ -4205,6 +4403,7 @@ msgid "Put your products in packs (e.g. parcels, boxes) and track them"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.stock_fixed_putaway_strat_form
 #: model:ir.ui.view,arch_db:stock.view_putaway
 msgid "Putaway"
 msgstr "Félre tesz"
@@ -4233,20 +4432,18 @@ msgstr "Minőség-ellenőrzés helye"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quant_ids
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_repair__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
-#: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
 #: model:ir.model.fields,field_description:stock.field_report_stock_forecast__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__product_qty
 #: model:ir.model.fields,field_description:stock.field_stock_quant__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__quantity
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_qty
 #: model:ir.ui.view,arch_db:stock.report_package_barcode
-#: model:ir.ui.view,arch_db:stock.report_picking
 #: model:ir.ui.view,arch_db:stock.report_stock_body_print
 #: model:ir.ui.view,arch_db:stock.report_stock_inventory
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -4292,7 +4489,7 @@ msgid "Quantity cannot be negative."
 msgstr "Mennyiség nem lehet negatív."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:624
+#: code:addons/stock/models/stock_move.py:650
 #, python-format
 msgid "Quantity decreased!"
 msgstr ""
@@ -4396,25 +4593,25 @@ msgid "Receipt Route"
 msgstr "Bevételi nyugta útvonal"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 1 step"
 msgstr "Egy lépéses bevételi nyugta"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:432
+#: code:addons/stock/models/stock_warehouse.py:436
 #, python-format
 msgid "Receipt in 2 steps"
 msgstr "Két lépéses bevételi nyugta"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:433
+#: code:addons/stock/models/stock_warehouse.py:437
 #, python-format
 msgid "Receipt in 3 steps"
 msgstr "Három lépéses bevételi nyugta"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:202
+#: code:addons/stock/models/stock_warehouse.py:206
 #: model:stock.picking.type,name:stock.picking_type_in
 #, python-format
 msgid "Receipts"
@@ -4426,7 +4623,7 @@ msgid "Receive goods directly in stock (1 step)"
 msgstr "Termék közvetlen beérkezése a raktárra  (1 lépés)"
 
 #. module: stock
-#: code:addons/stock/models/product.py:324
+#: code:addons/stock/models/product.py:323
 #, python-format
 msgid "Received Qty"
 msgstr "Beérkeztetett menny."
@@ -4474,6 +4671,7 @@ msgid "Register a product receipt"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.view,arch_db:stock.view_move_kandan
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Register lots, packs, location"
 msgstr ""
@@ -4495,7 +4693,7 @@ msgid "Removal Strategy"
 msgstr "Megszüntetési stratégia"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:115
+#: code:addons/stock/models/stock_quant.py:109
 #, python-format
 msgid "Removal strategy %s not implemented."
 msgstr "Megszüntetési stratégia %s nincs végrehajtva."
@@ -4529,6 +4727,19 @@ msgstr "Újrarendelési szabályok"
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
 msgstr "Újrerendelési szabályok keresése"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_product_replenish
+#: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
+#: model:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
+#: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+msgid "Replenish"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_product_replenish
+msgid "Replenish wizard"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -4589,6 +4800,11 @@ msgid "Responsible"
 msgstr "Felelős"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_user_id
+msgid "Responsible User"
+msgstr "Felelős felhasználó"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__resupply_route_ids
 msgid "Resupply Routes"
 msgstr "Újra ellátási útvonal"
@@ -4635,11 +4851,6 @@ msgstr "Visszavételezett kiválogatás"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
 msgstr "Átvitel vissza szállítás"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_location__parent_right
-msgid "Right Parent"
-msgstr "A megfelelő szülő"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__route_id
@@ -4710,6 +4921,7 @@ msgid "Scheduled"
 msgstr "Ütemezett"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
 #: model:ir.model.fields,field_description:stock.field_stock_picking__scheduled_date
 msgid "Scheduled Date"
 msgstr "Tervezett dátum"
@@ -4729,7 +4941,7 @@ msgstr ""
 "érték beállítás esetén, mint az összes készlet mozgás elvárt ideje."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:1031
+#: code:addons/stock/models/stock_picking.py:1032
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -4805,7 +5017,7 @@ msgid "Search Stock Location Paths"
 msgstr "Raktárhely útvonalak keresése"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:108
+#: code:addons/stock/models/stock_inventory.py:115
 #, python-format
 msgid "Select products manually"
 msgstr "Válasszon termékeket kézzel"
@@ -4843,31 +5055,31 @@ msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:687
+#: code:addons/stock/models/stock_warehouse.py:698
 #, python-format
 msgid "Sequence in"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:691
+#: code:addons/stock/models/stock_warehouse.py:702
 #, python-format
 msgid "Sequence internal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:688
+#: code:addons/stock/models/stock_warehouse.py:699
 #, python-format
 msgid "Sequence out"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:689
+#: code:addons/stock/models/stock_warehouse.py:700
 #, python-format
 msgid "Sequence packing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:690
+#: code:addons/stock/models/stock_warehouse.py:701
 #, python-format
 msgid "Sequence picking"
 msgstr ""
@@ -4876,6 +5088,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_procurement_rule__warehouse_id
 msgid "Served Warehouse"
 msgstr "Kiszolgált raktárépület"
+
+#. module: stock
+#: selection:product.template,type:0
+msgid "Service"
+msgstr "Szolgáltatás"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -4938,7 +5155,7 @@ msgid "Shelves (Y)"
 msgstr "Polcok (Y)"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:434
+#: code:addons/stock/models/stock_warehouse.py:438
 #, python-format
 msgid "Ship Only"
 msgstr "Csak szállítás"
@@ -5122,6 +5339,15 @@ msgid "Status"
 msgstr "Állapot"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_warehouse.py:96
 #: model:stock.location,name:stock.stock_location_stock
 #, python-format
@@ -5243,6 +5469,11 @@ msgstr "Végrehajtott raktári mozgások"
 #: model:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Stockable"
 msgstr "Készletezhető"
+
+#. module: stock
+#: selection:product.template,type:0
+msgid "Stockable Product"
+msgstr "Raktározható termék"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
@@ -5375,7 +5606,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:829
+#: code:addons/stock/models/stock_picking.py:830
 #, python-format
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
@@ -5501,8 +5732,19 @@ msgid "The push rule that created this stock move"
 msgstr "A betavési szabály, mely ezt a készlet mozgást létrehozta"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:275
-#: code:addons/stock/models/stock_move_line.py:81
+#: code:addons/stock/models/stock_move_line.py:377
+#, python-format
+msgid ""
+"The quantity done for the product \"%s\" doesn't respect the rounding "
+"precision                                   defined on the unit of measure "
+"\"%s\". Please change the quantity done or the"
+"                                   rounding precision of your unit of "
+"measure."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:284
+#: code:addons/stock/models/stock_move_line.py:80
 #, python-format
 msgid ""
 "The requested operation cannot be processed because of a programming error "
@@ -5512,10 +5754,17 @@ msgstr ""
 "mezőt állította a `product_uom_qty` helyett."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:144
-#: code:addons/stock/models/stock_inventory.py:146
-#: code:addons/stock/models/stock_inventory.py:148
-#: code:addons/stock/models/stock_inventory.py:150
+#: model:ir.ui.view,arch_db:stock.view_putaway
+msgid ""
+"The rules defined per product will be applied before the rules defined per "
+"product category."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:151
+#: code:addons/stock/models/stock_inventory.py:153
+#: code:addons/stock/models/stock_inventory.py:155
+#: code:addons/stock/models/stock_inventory.py:157
 #, python-format
 msgid "The selected inventory options are not coherent."
 msgstr "A kiválasztott árukészlet feltételek nem egyeztethetőek."
@@ -5634,7 +5883,7 @@ msgid "This is used to correct the product quantities you have in stock."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:85
+#: code:addons/stock/models/stock_location.py:83
 #, python-format
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
@@ -5699,11 +5948,6 @@ msgid ""
 msgstr ""
 "Ezt a szabályt alkalmazhatja, ha egy mozgást úgy igazol vissza, hogy annak "
 "ez a helyszín a célhelyszíne"
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "This shipment is a backorder of"
-msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner__property_stock_customer
@@ -5796,6 +6040,7 @@ msgstr "Beérkeztetéshez"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
+#: selection:stock.picking,activity_state:0
 msgid "Today"
 msgstr "Ma"
 
@@ -5890,6 +6135,11 @@ msgid "Transit Locations"
 msgstr "Tranzit helyszínek"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_barcode_rule__type
+msgid "Type"
+msgstr "Típus"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
@@ -5920,6 +6170,11 @@ msgstr "Mértékegység"
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
 msgid "Unit Price"
 msgstr "Egységár"
+
+#. module: stock
+#: selection:barcode.rule,type:0
+msgid "Unit Product"
+msgstr "Mértékegység termék"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom
@@ -5958,13 +6213,18 @@ msgid "Units of Measures"
 msgstr "Mértékegységek"
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:889
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unity of measure"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:890
 #, python-format
 msgid "Unknow stream."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:325
+#: code:addons/stock/models/stock_quant.py:336
 #, python-format
 msgid "Unknown Pack"
 msgstr "Ismeretlen csomag"
@@ -5994,10 +6254,22 @@ msgid "Unpack"
 msgstr "Kicsomagolás"
 
 #. module: stock
-#: code:addons/stock/models/product.py:342
+#: code:addons/stock/models/product.py:341
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Nem tervezett mennyiség"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_unread
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_unread
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__message_unread_counter
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Olvasatlan üzenetek számlálója"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6037,6 +6309,14 @@ msgstr "Sürgős"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_existing_lots
 msgid "Use Existing Lots/Serial Numbers"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.view,arch_db:stock.view_product_replenish
+msgid ""
+"Use this assistant to replenish your stock. \n"
+"                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
+"                a manufacturing order or a transfer."
 msgstr ""
 
 #. module: stock
@@ -6120,6 +6400,7 @@ msgstr "Virtuális helyek"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.picking,state:0
 msgid "Waiting"
 msgstr "Várakozó"
@@ -6135,7 +6416,6 @@ msgid "Waiting Another Operation"
 msgstr "Másik műveletre várakozás"
 
 #. module: stock
-#: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: selection:stock.move,state:0
 msgid "Waiting Availability"
 msgstr "Hozzáférésre várás"
@@ -6153,6 +6433,7 @@ msgstr "Várakozó átvitelek"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:stock.field_product_product__warehouse_id
+#: model:ir.model.fields,field_description:stock.field_product_replenish__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_product_template__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_location_path__warehouse_id
 #: model:ir.model.fields,field_description:stock.field_stock_move__warehouse_id
@@ -6188,7 +6469,7 @@ msgid "Warehouse to Propagate"
 msgstr "Fejlesztendő raktárépület"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:713
+#: code:addons/stock/models/stock_warehouse.py:724
 #, python-format
 msgid "Warehouse's Routes"
 msgstr "Raktárépülete útvonalai"
@@ -6203,8 +6484,8 @@ msgid "Warehouses"
 msgstr "Raktárak"
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:135
-#: code:addons/stock/models/stock_move_line.py:147
+#: code:addons/stock/models/stock_move_line.py:134
+#: code:addons/stock/models/stock_move_line.py:146
 #: selection:res.partner,picking_warn:0
 #, python-format
 msgid "Warning"
@@ -6216,7 +6497,7 @@ msgid "Warning on the Picking"
 msgstr "Figyelmeztetés a kiszedésre"
 
 #. module: stock
-#: code:addons/stock/models/product.py:303
+#: code:addons/stock/models/product.py:302
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
@@ -6232,7 +6513,19 @@ msgid "Warnings for Stock"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/barcode.py:11
+#: model:ir.model.fields,field_description:stock.field_stock_picking__website_message_ids
+#: model:ir.model.fields,field_description:stock.field_stock_production_lot__website_message_ids
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_picking__website_message_ids
+#: model:ir.model.fields,help:stock.field_stock_production_lot__website_message_ids
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: stock
+#: code:addons/stock/models/barcode.py:11 selection:barcode.rule,type:0
 #, python-format
 msgid "Weighted Product"
 msgstr "Súlyozott termék"
@@ -6282,12 +6575,6 @@ msgid ""
 msgstr ""
 "Ha bejelölt, az útvonal kiválasztható lesz a Termék Kategórián. Elsőbbséget "
 "élvez a Raktár útvonalával szemben."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_product_putaway__fixed_location_ids
-msgid ""
-"When the method is fixed, this location will be used to store the products"
-msgstr "Ha mód rögzített, ezt a helyet használja a termékek raktározásához"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -6345,13 +6632,22 @@ msgid "Wizard"
 msgstr "Varázsló"
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:45
+#, python-format
+msgid ""
+"You are not allowed to change the product linked to a serial or lot number "
+"if some stock moves have already been created with that number. This would "
+"lead to inconsistencies in your stock."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_production_lot.py:37
 #, python-format
 msgid "You are not allowed to create a lot for this picking type"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:649
+#: code:addons/stock/models/stock_move.py:675
 #, python-format
 msgid ""
 "You are using a unit of measure smaller than the one you are using in order "
@@ -6376,7 +6672,7 @@ msgid "You can delete lines to ignore some products."
 msgstr "Törölhet termék sorokat egyes termékek mellőzéséhez."
 
 #. module: stock
-#: code:addons/stock/models/product.py:519
+#: code:addons/stock/models/product.py:521
 #, python-format
 msgid ""
 "You can not change the type of a product that is currently reserved on a "
@@ -6385,7 +6681,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:510
+#: code:addons/stock/models/product.py:512
 #, python-format
 msgid ""
 "You can not change the unit of measure of a product that has already been "
@@ -6397,7 +6693,7 @@ msgstr ""
 "mértékegységet, akkor kapcsolja ki ezt a terméket."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:340
+#: code:addons/stock/models/stock_move_line.py:339
 #, python-format
 msgid ""
 "You can not delete product moves if the picking is done. You can only "
@@ -6405,31 +6701,31 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:153
+#: code:addons/stock/models/stock_move_line.py:152
 #, python-format
 msgid "You can not enter negative quantities!"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:381
+#: code:addons/stock/models/stock_inventory.py:388
 #, python-format
 msgid "You can only adjust stockable products."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1077
+#: code:addons/stock/models/stock_move.py:1154
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Csak a készletmozgás tervezetek törölhetők."
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:146
+#: code:addons/stock/models/stock_move_line.py:145
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:950
+#: code:addons/stock/models/stock_move.py:1018
 #, python-format
 msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "Nem érvényteleníthet egy készlet mozgást, melyet már 'Elvégezve'."
@@ -6441,7 +6737,13 @@ msgid "You cannot delete a scrap which is done."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:369
+#: code:addons/stock/models/stock_inventory.py:104
+#, python-format
+msgid "You cannot delete a validated inventory adjustement."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:376
 #, python-format
 msgid ""
 "You cannot have two inventory adjustments in progress for the same product "
@@ -6451,7 +6753,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:159
+#: code:addons/stock/models/stock_inventory.py:166
 #, python-format
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
@@ -6461,19 +6763,19 @@ msgstr ""
 "\t%s - qty: %s"
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1106
+#: code:addons/stock/models/stock_move.py:1185
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
 msgstr "Nem választhat szét egy mozgás tervezetet. Először jóvá kell hagynia."
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1102
+#: code:addons/stock/models/stock_move.py:1181
 #, python-format
 msgid "You cannot split a move done"
 msgstr "Nem tud egy elvégzett mozgást szétvéálasztani"
 
 #. module: stock
-#: code:addons/stock/models/stock_quant.py:92
+#: code:addons/stock/models/stock_quant.py:86
 #, python-format
 msgid ""
 "You cannot take products from or deliver products to a location of type "
@@ -6481,8 +6783,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:128
-#: code:addons/stock/models/stock_move_line.py:132
+#: code:addons/stock/models/stock_move_line.py:127
+#: code:addons/stock/models/stock_move_line.py:131
 #, python-format
 msgid ""
 "You cannot use the same serial number twice. Please correct the serial "
@@ -6490,29 +6792,20 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:716
+#: code:addons/stock/models/stock_picking.py:701
+#, python-format
+msgid ""
+"You cannot validate a transfer if no quantites are reserved nor done. To "
+"force the transfer, switch in edit more and encode the done quantities."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_picking.py:717
 #, python-format
 msgid ""
 "You cannot validate a transfer if you have not processed any quantity for "
 "%s."
 msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:700
-#, python-format
-msgid ""
-"You cannot validate a transfer if you have not processed any quantity. You "
-"should rather cancel the transfer."
-msgstr ""
-
-#. module: stock
-#: model:ir.ui.view,arch_db:stock.report_picking
-msgid ""
-"You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
-"                                to check if products are available."
-msgstr ""
-"Még nincs foglalva terméke erre a kiválogatásra. Kérem kattintson a 'Foglalás' gombra\n"
-"                                a termékek elérhetőségének ellenőrzéséhez."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:110
@@ -6542,7 +6835,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:304
+#: code:addons/stock/models/product.py:303
 #, python-format
 msgid ""
 "You have products in stock that have no lot number.  You can assign serial "
@@ -6552,14 +6845,14 @@ msgstr ""
 "sorozat számokat egy készletezés elvégzésével."
 
 #. module: stock
-#: code:addons/stock/models/stock_picking.py:873
+#: code:addons/stock/models/stock_picking.py:874
 #, python-format
 msgid ""
 "You have to define a groupby and sorted method and pass them as arguments."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:797
+#: code:addons/stock/models/stock_warehouse.py:808
 #, python-format
 msgid ""
 "You have to select a product unit of measure in the same category than the "
@@ -6569,7 +6862,7 @@ msgstr ""
 " termék alapértelmezett mértékegysége"
 
 #. module: stock
-#: code:addons/stock/models/stock_location.py:96
+#: code:addons/stock/models/stock_location.py:94
 #, python-format
 msgid "You have to set a name for this location."
 msgstr ""
@@ -6593,21 +6886,21 @@ msgid "You must define a warehouse for the company: %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move_line.py:398
-#: code:addons/stock/models/stock_picking.py:714
+#: code:addons/stock/models/stock_move_line.py:406
+#: code:addons/stock/models/stock_picking.py:715
 #, python-format
-msgid "You need to supply a lot/serial number for %s."
+msgid "You need to supply a Lot/Serial number for product %s."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:1061
+#: code:addons/stock/models/stock_move.py:1138
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/product.py:371
-#: code:addons/stock/models/product.py:512
+#: code:addons/stock/models/product.py:370
+#: code:addons/stock/models/product.py:514
 #, python-format
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
@@ -6615,7 +6908,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_move.py:330
+#: code:addons/stock/models/stock_move.py:339
 #, python-format
 msgid ""
 "You try to move a product using a UoM that is not compatible with the UoM of"
@@ -6698,6 +6991,11 @@ msgstr "ebből"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "processed instead of"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_replenish
+msgid "product.replenish"
 msgstr ""
 
 #. module: stock

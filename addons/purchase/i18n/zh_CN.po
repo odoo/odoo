@@ -19,13 +19,16 @@
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +93,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:100
+#: code:addons/purchase/models/stock.py:124
 #, python-format
 msgid " Buy"
 msgstr " 买"
@@ -136,6 +139,13 @@ msgid ""
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "取消</span>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-file-text\"/> "
+"Waiting for Bill</span>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -251,6 +261,26 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "可以为产品和客户设置警告信息(采购)"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_procurement_rule__action
+msgid "Action"
+msgstr "动作"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
 msgid "Add Purchase Order"
 msgstr "添加采购订单"
@@ -351,7 +381,8 @@ msgid "Blocking Message"
 msgstr "受阻消息"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:94
+#: code:addons/purchase/models/stock.py:118
+#: selection:procurement.rule,action:0
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -387,7 +418,7 @@ msgstr ""
 "当你想为一组给定的产品生成报价给几个供应商的报价时，就需要招标。如果您直接向一个供应商报价，或者您想要一个招标来比较几个供应商的报价，您可以配置每个产品的配置。"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:97
+#: code:addons/purchase/models/stock.py:121
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "找不到到任何购买路线"
@@ -405,7 +436,12 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:797
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:800
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "无法删除处于'%s'状态的采购订单行。"
@@ -434,7 +470,7 @@ msgid "Company Currency"
 msgstr "公司币种"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:330
+#: code:addons/purchase/models/purchase.py:331
 #, python-format
 msgid "Compose Email"
 msgstr "撰写邮件"
@@ -560,9 +596,11 @@ msgid "Delivered quantities"
 msgstr "已交货数量"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Deliveries & Invoices"
-msgstr "交货及发票"
+#: model:ir.model.fields,help:purchase.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr "取决于安装的模块，它允许你在产品定义路线：不管它将会被购买、制造、MTO/MTS，..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -652,7 +690,7 @@ msgid "Extended Filters"
 msgstr "扩展筛选"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:617
+#: code:addons/purchase/models/purchase.py:620
 #, python-format
 msgid "Extra line with %s "
 msgstr "更多明细 1%s"
@@ -663,6 +701,21 @@ msgstr "更多明细 1%s"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
 msgstr "财政状况"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -707,6 +760,16 @@ msgstr "如何导入"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -767,6 +830,11 @@ msgstr "开票及入向送货"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
 msgstr "开票"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__is_shipped
@@ -876,6 +944,11 @@ msgid "Manual actions may be needed."
 msgstr ""
 
 #. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Manufacture"
+msgstr "制造"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
@@ -906,6 +979,11 @@ msgid "Message for Purchase Order Line"
 msgstr "采购订单明细的消息"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr "最小数量"
@@ -925,6 +1003,11 @@ msgstr "两步验证所需要的最小金额"
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
 msgstr "月度采购"
+
+#. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Move From Another Location"
+msgstr "从其它位置移动"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -952,6 +1035,21 @@ msgstr "名称"
 #, python-format
 msgid "Newest"
 msgstr "最新"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.exception_on_po
@@ -990,6 +1088,21 @@ msgstr "备注"
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
 msgstr "无需开单"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1074,6 +1187,16 @@ msgid "Orders"
 msgstr "订单"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Other Information"
+msgstr "其他信息"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
 msgstr "PO_${(object.name or '').replace('/','_')}"
@@ -1102,6 +1225,11 @@ msgstr "付款条款"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_count
 msgid "Picking count"
 msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Planned"
+msgstr "已安排"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1249,6 +1377,11 @@ msgstr "采购提前时间"
 #, python-format
 msgid "Purchase Order"
 msgstr "采购订单"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Purchase Order #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1432,8 +1565,13 @@ msgstr "询价单和采购订单"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Send RFQ by Email"
-msgstr "重新用电邮发送询价单"
+msgid "Re-Send by Email"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Receipt"
+msgstr "收货"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1526,9 +1664,19 @@ msgid "Reservation"
 msgstr "预订"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
 msgstr "退回拣货"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_template__route_ids
+msgid "Routes"
+msgstr "路线"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1573,8 +1721,8 @@ msgstr "通过电邮发送采购单"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Send RFQ by Email"
-msgstr "通过电邮发送询价单"
+msgid "Send by Email"
+msgstr "通过电子邮件发送"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -1598,11 +1746,6 @@ msgid "Settings"
 msgstr "设置"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Shipment"
-msgstr "送货"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "显示在今天之前的下一个行动日期的所有记录"
@@ -1619,6 +1762,19 @@ msgstr "源单据"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
 msgstr "状态"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1674,7 +1830,7 @@ msgid "The full URL to access the document through the website."
 msgstr "通过网站访问单据的完整URL。"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:702
+#: code:addons/purchase/models/purchase.py:705
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1697,7 +1853,7 @@ msgid ""
 msgstr "询价单是采购流程的第一步。一旦转换为采购订单，你就能操作相关的收货单和供应商发票"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:931
+#: code:addons/purchase/models/purchase.py:934
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1758,13 +1914,13 @@ msgid "This note will show up on purchase orders."
 msgstr "此备注将显示在采购订单上。"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:216
+#: code:addons/purchase/models/account_invoice.py:248
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "该供应商帐单已经从：%s创建"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:230
+#: code:addons/purchase/models/account_invoice.py:262
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "此供应商帐单已从%s修改"
@@ -1784,6 +1940,11 @@ msgstr "这将决定进货的操作类型。"
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "待批准"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Today"
+msgstr "今日"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1820,7 +1981,7 @@ msgid "Transfer"
 msgstr "转账"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:386
+#: code:addons/purchase/models/purchase.py:388
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1828,7 +1989,7 @@ msgid ""
 msgstr "不能取消采购订单 %s，因为有相关的收货已经发生"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:389
+#: code:addons/purchase/models/purchase.py:391
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1856,9 +2017,15 @@ msgid "Unlock"
 msgstr "解锁"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "未读消息"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -1970,8 +2137,8 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:284
-#: code:addons/purchase/models/purchase.py:868
+#: code:addons/purchase/models/purchase.py:285
+#: code:addons/purchase/models/purchase.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr "%s 的警告"
@@ -1992,9 +2159,19 @@ msgid "Warnings"
 msgstr "警告"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+msgid "Website Messages"
+msgstr "网站信息"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_url
 msgid "Website URL"
 msgstr "网站URL"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+msgid "Website communication history"
+msgstr "网站沟通记录"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse__buy_to_resupply
@@ -2009,7 +2186,7 @@ msgid ""
 msgstr "你可以根据采购订单（服务）或者实际收货数量（产品）控制发票的生成"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:694
+#: code:addons/purchase/models/purchase.py:697
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -2031,7 +2208,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:428
+#: code:addons/purchase/models/purchase.py:431
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "您必须为此合作伙伴设置一个供应商的位置%s"

@@ -14,10 +14,10 @@
 # John Lin <linyinhuan@139.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: John Lin <linyinhuan@139.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -96,11 +96,15 @@ msgstr "<strong>承运商</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Shipping Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "<strong>跟踪号码</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>重量</strong>"
@@ -353,6 +357,7 @@ msgid "Fixed Price"
 msgstr "固定价格"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -699,7 +704,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr "如果您的凭证已通过生产认证，请设置为True。"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:165
+#: code:addons/delivery/models/stock_picking.py:168
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -863,7 +868,7 @@ msgid "Width must be positive"
 msgstr "宽度必须是正数"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:203
+#: code:addons/delivery/models/stock_picking.py:206
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -879,7 +884,7 @@ msgid "You can add delivery price only on unconfirmed quotations."
 msgstr "您只能在未经确认的报价单上添加交货价格。"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:179
+#: code:addons/delivery/models/stock_picking.py:182
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "

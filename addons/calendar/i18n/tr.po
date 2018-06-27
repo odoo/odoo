@@ -13,13 +13,17 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 # Alper Çiftçi <inactive+alprciftci@transifex.com>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Mehmet Demirel <mdemirell@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: Mehmet Demirel <mdemirell@gmail.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -303,7 +307,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Tarih güncellendi"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:720
+#: code:addons/calendar/models/calendar.py:740
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -313,19 +317,19 @@ msgstr ""
 " %s / %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:711
+#: code:addons/calendar/models/calendar.py:731
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s / (%s - %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:225
+#: code:addons/calendar/models/calendar.py:226
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s daveti kabul etti."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:233
+#: code:addons/calendar/models/calendar.py:234
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s daveti kabul etmedi"
@@ -383,6 +387,11 @@ msgid "Accepted"
 msgstr "Kabul edildi"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
+msgid "Action Needed"
+msgstr "Eylem Gerekiyor"
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts__active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
 msgid "Active"
@@ -409,7 +418,7 @@ msgid "All Day"
 msgstr "Tüm Gün"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:707
+#: code:addons/calendar/models/calendar.py:727
 #, python-format
 msgid "AllDay , %s"
 msgstr "TümGün , %s"
@@ -448,7 +457,7 @@ msgid "Availability"
 msgstr "Uygunluk"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1606
+#: code:addons/calendar/models/calendar.py:1642
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -490,6 +499,16 @@ msgstr "Toplantı Takvimi"
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr "Takvim: Etkinlik Hatırlatıcı"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
+msgid "Category"
+msgstr "Kategori"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -663,13 +682,13 @@ msgid "Ending at"
 msgstr "Bitiş"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:915
+#: code:addons/calendar/models/calendar.py:937
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "Bitiş tarihi başlangıç tarihinden önce olamaz."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:913
+#: code:addons/calendar/models/calendar.py:933
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr "Bitiş saati başlangıç saatinden önce olamaz."
@@ -690,7 +709,7 @@ msgid "Event alarm"
 msgstr "Olay alarmı"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1164
+#: code:addons/calendar/models/calendar.py:1194
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "Etkinlik tekrarlama aralığı negatif olamaz."
@@ -717,10 +736,25 @@ msgid "First"
 msgstr "İlk"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:955
+#: code:addons/calendar/models/calendar.py:979
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "İlk davet tarihini belirtmeniz gerekir."
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Takipçiler (Kanallar)"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Tekipçiler (İş ortakları)"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -754,7 +788,7 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1549
+#: code:addons/calendar/models/calendar.py:1585
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -779,6 +813,16 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__id
 msgid "ID"
 msgstr "ID"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__active
@@ -818,6 +862,11 @@ msgstr "Davetler"
 #: model:ir.model,name:calendar.model_mail_wizard_invite
 msgid "Invite wizard"
 msgstr "Davet sihirbazı"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -886,8 +935,16 @@ msgstr "Bana"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
+#: selection:mail.activity.type,category:0
 msgid "Meeting"
 msgstr "Toplantı"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:934
+#: code:addons/calendar/models/calendar.py:938
+#, python-format
+msgid "Meeting '%s' starts '%s' and ends '%s'"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -930,6 +987,11 @@ msgstr "Toplantılar"
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
 msgstr "Mesaj"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
@@ -989,9 +1051,24 @@ msgid "Notification"
 msgstr "Bildirimler"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Eylemlerin Sayısı"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Eylem gerektiren mesaj sayısı"
+
+#. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
 msgstr "Tekrarlama Sayısı"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_event__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Okunmamış mesaj sayısı"
 
 #. module: calendar
 #. openerp-web
@@ -1021,6 +1098,11 @@ msgid "Options"
 msgstr "Seçenekler"
 
 #. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "Diğer"
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
@@ -1037,7 +1119,7 @@ msgid "Partner-related data of the user"
 msgstr "Kullanıcının İş Ortağı ilgili veriler"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1177
+#: code:addons/calendar/models/calendar.py:1207
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Lütfen ayın uygun bir gününü seçiniz."
@@ -1087,6 +1169,11 @@ msgstr "Yinelenen Kural"
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__duration
 msgid "Remind Before"
 msgstr "Öncesinde Hatırlat : "
+
+#. module: calendar
+#: selection:mail.activity.type,category:0
+msgid "Reminder"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__alarm_ids
@@ -1331,9 +1418,15 @@ msgid "Unit"
 msgstr "Birim"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1376,7 +1469,7 @@ msgid "Yes I'm going."
 msgstr "Evet ben gidiyorum"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:155
+#: code:addons/calendar/models/calendar.py:156
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "Takvim katılımcısını çoğaltamazsınız."
@@ -1397,7 +1490,7 @@ msgid "e.g. Business Lunch"
 msgstr "ör. İş Yemeği"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1162
+#: code:addons/calendar/models/calendar.py:1192
 #, python-format
 msgid "interval cannot be negative."
 msgstr "aralığı negatif olamaz."

@@ -22,10 +22,10 @@
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -91,7 +91,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:100
+#: code:addons/purchase/models/stock.py:124
 #, python-format
 msgid " Buy"
 msgstr "Покупка"
@@ -137,6 +137,13 @@ msgid ""
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Отменено</span>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-file-text\"/> "
+"Waiting for Bill</span>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -253,6 +260,26 @@ msgstr ""
 "Предупреждение может быть установлено на продукт или клиента (Закупка)"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_procurement_rule__action
+msgid "Action"
+msgstr "Действие"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+msgid "Action Needed"
+msgstr "Требует внимания"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+msgid "Activities"
+msgstr "Деятельность"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+msgid "Activity State"
+msgstr "Этап действия"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
 msgid "Add Purchase Order"
 msgstr "Добавить заказ"
@@ -355,7 +382,8 @@ msgid "Blocking Message"
 msgstr "Блокирующее сообщение"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:94
+#: code:addons/purchase/models/stock.py:118
+#: selection:procurement.rule,action:0
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -397,7 +425,7 @@ msgstr ""
 "want a Call for Tenders to compare offers from several vendors."
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:97
+#: code:addons/purchase/models/stock.py:121
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Не могу найти общий маршрут покупки."
@@ -415,7 +443,12 @@ msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:797
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:800
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "Нельзя удалить строку заказа на закупку, которая в состоянии '%s'."
@@ -444,7 +477,7 @@ msgid "Company Currency"
 msgstr "Валюта компании"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:330
+#: code:addons/purchase/models/purchase.py:331
 #, python-format
 msgid "Compose Email"
 msgstr "Написать письмо"
@@ -570,9 +603,13 @@ msgid "Delivered quantities"
 msgstr "Доставленное количество"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Deliveries & Invoices"
-msgstr "Доставки и Счета"
+#: model:ir.model.fields,help:purchase.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+"В зависимости от установленных модулей, это позволит вам определить маршрут "
+"движения товара: будет ли он куплен, изготовлен, MTO/MTS,..."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -666,7 +703,7 @@ msgid "Extended Filters"
 msgstr "Расширенные фильтры"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:617
+#: code:addons/purchase/models/purchase.py:620
 #, python-format
 msgid "Extra line with %s "
 msgstr "К %s "
@@ -677,6 +714,21 @@ msgstr "К %s "
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
 msgstr "Система налогов"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+msgid "Followers"
+msgstr "Подписчики"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Подписчики (Каналы)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Подписчики (Партнеры)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -721,6 +773,16 @@ msgstr "Как импортировать"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 msgid "ID"
 msgstr "Номер"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Если отмечено, новые сообщения будут требовать вашего внимания."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Если отмечено - новые сообщения требуют Вашего внимания."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -785,6 +847,11 @@ msgstr "Счет-фактуры и Поступающие товары"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
 msgstr "Выставление счёта"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+msgid "Is Follower"
+msgstr "Подписчик"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__is_shipped
@@ -896,6 +963,11 @@ msgid "Manual actions may be needed."
 msgstr ""
 
 #. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Manufacture"
+msgstr "Изготовление"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
@@ -933,6 +1005,11 @@ msgid "Message for Purchase Order Line"
 msgstr "Сообщение о покупке позиции в заказе"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr "Минимальное количество"
@@ -952,6 +1029,11 @@ msgstr "Минимальная сумма, на которую требуетс�
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
 msgstr "Месячные закупки"
+
+#. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Move From Another Location"
+msgstr "Переместить Из Другого Местонахождения"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -979,6 +1061,21 @@ msgstr "Название"
 #, python-format
 msgid "Newest"
 msgstr "Свежайшее"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Резюме следующего мероприятия"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.exception_on_po
@@ -1019,6 +1116,21 @@ msgstr "Заметки"
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
 msgstr "Нечего выставить в счет"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Количество действий"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Количество сообщений, требующих внимания"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Количество непрочитанных сообщений"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1103,6 +1215,16 @@ msgid "Orders"
 msgstr "Заказы"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Other Information"
+msgstr "Прочая информация"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Overdue"
+msgstr "Просроченные"
+
+#. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
 msgstr "PO_${(object.name or '').replace('/','_')}"
@@ -1131,6 +1253,11 @@ msgstr "Условия оплаты"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_count
 msgid "Picking count"
 msgstr "Количество комплектования"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Planned"
+msgstr "Запланировано"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1282,6 +1409,11 @@ msgstr "Запас по времени на закупку"
 #, python-format
 msgid "Purchase Order"
 msgstr "Заказ на закупку"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Purchase Order #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1469,8 +1601,13 @@ msgstr "Запросы цен и закупки"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Send RFQ by Email"
-msgstr "Отправить повторно ЗЦП по эл. почте"
+msgid "Re-Send by Email"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Receipt"
+msgstr "Приход"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1568,9 +1705,19 @@ msgid "Reservation"
 msgstr "Резервирование"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+msgid "Responsible User"
+msgstr "Ответственный"
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Разукомплектовать"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_template__route_ids
+msgid "Routes"
+msgstr "Маршруты"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1615,8 +1762,8 @@ msgstr "Отправить Заказ Закупки по эл.почте"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Send RFQ by Email"
-msgstr "Отправить ЗЦП по эл. почте"
+msgid "Send by Email"
+msgstr "Отправить по Email"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -1640,11 +1787,6 @@ msgid "Settings"
 msgstr "Настройки"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Shipment"
-msgstr "Доставка"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Показать все записи с просроченой датой следующего действия"
@@ -1661,6 +1803,15 @@ msgstr "Документ-источник"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
 msgstr "Статус"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1716,7 +1867,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Полный URL-адрес для доступа к документу через веб-сайт."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:702
+#: code:addons/purchase/models/purchase.py:705
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1744,7 +1895,7 @@ msgstr ""
 "продукта и счёт-фактуру поставщика."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:931
+#: code:addons/purchase/models/purchase.py:934
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1818,13 +1969,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Эта пометка будет показана в заказах на закупку"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:216
+#: code:addons/purchase/models/account_invoice.py:248
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Этот счет поставщика создан от: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:230
+#: code:addons/purchase/models/account_invoice.py:262
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr "Этот счет поставщика изменен от: %s"
@@ -1844,6 +1995,11 @@ msgstr "Определяет тип операции для входящей п�
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "К одобрению"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Today"
+msgstr "Сегодня"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1880,7 +2036,7 @@ msgid "Transfer"
 msgstr "Перемещение"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:386
+#: code:addons/purchase/models/purchase.py:388
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1890,7 +2046,7 @@ msgstr ""
 "выполнены."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:389
+#: code:addons/purchase/models/purchase.py:391
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1920,9 +2076,15 @@ msgid "Unlock"
 msgstr "Разблокировать"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "Непрочитанные Сообщения"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Счетчик непрочитанных сообщений"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -2036,8 +2198,8 @@ msgid "Warning"
 msgstr "Предупреждение"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:284
-#: code:addons/purchase/models/purchase.py:868
+#: code:addons/purchase/models/purchase.py:285
+#: code:addons/purchase/models/purchase.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr "Предупреждение для %s"
@@ -2058,9 +2220,19 @@ msgid "Warnings"
 msgstr "Предупреждения"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+msgid "Website Messages"
+msgstr "Сообщения с сайта"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_url
 msgid "Website URL"
 msgstr "URL Веб-сайта"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+msgid "Website communication history"
+msgstr "История общения с сайта"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse__buy_to_resupply
@@ -2077,7 +2249,7 @@ msgstr ""
 "             тем что вы приобрели (услуги) или получили (продукты)."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:694
+#: code:addons/purchase/models/purchase.py:697
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -2099,7 +2271,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:428
+#: code:addons/purchase/models/purchase.py:431
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Вы должны указать местоположение Поставщика для партнера  %s"

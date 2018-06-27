@@ -10,31 +10,23 @@
 # 老窦 北京 <2662059195@qq.com>, 2018
 # e2f <projects@e2f.com>, 2018
 # Maie <m@maie.name>, 2018
+# niulin lnc. <admin@niulin.net>, 2018
+# waveyeung <waveyeung@qq.com>, 2018
+# liulixia <liu.lixia@elico-corp.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: Maie <m@maie.name>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:15+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
-#, python-format
-msgid "%s %s has been added to the fleet!"
-msgstr "%s %s已添加到车队"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:274
-#, python-format
-msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
-msgstr "%s 个合同即将到期，应续订/关闭!"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -47,6 +39,12 @@ msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "Action Needed"
+msgstr "需要采取行动"
+
+#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Activation Cost"
@@ -57,6 +55,22 @@ msgstr "激活费用"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 msgid "Active"
 msgstr "有效"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid "Activity State"
+msgstr "活动状态"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
+#: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
+msgid "Activity Types"
+msgstr "活动类型"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -253,6 +267,11 @@ msgstr "车辆的合约信息"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Contract logs"
 msgstr "合同日志"
+
+#. module: fleet
+#: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
+msgid "Contract to Renew"
+msgstr "需续签的合同"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -516,7 +535,7 @@ msgid "Driver of the vehicle"
 msgstr "车辆驾驶员"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:211
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "驾驶员：from'%s'to'%s'"
@@ -582,6 +601,24 @@ msgid "Fleet: Generate contracts costs based on costs frequency"
 msgstr "车队：根据成本频率生成合同成本"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
+msgid "Followers"
+msgstr "关注者"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_channel_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "关注者(渠道)"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "关注者(业务伙伴)"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
@@ -631,6 +668,12 @@ msgstr "车辆的燃油"
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
 msgstr "车辆燃油日志"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Future Activities"
+msgstr "未来活动"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -713,6 +756,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "If checked new messages require your attention."
+msgstr "查看是否有需要你留意的新信息。"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "如果勾选此项，有新消息会提醒你。"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
 msgid "Immatriculation Date"
 msgstr "注册日期"
@@ -778,6 +833,12 @@ msgid "Invoice Reference"
 msgstr "发票参考"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
+msgid "Is Follower"
+msgstr "是关注者"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "公里"
@@ -838,12 +899,18 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Late Activities"
+msgstr "晚活动"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 msgid "License Plate"
 msgstr "车辆牌照"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
+#: code:addons/fleet/models/fleet_vehicle.py:218
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "车牌：从'%s'到'%s'"
@@ -951,6 +1018,12 @@ msgid ""
 msgstr "中等尺寸的商标标识。自动缩放为 128x128px，保留纵横比。用在表单视图或者一些看板视图"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
+msgid "Messages"
+msgstr "消息"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
 msgstr "里程"
@@ -995,7 +1068,7 @@ msgid "Model of the vehicle"
 msgstr "车辆型号"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:207
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "型号：从'%s'到'%s'"
@@ -1034,9 +1107,30 @@ msgid "Name of contract to renew soon"
 msgstr "需马上续签合同的名称"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活动截止日期"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活动摘要"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活动类型"
+
+#. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "No"
 msgstr "否"
+
+#. module: fleet
+#: code:addons/fleet/models/fleet_vehicle.py:81
+#, python-format
+msgid "No Plate"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1045,10 +1139,10 @@ msgid "No data for analysis"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:206
+#: code:addons/fleet/models/fleet_vehicle.py:210
+#: code:addons/fleet/models/fleet_vehicle.py:214
+#: code:addons/fleet/models/fleet_vehicle.py:217
 #, python-format
 msgid "None"
 msgstr "无"
@@ -1061,14 +1155,32 @@ msgid "Notes"
 msgstr "便签"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "行动数量"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
 msgid "Number of doors of the vehicle"
 msgstr "车辆车门数量"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要行动消息的数量"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
 msgid "Number of seats of the vehicle"
 msgstr "车辆座位数"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未读消息的数量"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_count
@@ -1161,6 +1273,11 @@ msgid "Other"
 msgstr "其他"
 
 #. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Overdue"
+msgstr "逾期"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__parent_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__parent_id
@@ -1181,6 +1298,11 @@ msgstr "对这次的上一级费用成本"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
 msgstr "该合约的签署人"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Planned"
+msgstr "已安排"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1227,7 +1349,7 @@ msgid "Refueling Details"
 msgstr "加油明细"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:200
+#: code:addons/fleet/models/fleet_vehicle_cost.py:201
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1243,6 +1365,16 @@ msgstr "报告"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "残余价值"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
+msgid "Responsible"
+msgstr "负责"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
+msgid "Responsible User"
+msgstr "责任用户"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1309,6 +1441,12 @@ msgid "Set Contract In Progress"
 msgstr "设置合同为履行中"
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "显示在今天之前的下一个行动日期之所有记录"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_small
 msgid "Small-sized image"
 msgstr "小尺寸图像"
@@ -1335,7 +1473,7 @@ msgid "State name already exists"
 msgstr "状态名称已经存在"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:215
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "状态：从 '%s' 到 '%s'"
@@ -1345,6 +1483,19 @@ msgstr "状态：从 '%s' 到 '%s'"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Status"
 msgstr "状态"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"基于活动的状态 \n"
+" 逾期：已经超过截止日期 \n"
+" 现今：活动日期是当天 \n"
+" 计划：未来的活动。"
 
 #. module: fleet
 #: sql_constraint:fleet.vehicle.tag:0
@@ -1378,6 +1529,17 @@ msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
 msgstr "这个字段保存的图像作为标志的品牌，尺寸你不超过1024X1024PX。"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Today"
+msgstr "今日"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Today Activities"
+msgstr "今天的活动"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
@@ -1450,6 +1612,18 @@ msgstr "单位"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit of the odometer "
 msgstr "单位的里程表 "
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "Unread Messages"
+msgstr "未读消息"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未读消息计数器"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state__sequence

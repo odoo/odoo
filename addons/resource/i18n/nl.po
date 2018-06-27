@@ -7,10 +7,10 @@
 # Martin Trigaux, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Martin Trigaux, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:725
+#: code:addons/resource/models/resource.py:740
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -33,13 +33,15 @@ msgstr "Actief"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
 msgid "Average hour per day"
-msgstr ""
+msgstr "Gemiddeld aantal uren per dag"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
 msgid ""
 "Average hours per day a resource is supposed to work with this calendar."
 msgstr ""
+"Gemiddeld aantal uren per dag dat een resource met deze kalender hoort te "
+"werken."
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
@@ -52,8 +54,6 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee__company_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__company_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__company_id
@@ -94,8 +94,6 @@ msgid "Default Working Hours"
 msgstr "Standaard werkuren"
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_hr_employee__resource_calendar_id
-#: model:ir.model.fields,help:resource.field_mrp_workcenter__resource_calendar_id
 #: model:ir.model.fields,help:resource.field_res_users__resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_mixin__resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_resource__calendar_id
@@ -133,7 +131,7 @@ msgid "End Date"
 msgstr "Einddatum"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:756
+#: code:addons/resource/models/resource.py:773
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Fout! Verlof begindatum moet liggen vóór de verlof einddatum !"
@@ -239,6 +237,11 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: resource
+#: selection:resource.calendar.leaves,time_type:0
+msgid "Leave"
+msgstr "Verlof"
+
+#. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
@@ -287,6 +290,11 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: resource
+#: selection:resource.calendar.leaves,time_type:0
+msgid "Other"
+msgstr "Overige"
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__name
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
@@ -300,8 +308,6 @@ msgstr ""
 "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee__resource_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_test__resource_id
@@ -392,8 +398,7 @@ msgid "Search Working Time"
 msgstr "Werktijd zoeken"
 
 #. module: resource
-#: code:addons/resource/models/res_company.py:18
-#: code:addons/resource/models/res_company.py:23
+#: code:addons/resource/models/res_company.py:22
 #, python-format
 msgid "Standard 40 hours/week"
 msgstr "Standaard 40 uren/week"
@@ -429,16 +434,10 @@ msgid "Test Resource Model"
 msgstr "Test bron model"
 
 #. module: resource
-#: code:addons/resource/models/resource.py:711
+#: code:addons/resource/models/resource.py:725
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
 msgstr "De efficiëntie factor kan niet gelijk zijn aan 0."
-
-#. module: resource
-#: code:addons/resource/models/resource.py:668
-#, python-format
-msgid "The start-hour must be lower than end-hour."
-msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
@@ -470,6 +469,11 @@ msgstr "Donderdagavond"
 #, python-format
 msgid "Thursday Morning"
 msgstr "Vrijdagochtend"
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
+msgid "Time Type"
+msgstr ""
 
 #. module: resource
 #: sql_constraint:resource.resource:0
@@ -539,6 +543,12 @@ msgid "Wednesday Morning"
 msgstr "Woensdagochtend"
 
 #. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
+msgid ""
+"Whether this should be computed as a holiday or as work time (eg: formation)"
+msgstr ""
+
+#. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "Werk detail"
@@ -559,8 +569,6 @@ msgid "Work to"
 msgstr "Werk tot"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_hr_employee__resource_calendar_id
-#: model:ir.model.fields,field_description:resource.field_mrp_workcenter__resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_company__resource_calendar_ids
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin__resource_calendar_id

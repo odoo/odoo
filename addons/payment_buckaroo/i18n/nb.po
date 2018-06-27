@@ -2,15 +2,12 @@
 # This file contains the translation of the following modules:
 # * payment_buckaroo
 # 
-# Translators:
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +19,28 @@ msgstr ""
 #: code:addons/payment_buckaroo/models/payment.py:141
 #, python-format
 msgid "; multiple order found"
-msgstr "; flere ordrer funnet"
+msgstr ""
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:139
 #, python-format
 msgid "; no order found"
-msgstr "; ingen ordre funnet"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:148
@@ -40,7 +52,7 @@ msgstr ""
 #: code:addons/payment_buckaroo/models/payment.py:137
 #, python-format
 msgid "Buckaroo: received data for reference %s"
-msgstr "Buckaroo: Mottatt data for referanse %s"
+msgstr ""
 
 #. module: payment_buckaroo
 #: code:addons/payment_buckaroo/models/payment.py:131
@@ -49,30 +61,63 @@ msgid ""
 "Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
 "shasign (%s)"
 msgstr ""
-"Buckaroo: Mottok data med manglende referanse (%s) eller pay_id (%s) eller "
-"shasign (%s)"
 
 #. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr "Hvordan sette opp Buckaroo-kontoen din?"
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr ""
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsløsning"
+msgstr ""
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Betalingstransaksjon"
+msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
-msgstr "SecretKey"
+msgstr ""
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
-msgstr "WebsiteKey"
+msgstr ""
+
+#. module: payment_buckaroo
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr ""

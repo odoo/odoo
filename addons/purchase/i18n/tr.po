@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
 # Martin Trigaux, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Mehmet Demirel <mdemirell@gmail.com>, 2017
@@ -16,13 +16,14 @@
 # Saban Yildiz <sabany@projetgrup.com>, 2018
 # Umur Akın <umura@projetgrup.com>, 2018
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +88,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:100
+#: code:addons/purchase/models/stock.py:124
 #, python-format
 msgid " Buy"
 msgstr " Satınal"
@@ -133,6 +134,13 @@ msgid ""
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> İptal "
 "Edildi</span>"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+msgid ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-file-text\"/> "
+"Waiting for Bill</span>"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -248,6 +256,26 @@ msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Bir ürün veya müşteri üzerinde uyarı konulabilir (Satınalma)"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_procurement_rule__action
+msgid "Action"
+msgstr "Aksiyon"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
+msgid "Action Needed"
+msgstr "Eylem Gerekiyor"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice__purchase_id
 msgid "Add Purchase Order"
 msgstr "Satınalma Siparişi Ekle"
@@ -350,7 +378,8 @@ msgid "Blocking Message"
 msgstr "Engelleme"
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:94
+#: code:addons/purchase/models/stock.py:118
+#: selection:procurement.rule,action:0
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -384,7 +413,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:97
+#: code:addons/purchase/models/stock.py:121
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr "Satınalma rotasında herhangi bir tanım yok."
@@ -402,7 +431,12 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:797
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Cancelled Purchase Order #"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:800
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr "'%s' Durumundaki satınalma satırı silinemiyor"
@@ -431,7 +465,7 @@ msgid "Company Currency"
 msgstr "Şirket Para Birimi"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:330
+#: code:addons/purchase/models/purchase.py:331
 #, python-format
 msgid "Compose Email"
 msgstr "Eposta Yaz"
@@ -557,9 +591,13 @@ msgid "Delivered quantities"
 msgstr "Teslim edilen miktar"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Deliveries & Invoices"
-msgstr "Teslimatlar & Faturalar"
+#: model:ir.model.fields,help:purchase.field_product_template__route_ids
+msgid ""
+"Depending on the modules installed, this will allow you to define the route "
+"of the product: whether it will be bought, manufactured, MTO/MTS,..."
+msgstr ""
+"Kurulu modüllere dayalı olarak ürün rotasının tanımlamanızı sağlar: "
+"satınalınmış, üretilmiş, MTO/MTS, ... olmasına bakılmaksızın"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -653,7 +691,7 @@ msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:617
+#: code:addons/purchase/models/purchase.py:620
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -664,6 +702,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Fiscal Position"
 msgstr "Mali Koşul"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Takipçiler (Kanallar)"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Tekipçiler (İş ortakları)"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -709,6 +762,16 @@ msgstr "Nasıl içe aktarım yapılır"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__id
 msgid "ID"
 msgstr "ID"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -771,6 +834,11 @@ msgstr "Faturalar ve Gelen Sevkiyatlar"
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
 msgstr "Faturalama"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__is_shipped
@@ -884,6 +952,11 @@ msgid "Manual actions may be needed."
 msgstr ""
 
 #. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Manufacture"
+msgstr "Üretim"
+
+#. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lead
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_lead
 msgid ""
@@ -917,6 +990,11 @@ msgid "Message for Purchase Order Line"
 msgstr "Satınalma Sipariş Satırı için Mesaj"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum Amount"
 msgstr "Minimum Tutar"
@@ -936,6 +1014,11 @@ msgstr " Çift doğrulama gerektiren minimum miktar"
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
 msgstr "Aylık Satınalmalar"
+
+#. module: purchase
+#: selection:procurement.rule,action:0
+msgid "Move From Another Location"
+msgstr "Başka Konumdan Aktarma"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -963,6 +1046,21 @@ msgstr "İsim"
 #, python-format
 msgid "Newest"
 msgstr "En yeni"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Faaliyet Zaman Sınırı"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Faaliyet Özeti"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Faaliyet Türü"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.exception_on_po
@@ -1002,6 +1100,21 @@ msgstr "Notlar"
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
 msgstr "Faturalanacak Bir Şey Yok"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Eylemlerin Sayısı"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Eylem gerektiren mesaj sayısı"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Okunmamış mesaj sayısı"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1086,6 +1199,16 @@ msgid "Orders"
 msgstr "Siparişler"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Other Information"
+msgstr "Diğer Bilgiler"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Overdue"
+msgstr "Geciken"
+
+#. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
 msgstr "PO_${(object.name or '').replace('/','_')}"
@@ -1114,6 +1237,11 @@ msgstr "Ödeme Koşulları"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__picking_count
 msgid "Picking count"
 msgstr "Toplama Listesi Adedi"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Planned"
+msgstr "Planlanan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1265,6 +1393,11 @@ msgstr "Satınalma Tedarik Süresi"
 #, python-format
 msgid "Purchase Order"
 msgstr "Satınalma Siparişi"
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Purchase Order #"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -1452,8 +1585,13 @@ msgstr "Teklif Talepleri ve Satınalmalar"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Re-Send RFQ by Email"
-msgstr "Teklif talebini (RFQ) yeniden E-Postayla gönder"
+msgid "Re-Send by Email"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.purchase_order_form
+msgid "Receipt"
+msgstr "Alım"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1552,9 +1690,19 @@ msgid "Reservation"
 msgstr "Rezervasyon"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Ters Transfer"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_product_template__route_ids
+msgid "Routes"
+msgstr "Rotalar"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1599,8 +1747,8 @@ msgstr "PO E-Postayla Gönder"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Send RFQ by Email"
-msgstr "E-posta Gönder"
+msgid "Send by Email"
+msgstr "E-posta ile Gönder"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -1624,11 +1772,6 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.purchase_order_form
-msgid "Shipment"
-msgstr "Sevkiyat"
-
-#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
@@ -1645,6 +1788,15 @@ msgstr "Kaynak Belge"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Status"
 msgstr "Durumu"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1700,7 +1852,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Belgeye web sitesinden erişim için tam URL adresi."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:702
+#: code:addons/purchase/models/purchase.py:705
 #, python-format
 msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
@@ -1726,7 +1878,7 @@ msgstr ""
 "edebileceksiniz."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:931
+#: code:addons/purchase/models/purchase.py:934
 #, python-format
 msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
@@ -1793,13 +1945,13 @@ msgid "This note will show up on purchase orders."
 msgstr "Buraya yazacağınız açıklamalar satınalma siparişlerinde görünecektir."
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:216
+#: code:addons/purchase/models/account_invoice.py:248
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr "Bu satıcı faturası üzerinden oluşturuldu: %s"
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:230
+#: code:addons/purchase/models/account_invoice.py:262
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1819,6 +1971,11 @@ msgstr "Bu, gelen teslimatın operasyon türünü belirleyecektir."
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "To Approve"
 msgstr "Onaylanacak"
+
+#. module: purchase
+#: selection:purchase.order,activity_state:0
+msgid "Today"
+msgstr "Bugün"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1855,7 +2012,7 @@ msgid "Transfer"
 msgstr "Transfer"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:386
+#: code:addons/purchase/models/purchase.py:388
 #, python-format
 msgid ""
 "Unable to cancel purchase order %s as some receptions have already been "
@@ -1863,7 +2020,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:389
+#: code:addons/purchase/models/purchase.py:391
 #, python-format
 msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
@@ -1893,9 +2050,15 @@ msgid "Unlock"
 msgstr "Kilidini Aç"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Unread Messages"
 msgstr "Okunmamış Mesajlar"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Okunmamış Mesaj Sayacı"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
@@ -2006,8 +2169,8 @@ msgid "Warning"
 msgstr "Uyarı"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:284
-#: code:addons/purchase/models/purchase.py:868
+#: code:addons/purchase/models/purchase.py:285
+#: code:addons/purchase/models/purchase.py:871
 #, python-format
 msgid "Warning for %s"
 msgstr "%s için uyarı"
@@ -2028,9 +2191,19 @@ msgid "Warnings"
 msgstr "Uyarılar"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids
+msgid "Website Messages"
+msgstr "Websitesi Mesajları"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_url
 msgid "Website URL"
 msgstr "Web Sitesi URL Adresi"
+
+#. module: purchase
+#: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
+msgid "Website communication history"
+msgstr "Web Sitesi iletişim geçmişi"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_stock_warehouse__buy_to_resupply
@@ -2047,7 +2220,7 @@ msgstr ""
 "faturasından kontrol edebilirsiniz."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:694
+#: code:addons/purchase/models/purchase.py:697
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
@@ -2069,7 +2242,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:428
+#: code:addons/purchase/models/purchase.py:431
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
 msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"

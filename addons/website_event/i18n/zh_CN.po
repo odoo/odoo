@@ -17,13 +17,15 @@
 # waveyeung <waveyeung@qq.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:15+0000\n"
+"Last-Translator: e2f_cn c7 <e2f_cn_c7@outlook.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,17 +41,17 @@ msgstr "(免费)"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>End of Registration</b>"
-msgstr "<b/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Price</b>"
-msgstr "<b/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Quantity</b>"
-msgstr "<b/>"
+msgstr ""
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -163,13 +165,13 @@ msgid "<strong>Use this tag:</strong>"
 msgstr "<strong>使用此标签:</strong>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:99
 #, python-format
 msgid "All Categories"
 msgstr "所有类别"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:106
 #, python-format
 msgid "All Countries"
 msgstr "所有国家"
@@ -244,19 +246,19 @@ msgid ""
 msgstr "<em/>"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_menu
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr "在网站上的事件页面上创建菜单介绍，地理位置和注册。"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
 msgstr "专用菜单"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
 msgstr ""
 
@@ -308,7 +310,7 @@ msgid "Event Location"
 msgstr "活动地点"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
 msgstr "活动菜单"
 
@@ -369,19 +371,17 @@ msgstr "弄清楚关于此次活动人们看见了什么和讨论了什么,并�
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:61
 #, python-format
 msgid "Introduction"
 msgstr "介绍"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:62
+#: code:addons/website_event/models/event.py:55
 #, python-format
 msgid "Location"
 msgstr "地点"
@@ -398,7 +398,7 @@ msgstr "名称"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:183
+#: code:addons/website_event/controllers/main.py:189
 #: code:addons/website_event/static/src/js/website_event.editor.js:29
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -406,19 +406,19 @@ msgid "New Event"
 msgstr "新活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:38
 #, python-format
 msgid "Next Events"
 msgstr "下一个活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:47
 #, python-format
 msgid "Next Week"
 msgstr "下周"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:55
 #, python-format
 msgid "Next month"
 msgstr "次月"
@@ -429,7 +429,7 @@ msgid "No event found"
 msgstr "没有活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:55
+#: code:addons/website_event/controllers/main.py:59
 #, python-format
 msgid "Old Events"
 msgstr "历史活动"
@@ -483,6 +483,13 @@ msgid "Photos of Past Events"
 msgstr "历史活动照片"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.js:55
+#, python-format
+msgid "Please select at least one ticket."
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "价格"
@@ -503,8 +510,7 @@ msgid "Reference"
 msgstr "参考"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:56
 #, python-format
 msgid "Register"
 msgstr "发起者"
@@ -545,13 +551,18 @@ msgid "Sorry, the requested event is not available anymore."
 msgstr "对不起，您请求的活动已经失效。"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: model:ir.model.fields,help:website_event.field_event_event__website_url
+msgid "The full URL to access the document through the website."
+msgstr "通过网站访问单据的完整网址。"
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:43
 #, python-format
 msgid "This Week"
 msgstr "本周"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:51
 #, python-format
 msgid "This month"
 msgstr "本月"
@@ -562,7 +573,7 @@ msgid "Ticket Type #"
 msgstr "门票类型#"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:39
 #, python-format
 msgid "Today"
 msgstr "今日"
@@ -573,7 +584,7 @@ msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr "使用顶部菜单<I>“内容”</I>创建您的第一个事件。"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_published
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
 msgid "Visible in Website"
 msgstr "在网站可见"
 
@@ -585,7 +596,7 @@ msgstr "在google地图上可见"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "我们很高兴确认您注册我们的活动"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -596,6 +607,26 @@ msgstr "网站首页"
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "网站菜单"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_url
+msgid "Website URL"
+msgstr "网站网址"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_description
+msgid "Website meta description"
+msgstr "网站元说明"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "网站meta关键词"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_meta_title
+msgid "Website meta title"
+msgstr "网站meta标题"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full

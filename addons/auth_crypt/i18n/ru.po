@@ -3,15 +3,17 @@
 # * auth_crypt
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Collex100, 2018
+# Denis Trepalin <zekarious@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: Denis Trepalin <zekarious@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +22,22 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: auth_crypt
-#: model:ir.model.fields,field_description:auth_crypt.field_res_users_password_crypt
+#: model:ir.model.fields,field_description:auth_crypt.field_res_users__password_crypt
 msgid "Encrypted Password"
 msgstr "Зашифрованный пароль"
+
+#. module: auth_crypt
+#: model:ir.model.fields,help:auth_crypt.field_res_users__password
+msgid ""
+"Keep empty if you don't want the user to be able to connect on the system."
+msgstr ""
+"Оставьте пустым, если вы не хотите, чтобы пользователь мог подключиться к "
+"системе."
+
+#. module: auth_crypt
+#: model:ir.model.fields,field_description:auth_crypt.field_res_users__password
+msgid "Password"
+msgstr "Пароль"
 
 #. module: auth_crypt
 #: model:ir.model,name:auth_crypt.model_res_users
