@@ -122,7 +122,7 @@ class Message(models.Model):
     need_moderation = fields.Boolean('Need moderation', compute='_compute_need_moderation', search='_search_need_moderation')
     #keep notification layout informations to be able to generate mail again
     layout = fields.Char('Layout', copy=False)  # xml id of layout
-    layout_values = fields.Char('Notification values', copy=False)
+    add_sign = fields.Boolean(default=True)
 
     @api.multi
     def _get_needaction(self):
@@ -971,7 +971,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, layout=False, force_send=False, send_after_commit=True, values=None):
+    def _notify(self, force_send=False, send_after_commit=True, model_description=False, mail_auto_delete=True):
         """ Compute recipients to notify based on specified recipients and document
         followers. Delegate notification to partners to send emails and bus notifications
         and to channels to broadcast messages on channels """
@@ -1007,8 +1007,6 @@ class Message(models.Model):
 
         #update message, with maybe custom values
         message_values = {}
-        if email_partner:
-            message_values = {'layout': layout, 'layout_values': repr(values)}
         if channels_sudo:
             message_values['channel_ids'] = [(6, 0, channels_sudo.ids)]
         if partners_sudo:
@@ -1027,7 +1025,7 @@ class Message(models.Model):
                 ('id', 'in', (email_partner).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, values=values)
+            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, model_description=model_description, mail_auto_delete=mail_auto_delete)
 
         notif_partners._notify_by_chat(self)
         channels_sudo._notify(self)
