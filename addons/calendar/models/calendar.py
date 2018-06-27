@@ -1380,6 +1380,10 @@ class Meeting(models.Model):
 
     @api.multi
     def write(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         # compute duration, only if start and stop are modified
         if not 'duration' in values and 'start' in values and 'stop' in values:
             values['duration'] = self._get_duration(values['start'], values['stop'])
@@ -1445,6 +1449,10 @@ class Meeting(models.Model):
 
     @api.model
     def create(self, values):
+        # FIXME: neverending recurring events
+        if 'rrule' in values:
+            values['rrule'] = self._fix_rrule(values)
+
         if not 'user_id' in values:  # Else bug with quick_create when we are filter on an other user
             values['user_id'] = self.env.user.id
 
@@ -1610,3 +1618,11 @@ class Meeting(models.Model):
         self.ensure_one()
         default = default or {}
         return super(Meeting, self.browse(calendar_id2real_id(self.id))).copy(default)
+
+    @api.model
+    def _fix_rrule(self, values):
+        rule_str = values.get('rrule')
+        if rule_str:
+            if 'UNTIL' not in rule_str and 'COUNT' not in rule_str:
+                rule_str += ';COUNT=100'
+        return rule_str
