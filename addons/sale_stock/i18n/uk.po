@@ -2,48 +2,98 @@
 # This file contains the translation of the following modules:
 # * sale_stock
 # 
-# Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:170
+#: code:addons/sale_stock/models/sale_order.py:247
 #, python-format
 msgid ""
 "\n"
-"There are %s %s available accross all warehouses."
+"There are %s %s available across all warehouses.\n"
+"\n"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid ""
+".\n"
+"                Manual actions may be needed."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
+"times\"/> Cancelled</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Preparation</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
+"truck\"/> Shipped</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid ""
+"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
+"clock-o\"/> Partially Available</span>"
 msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>Референс клієнта:</strong>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.portal_order_page_shipping
+msgid "<strong>Delivery Orders</strong>"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Інкотермс:</strong>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr "Допродаж"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Analytic From Expenses"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -61,38 +111,37 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Компанії"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Доставляти всі товари за раз"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Доставляти частинами за наявності"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr "Доставка"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__module_sale_order_dates
 msgid "Delivery Date"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "Замовлення на доставку"
+msgstr ""
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
-"Відображати інкотермс на замовлення на продаж та відповідні рахунки-фактури"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -102,59 +151,84 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr "Дозволити маршрути для рядків продажу"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_display_incoterm
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "Exception(s) occurred on the picking:"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Exception(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Impacted Transfer(s):"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr "Інкотермс"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
-"Інкотермс - це набір термінів продажу. Вони служать для визначення розподілу"
-" відповідальності та вартості доставки між покупцем і продавцем і уособлюють"
-" витвір мистецтва практики перевезень."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
+#: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Міжнародні комерційні умови, комплект міжнародних правил з тлумачення "
-"найбільш широко використовуваних торгівельних термінів в галузі міжнародної "
-"торгівлі."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Маршрути інвентаризації"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
 msgid "Invoice"
-msgstr "Рахунок"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Рядок рахунку"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "Рахунки"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Manual"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "Manual actions may be needed."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for delivery that many days earlier than the actual promised date, to cope "
@@ -162,18 +236,19 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-#: model:ir.model.fields,help:sale_stock.field_res_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
+#: model:ir.model.fields,help:sale_stock.field_res_config_settings__security_lead
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
-"Межа відхилення для терміну постачання товарів замовникам. Поповнення "
-"запасів та дата відвантаження буде запланована на цю кількість днів раніше "
-"ніж обіцяна дата, щоб впоратися з несподіваними затримками в ланцюгу "
-"постачань."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -181,51 +256,61 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:174
+#: code:addons/sale_stock/models/sale_order.py:254
 #, python-format
 msgid "Not enough inventory!"
-msgstr "Не достатньо запасів!"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
 msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:188
+#: code:addons/sale_stock/models/sale_order.py:268
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Замовлена кількість зменшилась!"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
 msgid "Package"
-msgstr "Упаковка"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
+msgid "Picking Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Pickings"
-msgstr "Відбори"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
-msgstr "Група забезпечення"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "Замовлення на забезпечення"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
 msgid "Procurement Rule"
-msgstr "Правило забезпечення"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_product_template
+msgid "Product Template"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Quotation"
-msgstr "Пропозиція"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -237,9 +322,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
-msgstr "Маршрут"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -247,44 +332,44 @@ msgid "Routes for Sales Order Lines"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr "Замовлення"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sales"
-msgstr "Продаж"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Замовлення"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Рядок замовлення"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "Рядки замовлення на продаж"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Статистика замовлень на продаж"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_company__security_lead
 msgid "Sales Safety Days"
-msgstr "Дні підстрахування для продажів"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -292,19 +377,19 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
+#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr "Можна обирати у рядках"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -324,27 +409,23 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr "Інформація про доставку"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
-msgid "Shipping Management"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "Політика доставки"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Переміщення запасів"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
-msgstr "Переміщення запасів"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -356,27 +437,32 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:273
+#: code:addons/sale_stock/models/sale_order.py:361
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr "Цей товар запакований %.2f %s. Вам потрібно відтправити %.2f %s."
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Timesheets"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Переміщення"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
-msgstr "Склад"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:272
+#: code:addons/sale_stock/models/sale_order.py:360
 #, python-format
 msgid "Warning"
-msgstr "Попередження"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -389,28 +475,55 @@ msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:189
+#: code:addons/sale_stock/models/sale_order.py:269
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Ви зменшили кількість у замовленні! Не забудьте вручну змінити кількість у "
-"замовленні на доставку, якщо це потрібно."
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:166
+#: code:addons/sale_stock/models/sale_order.py:401
+#, python-format
+msgid ""
+"You cannot decrease the ordered quantity below the delivered quantity.\n"
+"Create a return first."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:243
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "cancelled"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "днів"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "of"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_so
+msgid "ordered instead of"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
+msgid "processed instead of"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr ""

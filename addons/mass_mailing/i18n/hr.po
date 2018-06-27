@@ -14,10 +14,10 @@
 # Marko Carević <marko.carevic@live.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Marko Carević <marko.carevic@live.com>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:551
+#: code:addons/mass_mailing/models/mass_mailing.py:568
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -243,6 +243,11 @@ msgid "ALL DAY"
 msgstr "CIJELI DAN"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_needaction
+msgid "Action Needed"
+msgstr "Potrebna dodatna radnja"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__active
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__active
 msgid "Active"
@@ -379,6 +384,8 @@ msgstr "Odaberite"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__clicked
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__clicked
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__clicked
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Clicked"
 msgstr ""
@@ -648,7 +655,7 @@ msgid "Domain"
 msgstr "Domena"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 #, python-format
@@ -752,6 +759,21 @@ msgid "Fields"
 msgstr "Polja"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_follower_ids
+msgid "Followers"
+msgstr "Pratitelji"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Pratitelji (Kanali)"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Pratitelji (Partneri)"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__email_from
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__email_from
 msgid "From"
@@ -801,6 +823,16 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Ako je odabrano, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Ako je označeno, nove poruke zahtijevaju Vašu pažnju."
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign__unique_ab_testing
 msgid ""
 "If checked, recipients will be mailed only once for the whole campaign. This"
@@ -809,11 +841,16 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
 msgstr "U redu čekanja"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_is_follower
+msgid "Is Follower"
+msgstr "Je pratitelj"
 
 #. module: mass_mailing
 #: model:mail.mass_mailing.list,popup_content:mass_mailing.mass_mail_list_1
@@ -913,6 +950,12 @@ msgid "Mail ID (tech)"
 msgstr "ID maila(tehnički)"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mail_server_id
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_mail_server_id
+msgid "Mail Server"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mail_mail_statistics_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__mail_stat_id
@@ -947,7 +990,6 @@ msgstr ""
 #: model:ir.model,name:mass_mailing.model_mail_mass_mailing_list
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mailing_list_ids
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list__name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mailing_list_ids
 msgid "Mailing List"
 msgstr "Lista za slanje mailova"
 
@@ -1045,7 +1087,6 @@ msgstr "Kampanja masovnom poštom"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail__mailing_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mail_statistics_search
 msgid "Mass Mailing"
 msgstr "Grupna e-pošta"
@@ -1062,7 +1103,6 @@ msgstr "Analiza masovne pošte"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__mass_mailing_campaign_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__mass_mailing_campaign_id
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_campaign_id
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_statistics_report_search
 msgid "Mass Mailing Campaign"
 msgstr "Kampanja masovne pošte"
@@ -1084,7 +1124,6 @@ msgstr "Kontakt masovne pošte"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_name
-#: model:ir.model.fields,field_description:mass_mailing.field_survey_mail_compose_message__mass_mailing_name
 msgid "Mass Mailing Name"
 msgstr ""
 
@@ -1173,6 +1212,11 @@ msgid "Message-ID"
 msgstr "ID poruke"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_ids
+msgid "Messages"
+msgstr "Poruke"
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_comparison_table
 msgid "More"
 msgstr "Više"
@@ -1236,6 +1280,11 @@ msgid "No support"
 msgstr "Nema podrške"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Broj akcija"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__clicks_ratio
 msgid "Number of Clicks"
 msgstr "Broj klikova"
@@ -1259,6 +1308,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign__clicks_ratio
 msgid "Number of clicks"
 msgstr "Broj klikova"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Broj poruka koje zahtijevaju aktivnost"
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Broj nepročitanih poruka"
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -1349,7 +1408,7 @@ msgstr ""
 "nasumično."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:742
+#: code:addons/mass_mailing/models/mass_mailing.py:759
 #, python-format
 msgid "Please select recipients."
 msgstr "Molimo odaberite primatelje."
@@ -1571,14 +1630,14 @@ msgid "Send to All"
 msgstr "Pošalji svima"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr "Šaljem"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:559
+#: code:addons/mass_mailing/models/mass_mailing.py:576
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report__sent
@@ -1632,6 +1691,11 @@ msgstr "Izvor"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing__name
 msgid "Source Name"
 msgstr "Naziv izvora"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
+msgid "Specific Mail Server"
+msgstr ""
 
 #. module: mass_mailing
 #: selection:mail.mass_mailing,reply_to_mode:0
@@ -1692,7 +1756,7 @@ msgid "Tags"
 msgstr "Oznake"
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:615
+#: code:addons/mass_mailing/models/mass_mailing.py:632
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1818,6 +1882,16 @@ msgid "Tracking"
 msgstr "Praćenje"
 
 #. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread
+msgid "Unread Messages"
+msgstr "Nepročitane poruke"
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Brojač nepročitanih poruka"
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 msgid "Unsubscribe"
@@ -1841,6 +1915,21 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
 msgid "Use This Promo Code BEFORE 1st of August"
 msgstr "Iskoristite ovaj PROMO kod prije 1. kolovoza!"
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid "Use a specific mail server for mailings"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing__mail_server_id
+#: model:ir.model.fields,help:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
+#: model:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
+msgid ""
+"Use a specific mail server in priority. Otherwise Odoo relies on the first "
+"outgoing mail server available (based on their sequencing) as it does for "
+"normal mails."
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -1899,7 +1988,7 @@ msgstr ""
 "uspješni, sadržaj mora biti koristan Vaših čitateljima."
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/controllers/main.py:33
+#: code:addons/mass_mailing/controllers/main.py:38
 #, python-format
 msgid "You have been unsubscribed successfully"
 msgstr "Odjavljeni ste uspješno"

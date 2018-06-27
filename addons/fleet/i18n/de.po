@@ -20,33 +20,26 @@
 # Dejan Dinic, 2017
 # Andreas Väthröder <andreas.vaethroeder@alvarium-services.de>, 2017
 # e2f <projects@e2f.com>, 2018
+# DE T1 <e2f8846@yahoo.com>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2018
+# Andi, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2018
+# Tom, 2018
+# Malte Jansen <work@maltejansen.de>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:11+0000\n"
-"PO-Revision-Date: 2018-03-22 14:11+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2018-06-25 08:15+0000\n"
+"PO-Revision-Date: 2018-06-25 08:15+0000\n"
+"Last-Translator: Malte Jansen <work@maltejansen.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
-#, python-format
-msgid "%s %s has been added to the fleet!"
-msgstr "%s %s wurde zur Flotte hinzugefügt!"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:274
-#, python-format
-msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
-msgstr ""
-"%s Die Verträge(s) laufen bald aus und sollten verlängert und/oder "
-"abgeschlossen werden!"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -59,6 +52,12 @@ msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "Action Needed"
+msgstr "Aktion notwendig"
+
+#. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Activation Cost"
@@ -69,6 +68,22 @@ msgstr "Einmalige Gebühr"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 msgid "Active"
 msgstr "Aktiv"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid "Activity State"
+msgstr "Status der Aktivität"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
+#: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Aktivitätstypen"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
@@ -266,6 +281,11 @@ msgstr "Vertragsinformation für ein Fahrzeug"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Contract logs"
 msgstr "Vertragsdetails"
+
+#. module: fleet
+#: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
+msgid "Contract to Renew"
+msgstr "Zu erneuernde Verträge"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -535,7 +555,7 @@ msgid "Driver of the vehicle"
 msgstr "Fahrer des Fahrzeugs"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
+#: code:addons/fleet/models/fleet_vehicle.py:211
 #, python-format
 msgid "Driver: from '%s' to '%s'"
 msgstr "Fahrer: von '%s' bis '%s'"
@@ -604,6 +624,24 @@ msgid "Fleet: Generate contracts costs based on costs frequency"
 msgstr "Fleet: Generieren Sie Auftragskosten basierend auf der Kostenfrequenz"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
+msgid "Followers"
+msgstr "Abonnenten"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_channel_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Abonnenten (Kanäle)"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnenten (Partner)"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
@@ -653,6 +691,12 @@ msgstr "Kraftstoffart"
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
 msgid "Fuel log for vehicles"
 msgstr "Tankprotokolle für Fahrzeuge"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Future Activities"
+msgstr "Anstehende Aktivitäten"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -735,6 +779,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
 msgid "Immatriculation Date"
 msgstr "Zulassungsdatum"
@@ -800,6 +856,12 @@ msgid "Invoice Reference"
 msgstr "Rechnungsreferenz"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
+msgid "Is Follower"
+msgstr "Ist ein Abonnent"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Kilometers"
 msgstr "Kilometer"
@@ -860,12 +922,18 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Late Activities"
+msgstr "Verspätete Aktivitäten"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 msgid "License Plate"
 msgstr "Kennzeichen"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
+#: code:addons/fleet/models/fleet_vehicle.py:218
 #, python-format
 msgid "License Plate: from '%s' to '%s'"
 msgstr "Nummernschild: von '%s' bis '%s'"
@@ -975,6 +1043,12 @@ msgstr ""
 "Feld dann in Formularasichten oder einigen Kanban-Ansichten."
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
+msgid "Messages"
+msgstr "Nachrichten"
+
+#. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
 msgstr "Meilen"
@@ -1019,7 +1093,7 @@ msgid "Model of the vehicle"
 msgstr "Fahrzeugmarke"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
+#: code:addons/fleet/models/fleet_vehicle.py:207
 #, python-format
 msgid "Model: from '%s' to '%s'"
 msgstr "Modell: von '%s' bis '%s'"
@@ -1058,9 +1132,30 @@ msgid "Name of contract to renew soon"
 msgstr "Bezeichnung des zu erneuernden Vertrags"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Nächste Aktivitätsfrist"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Zusammenfassung nächste Aktion"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Nächster Aktivitätstyp"
+
+#. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
 msgid "No"
 msgstr "Nein"
+
+#. module: fleet
+#: code:addons/fleet/models/fleet_vehicle.py:81
+#, python-format
+msgid "No Plate"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1069,10 +1164,10 @@ msgid "No data for analysis"
 msgstr ""
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:206
+#: code:addons/fleet/models/fleet_vehicle.py:210
+#: code:addons/fleet/models/fleet_vehicle.py:214
+#: code:addons/fleet/models/fleet_vehicle.py:217
 #, python-format
 msgid "None"
 msgstr "Keine"
@@ -1085,14 +1180,32 @@ msgid "Notes"
 msgstr "Notizen"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Anzahl der Aktionen"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
 msgid "Number of doors of the vehicle"
 msgstr "Anzahl Wagentüren"
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
 msgid "Number of seats of the vehicle"
 msgstr "Anzahl Sitzplätze eines Fahrzeugs"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_count
@@ -1187,6 +1300,11 @@ msgid "Other"
 msgstr "Andere"
 
 #. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Overdue"
+msgstr "Überfällig"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__parent_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__parent_id
@@ -1207,6 +1325,11 @@ msgstr "Kostenstelle für die laufenden Kosten"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
 msgstr "Person, die den Vertrag genehmigen muss"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Planned"
+msgstr "Geplant"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1253,7 +1376,7 @@ msgid "Refueling Details"
 msgstr "Tankübersicht"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:200
+#: code:addons/fleet/models/fleet_vehicle_cost.py:201
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
@@ -1269,6 +1392,16 @@ msgstr "Berichtswesen"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "Restbuchwert"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
+msgid "Responsible"
+msgstr "Verantwortlich"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Manager Veranstaltung"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1335,6 +1468,12 @@ msgid "Set Contract In Progress"
 msgstr "Aktivierung des Vertrags"
 
 #. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_small
 msgid "Small-sized image"
 msgstr "Miniaturbild"
@@ -1364,7 +1503,7 @@ msgid "State name already exists"
 msgstr "Statusbezeichnung existiert bereits"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
+#: code:addons/fleet/models/fleet_vehicle.py:215
 #, python-format
 msgid "State: from '%s' to '%s'"
 msgstr "Status: von '%s' bis '%s'"
@@ -1374,6 +1513,19 @@ msgstr "Status: von '%s' bis '%s'"
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Status"
 msgstr "Status"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Status basierend auf Aktivitäten\n"
+"Überfällig: Fälligkeitsdatum bereits überschritten\n"
+"Heute: Aktivität besitzt heutiges Datum\n"
+"Geplant: anstehende Aktivitäten."
 
 #. module: fleet
 #: sql_constraint:fleet.vehicle.tag:0
@@ -1411,6 +1563,17 @@ msgid ""
 msgstr ""
 "Dieses Feld enthält das Bild für das Logo der Marke, limitiert auf eine "
 "Größe von 1024x1024px."
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,activity_state:0
+msgid "Today"
+msgstr "Heute"
+
+#. module: fleet
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Today Activities"
+msgstr "Heutige Aktivitäten"
 
 #. module: fleet
 #: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
@@ -1483,6 +1646,18 @@ msgstr "Einheit"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit of the odometer "
 msgstr "Einheit des Tachometers "
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "Unread Messages"
+msgstr "Ungelesene Nachrichten"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Zähler der ungelesenen Nachrichten"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_state__sequence

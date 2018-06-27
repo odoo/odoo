@@ -11,10 +11,10 @@
 # Melroy van den Berg <webmaster1989@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -700,7 +700,7 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
-#: code:addons/event/models/event.py:297
+#: code:addons/event/models/event.py:303
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -730,6 +730,12 @@ msgstr ""
 "<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
 "                                        tot \n"
 "                                    </span>"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_needaction
+#: model:ir.model.fields,field_description:event.field_event_registration__message_needaction
+msgid "Action Needed"
+msgstr "Vereist actie"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__active
@@ -903,7 +909,7 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: event
-#: code:addons/event/models/event.py:264
+#: code:addons/event/models/event.py:269
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Einddatum kan niet ingesteld worden voor begindatum."
@@ -920,7 +926,7 @@ msgid "Company"
 msgstr "Bedijf"
 
 #. module: event
-#: code:addons/event/models/event.py:481
+#: code:addons/event/models/event.py:492
 #, python-format
 msgid "Compose Email"
 msgstr "Email opstellen"
@@ -1000,13 +1006,13 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: event
-#: code:addons/event/models/event.py:444
+#: code:addons/event/models/event.py:455
 #, python-format
 msgid "Customer"
 msgstr "Klant"
 
 #. module: event
-#: code:addons/event/models/event.py:446
+#: code:addons/event/models/event.py:457
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
@@ -1159,6 +1165,24 @@ msgid "Event Registration"
 msgstr "Evenementregistratie"
 
 #. module: event
+#: code:addons/event/models/event_mail.py:143
+#, python-format
+msgid ""
+"Event Scheduler for:\n"
+"                              - Event: %s (%s)\n"
+"                              - Scheduled: %s\n"
+"                              - Template: %s (%s)\n"
+"\n"
+"                            Failed with error:\n"
+"                              - %s\n"
+"\n"
+"                            You receive this email because you are:\n"
+"                              - the organizer of the event,\n"
+"                              - or the responsible of the event,\n"
+"                              - or the last writer of the template."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 msgid "Event Start Date"
 msgstr "Startdatum evenement"
@@ -1239,6 +1263,24 @@ msgid "Finish Event"
 msgstr "Evenement einde"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_channel_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Volgers (Kanalen)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_partner_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
@@ -1283,6 +1325,18 @@ msgid "ID"
 msgstr "ID"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__message_unread
+#: model:ir.model.fields,help:event.field_event_registration__message_unread
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__message_needaction
+#: model:ir.model.fields,help:event.field_event_registration__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
 msgid ""
 "If event is created, the status is 'Draft'. If event is confirmed for the "
@@ -1306,6 +1360,12 @@ msgstr "Direct"
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
 msgstr "Interval"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_is_follower
+#: model:ir.model.fields,field_description:event.field_event_registration__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
@@ -1437,12 +1497,18 @@ msgid "Maximum Registrations"
 msgstr "Maximaal aantal registraties"
 
 #. module: event
-#: code:addons/event/models/event.py:253
+#: code:addons/event/models/event.py:258
 #, python-format
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
 "Maximaal deelnemers aantal moet groter zijn dan minimum deelnemers aantal."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__message_ids
+msgid "Messages"
+msgstr "Berichten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_min
@@ -1466,16 +1532,22 @@ msgid "My Events"
 msgstr "Mijn evenementen"
 
 #. module: event
-#: code:addons/event/models/event.py:258
+#: code:addons/event/models/event.py:263
 #, python-format
 msgid "No more available seats."
 msgstr "Geen plaatsen meer beschikbaar."
 
 #. module: event
-#: code:addons/event/models/event.py:363
+#: code:addons/event/models/event.py:369
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Geen plaatsen meer beschikbaar voor dit evenement."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
+#: model:ir.model.fields,field_description:event.field_event_registration__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -1492,6 +1564,18 @@ msgstr "Aantal deelnemers"
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "Aantal evenementen waar de relatie aan heeft deelgenomen."
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
+#: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__message_unread_counter
+#: model:ir.model.fields,help:event.field_event_registration__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Aantal ongelezen berichten"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
@@ -1733,7 +1817,7 @@ msgid "Subscribe"
 msgstr "Inschrijven"
 
 #. module: event
-#: code:addons/event/models/event.py:307
+#: code:addons/event/models/event.py:313
 #, python-format
 msgid ""
 "There are already attendees who attended this event. Please reset it to "
@@ -1805,10 +1889,18 @@ msgid "Unlimited"
 msgstr "Onbeperkt"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_unread
+#: model:ir.model.fields,field_description:event.field_event_registration__message_unread
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unread Messages"
 msgstr "Ongelezen berichten"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__message_unread_counter
+#: model:ir.model.fields,field_description:event.field_event_registration__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Aantal ongelezen berichten"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1841,6 +1933,12 @@ msgid "Visibility"
 msgstr "Zichtbaarheid"
 
 #. module: event
+#: code:addons/event/models/event_mail.py:130
+#, python-format
+msgid "WARNING: Event Scheduler Error for event: %s"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
@@ -1856,7 +1954,7 @@ msgid "Week(s)"
 msgstr "Week/weken"
 
 #. module: event
-#: code:addons/event/models/event.py:420
+#: code:addons/event/models/event.py:426
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
@@ -1864,7 +1962,7 @@ msgstr ""
 "uitvoeren."
 
 #. module: event
-#: code:addons/event/models/event.py:422
+#: code:addons/event/models/event.py:428
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr ""
@@ -1892,25 +1990,25 @@ msgid "event.confirm"
 msgstr "event.confirm"
 
 #. module: event
-#: code:addons/event/models/event.py:503
+#: code:addons/event/models/event.py:514
 #, python-format
 msgid "in %d days"
 msgstr "in %d dagen"
 
 #. module: event
-#: code:addons/event/models/event.py:507
+#: code:addons/event/models/event.py:518
 #, python-format
 msgid "next month"
 msgstr "volgende maand"
 
 #. module: event
-#: code:addons/event/models/event.py:505
+#: code:addons/event/models/event.py:516
 #, python-format
 msgid "next week"
 msgstr "volgende week"
 
 #. module: event
-#: code:addons/event/models/event.py:509
+#: code:addons/event/models/event.py:520
 #, python-format
 msgid "on "
 msgstr "op"
@@ -1921,13 +2019,13 @@ msgid "res.config.settings"
 msgstr "res.config.settings"
 
 #. module: event
-#: code:addons/event/models/event.py:499
+#: code:addons/event/models/event.py:510
 #, python-format
 msgid "today"
 msgstr "vandaag"
 
 #. module: event
-#: code:addons/event/models/event.py:501
+#: code:addons/event/models/event.py:512
 #, python-format
 msgid "tomorrow"
 msgstr "morgen"

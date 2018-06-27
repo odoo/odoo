@@ -5,14 +5,13 @@
 # Translators:
 # Martin Trigaux, 2016
 # krnkris, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
+"Last-Translator: krnkris, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -206,19 +205,19 @@ msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:79
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:51
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:135
+#: code:addons/auth_signup/controllers/main.py:134
 #, python-format
 msgid "Authentication Failed."
 msgstr "Azonosítás nem sikerült"
@@ -229,7 +228,7 @@ msgid "Back to Login"
 msgstr "Vissza a bejelentkezéshez"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:137
+#: code:addons/auth_signup/models/res_users.py:142
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "Nem küldhető e-mail: a %s felhasználónak nincs e-mail címe."
@@ -255,13 +254,13 @@ msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:54
 #, python-format
 msgid "Could not create a new account."
 msgstr "Nem tudta létrehozni az új fiókot."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:82
+#: code:addons/auth_signup/controllers/main.py:81
 #, python-format
 msgid "Could not reset your password"
 msgstr "Nem lehetett visszaállítani a jelszaát"
@@ -303,12 +302,7 @@ msgid "HTTP routing"
 msgstr "HTTP útválasztás"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid "If unchecked, only invited users may sign up."
-msgstr "Ha nincs bejelölve, csak meghívott felhasználók jelentkezhetnek be."
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:113
+#: code:addons/auth_signup/controllers/main.py:112
 #, python-format
 msgid "Invalid signup token"
 msgstr "Érvénytelen regisztrációs token"
@@ -324,7 +318,7 @@ msgid "Never Connected"
 msgstr "Sohe nem kapcsolódott"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:75
+#: code:addons/auth_signup/controllers/main.py:74
 #, python-format
 msgid "No login provided."
 msgstr ""
@@ -350,7 +344,7 @@ msgid "Password reset"
 msgstr "Jelszó visszaállítás"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:123
+#: code:addons/auth_signup/controllers/main.py:122
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr ""
@@ -361,7 +355,7 @@ msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:110
+#: code:addons/auth_signup/models/res_users.py:115
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
@@ -412,21 +406,39 @@ msgid "Signup URL"
 msgstr "Bejelentkezési URL elérési útvonal"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:88
+#: code:addons/auth_signup/models/res_users.py:84
 #, python-format
 msgid "Signup is not allowed for uninvited users"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:146
+#: code:addons/auth_signup/models/res_partner.py:147
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:142
+#: code:addons/auth_signup/models/res_partner.py:143
 #, python-format
 msgid "Signup token '%s' is not valid"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:91
+#, python-format
+msgid "Signup: invalid template user"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:94
+#, python-format
+msgid "Signup: no login given for new user"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:96
+#, python-format
+msgid "Signup: no name or partner given for new user"
 msgstr ""
 
 #. module: auth_signup
@@ -440,7 +452,7 @@ msgid "Template user for new users created through signup"
 msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:121
+#: code:addons/auth_signup/controllers/main.py:120
 #, python-format
 msgid "The form was not properly filled in."
 msgstr ""

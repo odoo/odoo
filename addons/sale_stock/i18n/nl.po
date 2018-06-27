@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -94,9 +94,24 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incotermen:</strong>"
 
 #. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+msgid ""
+"According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+"  - Manual: the quantity is set manually on the line\n"
+"  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+"  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+"  - Stock Moves: the quantity comes from confirmed pickings\n"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
 msgstr "Nazorg"
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Analytic From Expenses"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -164,18 +179,18 @@ msgstr "Maak routes mogelijk op verkooporderregels"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Uitzondering(en) opgetreden in de picking:"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Uitzondering(en) opgetreden in de verkooporder(s):"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr ""
+msgstr "Uitzondering(en):"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -232,9 +247,14 @@ msgid "Invoicing"
 msgstr "Facturatie"
 
 #. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Manual"
+msgstr "Handmatig"
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Manual actions may be needed."
-msgstr ""
+msgstr "Manuele acties zijn mogelijk nodig"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings__use_security_lead
@@ -259,6 +279,11 @@ msgstr ""
 "Foutmarge op een leverdatum beloofd aan klanten. Producten worden ingepland "
 "voor verwerving en levering, zo veel dagen eerder dan de werkelijk beloofde "
 "datum om zo onverwachte vertragingen te kunnen opvangen."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
+msgid "Method to update delivered qty"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -437,6 +462,7 @@ msgstr "Voorraadmutatie"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
+#: selection:sale.order.line,qty_delivered_method:0
 msgid "Stock Moves"
 msgstr "Voorraadmutaties"
 
@@ -458,6 +484,11 @@ msgstr ""
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Dit product is verpakt door %.2f %s.. U moet %.2f %s verkopen."
+
+#. module: sale_stock
+#: selection:sale.order.line,qty_delivered_method:0
+msgid "Timesheets"
+msgstr "Urenstaten"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -516,7 +547,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "geannuleerd"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -532,7 +563,7 @@ msgstr "of"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr ""
+msgstr "geordend in plaats van"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.exception_on_picking

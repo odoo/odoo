@@ -11,10 +11,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~11.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
+"POT-Creation-Date: 2018-06-25 08:14+0000\n"
+"PO-Revision-Date: 2018-06-25 08:14+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -81,6 +81,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"o_view_nocontent\">\n"
+"Koop Odoo Enterprise om meer providers te krijgen\n"
+"</p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -95,11 +98,15 @@ msgstr "<strong>Vervoerder</strong>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
+msgid "<strong>Shipping Weight</strong>"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 msgid "<strong>Tracking Number</strong>"
 msgstr "<strong>Tracking nummer</strong>"
 
 #. module: delivery
-#: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
 msgstr "<strong>Gewicht</strong>"
@@ -136,7 +143,7 @@ msgstr "Gearchiveerd"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Beschikbare cassiers"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -211,7 +218,7 @@ msgstr "Fouten log"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Define a new delivery method"
-msgstr ""
+msgstr "Definieer een nieuwe leveringsmethode"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -359,6 +366,7 @@ msgid "Fixed Price"
 msgstr "Vaste prijs"
 
 #. module: delivery
+#: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.product_product_delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Free delivery charges"
@@ -712,7 +720,7 @@ msgstr ""
 "Zet op Waar wanneer uw inloggegevens gecertificeerd zijn voor productie."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:165
+#: code:addons/delivery/models/stock_picking.py:168
 #, python-format
 msgid ""
 "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: "
@@ -884,7 +892,7 @@ msgid "Width must be positive"
 msgstr "Breedte moet positief zien"
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:203
+#: code:addons/delivery/models/stock_picking.py:206
 #, python-format
 msgid ""
 "You are shipping different packaging types in the same shipment.\n"
@@ -900,7 +908,7 @@ msgid "You can add delivery price only on unconfirmed quotations."
 msgstr "U kunt alleen leverkosten toevoegen aan niet bevestigde offertes."
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:179
+#: code:addons/delivery/models/stock_picking.py:182
 #, python-format
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
