@@ -69,7 +69,7 @@
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
 % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
 % set pay_sign_name =  object.get_portal_confirmation_action()
-% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name
+% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name == 'pay' and 'Accept and pay online' or pay_sign_name == 'sign' and 'Accept and sign online' or 'View %s' % doc_name
 % set access_url = is_online and object.get_mail_url() or ''
 
 % if object.partner_id.parent_id:
