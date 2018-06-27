@@ -984,13 +984,13 @@ ListRenderer.include({
         }
 
         // ignore clicks in autocomplete dropdowns
-        if ($(event.target).parents('.ui-autocomplete').length) {
+        if ($(event.data.target).parents('.ui-autocomplete').length) {
             return;
         }
 
         // ignore clicks in modals, except if the list is in a modal, and the
         // click is performed in that modal
-        var $clickModal = $(event.target).closest('.modal');
+        var $clickModal = $(event.data.target).closest('.modal');
         if ($clickModal.length) {
             var $listModal = this.$el.closest('.modal');
             if ($clickModal.prop('id') !== $listModal.prop('id')) {
@@ -1000,13 +1000,13 @@ ListRenderer.include({
 
         // ignore clicks if target is no longer in dom.  For example, a click on
         // the 'delete' trash icon of a m2m tag.
-        if (!document.contains(event.target)) {
+        if (!document.contains(event.data.target)) {
             return;
         }
 
         // ignore clicks if target is inside the list. In that case, they are
         // handled directly by the renderer.
-        if (this.el.contains(event.target) && this.el !== event.target) {
+        if (this.el.contains(event.data.target) && this.el !== event.data.target) {
             return;
         }
 
