@@ -14,9 +14,9 @@
         border-radius: 0;
         background-color: $o-we-color-darker;
         color: $o-we-color-text-normal;
-        @include o-flex-display;
-        @include o-justify-content(center);
-        @include o-align-items(center);
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover, &:focus, &:active {
             color: $o-we-color-text-light;
@@ -93,7 +93,7 @@ body.o_force_mail_theme_choice {
                     max-width: 25%;
 
                     > a {
-                        @include o-transition(all, 0.3s, ease);
+                        transition: all 0.3s ease 0s;
 
                         .o_thumb {
                             display: none;
@@ -102,8 +102,8 @@ body.o_force_mail_theme_choice {
                             border-top: 1px solid $o-we-color-text-normal;
                             box-shadow: 0 5px 10px rgba(black, 0.8);
                             will-change: transform;
-                            @include backface-visibility(hidden);
-                            @include o-transition(all, 0.3s);
+                            backface-visibility: hidden;
+                            transition: all 0.3s ease 0s;
 
                             &.small {
                                 display: block;

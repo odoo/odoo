@@ -41,7 +41,7 @@
 
     .o_column_sortable {
         position: relative;
-        @include user-select(none);  // Prevent unwanted selection while sorting
+        user-select: none;  // Prevent unwanted selection while sorting
 
         &::after {
             font-family: FontAwesome;
@@ -96,7 +96,7 @@
         }
         .o_group_pager {
             cursor: text;
-            @include user-select(none);
+            user-select: none;
             text-align: right;
             padding-top: 0;
             padding-bottom: 0;

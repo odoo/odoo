@@ -56,9 +56,9 @@
 
 .o_kanban_counter {
     position: relative;
-    @include o-flex-display;
-    @include o-align-items(center);
-    @include o-transition(opacity, 0.3s);
+    display: flex;
+    align-items: center;
+    transition: opacity 0.3s ease 0s;
     margin-bottom: $o-kanban-record-margin*2;
 
     > .o_kanban_counter_progress {
@@ -81,7 +81,7 @@
 
         .o_kanban_counter_label {
             font-size: 10px;
-            @include user-select(none);
+            user-select: none;
         }
     }
 
@@ -91,14 +91,14 @@
         color: $headings-color;
         text-align: right;
         white-space: nowrap;
-        @include o-transform-origin(right, center);
+        transform-origin: right center;
 
         &.o_kanban_grow {
-            @include o-animation(grow, 1s, ease);
+            animation: grow 1s ease 0s 1 normal none running;
         }
 
         &.o_kanban_grow_huge {
-            @include o-animation(grow_huge, 1s, ease);
+            animation: grow_huge 1s ease 0s 1 normal none running;
         }
 
         // Target currency icon
@@ -117,11 +117,11 @@
     @include o-kanban-css-filter(danger, $brand-danger);
 
     &.o_kanban_group_show {
-        @include o-flex-display;
-        @include o-flex-flow(column, nowrap);
+        display: flex;
+        flex-flow: column nowrap;
 
         > * {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
         }
     }
 }

@@ -508,7 +508,7 @@ div.carousel {
     border-bottom: $navbar-default-border;
 
     margin-top: -200px;
-    @include o-transition(margin-top, 500ms);
+    transition: margin-top 500ms ease 0s;
 
     &.affixed {
         margin-top: 0px;
@@ -549,7 +549,7 @@ div.carousel {
     }
     @media (min-width: $screen-sm-min) {
         .row {
-            @include o-flex-display;
+            display: flex;
             > div {
                 margin: auto 0;
             }

@@ -75,7 +75,7 @@
                     float: left;
 
                     g.nvd3.nv-wrap.nv-lineChart {
-                        @include translate(45, 30); // FIXME was marked important before scss convertion
+                        transform: translate(45, 30); // FIXME was marked important before scss convertion
                     }
 
                     g.nv-x.nv-axis .tick > line {
@@ -210,7 +210,7 @@
             .o_properties_selection {
 
                 @media (min-width: $screen-md-min) {
-                    @include o-flex-display;
+                    display: flex;
                 }
 
                 margin-top: 10px;

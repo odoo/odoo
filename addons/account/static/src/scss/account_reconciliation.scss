@@ -200,12 +200,12 @@
         /* Icons */
 
         .toggle_match, .toggle_create {
-            @include o-transform(rotate(0deg));
-            @include o-transition(transform, 300ms);
+            transform: rotate(0deg);
+            transition: transform 300ms ease 0s;
         }
         .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
             visibility: visible !important;
-            @include o-transform(rotate(90deg));
+            transform: rotate(90deg);
         }
         .toggle_create {
             font-size: 10px;
@@ -218,18 +218,18 @@
             max-height: 0px;
             overflow: hidden;
             margin-bottom: 5px;
-            @include o-transition(max-height, 250ms);
+            transition: max-height 250ms ease 0s;
         }
         &[data-mode="match"] > .match {
             display: block;
             max-height: none;
             overflow: visible;
-            @include o-transition(max-height, 400ms);
+            transition: max-height 400ms ease 0s;
         }
         &[data-mode="create"] > .create {
             display: block;
             max-height: 210px;
-            @include o-transition(max-height, 400ms);
+            transition: max-height 400ms ease 0s;
         }
     }
 

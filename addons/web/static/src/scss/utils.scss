@@ -14,119 +14,6 @@
 }
 
 // ------------------------------------------------------------------
-// Vendor prefixes
-// ------------------------------------------------------------------
-// Flex
-@mixin o-flex-display {
-    display: -ms-flexbox;
-    display: -moz-box;
-    display: -webkit-box;
-    display: -webkit-flex;
-
-    display: flex;
-}
-@mixin o-inline-flex-display {
-    display: -ms-inline-flexbox;
-    display: -moz-inline-box;
-    display: -webkit-inline-box;
-    display: -webkit-inline-flex;
-
-    display: inline-flex;
-}
-@mixin o-flex-flow($direction, $wrap) {
-    -ms-flex-flow: $direction $wrap;
-    -moz-flex-flow: $direction $wrap;
-    -webkit-flex-flow: $direction $wrap;
-
-    flex-flow: $direction $wrap;
-}
-@mixin o-flex($grow, $schrink, $basis) {
-    -ms-flex: $grow $schrink $basis;
-    -moz-flex: $grow $schrink $basis;
-    -webkit-box-flex: $grow;
-    -webkit-flex: $grow $schrink $basis;
-
-    flex: $grow $schrink $basis;
-}
-@mixin o-justify-content($justify) {
-    -moz-justify-content: $justify;
-    -webkit-justify-content: $justify;
-
-    justify-content: $justify;
-}
-@mixin o-align-content($align) {
-    -webkit-align-content: $align;
-
-    align-content: $align;
-}
-@mixin o-align-items($align) {
-    -webkit-align-items: $align;
-
-    align-items: $align;
-}
-@mixin o-align-self($align) {
-    -webkit-align-self: $align;
-
-    align-self: $align;
-}
-
-// Background-size
-@mixin o-background-size($size) {
-    -webkit-background-size: $size;
-    -moz-background-size: $size;
-    -o-background-size: $size;
-    background-size: $size;
-}
-
-// ------------------------------------------------------------------
-// Select Appearance
-// ------------------------------------------------------------------
-@mixin o-appearance($value) {
-    -webkit-appearance: $value;
-    -moz-appearance: $value;
-    appearance: $value;
-}
-
-// ------------------------------------------------------------------
-// Transform
-// ------------------------------------------------------------------
-@mixin o-transform-origin($x: 50%, $y: 50%, $z: 0) {
-    -ms-transform-origin: $x $y $z;
-    -webkit-transform-origin: $x $y $z;
-    -moz-transform-origin: $x $y $z;
-    transform-origin: $x $y $z;
-}
-
-// ------------------------------------------------------------------
-// Animation
-// ------------------------------------------------------------------
-@mixin o-animation($name: none, $duration: 0s, $timing-function: ease, $delay: 0s, $iteration-count: 1, $direction: normal, $fill-mode: none, $play-state: running) {
-    -webkit-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
-    -moz-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
-    -o-animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
-    animation: $name $duration $timing-function $delay $iteration-count $direction $fill-mode $play-state;
-}
-
-// ------------------------------------------------------------------
-// Transition
-// ------------------------------------------------------------------
-@mixin o-transition($property: all, $duration: 0s, $timing-function: ease, $transition-delay: 0s) {
-    -webkit-transition: $property $duration $timing-function $transition-delay;
-    -moz-transition: $property $duration $timing-function $transition-delay;
-    -o-transition: $property $duration $timing-function $transition-delay;
-    transition: $property $duration $timing-function $transition-delay;
-}
-
-// ------------------------------------------------------------------
-// Columns
-// ------------------------------------------------------------------
-@mixin o-columns($width: auto, $col: auto) {
-    -webkit-columns: $width $col;
-    -moz-columns: $width $col;
-    columns: $width $col;
-}
-
-// ------------------------------------------------------------------
 // Position absolute
 // ------------------------------------------------------------------
 @mixin o-position-absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
@@ -147,43 +34,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: top; // To update display context changed by overflow:hidden
-}
-
-// ------------------------------------------------------------------
-// Gradients
-// ------------------------------------------------------------------
-@mixin o-linear-gradient($deg: 45deg, $start-color: #555, $end-color: #333) {
-    background-repeat: repeat-x;
-    background-image: -webkit-linear-gradient($deg, $start-color, $end-color);
-    background-image: -o-linear-gradient($deg, $start-color, $end-color);
-    background-image: linear-gradient($deg, $start-color, $end-color);
-}
-@mixin o-vertical-gradient($startColor: #555, $endColor: #333) {
-    background-color: mix($startColor, $endColor);
-    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor));
-    background-image: -webkit-linear-gradient(top, $startColor, $endColor);
-    background-image: -moz-linear-gradient(top, $startColor, $endColor);
-    background-image: -ms-linear-gradient(top, $startColor, $endColor);
-    background-image: -o-linear-gradient(top, $startColor, $endColor);
-    background-image: linear-gradient(to bottom, $startColor, $endColor);
-}
-@mixin o-skew-gradient($startColor: #555, $endColor: #333) {
-    background-color: $endColor;
-    background: -moz-linear-gradient(135deg, $endColor, $startColor);
-    background: -o-linear-gradient(135deg, $startColor, $endColor);
-    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor));
-    background: -ms-linear-gradient(top, $startColor, $endColor);
-}
-
-// ------------------------------------------------------------------
-// Transform
-// ------------------------------------------------------------------
-@mixin o-transform($transform) {
-    -webkit-transform: $transform;
-    -moz-transform: $transform;
-    -ms-transform: $transform;
-    -o-transform: $transform;
-    transform: $transform;
 }
 
 // ------------------------------------------------------------------
@@ -339,22 +189,22 @@
 }
 @mixin o-kanban-slim-col {
     position: relative;
-    @include o-flex(0, 0, auto);
+    flex: 0 0 auto;
     margin: 0;
     padding: 0 floor($o-kanban-group-padding * 0.7);
     cursor: pointer;
 }
 @mixin o-kanban-header-title {
-    @include o-flex-display;
-    @include o-align-items(center);
+    display: flex;
+    align-items: center;
     height: $o-kanban-header-title-height;
     line-height: 2.2;
     color: $headings-color;
 }
 @mixin o-kanban-v-title {
     @include o-position-absolute($o-kanban-inside-vgutter * 2, $left: floor(-$o-kanban-inside-vgutter * 1.2));
-    @include o-transform-origin(left, bottom, $z: 0);
-    @include o-transform(rotate(90deg));
+    transform-origin: left bottom 0;
+    transform: rotate(90deg);
     overflow: visible;
     white-space: nowrap;
     font-size: 15px;
@@ -424,7 +274,7 @@
                 display: block;
                 width: 1px;
                 height: 20px;
-                @include rotate(45deg);
+                transform: rotate(45deg);
                 background-color: red;
             }
             &::after {

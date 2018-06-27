@@ -1,7 +1,7 @@
 
 .o_web_client {
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     overflow: hidden;
 
     &.o_fullscreen {
@@ -15,7 +15,7 @@
 
 
     .navbar {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
 
         li > a {
             padding: 4px 8px;
@@ -30,20 +30,20 @@
     }
 
     > .o_main {
-        @include o-flex(1, 1, auto);
-        @include o-flex-display;
+        flex: 1 1 auto;
+        display: flex;
         min-height: 0; // Allow flex to shrink this element as much as it wants
         height: 100%;
 
         .o_sub_menu {
-            @include o-flex(0, 0, 220px);
-            @include o-flex-display;
-            @include o-flex-flow(column, nowrap);
+            flex: 0 0 220px;
+            display: flex;
+            flex-flow: column nowrap;
             border-right: 1px solid darken($o-control-panel-background-color, 20%);
             background-color: $o-control-panel-background-color;
 
             .o_sub_menu_logo {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 text-align: center;
                 position: relative;
 
@@ -67,7 +67,7 @@
             }
 
             .o_sub_menu_content {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 height:100%;
                 overflow-y: auto;
 
@@ -128,7 +128,7 @@
             }
 
             .o_sub_menu_footer {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 text-align: center;
 
                 > a {
@@ -141,15 +141,15 @@
         }
 
         .o_main_content {
-            @include o-flex(1, 1, auto);
-            @include o-flex-display;
-            @include o-flex-flow(column, nowrap);
+            flex: 1 1 auto;
+            display: flex;
+            flex-flow: column nowrap;
 
             .o_control_panel {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
             .o_content {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 height: 100%;
                 overflow: auto;
                 position: relative;

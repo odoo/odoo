@@ -12,13 +12,13 @@
         background-color: #DFA941;
         color: white;
         text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-        @include o-flex-display;
+        display: flex;
         border-bottom: 1px solid $o-main-color-muted;
 
         .o_mail_request_permission {
-            @include o-flex-display;
+            display: flex;
             justify-content: center;
-            @include o-flex(1,1, auto);
+            flex: 1 1 auto;
         }
         > span {
             font-size: 16px;
@@ -48,7 +48,7 @@
         }
 
         .o_mail_sidebar_title {
-            @include o-flex-display;
+            display: flex;
             padding: 6px $o-horizontal-padding 0 $o-horizontal-padding;
             align-items: center;
             justify-content: space-between;
@@ -64,16 +64,16 @@
             }
         }
         .o_mail_discuss_item {
-            @include o-flex-display;
+            display: flex;
             width: 100%;
             padding: 2px $o-horizontal-padding 2px ($o-horizontal-padding + 12px); // compensate icon
 
             .o_thread_name {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 @include o-text-overflow;
             }
             .o_mail_sidebar_needaction, .o_mail_partner_unpin, .o_mail_channel_settings {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
             .o_mail_sidebar_needaction {
                 margin: 0 0 0 5px;
@@ -111,8 +111,8 @@
     }
 
     .o_mail_discuss_content {
-        @include o-flex-display;
-        @include o-flex-flow(column, nowrap);
+        display: flex;
+        flex-flow: column nowrap;
         height: 100%;
         margin-left: $o-mail-chat-sidebar-width;
         position: relative;
@@ -125,7 +125,7 @@
         }
 
         .o_mail_thread {
-            @include o-flex(1, 0, 0);
+            flex: 1 0 0;
             overflow: auto;
             padding: 0 0 15px 0;
             -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
@@ -262,18 +262,18 @@
 // ------------------------------------------------------------------
 @media (max-width: $screen-xs-max) {
     .o_mail_discuss {
-        @include o-flex-display;
-        @include o-flex-flow(column, nowrap);
+        display: flex;
+        flex-flow: column nowrap;
         background: white;
 
         .o_mail_discuss_mobile_mailboxes_buttons {
-            @include o-flex-display;
-            @include o-flex(0, 0, auto);
+            display: flex;
+            flex: 0 0 auto;
             z-index: 2;
             box-shadow: 0 2px 4px $gray-lighter-darker;
 
             .o_mailbox_inbox_item {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 width: 50%;
                 padding: 2%;
 
@@ -284,7 +284,7 @@
         }
 
         .o_mail_discuss_content {
-            @include o-flex(1, 0, 0);
+            flex: 1 0 0;
             margin-left: 10px;
             margin-right: 10px;
             background-color: transparent;
@@ -310,7 +310,7 @@
             }
         }
         .o_mail_mobile_tabs {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
         }
     }
 }
@@ -320,7 +320,7 @@
 // ------------------------------------------------------------------
 
 .o_mail_preview {
-    @include o-flex-display;
+    display: flex;
     background-color: $gray-lighter;
     color: $o-main-text-color;
     cursor: pointer;
@@ -339,7 +339,7 @@
         border-bottom: 1px solid $gray-lighter-darker;
     }
     .o_mail_preview_image {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         position: relative;
         > img {
             @include square(100%);
@@ -353,19 +353,19 @@
         }
     }
     .o_preview_info {
-        @include o-flex(1, 1, 100%);
+        flex: 1 1 100%;
         overflow: hidden;
         .o_preview_title {
-            @include o-flex-display;
+            display: flex;
             .o_preview_name {
-                @include o-flex(0, 1, auto);
+                flex: 0 1 auto;
                 @include o-text-overflow;
             }
             .o_preview_counter {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
             }
             .o_last_message_date {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 color: $o-main-color-muted;
                 font-weight: 500;
             }
@@ -429,15 +429,15 @@
     }
 
     .o_mail_mobile_tabs {
-        @include o-flex-display;
+        display: flex;
         box-shadow: 0 0 8px $gray-lighter-darker;
 
         .o_mail_mobile_tab {
-            @include o-flex-display;
-            @include o-flex(1, 1, auto);
+            display: flex;
+            flex: 1 1 auto;
             width: 20%;
-            @include o-flex-flow(column, nowrap);
-            @include o-justify-content(space-between);
+            flex-flow: column nowrap;
+            justify-content: space-between;
             padding: $o-mail-chatter-mobile-gap $o-mail-chatter-mobile-gap*2;
             box-shadow: 1px 0 0 $gray-lighter-darker;
             text-align: center;

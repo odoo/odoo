@@ -1,13 +1,13 @@
 
 .o_kanban_view.o_kanban_dashboard {
     // correctly display the no_content_helper in dashboards
-    @include o-flex-flow(row, wrap);
+    flex-flow: row wrap;
 
     .o_kanban_record {
         position: relative;
-        @include o-flex-display;
-        @include o-flex-flow(column, nowrap);
-        @include o-justify-content(space-between);
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
         padding: $o-kanban-dashboard-vpadding $o-kanban-dashboard-hpadding;
 
         @media (max-width: $screen-xs-max) {
@@ -55,9 +55,9 @@
                 max-width: 400px;
 
                 .row {
-                    @include o-flex-display;
-                    @include o-flex-flow(row, nowrap);
-                    @include o-justify-content(space-between);
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-content: space-between;
                     margin-left: 0;
                     margin-right: 0;
                     padding-left: $o-kanban-dashboard-dropdown-complex-gap*2;
@@ -65,7 +65,7 @@
                 }
 
                 div[class*="col-"] {
-                    @include o-flex(1, 1, percentage(100/3));
+                    flex: 1 1 percentage(100/3);
                     padding-left: $o-kanban-dashboard-dropdown-complex-gap;
                     padding-right: $o-kanban-dashboard-dropdown-complex-gap;
 
@@ -154,10 +154,10 @@
         }
 
         .o_kanban_card_header + .container.o_kanban_card_content {
-            @include o-flex(1, 0, auto);
-            @include o-flex-display;
-            @include o-flex-flow(column, nowrap);
-            @include o-justify-content(space-between);
+            flex: 1 0 auto;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: space-between;
             margin-top: $o-kanban-dashboard-vpadding * 2;
             padding-right: 0;
             padding-left: 0;

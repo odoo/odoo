@@ -1,18 +1,18 @@
 .o_thread_window {
     &.o_thread_less {
         .o_thread_search_input {
-            @include o-flex-display;
-            @include o-align-items(baseline);
+            display: flex;
+            align-items: baseline;
             padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
 
             > span {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
 
             > input {
                 margin-left: 5px;
                 padding: $o-mail-chatter-gap*0.5;
-                @include o-flex(1, 1, 100%);
+                flex: 1 1 100%;
             }
         }
 

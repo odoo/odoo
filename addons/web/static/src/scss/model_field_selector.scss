@@ -3,9 +3,9 @@
     position: relative;
 
     > .o_field_selector_value {
-        @include o-flex-display;
-        @include o-flex-flow(row, wrap);
-        @include o-align-items(center);
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
         height: 100%;
         min-height: 20px; // needed when there is no value in it and used standalone
         &:active, &:focus, &:active:focus {
@@ -19,15 +19,15 @@
             margin-bottom: 1px;
         }
         > i {
-            @include o-align-self(center);
+            align-self: center;
             margin: 0 2px;
             font-size: 10px;
         }
     }
     > .o_field_selector_controls {
         @include o-position-absolute(0, 0, 1px);
-        @include o-flex-display;
-        @include o-align-items(center);
+        display: flex;
+        align-items: center;
         cursor: pointer;
     }
 
@@ -110,8 +110,8 @@
                         }
                         .o_field_selector_relation_icon {
                             @include o-position-absolute($top: 0, $right: 0, $bottom: 0);
-                            @include o-flex-display;
-                            @include o-align-items(center);
+                            display: flex;
+                            align-items: center;
                             padding: 10px;
                         }
                     }

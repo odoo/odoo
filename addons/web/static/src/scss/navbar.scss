@@ -17,7 +17,7 @@
         color: inherit;
 
         font-size: 18px;
-        @include user-select(none);
+        user-select: none;
 
         &:hover, &:focus {
             background-color: $o-navbar-inverse-link-hover-bg;
@@ -32,7 +32,7 @@
         display: block;
         float: left;
         margin-right: 35px;
-        @include user-select(none);
+        user-select: none;
         color: white;
         font-size: 22px;
         font-weight: 500;
@@ -147,12 +147,12 @@
 
         .oe_topbar_avatar {
             height: 17px;
-            @include o-transform(translateY(-2px));
+            transform: translateY(-2px);
         }
     }
 
     @media (max-width: $screen-sm-max) {
-        @include o-transition(height, 200ms, linear);
+        transition: height 200ms linear 0s;
 
         position: relative;
         height: $o-navbar-height;

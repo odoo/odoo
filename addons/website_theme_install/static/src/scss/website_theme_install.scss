@@ -5,7 +5,7 @@
 
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
-        @include o-justify-content(space-between);
+        justify-content: space-between;
         margin: 0 0 0 ($o-kanban-record-margin - 2 * $grid-gutter-width);
 
         @media (max-width: $screen-xs-max) {
@@ -14,7 +14,7 @@
         }
 
         .o_kanban_record {
-            @include o-flex(1, 0, 220px);
+            flex: 1 0 220px;
         }
     }
 
@@ -47,8 +47,8 @@
         .o_theme_preview_top {
             border: 1px solid darken($o-theme-kanban-gray, 20%);
             border-radius: 2px;
-            @include o-transform-origin(center, bottom);
-            @include o-transition(all, .1s);
+            transform-origin: center bottom;
+            transition: all .1s ease 0s;
 
             .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
                 width: 100%;
@@ -75,12 +75,12 @@
 
         .o_button_area {
             @include o-position-absolute(20px, -1px, -1px, -1px);
-            @include o-transition(opacity, 100ms);
-            @include o-flex-display;
-            @include o-flex-flow(column, nowrap);
-            @include o-justify-content(center);
-            @include translate3d(0,0,0);
-            @include o-linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0.3));
+            transition: opacity 100ms ease 0s;
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            transform: translate3d(0,0,0);
+            background-image: linear-gradient(0deg, rgba(black, 0.6), rgba(black, 0.3));
             padding: 10% 20%;
             opacity: 0;
             visibility: hidden;
@@ -96,15 +96,15 @@
 
         &:not(.o_theme_installed) {
             .o_theme_preview_top:hover {
-                @include o-transition(all, .3s);
-                @include o-transform(translateY(-10px));
+                transition: all .3s ease 0s;
+                transform: translateY(-10px);
                 border-color: darken($o-theme-kanban-gray, 26%);
                 box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
                 .o_button_area {
                     opacity: 1;
                     visibility: visible;
-                    @include o-transition(opacity, 0.2s, ease, 0.1s);
+                    transition: opacity 0.2s ease 0.1s;
                 }
             }
         }

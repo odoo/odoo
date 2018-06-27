@@ -1,23 +1,23 @@
 .o_web_client .o_export {
-    @include o-flex(1, 1, auto);
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column nowrap;
     min-height: 0;
 
     > p, > .row {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
     }
 
     .o_export_panel {
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         position: relative;
         min-height: 0;
 
         > div {
             height: 100%;
-            @include o-flex-display;
-            @include o-flex-flow(column, nowrap);
-            @include o-justify-content(center);
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
 
             &.o_left_panel { // Needed because of chrome
                 @include o-position-absolute($top: 0, $bottom: 0, $left: 0, $right: 57%);
@@ -30,18 +30,18 @@
             }
 
             > h4, > div {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
             }
 
             > button {
-                @include o-flex(0, 0, auto);
+                flex: 0 0 auto;
                 margin-top: 10px;
             }
 
             .o_left_field_panel, .o_fields_list {
                 border: 1px solid $o-brand-lightsecondary;
                 overflow: auto;
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 min-height: 0;
             }
 
@@ -49,7 +49,7 @@
                 cursor: pointer;
                 position: relative;
                 padding-left: 20px;
-                @include user-select(none);
+                user-select: none;
 
                 &.o_selected > .o_tree_column {
                     background-color: $o-brand-primary;
@@ -74,16 +74,16 @@
             }
 
             .o_save_list, .o_exported_lists {
-                @include o-flex-display;
-                @include o-align-items(baseline);
+                display: flex;
+                align-items: baseline;
 
                 > label, > button {
                     margin: 0 0 5px;
-                    @include o-flex(0, 0, auto);
+                    flex: 0 0 auto;
                 }
                 > input, > select {
                     width: 0;
-                    @include o-flex(1, 0, auto);
+                    flex: 1 0 auto;
                 }
             }
         }

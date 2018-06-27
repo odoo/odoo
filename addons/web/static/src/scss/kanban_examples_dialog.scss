@@ -1,11 +1,11 @@
 .o_kanban_examples_dialog {
-    @include o-flex-display;
+    display: flex;
     padding: 0px;
     background: $o-color-silver;
 
     // sidebar
     .o_kanban_examples_dialog_nav {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         border-right: 1px solid $gray-lighter-dark;
         background: white;
 
@@ -31,18 +31,18 @@
 
     // content
     .o_kanban_examples_dialog_content {
-        @include o-flex(1, 1, 100%);
+        flex: 1 1 100%;
 
         .o_kanban_examples_description {
             padding: 16px 16px 0;
             text-align: justify;
         }
         .o_kanban_examples {
-            @include o-flex-display;
+            display: flex;
             padding: 0 6px;
 
             .o_kanban_examples_group {
-                @include o-flex(1, 1, 100%);
+                flex: 1 1 100%;
                 margin: 10px;
 
                 .o_kanban_examples_ghost {

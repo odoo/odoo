@@ -22,7 +22,7 @@
     z-index: $zindex-modal - 9;
 
     background-color: rgba(0,0,0,0);
-    @include o-transition(background-color, 400ms, $o-we-md-ease);
+    transition: background-color 400ms $o-we-md-ease 0s;
     font-family: $o-we-font-family;
 
     form.navbar-form {
@@ -31,7 +31,7 @@
         margin: 0;
         padding: 0;
         @include o-position-absolute($right: -$o-we-sidebar-width);
-        @include o-transition(right, 0.4s, $o-we-md-ease);
+        transition: right 0.4s $o-we-md-ease 0s;
         border-left: 1px solid $o-we-color-divider;
         background-color: inherit;
 
@@ -47,7 +47,7 @@
             font-size: 13px;
             font-family: $o-we-font-family;
 
-            @include o-transition(all, 0.3s);
+            transition: all 0.3s ease 0s;
             border: none;
             border-radius: 0;
 
@@ -100,8 +100,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 #oe_snippets {
     @include o-w-preserve-btn;
 
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     @include o-position-absolute(0, auto, 0, -$o-we-sidebar-width);
     position: fixed;
     width: $o-we-sidebar-width;
@@ -109,12 +109,12 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     font-family: Roboto, $font-family-sans-serif;
     border-right: 1px solid $o-we-color-divider;
-    @include o-transition(left, 400ms, $o-we-md-ease);
-    @include o-linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
+    transition: left 400ms $o-we-md-ease 0s;
+    background-image: linear-gradient(45deg, $o-we-color-normal, darken($o-we-color-normal, 10%));
     box-shadow: 0px 10px 10px -10px black inset;
 
     #snippets_menu {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         height: $o-navbar-height;
         line-height: $o-navbar-height;
         margin: 0;
@@ -133,9 +133,9 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
         .o_panel_header {
             color: #999999;
-            @include o-flex-display;
-            @include o-align-items(center);
-            @include o-justify-content(center);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 3%;
             color: white;
             margin-bottom: 3%;
@@ -157,7 +157,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 margin: 0 0 6% 3%;
                 box-shadow: none;
                 background-color: transparent;
-                @include user-select(none);
+                user-select: none;
 
                 cursor: pointer;
                 cursor: copy;
@@ -173,8 +173,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
 
                     &:hover .oe_snippet_thumbnail_img {
-                        @include o-transition(transform, 200ms, ease);
-                        @include scale(1.05);
+                        transition: transform 200ms ease 0s;
+                        transform: scale(1.05);
                     }
                 }
 
@@ -256,7 +256,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 }
 #wrapwrap .oe_drop_zone {
     background-color: rgba($o-brand-primary, 0.05);
-    @include o-animation(dropZoneInsert, 1s, linear, 0s, infinite, alternate);
+    animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
         z-index: 999;
@@ -270,7 +270,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         height: $o-we-dropzone-size;
         margin: (-$o-we-dropzone-size/2) 0;
 
-        @include o-transition(margin, 400ms, linear);
+        transition: margin 400ms linear 0s;
 
         &:after {
             content: "";
@@ -312,7 +312,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         height: 0;
         background: transparent;
         text-align: center;
-        @include o-transition(opacity, 400ms, linear);
+        transition: opacity 400ms linear 0s;
         &.o_keypress {
             opacity: 0;
         }
@@ -341,7 +341,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     border-radius: 0;
                     font-weight: normal;
 
-                    @include o-transition(all, 400ms);
+                    transition: all 400ms ease 0s;
                     color: $o-we-color-text-light;
                     background-color: $o-we-color-light;
                     &:hover {
@@ -367,7 +367,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                         }
                     }
                     &.oe_snippet_parent > i {
-                        @include scaleX(-1);
+                        transform: scaleX(-1);
                         font-size: 12px;
                     }
 
@@ -397,15 +397,15 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                             height: 2px;
                             background-color: $o-we-color-text-light;
                             @include o-position-absolute(46%);
-                            @include o-transition(all, 0.3s);
+                            transition: all 0.3s ease 0s;
                         }
                         &:before {
                             right: 9px;
-                            @include rotate(45deg);
+                            transform: rotate(45deg);
                         }
                         &:after {
                             right: 5px;
-                            @include rotate(-45deg);
+                            transform: rotate(-45deg);
                         }
                     }
                     // Open menu
@@ -419,7 +419,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                             transform: translateX(5px) rotate(-45deg);
                         }
                         &:after {
-                            @include rotate(45deg);
+                            transform: rotate(45deg);
                         }
                     }
 
@@ -498,7 +498,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                                         content: "\f148";
                                         @include o-position-absolute($top: 2px, $left: 8px);
                                         font-family: FontAwesome;
-                                        @include scaleX(-1);
+                                        transform: scaleX(-1);
                                     }
                                     ~ li:not(.dropdown-header) {
                                         a {
@@ -548,7 +548,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
                 position: relative;
                 border: 0 solid $o-we-handles-accent-color;
-                @include o-transition(background, 300ms);
+                transition: background 300ms ease 0s;
 
                 &:hover, &.o_active {
                     background-color: rgba($o-we-handles-accent-color, 0.2);
@@ -715,7 +715,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
             background-color: $o-we-color-dark;
             color: $o-we-color-text-normal;
             border-top: 2px solid transparent;
-            @include o-transition(all, 0.3s);
+            transition: all 0.3s ease 0s;
 
             > .fa {
                 color: $o-we-color-text-normal;
@@ -1030,7 +1030,7 @@ body.editor_enable {
     }
 
     &.editor_has_snippets {
-        @include o-transition(padding-left, 400ms, $o-we-md-ease);
+        transition: padding-left 400ms $o-we-md-ease 0s;
         padding-left: $o-we-sidebar-width!important;
 
         #oe_snippets {
@@ -1069,11 +1069,11 @@ body.editor_enable {
 @keyframes fadeInDownSmall {
     0% {
         opacity: 0;
-        @include translate(0, -5px);
+        transform: translate(0, -5px);
     }
     100% {
         opacity: 1;
-        @include translate(0, 0);
+        transform: translate(0, 0);
     }
 }
 @keyframes fadeInOut {
@@ -1097,8 +1097,8 @@ body.editor_enable {
 
 // INPUTS
 .o_switch {
-    @include o-flex-display;
-    @include o-align-items(center);
+    display: flex;
+    align-items: center;
     font-weight: normal;
     cursor: pointer;
 
@@ -1113,7 +1113,7 @@ body.editor_enable {
             width: $o-we-switch-size * 1.8;
             margin-right: 0.5em;
             display: inline-block;
-            @include transition(all 0.3s $o-we-md-ease);
+            transition: all 0.3s $o-we-md-ease;
 
             &:after {
                 content: "";
@@ -1124,14 +1124,14 @@ body.editor_enable {
                 margin-top: 0.1ex;
                 margin-left: 0.1ex;
                 border-radius: 100rem;
-                @include transition(all 0.3s $o-we-md-ease);
+                transition: all 0.3s $o-we-md-ease;
                 box-shadow: 0 1px 1px darken($o-we-switch-inactive-color,35%), inset 0 0 0 1px lighten($o-we-switch-inactive-color,10%);
             }
         }
 
         &:checked + span {
             box-shadow: none;
-            @include o-linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
+            background-image: linear-gradient(0deg, $o-we-color-success, darken($o-we-color-success, 10%));
 
             &:after {
                 margin-left: ($o-we-switch-size*1.8 - $o-we-switch-size) + 0.1;
@@ -1142,7 +1142,7 @@ body.editor_enable {
         > input {
             &:not(:checked) + span {
                 box-shadow: none;
-                @include o-linear-gradient(0deg, lighten($brand-danger, 5%), darken($brand-danger, 5%));
+                background-image: linear-gradient(0deg, lighten($brand-danger, 5%), darken($brand-danger, 5%));
             }
         }
     }
@@ -1174,7 +1174,7 @@ body.editor_enable {
         font-weight: normal;
         @include o-position-absolute($top: 10px, $left: 5px);
         pointer-events: none;
-        @include transition(0.2s ease all);
+        transition: 0.2s ease all;
     }
 
     /* active state */
@@ -1193,7 +1193,7 @@ body.editor_enable {
         bottom: 1px;
         @include o-position-absolute;
         background: #5264AE;
-        @include transition(0.2s ease all);
+        transition: 0.2s ease all;
     }
     .bar:before {
         left: 50%;
@@ -1218,28 +1218,28 @@ body.editor_enable {
 
     /* active state */
     input:focus ~ .highlight {
-        @include animation(inputHighlighter 0.3s ease);
+        animation: inputHighlighter 0.3s ease;
     }
 }
 
 // DRAG&DROP ANIMATIONS
 .oe_snippet_body {
     opacity: 0;
-    @include o-animation(fadeInDownSmall, 700ms, $fill-mode: forwards);
+    animation: fadeInDownSmall 700ms forwards;
 }
 
 // ACE EDITOR
 .o_ace_view_editor {
     background: $o-we-ace-color;
     color: white;
-    @include o-flex-display;
-    @include o-flex-flow(column, nowrap);
+    display: flex;
+    flex-flow: column nowrap;
     opacity: 0.97;
 
     .o_ace_view_editor_title {
-        @include o-flex(0, 0, auto);
-        @include o-flex-display;
-        @include o-align-items(center);
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
         padding: $grid-gutter-width/4;
 
         > .o_ace_type_switcher > button::after {
@@ -1248,12 +1248,12 @@ body.editor_enable {
         }
 
         > * {
-            @include o-flex(0, 0, auto);
+            flex: 0 0 auto;
             margin: 0 $grid-gutter-width/4;
 
             &.o_include_option {
-                @include o-flex-display;
-                @include o-align-items(center);
+                display: flex;
+                align-items: center;
                 font-size: 11px;
 
                 > .o_checkbox {
@@ -1262,13 +1262,13 @@ body.editor_enable {
             }
 
             &.o_res_list {
-                @include o-flex(1, 1, auto);
+                flex: 1 1 auto;
                 min-width: 60px;
             }
         }
     }
     #ace-view-id {
-        @include o-flex(0, 0, auto);
+        flex: 0 0 auto;
         padding: $grid-gutter-width/4 $grid-gutter-width/2;
         background-color: lighten($o-we-ace-color, 10%);
     }
@@ -1283,7 +1283,7 @@ body.editor_enable {
         }
 
         height: 70%; // in case flex is not supported
-        @include o-flex(1, 1, auto);
+        flex: 1 1 auto;
         .ace_gutter {
             cursor: ew-resize;
 
@@ -1383,7 +1383,7 @@ body .modal {
                 .o_image {
                     border: $o-border-image solid transparent;
                     cursor: pointer;
-                    @include o-transition(opacity, 400ms);
+                    transition: opacity 400ms ease 0s;
 
                     &.o_webimage {
                         width: 100%;
@@ -1438,11 +1438,11 @@ body .modal {
             // VIDEO TAB
             #editor-media-video .well {
                 padding: 0;
-                @include o-flex-display;
-                @include o-flex-flow(row, wrap);
+                display: flex;
+                flex-flow: row wrap;
 
                 .o_video_dialog_form {
-                    @include o-flex(1, 1, auto);
+                    flex: 1 1 auto;
                     min-width: 0;
                     padding: 20px;
 
@@ -1475,10 +1475,10 @@ body .modal {
 
                 #video-preview {
                     position: relative;
-                    @include o-flex(1, 0, 50%);
-                    @include o-flex-display;
-                    @include o-flex-flow(column, nowrap);
-                    @include o-justify-content(center);
+                    flex: 1 0 50%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: center;
 
                     @include o-we-preview-box(0 19px);
                     border: none;
@@ -1493,7 +1493,7 @@ body .modal {
                         max-height: 100%;
 
                         &.alert {
-                            @include o-animation(fadeInDownSmall, 700ms, $fill-mode: forwards);
+                            animation: fadeInDownSmall 700ms forwards;
                             margin: 0 auto;
                         }
                     }
@@ -1523,7 +1523,7 @@ body .modal {
                     border: 1px dotted #888787;
                     background-image: url(/web/image);
                     background-position: center center;
-                    @include o-background-size(cover);
+                    background-size: cover;
                 }
                 .el {
                     @include o-position-absolute(10px, 0, 10px, 0);
@@ -1566,7 +1566,7 @@ body .modal {
                 }
             }
             .o_bg_img_opt_ui_info {
-                @include animation(fadeInOut 2s ease forwards);
+                animation: fadeInOut 2s ease forwards;
                 @include o-position-absolute($bottom: 1px, $right: 0);
                 display: block;
                 padding: 3px 13px;
@@ -1616,7 +1616,7 @@ body .modal {
                 box-shadow: 0 0 1px #333;
                 pointer-events: none;
                 &.o_with_transition {
-                    @include o-transition(all, 0.2s);
+                    transition: all 0.2s ease 0s;
                 }
                 &:before {
                     pointer-events: none;
@@ -1631,7 +1631,7 @@ body .modal {
                     border-radius: 100em;
                     opacity: 1;
                     box-shadow: 0 0 0 100em rgba(0, 0, 0, 0.33);
-                    @include o-transition(opacity, 0.2s);
+                    transition: opacity 0.2s ease 0s;
                 }
             }
         }
@@ -1669,13 +1669,13 @@ body .modal {
         height: 350px;
         .cropper-point {
             background-color: white;
-            @include o-transition(all, 400ms, $o-we-md-ease);
-            @include o-transform(scale(1.5, 1.5));
+            transition: all 400ms $o-we-md-ease 0s;
+            transform: scale(1.5, 1.5);
             border-radius: 10px;
             box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
             opacity: 1;
             &:hover {
-                @include o-transform(scale(2.5, 2.5));
+                transform: scale(2.5, 2.5);
             }
         }
         .cropper-line {

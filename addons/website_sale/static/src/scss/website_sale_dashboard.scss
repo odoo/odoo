@@ -16,8 +16,8 @@
         color: $o-main-color-muted;
         width: 100%;
         @include o-position-absolute($left: 0, $top: 12%);
-        @include o-flex-display;
-        @include o-justify-content(center);
+        display: flex;
+        justify-content: center;
     }
     .o_link_enable {
         @media (min-width: $screen-md-min) {
