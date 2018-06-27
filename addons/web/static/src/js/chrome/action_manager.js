@@ -390,10 +390,13 @@ var ActionManager = Widget.extend({
         }
 
         return this._startController(controller).then(function (controller) {
+            var prevDialogOnClose;
             if (self.currentDialogController) {
+                prevDialogOnClose = self.currentDialogController.onClose;
                 self._closeDialog(true);
             }
 
+            controller.onClose = prevDialogOnClose || options.on_close;
             var dialog = new Dialog(self, _.defaults({}, options, {
                 buttons: [],
                 dialogClass: controller.className,
@@ -404,7 +407,7 @@ var ActionManager = Widget.extend({
                 self._removeAction(action.jsID);
                 self.currentDialogController = null;
                 if (silent !== true) {
-                    options.on_close();
+                    controller.onClose();
                 }
             });
             controller.dialog = dialog;
@@ -487,8 +490,9 @@ var ActionManager = Widget.extend({
      * @returns {Deferred} resolved immediately
      */
     _executeCloseAction: function (action, options) {
+        var result;
         if (!this.currentDialogController) {
-            options.on_close();
+            result = options.on_close();
         }
 
         this._closeDialog();
@@ -498,7 +502,7 @@ var ActionManager = Widget.extend({
             this.trigger_up('show_effect', action.effect);
         }
 
-        return $.when();
+        return $.when(result);
     },
     /**
      * Executes actions of type 'ir.actions.server'.

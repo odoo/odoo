@@ -584,13 +584,16 @@ var BasicModel = AbstractModel.extend({
     /**
      * Returns true if a record can be abandoned.
      *
-     * A record can be abandonned if it is a new record, except if
-     * this datapoint has been specifically tagged as "do not abandon".
+     * Case for not abandoning the record:
      *
-     * Example:
+     *  1. flagged as 'no abandon' (i.e. during a `default_get`, including any
+     *     `onchange` from a `default_get`)
+     *  2. registered in a list on addition
+     *      2.1. registered as non-new addition
+     *      2.2. registered as new additon on update
+     *  3. record is not new
      *
-     *  - Discard record from "Add an item" => "New" record => abandon
-     *  - Discard record from `default_get`/`onchange` => do not abandon
+     * Otherwise, the record can be abandoned.
      *
      * This is useful when discarding changes on this record, as it means that
      * we must keep the record even if some fields are invalids (e.g. required
@@ -600,7 +603,29 @@ var BasicModel = AbstractModel.extend({
      * @returns {boolean}
      */
     canBeAbandoned: function (id) {
-        return !this.localData[id]._noAbandon && this.isNew(id);
+        // 1. no drop if flagged
+        if (this.localData[id]._noAbandon) {
+            return false;
+        }
+        // 2. no drop in a list on "ADD in some cases
+        var record = this.localData[id];
+        var parent = this.localData[record.parentID];
+        if (parent) {
+            var entry = _.findWhere(parent._savePoint, {operation: 'ADD', id: id});
+            if (entry) {
+                // 2.1. no drop on non-new addition in list
+                if (!entry.isNew) {
+                    return false;
+                }
+                // 2.2. no drop on new addition on "UPDATE"
+                var lastEntry = _.last(parent._savePoint);
+                if (lastEntry.operation === 'UPDATE' && lastEntry.id === id) {
+                    return false;
+                }
+            }
+        }
+        // 3. drop new records
+        return this.isNew(id);
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has
@@ -2559,7 +2584,7 @@ var BasicModel = AbstractModel.extend({
                     count: ids.length,
                     context: record.context,
                     fieldsInfo: fieldsInfo,
-                    fields: view ? view.viewFields : fieldInfo.relatedFields,
+                    fields: view ? view.fields : fieldInfo.relatedFields,
                     limit: fieldInfo.limit,
                     modelName: field.relation,
                     res_ids: ids,
@@ -2571,6 +2596,11 @@ var BasicModel = AbstractModel.extend({
                     relationField: field.relation_field,
                     viewType: view ? view.type : fieldInfo.viewType,
                 });
+                // set existing changes to the list
+                if (record._changes && record._changes[fieldName]) {
+                    list._changes = self.localData[record._changes[fieldName]]._changes;
+                    record._changes[fieldName] = list.id;
+                }
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
