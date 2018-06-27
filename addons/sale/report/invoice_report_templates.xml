@@ -14,7 +14,7 @@
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
-                        <th class="text-right" groups="sale.group_show_price_subtotal">Price</th>
+                        <th class="text-right">Amount</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -45,7 +45,7 @@
                                 <td class="text-right">
                                     <span t-esc="', '.join(map(lambda x: x.description or x.name, l.invoice_line_tax_ids))"/>
                                 </td>
-                                <td class="text-right" groups="sale.group_show_price_subtotal">
+                                <td class="text-right">
                                     <span t-field="l.price_subtotal"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
