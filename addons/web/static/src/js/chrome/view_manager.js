@@ -25,7 +25,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         },
         search: function(event) {
             var d = event.data;
-            _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys));
+            _.extend(this.env, this._process_search_data(d.domains, d.contexts, d.groupbys, d.viewGroupBys));
             this.active_view.controller.reload(_.extend({offset: 0}, this.env));
         },
         switch_view: function(event) {
@@ -150,7 +150,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             def = this.setup_search_view().then(function() {
                 // udpate domain, context and groupby in the env
                 var d = self.searchview.build_search_data();
-                _.extend(self.env, self._process_search_data(d.domains, d.contexts, d.groupbys));
+                _.extend(self.env, self._process_search_data(d.domains, d.contexts, d.groupbys, d.viewGroupBys));
             });
         }
         return $.when(def).then(function() {
@@ -482,7 +482,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             self.searchview_elements.$searchview_buttons = self.searchview.$buttons.contents();
         });
     },
-    _process_search_data: function(domains, contexts, groupbys) {
+    _process_search_data: function(domains, contexts, groupbys, viewGroupBys) {
         // var controller = this.active_view.controller; // the correct view must be loaded here
         var action_context = this.action.context || {};
         var view_context = {}; //controller.get_context();
@@ -505,6 +505,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             context: results.context,
             domain: results.domain,
             groupBy: groupby || [],
+            viewGroupBys: viewGroupBys,
         };
     },
     do_push_state: function(state) {

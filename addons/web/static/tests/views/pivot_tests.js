@@ -152,6 +152,7 @@ QUnit.module('Views', {
             },
             viewOptions: {
                 action: {
+                    context: {},
                     views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
                 },
                 context: {someKey: true, search_default_test: 3},
@@ -585,7 +586,7 @@ QUnit.module('Views', {
         assert.strictEqual(pivot.$('tbody tr').length, 1,
             "should have 1 rows");
 
-        pivot.update({groupBy: ['product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id']}});
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 3,
             "should have 3 cells");
@@ -649,7 +650,7 @@ QUnit.module('Views', {
 
         // expand on date:days, product
         nbReadGroups = 0;
-        pivot.update({groupBy: ['date:days', 'product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.strictEqual(pivot.$('tbody tr').length, 8,
@@ -695,7 +696,7 @@ QUnit.module('Views', {
         });
 
         // expand on date:days, product
-        pivot.update({groupBy: ['date:days', 'product_id']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['date:days', 'product_id']}});
 
         assert.strictEqual(pivot.$('tbody tr').length, 8,
             "should have 7 rows (total + 3 for December and 2 for October and April)");
@@ -931,6 +932,72 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('higher priority to pivot_row_groupby in action context then group_by', function (assert) {
+        assert.expect(7);
+
+        var pivot = createView({
+            View: PivotView,
+            model: 'partner',
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="customer" type="col" />' +
+                        '<field name="foo" type="measure" />' +
+                '</pivot>',
+            viewOptions: {
+                action: {
+                    context: {
+                        pivot_row_groupby: ['product_id'],
+                        group_by: ['date:days'],
+                    }
+                }
+            },
+        });
+
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            'column: should have one opened header');
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(First)').length, 1,
+            'column: should display one closed header with "First"');
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(Second)').length, 1,
+            'column: should display one closed header with "Second"');
+
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'row: should have one opened header');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed').length, 2, 'should grouped by with product_id');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xphone)').length, 1,
+            'row: should grouped by with product_id and display one closed header with "xphone"');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xpad)').length, 1,
+            'row: should display one closed header with "xpad"');
+
+        pivot.destroy();
+
+    });
+
+    QUnit.test('correctly apply initial groupby for type="row" field', function (assert) {
+        assert.expect(4);
+
+        var pivot = createView({
+            View: PivotView,
+            model: 'partner',
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="customer" type="col" />' +
+                        '<field name="foo" type="measure" />' +
+                        '<field name="product_id" type="row" />' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            'row: should have one opened header');
+
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed').length, 2, 'should grouped by with product_id');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xphone)').length, 1,
+            'row: should display one closed header with "xphone"');
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xpad)').length, 1,
+            'row: should display one closed header with "xpad"');
+
+        pivot.destroy();
+    });
+
     QUnit.test('pivot still handles __count__ measure', function (assert) {
         // for retro-compatibility reasons, the pivot view still handles
         // '__count__' measure.
@@ -1024,8 +1091,8 @@ QUnit.module('Views', {
         });
 
         def = $.Deferred();
-        pivot.update({groupBy: ['product_id']});
-        pivot.update({groupBy: ['product_id', 'customer']});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id']}});
+        pivot.update({viewGroupBys: {pivotRowGroupBy: ['product_id', 'customer']}});
         def.resolve();
 
         assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 6,

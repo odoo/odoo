@@ -108,6 +108,12 @@ return Widget.extend({
                 contexts: [user_context].concat(search.contexts.concat(controllerContext || [])),
                 group_by_seq: search.groupbys || [],
             });
+        if (search.viewGroupBys.pivotRowGroupBy.length) {
+            results.context.pivot_row_groupby = search.viewGroupBys.pivotRowGroupBy;
+        }
+        if (search.viewGroupBys.graphGroupBy.length) {
+            results.context.graph_groupbys = search.viewGroupBys.graphGroupBy;
+        }
         if (!_.isEmpty(results.group_by)) {
             results.context.group_by = results.group_by;
         }

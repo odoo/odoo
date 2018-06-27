@@ -404,10 +404,12 @@ var SearchView = Widget.extend({
                 groupbys.push.apply(groupbys, group_by);
             }
         });
+        var viewGroupBys = this.prepareViewGroupby(groupbys);
         return {
             domains: domains,
             contexts: contexts,
             groupbys: groupbys,
+            viewGroupBys: viewGroupBys,
         };
     },
     toggle_visibility: function (is_visible) {
@@ -541,6 +543,32 @@ var SearchView = Widget.extend({
      */
     renderChangedFacets: function (model, options) {
         this.renderFacets(undefined, model, options);
+    },
+    /**
+     * evaluates groupbys and separate group_by, pivot_row_groupby and graph_groupbys
+     *
+     * @param {Array} groupbys list of group by
+     * @return {object} groupby for pivot/graph view
+     */
+    prepareViewGroupby: function (groupbys) {
+        var self = this;
+        var pivotRowGroupBy = [];
+        var graphGroupBy = [];
+        _.each(groupbys, function (group) {
+            if (_.isString(group)) {
+                group = pyeval.py_eval(group, self.getSession().user_context);
+            }
+            // Prepare group by for pivot view if pivot_row_groupby and group_by both are given on faceet
+            // For pivot view pivot_row_groupby key have highest priority and graph_groupbys key have highest priority in graph view
+            // if pivot_row_groupby/graph_groupbys is not given then apply group_by for all view
+            // To maintain sequence of applied group by fields add group_by if pivot_row_groupby/graph_groupbys are not given
+            pivotRowGroupBy.push(group.pivot_row_groupby || group.group_by);
+            graphGroupBy.push(group.graph_groupbys || group.group_by);
+        });
+        return {
+            pivotRowGroupBy: _.flatten(pivotRowGroupBy),
+            graphGroupBy: _.flatten(graphGroupBy),
+        };
     },
     // it should parse the arch field of the view, instantiate the corresponding
     // filters/fields, and put them in the correct variables:
