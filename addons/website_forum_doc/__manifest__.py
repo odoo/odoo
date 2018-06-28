@@ -4,10 +4,10 @@
 {
     'name': 'Documentation',
     'category': 'Website',
-    'summary': 'Forum, Documentation',
+    'summary': 'Promote question(s)/answers to documentation',
     'description': """
-Documentation based on question and pertinent answers of Forum
-        """,
+This module allows to push/promote functional documentation based on frequently asked question(s) and with their pertinent answer(s).
+    """,
     'depends': [
         'website_forum'
     ],

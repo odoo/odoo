@@ -3,14 +3,25 @@
 
 {
     'name': 'Resellers',
-    'category': 'Sales',
+    'category': 'Website',
     'website': 'https://www.odoo.com/page/website-builder',
-    'summary': 'Publish Your Channel of Resellers',
+    'summary': 'Publish your resellers/partners and forward leads to them',
     'version': '1.0',
     'description': """
-Publish and Assign Partner
-==========================
-        """,
+This module allows to publish your resellers/partners on your website and to forward incoming leads/opportunities to them.
+
+
+**Publish a partner**
+
+To publish a partner, set a *Level* in their contact form (in the Partner Assignation section) and click the *Publish* button.
+
+**Forward leads**
+
+Forwarding leads can be done for one or several leads at a time. The action is available in the *Assigned Partner* section of the lead/opportunity form view and in the *Action* menu of the list view.
+
+The automatic assignation is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.
+
+    """,
     'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'portal'],
     'data': [

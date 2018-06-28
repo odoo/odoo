@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Team Page',
-    'category': 'Human Resources',
-    'summary': 'Present Your Team',
+    'name': 'Online Employee Details',
+    'category': 'Website',
+    'summary': 'Present your employee details online',
     'description': """
-Our Team Page
-=============
-
-        """,
+Publish your employees public information on About Us website page.
+    """,
     'depends': ['website', 'hr'],
     'demo': [
         'data/hr_employee_demo.xml',
