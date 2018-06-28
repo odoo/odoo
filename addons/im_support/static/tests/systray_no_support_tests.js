@@ -19,6 +19,11 @@ QUnit.module('im_support', {}, function () {
 QUnit.module('systray', {
     beforeEach: function () {
         this.services = [ChatManager, createBusService()];
+        this.data = {
+            'mail.message': {
+                fields: {},
+            },
+        };
     },
 });
 
@@ -30,6 +35,7 @@ QUnit.test('messaging menu does not display the Support channel if not available
     var messagingMenu = new systray.MessagingMenu();
     testUtils.addMockEnvironment(messagingMenu, {
         services: this.services,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
