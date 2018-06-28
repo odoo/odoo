@@ -41,7 +41,7 @@ def datetime_to_string(dt):
 
 def float_to_time(hours):
     """ Convert a number of hours into a time object. """
-    if float_hour == 24.0:
+    if hours == 24.0:
         return time.max
     fractional, integral = math.modf(hours)
     return time(int(integral), int(60 * fractional), 0)
