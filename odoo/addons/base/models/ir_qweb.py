@@ -51,21 +51,7 @@ class IrQWeb(models.AbstractModel, QWeb):
             if method.startswith('render_'):
                 _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
-        def jsonable(val):
-            try:
-                json.dumps(val)
-                return True
-            except Exception:
-                return False
-
-        context = {
-            key: val
-            for key, val in self.env.context.items()
-            if isinstance(key, pycompat.string_types) and not key.startswith('_')
-            if jsonable(val)
-        }
-        context['dev_mode'] = 'qweb' in tools.config['dev_mode']
-        # context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
+        context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
 
         return super(IrQWeb, self).render(id_or_xml_id, values=values, **context)
@@ -369,8 +355,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         field = record._fields[field_name]
 
         # adds template compile options for rendering fields
-        for k, v in options.items():
-            field_options.setdefault(k, v)
+        field_options['template_options'] = options
 
         # adds generic field options
         field_options['tagName'] = tagName
@@ -392,6 +377,9 @@ class IrQWeb(models.AbstractModel, QWeb):
         return (attributes, content, inherit_branding or translate)
 
     def _get_widget(self, value, expression, tagName, field_options, options, values):
+        # adds template compile options for rendering fields
+        field_options['template_options'] = options
+
         field_options['type'] = field_options['widget']
         field_options['tagName'] = tagName
         field_options['expression'] = expression
