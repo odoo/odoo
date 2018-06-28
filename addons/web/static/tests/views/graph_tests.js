@@ -154,6 +154,30 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('displaying line chart data with multiple groupbys', function (assert) {
+        var done = assert.async();
+        assert.expect(3);
+
+        // this test makes sure the line chart show all data labels when apply multiple groupbys
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph type="line"><field name="foo" /></graph>',
+            groupBy: ['product_id', 'bar'],
+        });
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 1,
+                        'should contain a text element with product in legend is xphone');
+            assert.strictEqual(graph.$('text:contains(xpad)').length, 1,
+                        'should contain a text element with product in legend is xpad');
+            assert.strictEqual(graph.$('text:contains(true)').length, 1,
+                        'second groupby should be with bar field');
+            graph.destroy();
+            done();
+        });
+    });
+
     QUnit.test('switching measures', function (assert) {
         var done = assert.async();
         assert.expect(4);
