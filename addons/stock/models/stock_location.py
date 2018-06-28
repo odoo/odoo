@@ -82,10 +82,10 @@ class Location(models.Model):
             if self.mapped('quant_ids'):
                 raise UserError(_("This location's usage cannot be changed to view as it contains products."))
         if 'usage' in values or 'scrap_location' in values:
+
             modified_locations = self.filtered(
-                lambda l: l.usage != values.get('usage') or
-                l.scrap_location != values.get('scrap_location')
-            )
+                lambda l: any(l[f] != values[f] if f in values else False
+                              for f in {'usage', 'scrap_location'}))
             reserved_quantities = self.env['stock.move.line'].search_count([
                 ('location_id', 'in', modified_locations.ids),
                 ('product_qty', '>', 0),
