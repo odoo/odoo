@@ -3,7 +3,7 @@
     <data>
         <!-- Bundle (minimal) for embedded slide iframe -->
         <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
-            <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+            <t t-call="web._assets_bootstrap"/>
             <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
 
             <t t-call="web.pdf_js_lib"></t>

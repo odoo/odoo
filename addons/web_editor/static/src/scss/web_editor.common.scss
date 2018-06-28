@@ -229,40 +229,8 @@ a.o_underline {
     }
 }
 
-// Create classes for theme colors...
-@include o-create-color-classes(alpha, $color-alpha);
-@include o-create-color-classes(beta, $color-beta);
-@include o-create-color-classes(gamma, $color-gamma);
-@include o-create-color-classes(delta, $color-delta);
-@include o-create-color-classes(epsilon, $color-epsilon);
-
-// ... and button classes
-@include o-create-color-btn-classes(alpha, $color-alpha);
-@include o-create-color-btn-classes(beta, $color-beta);
-@include o-create-color-btn-classes(gamma, $color-gamma);
-@include o-create-color-btn-classes(delta, $color-delta);
-@include o-create-color-btn-classes(epsilon, $color-epsilon);
-
-// Create classes for UI colors // FIXME
-@include o-create-color-classes(primary, theme-color('primary'));
-// @include o-create-color-classes(success, $state-success-bg, $content-color: $state-success-text);
-// @include o-create-color-classes(info, $state-info-bg, $content-color: $state-info-text);
-// @include o-create-color-classes(warning, $state-warning-bg, $content-color: $state-warning-text);
-// @include o-create-color-classes(danger, $state-danger-bg, $content-color: $state-danger-text);
-
-// Create classes for greyscale colors
-@include o-create-color-classes('black', $black);
-@include o-create-color-classes('gray-darker', gray('900')); // FIXME
-@include o-create-color-classes('gray-dark', gray('900'));
-@include o-create-color-classes('gray', gray('700'));
-@include o-create-color-classes('gray-light', gray('600'));
-@include o-create-color-classes('gray-lighter', gray('200'));
-@include o-create-color-classes('white', $white);
-
-// Create classes for greyscale transparent colours
-@include o-create-color-classes('black-25', $color-black-25);
-@include o-create-color-classes('black-50', $color-black-50);
-@include o-create-color-classes('black-75', $color-black-75);
-@include o-create-color-classes('white-25', $color-white-25);
-@include o-create-color-classes('white-50', $color-white-50);
-@include o-create-color-classes('white-75', $color-white-75);
+// Extend bootstrap to create background and text utilities for gray colors too
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
