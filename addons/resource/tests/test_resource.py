@@ -184,6 +184,21 @@ class TestCalendar(TestResourceCommon):
         leave.unlink()
 
         # leave of very small size
+    def test_calendar_working_hours_24(self):
+        self.att_4 = self.env['resource.calendar.attendance'].create({
+            'name': 'Att4',
+            'calendar_id': self.calendar.id,
+            'dayofweek': '2',
+            'hour_from': 0,
+            'hour_to': 24
+        })
+        res = self.calendar.get_work_hours_count(
+            Datetime.from_string('2018-06-19 23:00:00'),
+            Datetime.from_string('2018-06-21 01:00:00'),
+            self.resource1_id,
+            compute_leaves=True)
+        self.assertAlmostEqual(res, 24.0)
+
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero_length',
             'calendar_id': self.calendar_patel.id,

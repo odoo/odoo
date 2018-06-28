@@ -380,6 +380,12 @@ class QuantPackage(models.Model):
 
     def unpack(self):
         for package in self:
+            move_line_to_modify = self.env['stock.move.line'].search([
+                ('package_id', '=', package.id),
+                ('state', 'in', ('assigned', 'partially_available')),
+                ('product_qty', '!=', 0),
+            ])
+            move_line_to_modify.write({'package_id': False})
             package.mapped('quant_ids').write({'package_id': False})
 
     def action_view_picking(self):

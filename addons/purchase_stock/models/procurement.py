@@ -36,7 +36,8 @@ class ProcurementRule(models.Model):
             cache[domain] = po
         if not po:
             vals = self._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
-            po = self.env['purchase.order'].sudo().create(vals)
+            company_id = values.get('company_id') and values['company_id'].id or self.env.user.company_id.id
+            po = self.env['purchase.order'].with_context(force_company=company_id).sudo().create(vals)
             cache[domain] = po
         elif not po.origin or origin not in po.origin.split(', '):
             if po.origin:

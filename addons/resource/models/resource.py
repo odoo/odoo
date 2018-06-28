@@ -41,6 +41,8 @@ def datetime_to_string(dt):
 
 def float_to_time(hours):
     """ Convert a number of hours into a time object. """
+    if float_hour == 24.0:
+        return time.max
     fractional, integral = math.modf(hours)
     return time(int(integral), int(60 * fractional), 0)
 
@@ -400,7 +402,9 @@ class ResourceCalendarAttendance(models.Model):
         ], 'Day of Week', required=True, index=True, default='0')
     date_from = fields.Date(string='Starting Date')
     date_to = fields.Date(string='End Date')
-    hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
+    hour_from = fields.Float(string='Work from', required=True, index=True,
+        help="Start and End time of working.\n"
+             "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')

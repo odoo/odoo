@@ -46,6 +46,13 @@
             </xpath>
         </template>
 
+        <template id="js_test_assets" name="mail_js_test_assets" inherit_id="web.js_tests_assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
+            </xpath>
+        </template>
+
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
                 <script type="text/javascript" src="/mail/static/tests/chat_window_tests.js"></script>
@@ -54,16 +61,12 @@
                 <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/discuss_moderation_tests.js"></script>  
-                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
-                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>
         </template>
 
         <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
                 <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
-                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
-                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
             </xpath>
         </template>
 

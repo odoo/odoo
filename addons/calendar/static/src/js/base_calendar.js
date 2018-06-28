@@ -40,8 +40,10 @@ var CalendarNotification = Notification.extend({
             },
 
             'click .link2showed': function() {
-                this.destroy(true);
-                this._rpc({route: '/calendar/notify_ack'});
+                var self = this;
+                this._rpc({route: '/calendar/notify_ack'}).always(function() {
+                    self.destroy();
+                });
             },
         });
     },

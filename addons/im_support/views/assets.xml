@@ -12,5 +12,34 @@
         <script type="text/javascript" src="/im_support/static/src/js/systray.js"></script>
       </xpath>
     </template>
+
+    <template id="qunit_suite" name="im_support_tests" inherit_id="web.qunit_suite">
+      <xpath expr="//t[@t-set='head']" position="inside">
+        <script type="text/javascript" src="/im_support/static/tests/systray_no_support_tests.js"></script>
+      </xpath>
+    </template>
+
+    <template id="im_support.support_qunit_suite">
+      <t t-call="web.layout">
+        <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+        <t t-set="title">IM Support Tests</t>
+        <t t-set="head">
+          <script type="text/javascript">
+            odoo.session_info = {
+              support_token: 'ABCDEFGHIJ',
+              support_origin: 'https://something.com'
+            };
+          </script>
+          <t t-call="web.js_tests_assets"/>
+
+          <script type="text/javascript" src="/im_support/static/tests/helpers/test_utils.js"></script>
+
+          <script type="text/javascript" src="/im_support/static/tests/systray_tests.js"></script>
+        </t>
+
+        <div id="qunit"/>
+        <div id="qunit-fixture"/>
+      </t>
+    </template>
   </data>
 </openerp>
