@@ -231,6 +231,23 @@ function context_today() {
         py.extras.datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
 }
 
+/**
+ * Returns a timedelta object which represents the timezone offset between the
+ * local timezone and the UTC time.
+ *
+ * This is very useful to generate datetime strings which are 'timezone'
+ * dependant.  For example, we can now write this to generate the correct
+ * datetime string representing "this morning in the user timezone":
+ *
+ * "datetime.datetime.now().replace(hour=0,minute=0,second=0) + tz_offset()).strftime('%Y-%m-%d %H:%M:%S')"
+ * @returns {datetime.timedelta}
+ */
+function tz_offset() {
+    var offset= new Date().getTimezoneOffset();
+    var kwargs = {minutes: py.float.fromJSON(offset)};
+    return py.PY_call(py.extras.datetime.timedelta,[],kwargs);
+}
+
 
 function pycontext() {
     return {
@@ -240,6 +257,7 @@ function pycontext() {
         relativedelta: py.extras.relativedelta,
         current_date: py.PY_call(
             py.extras.time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
+        tz_offset: tz_offset,
     };
 }
 
