@@ -372,4 +372,53 @@ QUnit.test("messaging menu widget: messaging menu with 1 message", function ( as
     messagingMenu.destroy();
 });
 
+QUnit.test("messaging menu widget: no crash on open after receiving a needaction channel message (moderation accepted)", function (assert) {
+    assert.expect(1);
+
+    var bus = new Bus();
+    var CHANNEL_ID = 1;
+    var PARTNER_ID = 3;
+
+    var messagingMenu = new systray.MessagingMenu();
+    testUtils.addMockEnvironment(messagingMenu, {
+        data: this.data,
+        services: [ChatManager, createBusService(bus)],
+        session: { partner_id: PARTNER_ID },
+    });
+    messagingMenu.appendTo($('#qunit-fixture'));
+
+    // Simulate receiving needaction and channel notifications of a message
+    // that is 'accepted'.
+    // Note that we use a different message data object in each notification:
+    // If we make some changes on one of the object, we should not have changed
+    // the other object too (as these objects come from two different JSON
+    // objects from the server).
+    // For instance, if the 'ir.needaction' notification handling procedure adds
+    // an item in `channel_ids`, we should not have this item in the
+    // 'mail.channel' notification.
+    var messageData1 = {
+        author_id: [42, "Someone"],
+        body: "<p>test</p>",
+        channel_ids: [CHANNEL_ID],
+        moderation_status: 'accepted',
+        needaction_partner_ids: [PARTNER_ID],
+    };
+    var messageData2 = JSON.parse(JSON.stringify(messageData1)); // deep copy
+    var needactionNotification = [[false, 'ir.needaction', PARTNER_ID], messageData1];
+    var channelNotification = [[false, 'mail.channel', CHANNEL_ID], messageData2];
+    bus.trigger('notification', [needactionNotification, channelNotification]);
+
+    // Open the messaging menu
+    var hasCrashed = false;
+    try {
+        messagingMenu.$('.dropdown-toggle').click();
+    } catch (err) {
+        hasCrashed = true;
+    }
+    assert.notOk(hasCrashed,
+            "should not have crashed when opening the messaging menu" +
+            "after receiving a needaction channel message");
+    messagingMenu.destroy();
+});
+
 });

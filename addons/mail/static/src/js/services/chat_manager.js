@@ -1063,7 +1063,7 @@ var ChatManager =  AbstractService.extend({
         } else if (options.domain && options.domain !== []) {
             this._addToCache(msg, options.domain);
         } else if (data.moderation_status === 'accepted') {
-            msg.channel_ids = data.channel_ids;
+            msg.channel_ids = _.uniq(data.channel_ids.concat(msg.channel_ids));
             msg.needsModeration = false;
             if (msg.isModerator) {
                 this.moderationCounter--;
