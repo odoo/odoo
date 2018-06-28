@@ -16,7 +16,8 @@ class PaymentPortal(http.Controller):
 
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
-        success_url = kwargs.get('success_url', '/my')
+        success_url = '/my/orders/%s?access_token=%s' % (order_id, access_token) if access_token else '/my/orders/%s' % order_id
+        success_url = kwargs.get('success_url', success_url)
         callback_method = kwargs.get('callback_method', '')
 
         order_sudo = request.env['sale.order'].sudo().browse(order_id)
