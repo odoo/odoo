@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_functions.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_mixins.scss"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
     </template>
 
     <template id="_assets_primary_variables">
@@ -33,6 +34,12 @@
     <template id="_assets_frontend_helpers">
         <t t-call="web._assets_helpers"><t t-set="no_bs_vars" t-value="True"/></t>
         <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
+    </template>
+
+    <template id="_assets_bootstrap">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part1.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap_part2.scss"/>
     </template>
 
     <template id="assets_common" name="Common Assets (used in backend interface and website)">
@@ -128,7 +135,7 @@
     <template id="assets_backend" name="Backend Assets (used in backend interface)">
         <t t-call="web._assets_backend_helpers"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
@@ -294,7 +301,7 @@
     <template id="web.assets_frontend" name="Website Assets">
         <t t-call="web._assets_frontend_helpers"/>
 
-        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <t t-call="web._assets_bootstrap"/>
         <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
 
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>

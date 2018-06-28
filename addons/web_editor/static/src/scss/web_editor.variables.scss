@@ -234,24 +234,6 @@ $color-white-25: rgba(white, 0.25) !default;
 $color-white-50: rgba(white, 0.5) !default;
 $color-white-75: rgba(white, 0.75) !default;
 
-@mixin o-create-color-classes($name, $color, $complementary: o-get-most-contrast($color, $body-color, #FFF), $content-color: $color) {
-    .bg-#{$name} {
-        background-color: $color;
-        color: $complementary;
-        .text-muted {
-            color: rgba($complementary, 0.4);
-        }
-    }
-    body .text-#{$name} { // body to make the rules more important that bg-* ones
-        color: $content-color;
-    }
-}
-@mixin o-create-color-btn-classes($name, $color, $complementary: o-get-most-contrast($color, $body-color, #FFF), $border-color: darken($color, 5%)) {
-    .btn-#{$name} {
-        @include button-variant($complementary, $color, $border-color);
-    }
-}
-
 // Translations
 $o-we-content-to-translate-color: rgb(255, 255, 90) !default;
 $o-we-translated-content-color: rgb(120, 215, 110) !default;
