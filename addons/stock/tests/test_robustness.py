@@ -10,8 +10,8 @@ class TestRobustness(TransactionCase):
         super(TestRobustness, self).setUp()
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
-        self.uom_unit = self.env.ref('product.product_uom_unit')
-        self.uom_dozen = self.env.ref('product.product_uom_dozen')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
