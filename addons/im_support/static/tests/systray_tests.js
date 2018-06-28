@@ -24,6 +24,11 @@ QUnit.module('systray', {
             support_token: 'ABCDEFGHIJ',
             support_origin: 'something.com',
         };
+        this.data = {
+            'mail.message': {
+                fields: {},
+            },
+        };
     },
 });
 
@@ -34,6 +39,7 @@ QUnit.test('messaging menu displays the Support channel', function (assert) {
     addMockSupportEnvironment(messagingMenu, {
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -50,7 +56,9 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
     var messagingMenu = new systray.MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -65,6 +73,7 @@ QUnit.test('clicking on Support channel: channel not available', function (asser
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -96,7 +105,9 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
     var messagingMenu = new systray.MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -107,6 +118,7 @@ QUnit.test('clicking on Support channel: channel available', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -138,7 +150,9 @@ QUnit.test('post messages in Support channel', function (assert) {
     var messagingMenu = new systray.MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -149,6 +163,7 @@ QUnit.test('post messages in Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -181,7 +196,9 @@ QUnit.test('fold Support channel', function (assert) {
     var messagingMenu = new systray.MessagingMenu();
     addMockSupportEnvironment(messagingMenu, {
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -192,6 +209,7 @@ QUnit.test('fold Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     testUtils.intercept(messagingMenu, 'call_service', function (ev) {
         if (ev.data.service === 'local_storage') {
@@ -234,7 +252,9 @@ QUnit.test('restore Support channel if necessary', function (assert) {
     addMockSupportEnvironment(messagingMenu, {
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -245,6 +265,7 @@ QUnit.test('restore Support channel if necessary', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -261,7 +282,7 @@ QUnit.test('restore Support channel if necessary', function (assert) {
 });
 
 QUnit.test('receive messages in the Support channel', function (assert) {
-    assert.expect(10);
+    assert.expect(9);
 
     var supportChannelID;
 
@@ -269,7 +290,9 @@ QUnit.test('receive messages in the Support channel', function (assert) {
     addMockSupportEnvironment(messagingMenu, {
         enableSupportPoll: true,
         mockRPC: function (route, args) {
-            assert.step(args.method || route);
+            if (!_.str.contains(route, '/static/')) {
+                assert.step(args.method || route);
+            }
             return this._super.apply(this, arguments);
         },
         mockSupportRPC: function (route) {
@@ -280,6 +303,7 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         },
         services: this.services,
         session: this.supportParams,
+        data: this.data,
     });
     messagingMenu.appendTo($('#qunit-fixture'));
 
@@ -301,8 +325,6 @@ QUnit.test('receive messages in the Support channel', function (assert) {
         "there should be a new message in the thread");
     assert.strictEqual($('.o_chat_window .o_thread_message .o_thread_author ').text().trim(),
         'An operator', "should correctly display the author");
-    assert.strictEqual($('.o_chat_window .o_thread_message .o_thread_message_avatar').attr('src'),
-        '/mail/static/src/img/odoo_o.png', "should have correct avatar");
     assert.strictEqual($('.o_chat_window .o_thread_message .o_thread_message_content ').text().trim(),
         'A message', "message is correct");
 
