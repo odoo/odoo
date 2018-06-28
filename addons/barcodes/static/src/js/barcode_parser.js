@@ -18,6 +18,9 @@ var BarcodeParser = Class.extend({
     // only when those data have been loaded
     load: function(){
         var self = this;
+        if (!this.nomenclature_id) {
+            return;
+        }
         var id = this.nomenclature_id[0];
         rpc.query({
                 model: 'barcode.nomenclature',

@@ -1335,6 +1335,51 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('disable buttons until reload data from server', function (assert) {
+        assert.expect(2);
+        var def;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    args.args[1].foo = "apple";
+                } else if (args.method === 'read') {
+                    // Block the 'read' call
+                    var result = this._super.apply(this, arguments);
+                    return $.when(def).then(_.constant(result));
+                }
+                return this._super(route, args);
+            },
+            res_id: 2,
+        });
+
+        var def = $.Deferred();
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input').val("tralala").trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        // Save button should be disabled
+        assert.strictEqual(
+            form.$buttons.find('.o_form_button_save').attr('disabled'),
+            'disabled', 'buttons should be disabled')
+
+        // Release the 'read' call
+        def.resolve();
+
+        // Edit button should be enabled after the reload
+        assert.strictEqual(
+            form.$buttons.find('.o_form_button_edit').attr('disabled'),
+            undefined, 'buttons should be enabled')
+
+        form.destroy();
+    });
+
     QUnit.test('properly apply onchange in simple case', function (assert) {
         assert.expect(2);
 

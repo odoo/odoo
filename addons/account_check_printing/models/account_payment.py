@@ -162,12 +162,12 @@ class AccountPayment(models.Model):
 
         # Prepare the stub lines
         if not credits:
-            stub_lines = [self.make_stub_line(inv) for inv in invoices]
+            stub_lines = [self._check_make_stub_line(inv) for inv in invoices]
         else:
             stub_lines = [{'header': True, 'name': "Bills"}]
-            stub_lines += [self.make_stub_line(inv) for inv in debits]
+            stub_lines += [self._check_make_stub_line(inv) for inv in debits]
             stub_lines += [{'header': True, 'name': "Refunds"}]
-            stub_lines += [self.make_stub_line(inv) for inv in credits]
+            stub_lines += [self._check_make_stub_line(inv) for inv in credits]
 
         # Crop the stub lines or split them on multiple pages
         if not multi_stub:

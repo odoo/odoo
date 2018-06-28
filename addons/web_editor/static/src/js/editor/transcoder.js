@@ -108,9 +108,14 @@ function getMatchedCSSRules(a) {
     // The css generates all the attributes separately and not in simplified form.
     // In order to have a better compatibility (outlook for example) we simplify the css tags.
     // e.g. border-left-style: none; border-bottom-s .... will be simplified in border-style = none
-    _.each([['margin'], ['padding'], ['border', 'style']], function (attr) {
-        var p = attr[0];
-        var e = attr[1] ? '-' + attr[1] : '';
+    _.each([
+        {property: 'margin'},
+        {property: 'padding'},
+        {property: 'border', propertyEnd: '-style', defaultValue: 'none'},
+    ], function (propertyInfo) {
+        var p = propertyInfo.property;
+        var e = propertyInfo.propertyEnd || '';
+        var defVal = propertyInfo.defaultValue || 0;
 
         if (style[p+'-top'+e] || style[p+'-right'+e] || style[p+'-bottom'+e] || style[p+'-left'+e]) {
             if (style[p+'-top'+e] === style[p+'-right'+e] && style[p+'-top'+e] === style[p+'-bottom'+e] && style[p+'-top'+e] === style[p+'-left'+e]) {
@@ -119,7 +124,7 @@ function getMatchedCSSRules(a) {
             }
             else {
                 // keep => property: [top value] [right value] [bottom value] [left value];
-                style[p+e] = (style[p+'-top'+e] || 0) + ' ' + (style[p+'-right'+e] || 0) + ' ' + (style[p+'-bottom'+e] || 0) + ' ' + (style[p+'-left'+e] || 0);
+                style[p+e] = (style[p+'-top'+e] || defVal) + ' ' + (style[p+'-right'+e] || defVal) + ' ' + (style[p+'-bottom'+e] || defVal) + ' ' + (style[p+'-left'+e] || defVal);
                 if (style[p+e].indexOf('inherit') !== -1 || style[p+e].indexOf('initial') !== -1) {
                     // keep => property-top: [top value]; property-right: [right value]; property-bottom: [bottom value]; property-left: [left value];
                     delete style[p+e];
@@ -277,11 +282,12 @@ function classToStyle($editable) {
         }
 
         // Outlook
-        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.children().length) {
-            var $hack = $('<table class="o_outlook_hack"><tr><td></td></tr></table>');
+        if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
+            var $hack = $('<table class="o_outlook_hack" style="display: inline-table;"><tr><td></td></tr></table>');
             $hack.find('td')
                 .attr('height', $target.outerHeight())
                 .css({
+                    'text-align': $target.parent().css('text-align'),
                     'margin': $target.css('padding'),
                     'border-radius': $target.css('border-radius'),
                     'background-color': $target.css('background-color'),

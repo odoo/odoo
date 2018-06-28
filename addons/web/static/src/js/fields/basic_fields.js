@@ -2516,6 +2516,21 @@ var AceEditor = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Format value
+     *
+     * Note: We have to overwrite this method to always return a string.
+     * AceEditor works with string and not boolean value.
+     *
+     * @override
+     * @private
+     * @param {boolean|string} value
+     * @returns {string}
+     */
+    _formatValue: function (value) {
+        return this._super.apply(this, arguments) || '';
+    },
+
+    /**
      * @override
      * @private
      */
@@ -2537,6 +2552,7 @@ var AceEditor = DebouncedField.extend({
             this.aceSession.setValue(newValue);
         }
     },
+
     /**
      * Starts the ace library on the given DOM element. This initializes the
      * ace editor option according to the edit/readonly mode and binds ace

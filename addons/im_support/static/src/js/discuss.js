@@ -42,9 +42,9 @@ Discuss.include({
                 if (!channel.available) {
                     self.basicComposer.do_hide();
                 }
-                $buttonAddAttachment.hide();
+                $buttonAddAttachment.toggleClass('o_hidden', true);
             } else {
-                $buttonAddAttachment.show();
+                $buttonAddAttachment.toggleClass('o_hidden', false);
             }
         });
     },
