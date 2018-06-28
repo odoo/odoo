@@ -173,6 +173,7 @@ class Contact(models.AbstractModel):
     @api.model
     def attributes(self, record, field_name, options, values):
         attrs = super(Contact, self).attributes(record, field_name, options, values)
+        options.pop('template_options') # remove options not specific to this widget
         attrs['data-oe-contact-options'] = json.dumps(options)
         return attrs
 
