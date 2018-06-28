@@ -15,6 +15,7 @@ Reference
     reference/cmdline
     reference/security
     reference/testing
+    reference/migrations
 
     reference/http
     reference/qweb
