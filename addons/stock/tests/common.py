@@ -43,6 +43,7 @@ class TestStockCommon(common.TransactionCase):
         # Configure unit of measure.
         self.uom_kg = self.UomObj.create({
             'name': 'Test-KG',
+            'category_id': self.categ_kgm,
             'rounding': 0.000001})
         self.uom_tone = self.UomObj.create({
             'name': 'Test-Tone',
@@ -65,6 +66,7 @@ class TestStockCommon(common.TransactionCase):
         # Check Unit
         self.uom_unit = self.UomObj.create({
             'name': 'Test-Unit',
+            'category_id': self.categ_unit,
             'rounding': 1.0})
         self.uom_dozen = self.UomObj.create({
             'name': 'Test-DozenA',
