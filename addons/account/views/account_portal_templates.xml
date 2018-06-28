@@ -121,11 +121,11 @@
 
     <template id="portal_invoice_chatter" name="Allow Comments &amp; History" inherit_id="account.portal_invoice_page">
         <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="after">
-            <div class="modal fade" id="invoice_chatter" role="dialog" aria-hidden="true">
+            <div class="modal fade" id="invoice_chatter" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <button type="button" class="close" data-dismiss="modal">&amp;times;</button>
                             <h3 class="mt0 ml16 mb0">History</h3>
                         </div>
                         <div class="modal-body">
