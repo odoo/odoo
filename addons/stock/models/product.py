@@ -590,15 +590,19 @@ class UoM(models.Model):
     def write(self, values):
         # Users can not update the factor if open stock moves are based on it
         if 'factor' in values or 'factor_inv' in values or 'category_id' in values:
-            stock_move_lines = self.env['stock.move.line'].search_count([
-                ('product_uom_id.category_id', '=', self.category_id.id),
-                ('state', '!=', 'cancel'),
-            ])
+            changed = self.filtered(
+                lambda u: any(u[f] != values[f] if f in values else False
+                              for f in {'factor', 'factor_inv', 'category_id'}))
+            if changed:
+                stock_move_lines = self.env['stock.move.line'].search_count([
+                    ('product_uom_id.category_id', 'in', changed.mapped('category_id.id')),
+                    ('state', '!=', 'cancel'),
+                ])
 
-            if stock_move_lines:
-                raise UserError(_(
-                    "You cannot change the ratio of this unit of mesure as some"
-                    " products with this UoM have already been moved or are "
-                    "currently reserved."
-                ))
+                if stock_move_lines:
+                    raise UserError(_(
+                        "You cannot change the ratio of this unit of mesure as some"
+                        " products with this UoM have already been moved or are "
+                        "currently reserved."
+                    ))
         return super(UoM, self).write(values)
