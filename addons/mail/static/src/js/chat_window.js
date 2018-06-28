@@ -143,7 +143,9 @@ return Widget.extend({
             if (content) {
                 this.trigger('post_message', {
                     message: message,
-                    channelID: this.channel_id,
+                    options: {
+                        channelID: this.channel_id
+                    },
                 });
             }
         }

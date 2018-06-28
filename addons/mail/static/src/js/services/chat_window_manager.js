@@ -123,14 +123,17 @@ var ChatWindowManager =  AbstractService.extend({
             });
 
             chatSession.window.on("post_message", null, function (ev) {
-                self.call('chat_manager', 'postMessage', ev.data.message,{
+                self.call('chat_manager', 'postMessage', {data: {
+                    message: ev.data.message,
+                    options: {
                         channelID: ev.data.channelID
-                    }).then(function () {
+                    },
+                }}).then(function () {
                         chatSession.window.thread.scroll_to();
                     });
             });
             chatSession.window.on("redirect", null, function (ev) {
-                self.call('chat_manager', 'redirect', ev.data.resModel, ev.data.resID, self.openChat.bind(self));
+                self.call('chat_manager', 'redirect', (ev.data.data !== undefined) ? ev.data.data.resModel : ev.data.resModel,  (ev.data.data !== undefined) ? ev.data.data.resModel:  ev.data.resID, self.openChat.bind(self));
             });
             chatSession.window.on("redirect_to_channel", null, function (ev) {
                 var channelID = ev.data.channelID;

@@ -724,10 +724,10 @@ var ChatManager =  AbstractService.extend({
      * @param  {integer} [options.res_id]
      * @return {$.Promise}
      */
-    postMessage: function (data, options) {
+    postMessage: function (event) {
         var self = this;
-        data = data.message || data;
-        options = options || {};
+        var data = event.data.message;
+        var options = event.data.options || {};
 
         // This message will be received from the mail composer as html content subtype
         // but the urls will not be linkified. If the mail composer takes the responsibility

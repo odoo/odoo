@@ -353,7 +353,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             // TODO: remove
             if (! _.isString(url)) {
                 _.extend(options, url);
-                url = url.url;
             }
             var fct;
             if (self.origin_server) {
