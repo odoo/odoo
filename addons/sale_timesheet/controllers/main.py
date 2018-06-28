@@ -60,7 +60,7 @@ class SaleTimesheetController(http.Controller):
 
         # hours (from timesheet) and rates (by billable type)
         dashboard_domain = [('project_id', 'in', projects.ids), ('timesheet_invoice_type', '!=', False)]  # force billable type
-        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_revenue', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
+        dashboard_data = request.env['account.analytic.line'].read_group(dashboard_domain, ['unit_amount', 'timesheet_invoice_type'], ['timesheet_invoice_type'])
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data])
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']

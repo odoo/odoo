@@ -48,10 +48,7 @@ class AccountInvoice(models.Model):
     @api.multi
     def invoice_validate(self):
         result = super(AccountInvoice, self).invoice_validate()
-        self._compute_timesheet_revenue()
-        return result
-
-    def _compute_timesheet_revenue(self):
+        # associate the invoice to the timesheet on validation
         for invoice in self:
             for invoice_line in invoice.invoice_line_ids.filtered(lambda line: line.product_id.type == 'service').sorted(key=lambda inv_line: (inv_line.invoice_id, inv_line.id)):
                 uninvoiced_timesheet_lines = self.env['account.analytic.line'].sudo().search([
@@ -60,68 +57,5 @@ class AccountInvoice(models.Model):
                     ('timesheet_invoice_id', '=', False),
                     ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
                 ])
-
-                # NOTE JEM : changing quantity (or unit price) of invoice line does not impact the revenue calculation. (FP specs)
-                if uninvoiced_timesheet_lines:
-                    # delivered : update revenue with the prorata of number of hours on the timesheet line
-                    if invoice_line.product_id.invoice_policy == 'delivery':
-                        invoiced_price_per_hour = invoice_line.currency_id.round(invoice_line.price_subtotal / float(sum(uninvoiced_timesheet_lines.mapped('unit_amount'))))
-                        # invoicing analytic lines of different currency
-                        total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('currency_id').ids, 0.0)
-                        for index, timesheet_line in enumerate(uninvoiced_timesheet_lines.sorted(key=lambda ts: (ts.date, ts.id))):
-                            if index+1 != len(uninvoiced_timesheet_lines):
-                                line_revenue = invoice_line.currency_id._convert(
-                                    invoiced_price_per_hour, timesheet_line.currency_id,
-                                    self.env.user.company_id, fields.Date.today()) * timesheet_line.unit_amount
-                                total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
-                            else:  # last line: add the difference to avoid rounding problem
-                                total_revenue = sum([self.env['res.currency'].browse(currency_id)._convert(
-                                    amount, timesheet_line.currency_id,
-                                    self.env.user.company_id, fields.Date.today()
-                                ) for currency_id, amount in total_revenue_per_currency.items()])
-                                line_revenue = invoice_line.currency_id._convert(
-                                    invoice_line.price_subtotal, timesheet_line.currency_id,
-                                    self.env.user.company_id, fields.Date.today()
-                                ) - total_revenue
-                            timesheet_line.write({
-                                'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': timesheet_line.currency_id.round(line_revenue),
-                            })
-
-                    # ordered : update revenue with the prorata of theorical revenue
-                    elif invoice_line.product_id.invoice_policy == 'order':
-                        zero_timesheet_revenue = uninvoiced_timesheet_lines.filtered(lambda line: line.timesheet_revenue == 0.0)
-                        no_zero_timesheet_revenue = uninvoiced_timesheet_lines.filtered(lambda line: line.timesheet_revenue != 0.0)
-
-                        # timesheet with zero theorical revenue keep the same revenue, but become invoiced (invoice_id set)
-                        zero_timesheet_revenue.write({'timesheet_invoice_id': invoice.id})
-
-                        # invoicing analytic lines of different currency
-                        total_revenue_per_currency = dict.fromkeys(no_zero_timesheet_revenue.mapped('currency_id').ids, 0.0)
-
-                        for index, timesheet_line in enumerate(no_zero_timesheet_revenue.sorted(key=lambda ts: (ts.date, ts.id))):
-                            if index+1 != len(no_zero_timesheet_revenue):
-                                price_subtotal_inv = invoice_line.currency_id._convert(
-                                    invoice_line.price_subtotal, timesheet_line.currency_id, self.env.user.company_id, fields.Date.today())
-                                price_subtotal_sol = timesheet_line.so_line.currency_id._convert(
-                                    timesheet_line.so_line.price_subtotal, timesheet_line.currency_id, self.env.user.company_id, fields.Date.today())
-                                if not float_is_zero(price_subtotal_sol, precision_rounding=timesheet_line.currency_id.rounding):
-                                    line_revenue = timesheet_line.timesheet_revenue * price_subtotal_inv / price_subtotal_sol
-                                    total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
-                                else:
-                                    line_revenue = timesheet_line.timesheet_revenue
-                                    total_revenue_per_currency[timesheet_line.currency_id.id] += line_revenue
-                            else:  # last line: add the difference to avoid rounding problem
-                                last_price_subtotal_inv = invoice_line.currency_id._convert(
-                                    invoice_line.price_subtotal, timesheet_line.currency_id,
-                                    self.env.user.company_id, fields.Date.today())
-                                total_revenue = sum([self.env['res.currency'].browse(currency_id)._convert(
-                                    amount, timesheet_line.currency_id,
-                                    self.env.user.company_id, fields.Date.today()
-                                ) for currency_id, amount in total_revenue_per_currency.items()])
-                                line_revenue = last_price_subtotal_inv - total_revenue
-
-                            timesheet_line.write({
-                                'timesheet_invoice_id': invoice.id,
-                                'timesheet_revenue': timesheet_line.currency_id.round(line_revenue),
-                            })
+                uninvoiced_timesheet_lines.write({'timesheet_invoice_id': invoice.id})
+        return result
