@@ -50,8 +50,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.hasHandle = false;
-        this.handleField = 'sequence';
+        // This attribute lets us know if there is a handle widget on a field,
+        // and on which field it is set.
+        this.handleField = null;
         this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
@@ -73,7 +74,7 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      * @public
      */
-    giveFocus:function() {
+    giveFocus: function () {
         this.$('tbody .o_list_record_selector input:first()').focus();
     },
     /**
@@ -181,7 +182,6 @@ var ListRenderer = BasicRenderer.extend({
      */
     _processColumns: function (columnInvisibleFields) {
         var self = this;
-        self.hasHandle = false;
         self.handleField = null;
         this.columns = _.reject(this.arch.children, function (c) {
             var reject = c.attrs.modifiers.column_invisible;
@@ -191,7 +191,6 @@ var ListRenderer = BasicRenderer.extend({
                 reject = columnInvisibleFields[c.attrs.name];
             }
             if (!reject && c.attrs.widget === 'handle') {
-                self.hasHandle = true;
                 self.handleField = c.attrs.name;
             }
             return reject;
@@ -312,6 +311,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQuery} a <button> element
      */
     _renderButton: function (record, node) {
+        var self = this;
         var $button = this._renderButtonFromNode(node, {
             extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
             textAsTitle: !!node.attrs.icon,
@@ -321,7 +321,6 @@ var ListRenderer = BasicRenderer.extend({
 
         if (record.res_id) {
             // TODO this should be moved to a handler
-            var self = this;
             $button.on("click", function (e) {
                 e.stopPropagation();
                 self.trigger_up('button_clicked', {
@@ -331,7 +330,6 @@ var ListRenderer = BasicRenderer.extend({
             });
         } else {
             if (node.attrs.options.warn) {
-                var self = this;
                 $button.on("click", function (e) {
                     e.stopPropagation();
                     self.do_warn(_t("Warning"), _t('Please click on the "save" button first.'));
@@ -729,15 +727,15 @@ var ListRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to 
+     * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
      * a cell using the keyboard, if he presses enter, enter the model represented by the line
-     * 
+     *
      * @private
      * @param {KeyboardEvent} e
      */
-    _onKeyDown : function(e) {
+    _onKeyDown : function (e) {
         if (!this.editable) {
-            switch(e.which) {
+            switch (e.which) {
                 case $.ui.keyCode.DOWN:
                     $(e.currentTarget).next().find('input').focus();
                     e.preventDefault();
@@ -745,8 +743,8 @@ var ListRenderer = BasicRenderer.extend({
                 case $.ui.keyCode.UP:
                     $(e.currentTarget).prev().find('input').focus();
                     e.preventDefault();
-                    break; 
-                case $.ui.keyCode.ENTER: 
+                    break;
+                case $.ui.keyCode.ENTER:
                     e.preventDefault();
                     var id = $(e.currentTarget).data('id');
                     if (id) {

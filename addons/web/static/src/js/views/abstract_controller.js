@@ -124,7 +124,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
     /**
      * Gives the focus to the renderer
      */
-    giveFocus:function(){
+    giveFocus: function () {
         this.renderer.giveFocus();
     },
     //--------------------------------------------------------------------------
@@ -301,7 +301,7 @@ var AbstractController = AbstractAction.extend(ControlPanelMixin, {
             this.renderSidebar(elements.$sidebar);
             this.renderPager(elements.$pager);
             // remove the unnecessary outer div
-            elements = _.mapObject(elements, function($node) {
+            elements = _.mapObject(elements, function ($node) {
                 return $node && $node.contents();
             });
             elements.$switch_buttons = this._renderSwitchButtons();

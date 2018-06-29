@@ -123,7 +123,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     /**
      * Gives the focus to the renderer
      */
-    giveFocus:function() {
+    giveFocus: function () {
         this.renderer.giveFocus();
     },
     /**
@@ -615,9 +615,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                     if (self.renderer.alertFields.length) {
                         self.renderer.displayTranslationAlert();
                     }
-                    return false
+                    return false;
                 },
-            })
+            });
         });
     },
 });

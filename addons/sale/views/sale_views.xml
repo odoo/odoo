@@ -271,6 +271,12 @@
                                             <div name="discount" groups="sale.group_discount_per_so_line">
                                                 <field name="discount" class="oe_inline"/> %%
                                             </div>
+                                            <!--
+                                                We need the sequence field to be here
+                                                because we want to be able to overwrite the default sequence value in the JS
+                                                in order for new lines to be added at the correct position.
+                                            -->
+                                            <field name="sequence" invisible="1"/>
                                         </group>
                                         <group>
                                             <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" context="{'search_view_ref': 'account.account_tax_view_search'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
@@ -293,6 +299,10 @@
                                     </div>
                                     <field name="state" invisible="1"/>
                                 </form>
+                                <!-- This is inherited below to make the order lines non-editable (inline)
+                                    for the members of some usability groups (packaging, event):
+                                    Indeed in those cases we need a dialog because there are additional fields to input.
+                                -->
                                 <tree string="Sales Order Lines" editable="bottom" decoration-info="invoice_status=='to invoice'">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_updatable" invisible="1"/>
@@ -551,10 +561,10 @@
               <p class="o_view_nocontent_smiling_face">
                 No orders to upsell found
               </p><p>
-                These are orders with products invoiced based on ordered quantities, 
+                These are orders with products invoiced based on ordered quantities,
                 in the case you have delivered more than what was ordered.
               </p><p>
-                A typical example is the pre-paid hours of service, 
+                A typical example is the pre-paid hours of service,
                 where you want to sell extra hours to the customer
                 because the initial hours have already been used.
               </p>

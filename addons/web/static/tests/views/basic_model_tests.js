@@ -111,7 +111,7 @@ QUnit.module('Views', {
 
         model.load(this.params).always(function (error) {
             assert.strictEqual(this.state(), 'rejected',
-                "load should return a rejected deferred for an invalid id")
+                "load should return a rejected deferred for an invalid id");
         });
         model.destroy();
     });

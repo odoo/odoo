@@ -31,7 +31,7 @@ var Followers = AbstractField.extend({
     supportedFieldTypes: ['one2many'],
 
     // inherited
-    init: function(parent, name, record, options) {
+    init: function (parent, name, record, options) {
         this._super.apply(this, arguments);
 
         this.image = this.attrs.image || 'image_small';
@@ -118,7 +118,7 @@ var Followers = AbstractField.extend({
 
             // On mouse-enter it will show the edit_subtype pencil.
             if (record.is_editable) {
-                $follower_li.on('mouseenter mouseleave', function(e) {
+                $follower_li.on('mouseenter mouseleave', function (e) {
                     $(e.currentTarget).find('.o_edit_subtype').toggleClass('hide', e.type === 'mouseleave');
                 });
             }
@@ -131,7 +131,7 @@ var Followers = AbstractField.extend({
             .html(this.value.res_ids.length)
             .parent().attr("title", this._formatFollowers(this.value.res_ids.length));
     },
-    _displaySubtypes:function (data, dialog, display_warning) {
+    _displaySubtypes: function (data, dialog, display_warning) {
         var old_parent_model;
         var $list;
         if (dialog) {
