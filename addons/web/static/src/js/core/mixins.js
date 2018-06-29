@@ -397,7 +397,8 @@ var PropertiesMixin = _.extend({}, EventDispatcherMixin, {
             changed = true;
             self.__getterSetterInternalMap[key] = val;
             if (! options.silent)
-                self.trigger("change:" + key, self, {
+                self.trigger("change:" + key, {
+                    parent: self,
                     oldValue: tmp,
                     newValue: val
                 });
