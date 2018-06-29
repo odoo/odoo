@@ -480,7 +480,7 @@
             <t t-if="event.state != 'draft'" itemprop="availability" content="http://schema.org/Discontinued">
                 Event registration is closed.
             </t>
-            <t t-if="uid">
+            <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
                     <i class="fa fa-plus-circle"></i>
                     <em>Configure and Launch Event Registration</em>

@@ -261,7 +261,7 @@ class HTMLConverter(models.AbstractModel):
         for element in body.iter():
             if element.attrib:
                 attrib = OrderedDict(element.attrib)
-                attrib = irQweb._post_processing_att(element.tag, attrib, options)
+                attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
                 element.attrib.clear()
                 element.attrib.update(attrib)
         return etree.tostring(body, encoding='unicode', method='html')[6:-7]
@@ -488,7 +488,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val)
+        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options'))
 
 
 class QwebView(models.AbstractModel):

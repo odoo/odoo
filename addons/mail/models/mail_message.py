@@ -5,6 +5,7 @@ import logging
 import re
 
 from email.utils import formataddr
+from openerp.http import request
 
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
@@ -299,11 +300,12 @@ class Message(models.Model):
 
         # 2. Attachments as SUPERUSER, because could receive msg and attachments for doc uid cannot see
         attachments_data = attachments.sudo().read(['id', 'datas_fname', 'name', 'mimetype'])
+        safari = request and request.httprequest.user_agent.browser == 'safari'
         attachments_tree = dict((attachment['id'], {
             'id': attachment['id'],
             'filename': attachment['datas_fname'],
             'name': attachment['name'],
-            'mimetype': attachment['mimetype'],
+            'mimetype': 'application/octet-stream' if safari and 'video' in attachment['mimetype'] else attachment['mimetype'],
         }) for attachment in attachments_data)
 
         # 3. Tracking values
