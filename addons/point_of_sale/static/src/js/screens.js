@@ -2223,7 +2223,7 @@ define_action_button({
     'name': 'set_pricelist',
     'widget': set_pricelist_button,
     'condition': function(){
-        return this.pos.pricelists.length > 1;
+        return this.pos.config.use_pricelist && this.pos.pricelists.length > 1;
     },
 });
 
