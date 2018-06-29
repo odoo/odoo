@@ -257,6 +257,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" title="If you check this box, you will let your customers pay their invoices by scanning a QR code">
+                                <div class="o_setting_left_pane">
+                                    <field name="qr_code_payment" class="oe_inline" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" name="qr_code_right_pane">
+                                    <label string="SEPA QR Code" for="qr_code_payment"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Let your customers pay their invoices by scanning QR code
+                                    </div>
+                                <div class="content-group" attrs="{'invisible': [('qr_code_payment', '=', False)]}">
+                                    <div class="row">
+                                        <label for="qr_code_bank_account" class="col-md-3 o_light_label"/>
+                                        <field name="qr_code_bank_account" class="oe_inline"/>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                         </div>
 
                         <h2>Supplier Payments</h2>

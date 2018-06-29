@@ -375,6 +375,8 @@ class AccountInvoice(models.Model):
     vendor_display_name = fields.Char(compute='_get_vendor_display_info', store=True)  # store=True to enable sorting on that column
     invoice_icon = fields.Char(compute='_get_vendor_display_info', store=False)
 
+    qrcode_string = fields.Char(string='QRCode String', compute="_compute_qrcode_string")
+
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
@@ -1529,6 +1531,16 @@ class AccountInvoice(models.Model):
             fmt(r[1]['amount']), fmt(r[1]['base']),
         ) for r in res]
         return res
+
+    @api.multi
+    @api.depends('number', 'partner_id.name', 'reference', 
+    'company_id.qr_code_bank_account.bank_id.bic', 'company_id.name', 
+    'company_id.qr_code_bank_account.bank_acc_number', 'amount_total')
+    def _compute_qrcode_string(self):
+        for invoice in self:
+            info = '%s - %s' % (invoice.number, invoice.partner_id.name)
+            comment = ('\n' + ((info[:137] + '...') if len(info) > 140 else info)) if invoice.reference == False else invoice.reference
+            invoice.qrcode_string = 'BCD\n001\n1\nSCT\n%s\n%s\n%s\nEUR%s\n\n\n%s' % (invoice.company_id.qr_code_bank_account.bank_id.bic, invoice.company_id.name, invoice.company_id.qr_code_bank_account.bank_acc_number, invoice.amount_total, comment)
 
 
 class AccountInvoiceLine(models.Model):

@@ -55,6 +55,9 @@ Thank you in advance for your cooperation.
 Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
 
+    qr_code_payment = fields.Boolean(string='Display QR Code')
+    qr_code_bank_account = fields.Many2one('account.journal', string='Journal Account')
+
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.")

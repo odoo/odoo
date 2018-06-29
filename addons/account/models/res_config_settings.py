@@ -58,6 +58,8 @@ class ResConfigSettings(models.TransientModel):
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
+    qr_code_payment = fields.Boolean(string='Display QR Code', related='company_id.qr_code_payment')
+    qr_code_bank_account = fields.Many2one('account.journal', related='company_id.qr_code_bank_account', string="Journal Account", domain="[('type', '=', 'bank')]")
 
     @api.multi
     def set_values(self):

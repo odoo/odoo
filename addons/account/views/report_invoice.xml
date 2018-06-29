@@ -200,7 +200,11 @@
                     </p>
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
-                    </p>
+                    </p>                
+                    <div t-if="o.currency_id.name == 'EUR' and o.company_id.qr_code_payment">
+                        <strong class="text-center">Scan me to pay!</strong><br />                                                  
+                        <img class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('QR', o.qrcode_string, 128, 128)"/>
+                    </div>
                 </div>
             </t>
         </template>
