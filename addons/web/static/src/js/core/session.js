@@ -49,6 +49,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.qweb_mutex = new concurrency.Mutex();
         this.currencies = {};
         this._groups_def = {};
+        core.bus.on('invalidate_session', this, this._onInvalidateSession);
     },
     setup: function (origin, options) {
         // must be able to customize server
@@ -327,31 +328,31 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
     rpc: function (url, params, options) {
         var self = this;
         options = _.clone(options || {});
-        var shadow = options.shadow || false;
         options.headers = _.extend({}, options.headers);
         if (odoo.debug) {
             options.headers["X-Debug-Mode"] = $.deparam($.param.querystring()).debug;
         }
 
-        delete options.shadow;
-
-        var deferred = $.Deferred();
+        var deferred = self.check_session_id();
         var aborted = false;
+        var xhrDef;
         deferred.abort = function () {
-            aborted = true;
+            if (xhrDef) {
+                xhrDef.abort();
+            } else {
+                aborted = true;
+            }
         };
-        self.check_session_id().then(function () {
+
+        return deferred.then(function () {
             if (aborted) {
-                return deferred.reject('communication', $.Event(), 'abort', 'abort');
+                return $.Deferred().reject('communication', $.Event(), 'abort', 'abort');
             }
             // TODO: remove
             if (! _.isString(url)) {
                 _.extend(options, url);
                 url = url.url;
             }
-            // TODO correct handling of timeouts
-            if (! shadow)
-                self.trigger('request');
             var fct;
             if (self.origin_server) {
                 fct = ajax.jsonRpc;
@@ -370,40 +371,9 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                 url = self.url(url, null);
                 options.session_id = self.session_id || '';
             }
-            var p = fct(url, "call", params, options);
-            deferred.abort = p.abort.bind(p); // Allow to abort the rpc call
-            p = p.then(function (result) {
-                if (! shadow)
-                    self.trigger('response');
-                return deferred.resolve(result);
-            }, function (type, error, textStatus, errorThrown) {
-                if (type === "server") {
-                    if (! shadow)
-                        self.trigger('response');
-                    if (error.code === 100) {
-                        self.uid = false;
-                    }
-                    return deferred.reject(error, $.Event());
-                } else {
-                    if (! shadow)
-                        self.trigger('response_failed');
-                    var nerror = {
-                        code: -32098,
-                        message: "XmlHttpRequestError " + errorThrown,
-                        data: {type: "xhr"+textStatus, debug: error.responseText, objects: [error, errorThrown] }
-                    };
-                    return deferred.reject(nerror, $.Event());
-                }
-            });
-            return deferred.fail(function () { // Allow deferred user to disable rpc_error call in fail
-                deferred.fail(function (error, event) {
-                    if (!event.isDefaultPrevented()) {
-                        self.trigger('error', error, event);
-                    }
-                });
-            });
+            xhrDef = fct(url, "call", params, options);
+            return xhrDef;
         });
-        return deferred;
     },
     url: function (path, params) {
         params = _.extend(params || {});
@@ -427,6 +397,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     getTZOffset: function (date) {
         return -new Date(date).getTimezoneOffset();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onInvalidateSession: function () {
+        this.uid = false;
     },
 });
 

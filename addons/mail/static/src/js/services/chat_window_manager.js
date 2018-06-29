@@ -108,7 +108,7 @@ var ChatWindowManager =  AbstractService.extend({
                 uuid: session.uuid,
                 name: session.name,
                 keep_unread: options.passively, // don't automatically mark unread messages as seen
-                window: new ExtendedChatWindow(web_client, session.id, prefix + session.name, session.is_folded, session.unread_counter, windowOptions),
+                window: new ExtendedChatWindow(this, session.id, prefix + session.name, session.is_folded, session.unread_counter, windowOptions),
             };
             chatSession.window.on("close_chat_session", null, function () {
                 self._closeChat(chatSession);

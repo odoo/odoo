@@ -19,6 +19,16 @@ from odoo.tools.float_utils import float_round
 HOURS_PER_DAY = 8
 
 
+def make_aware(dt):
+    """ Return ``dt`` with an explicit timezone, together with a function to
+        convert a datetime to the same (naive or aware) timezone as ``dt``.
+    """
+    if dt.tzinfo:
+        return dt, lambda val: val.astimezone(dt.tzinfo)
+    else:
+        return dt.replace(tzinfo=utc), lambda val: val.astimezone(utc).replace(tzinfo=None)
+
+
 def string_to_datetime(value):
     """ Convert the given string value to a datetime in UTC. """
     return utc.localize(fields.Datetime.from_string(value))
@@ -31,6 +41,8 @@ def datetime_to_string(dt):
 
 def float_to_time(hours):
     """ Convert a number of hours into a time object. """
+    if hours == 24.0:
+        return time.max
     fractional, integral = math.modf(hours)
     return time(int(integral), int(60 * fractional), 0)
 
@@ -293,8 +305,7 @@ class ResourceCalendar(models.Model):
 
         Return datetime after having planned hours
         """
-        if not day_dt.tzinfo:
-            day_dt = day_dt.replace(tzinfo=utc)
+        day_dt, revert = make_aware(day_dt)
 
         # which method to use for retrieving intervals
         if compute_leaves:
@@ -309,7 +320,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in get_intervals(dt, dt + delta):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (start + timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                        return revert(start + timedelta(hours=hours))
                     hours -= interval_hours
             return False
 
@@ -321,12 +332,12 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
                     interval_hours = (stop - start).total_seconds() / 3600
                     if hours <= interval_hours:
-                        return (stop - timedelta(hours=hours)).astimezone(day_dt.tzinfo)
+                        return revert(stop - timedelta(hours=hours))
                     hours -= interval_hours
             return False
 
         else:
-            return day_dt
+            return revert(day_dt)
 
     @api.multi
     def plan_days(self, days, day_dt, compute_leaves=False, domain=None):
@@ -339,8 +350,7 @@ class ResourceCalendar(models.Model):
 
         Returns the datetime of a days scheduling.
         """
-        if not day_dt.tzinfo:
-            day_dt = day_dt.replace(tzinfo=utc)
+        day_dt, revert = make_aware(day_dt)
 
         # which method to use for retrieving intervals
         if compute_leaves:
@@ -356,7 +366,7 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in get_intervals(dt, dt + delta):
                     found.add(start.date())
                     if len(found) == days:
-                        return stop.astimezone(day_dt.tzinfo)
+                        return revert(stop)
             return False
 
         elif days < 0:
@@ -368,11 +378,11 @@ class ResourceCalendar(models.Model):
                 for start, stop, meta in reversed(get_intervals(dt - delta, dt)):
                     found.add(start.date())
                     if len(found) == days:
-                        return start.astimezone(day_dt.tzinfo)
+                        return revert(start)
             return False
 
         else:
-            return day_dt
+            return revert(day_dt)
 
 
 class ResourceCalendarAttendance(models.Model):
@@ -392,7 +402,9 @@ class ResourceCalendarAttendance(models.Model):
         ], 'Day of Week', required=True, index=True, default='0')
     date_from = fields.Date(string='Starting Date')
     date_to = fields.Date(string='End Date')
-    hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
+    hour_from = fields.Float(string='Work from', required=True, index=True,
+        help="Start and End time of working.\n"
+             "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([('morning', 'Morning'), ('afternoon', 'Afternoon')], required=True, default='morning')

@@ -368,7 +368,10 @@ options.registry.layout_column = options.Class.extend({
                 $lastColumn.clone().insertAfter($lastColumn);
             }
         } else {
-            this.$target.children().slice(count).remove();
+            var self = this;
+            _.each(this.$target.children().slice(count), function (el) {
+                self.trigger_up('remove_snippet', {$snippet: $(el)});
+            });
         }
 
         this._resizeColumns();

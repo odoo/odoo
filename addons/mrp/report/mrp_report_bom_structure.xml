@@ -3,7 +3,7 @@
     <template id="report_mrp_bom">
         <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <div class="container o_mrp_bom_report_page">
-            <t t-if="data['components'] or data['lines']">
+            <t t-if="data.get('components') or data.get('lines')">
                 <div class="row">
                     <div class="col-md-12">
                         <h1>BoM Structure &amp; Cost</h1>

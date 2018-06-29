@@ -6,6 +6,8 @@ from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
+from lxml import etree
+
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
 import logging
@@ -252,7 +254,17 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(value)
+        irQweb = self.env['ir.qweb']
+        # wrap value inside a body and parse it as HTML
+        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
+        # use pos processing for all nodes with attributes
+        for element in body.iter():
+            if element.attrib:
+                attrib = OrderedDict(element.attrib)
+                attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
+                element.attrib.clear()
+                element.attrib.update(attrib)
+        return etree.tostring(body, encoding='unicode', method='html')[6:-7]
 
 
 class ImageConverter(models.AbstractModel):
@@ -484,7 +496,7 @@ class Contact(models.AbstractModel):
             'object': value,
             'options': options
         }
-        return self.env['ir.qweb'].render('base.contact', val)
+        return self.env['ir.qweb'].render('base.contact', val, **options.get('template_options'))
 
 
 class QwebView(models.AbstractModel):

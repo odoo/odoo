@@ -163,7 +163,7 @@ var MessagingMenu = Widget.extend({
                     views: [[false, 'form']],
                     res_id: resID
                 });
-            } else if (resModel) {
+            } else if (resModel && resModel !== 'mail.channel' && !resID) {
                 this.do_action({
                     name: "Mail failures",
                     type: 'ir.actions.act_window',

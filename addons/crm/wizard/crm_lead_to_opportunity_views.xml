@@ -56,8 +56,7 @@
                     <group string="Assign these opportunities to">
                         <field name="team_id"/>
                         <field name="user_ids" widget="many2many_tags" domain="[('share', '=', False)]"/>
-                        <!-- Uncomment me in trunk -->
-                        <!-- <field name="force_assignation" /> -->
+                         <field name="force_assignation"/>
                     </group>
                     <label for="opportunity_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
                     <group attrs="{'invisible': [('deduplicate', '=', False)]}">

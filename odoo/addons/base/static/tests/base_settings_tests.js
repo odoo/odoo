@@ -139,5 +139,44 @@ QUnit.module('base_settings_tests', {
 
         actionManager.destroy();
     });
+
+    QUnit.test('settings view does not display other settings after reload', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: BaseSettingsView,
+            model: 'project',
+            data: this.data,
+            arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
+                    '<div class="o_panel">' +
+                        '<div class="setting_search">' +
+                            '<input type="text" class="searchInput" placeholder="Search..."/>' +
+                        '</div> ' +
+                    '</div> ' +
+                    '<header>' +
+                        '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
+                        '<button string="Cancel" type="object" name="cancel" class="oe_link" />' +
+                    '</header>' +
+                    '<div class="o_setting_container">' +
+                        '<div class="settings_tab"/>'+
+                        '<div class="settings">' +
+                            '<div class="notFound o_hidden">No Record Found</div>' +
+                            '<div class="app_settings_block" string="CRM" data-key="crm">' +
+                                'crm tab' +
+                            '</div>' +
+                            '<div class="app_settings_block o_not_app" string="Other App" data-key="otherapp">' +
+                                'other app tab' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
+        form.reload();
+        assert.strictEqual(form.$('.app_settings_block').text().replace(/\s/g,''), 'CRMcrmtab');
+        form.destroy();
+    });
+
 });
 });
