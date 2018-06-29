@@ -256,7 +256,8 @@ class google_calendar(osv.AbstractModel):
         if not self.get_need_synchro_attendee(cr, uid, context=context):
             data.pop("attendees")
         if isCreating:
-            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids if other_att.google_internal_event_id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in event.attendee_ids
+                                if other_att.google_internal_event_id and not other_att.google_internal_event_id.startswith('_')]
             if other_google_ids:
                 data["id"] = other_google_ids[0]
         return data
@@ -627,7 +628,8 @@ class google_calendar(osv.AbstractModel):
                                     ('event_id.final_date', '>', self.get_minTime(cr, uid, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)),
                                     ], context=context_norecurrent)
         for att in att_obj.browse(cr, uid, my_att_ids, context=context):
-            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if other_att.google_internal_event_id and other_att.id != att.id]
+            other_google_ids = [other_att.google_internal_event_id for other_att in att.event_id.attendee_ids if
+                                other_att.google_internal_event_id and other_att.id != att.id and not other_att.google_internal_event_id.startswith('_')]
             for other_google_id in other_google_ids:
                 if self.get_one_event_synchro(cr, uid, other_google_id, context=context):
                     att_obj.write(cr, uid, [att.id], {'google_internal_event_id': other_google_id})
