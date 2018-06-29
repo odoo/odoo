@@ -99,7 +99,47 @@
                 </tree>
             </field>
         </record>
-
+        <!--Codigo modificado por TRESCLOUD-->
+        <record model="ir.ui.view" id="invoice_tax_kanban">
+            <field name="name">account.invoice.tax.kanban</field>
+            <field name="model">account.invoice.tax</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="sequence"/>
+                    <field name="manual"/>
+                    <field name="name"/>
+                    <field name="account_id" groups="account.group_account_user"/>
+                    <field name="base"/>
+                    <field name="amount"/>
+                    <field name="currency_id" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><span><t t-esc="record.account_id.value"/></span></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.base.string'/>: <t t-esc="record.base.value"/></span>
+                                    </div>
+                                    <div class="col-xs-12 text-muted">
+                                         <span><t t-esc='record.amount.string'/>: <t t-esc="record.amount.value"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <!--Fin del Codigo modificado por TRESCLOUD-->
         <record id="view_invoice_tax_form" model="ir.ui.view">
             <field name="name">account.invoice.tax.form</field>
             <field name="model">account.invoice.tax</field>
