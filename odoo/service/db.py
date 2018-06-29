@@ -97,7 +97,7 @@ def _create_empty_database(name):
             raise DatabaseExists("database %r already exists!" % (name,))
         else:
             cr.autocommit(True)     # avoid transaction block
-            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' LC_COLLATE 'C' TEMPLATE "%s" """ % (name, chosen_template))
 
 @check_db_management_enabled
 def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
