@@ -90,6 +90,7 @@ var SnippetEditor = Widget.extend({
      * @override
      */
     destroy: function () {
+        this.cleanForSave();
         this._super.apply(this, arguments);
         this.$target.removeData('snippet-editor');
     },
@@ -134,6 +135,57 @@ var SnippetEditor = Widget.extend({
         });
         this.$('.o_handles').css('height', this.$target.outerHeight());
         this.$el.toggleClass('o_top_cover', offset.top < 15);
+    },
+    /**
+     * Removes the associated snippet from the DOM and destroys the associated
+     * editor (itself).
+     */
+    removeSnippet: function () {
+        this.toggleFocus(false);
+
+        this.trigger_up('call_for_each_child_snippet', {
+            $snippet: this.$target,
+            callback: function (editor, $snippet) {
+                for (var i in editor.styles) {
+                    editor.styles[i].onRemove();
+                }
+            },
+        });
+
+        var $parent = this.$target.parent();
+        this.$target.find('*').andSelf().tooltip('destroy');
+        this.$target.remove();
+        this.$el.remove();
+
+        var node = $parent[0];
+        if (node && node.firstChild) {
+            $.summernote.core.dom.removeSpace(node, node.firstChild, 0, node.lastChild, 1);
+            if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
+                node.removeChild(node.firstChild);
+            }
+        }
+
+        if ($parent.closest(':data("snippet-editor")').length) {
+            while (!$parent.data('snippet-editor')) {
+                var $nextParent = $parent.parent();
+                if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                    $parent.remove();
+                }
+                $parent = $nextParent;
+            }
+            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
+                _.defer(function () {
+                    $parent.data('snippet-editor').removeSnippet();
+                });
+            }
+        }
+
+        // clean editor if they are image or table in deleted content
+        $('.note-control-selection').hide();
+        $('.o_table_handler').remove();
+
+        this.trigger_up('snippet_removed');
+        this.destroy();
     },
     /**
      * Displays/Hides the editor overlay and notifies the associated snippet
@@ -258,59 +310,6 @@ var SnippetEditor = Widget.extend({
         this.$el.find('[data-toggle="dropdown"]').dropdown();
 
         return $.when.apply($, defs);
-    },
-    /**
-     * Removes the associated snippet from the DOM and destroys the associated
-     * editor (itself).
-     *
-     * @private
-     */
-    _removeSnippet: function () {
-        this.toggleFocus(false);
-
-        this.trigger_up('call_for_each_child_snippet', {
-            $snippet: this.$target,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onRemove();
-                }
-            },
-        });
-
-        var $parent = this.$target.parent();
-        this.$target.find('*').andSelf().tooltip('destroy');
-        this.$target.remove();
-        this.$el.remove();
-
-        var node = $parent[0];
-        if (node && node.firstChild) {
-            $.summernote.core.dom.removeSpace(node, node.firstChild, 0, node.lastChild, 1);
-            if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
-                node.removeChild(node.firstChild);
-            }
-        }
-
-        if ($parent.closest(':data("snippet-editor")').length) {
-            while (!$parent.data('snippet-editor')) {
-                var $nextParent = $parent.parent();
-                if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                    $parent.remove();
-                }
-                $parent = $nextParent;
-            }
-            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                _.defer(function () {
-                    $parent.data('snippet-editor')._removeSnippet();
-                });
-            }
-        }
-
-        // clean editor if they are image or table in deleted content
-        $('.note-control-selection').hide();
-        $('.o_table_handler').remove();
-
-        this.trigger_up('snippet_removed');
-        this.destroy();
     },
 
     //--------------------------------------------------------------------------
@@ -495,7 +494,7 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         this.trigger_up('request_history_undo_record', {$target: this.$target});
-        this._removeSnippet();
+        this.removeSnippet();
     },
 });
 
@@ -511,6 +510,7 @@ var SnippetsMenu = Widget.extend({
         deactivate_snippet: '_onDeactivateSnippet',
         drag_and_drop_stop: '_onDragAndDropStop',
         go_to_parent: '_onGoToParent',
+        remove_snippet: '_onRemoveSnippet',
         snippet_removed: '_onSnippetRemoved',
     },
 
@@ -634,9 +634,7 @@ var SnippetsMenu = Widget.extend({
      */
     cleanForSave: function () {
         this.trigger_up('ready_to_clean_for_save');
-        _.each(this.snippetEditors, function (snippetEditor) {
-            snippetEditor.cleanForSave();
-        });
+        this._destroyEditors();
 
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
@@ -644,17 +642,6 @@ var SnippetsMenu = Widget.extend({
 
         this.$editable.find('.o_we_selected_image')
             .removeClass('o_we_selected_image');
-
-        // Removing query_string used to invalidate cache during image crop
-        _.each(this.$editable.find('.o_cropped_img_to_clean'), function (croppedImg) {
-            var $croppedImg = $(croppedImg);
-            var s = $croppedImg.attr('src').split('?');
-            var src = s[0];
-            var urlParams = s[1] || '';
-            urlParams = $.param(_.omit($.deparam(urlParams), 'unique'));
-            $croppedImg.attr('src', src + (urlParams ? ('?' + urlParams) : ''));
-            $croppedImg.removeClass('o_cropped_img_to_clean');
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -816,6 +803,14 @@ var SnippetsMenu = Widget.extend({
             });
         }
         return $.when();
+    },
+    /**
+     * @private
+     */
+    _destroyEditors: function () {
+        _.each(this.snippetEditors, function (snippetEditor) {
+            snippetEditor.destroy();
+        });
     },
     /**
      * Updates the cover dimensions of the current snippet editor.
@@ -1355,15 +1350,11 @@ var SnippetsMenu = Widget.extend({
     /**
      * Called when a snippet has moved in the page.
      *
-     * @todo technically, as a snippet has been moved, all editors should be
-     * destroyed as their snippet options may not correspond to their
-     * selector anymore. However this should rarely (maybe never ?) be the case,
-     * so we might not want to do this as it would slow the editor.
-     *
      * @private
      * @param {OdooEvent} ev
      */
     _onDragAndDropStop: function (ev) {
+        this._destroyEditors();
         this._activateSnippet(ev.data.$snippet);
     },
     /**
@@ -1376,6 +1367,16 @@ var SnippetsMenu = Widget.extend({
     _onGoToParent: function (ev) {
         ev.stopPropagation();
         this._activateSnippet(ev.data.$snippet.parent());
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onRemoveSnippet: function (ev) {
+        ev.stopPropagation();
+        this._createSnippetEditor(ev.data.$snippet).then(function (editor) {
+            editor.removeSnippet();
+        });
     },
     /**
      * Called when a snippet is removed -> checks if there is draggable snippets

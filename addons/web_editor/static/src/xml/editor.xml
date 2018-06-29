@@ -313,13 +313,13 @@
         </div>
         <t t-else="">
            <div class="o_crop_area">
-                <img class="img img-responsive o_cropper_image" t-att-src="widget.imageData.src" />
+                <img class="img img-responsive o_cropper_image" t-att-src="widget.imageData.originalSrc"/>
            </div>
            <div class="o_crop_options text-center mt16">
                <div class="btn-group" title="Aspect Ratio" data-toggle="buttons">
                    <t t-foreach="widget.aspectRatioList" t-as="ratio">
                        <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
-                       <a href="#" t-attf-class="btn btn-default#{is_active and ' active' or ''}" data-event="ratio" t-att-data-value="ratio[1]">
+                       <a href="#" t-attf-class="btn btn-default#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
                             <t t-esc="ratio[0]"/>
                        </a>
                    </t>

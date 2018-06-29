@@ -164,7 +164,7 @@ class ReportBomStructure(models.AbstractModel):
             if line.child_bom_id:
                 qty = line.product_uom_id._compute_quantity(line.product_qty * factor, line.child_bom_id.product_uom_id)
                 sub_price = self._get_price(line.child_bom_id, qty)
-                price += sub_price * qty
+                price += sub_price
             else:
                 prod_qty = line.product_qty * factor
                 price += (line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id) * prod_qty)

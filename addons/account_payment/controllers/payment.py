@@ -17,7 +17,6 @@ class PaymentPortal(http.Controller):
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
         success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
 
         invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id)
         if not invoice_sudo:
@@ -28,11 +27,10 @@ class PaymentPortal(http.Controller):
         except:
             return False
 
+        if request.env.user == request.env.ref('base.public_user'):
+            save_token = False # we avoid to create a token for the public user
         vals = {
             'acquirer_id': acquirer_id,
-            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', invoice_sudo._name)], limit=1).id,
-            'callback_res_id': invoice_sudo.id,
-            'callback_method': callback_method,
         }
 
         if save_token:
@@ -55,7 +53,6 @@ class PaymentPortal(http.Controller):
         """ Use a token to perform a s2s transaction """
         error_url = kwargs.get('error_url', '/my')
         success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
         access_token = kwargs.get('access_token')
         params = {}
         if access_token:
@@ -67,18 +64,17 @@ class PaymentPortal(http.Controller):
             return request.redirect(_build_url_w_params(error_url, params))
 
         try:
-            pm_id = int(pm_id)
+            token = request.env['payment.token'].sudo().browse(int(pm_id))
         except (ValueError, TypeError):
+            token = False
+        token_owner = invoice_sudo.partner_id if request.env.user == request.env.ref('base.public_user') else request.env.user.partner_id
+        if not token or token.partner_id != token_owner:
             params['error'] = 'pay_invoice_invalid_token'
             return request.redirect(_build_url_w_params(error_url, params))
 
         vals = {
-            'payment_token_id': pm_id,
+            'payment_token_id': token.id,
             'type': 'server2server',
-            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', invoice_sudo._name)],
-                                                                       limit=1).id,
-            'callback_res_id': invoice_sudo.id,
-            'callback_method': callback_method,
         }
 
         invoice_sudo._create_payment_transaction(vals)

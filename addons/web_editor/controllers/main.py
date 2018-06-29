@@ -255,11 +255,14 @@ class Web_Editor(http.Controller):
         elif image_id:
             record = request.env['ir.attachment'].browse(image_id)
         result = {
-            'id': record.id,
             'mimetype': record.mimetype,
         }
+        # If we received the image ID and that image has an associated URL
+        # field, this should be a crop image attachment, so we return the ID
+        # and URL to confirm
         if image_id and record.url:
-            result['src'] = record.url
+            result['id'] = record.id
+            result['originalSrc'] = record.url
         return result
 
     ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
@@ -270,7 +273,7 @@ class Web_Editor(http.Controller):
     ## @param bundles - True if the bundles views must be fetched (default to False)
     ## @param bundles_restriction - Names of the bundle in which to look for scss files (if empty, search in all of them)
     ## @returns a dictionary with views info in the views key and style info in the scss key
-    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user")
+    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, bundles=False, bundles_restriction=[]):
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
@@ -387,16 +390,17 @@ class Web_Editor(http.Controller):
 
         # Check if the file to save had already been modified
         custom_attachment = IrAttachment.search([("url", "=", custom_url)])
+        datas = base64.b64encode((content or "\n").encode("utf-8"))
         if custom_attachment:
             # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": base64.b64encode(content.encode("utf-8"))})
+            custom_attachment.write({"datas": datas})
         else:
             # If not, create a new attachment to copy the original scss file content, with its modifications
             IrAttachment.create(dict(
                 name = custom_url,
                 type = "binary",
                 mimetype = "text/scss",
-                datas = base64.b64encode(content.encode("utf-8")),
+                datas = datas,
                 datas_fname = url.split("/")[-1],
                 url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
                                   # is quite of an hack. This allows to fetch the "datas" field by adding

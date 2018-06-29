@@ -397,7 +397,7 @@ class Warehouse(models.Model):
 
             pull_rules_list = supplier_wh._get_supply_pull_rules_values(
                 [self.Routing(output_location, transit_location, supplier_wh.out_type_id)],
-                values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': self.id})
+                values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
                 [self.Routing(transit_location, input_location, self.in_type_id)],
                 values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})

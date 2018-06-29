@@ -257,9 +257,7 @@ var BaseSettingRenderer = FormRenderer.extend({
 
     _render: function () {
         var res = this._super.apply(this, arguments);
-        if (!this.modules) {
-            this._initModules();
-        }
+        this._initModules();
         this._renderLeftPanel();
         this._initSearch();
         if (config.device.isMobile) {

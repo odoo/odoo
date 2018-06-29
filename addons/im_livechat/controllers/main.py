@@ -16,7 +16,7 @@ class LivechatController(http.Controller):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
         xmlid = 'im_livechat.external_lib'
         files, remains = request.env["ir.qweb"]._get_asset_content(xmlid, options=request.context)
-        asset = AssetsBundle(xmlid, files, remains)
+        asset = AssetsBundle(xmlid, files)
 
         mock_attachment = getattr(asset, ext)()
         if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages

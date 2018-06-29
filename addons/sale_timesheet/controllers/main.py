@@ -414,7 +414,9 @@ class SaleTimesheetController(http.Controller):
         elif res_model == 'sale.order':
             action = clean_action(request.env.ref('sale.action_orders').read()[0])
             action['domain'] = domain
+            action['context'] = {'create': False, 'edit': False, 'delete': False}  # No CRUD operation when coming from overview
         elif res_model == 'account.invoice':
             action = clean_action(request.env.ref('account.action_invoice_tree1').read()[0])
             action['domain'] = domain
+            action['context'] = {'create': False, 'edit': False, 'delete': False}  # No CRUD operation when coming from overview
         return action

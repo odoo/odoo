@@ -156,7 +156,6 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
-        self.state = 'refunding'
         result = self._create_stripe_refund()
         return self._stripe_s2s_validate_tree(result)
 
