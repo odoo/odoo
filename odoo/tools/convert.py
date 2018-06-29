@@ -20,6 +20,7 @@ from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo import SUPERUSER_ID
+from odoo.tools.parse_version import version_match
 
 _logger = logging.getLogger(__name__)
 
@@ -240,6 +241,9 @@ class xml_import(object):
         if node_uid:
             return self.id_get(node_uid)
         return self.uid
+
+    def _version_matches(self, data_node):
+        return version_match(data_node.get("versions", ":"))
 
     def _test_xml_id(self, xml_id):
         id = xml_id
@@ -737,6 +741,8 @@ form: module.record_id""" % (xml_id,)
             raise Exception("Root xml tag must be <openerp>, <odoo> or <data>.")
         for rec in de:
             if rec.tag in roots:
+                if not self._version_matches(rec):
+                    _logger.debug("Skipping XML section because version does not match")
                 self.parse(rec, mode)
             elif rec.tag in self._tags:
                 try:

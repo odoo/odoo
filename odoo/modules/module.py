@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import functools
 import imp
 import importlib
 import inspect
@@ -16,14 +15,13 @@ import time
 import types
 import unittest
 import threading
-from operator import itemgetter
 from os.path import join as opj
 
 import odoo
 import odoo.tools as tools
 import odoo.release as release
-from odoo import SUPERUSER_ID, api
 from odoo.tools import pycompat
+from odoo.tools.parse_version import version_match
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -333,6 +331,19 @@ def load_information_from_description_file(module, mod_path=None):
             info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
+
+        # Version-specific overrides
+        try:
+            overrides = info.pop("overrides")
+        except KeyError:
+            pass
+        else:
+            if len(overrides) > 1 and sys.version_info < (3, 6):
+                _logger.warning("Python interpreter without PEP 468 support; "
+                                "overrides are randomly sorted!")
+            for wanted_versions, subdict in overrides.items():
+                if version_match(wanted_versions):
+                    info.update(subdict)
 
         if not info.get('description'):
             readme_path = [opj(mod_path, x) for x in README
