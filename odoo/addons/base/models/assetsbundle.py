@@ -422,6 +422,9 @@ class AssetsBundle(object):
         css_content = '\n'.join(asset.minify() for asset in self.stylesheets)
 
         # Post process the produced css to add required vendor prefixes here
+        css_content = re.sub(r'(display: ((?:inline-)?)flex((?: ?!important)?);)', r'display: -webkit-\2flex\3; \1', css_content)  # For PhantomJS tests
+        css_content = re.sub(r'(flex-flow: (\w+ \w+);)', r'-webkit-flex-flow: \2; \1', css_content) # For PhantomJS tests
+        css_content = re.sub(r'(flex: (\d+ \d+ (?:\d+|auto));)', r'-webkit-flex: \2; \1', css_content)  # For PhantomJS tests
 
         return css_content
 
