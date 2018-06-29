@@ -654,7 +654,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "always"'
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body').text(),
+    assert.strictEqual($modal.find('.modal-body p').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
@@ -830,7 +830,7 @@ QUnit.test('chatter: discard changes on message post with post_refresh "recipien
 
             var $modal = $('.modal-dialog');
             assert.strictEqual($modal.length, 1, "should have a modal opened");
-            assert.strictEqual($modal.find('.modal-body').text(),
+            assert.strictEqual($modal.find('.modal-body p').text(),
                 "The record has been modified, your changes will be discarded. Do you want to proceed?",
                 "should warn the user that any unsaved changes will be lost");
 
@@ -883,7 +883,7 @@ QUnit.test('chatter: discard changes on opening full-composer', function (assert
 
     var $modal = $('.modal-dialog');
     assert.strictEqual($modal.length, 1, "should have a modal opened");
-    assert.strictEqual($modal.find('.modal-body').text(),
+    assert.strictEqual($modal.find('.modal-body p').text(),
         "The record has been modified, your changes will be discarded. Do you want to proceed?",
         "should warn the user that any unsaved changes will be lost");
 
