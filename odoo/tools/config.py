@@ -221,7 +221,7 @@ class configmanager(object):
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to PostgreSQL")
-        group.add_option("--db-template", dest="db_template", my_default="template1",
+        group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
