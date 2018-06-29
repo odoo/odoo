@@ -46,7 +46,7 @@ var DropdownMenu = Widget.extend({
                 el: {class: 'btn-group o_dropdown', attrs: {}},
                 mainButton: {class: 'o_dropdown_toggler_btn btn btn-sm btn-default dropdown-toggle'},
             };
-        this.items = _.sortBy(items, 'groupId');
+        this.items = items;
         _.each(this.items, this._prepareItem.bind(this));
     },
 

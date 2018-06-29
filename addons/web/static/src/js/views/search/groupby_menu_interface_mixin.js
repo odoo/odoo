@@ -54,6 +54,7 @@ var GroupByMenuInterfaceMixin = {
                 defaultOptionId: groupby ? groupby.interval : false,
             });
         });
+        groupbys = _.sortBy(groupbys, 'description');
         var groupByMenu = new GroupByMenu(this, groupbys, groupableFields, {headerStyle: 'primary'});
         groupByMenu.insertAfter($node.find('div:first'));
     },
