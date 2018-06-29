@@ -208,7 +208,7 @@ database
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
-    specified `template database`_. Defaults to ``template1``.
+    specified `template database`_. Defaults to ``template0``.
 
 .. option:: --no-database-list
 
