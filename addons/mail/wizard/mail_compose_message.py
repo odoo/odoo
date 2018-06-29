@@ -443,8 +443,8 @@ class MailComposer(models.TransientModel):
             multi_mode = False
             res_ids = [res_ids]
 
-        subjects = self.render_template(self.subject, self.model, res_ids) if not self.template_id else False
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True) if not self.template_id else False
+        subjects = self.render_template(self.subject, self.model, res_ids)
+        bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
         emails_from = self.render_template(self.email_from, self.model, res_ids)
         replies_to = self.render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
@@ -454,8 +454,8 @@ class MailComposer(models.TransientModel):
         results = dict.fromkeys(res_ids, False)
         for res_id in res_ids:
             results[res_id] = {
-                'subject': subjects[res_id] if subjects else False,
-                'body': bodies[res_id] if bodies else False,
+                'subject': subjects[res_id],
+                'body': bodies[res_id],
                 'email_from': emails_from[res_id],
                 'reply_to': replies_to[res_id],
             }
@@ -465,7 +465,7 @@ class MailComposer(models.TransientModel):
         if self.template_id:
             template_values = self.generate_email_for_composer(
                 self.template_id.id, res_ids,
-                fields=['subject', 'body_html', 'email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
+                fields=['email_to', 'partner_to', 'email_cc', 'attachment_ids', 'mail_server_id'])
         else:
             template_values = {}
 
@@ -475,8 +475,6 @@ class MailComposer(models.TransientModel):
                 results[res_id].pop('partner_ids')
                 results[res_id].pop('email_to')
                 results[res_id].pop('email_cc')
-                results[res_id].pop('subject')
-                results[res_id].pop('body')
                 # remove attachments from template values as they should not be rendered
                 template_values[res_id].pop('attachment_ids', None)
             else:

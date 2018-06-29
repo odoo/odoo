@@ -47,7 +47,7 @@
                                 context="{'force_email':True, 'show_email':True}"
                                 attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
                         </div>
-                        <field name="subject" placeholder="Subject..." required="True" attrs="{'readonly':[('composition_mode', 'in', ('mass_mail','mass_post'))]}"/>
+                        <field name="subject" placeholder="Subject..." required="True"/>
                         <!-- mass post -->
                         <field name="notify"
                             attrs="{'invisible':['|', ('composition_mode', '!=', 'mass_post')]}"/>
@@ -57,7 +57,7 @@
                             attrs="{'invisible':['|', ('no_auto_thread', '=', False), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
                     </group>
-                    <field name="body" attrs="{'readonly':[('composition_mode', 'in', ('mass_mail','mass_post'))]}" options="{'style-inline': true}"/>
+                    <field name="body" options="{'style-inline': true}"/>
                     <group col="4">
                         <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
                         <field name="template_id" options="{'no_create': True}"
