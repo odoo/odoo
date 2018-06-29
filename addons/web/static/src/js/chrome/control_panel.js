@@ -142,6 +142,19 @@ var ControlPanel = Widget.extend({
             });
             var new_cp_content = status.cp_content || {};
 
+            // If the search view is the same as before
+            // we probably don't need to detach/reattach it
+            var $searchViewEl = this.nodes.$searchview.find('.o_searchview');
+            var nodesToDetach = _.extend({}, this.nodes);
+            if (new_cp_content.$searchview &&
+                (
+                 (this.$currentSearchView && this.$currentSearchView[0] === new_cp_content.$searchview[0]) ||
+                 ($searchViewEl[0] === new_cp_content.$searchview[0]))
+                ) {
+                delete nodesToDetach.$searchview;
+                delete new_cp_content.$searchview;
+            }
+
             // Render the breadcrumbs
             if (status.breadcrumbs) {
                 this.$('.breadcrumb').html(this._render_breadcrumbs(status.breadcrumbs));
@@ -149,14 +162,25 @@ var ControlPanel = Widget.extend({
 
             // Detach control_panel old content and attach new elements
             if (options.clear) {
-                this._detach_content(this.nodes);
+                this._detach_content(nodesToDetach);
+                if ('$searchview' in nodesToDetach) {
+                    this.$currentSearchView = undefined;
+                }
                 // Show the searchview buttons area, which might have been hidden by
                 // the searchview, as client actions may insert elements into it
                 this.nodes.$searchview_buttons.show();
             } else {
-                this._detach_content(_.pick(this.nodes, _.keys(new_cp_content)));
+                var selectiveDetach = _.pick(nodesToDetach, _.keys(new_cp_content));
+                this._detach_content(selectiveDetach);
+                if ('$searchview' in selectiveDetach) {
+                    this.$currentSearchView = undefined;
+                }
+
             }
             this._attach_content(new_cp_content);
+            if (new_cp_content.$searchview) {
+                this.$currentSearchView = new_cp_content.$searchview;
+            }
 
             // Update the searchview and switch buttons
             if (status.searchview || options.clear) {
