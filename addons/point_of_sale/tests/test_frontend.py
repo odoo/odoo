@@ -274,6 +274,7 @@ class TestUi(odoo.tests.HttpCase):
                                                        'type': 'cash',
                                                        'company_id': main_company.id,
                                                        'journal_user': True})],
+            'use_pricelist': True,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
         })
 
