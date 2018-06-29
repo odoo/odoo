@@ -17,6 +17,7 @@ import uuid
 
 from odoo import api, fields, models
 from odoo import tools
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError, ValidationError
@@ -1098,6 +1099,24 @@ class Meeting(models.Model):
         if 'id' not in order_fields:
             order_fields.append('id')
 
+        leaf_evaluations = None
+        #compose a query of the type SELECT id, condition1 as domain1, condition2 as domaine2
+        #This allows to load leaf interpretation of the where clause in one query
+        #leaf_evaluations is then used when running custom interpretation of domain for recuring events
+        if self:
+            select_fields = ["id"]
+            where_params_list = []
+            for pos, arg in enumerate(domain):
+                if not arg[0] in ('start', 'stop', 'final_date', '&', '|'):
+                    e = expression.expression([arg], self)
+                    where_clause, where_params = e.to_sql()  # CAUTION, wont work if field is autojoin, not supported
+                    select_fields.append("%s as \"%s\"" % (where_clause, str(pos)))
+                    where_params_list += where_params
+            if len(select_fields) > 1:
+                query = "SELECT %s FROM calendar_event WHERE id in %%s" % (", ".join(select_fields))  # could be improved by only taking event with recurency ?
+                where_params_list += [tuple(self.ids)]
+                self._cr.execute(query, where_params_list)
+                leaf_evaluations = dict([(row['id'], row) for row in self._cr.dictfetchall()])
         result_data = []
         result = []
         for meeting in self:
@@ -1115,7 +1134,7 @@ class Meeting(models.Model):
                 pile = []
                 ok = True
                 r_date = r_start_date  # default for empty domain
-                for arg in domain:
+                for pos, arg in enumerate(domain):
                     if str(arg[0]) in ('start', 'stop', 'final_date'):
                         if str(arg[0]) == 'start':
                             r_date = r_start_date
@@ -1140,6 +1159,8 @@ class Meeting(models.Model):
                         pile.append(ok)
                     elif str(arg) == str('&') or str(arg) == str('|'):
                         pile.append(arg)
+                    elif leaf_evaluations and meeting.id in leaf_evaluations:
+                        pile.append(bool(leaf_evaluations[meeting.id][str(pos)]))
                     else:
                         pile.append(True)
                 pile.reverse()
