@@ -503,7 +503,10 @@ class StockMove(models.Model):
 
     def _push_apply(self):
         # TDE CLEANME: I am quite sure I already saw this code somewhere ... in routing ??
+        Move = self.env['stock.move']
         Push = self.env['stock.location.path']
+
+        moves_by_rule = {}
         for move in self:
             # if the move is already chained, there is no need to check push rules
             if move.move_dest_ids:
@@ -523,7 +526,11 @@ class StockMove(models.Model):
                     rules = Push.search(domain + [('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
-                rules._apply(move)
+                if not rules in moves_by_rule:
+                    moves_by_rule[rules] = Move.browse()
+                moves_by_rule[rules] |= move
+        for rule, moves in moves_by_rule.items():
+            rule._apply(moves)
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
@@ -677,37 +684,47 @@ class StockMove(models.Model):
         reserved yet and has the same procurement group, locations and picking
         type (moves should already have them identical). Otherwise, create a new
         picking to assign them to. """
+        Move = self.env['stock.move']
         Picking = self.env['stock.picking']
-        for move in self:
+
+        by_pick_ident = lambda m: (m.group_id.id,
+                                   m.location_id.id,
+                                   m.location_dest_id.id,
+                                   m.picking_type_id.id)
+
+        moves_by_pick_ident = {ident: Move.union(*moves) for
+                               ident, moves in
+                               groupby(sorted(self, key=by_pick_ident), key=by_pick_ident)}
+
+        for ident, moves in moves_by_pick_ident.items():
             recompute = False
-            picking = Picking.search([
-                ('group_id', '=', move.group_id.id),
-                ('location_id', '=', move.location_id.id),
-                ('location_dest_id', '=', move.location_dest_id.id),
-                ('picking_type_id', '=', move.picking_type_id.id),
-                ('printed', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+            picking = Picking.search(
+                [
+                    ('group_id', '=', ident[0]),
+                    ('location_id', '=', ident[1]),
+                    ('location_dest_id', '=', ident[2]),
+                    ('picking_type_id', '=', ident[3]),
+                    ('printed', '=', False),
+                    ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])
+                ], limit=1)
             if picking:
-                if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
-                    # If a picking is found, we'll append `move` to its move list and thus its
-                    # `partner_id` and `ref` field will refer to multiple records. In this
-                    # case, we chose to  wipe them.
-                    picking.write({
-                        'partner_id': False,
-                        'origin': False,
-                    })
+                for move in moves:
+                    if picking.partner_id.id != move.partner_id.id or picking.origin != move.origin:
+                        # If a picking is found, we'll append `move` to its move list and thus its
+                        # `partner_id` and `ref` field will refer to multiple records. In this
+                        # case, we chose to  wipe them.
+                        picking.write({
+                            'partner_id': False,
+                            'origin': False,
+                        })
+                        break
             else:
                 recompute = True
-                picking = Picking.create(move._get_new_picking_values())
-            move.write({'picking_id': picking.id})
+                picking = Picking.create(moves[0]._get_new_picking_values())
 
-            # If this method is called in batch by a write on a one2many and
-            # at some point had to create a picking, some next iterations could
-            # try to find back the created picking. As we look for it by searching
-            # on some computed fields, we have to force a recompute, else the
-            # record won't be found.
+            moves.write({'picking_id': picking.id})
             if recompute:
-                move.recompute()
+                moves.recompute()
         return True
 
     def _get_new_picking_values(self):
@@ -731,8 +748,8 @@ class StockMove(models.Model):
         move_create_proc = self.env['stock.move']
         move_to_confirm = self.env['stock.move']
         move_waiting = self.env['stock.move']
+        move_to_assign = self.env['stock.move']
 
-        to_assign = {}
         for move in self:
             # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
@@ -743,10 +760,7 @@ class StockMove(models.Model):
                 else:
                     move_to_confirm |= move
             if not move.picking_id and move.picking_type_id:
-                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
-                if key not in to_assign:
-                    to_assign[key] = self.env['stock.move']
-                to_assign[key] |= move
+                move_to_assign |= move
 
         # create procurements for make to order moves
         for move in move_create_proc:
@@ -759,8 +773,8 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for moves in to_assign.values():
-            moves._assign_picking()
+        if move_to_assign:
+            move_to_assign._assign_picking()
         self._push_apply()
         if merge:
             return self._merge_moves(merge_into=merge_into)

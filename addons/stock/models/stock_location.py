@@ -231,22 +231,30 @@ class PushedFlow(models.Model):
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
     sequence = fields.Integer('Sequence')
 
-    def _apply(self, move):
-        new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        if self.auto == 'transparent':
-            move.write({
-                'date': new_date,
-                'date_expected': new_date,
-                'location_dest_id': self.location_dest_id.id})
-            # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_dest_id != move.location_dest_id:
-                # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
-        else:
-            new_move_vals = self._prepare_move_copy_values(move, new_date)
-            new_move = move.copy(new_move_vals)
-            move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
+    def _apply(self, moves):
+        moves_to_confirm = self.env['stock.move']
+        moves_to_push = self.env['stock.move']
+        for move in moves:
+            new_date = (datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta.relativedelta(days=self.delay)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            if self.auto == 'transparent':
+                move.write({
+                    'date': new_date,
+                    'date_expected': new_date,
+                    'location_dest_id': self.location_dest_id.id})
+                # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
+                if self.location_dest_id != move.location_dest_id:
+                    # TDE FIXME: should probably be done in the move model IMO
+                    moves_to_push |= move
+            else:
+                new_move_vals = self._prepare_move_copy_values(move, new_date)
+                new_move = move.copy(new_move_vals)
+                move.write({'move_dest_ids': [(4, new_move.id)]})
+                moves_to_confirm |= new_move
+
+        if moves_to_confirm:
+            moves_to_confirm._action_confirm()
+        if moves_to_push:
+            moves_to_push._push_apply()
 
     def _prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = {
