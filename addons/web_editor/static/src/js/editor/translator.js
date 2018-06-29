@@ -96,13 +96,17 @@ var ImageAttributeTranslateDialog = weWidgets.Dialog.extend({
      */
     init: function (parent, options, node) {
         this._super(parent, _.extend({
-            title: _t("Translate Image Attribute"),
+            title: _t("Translate Image Attributes"),
             buttons: [
                 {text:  _t("Close"), close: true},
             ],
         }, options || {}));
         this.translation = $(node).data('translation');
-        this.attributeString = {alt: _t("Description"), title: _t("Tooltip"), src: _t("Image")};
+        this.attributeData = {
+            alt: {string: _t("Description"), substring: _t("(ALT TAG)"), title: _t("Tooltip (TITLE ATG)")},
+            title: {string: _t("Tooltip"), substring: _t("(TITLE TAG)"), title: _t("'Title tag' is shown as a tooltip when you hover the picture.")},
+            src: {string: _t("Image"), title: _t("Click to change image")},
+        };
     },
 
     //--------------------------------------------------------------------------
@@ -278,6 +282,14 @@ var TranslatorMenuBar = Widget.extend({
         this.rte.cancel();
         this.$target.each(function () {
             $(this).html(self._getTranlationObject(this).value);
+        });
+        this.$target_attr.each(function () {
+            var $target = $(this);
+            _.each($target.data('translation'), function (node, attr) {
+                var value = self._getTranlationObject(node).value;
+                $target.attr(attr, value);
+                $(node).html(value);
+            });
         });
         this._unmarkTranslatableNode();
         this.trigger('cancel');

@@ -16,16 +16,15 @@
     <div t-name="web_editor.ImageAttributeTranslateDialog">
         <t t-foreach="widget.translation" t-as="attr">
             <t t-set="value" t-value="widget.translation[attr].innerHTML"/>
-            <div class="form-group">
-                <label><t t-esc="widget.attributeString[attr] or attr"/></label>
-                <input t-attf-class="form-control #{attr === 'src' ? 'hidden' : ''}" t-att-value="value" t-att-data-attr="attr"/>
-                <div t-if="attr === 'src'" class="row">
-                    <div class="col-md-4">
-                        <a href="#" class="thumbnail translate_img_preview">
-                            <img t-att-src="value" title="Click to change image"/>
-                        </a>
-                    </div>
-                </div>
+            <div class="form-group row">
+                <t t-set="attribute_data" t-value="widget.attributeData[attr]"/>
+                <label class="col-md-3 col-form-label"><strong><t t-esc="attribute_data.string or attr"/></strong> <small class="text-muted"><t t-esc="attribute_data.substring"/></small></label>
+                <input t-attf-class="form-control col-md-8 #{attr === 'src' ? 'o_hidden' : ''}" t-att-value="value" t-att-data-attr="attr" t-att-title="attribute_data.title"/>
+                <t t-if="attr === 'src'">
+                    <a href="#" class="thumbnail translate_img_preview col-md-4 p-0">
+                        <img t-att-src="value" t-att-title="attribute_data.title" class="img img-fluid mx-auto"/>
+                    </a>
+                </t>
             </div>
         </t>
     </div>
