@@ -480,7 +480,7 @@ ListRenderer.include({
         if (this.currentRow > 0) {
             this._selectCell(this.currentRow - 1, this.columns.length - 1);
         } else {
-            this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+            this.unselectRow().then(this.trigger.bind(this, 'add_record'));
         }
     },
     /**
