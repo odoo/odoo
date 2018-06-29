@@ -58,7 +58,7 @@ class SaleOrder(models.Model):
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
+            refunds = invoice_ids.search([('origin', 'like', order.name), ('company_id', '=', order.company_id.id)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
@@ -400,6 +400,9 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         invoices = {}
         references = {}
+        invoices_origin = {}
+        invoices_name = {}
+
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
@@ -410,13 +413,14 @@ class SaleOrder(models.Model):
                     invoice = inv_obj.create(inv_data)
                     references[invoice] = order
                     invoices[group_key] = invoice
+                    invoices_origin[group_key] = [invoice.origin]
+                    invoices_name[group_key] = [invoice.name]
                 elif group_key in invoices:
-                    vals = {}
-                    if order.name not in invoices[group_key].origin.split(', '):
-                        vals['origin'] = invoices[group_key].origin + ', ' + order.name
-                    if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', ') and order.client_order_ref != invoices[group_key].name:
-                        vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
-                    invoices[group_key].write(vals)
+                    if order.name not in invoices_origin[group_key]:
+                        invoices_origin[group_key].append(order.name)
+                    if order.client_order_ref and order.client_order_ref not in invoices_name[group_key]:
+                        invoices_name[group_key].append(order.client_order_ref)
+
                 if line.qty_to_invoice > 0:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif line.qty_to_invoice < 0 and final:
@@ -424,7 +428,11 @@ class SaleOrder(models.Model):
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:
-                    references[invoice] = references[invoice] | order
+                    references[invoices[group_key]] |= order
+
+        for group_key in invoices:
+            invoices[group_key].write({'name': ', '.join(invoices_name[group_key]),
+                                       'origin': ', '.join(invoices_origin[group_key])})
 
         if not invoices:
             raise UserError(_('There is no invoiceable line.'))
@@ -567,7 +575,7 @@ class SaleOrder(models.Model):
                 report_pages.append([])
             # Append category to current report page
             report_pages[-1].append({
-                'name': category and category.name or 'Uncategorized',
+                'name': category and category.name or _('Uncategorized'),
                 'subtotal': category and category.subtotal,
                 'pagebreak': category and category.pagebreak,
                 'lines': list(lines)
@@ -580,20 +588,15 @@ class SaleOrder(models.Model):
         self.ensure_one()
         res = {}
         for line in self.order_line:
-            base_tax = 0
+            price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+            taxes = line.tax_id.compute_all(price_reduce, quantity=line.product_uom_qty, product=line.product_id, partner=self.partner_shipping_id)['taxes']
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, {'amount': 0.0, 'base': 0.0})
-                # FORWARD-PORT UP TO SAAS-17
-                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
-                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
-                    res[group]['amount'] += t['amount']
-                    res[group]['base'] += t['base']
-                if tax.include_base_amount:
-                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
-                                                partner=self.partner_shipping_id)['taxes'][0]['amount']
+                    if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
+                        res[group]['amount'] += t['amount']
+                        res[group]['base'] += t['base']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]['amount'], l[1]['base'], len(res)) for l in res]
         return res
@@ -1072,23 +1075,21 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def name_get(self):
-        if self._context.get('sale_show_order_product_name'):
-            result = []
-            for so_line in self:
-                name = '%s - %s' % (so_line.order_id.name, so_line.product_id.name)
-                result.append((so_line.id, name))
-            return result
-        return super(SaleOrderLine, self).name_get()
+        result = []
+        for so_line in self:
+            name = '%s - %s' % (so_line.order_id.name, so_line.name.split('\n')[0] or so_line.product_id.name)
+            if so_line.order_partner_id.ref:
+                name = '%s (%s)' % (name, so_line.order_partner_id.ref)
+            result.append((so_line.id, name))
+        return result
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if self._context.get('sale_show_order_product_name'):
-            if operator in ('ilike', 'like', '=', '=like', '=ilike'):
-                domain = expression.AND([
-                    args or [],
-                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
-                ])
-                return self.search(domain, limit=limit).name_get()
+        if operator in ('ilike', 'like', '=', '=like', '=ilike'):
+            args = expression.AND([
+                args or [],
+                ['|', ('order_id.name', operator, name), ('name', operator, name)]
+            ])
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
 
     @api.multi
@@ -1190,7 +1191,7 @@ class SaleOrderLine(models.Model):
             on SO lines. This method is a hook: since analytic line are used for timesheet,
             expense, ...  each use case should provide its part of the domain.
         """
-        return [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
+        return ['&', ('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
 
     @api.multi
     def _analytic_compute_delivered_quantity(self):

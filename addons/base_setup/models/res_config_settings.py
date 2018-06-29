@@ -90,6 +90,8 @@ class ResConfigSettings(models.TransientModel):
 
     @api.multi
     def edit_external_header(self):
+        if not self.external_report_layout:
+            return False
         return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
 
     @api.multi

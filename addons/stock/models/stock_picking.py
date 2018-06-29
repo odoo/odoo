@@ -300,17 +300,22 @@ class Picking(models.Model):
     product_id = fields.Many2one('product.product', 'Product', related='move_lines.product_id')
     show_operations = fields.Boolean(compute='_compute_show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
+    has_tracking = fields.Boolean(compute='_compute_has_tracking')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
     ]
+
+    def _compute_has_tracking(self):
+        for picking in self:
+            picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_lines)
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
         for picking in self:
             if self.env.context.get('force_detailed_view'):
                 picking.show_operations = True
-                break
+                continue
             if picking.picking_type_id.show_operations:
                 if (picking.state == 'draft' and not self.env.context.get('planned_picking')) or picking.state != 'draft':
                     picking.show_operations = True
@@ -378,9 +383,9 @@ class Picking(models.Model):
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
         if self.move_type == 'direct':
-            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = min(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
         else:
-            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [False])
+            self.scheduled_date = max(self.move_lines.mapped('date_expected') or [fields.Datetime.now()])
 
     @api.one
     def _set_scheduled_date(self):
@@ -659,6 +664,7 @@ class Picking(models.Model):
         all_in = True
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
         keys = ['product_id', 'lot_id']
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         grouped_quants = {}
         for k, g in groupby(sorted(package.quant_ids, key=itemgetter(*keys)), key=itemgetter(*keys)):
@@ -667,8 +673,8 @@ class Picking(models.Model):
         grouped_ops = {}
         for k, g in groupby(sorted(pack_move_lines, key=itemgetter(*keys)), key=itemgetter(*keys)):
             grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
-        if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
-                or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):
+        if any(not float_is_zero(grouped_quants.get(key, 0) - grouped_ops.get(key, 0), precision_digits=precision_digits) for key in grouped_quants) \
+                or any(not float_is_zero(grouped_ops.get(key, 0) - grouped_quants.get(key, 0), precision_digits=precision_digits) for key in grouped_ops):
             all_in = False
         return all_in
 
@@ -694,7 +700,8 @@ class Picking(models.Model):
 
         # If no lots when needed, raise error
         picking_type = self.picking_type_id
-        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        no_quantities_done = all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in self.move_line_ids)
         no_reserved_quantities = all(float_is_zero(move_line.product_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in self.move_line_ids)
         if no_reserved_quantities and no_quantities_done:
             raise UserError(_('You cannot validate a transfer if you have not processed any quantity. You should rather cancel the transfer.'))
@@ -813,31 +820,25 @@ class Picking(models.Model):
 
     @api.multi
     def _create_backorder(self, backorder_moves=[]):
-        """ Move all non-done lines into a new backorder picking. If the key 'do_only_split' is given in the context, then move all lines not in context.get('split', []) instead of all non-done lines.
+        """ Move all non-done lines into a new backorder picking.
         """
-        # TDE note: o2o conversion, todo multi
         backorders = self.env['stock.picking']
         for picking in self:
-            backorder_moves = backorder_moves or picking.move_lines
-            if self._context.get('do_only_split'):
-                not_done_bo_moves = backorder_moves.filtered(lambda move: move.id not in self._context.get('split', []))
-            else:
-                not_done_bo_moves = backorder_moves.filtered(lambda move: move.state not in ('done', 'cancel'))
-            if not not_done_bo_moves:
-                continue
-            backorder_picking = picking.copy({
-                'name': '/',
-                'move_lines': [],
-                'move_line_ids': [],
-                'backorder_id': picking.id
-            })
-            picking.message_post(body=_("Back order <em>%s</em> <b>created</b>.") % (backorder_picking.name))
-            not_done_bo_moves.write({'picking_id': backorder_picking.id})
-            if not picking.date_done:
-                picking.write({'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
-            backorder_picking.action_confirm()
-            backorder_picking.action_assign()
-            backorders |= backorder_picking
+            moves_to_backorder = picking.move_lines.filtered(lambda x: x.state not in ('done', 'cancel'))
+            if moves_to_backorder:
+                backorder_picking = picking.copy({
+                    'name': '/',
+                    'move_lines': [],
+                    'move_line_ids': [],
+                    'backorder_id': picking.id
+                })
+                picking.message_post(
+                    _('The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has been created.') % (
+                        backorder_picking.id, backorder_picking.name))
+                moves_to_backorder.write({'picking_id': backorder_picking.id})
+                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
+                backorder_picking.action_assign()
+                backorders |= backorder_picking
         return backorders
 
     def _put_in_pack(self):

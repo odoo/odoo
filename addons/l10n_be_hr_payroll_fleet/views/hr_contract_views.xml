@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='transport_mode']" position="after">
                 <field name="new_car" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('available_cars_amount', '&gt;', 3)]}"/>
-                <label for="car_id" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}"/>
-                <div attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}">
+                <label for="car_id" attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}" name="car_id_label"/>
+                <div attrs="{'invisible': ['|', ('transport_mode', '!=', 'company_car'), ('new_car', '=', True)]}" name="car_id_div">
                     <field name="car_id" nolabel="1" attrs="{'invisible': [('new_car', '=', True)]}"/>
                     <field name="available_cars_amount" invisible="1"/>
                 </div>

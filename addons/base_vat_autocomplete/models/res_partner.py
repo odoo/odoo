@@ -12,6 +12,9 @@ _logger = logging.getLogger(__name__)
 
 try:
     import stdnum.eu.vat as stdnum_vat
+    if not hasattr(stdnum_vat, "country_codes"):
+        # stdnum version >= 1.9
+        stdnum_vat.country_codes = stdnum_vat._country_codes
 except ImportError:
     _logger.warning('Python `stdnum` library not found, unable to call VIES service to detect address based on VAT number.')
     stdnum_vat = None
@@ -29,6 +32,11 @@ class ResPartner(models.Model):
                     cp = lines.pop()
                     city = lines.pop()
                     return (cp, city)
+            elif country == 'SE':
+                result = re.match('([0-9]{3}\s?[0-9]{2})\s?([A-Z]+)', lines[-1])
+                if result:
+                    lines.pop()
+                    return (result.group(1), result.group(2))
             else:
                 result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
                 if result:

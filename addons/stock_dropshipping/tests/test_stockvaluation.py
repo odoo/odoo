@@ -11,13 +11,14 @@ class TestStockValuation(AccountingTestCase):
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.partner_id = self.env.ref('base.res_partner_1')
         self.product1 = self.env.ref('product.product_product_8')
+        self.categ_id = self.product1.categ_id
 
-        self.acc_payable = self.env['account.account'].search([('name', '=', 'Account Payable')]).id
-        self.acc_expense = self.env['account.account'].search([('name', '=', 'Expenses')]).id
-        self.acc_receivable = self.env['account.account'].search([('name', '=', 'Account Receivable')]).id
-        self.acc_sale = self.env['account.account'].search([('name', '=', 'Product Sales')]).id
-        self.acc_stock_in = self.env['account.account'].search([('name', '=', 'Stock Interim Account (Received)')]).id
-        self.acc_stock_out = self.env['account.account'].search([('name', '=', 'Stock Interim Account (Delivered)')]).id
+        self.acc_payable = self.partner_id.property_account_payable_id.id
+        self.acc_expense = self.categ_id.property_account_expense_categ_id.id
+        self.acc_receivable = self.partner_id.property_account_receivable_id.id
+        self.acc_sale = self.categ_id.property_account_income_categ_id.id
+        self.acc_stock_in = self.categ_id.property_stock_account_input_categ_id.id
+        self.acc_stock_out = self.categ_id.property_stock_account_output_categ_id.id
 
     def _dropship_product1(self):
         # enable the dropship and MTO route on the product

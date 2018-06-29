@@ -57,7 +57,7 @@
 
     <template id='recommended_product' inherit_id="website_sale.recommended_products" name="Alternative Products">
         <xpath expr="//h3" position="replace">
-            <t t-set="ids" t-value="str(product.id) + ','+ ','.join([str(a) for a in product.alternative_product_ids.ids])"></t>
+            <t t-set="ids" t-value="str(product.product_variant_id.id) + ','+ ','.join([str(a) for a in product.alternative_product_ids.mapped('product_variant_id.id')])"/>
             <div><span class='h3'>Suggested alternatives: </span><a class="btn btn-primary" t-attf-href="/shop/compare/?products=#{ids}"><i class="fa fa-exchange"></i> Compare</a></div>
         </xpath>
     </template>
@@ -74,7 +74,7 @@
                             <thead>
                                 <td class='td-top-left'></td>
                                 <td t-foreach="products" t-as="product">
-                                    <a t-attf-href="/shop/compare/?products=#{','.join([str(id) for id in products._ids if id != product.id])}" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
+                                    <a href="#" t-att-data-product_product_id="product.id" class="o_comparelist_remove" t-if="len(products) &gt; 2">
                                         <strong class='pull-right'>x</strong>
                                     </a>
                                     <a t-att-href="'/shop/product/%s' % slug(product.product_tmpl_id)">

@@ -166,7 +166,7 @@ root can have the following attributes:
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
     (``font-style: italic``), or any `bootstrap contextual color
-    <http://getbootstrap.com/components/#available-variations>`_ (``danger``,
+    <https://getbootstrap.com/docs/3.3/components/#available-variations>`_ (``danger``,
     ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
 ``create``, ``edit``, ``delete``
     allows *dis*\ abling the corresponding action in the view by setting the
@@ -954,7 +954,9 @@ calendar view are:
 ``readonly_form_view_id``
     view to open in readonly mode
 ``form_view_id``
-    view to open when the user create or edit an event
+    view to open when the user create or edit an event. Note that if this attribute
+    is not set, the calendar view will fall back to the id of the form view in the
+    current action, if any.
 ``event_open_popup``
     If the option 'event_open_popup' is set to true, then the calendar view will
     open events (or records) in a FormViewDialog. Otherwise, it will open events
@@ -1055,6 +1057,10 @@ take the following attributes:
   dictionary with the "group by" field as key and the maximum consolidation
   value that can be reached before displaying the cell in red
   (e.g. ``{"user_id": 100}``)
+``consolidation_exclude``
+  name of the field that describe if the task has to be excluded
+  from the consolidation
+  if set to true it displays a striped zone in the consolidation line
 
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
@@ -1069,11 +1075,9 @@ take the following attributes:
 ``drag_resize``
   resizing of the tasks, default is ``true``
 
-.. ``progress``
-    name of a field providing the completion percentage for the record's event,
-    between 0 and 100
-.. consolidation_exclude
-.. consolidation_color
+``progress``
+  name of a field providing the completion percentage for the record's event,
+  between 0 and 100
 
 .. _reference/views/diagram:
 

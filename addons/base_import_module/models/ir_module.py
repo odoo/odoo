@@ -24,6 +24,13 @@ class IrModule(models.Model):
 
     imported = fields.Boolean(string="Imported Module")
 
+    @api.depends('name')
+    def _get_latest_version(self):
+        imported_modules = self.filtered(lambda m: m.imported and m.latest_version)
+        for module in imported_modules:
+            module.installed_version = module.latest_version
+        super(IrModule, self - imported_modules)._get_latest_version()
+
     @api.multi
     def _import_module(self, module, path, force=False):
         known_mods = self.search([])
@@ -32,6 +39,8 @@ class IrModule(models.Model):
 
         terp = load_information_from_description_file(module, mod_path=path)
         values = self.get_values_from_terp(terp)
+        if 'version' in terp:
+            values['latest_version'] = terp['version']
 
         unmet_dependencies = set(terp['depends']).difference(installed_mods)
 

@@ -24,4 +24,8 @@
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
+
+    # needed because dependencies can't be changed in a stable version
+    # TODO in master: add sale_payment to depends and remove this
+    'post_init_hook': '_install_sale_payment',
 }

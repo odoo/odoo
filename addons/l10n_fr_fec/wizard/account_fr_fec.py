@@ -220,7 +220,7 @@ class AccountFrFec(models.TransientModel):
             replace(MIN(aa.name), '|', '/') AS CompteLib,
             CASE WHEN rp.ref IS null OR rp.ref = ''
             THEN COALESCE('ID ' || rp.id, '')
-            ELSE rp.ref
+            ELSE replace(rp.ref, '|', '/')
             END
             AS CompAuxNum,
             COALESCE(replace(rp.name, '|', '/'), '') AS CompAuxLib,
@@ -278,7 +278,7 @@ class AccountFrFec(models.TransientModel):
             replace(replace(aa.name, '|', '/'), '\t', '') AS CompteLib,
             CASE WHEN rp.ref IS null OR rp.ref = ''
             THEN COALESCE('ID ' || rp.id, '')
-            ELSE rp.ref
+            ELSE replace(rp.ref, '|', '/')
             END
             AS CompAuxNum,
             COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '') AS CompAuxLib,

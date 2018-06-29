@@ -185,6 +185,73 @@ class TestPickShip(TestStockCommon):
         # the client picking should not be assigned anymore, as we returned partially what we took
         self.assertEqual(picking_client.state, 'confirmed')
 
+    def test_mto_moves_return_return(self):
+        picking_pick, picking_client = self.create_pick_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '123456789'
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0, lot_id=lot)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.button_validate()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_client.state, 'assigned')
+
+        # return this picking
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_pick.move_lines[0].move_line_ids[0].write({
+            'qty_done': 10.0,
+            'lot_id': lot.id,
+        })
+        return_pick.button_validate()
+        # return this return of this picking
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_id=return_pick.id)\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        return_return_pick.move_lines[0].move_line_ids[0].write({
+            'qty_done': 10.0,
+            'lot_id': lot.id,
+        })
+        return_return_pick.button_validate()
+        # test computation of traceability
+        vals = {
+            'line_id': 1,
+            'model_name': 'stock.move.line',
+            'level': 11,
+            'parent_quant': False,
+        }
+        lines = self.env['stock.traceability.report'].get_lines(
+            model_id=return_return_pick.move_line_ids[0].id,
+            stream='upstream',
+            **vals
+        )
+        self.assertEqual(
+            [l.get('res_id') for l in lines],
+            [return_return_pick.id, return_pick.id, picking_pick.id],
+            "Upstream computation from return of return worked"
+        )
+        lines = self.env['stock.traceability.report'].get_lines(
+            model_id=picking_pick.move_line_ids[0].id,
+            stream='downstream',
+            **vals
+        )
+        self.assertEqual(
+            [l.get('res_id') for l in lines],
+            [picking_pick.id, return_pick.id, return_return_pick.id],
+            "Downstream computation from original picking worked"
+        )
+
     def test_mto_resupply_cancel_ship(self):
         """ This test simulates a pick pack ship with a resupply route
         set. Pick and pack are validated, ship is cancelled. This test
@@ -962,6 +1029,82 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(sum(move1.move_line_ids.mapped('qty_done')), 2.0)
         self.assertEqual(move1.state, 'done')
+
+    def test_extra_move_4(self):
+        """ Create a picking with similar moves (created after
+        confirmation). Action done should propagate all the extra
+        quantity and only merge extra moves in their original moves.
+        """
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5)
+        delivery.action_confirm()
+        delivery.action_assign()
+
+        delivery.write({
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 0,
+                'quantity_done': 10,
+                'state': 'assigned',
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': delivery.id,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+            })]
+        })
+        delivery.action_done()
+        self.assertEqual(len(delivery.move_lines), 2, 'Move should not be merged together')
+        for move in delivery.move_lines:
+            self.assertEqual(move.quantity_done, move.product_uom_qty, 'Initial demand should be equals to quantity done')
+
+    def test_extra_move_5(self):
+        """ Create a picking a move that is problematic with
+        rounding (5.95 - 5.5 = 0.4500000000000002). Ensure that
+        initial demand is corrct afer action_done and backoder
+        are not created.
+        """
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5.5,
+            'quantity_done': 5.95,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 5.5)
+        delivery.action_confirm()
+        delivery.action_assign()
+        delivery.action_done()
+        self.assertEqual(delivery.move_lines.product_uom_qty, 5.95, 'Move initial demand should be 5.95')
+
+        back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
+        self.assertFalse(back_order, 'There should be no back order')
 
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with

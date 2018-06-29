@@ -91,7 +91,7 @@ class SaleOrder(models.Model):
         # Create the sales order line
         values = {
             'order_id': self.id,
-            'name': carrier.name,
+            'name': carrier.with_context(lang=self.partner_id.lang).name,
             'product_uom_qty': 1,
             'product_uom': carrier.product_id.uom_id.id,
             'product_id': carrier.product_id.id,

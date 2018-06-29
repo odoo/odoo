@@ -145,15 +145,22 @@ var Menu = Widget.extend({
        });
     },
     /**
-     * Call open_menu with the first menu_item matching an action_id
+     * Call open_menu on a menu_item that matches the action_id
+     *
+     * If `menuID` is a match on this action, open this menu_item.
+     * Otherwise open the first menu_item that matches the action_id.
      *
      * @param {Number} id the action_id to match
+     * @param {Number} [menuID] a menu ID that may match with provided action
      */
-    open_action: function (id) {
+    open_action: function (id, menuID) {
         var $menu = this.$el.add(this.$secondary_menus).find('a[data-action-id="' + id + '"]');
-        var menu_id = $menu.data('menu');
-        if (menu_id) {
-            this.open_menu(menu_id);
+        if (!(menuID && $menu.filter("[data-menu='" + menuID + "']").length)) {
+            // menuID doesn't match action, so pick first menu_item
+            menuID = $menu.data('menu');
+        }
+        if (menuID) {
+            this.open_menu(menuID);
         }
     },
     /**

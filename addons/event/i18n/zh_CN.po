@@ -5,13 +5,14 @@
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
-# Rona Lin <ssauapw@qq.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Martin Trigaux, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
+# Rona Lin <ssauapw@qq.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 # Michael Chong <michaelchong2005@gmail.com>, 2017
 # SHOM <shanmuxin@yeah.net>, 2017
@@ -386,26 +387,26 @@ msgstr ""
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px; font-size:16px;\">\n"
 "                    <p style=\"font-size:16px;\">\n"
-"                        Hello,\n"
+"                        您好！\n"
 "                    </p>\n"
 "                    <p style=\"font-size:16px;\">\n"
-"                        我们很高兴提醒您\n"
+"                        我们很高兴提醒您以下活动\n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            ${object.event_id.name}\n"
 "                        % endif\n"
 "                        即将开始\n"
-"                        <strong>${object.get_date_range_str()}</strong>.\n"
+"                        <strong>${object.get_date_range_str()}</strong>。\n"
 "                    </p><p style=\"font-size:16px;\">\n"
-"                       我们确认您的注册，希望能在那里见到您，\n"
+"                       我们确认您的注册，希望届时见到您，\n"
 "                    </p><p style=\"font-size:16px; margin-bottom: 30px\">\n"
 "                        <i>\n"
 "                           -- <br/>\n"
 "                        % if object.event_id.organizer_id:\n"
 "                            ${object.event_id.organizer_id.name}\n"
 "                        % else:\n"
-"                            The organizers.\n"
+"                            组织者。\n"
 "                        % endif\n"
 "                        </i>\n"
 "                    </p>\n"
@@ -485,7 +486,7 @@ msgstr ""
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>将此活动添加到您的日历汇总</strong>\n"
+"                                <strong>将此活动添加到您的日历</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
 "                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
@@ -507,10 +508,10 @@ msgstr ""
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Sent by ${object.company_id.name}</p>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">发送者 ${object.company_id.name}</p>\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                    <div>\n"
-"                        发现<a href=\"/event\" style=\"text-decoration:none;color:#717188;\">我们所有的活动</a>。\n"
+"                        发现<a href=\"/event\" style=\"text-decoration:none;color:#717188;\">我们的所有活动</a>。\n"
 "                    </div>\n"
 "                    % endif\n"
 "                </td>\n"
@@ -533,8 +534,8 @@ msgstr ""
 "\n"
 "<p>尊敬的 ${object.name}，</p>\n"
 "<p>感谢您的查询。</p>\n"
-"<p>这是您参加活动 ${object.event_id.name} 的徽章。</p>\n"
-"<p>如果您有任何问题，请告知我们。</p>\n"
+"<p>这是您参加活动 ${object.event_id.name} 的勋章。</p>\n"
+"<p>如果您有任何疑问，请告知我们。</p>\n"
 "<p>诚挚的问候，</p>"
 
 #. module: event
@@ -667,7 +668,7 @@ msgstr "<strong>商务应用会议</strong>"
 msgid ""
 "<strong>Having attended this course, participants should be able "
 "to:</strong>"
-msgstr "<STRONG>参加这门课程，学员应具备：</STRONG>"
+msgstr "<STRONG>参加了这门课程，学员应具备：</STRONG>"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -863,7 +864,7 @@ msgstr "Bootstrap CSS"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Bring your own laptop."
-msgstr "带上你自己的笔记本电脑"
+msgstr "带上你自己的笔记本电脑。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -918,7 +919,7 @@ msgstr "点击添加新的参与者。"
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr "点击创建一个新的事件"
+msgstr "点击创建一个新的事件。"
 
 #. module: event
 #: code:addons/event/models/event.py:264
@@ -987,7 +988,7 @@ msgstr "已确认"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr "确认出席者"
+msgstr "已确认出席者"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1130,7 +1131,7 @@ msgstr "完成"
 msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
-msgstr "在该会议中，我们的团队将会非常详细的介绍该应用，你也会了解到该应用的优点"
+msgstr "在该会议中，我们的团队将会非常详细的介绍我们的业务应用。你将会了解到使用该应用的优点。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -1147,7 +1148,7 @@ msgstr "电子邮件排徎"
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail_template_id
 msgid "Email Template"
-msgstr "Email模板"
+msgstr "电邮模板"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
@@ -1171,7 +1172,7 @@ msgstr "活动"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "自动发邮件"
+msgstr "自动发送活动邮件"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1257,7 +1258,7 @@ msgstr "活动类型"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr "活动：邮件计划"
+msgstr "活动：邮件安排工具"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1308,7 +1309,7 @@ msgstr "在新建状态的活动"
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Exhibition"
-msgstr "展示"
+msgstr "展览"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1335,7 +1336,7 @@ msgstr "对于任何额外的信息，请和我们取得联系"
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
-msgstr "对于每一个事件，你可以定义一个注册人数的最大值（与会者的人数），高于这个数字的注册将不被接受。"
+msgstr "对于每一个事件，你可以定义注册席位的最大值（与会者的人数），高于这个数字的注册将不被接受。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_min
@@ -1343,7 +1344,8 @@ msgid ""
 "For each event you can define a minimum reserved seats (number of "
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
-msgstr "对于每一个事件你都可以定义一个最小的座位数（与会者）如果注册的人数没有达到这个数目，该时间讲不被确认（最小值设为0将不受该条件限制）"
+msgstr ""
+"对于每一个事件你都可以定义一个最小的座位数（与会者），如果注册的人数没有达到此所述登记数目，该活动则不被确认（最小值设为0将不受该条件限制）"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1353,7 +1355,7 @@ msgstr "泛函网络研讨会"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr "主要应用的业务流程"
+msgstr "主要应用的功能流程；"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1366,7 +1368,7 @@ msgstr "功能"
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr "分组"
+msgstr "分组按"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1434,7 +1436,7 @@ msgstr "马上"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Install and administer your own server;"
-msgstr "安装并管理自己的服务器"
+msgstr "安装并管理自己的服务器；"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1483,7 +1485,7 @@ msgstr "当你选择这个活动，将选择默认最大值"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_min
 msgid "It will select this default minimum value when you choose this event"
-msgstr "当你选择这个活动，将选择默认最小值"
+msgstr "当你选择这个活动，将选择默认最小值。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_color
@@ -1549,7 +1551,7 @@ msgstr "循环"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Luigi Roni, Senior Event Manager"
-msgstr "Luigi Roni， 高级经理"
+msgstr "Luigi Roni， 高级活动经理"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
@@ -1570,7 +1572,7 @@ msgstr "邮件调度"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_mail_schedulers
 msgid "Mail Schedulers"
-msgstr "邮件调度"
+msgstr "邮件排程器"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
@@ -1580,7 +1582,7 @@ msgstr "针对活动类型的邮件排程"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
 msgid "Mail Sent"
-msgstr "电子邮件发送"
+msgstr "已经发送的电子邮件"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
@@ -1595,7 +1597,7 @@ msgstr "管理并发布具有跟踪记录的时间表"
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr "管理员"
+msgstr "经理"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
@@ -1651,13 +1653,13 @@ msgstr "我的活动"
 #: code:addons/event/models/event.py:258
 #, python-format
 msgid "No more available seats."
-msgstr "没有更多可用的席位"
+msgstr "没有更多可用的席位。"
 
 #. module: event
 #: code:addons/event/models/event.py:363
 #, python-format
 msgid "No more seats available for this event."
-msgstr "该时间没有更多可用座位"
+msgstr "该活动没有更多可用座位。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_expected
@@ -1755,7 +1757,7 @@ msgstr "参与者"
 msgid ""
 "Participants are expected to have some knowledge in programming. A basic "
 "knowledge of the Python programming is recommended."
-msgstr "参与者需要有一定的变成知识，最好懂Python"
+msgstr "参与者需要有一定的程式知识。建议最好懂Python程式。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1764,7 +1766,7 @@ msgstr "参与者需要有一定的变成知识，最好懂Python"
 msgid ""
 "Participants preferably have a functional knowledge of our software (see "
 "Functional Training)."
-msgstr "参与者最好最我们的系统的业务流程比较了解（参照功能培训）"
+msgstr "参与者最好是对我们软件的功能知识比较了解（参照功能培训）。"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1784,17 +1786,17 @@ msgstr "实体活动"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Point of Sale (POS), Introduction to report customization."
-msgstr "销售点（POS），报告定制介绍"
+msgstr "销售点（POS），报告定制介绍。"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Project management, Human resources, Contract management."
-msgstr "项目管理，人力资源，合同管理"
+msgstr "项目管理、人力资源、合同管理。"
 
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "采购，销售和采购管理，财务会计"
+msgstr "采购、销售和采购管理、财务会计。"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1839,7 +1841,7 @@ msgstr "注册徽章"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_open
 msgid "Registration Date"
-msgstr "活动日期"
+msgstr "登记日期"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
@@ -1904,7 +1906,7 @@ msgstr "预订的席位"
 #: model:ir.model.fields,field_description:event.field_event_event_user_id
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr "负责人"
+msgstr "负责"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2055,7 +2057,7 @@ msgstr "要获取更多信息，请访问"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
-msgstr "耿宗并计划"
+msgstr "专场和日程"
 
 #. module: event
 #: model:event.type,name:event.event_type_4
@@ -2101,14 +2103,14 @@ msgstr "未确认的席位预订"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Underscore"
-msgstr "强调"
+msgstr "Underscore"
 
 #. module: event
 #: model:event.event,description:event.event_0
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "Understand the development concepts and architecture;"
-msgstr "了解开发概念和结构"
+msgstr "了解开发概念和结构；"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -2172,7 +2174,7 @@ msgstr "可见性"
 #. module: event
 #: model:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr "仓库管理，制造（MRP）& 销售。导入/导出"
+msgstr "仓库管理、制造（MRP）和销售。导入/导出。"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -2240,7 +2242,7 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "drinks and lunch;"
-msgstr "饮料和午餐"
+msgstr "饮料和午餐；"
 
 #. module: event
 #: model:ir.model,name:event.model_event_confirm
@@ -2298,4 +2300,4 @@ msgstr "明天"
 #: model:event.event,description:event.event_1
 #: model:event.event,description:event.event_3
 msgid "training material."
-msgstr "培训资料"
+msgstr "培训资料。"

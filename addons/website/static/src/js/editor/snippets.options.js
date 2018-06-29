@@ -63,9 +63,10 @@ options.registry.company_data = options.Class.extend({
     start: function () {
         var proto = options.registry.company_data.prototype;
         var def;
+        var self = this;
         if (proto.__link === undefined) {
             def = this._rpc({route: '/web/session/get_session_info'}).then(function (session) {
-                return this._rpc({
+                return self._rpc({
                     model: 'res.users',
                     method: 'read',
                     args: [session.uid, ['company_id']],

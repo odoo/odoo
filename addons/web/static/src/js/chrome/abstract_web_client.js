@@ -165,7 +165,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         core.bus.on('connection_restored', this, this.on_connection_restored);
 
         // crash manager integration
-        session.on('error', crash_manager, crash_manager.rpc_error);
+        core.bus.on('rpc_error', crash_manager, crash_manager.rpc_error);
         window.onerror = function (message, file, line, col, error) {
             // Scripts injected in DOM (eg: google API's js files) won't return a clean error on window.onerror.
             // The browser will just give you a 'Script error.' as message and nothing else for security issue.

@@ -44,6 +44,7 @@ class Currency(models.Model):
     ]
 
     @api.multi
+    @api.depends('rate_ids.rate')
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Date.today()
         company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
@@ -101,17 +102,20 @@ class Currency(models.Model):
             logging.getLogger(__name__).warning("The library 'num2words' is missing, cannot render textual amounts.")
             return ""
 
-        fractional_value, integer_value = math.modf(amount)
-        fractional_amount = round(abs(fractional_value), self.decimal_places) * (math.pow(10, self.decimal_places))
+        formatted = "%.{0}f".format(self.decimal_places) % amount
+        parts = formatted.partition('.')
+        integer_value = int(parts[0])
+        fractional_value = int(parts[2] or 0)
+
         lang_code = self.env.context.get('lang') or self.env.user.lang
         lang = self.env['res.lang'].search([('code', '=', lang_code)])
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
-                        amt_value=_num2words(int(integer_value), lang=lang.iso_code),
+                        amt_value=_num2words(integer_value, lang=lang.iso_code),
                         amt_word=self.currency_unit_label,
                         )
-        if not self.is_zero(fractional_value):
+        if not self.is_zero(amount - integer_value):
             amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
-                        amt_value=_num2words(int(fractional_amount), lang=lang.iso_code),
+                        amt_value=_num2words(fractional_value, lang=lang.iso_code),
                         amt_word=self.currency_subunit_label,
                         )
         return amount_words

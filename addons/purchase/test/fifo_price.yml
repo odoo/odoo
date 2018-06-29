@@ -1,10 +1,4 @@
 -
-  Set the company currency as EURO for the sake of repeatibility
--
-  !python {model: res.company}: |
-    company = self.env.ref('base.main_company')
-    company.currency_id = self.env.ref('base.EUR')
--
   Set a product as using fifo price
 -
   !record {model: product.product, id: product_fifo_icecream}:

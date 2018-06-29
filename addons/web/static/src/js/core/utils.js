@@ -228,7 +228,7 @@ var utils = {
      * @returns {boolean}
      */
     is_bin_size: function (v) {
-        return (/^\d+(\.\d*)? \w+$/).test(v);
+        return (/^\d+(\.\d*)? [^0-9]+$/).test(v);
     },
     /**
      * @param {any} node

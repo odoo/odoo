@@ -26,7 +26,10 @@ class SaleOrder(models.Model):
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):
         for order in self:
-            order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
+            if self.env.user.has_group('sale.group_show_price_subtotal'):
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
+            else:
+                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
 
     @api.depends('order_line.is_delivery')
     def _compute_has_delivery(self):
@@ -62,12 +65,11 @@ class SaleOrder(models.Model):
                         carrier = delivery
                         break
                 self.write({'carrier_id': carrier.id})
+            self._remove_delivery_line()
             if carrier:
                 self.get_delivery_price()
                 if self.delivery_rating_success:
                     self.set_delivery_line()
-            else:
-                self._remove_delivery_line()
 
         return bool(carrier)
 

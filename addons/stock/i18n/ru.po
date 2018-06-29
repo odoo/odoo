@@ -23,13 +23,14 @@
 # Mekan Bash <tmbashimov@gmail.com>, 2017
 # Dmitry sky <d.v.selitsky@gmail.com>, 2017
 # Yuriy Ney <k_wizard@mail.ru>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:42+0000\n"
 "PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2017\n"
+"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1412,27 +1413,27 @@ msgstr "Вычислить"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Расчет цены и доставка DHL"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Расчет цены и доставка FedEx"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Расчет цены и доставка UPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Расчет цены и доставка USPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Расчет цены и доставка bpost"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
@@ -2482,7 +2483,7 @@ msgstr "Полное Название Места хранения"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
-msgstr ""
+msgstr "Будущие действия"
 
 #. module: stock
 #: code:addons/stock/models/product.py:330
@@ -3067,7 +3068,7 @@ msgstr "Место входа"
 #: code:addons/stock/models/stock_scrap.py:131
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "Недостаточное количество"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
@@ -3311,7 +3312,7 @@ msgstr "Инвентаризация"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_is_locked
 #: model:ir.model.fields,field_description:stock.field_stock_picking_is_locked
 msgid "Is Locked"
-msgstr ""
+msgstr "Заблокировано"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_is_processed
@@ -3537,7 +3538,7 @@ msgstr "Позже"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
-msgstr ""
+msgstr "Действия с опозданием"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -4026,7 +4027,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
-msgstr ""
+msgstr "Моя деятельность"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_name
@@ -5005,7 +5006,7 @@ msgstr "Перемещение Продукта"
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "Product Moves"
-msgstr ""
+msgstr "Движения продукта"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
@@ -5730,7 +5731,7 @@ msgstr "Перемещение брака"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_scrap
 msgid "Scrap Orders"
-msgstr ""
+msgstr "Заказы по браку"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_scrapped
@@ -5801,7 +5802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Продавайте и покупайте товары в различных единицах измерения"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_sequence
@@ -6482,7 +6483,7 @@ msgstr "Новое местоположение, куда товары долж�
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "The operation type determines the picking view"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7614,6 +7615,8 @@ msgstr "Вы можете удалить только черновик пере�
 #, python-format
 msgid "You can only process 1.0 %s for products with unique serial number."
 msgstr ""
+"Вы можете создать только 1.0 %s для продукции с уникальными серийными "
+"номерами."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner

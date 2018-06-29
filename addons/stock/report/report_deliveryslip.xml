@@ -53,20 +53,19 @@
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
-                                <th><strong>Ordered Quantity</strong></th>
+                                <th><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="o.move_lines" t-as="move">
                                 <td><span t-field="move.product_id"/></td>
                                 <td>
-                                    <span t-field="move.ordered_qty"/>
+                                    <span t-field="move.quantity_done"/>
                                     <span t-field="move.product_uom"/>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <t t-set="backorder" t-value="False"/>
                     <table class="table table-condensed mt48" t-if="o.move_line_ids">
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_production_lot"/>
                         <thead>
@@ -75,10 +74,7 @@
                                 <th name="lot_serial" t-if="has_serial_number">
                                     Lot/Serial Number
                                 </th>
-                                <th class="text-center"><strong>Ordered Quantity</strong></th>
-                                <th t-if="any([move_line.state == 'done' for move_line in o.move_line_ids])" class="text-right">
-                                        <strong>Delivered Quantity</strong>
-                                </th>
+                                <th class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,13 +108,6 @@
                                   </td>
                                 </t>
                                 <td class="text-center">
-                                    <span t-field="move_line.ordered_qty"/>
-                                    <span t-field="move_line.product_uom_id"/>
-                                </td>
-                                <td class="text-right" t-if="move_line.state == 'done'">
-                                    <t t-if="move_line.ordered_qty != move_line.qty_done">
-                                        <t t-set="backorder" t-value="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])"/>
-                                    </t>
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
                                 </td>
@@ -129,7 +118,7 @@
                         This shipment is a backorder of <t t-esc="o.backorder_id.name"/>.
                     </p>
                     <p>
-                        <t t-if="backorder">
+                        <t t-if="o.search([('backorder_id', '=', o.id), ('state', 'not in', ['cancel', 'done'])])">
                             All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
                         </t>
                     </p>

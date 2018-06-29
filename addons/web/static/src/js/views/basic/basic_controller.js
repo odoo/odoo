@@ -306,7 +306,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').attr('disabled', true);
         }
@@ -338,10 +338,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                     return;
                 }
                 self.model.discardChanges(recordID);
-                if (self.model.isNew(recordID)) {
-                    if (self.model.canBeAbandoned(recordID)) {
-                        self._abandonRecord(recordID);
-                    }
+                if (self.model.canBeAbandoned(recordID)) {
+                    self._abandonRecord(recordID);
                     return;
                 }
                 return self._confirmSave(recordID);
@@ -352,7 +350,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         if (this.$buttons) {
             this.$buttons.find('button').removeAttr('disabled');
         }

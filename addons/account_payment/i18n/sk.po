@@ -4,19 +4,23 @@
 # 
 # Translators:
 # Martin Trigaux, 2017
+# Robert Kirschner <robertkirschner@yahoo.com>, 2018
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2018
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
+# Miroslav Fic <mirko.fic@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-19 13:43+0000\n"
 "PO-Revision-Date: 2018-02-19 13:43+0000\n"
-"Last-Translator: Martin Trigaux, 2017\n"
+"Last-Translator: Miroslav Fic <mirko.fic@gmail.com>, 2018\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: sk\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:61
@@ -39,7 +43,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Zaplatiť teraz"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -64,6 +68,8 @@ msgid ""
 "<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
 " fa-clock-o\"/> Waiting</span>"
 msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Čakajúce</span>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -90,6 +96,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Ak budeme ukladať vaše platobné údaje na našom serveri, budú platby odberu "
+"vykonané automaticky."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -111,14 +119,14 @@ msgstr ""
 #: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Zaplatiť a Potvrdiť"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:119
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Zaplatiť teraz"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -128,18 +136,18 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Príjemca platby "
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Platobná transakcia"
 
 #. module: account_payment
 #: code:addons/account_payment/models/account_invoice.py:28
 #, python-format
 msgid "Payment Transactions"
-msgstr ""
+msgstr "Platobné transakcie"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -202,7 +210,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
 #: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Transactions"
-msgstr ""
+msgstr "Transakcie"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.payment_confirmation_status

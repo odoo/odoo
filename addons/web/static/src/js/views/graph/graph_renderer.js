@@ -43,6 +43,30 @@ return AbstractRenderer.extend({
         nv.utils.offWindowResize(this.to_remove);
         this._super();
     },
+    /**
+     * The graph view uses the nv(d3) lib to render the graph. This lib requires
+     * that the rendering is done directly into the DOM (so that it can correctly
+     * compute positions). However, the views are always rendered in fragments,
+     * and appended to the DOM once ready (to prevent them from flickering). We
+     * here use the on_attach_callback hook, called when the widget is attached
+     * to the DOM, to perform the rendering. This ensures that the rendering is
+     * always done in the DOM.
+     *
+     * @override
+     */
+    on_attach_callback: function () {
+        this._super.apply(this, arguments);
+        this.isInDOM = true;
+        this._renderGraph();
+    },
+    /**
+     * @override
+     */
+    on_detach_callback: function () {
+        this._super.apply(this, arguments);
+        this.isInDOM = false;
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -51,10 +75,9 @@ return AbstractRenderer.extend({
      * Render the chart.
      *
      * Note that This method is synchronous, but the actual rendering is done
-     * asynchronously (in a setTimeout).  The reason for that is that nvd3/d3
-     * needs to be in the DOM to correctly render itself.  So, we trick Odoo by
-     * returning immediately, then wait a tiny interval before actually
-     * displaying the data.
+     * asynchronously.  The reason for that is that nvd3/d3 needs to be in the
+     * DOM to correctly render itself.  So, we trick Odoo by returning
+     * immediately, then we render the chart when the widget is in the DOM.
      *
      * @returns {Deferred} The _super deferred is actually resolved immediately
      */
@@ -76,21 +99,15 @@ return AbstractRenderer.extend({
                     "Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
-        } else {
-            var self = this;
-            setTimeout(function () {
-                self.$el.empty();
-                var chart = self['_render' + _.str.capitalize(self.state.mode) + 'Chart']();
-                if (chart && chart.tooltip.chartContainer) {
-                    self.to_remove = chart.update;
-                    nv.utils.onWindowResize(chart.update);
-                    chart.tooltip.chartContainer(self.el);
-                }
-            }, 0);
+        } else if (this.isInDOM) {
+            // only render the graph if the widget is already in the DOM (this
+            // happens typically after an update), otherwise, it will be
+            // rendered when the widget will be attached to the DOM (see
+            // 'on_attach_callback')
+            this._renderGraph();
         }
         return this._super.apply(this, arguments);
     },
-
     /**
      * Helper function to set up data properly for the multiBarChart model in
      * nvd3.
@@ -326,6 +343,21 @@ return AbstractRenderer.extend({
 
         chart(svg);
         return chart;
+    },
+    /**
+     * Renders the graph according to its type. This function must be called
+     * when the renderer is in the DOM (for nvd3 to render the graph correctly).
+     *
+     * @private
+     */
+    _renderGraph: function () {
+        this.$el.empty();
+        var chart = this['_render' + _.str.capitalize(this.state.mode) + 'Chart']();
+        if (chart && chart.tooltip.chartContainer) {
+            this.to_remove = chart.update;
+            nv.utils.onWindowResize(chart.update);
+            chart.tooltip.chartContainer(this.el);
+        }
     },
 });
 

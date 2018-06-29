@@ -4,15 +4,10 @@
 # 
 # Translators:
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# inddroy inddroy <joe@joe-chow.com>, 2017
+# e2f_cn c7 <e2f_cn_c7@outlook.com>, 2017
 # Martin Trigaux, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# fausthuang, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# mrshelly <mrshelly@hotmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # e2f <projects@e2f.com>, 2018
@@ -72,18 +67,18 @@ msgstr ""
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
 "    <p>尊敬的 ${object.name}，</p>\n"
-"    <p>链接到此电子邮件的 Odoo 账号提出密码重置请求。</p>\n"
-"    <p>您可以根据以下链接更改密码，该链接在 24 小时内有效：</p>\n"
+"    <p>与此电子邮件地址相关联的 Odoo 账号提出密码重置请求。</p>\n"
+"    <p>请单击以下链接更改您的密码，该链接在 24 小时内有效：</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">更改密码</a>\n"
 "    </div>\n"
-"    <p>如果您不需要更改，可以放心忽略此电子邮件。</p>\n"
-"    <p>此致，</p>\n"
+"    <p>如果您没有请求过更改密码，您可以放心地忽略此电子邮件。</p>\n"
+"    <p>此致</p>\n"
 "</div>\n"
 "<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
-"        <strong>由 ${user.company_id.name} 使用 <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>发送</strong>\n"
+"        <strong>由 ${user.company_id.name} 使用 <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a> 发送</strong>\n"
 "    </p>\n"
 "</div>"
 
@@ -175,7 +170,6 @@ msgid ""
 "    <p>\n"
 "        Your login: ${object.email}\n"
 "        <br/>\n"
-"        Your password: ${ctx['password']}\n"
 "    </p>\n"
 "    <p>\n"
 "        To gain access to your account, you can use the following link:\n"
@@ -209,7 +203,6 @@ msgstr ""
 "    <p>\n"
 "        您的登录账号：${object.email}\n"
 "        <br/>\n"
-"        您的密码：${ctx['password']}\n"
 "    </p>\n"
 "    <p>\n"
 "        要获取访问您账户的权限，可使用以下链接：\n"
@@ -231,14 +224,14 @@ msgstr ""
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr "<strong>要求该用户更改密码，包含以下信息的邮件发出：</strong>"
+msgstr "<strong>已经为此用户提出更改密码的要求。包含以下信息的邮件已经发出：</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr "<strong>包含以下订阅链接的邀请函发出：</strong>"
+msgstr "<strong>包含以下订阅链接的邀请函已经发出：</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.signup
@@ -249,19 +242,19 @@ msgstr "已经拥有账户？"
 #: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr "一封包含证明以重置你的密码的电子邮件已经发送"
+msgstr "一封包含让你重置密码的凭证的电子邮件已经发送"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr "该邮件地址已经被其他注册了"
+msgstr "该邮件地址已经被其他用户注册了"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
-msgstr "身份验证失败"
+msgstr "验证失败。"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -272,7 +265,7 @@ msgstr "返回到登录页面"
 #: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr "无法发送邮件：用户 %s 邮件地址为空。"
+msgstr "无法发送邮件：用户 %s 没有邮件地址。"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -303,13 +296,13 @@ msgstr "复制访问权限自"
 #: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
-msgstr "不能创建一个新账号"
+msgstr "不能创建一个新账号。"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
-msgstr "无法重置密码"
+msgstr "无法重置你的密码"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
@@ -356,7 +349,7 @@ msgstr "无效的注册令牌"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "让你的客户登录查看他们的证件"
+msgstr "让你的客户登录查看他们的文件"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -404,7 +397,7 @@ msgstr "重置密码"
 #: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr "重置密码: 用户名或密码无效"
+msgstr "重置密码: 用户名或电邮无效"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -431,13 +424,13 @@ msgstr "注册到期"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
 msgid "Signup Token"
-msgstr "注册令牌 Token"
+msgstr "注册令牌"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr "注册令牌（Token）类型"
+msgstr "注册令牌类型"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
@@ -477,7 +470,7 @@ msgstr "状态"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr "用作通过注册创建的新用户的模板"
+msgstr "用作通过注册创建的新用户模板"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:119

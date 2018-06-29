@@ -31,7 +31,7 @@ class ResConfigSettings(models.TransientModel):
         ], string="Shipping Management")
 
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
-    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
+    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
 
     module_website_sale_options = fields.Boolean("Optional Products")
     module_website_sale_digital = fields.Boolean("Digital Content")
@@ -45,7 +45,12 @@ class ResConfigSettings(models.TransientModel):
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
         help="Email sent to customer at the end of the checkout process")
 
-    automatic_invoice = fields.Boolean("Automatic Invoice")
+    automatic_invoice = fields.Boolean("Automatic Invoice",
+                                       help="The invoice is generated automatically and available in the customer portal "
+                                       "when the transaction is confirmed by the payment acquirer.\n"
+                                       "The invoice is marked as paid and the payment is registered in the payment journal "
+                                       "defined in the configuration of the payment acquirer.\n"
+                                       "This mode is advised if you issue the final invoice at the order and not after the delivery.")
 
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 

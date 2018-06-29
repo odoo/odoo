@@ -95,6 +95,7 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <field name="email" position="after">
+                    <field name="company_id" invisible="1"/>
                     <field name="property_payment_term_id" widget="selection"/>
                     <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                 </field>
@@ -111,7 +112,7 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button type="object" class="oe_stat_button" icon="fa-pencil-square-o" name="action_view_partner_invoices"
-                        attrs="{'invisible': [('customer', '=', False)]}">
+                        attrs="{'invisible': [('customer', '=', False)]}" context="{'default_partner_id': active_id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
                                 <field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/>

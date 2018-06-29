@@ -1,7 +1,7 @@
 @mail-thread-avatar-size: 36px;
 @mail-thread-icon-opacity: 0.6;
 @mail-thread-side-date-opacity: 0.6;
-@mail-thread-note: @gray-lighter;
+@mail-thread-note: fade(@gray-lighter-dark, 50%);
 
 .o_mail_thread, .o_mail_activity {
     .o_thread_show_more {
@@ -107,7 +107,7 @@
             &.o_mail_note {
                 background-color: @mail-thread-note;
                 padding-left: @grid-gutter-width*0.3;
-                border-bottom: 1px solid @gray-lighter-dark;
+                border-bottom: 1px solid @gray-lighter-darker;
             }
 
             .o_mail_subject {

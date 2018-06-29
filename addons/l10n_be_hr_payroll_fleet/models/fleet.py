@@ -13,7 +13,8 @@ class FleetVehicle(models.Model):
 
     co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
     total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
-        string="Total Cost (Depreciated)", help="This includes all the depreciated costs and the CO2 fee")
+        string="Total Cost (Depreciated)", track_visibility="onchange",
+        help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')
     atn = fields.Float(compute='_compute_car_atn', string="ATN")
@@ -137,19 +138,6 @@ class FleetVehicleModel(models.Model):
     def _compute_default_total_depreciated_cost(self):
         for model in self:
             model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
-
-    @api.multi
-    @api.depends('name', 'brand_id', 'default_total_depreciated_cost')
-    def name_get(self):
-        res = super(FleetVehicleModel, self).name_get()
-        new_res = []
-        for res_item in res:
-            model = self.browse(res_item[0])
-            if model.default_total_depreciated_cost != 0.0:
-                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(round(model.default_total_depreciated_cost, 2))))
-            else:
-                new_res.append(res_item)
-        return new_res
 
     @api.depends('default_co2')
     def _compute_co2_fee(self):

@@ -5,12 +5,15 @@
         font-family: inherit !important;
         line-height: initial !important;
         color: initial !important;
-        p {
+        p, div {
             font-family: 'Lucida Grande', Helvetica, Verdana, Arial, sans-serif;
             font-size: 13px;
         }
         a, a:hover {
             color: initial;
+        }
+        ul > li > p {
+            margin: 0px;
         }
     }
     .o_readonly {
@@ -19,6 +22,10 @@
         margin: 0;
         padding: 0;
         border: 0;
+        word-wrap: break-word;
+        ul > li > p {
+            margin: 0px;
+        }
     }
 }
 .oe_form_field_html iframe {
@@ -51,9 +58,9 @@
         position: static !important;
         top: 0 !important;
         left: 0 !important;
-        overflow: visible !important;
         width: auto !important;
         overflow: hidden !important;
+        transform: none !important;
     }
 }
 

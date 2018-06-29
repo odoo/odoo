@@ -84,7 +84,7 @@
                             <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                 <t t-set="id" t-value="acq.id"/>
                                 <t t-set="partner_id" t-value="partner_id"/>
-                                <t t-set="return_url" t-value="''"/>
+                                <t t-if="not return_url" t-set="return_url" t-value="''"/>
                             </t>
                         </div>
                     </div>

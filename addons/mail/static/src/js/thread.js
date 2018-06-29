@@ -229,7 +229,7 @@ var Thread = Widget.extend({
         } else {
             this.trigger('redirect', options.model, options.id);
         }
-    }, 200, true),
+    }, 500, true),
 
     on_click_show_more: function () {
         this.trigger('load_more_messages');
@@ -328,6 +328,7 @@ var Thread = Widget.extend({
      * @param {MouseEvent} event
      */
     _onAttachmentView: function (event) {
+        event.stopPropagation();
         var activeAttachmentID = $(event.currentTarget).data('id');
         if (activeAttachmentID) {
             var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);

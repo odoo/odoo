@@ -468,7 +468,13 @@ var FieldDate = InputField.extend({
      * @private
      */
     _makeDatePicker: function () {
-        return new datepicker.DateWidget(this, {defaultDate: this.value});
+        return new datepicker.DateWidget(
+            this,
+            _.defaults(
+                this.nodeOptions.datepicker || {},
+                {defaultDate: this.value}
+            )
+        );
     },
 
     /**
@@ -1014,6 +1020,21 @@ var FieldPhone = FieldEmail.extend({
     },
 
     /**
+     * Remove possibly present &shy; characters when saving number
+     *
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        // NOT NEEDED AS OF SAAS-11.3
+        if (value) {
+            // remove possibly pasted &shy; characters
+            value = value.replace(/\u00AD/g, '');
+        }
+        return this._super(value, options);
+    },
+
+    /**
      * Phone fields are clickable in readonly on small screens ~= on phones.
      * This can be overriden by call-capable modules to display a clickable
      * link in different situations, like always regardless of screen size,
@@ -1211,9 +1232,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
             $img.attr('src', self.placeholder);
             self.do_warn(_t("Image"), _t("Could not display the selected image."));
         });
-    },
-    isSet: function () {
-        return true;
     },
 });
 
@@ -1757,7 +1775,7 @@ var StatInfo = AbstractField.extend({
 
 var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['integer', 'float'],
 
     /**
      * Register some useful references for later use throughout the widget.
@@ -1993,8 +2011,9 @@ var FieldToggleBoolean = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var className = this.value ? 'o_toggle_button_success' : 'text-muted';
-        this.$('i').addClass('fa fa-circle ' + className);
+        this.$('i')
+            .toggleClass('o_toggle_button_success', !!this.value)
+            .toggleClass('text-muted', !this.value);
         var title = this.value ? this.attrs.options.active : this.attrs.options.inactive;
         this.$el.attr('title', title);
     },
@@ -2413,6 +2432,21 @@ var AceEditor = DebouncedField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Format value
+     *
+     * Note: We have to overwrite this method to always return a string.
+     * AceEditor works with string and not boolean value.
+     *
+     * @override
+     * @private
+     * @param {boolean|string} value
+     * @returns {string}
+     */
+    _formatValue: function (value) {
+        return this._super.apply(this, arguments) || '';
+    },
+
+    /**
      * @override
      * @private
      */
@@ -2434,6 +2468,7 @@ var AceEditor = DebouncedField.extend({
             this.aceSession.setValue(newValue);
         }
     },
+
     /**
      * Starts the ace library on the given DOM element. This initializes the
      * ace editor option according to the edit/readonly mode and binds ace

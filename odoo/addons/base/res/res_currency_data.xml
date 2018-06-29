@@ -55,6 +55,7 @@
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Yuan</field>
             <field name="currency_subunit_label">Fen</field>
+            <field name="position">before</field>
         </record>
 
         <record id="COP" model="res.currency">
@@ -218,7 +219,7 @@
         <record id="JPY" model="res.currency">
             <field name="name">JPY</field>
             <field name="symbol">¥</field>
-            <field name="rounding">0.01</field>
+            <field name="rounding">1.00</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Yen</field>
             <field name="currency_subunit_label">Cen</field>
@@ -999,7 +1000,7 @@
 
         <record id="MAD" model="res.currency">
             <field name="name">MAD</field>
-            <field name="symbol"> د.م. </field>
+            <field name="symbol">DH</field>
             <field name="rounding">0.01</field>
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dirham</field>
@@ -1292,6 +1293,7 @@
             <field name="currency_subunit_label">Cents</field>
         </record>
 
+        <!-- no longer in use since 2007 -->
         <record id="SDD" model="res.currency">
             <field name="name">SDD</field>
             <field name="symbol">£Sd</field>
@@ -1299,6 +1301,13 @@
             <field name="active" eval="False"/>
             <field name="currency_unit_label">Dinar</field>
             <field name="currency_subunit_label">Fils</field>
+        </record>
+
+        <record id="SDG" model="res.currency">
+            <field name="name">SDG</field>
+            <field name="symbol">ج.س.</field>
+            <field name="rounding">0.01</field>
+            <field name="active" eval="False"/>
         </record>
 
         <record id="LKR" model="res.currency">

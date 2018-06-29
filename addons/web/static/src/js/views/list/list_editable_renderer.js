@@ -498,7 +498,8 @@ ListRenderer.include({
     _renderRow: function (record, index) {
         var $row = this._super.apply(this, arguments);
         if (this.addTrashIcon) {
-            var $icon = $('<span>', {class: 'fa fa-trash-o', name: 'delete'});
+            var $icon = $('<button>', {class: 'fa fa-trash-o o_list_record_delete_btn', name: 'delete',
+                'aria-label': _t('Delete row ') + (index+1)});
             var $td = $('<td>', {class: 'o_list_record_delete'}).append($icon);
             $row.append($td);
         }
@@ -530,8 +531,13 @@ ListRenderer.include({
      * @returns {Deferred} this deferred is resolved immediately
      */
     _renderView: function () {
+        var self = this;
         this.currentRow = null;
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(function () {
+            if (self._isEditable()) {
+                self.$('table').addClass('o_editable_list');
+            }
+        });
     },
     /**
      * Force the resequencing of the items in the list.

@@ -28,6 +28,7 @@ import werkzeug.wsgi
 from collections import OrderedDict
 from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
+import unicodedata
 
 
 import odoo
@@ -961,14 +962,17 @@ class DataSet(http.Controller):
 
 class View(http.Controller):
 
-    @http.route('/web/view/add_custom', type='json', auth="user")
-    def add_custom(self, view_id, arch):
-        CustomView = request.env['ir.ui.view.custom']
-        CustomView.create({
-            'user_id': request.session.uid,
-            'ref_id': view_id,
-            'arch': arch
-        })
+    @http.route('/web/view/edit_custom', type='json', auth="user")
+    def edit_custom(self, custom_id, arch):
+        """
+        Edit a custom view
+
+        :param int custom_id: the id of the edited custom view
+        :param str arch: the edited arch of the custom view
+        :returns: dict with acknowledged operation (result set to True)
+        """
+        custom_view = request.env['ir.ui.view.custom'].browse(custom_id)
+        custom_view.write({ 'arch': arch })
         return {'result': True}
 
 class Binary(http.Controller):
@@ -993,7 +997,7 @@ class Binary(http.Controller):
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
                        filename=None, filename_field='datas_fname', unique=None, mimetype=None,
-                       download=None, data=None, token=None, access_token=None):
+                       download=None, data=None, token=None, access_token=None, **kw):
         status, headers, content = binary_content(
             xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
             filename_field=filename_field, download=download, mimetype=mimetype,
@@ -1043,8 +1047,12 @@ class Binary(http.Controller):
         elif status != 200 and download:
             return request.not_found()
 
-        height = int(height or 0)
-        width = int(width or 0)
+        if headers and dict(headers).get('Content-Type', '') == 'image/svg+xml':  # we shan't resize svg images
+            height = 0
+            width = 0
+        else:
+            height = int(height or 0)
+            width = int(width or 0)
 
         if crop and (width or height):
             content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
@@ -1107,20 +1115,27 @@ class Binary(http.Controller):
                 </script>"""
         args = []
         for ufile in files:
+
+            filename = ufile.filename
+            if request.httprequest.user_agent.browser == 'safari':
+                # Safari sends NFD UTF-8 (where é is composed by 'e' and [accent])
+                # we need to send it the same stuff, otherwise it'll fail
+                filename = unicodedata.normalize('NFD', ufile.filename)
+
             try:
                 attachment = Model.create({
-                    'name': ufile.filename,
+                    'name': filename,
                     'datas': base64.encodestring(ufile.read()),
-                    'datas_fname': ufile.filename,
+                    'datas_fname': filename,
                     'res_model': model,
                     'res_id': int(id)
                 })
             except Exception:
-                args = args.append({'error': _("Something horrible happened")})
+                args.append({'error': _("Something horrible happened")})
                 _logger.exception("Fail to upload attachment %s" % ufile.filename)
             else:
                 args.append({
-                    'filename': ufile.filename,
+                    'filename': filename,
                     'mimetype': ufile.content_type,
                     'id': attachment.id
                 })
@@ -1493,69 +1508,6 @@ class ExcelExport(ExportFormat, http.Controller):
         data = fp.read()
         fp.close()
         return data
-
-class Reports(http.Controller):
-    POLLING_DELAY = 0.25
-    TYPES_MAPPING = {
-        'doc': 'application/vnd.ms-word',
-        'html': 'text/html',
-        'odt': 'application/vnd.oasis.opendocument.text',
-        'pdf': 'application/pdf',
-        'sxw': 'application/vnd.sun.xml.writer',
-        'xls': 'application/vnd.ms-excel',
-    }
-
-    @http.route('/web/report', type='http', auth="user")
-    @serialize_exception
-    def index(self, action, token):
-        action = json.loads(action)
-
-        context = dict(request.context)
-        context.update(action["context"])
-
-        report_data = {}
-        report_ids = context.get("active_ids", None)
-        if 'report_type' in action:
-            report_data['report_type'] = action['report_type']
-        if 'datas' in action:
-            if 'ids' in action['datas']:
-                report_ids = action['datas'].pop('ids')
-            report_data.update(action['datas'])
-
-        report_id = dispatch_rpc('report', 'report', [
-            request.session.db, request.session.uid, request.session.password,
-            action["report_name"], report_ids, report_data, context])
-
-        report_struct = None
-        while True:
-            report_struct = dispatch_rpc('report', 'report_get', [
-                request.session.db, request.session.uid, request.session.password, report_id])
-            if report_struct["state"]:
-                break
-
-            time.sleep(self.POLLING_DELAY)
-
-        report = base64.b64decode(report_struct['result'])
-        if report_struct.get('code') == 'zlib':
-            report = zlib.decompress(report)
-        report_mimetype = self.TYPES_MAPPING.get(
-            report_struct['format'], 'octet-stream')
-        file_name = action.get('name', 'report')
-        if 'name' not in action:
-            reports = request.env['ir.actions.report']
-            reports = reports.search([('report_name', '=', action['report_name'])])
-            if reports:
-                file_name = reports[0].name
-            else:
-                file_name = action['report_name']
-        file_name = '%s.%s' % (file_name, report_struct['format'])
-
-        return request.make_response(report,
-             headers=[
-                 ('Content-Disposition', content_disposition(file_name)),
-                 ('Content-Type', report_mimetype),
-                 ('Content-Length', len(report))],
-             cookies={'fileToken': token})
 
 class Apps(http.Controller):
     @http.route('/apps/<app>', auth='user')

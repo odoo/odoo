@@ -21,47 +21,55 @@ class MrpStockReport(models.TransientModel):
 
     @api.model
     def get_move_lines_upstream(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
+        lines_seen = move_lines
+        lines_todo = list(move_lines)
+        while lines_todo:
+            move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_orig_ids:
-                res |= move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
+                lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
+                    lambda m: m.lot_id == move_line.lot_id
+                ) - lines_seen
             # if MTS
+            elif move_line.location_id.usage == 'internal':
+                lines = self.env['stock.move.line'].search([
+                    ('product_id', '=', move_line.product_id.id),
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('location_dest_id', '=', move_line.location_id.id),
+                    ('id', 'not in', lines_seen.ids),
+                    ('date', '<', move_line.date),
+                ])
             else:
-                if move_line.location_id.usage == 'internal':
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('location_dest_id', '=', move_line.location_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '<', move_line.date),
-                    ])
-        if res:
-            res |= self.get_move_lines_upstream(res)
-        return res
+                continue
+            lines_todo += list(lines)
+            lines_seen |= lines
+        return lines_seen - move_lines
 
     @api.model
     def get_move_lines_downstream(self, move_lines):
-        res = self.env['stock.move.line']
-        for move_line in move_lines:
+        lines_seen = move_lines
+        lines_todo = list(move_lines)
+        while lines_todo:
+            move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_dest_ids:
-                res |= move_line.move_id.move_dest_ids.mapped('move_line_ids').filtered(
-                    lambda m: m.lot_id.id == move_line.lot_id.id)
+                lines = move_line.move_id.move_dest_ids.mapped('move_line_ids').filtered(
+                    lambda m: m.lot_id == move_line.lot_id
+                ) - lines_seen
             # if MTS
+            elif move_line.location_dest_id.usage == 'internal':
+                lines = self.env['stock.move.line'].search([
+                    ('product_id', '=', move_line.product_id.id),
+                    ('lot_id', '=', move_line.lot_id.id),
+                    ('location_id', '=', move_line.location_dest_id.id),
+                    ('id', 'not in', lines_seen.ids),
+                    ('date', '>', move_line.date),
+                ])
             else:
-                if move_line.location_dest_id.usage == 'internal':
-                    res |= self.env['stock.move.line'].search([
-                        ('product_id', '=', move_line.product_id.id),
-                        ('lot_id', '=', move_line.lot_id.id),
-                        ('location_id', '=', move_line.location_dest_id.id),
-                        ('id', '!=', move_line.id),
-                        ('date', '>', move_line.date),
-                    ])
-        if res:
-            res |= self.get_move_lines_downstream(res)
-        return res
+                continue
+            lines_todo += list(lines)
+            lines_seen |= lines
+        return lines_seen - move_lines
 
     @api.model
     def get_lines(self, line_id=None, **kw):
@@ -145,6 +153,12 @@ class MrpStockReport(models.TransientModel):
             ref = move_line.move_id.scrap_ids[0].name
         return res_model, res_id, ref
 
+    @api.model
+    def _quantity_to_str(self, from_uom, to_uom, qty):
+        """ workaround to apply the float rounding logic of t-esc on data prepared server side """
+        qty = from_uom._compute_quantity(qty, to_uom, rounding_method='HALF-UP')
+        return self.env['ir.qweb.field.float'].value_to_html(qty, {'decimal_precision': 'Product Unit of Measure'})
+
     def make_dict_move(self, level, parent_id, move_line, stream=False, unfoldable=False):
         res_model, res_id, ref = self.get_links(move_line)
         data = [{
@@ -155,7 +169,7 @@ class MrpStockReport(models.TransientModel):
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
-            'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
+            'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
             'location': move_line.location_id.name + ' -> ' + move_line.location_dest_id.name,
             'reference_id': ref,
             'res_id': res_id,
@@ -175,7 +189,7 @@ class MrpStockReport(models.TransientModel):
                 'model': model or 'stock.move.line',
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
-                'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
+                'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.qty_done), move_line.product_id.uom_id.name),
                 'location': move_line.location_dest_id.name,
                 'stream': stream,
                 'reference_id': False}]
@@ -189,7 +203,7 @@ class MrpStockReport(models.TransientModel):
                 'model': model or 'stock.quant',
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
-                'product_qty_uom': str(move_line.quantity) + ' ' + move_line.product_id.uom_id.name,
+                'product_qty_uom': "%s %s" % (self._quantity_to_str(move_line.product_uom_id, move_line.product_id.uom_id, move_line.quantity), move_line.product_id.uom_id.name),
                 'location': move_line.location_id.name,
                 'stream': stream,
                 'reference_id': False}]

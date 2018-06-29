@@ -159,7 +159,7 @@ class PaymentTransaction(models.Model):
                 'currency_id': invoice.currency_id.id,
                 'partner_id': invoice.partner_id.id,
                 'partner_country_id': invoice.partner_id.country_id.id,
-                'reference': self.get_next_reference(invoice.number),
+                'reference': self._get_next_reference(invoice.number, acquirer=acquirer),
                 'account_invoice_id': invoice.id,
             }
             if add_tx_values:
@@ -175,3 +175,10 @@ class PaymentTransaction(models.Model):
         })
 
         return tx
+
+    def _post_process_after_done(self, **kwargs):
+        # set invoice id in payment transaction when payment being done from sale order
+        res = super(PaymentTransaction, self)._post_process_after_done()
+        if kwargs.get('invoice_id'):
+            self.account_invoice_id = kwargs['invoice_id']
+        return res

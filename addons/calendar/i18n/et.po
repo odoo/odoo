@@ -6,15 +6,15 @@
 # Martin Trigaux, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Rivo Zängov <eraser@eraser.ee>, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
+# Rivo Zängov <eraser@eraser.ee>, 2017
 # Gert Valdek <gert@airobot.ee>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-07 10:30+0000\n"
-"PO-Revision-Date: 2018-02-07 10:30+0000\n"
+"POT-Creation-Date: 2018-06-06 08:01+0000\n"
+"PO-Revision-Date: 2018-06-06 08:01+0000\n"
 "Last-Translator: Gert Valdek <gert@airobot.ee>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -416,7 +416,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
 msgid "Attendee"
-msgstr ""
+msgstr "Osaleja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
@@ -527,7 +527,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_start
@@ -598,7 +598,7 @@ msgstr "Dokument"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
 msgid "Document ID"
-msgstr ""
+msgstr "Dokumendi ID"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
@@ -764,7 +764,7 @@ msgstr "HTTP routing"
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Hour(s)"
-msgstr ""
+msgstr "tund(i)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_id
@@ -786,7 +786,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "Kutse"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
@@ -882,6 +882,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
 msgstr "Kohtumine"
+
+#. module: calendar
+#: code:addons/calendar/models/calendar.py:933
+#: code:addons/calendar/models/calendar.py:937
+#, python-format
+msgid "Meeting '%s' starts '%s' and ends '%s'"
+msgstr ""
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1089,7 +1096,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
 msgid "Repeat"
-msgstr ""
+msgstr "Korda"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_interval

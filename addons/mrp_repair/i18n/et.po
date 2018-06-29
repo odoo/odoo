@@ -11,13 +11,14 @@
 # Gert Valdek <gert@airobot.ee>, 2017
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
+# Marek Pontus, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2017\n"
+"POT-Creation-Date: 2018-04-27 14:52+0000\n"
+"PO-Revision-Date: 2018-04-27 14:52+0000\n"
+"Last-Translator: Marek Pontus, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,7 +68,7 @@ msgid ""
 "                (with reference: ${object.origin} )\n"
 "                % endif\n"
 "                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
 "                % endif\n"
 "                </p>\n"
 "                <p>You can reply to this email if you have any questions.</p>\n"
@@ -231,7 +232,7 @@ msgstr "Loo arve"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Create invoices"
-msgstr "Loo müügiarve"
+msgstr "Loo arve"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_create_uid
@@ -251,7 +252,7 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_make_invoice_create_date
 #: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_create_date
 msgid "Created on"
-msgstr "Loodud"
+msgstr "Loomise kuupäev"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
@@ -382,7 +383,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:215
 #, python-format
 msgid "Insufficient Quantity"
-msgstr ""
+msgstr "Pole vajaliku kogust"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
@@ -478,13 +479,13 @@ msgstr "Viimati uuendatud"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr "Ületähtaja tegevused"
+msgstr "Üle tähtaja tegevused"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_lot_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Partii/seerianumber"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
@@ -631,7 +632,7 @@ msgstr "Pakkumine"
 #. module: mrp_repair
 #: model:ir.actions.report,name:mrp_repair.action_report_mrp_repair_order
 msgid "Quotation / Order"
-msgstr "Pakkumine / Korraldus"
+msgstr "Pakkumine / tellimus"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
@@ -662,7 +663,7 @@ msgstr "Eemalda"
 #: model:ir.model.fields,field_description:mrp_repair.field_stock_move_repair_id
 #: model:ir.model.fields,field_description:mrp_repair.field_stock_warn_insufficient_qty_repair_repair_id
 msgid "Repair"
-msgstr ""
+msgstr "Paranda"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
@@ -696,7 +697,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
-msgstr "Remondikorraldused"
+msgstr "Remondikäsk"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -753,13 +754,13 @@ msgstr "Remonditud"
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Parandustööd"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr "Remontide korraldus"
+msgstr "Remondikäsud"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -939,7 +940,7 @@ msgstr "Hoiatus"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Garantii aegumine"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -964,7 +965,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair

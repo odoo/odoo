@@ -1623,6 +1623,37 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('duplicating a record preserve the context', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true, context: {hey: 'hoy'}},
+            mockRPC: function (route, args) {
+                if (args.method === 'read') {
+                    // should have 2 read, one for initial load, second for
+                    // read after duplicating
+                    assert.strictEqual(args.kwargs.context.hey, 'hoy',
+                        "should have send the correct context");
+                }
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.sidebar.$('a:contains(Duplicate)').click();
+
+        form.destroy();
+    });
+
     QUnit.test('cannot duplicate a record', function (assert) {
         assert.expect(2);
 
@@ -5203,6 +5234,46 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('outer and inner groups string attribute', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group string="parent group" class="parent_group">' +
+                            '<group string="child group 1" class="group_1">' +
+                                '<field name="bar"/>' +
+                            '</group>' +
+                            '<group string="child group 2" class="group_2">' +
+                                '<field name="bar"/>' +
+                            '</group>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        var $parentGroup = form.$('.parent_group');
+        var $group1 = form.$('.group_1');
+        var $group2 = form.$('.group_2');
+
+        assert.strictEqual(form.$('table.o_inner_group').length, 2,
+            "should contain two inner groups");
+        assert.strictEqual($group1.find('.o_horizontal_separator').length, 1,
+            "inner group should contain one string separator");
+        assert.strictEqual($group1.find('.o_horizontal_separator:contains(child group 1)').length, 1,
+            "first inner group should contain 'child group 1' string");
+        assert.strictEqual($group2.find('.o_horizontal_separator:contains(child group 2)').length, 1,
+            "second inner group should contain 'child group 2' string");
+        assert.strictEqual($parentGroup.find('> div.o_horizontal_separator:contains(parent group)').length, 1,
+            "outer group should contain 'parent group' string");
+
+        form.destroy();
+    });
+
     QUnit.test('form group with newline tag inside', function (assert) {
         assert.expect(6);
 
@@ -6453,6 +6524,36 @@ QUnit.module('Views', {
 
         testUtils.unpatch(mixins.ParentedMixin);
     });
+
+    QUnit.test('do not change pager when discarding current record', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                '</form>',
+            viewOptions: {
+                ids: [1, 2],
+                index: 0,
+            },
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.pager.$('.o_pager_counter').text().trim(), '2 / 2',
+            'pager should indicate that we are on second record');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$buttons.find('.o_form_button_cancel').click();
+
+        assert.strictEqual(form.pager.$('.o_pager_counter').text().trim(), '2 / 2',
+            'pager should not have changed');
+
+        form.destroy();
+    });
+
 
 });
 });

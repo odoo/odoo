@@ -3,15 +3,18 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Manuela Silva <manuela.silva@sky.com>, 2017
+# Nuno Silva <nuno.silva@arxi.pt>, 2018
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
+# Daniel C Santos <dcs@thinkopensolutions.pt>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2017\n"
+"Last-Translator: Daniel C Santos <dcs@thinkopensolutions.pt>, 2018\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,22 +29,24 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"Existem %s%s disponíveis em todos os armazéns."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Referência do cliente:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr ""
+msgstr "Pós-Venda"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -64,17 +69,17 @@ msgstr "Empresas"
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr ""
+msgstr "Entregar todos os artigos de uma só vez"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr ""
+msgstr "Entregar cada artigo quando estiver disponível"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr ""
+msgstr "Entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_module_sale_order_dates
@@ -84,12 +89,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Ordens de Entrega"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
+msgstr "Mostrar incoterms nas Ordens de Venda e faturas relacionadas"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -99,7 +104,7 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
 msgid "Enable Route on Sales Order Line"
-msgstr ""
+msgstr "Permite Rotas na Linha de Ordem de Venda"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
@@ -107,7 +112,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
-msgstr ""
+msgstr "Incoterms"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
@@ -116,6 +121,9 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-"
 "the-art transportation practices."
 msgstr ""
+"Incoterms são uma série de termos de vendas. Estes são utilizados para "
+"repartir custos de transação e responsabilidades entre o comprador e o "
+"vendedor, e refletir as práticas de transporte topo de gama."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_incoterm
@@ -123,11 +131,13 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"International Commercial Terms são uma série de condições comerciais pré-"
+"definidos utilizados em transações internacionais."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr ""
+msgstr "Rotas de Inventário"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice
@@ -161,6 +171,10 @@ msgid ""
 "for procurement and delivery that many days earlier than the actual promised"
 " date, to cope with unexpected delays in the supply chain."
 msgstr ""
+"A margem de erro para as datas prometidas para os clientes. Os produtos "
+"serão agendadas para a aquisição e entrega que muitos dias anteriores à data"
+" prometida real, para lidar com atrasos inesperados na cadeia de "
+"abastecimento."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -171,7 +185,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Stock insuficiente!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
@@ -182,32 +196,32 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Quantidade Pedida Diminuiu!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
 msgid "Package"
-msgstr ""
+msgstr "Batelada"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_ids
 msgid "Pickings"
-msgstr ""
+msgstr "Recolhas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_procurement_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Grupo de Aquisição"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Requisição de Aquisição"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Regra de Aquisição"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -226,7 +240,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
-msgstr ""
+msgstr "Rota"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -241,7 +255,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Ordem de Venda"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
@@ -256,22 +270,22 @@ msgstr "Ordem de Vendas"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linha da ordem de venda"
+msgstr "Linhas da Ordem de Vendas"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
 msgid "Sales Order Lines"
-msgstr "Linhas da Ordem de Venda"
+msgstr "Linhas da Ordem de Vendas"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Estatísticas de ordens de venda"
+msgstr "Estatísticas das Ordens de Vendas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Dias de Segurança da Venda"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -291,7 +305,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
 msgid "Selectable on Sales Order Line"
-msgstr ""
+msgstr "Selecionável em Linhas de Ordens de Venda"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -311,7 +325,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
-msgstr ""
+msgstr "Informação de Entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_default_picking_policy
@@ -321,17 +335,17 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Política de Expedição"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimento de Stock"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_move_ids
 msgid "Stock Moves"
-msgstr ""
+msgstr "Movimentos de Stock"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -351,13 +365,13 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transferência"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report_warehouse_id
 msgid "Warehouse"
-msgstr ""
+msgstr "Armazém"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:272

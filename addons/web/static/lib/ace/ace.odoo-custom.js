@@ -1173,15 +1173,16 @@ define("ace/lib/regexp", ["require", "exports", "module"], function(e, t, n) {
                     if (!t.onCompositionEnd || t.$readOnly) return;
                     var r = h;
                     h = !1;
-                    var i = setTimeout(function() {
-                        i = null;
+                    var i2 = setTimeout(function() {
+                        i2 = null;
                         var e = n.value.replace(/\x01/g, "");
                         if (h) return;
                         e == r.lastValue ? w() : !r.lastValue && e && (w(), A(e))
                     });
                     k = function(n) {
-                        return i && clearTimeout(i), n = n.replace(/\x01/g, ""), n == r.lastValue ? "" : (r.lastValue && i && t.undo(), n)
-                    }, t.onCompositionEnd(), t.removeListener("mousedown", F), e.type == "compositionend" && r.range && t.selection.setRange(r.range)
+                        return i2 && clearTimeout(i2), n = n.replace(/\x01/g, ""), n == r.lastValue ? "" : (r.lastValue && i2 && t.undo(), n)
+                    }, t.onCompositionEnd(), t.removeListener("mousedown", F), e.type == "compositionend" && r.range && t.selection.setRange(r.range),
+                    i.isChrome && i.isChrome >= 53 && O()
                 },
                 I = o.delayedCall(j, 50);
             r.addListener(n, "compositionstart", B), i.isGecko ? r.addListener(n, "text", function() {

@@ -13,6 +13,7 @@ var FieldOrgChart = AbstractField.extend({
 
     events: {
         "click .o_employee_redirect": "_onEmployeeRedirect",
+        "click .o_employee_sub_redirect": "_onEmployeeSubRedirect",
     },
     /**
      * @constructor

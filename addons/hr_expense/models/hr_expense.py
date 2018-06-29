@@ -370,7 +370,9 @@ class HrExpense(models.Model):
             product = default_product
         else:
             expense_description = expense_description.replace(product_code.group(), '')
-            product = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            products = self.env['product.product'].search([('default_code', 'ilike', product_code.group(1))]) or default_product
+            product = products.filtered(lambda p: p.default_code == product_code.group(1)) or products[0]
+        account = product.product_tmpl_id._get_product_accounts()['expense']
 
         pattern = '[-+]?(\d+(\.\d*)?|\.\d+)([eE][-+]?\d+)?'
         # Match the last occurence of a float in the string
@@ -397,6 +399,8 @@ class HrExpense(models.Model):
             'unit_amount': price,
             'company_id': employee.company_id.id,
         })
+        if account:
+            custom_values['account_id'] = account.id
         return super(HrExpense, self).message_new(msg_dict, custom_values)
 
 class HrExpenseSheet(models.Model):

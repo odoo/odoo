@@ -4,13 +4,18 @@
 # 
 # Translators:
 # Quim - eccit <quim@eccit.com>, 2017
+# Lluís Dalmau <lluis.dalmau@guifi.net>, 2018
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Martin Trigaux, 2018
+# Nacho Serra <nacho.serra@domatix.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 13:42+0000\n"
-"PO-Revision-Date: 2018-02-19 13:42+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"POT-Creation-Date: 2018-04-27 14:47+0000\n"
+"PO-Revision-Date: 2018-04-27 14:47+0000\n"
+"Last-Translator: Nacho Serra <nacho.serra@domatix.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,13 +27,11 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_state
 msgid ""
 " * The 'Draft' status is used when a user is encoding a new and unconfirmed Invoice.\n"
-" * The 'Pro-forma' status is used when the invoice does not have an invoice number.\n"
 " * The 'Open' status is used when user creates invoice, an invoice number is generated. It stays in the open status till the user pays the invoice.\n"
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
 "* L'estat 'Esborrany' s'utilitza quan un usuari està introduint una nova factura no confirmada.\n"
-"* L'estat 'Proforma' s'utilitza quan la factura no té un número assignat.\n"
 "* L'estat 'Obert' s'utilitza quan l'usuari crea la factura i la confirma. Es genera un número de factura i el seu estat romandrà així fins que l'usuari doni la factura per pagada.\n"
 "* L'estat 'Pagat' s'estableix automàticament quan es paga la factura. Els seus corresponents assentaments poden o no estar conciliats.\n"
 "* L'estat 'Cancel·lada' s'utilitza quan l'usuari cancel·la la factura."
@@ -168,7 +171,7 @@ msgstr ": Balanç de comprovació"
 msgid ""
 "<?xml version=\"1.0\"?>\n"
 "<data><p>Dear ${object.partner_id.name},</p>\n"
-"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${object.amount} ${object.currency_id.name}</strong> from ${object.company_id.name}.</p>\n"
+"<p>Thank you for your payment.<br/>Here is your payment receipt <strong>${(object.name or '').replace('/','-')}</strong> amounting to <strong>${format_amount(object.amount, object.currency_id)}</strong> from ${object.company_id.name}.</p>\n"
 "<p>If you have any questions, please do not hesitate to contact us.</p>\n"
 "<p>Best regards,\n"
 "% if user and user.signature:\n"
@@ -177,23 +180,13 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Apreciat ${object.partner_id.name},</p>\n"
-"<p>Gràcies pel vostre pagament.<br/>Aquí teniu el rebut del pagament <strong>${(object.name or '').replace('/','-')}</strong> d'una quantitat de <strong>${object.amount} ${object.currency_id.name}</strong> de ${object.company_id.name}.</p>\n"
-"<p>Si té cap dubte, si us plau, contacti amb nosaltres.</p>\n"
-"<p>Cordialment,\n"
-"% if user and user.signature:\n"
-"${user.signature | safe}\n"
-"% endif\n"
-"</p>\n"
-"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
 msgid ""
 "<div>\n"
 "% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
+"% set company = record and record.company_id or ctx.get('company')\n"
 "<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
 "<tbody>\n"
 "    <!-- HEADER -->\n"
@@ -257,71 +250,6 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"% set record = ctx.get('record')\n"
-"% set company = record and record.company_id or user.company_id\n"
-"<table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
-"                            Invoice ${object.record_name}\n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\"/>\n"
-"                    </td>\n"
-"                </tr>\n"
-"          </table>\n"
-"    </td>\n"
-"  </tr>\n"
-"  <!-- CONTENT -->\n"
-"  <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
-"                <tbody>\n"
-"                    <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
-"                        ${object.body | safe}\n"
-"                    </td>\n"
-"                </tbody>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                        ${company.name}<br/>\n"
-"                        ${company.phone or ''}\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
-"                        % if company.email:\n"
-"                        <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
-"                        % endif\n"
-"                        % if company.website:\n"
-"                        <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
-"                        ${company.website}\n"
-"                        </a>\n"
-"                        % endif\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <tr>\n"
-"        <td align=\"center\">\n"
-"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -345,7 +273,7 @@ msgid ""
 "% if object.origin:\n"
 "(with reference: ${object.origin})\n"
 "% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
@@ -371,50 +299,6 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"<p>Estimat ${object.partner_id.name}\n"
-"% set access_action = object.with_context(force_website=True).get_access_action()\n"
-"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set access_url = object.get_mail_url()\n"
-"\n"
-"% if object.partner_id.parent_id:\n"
-"    (<i>${object.partner_id.parent_id.name}</i>)\n"
-"% endif\n"
-",</p>\n"
-"<p>Adjuntem  \n"
-"% if object.number:\n"
-"la factura <strong>${object.number}</strong>\n"
-"% else:\n"
-"factura\n"
-"% endif\n"
-"% if object.origin:\n"
-"(referència: ${object.origin})\n"
-"% endif\n"
-"amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
-"from ${object.company_id.name}.\n"
-"</p>\n"
-"\n"
-"% if is_online:\n"
-"    <br/><br/>\n"
-"    <center>\n"
-"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Veure factura</a>\n"
-"    </center>\n"
-"% endif\n"
-"    <br/><br/>\n"
-"\n"
-"% if object.state=='paid':\n"
-"    <p>La factura ja està pagada.</p>\n"
-"% else:\n"
-"    <p>Si us plau, faci el pagament tant bon punt pugui.</p>\n"
-"% endif\n"
-"\n"
-"<p>Gràcies,</p>\n"
-"<p style=\"color:#888888\">\n"
-"% if object.user_id and object.user_id.signature:\n"
-"    ${object.user_id.signature | safe}\n"
-"% endif\n"
-"</p>\n"
-"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1810,6 +1694,21 @@ msgid "Adjustment Tax"
 msgstr "Ajustament d'impostos"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_adjustment_type
+msgid "Adjustment Type"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in favor of the Estate"
+msgstr ""
+
+#. module: account
+#: selection:tax.adjustments.wizard,adjustment_type:0
+msgid "Adjustment in your favor"
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model:ir.ui.view,arch_db:account.view_tax_form
 msgid "Advanced Options"
@@ -1976,11 +1875,6 @@ msgid "Allow Cancelling Entries"
 msgstr "Permetre cancel·lar assentaments"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
-msgid "Allow Currency Rate Live"
-msgstr "Permetre Canvi Moneda en viu"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template_reconcile
 msgid "Allow Invoices & payments Matching"
 msgstr "Permetre la conciliació de factures i pagaments"
@@ -2022,6 +1916,7 @@ msgstr "Permet utilitzar la comptabilitat analítica"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2341,14 +2236,14 @@ msgid "Automated Entries"
 msgstr "Entrades Automatitzades"
 
 #. module: account
-#: code:addons/account/models/company.py:349
+#: code:addons/account/models/company.py:354
 #: code:addons/account/wizard/setup_wizards.py:79
 #, python-format
 msgid "Automatic Balancing Line"
 msgstr "Línia de Balanç Automàtica"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_currency_rate_live
 msgid "Automatic Currency Rates"
 msgstr "Canvi de Moneda Automàtic"
 
@@ -2531,6 +2426,12 @@ msgstr "Configuració del Banc marcada com a feta"
 #: model:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
 msgstr "Extracte bancari"
+
+#. module: account
+#: code:addons/account/models/account_bank_statement.py:935
+#, python-format
+msgid "Bank Statement %s"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -4613,11 +4514,6 @@ msgid "Enable Comparison"
 msgstr "Habilita la comparació"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
-msgid "Enable payment followup management"
-msgstr "Activa l'administració de seguiment de pagaments"
-
-#. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "End"
 msgstr "Fi"
@@ -4967,12 +4863,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_receivables_follow_up
 msgid "Follow-up"
-msgstr ""
+msgstr "Seguiment"
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_reports_followup
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Nivells de seguiment"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_report_sign
@@ -5109,7 +5005,7 @@ msgstr "Informe del llibre major"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
 msgid "Generate Entries"
-msgstr ""
+msgstr "Genera assentaments"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -5189,7 +5085,7 @@ msgstr "Bona Feina!"
 #: model:ir.model.fields,field_description:account.field_account_account_group_id
 #: model:ir.model.fields,field_description:account.field_account_account_template_group_id
 msgid "Group"
-msgstr ""
+msgstr "Grup"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -5622,7 +5518,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiu"
 
 #. module: account
 #: selection:account.payment.method,payment_type:0
@@ -5923,7 +5819,6 @@ msgstr "Factura"
 #: model:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 #: model:ir.ui.view,arch_db:account.view_account_payment_graph
 #: model:ir.ui.view,arch_db:account.view_invoice_graph
@@ -6406,7 +6301,7 @@ msgstr "Última modificació el "
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Last Month"
-msgstr ""
+msgstr "Últim mes"
 
 #. module: account
 #. openerp-web
@@ -6595,7 +6490,7 @@ msgstr "Data de l'última conciliació de factures i pagaments"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_parent_left
 msgid "Left Parent"
-msgstr ""
+msgstr "Pare esquerra"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6848,7 +6743,7 @@ msgstr "Marcar la factura com totalment pagada"
 #: model:ir.ui.menu,name:account.menu_finance_payables_master_data
 #: model:ir.ui.menu,name:account.menu_finance_receivables_master_data
 msgid "Master Data"
-msgstr ""
+msgstr "Dades principals"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_matched_credit_ids
@@ -7089,7 +6984,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "Net"
-msgstr ""
+msgstr "Net"
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -7117,7 +7012,7 @@ msgstr "Nova data de pagament:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_sequence_number_next_prefix
 #: model:ir.model.fields,field_description:account.field_account_journal_sequence_number_next
 msgid "Next Number"
-msgstr ""
+msgstr "Pròxim número"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7201,17 +7096,6 @@ msgstr "Deutor normal"
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
 msgstr "Text normal"
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_credit_notes
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter_inherit_invoices
-msgid "Not Draft"
-msgstr ""
-
-#. module: account
-#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
-msgid "Not Paid"
-msgstr "No pagat"
 
 #. module: account
 #. openerp-web
@@ -7460,13 +7344,14 @@ msgstr ""
 #. openerp-web
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: code:addons/account/static/src/xml/account_payment.xml:82
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #, python-format
 msgid "Open"
 msgstr "Obert"
 
 #. module: account
 #. openerp-web
-#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:636
+#: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:662
 #: code:addons/account/static/src/xml/account_reconciliation.xml:131
 #, python-format
 msgid "Open balance"
@@ -7477,7 +7362,7 @@ msgstr "Saldo inicial"
 #: model:ir.model.fields,field_description:account.field_account_opening_date
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_date
 msgid "Opening Date"
-msgstr ""
+msgstr "Data d'obertura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_opening_journal_id
@@ -7653,17 +7538,18 @@ msgstr "Informes PDF"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr ""
+msgstr "Paquet"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 #: model:ir.ui.view,arch_db:account.report_overdue_document
+#: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model:mail.message.subtype,name:account.mt_invoice_paid
 msgid "Paid"
 msgstr "Pagat"
 
 #. module: account
-#: code:addons/account/models/account_payment.py:411
+#: code:addons/account/models/account_payment.py:426
 #, python-format
 msgid "Paid Invoices"
 msgstr "Factures pagades"
@@ -7749,7 +7635,7 @@ msgstr "Llibre major d'empresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_partner_name
 msgid "Partner Name"
-msgstr ""
+msgstr "Nom de l'empresa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_partner_type
@@ -8272,7 +8158,7 @@ msgstr "Plantilla del producte"
 #: model:ir.actions.act_window,name:account.product_product_action
 #: model:ir.ui.view,arch_db:account.product_product_view_tree
 msgid "Products"
-msgstr ""
+msgstr "Productes"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:177
@@ -8318,7 +8204,7 @@ msgstr "Propietats"
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 msgid "Purchasable Products"
-msgstr ""
+msgstr "Productes Comprables"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -8708,7 +8594,7 @@ msgstr "Valor en informe"
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr ""
+msgstr "Informes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding_rounding
@@ -8799,7 +8685,7 @@ msgstr "Revisar la llista de divises disponibles (des de"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group_parent_right
 msgid "Right Parent"
-msgstr ""
+msgstr "Pare dret"
 
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
@@ -8825,12 +8711,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_rounding_method
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Rounding Method"
-msgstr ""
+msgstr "Mètode arrodoniment"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_rounding
 msgid "Rounding Precision"
-msgstr ""
+msgstr "Precisió d'arrodoniment"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cash_rounding_strategy
@@ -8843,7 +8729,7 @@ msgid "Rounding Tree"
 msgstr ""
 
 #. module: account
-#: model:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
 msgstr ""
 
@@ -9139,7 +9025,7 @@ msgstr "Seqüència"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Set To Draft"
-msgstr ""
+msgstr "Estableix en esborrany"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag_active
@@ -9497,12 +9383,12 @@ msgstr "Mètode d'arrodoniment del càlcul d'impostos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "Impost de base d'efectiu d'entrada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr ""
+msgstr "Impost de base d'efectiu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_amount_type
@@ -9559,7 +9445,7 @@ msgstr "Nom impost"
 #: model:ir.model.fields,field_description:account.field_account_tax_cash_basis_account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_cash_basis_account
 msgid "Tax Received Account"
-msgstr ""
+msgstr "Compte d'impostos rebuts"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_tax
@@ -9603,7 +9489,7 @@ msgstr "Plantilles impostos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Mètode d'arrodoniment del càlcul d'impostos"
 
 #. module: account
 #: sql_constraint:account.tax:0 sql_constraint:account.tax.template:0
@@ -10218,6 +10104,13 @@ msgid "The partner reference of this invoice."
 msgstr "La referència de l'empresa d'aquesta factura."
 
 #. module: account
+#: code:addons/account/models/account.py:522
+#, python-format
+msgid ""
+"The partners of the journal's company and the related bank account mismatch."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:60
 #, python-format
 msgid "The payment amount cannot be negative."
@@ -10325,6 +10218,8 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"No hi ha diari base d'efectiu d'impostos definit per aquesta empresa:\" %s \"\n"
+"Configurar en Ajustos / Configuració / Comptabilitat"
 
 #. module: account
 #. openerp-web
@@ -10371,7 +10266,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "This Month"
-msgstr ""
+msgstr "Aquest mes"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:111
@@ -10759,7 +10654,6 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Import total"
@@ -11087,17 +10981,12 @@ msgstr "Utilitzar comptabilitat anglosaxona"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_tax_exigibility
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "Utilitzar base d'efectiu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa_direct_debit
 msgid "Use SEPA Direct Debit"
 msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_sepa
-msgid "Use SEPA payments"
-msgstr "Utilitzar pagaments SEPA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_journal_id
@@ -11221,7 +11110,7 @@ msgstr "DNI/NIF requerit"
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "VAT:"
-msgstr ""
+msgstr "IVA:"
 
 #. module: account
 #. openerp-web
@@ -11583,7 +11472,7 @@ msgstr ""
 "informes financers (compte autocalculat 'nivell')."
 
 #. module: account
-#: code:addons/account/models/account_move.py:207
+#: code:addons/account/models/account_move.py:209
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s"
@@ -11592,7 +11481,7 @@ msgstr ""
 "bloqueig %s"
 
 #. module: account
-#: code:addons/account/models/account_move.py:209
+#: code:addons/account/models/account_move.py:211
 #, python-format
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
@@ -11603,7 +11492,7 @@ msgstr ""
 "amb el rol 'Assessor'"
 
 #. module: account
-#: code:addons/account/models/account_invoice.py:1208
+#: code:addons/account/models/account_invoice.py:1193
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -11611,6 +11500,15 @@ msgid ""
 msgstr ""
 "No pot cancel·lar una factura que ja està parcialment pagada. Necessita "
 "trencar la conciliació del pagament relacionat primer."
+
+#. module: account
+#: code:addons/account/models/company.py:143
+#, python-format
+msgid ""
+"You cannot change the currency of the company since some journal items "
+"already exist"
+msgstr ""
+"No es pot canviar la moneda de l'empresa quan ja hi ha alguns elements"
 
 #. module: account
 #: code:addons/account/models/account.py:235

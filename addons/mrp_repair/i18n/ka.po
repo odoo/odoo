@@ -7,19 +7,21 @@
 # Saba Khmaladze <skhmaladze@uglt.org>, 2018
 # Giorgi Melitauri <gmelitauri@live.com>, 2018
 # Gizo Kobakhidze <040168@gmail.com>, 2018
+# Temur, 2018
+# Dachi Darchiashvili <darcho.dd@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Gizo Kobakhidze <040168@gmail.com>, 2018\n"
+"POT-Creation-Date: 2018-04-27 14:52+0000\n"
+"PO-Revision-Date: 2018-04-27 14:52+0000\n"
+"Last-Translator: Dachi Darchiashvili <darcho.dd@gmail.com>, 2018\n"
 "Language-Team: Georgian (https://www.transifex.com/odoo/teams/41243/ka/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ka\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
 #. module: mrp_repair
 #: model:mail.template,report_name:mrp_repair.mail_template_mrp_repair_quotation
@@ -39,7 +41,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "(update)"
-msgstr ""
+msgstr "(განახლება)"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
@@ -63,7 +65,7 @@ msgid ""
 "                (with reference: ${object.origin} )\n"
 "                % endif\n"
 "                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
 "                % endif\n"
 "                </p>\n"
 "                <p>You can reply to this email if you have any questions.</p>\n"
@@ -206,7 +208,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "დამოწმებული"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:600
@@ -304,7 +306,7 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Done"
-msgstr ""
+msgstr "დასრულებულია"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -319,7 +321,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Extra Info"
-msgstr ""
+msgstr "დამატებითი ინფორმაცია"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -354,7 +356,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "History"
-msgstr ""
+msgstr "ისტორია"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_cancel_id
@@ -543,7 +545,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Notes"
-msgstr ""
+msgstr "ჩანაწერები"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
@@ -592,7 +594,7 @@ msgstr "პროდუქტი"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_qty
 msgid "Product Quantity"
-msgstr ""
+msgstr "პროდუქტის რაოდენობა"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom
@@ -652,7 +654,7 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
 msgid "Remove"
-msgstr ""
+msgstr "მოცილება"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_stock_move_repair_id
@@ -819,12 +821,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_subtotal
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_subtotal
 msgid "Subtotal"
-msgstr ""
+msgstr "ქვეჯამი"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Tax"
-msgstr ""
+msgstr "გადასახადი"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
@@ -832,7 +834,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Taxes"
-msgstr ""
+msgstr "გადასახადები"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:175
@@ -882,7 +884,7 @@ msgstr "დღევანდელი აქტივობები"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
-msgstr ""
+msgstr "ჯამი"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -897,7 +899,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_type
 msgid "Type"
-msgstr ""
+msgstr "ტიპი"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -909,7 +911,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_price_unit
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Unit Price"
-msgstr ""
+msgstr "ერთეულის ფასი"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -930,7 +932,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:175
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "გაფრთხილება"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
@@ -940,7 +942,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Yes"
-msgstr ""
+msgstr "დიახ"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:300

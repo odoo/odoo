@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: board
 #. openerp-web
@@ -122,6 +122,13 @@ msgstr "תאריך שינוי אחרון"
 #: model:ir.ui.view,arch_db:board.board_my_dash_view
 #, python-format
 msgid "My Dashboard"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/favorite_menu.js:99
+#, python-format
+msgid "Please refresh your browser for the changes to take effect."
 msgstr ""
 
 #. module: board

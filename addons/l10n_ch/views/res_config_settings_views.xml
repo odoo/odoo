@@ -17,6 +17,35 @@
                                 Print the coordinates of your bank under the &apos;Payment for&apos; title of the ISR.
                                 Your address will be moved to the &apos;in favour of&apos; section.
                             </div>
+                            <div class="content-group" attrs="{'invisible': [('l10n_ch_isr_print_bank_location', '=', False)]}">
+                                <div class="row mt16">
+                                    <label for="l10n_ch_isr_preprinted_bank" class="col-md-4 o_light_label"/>
+                                    <field name="l10n_ch_isr_preprinted_bank"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_ch_isr_preprinted_account" class="col-md-4 o_light_label"/>
+                                    <field name="l10n_ch_isr_preprinted_account"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="l10n_ch-isr_print_scanline_offset">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label string="ISR scan line offset"/>
+                            <div class="text-muted">
+                                Offset to move the the scan line in mm
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="l10n_ch_isr_scan_line_top" class="col-md-4 o_light_label"/>
+                                    <field name="l10n_ch_isr_scan_line_top"/>
+                                </div>
+                                <div class="row">
+                                    <label for="l10n_ch_isr_scan_line_left" class="col-md-4 o_light_label"/>
+                                    <field name="l10n_ch_isr_scan_line_left"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </xpath>

@@ -4,7 +4,7 @@
          <field name="name">report.all.channels.sales.pivot</field>
          <field name="model">report.all.channels.sales</field>
          <field name="arch" type="xml">
-            <pivot string="All Channels Sales Orders Analysis">
+            <pivot string="All Channels Sales Orders Analysis" disable_linking="True">
                 <field name="name" type="row"/>
                 <field name="price_total" string="Total Price" type="measure"/>
             </pivot>

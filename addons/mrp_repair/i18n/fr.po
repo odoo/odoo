@@ -25,14 +25,13 @@
 # Clo <clo@odoo.com>, 2017
 # fr trans <e2ftrans1@yahoo.com>, 2017
 # Florian Hatat, 2017
-# fr trans <e2ffr05@hotmail.com>, 2018
 # e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"POT-Creation-Date: 2018-04-27 14:52+0000\n"
+"PO-Revision-Date: 2018-04-27 14:52+0000\n"
 "Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -91,27 +90,13 @@ msgid ""
 "                (with reference: ${object.origin} )\n"
 "                % endif\n"
 "                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong>\n"
 "                % endif\n"
 "                </p>\n"
 "                <p>You can reply to this email if you have any questions.</p>\n"
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
-"<?xml version=\"1.0\"?>\n"
-"<data><p>Cher/chère ${object.partner_id.name}</p>\n"
-"                <p>\n"
-"                Voici votre ordre de réparation ${doc_name} <strong>${object.name}</strong>\n"
-"                % if object.origin:\n"
-"                (référence : ${object.origin} )\n"
-"                % endif\n"
-"                % if object.invoice_method != 'none':\n"
-"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
-"                % endif\n"
-"                </p>\n"
-"                <p>Vous pouvez répondre à cet e-mail si vous avez des questions.</p>\n"
-"                <p>Merci,</p>\n"
-"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder

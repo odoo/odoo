@@ -114,7 +114,7 @@
                                 <span class="label label-danger"><i class="fa fa-fw fa-warning"></i><span class="hidden-xs"> Problem</span></span>
                             </t>
                             <t t-if="order.state == 'done'">
-                                <span class="label label-default hidden-xs"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Done</span></span>
+                                <span class="label label-success hidden-xs"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Done</span></span>
                             </t>
                         </td>
                         <td><span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.pricelist_id.currency_id}'/></td>
@@ -148,7 +148,7 @@
                             <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
                         </t>
                         <t t-if="order.state == 'done'">
-                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Done</span>
+                            <span class="label label-success"><i class="fa fa-fw fa-check" /> Done</span>
                         </t>
                     </h4>
                 </div>

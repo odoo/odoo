@@ -37,9 +37,7 @@ class ProductProduct(models.Model):
         price = 0.0
         result, result2 = bom.explode(self, 1)
         for sbom, sbom_data in result2:
-            if not sbom.attribute_value_ids:
-                # No attribute_value_ids means the bom line is not variant specific
-                price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * sbom_data['qty']
+            price += sbom.product_id.uom_id._compute_price(sbom.product_id.standard_price, sbom.product_uom_id) * sbom_data['qty']
         if bom.routing_id:
             # FIXME master: remove me
             if hasattr(self.env['mrp.workcenter'], 'costs_hour'):                

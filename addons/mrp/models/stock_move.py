@@ -73,6 +73,13 @@ class StockMove(models.Model):
     order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
 
+    def _unreserve_initial_demand(self, new_move):
+        # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
+        self.filtered(lambda m: m.production_id or m.raw_material_production_id)\
+        .mapped('move_line_ids')\
+        .filtered(lambda ml: ml.qty_done == 0.0)\
+        .write({'move_id': new_move, 'product_uom_qty': 0})
+
     @api.depends('active_move_line_ids.qty_done', 'active_move_line_ids.product_uom_id')
     def _compute_done_quantity(self):
         super(StockMove, self)._compute_done_quantity()
@@ -137,12 +144,12 @@ class StockMove(models.Model):
              If you want to cancel this MO, please change the consumed quantities to 0.'))
         return super(StockMove, self)._action_cancel()
 
-    def _action_confirm(self, merge=True):
+    def _action_confirm(self, merge=True, merge_into=False):
         moves = self.env['stock.move']
         for move in self:
             moves |= move.action_explode()
         # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm(merge=merge)
+        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into)
 
     def action_explode(self):
         """ Explodes pickings """
