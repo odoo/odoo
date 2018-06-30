@@ -831,12 +831,12 @@ class Task(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         recipients = super(Task, self).message_get_suggested_recipients()
-        for task in self.filtered('partner_id'):
-            reason = _('Customer Email') if task.partner_id.email else _('Customer')
+        for task in self:
             if task.partner_id:
+                reason = _('Customer Email') if task.partner_id.email else _('Customer')
                 task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
             elif task.email_from:
-                task._message_add_suggested_recipient(recipients, partner=task.email_from, reason=reason)
+                task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
     @api.multi

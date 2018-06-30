@@ -519,20 +519,24 @@ class IrActionsReport(models.Model):
                     # we look on the pdf structure using pypdf to compute the outlines_pages that is
                     # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
                     reader = PdfFileReader(pdf_content_stream)
-                    outlines_pages = sorted(
-                        [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
-                    assert len(outlines_pages) == len(res_ids)
-                    for i, num in enumerate(outlines_pages):
-                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
-                        attachment_writer = PdfFileWriter()
-                        for j in range(num, to):
-                            attachment_writer.addPage(reader.getPage(j))
-                        stream = io.BytesIO()
-                        attachment_writer.write(stream)
-                        if res_ids[i] and res_ids[i] not in save_in_attachment:
-                            self.postprocess_pdf_report(record_map[res_ids[i]], stream)
-                        streams.append(stream)
-                    close_streams([pdf_content_stream])
+                    if reader.trailer['/Root'].get('/Dests'):
+                        outlines_pages = sorted(
+                            [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                        assert len(outlines_pages) == len(res_ids)
+                        for i, num in enumerate(outlines_pages):
+                            to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                            attachment_writer = PdfFileWriter()
+                            for j in range(num, to):
+                                attachment_writer.addPage(reader.getPage(j))
+                            stream = io.BytesIO()
+                            attachment_writer.write(stream)
+                            if res_ids[i] and res_ids[i] not in save_in_attachment:
+                                self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                            streams.append(stream)
+                        close_streams([pdf_content_stream])
+                    else:
+                        # If no outlines available, do not save each record
+                        streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
         # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.

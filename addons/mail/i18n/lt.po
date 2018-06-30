@@ -195,6 +195,8 @@ msgid ""
 "* Smiley are only used for HTML code to display an image * Text (default "
 "value) is used to substitute text with another text"
 msgstr ""
+"* Šypsenėlės yra naudojamos tik HTML kodui paveikslėliams atvaizduoti * "
+"Tekstas (numatytoji reikšmė) yra naudojama pakeisti tekstą kitu tekstu"
 
 #. module: mail
 #. openerp-web
@@ -229,7 +231,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:76
 #, python-format
 msgid "0 Today"
-msgstr ""
+msgstr "0 Šiandien"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:678
@@ -241,6 +243,11 @@ msgid ""
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
 msgstr ""
+"<br><br>\n"
+"            Galite paminėti ką nors parašydami <b>@vartotojovardas</b>, tai atkreips jo dėmesį.<br>\n"
+"            Galite paminėti kanalą parašydami <b>#kanalas</b>.<br>\n"
+"            Galite įvykdyti komandą parašydami <b>/command</b>.<br>\n"
+"            Galite pridėti iš anksto paruoštus atsakymus į savo žinutę parašydami <b>:shortcut</b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:584
@@ -619,7 +626,7 @@ msgstr "Pridėti prenumeratorius"
 #: code:addons/mail/models/ir_actions.py:36
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr ""
+msgstr "Sekėjų pridėjimas gali būti pridėtas tik el. pašo gijų modeliui"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
@@ -751,6 +758,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
+"Atsakymai neina į pradinę dokumento diskusiją. Tai turi įtakos sugeneruotam "
+"žinutės ID."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -830,6 +839,8 @@ msgid ""
 "Author of the message. If not set, email_from may hold an email address that"
 " did not match any partner."
 msgstr ""
+"Žinutės autorius. Jei nenustatyta, email_from gali turėti el. pašto adresą, "
+"kuris nesutampa su partneriais."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
@@ -980,7 +991,7 @@ msgstr "Kanalas"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel Message"
-msgstr ""
+msgstr "Kanalo žinutė"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
@@ -1662,6 +1673,8 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Siuntėjo el. pašto adresas. Šis laukas yra nustatomas, kai nerandamas "
+"sutampantis partneris, ir jis pakeičia autoriaus ID susirašinėjime."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2413,7 +2426,7 @@ msgstr "Gauta"
 #: model:ir.model.fields,help:mail.field_mail_message_parent_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_parent_id
 msgid "Initial thread message."
-msgstr ""
+msgstr "Pradinė susirašinėjimo gijos žinutė."
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
@@ -3078,6 +3091,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Žinutės tipas: el. paštas el. pašto žinutei, pranešimas sistemos žinutei, "
+"komentaras kitoms žinutėms, tokioms, kaip vartotojų atsakymai"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_message_id
@@ -3912,7 +3927,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "Papildoma reikšmė nustatymui, jei numatytasis laukas yra tuščias"
 
 #. module: mail
 #: selection:mail.activity.type,category:0
@@ -4625,6 +4640,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"Šoninės juostos veiksmas, padarantis šį šabloną pasiekiamą susijusių "
+"dokumentų modelio įrašuose"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_avatar
@@ -4909,12 +4926,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_source
 msgid "The shortcut which must be replaced in the Chat Messages"
-msgstr ""
+msgstr "Trumpoji nuoroda, kuri turi būti pakeista susirašinėjimo žinutėse"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_shortcode_unicode_source
 msgid "The source is replaced by this unicode character in the Chat Messages"
-msgstr ""
+msgstr "Susirašinėjimo žinutėse šaltinis yra pakeičiamas šiuo unikodo ženklu"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_model_id

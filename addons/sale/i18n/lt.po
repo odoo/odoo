@@ -448,7 +448,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Sutikti ir pasirašyti"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -517,13 +517,13 @@ msgstr "Suma"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
 msgid "Amount Invoiced"
-msgstr ""
+msgstr "Kiekis, už kurį pateikta sąskaita"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr ""
+msgstr "Kiekis, už kurį pateikti sąskaitą"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
@@ -639,6 +639,9 @@ msgid ""
 "confirming orders straight away. This will add specific action buttons to "
 "your dashboard."
 msgstr ""
+"Pažymėkite šį langelį, jei siunčiate savo klientams komercinius pasiūlymus, "
+"o ne iškart patvirtinate užsakymus. Taip pridėsite tam tikrus veiksmų "
+"mygtukus į valdymo skydelį."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
@@ -1081,6 +1084,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Jei pardavimas yra užrakintas, nebegalėsite jo keisti. Vis dėlto, jūs vis "
+"tiek galėsite pateikti sąskaitą ar pristatyti."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1153,7 +1158,7 @@ msgstr "Sąskaitos išrašymas"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
-msgstr ""
+msgstr "Pateikti sąskaitą pardavimų užsakymui"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_status
@@ -1173,16 +1178,19 @@ msgid ""
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Sąskaitų pajamos einančiam mėnesiui. Tai yra kiekis, už kurį pardavimų "
+"kanalas pateikė sąskaitas šį mėnesį. Jis naudojamas progresijos santykiui "
+"tarp esamų pajamų ir tikslo skaičiavimui kanban peržiūroje."
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr ""
+msgstr "Pateikti sąskaitą už tai, kas pristatyta"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is ordered"
-msgstr ""
+msgstr "Pateikti sąskaitą už tai, kas užsakyta"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1235,12 +1243,14 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"Sąskaitos bus pateiktos kaip juodraščiai, todėl galėsite\n"
+"peržiūrėti jas prieš patvirtinimą."
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr ""
+msgstr "Sąskaitos: viso neapmokęstinta"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1256,7 +1266,7 @@ msgstr "Sąskaitos išrašymas"
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Sąskaitų pateikimo politika"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
@@ -1290,6 +1300,8 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Neleidžiama keisti šių laukų užrakintame užsakyme:\n"
+"%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
@@ -1337,7 +1349,7 @@ msgstr "Leiskite savo klientams prisijungti ir matyti savo dokumentus"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers sign &amp; pay online"
-msgstr ""
+msgstr "Leiskite savo vartotojams pasirašyti ir sumokėti internetu"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1362,7 +1374,7 @@ msgstr "Užrakinta"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "Valdyti akcijų ir kuponų programas"
 
 #. module: sale
 #: selection:product.template,service_type:0
@@ -1385,6 +1397,9 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
+"Rankiniu būdu nustatykite savo komercinio pasiūlymo galiojimo datą arba data"
+" bus nustatoma automatiškai, remiantis šablonu, jei internetiniai "
+"komerciniai pasiūlymai yra įdiegti."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_margin
@@ -1475,6 +1490,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
+"Turėkite omenyje, kad kai komercinis pasiūlymas tampa pardavimo užsakymu\n"
+"                jis bus perkeltas iš pasiūlymų sąrašo į pardavimo užsakymų sąrašą."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1483,12 +1500,14 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
+"Turėkite omenyje, kad kai komercinis pasiūlymas tampa pardavimo užsakymu, "
+"jis bus perkeltas iš pasiūlymų sąrašo į pardavimo užsakymų sąrašą."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "Nėra už ką pateikti sąskaitą"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -1502,12 +1521,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "Komercinių pasiūlymų sąskaitoms skaičius"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "Pardavimų sąskaitoms skaičius"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1517,6 +1536,10 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"Kai komercinis pasiūlymas yra patvirtinamas, jis tampa pardavimo užsakymu.\n"
+"                    Galėsite pateikti sąskaitą už jį ir susirinkti mokėjimus.\n"
+"                    Iš <i>Pardavimų užsakymų</i> meniu galite sekti pristatymo\n"
+"                   užsakymus ar paslaugas."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
@@ -1682,7 +1705,7 @@ msgstr "Kita informacija"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "IŠANKSTINĖ sąskaita"
+msgstr "Išansktinė sąskaita"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
