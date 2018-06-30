@@ -11,6 +11,6 @@
         'views/res_config_settings_views.xml',
     ],
     'external_dependencies' : {
-        'python' : ['ldap'],
+        'python' : ['pyldap'],
     }
 }

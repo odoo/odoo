@@ -8,6 +8,7 @@ import importlib
 import io
 import logging
 import os
+import pkg_resources
 import shutil
 import tempfile
 import zipfile
@@ -308,15 +309,32 @@ class Module(models.Model):
         return super(Module, self).unlink()
 
     @staticmethod
+    def _check_python_external_dependency(pydep):
+        try:
+            pkg_resources.get_distribution(pydep)
+        except pkg_resources.DistributionNotFound as e:
+            try:
+                importlib.import_module(pydep)
+                _logger.warning("python external dependency %s should be replaced by it's PyPI package name", pydep)
+            except ImportError:
+                # backward compatibility attempt failed
+                _logger.warning("DistributionNotFound: %s", e)
+                raise Exception('Python library not installed: %s' % (pydep,))
+        except pkg_resources.VersionConflict as e:
+            _logger.warning("VersionConflict: %s", e)
+            raise Exception('Python library version conflict: %s' % (pydep,))
+        except Exception as e:
+            _logger.warning("get_distribution(%s) failed: %s", pydep, e)
+            raise Exception('Error finding python library %s' % (pydep,))
+
+
+    @staticmethod
     def _check_external_dependencies(terp):
         depends = terp.get('external_dependencies')
         if not depends:
             return
         for pydep in depends.get('python', []):
-            try:
-                importlib.import_module(pydep)
-            except ImportError:
-                raise ImportError('No module named %s' % (pydep,))
+            Module._check_python_external_dependency(pydep)
 
         for binary in depends.get('bin', []):
             try:

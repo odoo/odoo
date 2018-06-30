@@ -18,7 +18,7 @@ that would need such functionality.
 """,
     'depends': ['hw_proxy'],
     'external_dependencies': {
-        'python' : ['usb.core','serial','qrcode'],
+        'python' : ['pyusb','pyserial','qrcode'],
     },
     'installable': False,
 }
