@@ -1240,6 +1240,8 @@ msgstr ""
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
+"Inventoriaus perkėlimai, kuriems turite nuskenuoti partijos numerį šiam "
+"darbo užsakymui"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_user_working
@@ -1642,7 +1644,7 @@ msgstr "Žurnalo įrašas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_move_lot_ids
 msgid "Moves to Track"
-msgstr ""
+msgstr "Sekami veiksmai"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -1711,6 +1713,8 @@ msgid ""
 "No data to display. You will get here statistics about the\n"
 "              work orders duration related to this routing."
 msgstr ""
+"Nėra rodomų duomenų. Čia gausite statistiką apie\n"
+"darbo užsakymų, susijusių su šiuo maršrutu, trukmę."
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
@@ -1753,6 +1757,8 @@ msgstr "Nėra produktų variantų"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
+"Joks darbo užsakymas šiuo metu nevyksta. Paspauskite, kad pažymėtumėte darbo"
+" centrą kaip užblokuotą."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -2677,6 +2683,8 @@ msgstr "Techninis laukas užsakyti pervežimams"
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
 msgstr ""
+"Techninis laukas rodantis, ar galima rodyti \"Pažymėti kaip atliktą\" "
+"mygtuką"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_done_wo
@@ -2697,7 +2705,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
 msgid "Technical field to check when we can unreserve"
-msgstr ""
+msgstr "Techninis laukas pažymėjimui, kada galime atrezervuoti"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
@@ -2769,6 +2777,8 @@ msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
 msgstr ""
+"Operacija, kur komponentai yra sunaudojami arba galutiniai produktai yra "
+"sukuriami."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -2915,6 +2925,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Produktų gaminimui, surinkimui, žaliavų ir nebaigtų produktų\n"
+"naudojimui taip pat turite tvarkyti gaminimo operacijas. Gaminimo\n"
+"operacijos dažnai vadinamos darbo užsakymais. Įvairios operacijos\n"
+"turės skirtingą įtaką gaminimo kaštams ir planavimui, priklausomai\n"
+"nuo galimos darbo apkrovos."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3015,6 +3030,8 @@ msgid ""
 "Unit of Measure (Unit of Measure) is the unit of measurement for the "
 "inventory control"
 msgstr ""
+"Matavimo vienetas (Matavimo vienetas) yra matavimo vienetas inventoriaus "
+"kontrolei"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3246,6 +3263,10 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"Darbo užsakymų operacijos leidžia jums sukurti ir valdyti gaminimo "
+"operacijas, kurių turėtų būt laikomasi jūsų darbo centruose, kad būtų "
+"pagamintas produktas. Jos yra pridedamos prie medžiagų sąrašų, kurie nusako "
+"reikalingas žaliavas."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3337,13 +3358,13 @@ msgstr "Darbo centro produktyvumas"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "Darbo centro produktyvumo žurnalas"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr ""
+msgstr "Darbo centro produktyvumo praradimas"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -3437,7 +3458,7 @@ msgstr ""
 #: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
-msgstr ""
+msgstr "Jau apdorojote %d. Įveskite kiekį, didesnį nei %d "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:353

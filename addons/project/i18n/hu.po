@@ -1110,7 +1110,7 @@ msgid ""
 msgstr ""
 "Egy feladat kanbanállapota jelzi az előrehaladását befolyásoló speciális állapotokat:\n"
 " * Normál: az alapértelmezett állapot\n"
-" * Blokkolt: azt mutatja, hogy valami megakadályozza ezen feladat előrehaladását\n"
+" * Blokkolva: azt mutatja, hogy valami megakadályozza ezen feladat előrehaladását\n"
 " * Készen áll a következő szakaszra: azt mutatja, hogy a feladat készen áll a következő szakaszba való áthúzásra"
 
 #. module: project
@@ -1346,12 +1346,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 #, python-format
 msgid "Attachments"
-msgstr "Mellékletek"
+msgstr "Csatolmányok"
 
 #. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
-msgstr "Automatikusan létrehoz egy email álnevet a projekt létrehozásakor"
+msgstr "Automatikusan létrehoz egy e-mail álnevet a projekt létrehozásakor"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1404,7 +1404,7 @@ msgstr ""
 #: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
-msgstr "Blokkolt"
+msgstr "Blokkolva"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1496,7 +1496,7 @@ msgstr "A leírás és cél tisztázása"
 #: code:addons/project/static/src/js/tour.js:59
 #, python-format
 msgid "Click on a card to get the details of the task."
-msgstr "Kattintson egy kártyára a feladat részleteihez"
+msgstr "Kattintson egy kártyára a feladat részleteinek megtekintéséhez"
 
 #. module: project
 #. openerp-web
@@ -1505,8 +1505,8 @@ msgstr "Kattintson egy kártyára a feladat részleteihez"
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
 msgstr ""
-"Kattintson a kártyára <b>a projekt témájának eléréséhez</b> és feladatai "
-"rendszerezéséhez."
+"Kattintson a kártyára <b>a projekt eléréséhez</b>, és kezdje el rendszerezni"
+" a feladatokat."
 
 #. module: project
 #. openerp-web
@@ -1523,12 +1523,12 @@ msgstr "Kattintson egy új címke hozzáadásához."
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
 msgid "Click to add a stage in the task pipeline."
-msgstr "Kattintson a egy új szakasz hozzáadásához a folyamat útvonalába."
+msgstr "Kattintson egy új szakasz hozzáadásához a feladatfolyamatba."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "Click to create a new project.<br>"
-msgstr "Kattintson új projekt létrehozásához.<br>"
+msgstr "Kattintson egy új projekt létrehozásához.<br>"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
@@ -1540,7 +1540,7 @@ msgstr "Kollaboratív, formázott szöveg használata a feladat leírásánál"
 #: model:ir.model.fields,field_description:project.field_project_tags_color
 #: model:ir.model.fields,field_description:project.field_project_task_color
 msgid "Color Index"
-msgstr "Szín jegyzék"
+msgstr "Színjegyzék"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1566,7 +1566,7 @@ msgstr "Vállalat"
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr "Cég mértékegysége"
+msgstr "Vállalat mértékegysége"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -3526,7 +3526,7 @@ msgstr "Feladat tevékenységei"
 #: model:mail.message.subtype,name:project.mt_project_task_blocked
 #: model:mail.message.subtype,name:project.mt_task_blocked
 msgid "Task Blocked"
-msgstr "Blokkolt feladat"
+msgstr "Feladat blokkolva"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3571,7 +3571,7 @@ msgstr "Feladat neve..."
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
-msgstr "Blokkolt feladat"
+msgstr "Feladat blokkolva"
 
 #. module: project
 #: selection:project.config.settings,module_pad:0
