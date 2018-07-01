@@ -28,6 +28,8 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"Є %s %sдоступне на всіх складах."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -49,6 +51,7 @@ msgstr "Допродаж"
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
+"Застосуйте спеціальні маршрути із замовлень (наприклад, дропшипінг, MTO)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -57,6 +60,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"За замовчуванням Odoo обчислює очікувану дату доставки таким чином: дата "
+"замовлення + найбільший час доставки клієнтів. За допомогою цього параметра "
+"ви можете встановити конкретну дату замовлення на доставку, а не "
+"встановлювати час очікування товарів."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -97,7 +104,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Відображати інкотерми на замовленнях та рахунках-фактури"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_route_so_lines
@@ -160,6 +167,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Маржа помилки для дат, обіцяних покупцям. Товари заплановані на доставку на "
+"багато днів раніше, ніж фактична обіцяна дата, щоби впоратися з "
+"несподіваними затримками в ланцюжку постачання."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -178,7 +188,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Очікувані наступні дати доставки"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:174
@@ -189,7 +199,7 @@ msgstr "Не достатньо запасів!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Спеціально-замовлені маршрути"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:188
@@ -235,6 +245,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Бронюючи товари вручну в замовленнях на доставку або керуючи планувальником,"
+" рекомендується краще керувати пріоритетами у випадку довгого строку "
+"обслуговування клієнтів та/або частого вилучення запасів. За замовчуванням, "
+"планувальник запускається автоматично кожні 24 години."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -244,7 +258,7 @@ msgstr "Маршрут"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Маршрути для рідків замовлення на продаж"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
@@ -289,17 +303,17 @@ msgstr "Дні підстрахування для продажів"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Плануйте постачання раніше, щоб уникнути затримок"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Безпека часу проведення"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Безпека часу проведення для продажів"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -309,17 +323,17 @@ msgstr "Можна обирати у рядках"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Set a delivery date on orders"
-msgstr ""
+msgstr "Встановіть дату доставки на замовлення"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Завантажте всі товари одразу"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Якнайшвидша доставка товарів, зі зворотним замовленням"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -354,6 +368,11 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Це дозволяє застосовувати спеціальний маршрут до рядка замовлення на продаж "
+"(наприклад, дропшипінг, виготовлення на замовлення) у разі незвичного "
+"сценарію замовлення. Щоб бути доступним у замовленнях на продаж, маршрути "
+"повинні мати опцію \"Рядок замовлення на продаж\", зазначену в їхній формі "
+"налаштування."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
@@ -381,12 +400,12 @@ msgstr "Попередження"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Коли зарезервувати продані товари"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Коли розпочати доставку"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:189
@@ -404,6 +423,7 @@ msgstr ""
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
+"Ви плануєте продати%s %s але ви маєте лише %s %s доступне на %s складі."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

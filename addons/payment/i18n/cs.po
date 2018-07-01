@@ -25,33 +25,33 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr ""
+msgstr "3D Secure HTML"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/>Zpět na Můj účet"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\">zaplatit</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-plus-circle\"> Add new card</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-plus-circle\">Přidat novou kartu</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/>Smazat"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:112
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Zrušit,</i> platba byla zrušena."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:108
@@ -60,6 +60,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Hotovo,</i> platba online byla úspěšně zpracována. Děkuji za Vaši "
+"objednávku."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:116
@@ -69,6 +71,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Chyba,</i> Upozorňujeme, že během transakce došlo k chybě. Objednávka "
+"byla potvrzena, ale nebude zaplacena. Pokud máte jakékoliv dotazy ohledně "
+"stavu objednávky, neváhejte nás kontaktovat."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:104
@@ -77,13 +82,15 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Probíhá</i> Online platba byla úspěšně zpracována. Vaše objednávka však "
+"ještě není potvrzena."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:349
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Tato karta je momentálně propojena s následujícími záznamy:<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -91,6 +98,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Test</span>\n"
+"<span class=\"o_stat_text\">Prostředí</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -128,6 +137,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Hotovo, </i>platba online byla úspěšně zpracována. Děkuji za Vaši "
+"objednávku.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -146,6 +157,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Chyba,</i> Upozorňujeme, že během transakce došlo k chybě. "
+"Objednávka byla potvrzena, ale nebude zaplacena. Pokud máte jakékoliv dotazy"
+" ohledně stavu objednávky, neváhejte nás kontaktovat.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -161,28 +175,30 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"</span></i>Probhá </i> Online platba byla úspěšně zpracována. Vaše "
+"objednávka však ještě není potvrzena.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr ""
+msgstr "<span><i>Čeká se </i>... Po objednávce bude platba potvrzena.</span>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
 msgid "Acquirer"
-msgstr ""
+msgstr "Odběratel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Účet Odběratele"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Ref. Odběratele"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
@@ -192,17 +208,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Odběratelé"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Seznam Odběratelů"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Activate"
-msgstr ""
+msgstr "aktivovat"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -212,7 +228,7 @@ msgstr "Aktivní"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Přidat další poplatky"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_address
@@ -297,7 +313,7 @@ msgstr "Zrušit"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_cancel_msg
 msgid "Cancel Message"
-msgstr ""
+msgstr "Zrušit zprávu"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -309,12 +325,12 @@ msgstr "Zrušeno"
 #: code:addons/payment/static/src/js/payment_form.js:168
 #, python-format
 msgid "Cannot set-up the payment"
-msgstr ""
+msgstr "Platbu nelze nastavit"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Sejmout částku ručně"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
@@ -340,7 +356,7 @@ msgstr ""
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Click to create a payment icon."
-msgstr ""
+msgstr "Klepnutím vytvořte ikonu platby."
 
 #. module: payment
 #: model:payment.acquirer,post_msg:payment.payment_acquirer_custom
@@ -368,7 +384,7 @@ msgstr "Konfigurovat"
 #: code:addons/payment/static/src/js/payment_form.js:322
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Potvrdit vymazání"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -384,7 +400,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
-msgstr ""
+msgstr "Zúčtování platebního tokenu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
@@ -425,7 +441,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "Credit card(s)"
-msgstr ""
+msgstr "Kreditní karta(y)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_currency_id
@@ -478,7 +494,7 @@ msgstr "Návrh"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
@@ -511,7 +527,7 @@ msgstr "Chybové hlášení"
 #: code:addons/payment/static/src/js/payment_form.js:372
 #, python-format
 msgid "Error: "
-msgstr ""
+msgstr "Chyba:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_fees
@@ -536,12 +552,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "Pevné domácí poplatky"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "Pevné mezinárodní poplatky"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -551,7 +567,7 @@ msgstr "Formulář"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr ""
+msgstr "Šablona tlačítka formuláře"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -667,7 +683,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_methods
 msgid "Manage your Payment Methods"
-msgstr ""
+msgstr "Spravujte způsoby platby"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay_meth_link
@@ -963,7 +979,7 @@ msgstr "Telefon"
 #: code:addons/payment/static/src/js/payment_form.js:199
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Vyberte způsob platby."
 
 #. module: payment
 #. openerp-web
