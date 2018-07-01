@@ -4008,7 +4008,7 @@ msgstr "Данъци на клиент"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Customer ref:"
-msgstr ""
+msgstr "Референция за клиент"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -4085,6 +4085,7 @@ msgstr "Дати"
 #: selection:account.payment.term.line,option:0
 msgid "Day(s) after the end of the invoice month (Net EOM)"
 msgstr ""
+"Дата/и след края на месеца на излизане на фактурата (нето в края на месеца)"
 
 #. module: account
 #: selection:account.payment.term.line,option:0
@@ -4128,7 +4129,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_inbound_payment_method_ids
 msgid "Debit Methods"
-msgstr ""
+msgstr "Дебитни методи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_debit_move_id
@@ -4138,7 +4139,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_debit_account_id
 msgid "Debit account"
-msgstr ""
+msgstr "Дебитна сметка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_debit
@@ -4149,6 +4150,8 @@ msgstr "Сума дебит"
 #: model:ir.model.fields,help:account.field_account_move_line_matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
 msgstr ""
+"Пунктове в дебитния счетоводен регистър, които съвпадат с този пункт в "
+"счетоводния регистър."
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -4184,7 +4187,7 @@ msgstr "Данък продажба по подразбиране"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_id
 msgid "Default Sales Tax"
-msgstr ""
+msgstr "Данък продажби по подразбиране"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tax_ids
@@ -4227,7 +4230,7 @@ msgstr "Дефиниция"
 #: model:ir.model.fields,field_description:account.field_res_partner_trust
 #: model:ir.model.fields,field_description:account.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Степен на доверие към конкретния длъжник"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_deprecated
@@ -4243,7 +4246,7 @@ msgstr "Амортизация"
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_out_form
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Опишете защо вземате пари от касовия регистър"
 
 #. module: account
 #. openerp-web
@@ -4272,7 +4275,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_auto_apply
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_auto_apply
 msgid "Detect Automatically"
-msgstr ""
+msgstr "Автоматично разпознаване"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_template_type_tax_use
@@ -4281,6 +4284,9 @@ msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
 msgstr ""
+"Определя къде данъкът е избираем. Забележка: \"Нито един\" означава, че "
+"даден данък не може да се използва сам по себе си, но все пак би могъл да се"
+" използва в група."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_difference
@@ -4290,19 +4296,19 @@ msgstr "Разлика"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_writeoff_account_id
 msgid "Difference Account"
-msgstr ""
+msgstr "Сметка на различията"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_difference
 msgid ""
 "Difference between the computed ending balance and the specified ending "
 "balance."
-msgstr ""
+msgstr "Разлика между изчисления краен баланс и установения краен баланс."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Direct connection to your bank"
-msgstr ""
+msgstr "Директна връзка с Вашата банка"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
@@ -4325,12 +4331,12 @@ msgstr "Отстъпка (%)"
 #: model:ir.model.fields,field_description:account.field_account_common_account_report_display_account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_display_account
 msgid "Display Accounts"
-msgstr ""
+msgstr "Покажете сметки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_debit_credit
 msgid "Display Debit/Credit Columns"
-msgstr ""
+msgstr "Покажете дебитни/кредитни колони"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_display_name
@@ -4411,7 +4417,7 @@ msgstr "Име за показване"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "Покажете деца в равнина"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
@@ -4421,12 +4427,12 @@ msgstr "Показва елементи от тип 'дете' в йерархи
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_display_detail
 msgid "Display details"
-msgstr ""
+msgstr "Покажете подробности"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_description
 msgid "Display on Invoices"
-msgstr ""
+msgstr "Покажете на фактурите"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_print_docsaway
@@ -4440,6 +4446,8 @@ msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
 msgstr ""
+"Документ: Извлечение сметка клиент<br/>\n"
+"                    Дата:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_payables_documents
@@ -4474,7 +4482,7 @@ msgstr "Чернова"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Bill"
-msgstr ""
+msgstr "Проектна сметка"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -4499,7 +4507,7 @@ msgstr "Проек на фактури"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Draft bills"
-msgstr ""
+msgstr "Проектни сметки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4532,22 +4540,22 @@ msgstr "Насрочена дата"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due Date Computation"
-msgstr ""
+msgstr "Изчисляване на дължимата дата"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Due Month"
-msgstr ""
+msgstr "Дължим месец"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_print_overdue
 msgid "Due Payments"
-msgstr ""
+msgstr "Дължими плащания"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Due Type"
-msgstr ""
+msgstr "Падежен тип"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_date_maturity
@@ -4578,13 +4586,13 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:191
 #, python-format
 msgid "EXCH"
-msgstr ""
+msgstr "Промяна"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1041
 #, python-format
 msgid "Either pass both debit and credit or none."
-msgstr ""
+msgstr "Всяко разрешение, дебитно/кредитно или нито едно."
 
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
@@ -4620,7 +4628,7 @@ msgstr "Крайна дата"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
 msgid "End of Following Month"
-msgstr ""
+msgstr "Край на следващ месец"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_balance_end_real
@@ -4630,12 +4638,12 @@ msgstr "Краен баланс"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox_end_id
 msgid "Ending Cashbox"
-msgstr ""
+msgstr "Крайна каса"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Enjoy your Odoo experience,"
-msgstr ""
+msgstr "Насладете се на Odoo опита си"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -4651,12 +4659,12 @@ msgstr "Записите Сортирани по"
 #: code:addons/account/models/account_move.py:1006
 #, python-format
 msgid "Entries are not of the same account!"
-msgstr ""
+msgstr "Вписванията не са от една и съща сметка!"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr ""
+msgstr "Вписвания, подлежащи на преглед"
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:58
@@ -4700,13 +4708,15 @@ msgstr "Excel шаблон"
 #: code:addons/account/models/chart_template.py:191
 #, python-format
 msgid "Exchange Difference"
-msgstr ""
+msgstr "Разлика във валутния курс"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_currency_exchange_journal_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings_currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
 msgstr ""
+"Счетоводен регистър на печалбите и загубите вследствие промяната на валутния"
+" курс "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile_exchange_move_id
@@ -4720,6 +4730,9 @@ msgid ""
 "Finance</strong> or the <strong>European Central Bank</strong>. You can "
 "activate this feature in the bottom of the"
 msgstr ""
+"Обменните курсове могат автоматично да се актуализират веднъж дневно от "
+"<strong>Yahoo Finance</strong> или от <strong>European Central "
+"Bank</strong>. Можете да активирате тази функция в дъното на"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_expects_chart_of_accounts
@@ -4753,7 +4766,7 @@ msgstr "Разходи"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr ""
+msgstr "Външна референция"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4763,7 +4776,7 @@ msgstr "Допълнителни Възможности"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_search
 msgid "Favorites"
-msgstr ""
+msgstr "Фаворити"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -4774,17 +4787,17 @@ msgstr "Февруари"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_state_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template_state_ids
 msgid "Federal States"
-msgstr ""
+msgstr "Федерални щати"
 
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "File Import"
-msgstr ""
+msgstr "Въвеждане на файл"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.cash_box_in_form
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Попълнете този формуляр, ако внасяте пари в касовия регистър:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_accounting_report_filter_cmp
@@ -4796,18 +4809,18 @@ msgstr "Подреждане по"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:141
 #, python-format
 msgid "Filter..."
-msgstr ""
+msgstr "Филтър"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_general_account_id
 #: model:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr ""
+msgstr "Финансова сметка"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_style_overwrite
 msgid "Financial Report Style"
-msgstr ""
+msgstr "Вид на финансовия отчет"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_financial_report_tree
@@ -4824,7 +4837,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.action_report_financial
 msgid "Financial report"
-msgstr ""
+msgstr "Финансов отчет"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op_account_setup_fy_data_done
@@ -4835,11 +4848,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "First, register any outstanding customer invoices and vendor bills:"
 msgstr ""
+"Първо регистрирайте всички възможни неуредени клиентски фактури и сметки на "
+"продавачи/доставчици:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Fiscal Information"
-msgstr ""
+msgstr "Фискална информация"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4925,7 +4940,7 @@ msgstr "Фиксирана сметка"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_fixed_assets
 msgid "Fixed Assets"
-msgstr ""
+msgstr "Дълготрайни активи"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_amount
@@ -4936,6 +4951,8 @@ msgid ""
 "Fixed amount will count as a debit if it is negative, as a credit if it is "
 "positive."
 msgstr ""
+"Фиксираната сума ще се счита за дебит, в случай че е отрицателна и за "
+"кредит, в случай че е положителна."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_receivables_follow_up
@@ -4956,11 +4973,17 @@ msgid ""
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
 msgstr ""
+"За сметки, които по принцип са по-скоро дебитни, отколкото кредитни и които "
+"желаете да разпечатате като негативни суми в извлеченията си, е необходимо "
+"да отмените символа за баланса; напр.: Сметка на разходите. Същото се отнася"
+" и до  сметки, които са по-скоро кредитни, отколкото дебитни и които бихте "
+"желали да разпечатате като положителни суми в извлеченията си; напр.: Сметка"
+" на приходите."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_value_amount
 msgid "For percent enter a ratio between 0-100."
-msgstr ""
+msgstr "За процент въведете съотношение между 0-100."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4968,11 +4991,14 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
+"За Odoo Team,<br/>\n"
+"                            Фабиен Пинкерс, основател"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_currency_id
 msgid "Forces all moves for this account to have this account currency."
 msgstr ""
+"Кара всички движения по тази сметка да разполагат с тази валута по сметка."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_currency_id
@@ -5001,12 +5027,12 @@ msgstr "Свободна отпратка"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Payable accounts"
-msgstr ""
+msgstr "От разплащателни сметки"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Receivable accounts"
-msgstr ""
+msgstr "От сметки за вземания"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -5015,6 +5041,10 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"От този отчет можете да добиете представа за фактурираната сума от Вашите "
+"продавачи/доставчици. Търсачката също може да бъде използвана с цел "
+"персонализиране отчетите за фактурите Ви и по този начин да нагоди този "
+"анализ към специфичните Ви нужди."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -5023,6 +5053,10 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"От този отчет можете да добиете представа за фактурираната сума от Вашите "
+"клиенти. Търсачката също може да бъде използвана с цел персонализиране "
+"отчетите за фактурите Ви и по този начин да нагоди този анализ към "
+"специфичните Ви нужди."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -5044,13 +5078,13 @@ msgstr "Бъдещи дейности"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "GROSS PROFIT"
-msgstr ""
+msgstr "БРУТНА ПЕЧАЛБА"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_income_currency_exchange_account_id
 #: model:ir.model.fields,field_description:account.field_res_company_income_currency_exchange_account_id
 msgid "Gain Exchange Rate Account"
-msgstr ""
+msgstr "Сметка печалба от обменен курс"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
@@ -5077,7 +5111,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Get started"
-msgstr ""
+msgstr "Започнете дейност"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5096,18 +5130,22 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_sequence
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "Посочва последователността на този ред, когато показва фастурата."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_sequence
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
 msgstr ""
+"Посочва реда на последователност, когато показва списък на редовете с "
+"банкови извлечения."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_tax_sequence
 msgid "Gives the sequence order when displaying a list of invoice tax."
 msgstr ""
+"Посочва реда на последователност, когато показва списък с данъка върху "
+"фактурите."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line_sequence
@@ -5131,7 +5169,7 @@ msgstr "Отиди в панела за конфигурация"
 #. module: account
 #: selection:res.partner,trust:0
 msgid "Good Debtor"
-msgstr ""
+msgstr "Добър длъжник"
 
 #. module: account
 #. openerp-web
@@ -5169,7 +5207,7 @@ msgstr "Групиране на фактурни редове"
 #: selection:account.tax,amount_type:0
 #: selection:account.tax.template,amount_type:0
 msgid "Group of Taxes"
-msgstr ""
+msgstr "Данъчна група"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5310,13 +5348,13 @@ msgstr "ID"
 #: code:addons/account/models/chart_template.py:188
 #, python-format
 msgid "INV"
-msgstr ""
+msgstr "Фактура"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:389
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "В случай, че е посочена \"Сума на валутата\" трябва да присъства и \"Сума\". "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_nocreate
@@ -5329,6 +5367,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal_journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
+"Ако е празно, използва счетоводния регистър на съответното вписване, за да "
+"бъде отменено/променено."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_include_base_amount
@@ -5337,6 +5377,8 @@ msgid ""
 "If set, taxes which are computed after this one will be computed based on "
 "the price tax included."
 msgstr ""
+"Ако е инсталирано, данъците, които са изчислени след това, ще бъдат "
+"изчислени на базата на включения данък върху цената."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_analytic
@@ -5345,6 +5387,9 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
+"Ако е инсталирано, сумата, изчислена посредством този данък ще бъде "
+"определена за същата аналитична сметка както за реда на фактурата (ако такъв"
+" съществува)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_active
@@ -5381,6 +5426,8 @@ msgid ""
 "If you have less than 200 contacts, we recommend you\n"
 "                                        create them manually."
 msgstr ""
+"В случай, че имате по-малко от 200 контакта, Ви препоръчваме\n"
+"                                        да ги създадете ръчно."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_general_ledger_initial_balance
@@ -5388,6 +5435,9 @@ msgid ""
 "If you selected date, this field allow you to add a row to display the "
 "amount of debit/credit/balance that precedes the filter you've set."
 msgstr ""
+"В случай, че сте избрали дата, това поле Ви позволява да добавите редица, "
+"която да посочва сумата от дебит/кредит/баланс, която предхожда инсталирания"
+" от Вас филтър."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -5395,6 +5445,9 @@ msgid ""
 "If you unreconcile transactions, you must also verify all the actions that "
 "are linked to those transactions because they will not be disabled"
 msgstr ""
+"В случай че извадите транзакции от състояние 'несъгласувани', трябва да "
+"потвърдите и всички действия, свързани с тези транзакции, тъй като те няма "
+"да бъдат деактивирани."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_payment_term_id
@@ -7216,6 +7269,9 @@ msgid ""
 "                etc. So, you should record journal entries manually only/mainly\n"
 "                for miscellaneous operations."
 msgstr ""
+"Odoo автоматично създава едно вписване в счетоводния регистър за счетоводен\n"
+"                документ: фактура, олезщетение, плащане на доставчик, банково извлечение\n"
+"                и т. н. Така че ще се налага да документирате вписванията в счетоводния регистър ръчно предимно за разнородни по рода си операции."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8028,12 +8084,12 @@ msgstr "Публикувано"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "Публикувани вписвания в счетоводния регистър"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "Публикувани вписвания в счетоводния регистър"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_bank_account_code_prefix
@@ -8135,7 +8191,7 @@ msgstr "Продукти"
 #: code:addons/account/models/account_bank_statement.py:177
 #, python-format
 msgid "Profit"
-msgstr ""
+msgstr "Печалба"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8464,6 +8520,8 @@ msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
 msgstr ""
+"База за обезщетение от този тип. Не можете да променята и отменяте, в "
+"случай, че фактурата вече е съгласувана."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_payment
@@ -9298,7 +9356,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_refund_account_id
 msgid "Tax Account on Refunds"
-msgstr ""
+msgstr "Данъчна фактура за обезщетения"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_adjustment
@@ -9571,6 +9629,8 @@ msgstr ""
 msgid ""
 "Technical field to hide filter_refund in case invoice is partially paid"
 msgstr ""
+"Техническо поле, което да скрие filter_refund в случай, че фактурата е "
+"частично изплатена"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_journal_type
