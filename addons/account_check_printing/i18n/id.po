@@ -6,6 +6,7 @@
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # rahman hakim <alif_rahman76@yahoo.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
+# Ikhsanul Wirsa <iwirsa02@outlook.co.id>, 2017
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # Andhitia Rama <andhitia.r@gmail.com>, 2017
 # Ryanto The <ry.the77@gmail.com>, 2017
@@ -33,7 +34,7 @@ msgstr ": Nomor Urut Cek"
 #: code:addons/account_check_printing/models/account_payment.py:69
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr "memo cek tidak lebih dari 60 karakter"
+msgstr "Memo cek tidak boleh lebih dari 60 karakter."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
@@ -60,7 +61,7 @@ msgstr "Mencetak cek"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
 msgid "Check Printing Payment Method Selected"
-msgstr ""
+msgstr "Metode Pembayaran Cetak Cek Dipilih"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_sequence_id
@@ -72,13 +73,12 @@ msgstr "rangkaian cek"
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"cek opsi ini jika cek yang telah dicetak sebelumnya tidak diberi nomor."
+msgstr "Centang opsi jika cek Anda yang belum dicetak tidak bernomor."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr ""
+msgstr "Cek yang akan dicetak"
 
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
@@ -88,23 +88,23 @@ msgstr "Cek"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 msgid "Checks To Print"
-msgstr ""
+msgstr "Cek yang akan dicetak"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_sequence_id
 msgid "Checks numbering sequence."
-msgstr ""
+msgstr "Rangkaian penomoran cek"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:97
 #, python-format
 msgid "Checks to Print"
-msgstr ""
+msgstr "Cek yang akan dicetak"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr ""
+msgstr "Cek yang akan dicetak"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
@@ -133,8 +133,8 @@ msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
 msgstr ""
-"Cek harus berasal dari jurnal bank yang sama jika hendak dicetak dalam "
-"jumlah banyak sekali cetak."
+"Untuk mencetak banyak cek dalam sekali cetak, cek-cek tersebut harus berada "
+"dalam jurnal bank yang sama."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -166,13 +166,13 @@ msgstr "Penomoran manual"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_bank_journal_form_inherited_check_printing
 msgid "Manual Numbering of check"
-msgstr ""
+msgstr "Penomoran Cek secara Manual"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_next_check_number
 msgid "Next Check Number"
-msgstr "Nomor Check berikutnya"
+msgstr "Nomor Cek berikutnya"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_number
@@ -181,9 +181,9 @@ msgid ""
 " are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
-"Beri nomor pada cek yang berkenaan dengan pembayaran ini. jika cek pra-cetak"
-" belum diberi nomor, anda dapat membuat penomoran pada halaman konfigurasi "
-"jurnal."
+"Nomor cek yang berkenaan dengan pembayaran ini. Jika cek Anda yang belum "
+"dicetak belum bernomor, Anda dapat mengatur penomoran pada halaman "
+"pengaturan jurnal."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -197,15 +197,15 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Pembayaran untuk mencetak cek harus memiliki metode pembayaran cek terpilih "
-"dan belum disepakati."
+"Pembayaran yang akan dicetak sebagai cek harus memastikan 'Cek' dipilih "
+"sebagai metode pembayaran dan belum pernah direkonsiliasi"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "Silahkan masukan angka cek pra-cetak pertama yang akan anda cetak."
+msgstr "Mohon masukkan nomor cek belum tercetak yang ingin Anda cetak."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -215,12 +215,12 @@ msgstr "Cetak"
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Print Check"
-msgstr "Mencetak Check"
+msgstr "Cetak Cek"
 
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr "Cek Cetak"
+msgstr "Cetak Cek"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:99
@@ -228,17 +228,17 @@ msgstr "Cek Cetak"
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr ""
+msgstr "Cetak Cek yang Belum Bernomor"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
 msgid "Register payments on multiple invoices"
-msgstr "Mendaftar pembayaran beberapa tagihan"
+msgstr "Terbitkan pembayaran dalam beberapa faktur"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "Nomor rangkaian dari cek yang hendak dicetak selanjutnya."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
@@ -246,6 +246,8 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
+"Fitur teknis yang digunakan untuk mengetahui apakah pencetakan cek "
+"diaktifkan sebagai metode pembayaran."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:26
@@ -254,6 +256,8 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"Nomor cek terakhir adalah %s. Untuk menghindari cek ditolak oleh bank, Anda "
+"hanya dapat menggunakan nomor yang lebih besar."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -262,6 +266,9 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"Jurnal yang dipilih diatur untuk mencetak nomor cek. Jika lembaran cek belum"
+" tercetak Anda memiliki nomor atau jika penomoran saat ini salah, Anda dapat"
+" mengubahnya pada halaman pengaturan jurnal."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:121
@@ -270,19 +277,24 @@ msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
+"Tidak ada tata letak cek yang diatur. Pastikan modul cetak cek yang benar "
+"telah terpasang dan pengaturannya (dalam pengaturan perusahaan > tab "
+"'Pengaturan') sudah benar."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
 msgstr ""
+"Ini akan memperbolehkan Anda untuk menyimpan nomor cek berkenaan pada "
+"pembayaran."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr ""
+msgstr "Hilangkan Tanda Terkirim"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr "Wizard.multi.Charts.akuns"
+msgstr "wizard.multi.charts.accounts"
