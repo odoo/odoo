@@ -208,18 +208,6 @@
 
         <!-- Product Variant -->
 
-        <record id="product_search_form_view_stock" model="ir.ui.view">
-            <field name="name">product.search.stock.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_search_form_view"/>
-            <field name="arch" type="xml">
-                <field name="pricelist_id" position="before">
-                    <field name="location_id" widget="selection" context="{'location': self}"/>
-                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                </field>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="product_kanban_stock_view">
             <field name="name">Product Kanban Stock</field>
             <field name="model">product.product</field>
