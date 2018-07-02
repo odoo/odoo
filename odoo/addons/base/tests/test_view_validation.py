@@ -71,12 +71,15 @@ valid_form = etree.parse(io.BytesIO(b'''\
                 <span class="fa fa-success" aria-label="Test span" title="Test span"/>
                 <a class="fa fa-success"><span aria-label="test" title="test"/></a>
                 <a class="btn" role="button"/>
+                <i class="fa fa-check"/> Test icon
+                <i class="fa fa-check"/>
             </group>
         </page>
     </notebook>
     <div role="dialog" class="modal">
         <header class="modal-header"/>
         <main class="modal-body"/>
+        <i class="fa fa-check"/> <span>Test</span>
         <footer class="modal-footer"/>
     </div>
     <div class="tab-pane" role="tabpanel"/>
