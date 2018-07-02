@@ -1506,13 +1506,19 @@ attributes:
     'retention' (default). Churn mode will start at 0% and accumulate over time
     whereas retention will start at 100% and decrease over time.
 
+- ``timeline`` (optional)
+    A string to describe the timeline. It should be either 'backward' or 'forward' (default).
+    Forward timeline will display data from date_start to date_stop, whereas backward timeline
+    will display data from date_stop to date_start (when the date_start is in future / greater
+    than date_stop).
+
 - ``interval`` (optional)
     A string to describe a time interval. It should be 'day', 'week', 'month''
     (default) or 'year'.
 
 - ``measure`` (optional)
     A field that can be aggregated.  This field will be used to compute the values
-    for each cell.  If not set, the cohort view will count the number of occurences.
+    for each cell.  If not set, the cohort view will count the number of occurrences.
 
 Search
 ======
