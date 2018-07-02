@@ -29,9 +29,9 @@ var ProductWishlist = Widget.extend({
         if ($('.wishlist-section').length) {
             $('.wishlist-section a.o_wish_rm').on('click', function (e){ self.wishlist_rm(e, false); });
             $('.wishlist-section a.o_wish_add').on('click', function (e){
-                $(e.currentTarget).addClass('disabled');
+                $('.wishlist-section a.o_wish_add').addClass('disabled');
                 self.wishlist_add_or_mv(e).then(function(o) {
-                    $(e.currentTarget).removeClass('disabled');
+                    $('.wishlist-section a.o_wish_add').removeClass('disabled');
                 });
             });
         }
