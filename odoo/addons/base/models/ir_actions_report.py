@@ -404,6 +404,9 @@ class IrActionsReport(models.Model):
                 else:
                     message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
                 raise UserError(message % (str(process.returncode), err[-1000:]))
+            else:
+                if err:
+                    _logger.warning('wkhtmltopdf: %s' % err)
         except:
             raise
 
