@@ -479,27 +479,27 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <li t-att-class="not comments and 'active' or None">
                                     <a aria-controls="about" href="#about" role="tab" data-toggle="tab">
-                                        <span class="fa fa-home"> About</span>
+                                        <i class="fa fa-home"></i> About
                                     </a>
                                 </li>
                                 <li>
                                     <a aria-controls="share" href="#share" role="tab" data-toggle="tab">
-                                        <span class="fa fa-share-alt"> Share</span>
+                                        <i class="fa fa-share-alt"></i> Share
                                     </a>
                                 </li>
                                 <li t-att-class="comments and 'active' or None">
                                     <a aria-controls="discuss" href="#discuss" role="tab" data-toggle="tab">
-                                        <span class="fa fa-comments-o"> Comments</span>
+                                        <i class="fa fa-comments-o"></i> Comments
                                     </a>
                                 </li>
                                 <li>
                                     <a aria-controls="transcript" href="#transcript" role="tab" data-toggle="tab">
-                                        <span class="fa fa-align-justify"> Transcript</span>
+                                        <i class="fa fa-align-justify"></i> Transcript
                                     </a>
                                 </li>
                                 <li>
                                     <a aria-controls="statistic" href="#statistic" role="tab" data-toggle="tab">
-                                        <span class="fa fa-bar-chart"> Statistics</span>
+                                        <i class="fa fa-bar-chart"></i> Statistics
                                     </a>
                                 </li>
                             </ul>
@@ -521,7 +521,7 @@
                                     </t>
                                 </div>
                                 <div role="tabpanel" class="tab-pane fade" t-if="not slide.website_published" id="share">
-                                    <h4 class="fa fa-info-circle">
+                                    <h4><i class="fa fa-info-circle"></i>
                                         The social sharing module will be unlocked when a moderator will allow your publication.
                                     </h4>
                                 </div>
@@ -544,15 +544,15 @@
                                             <ul class="list-group">
                                                 <li class="list-group-item">
                                                     <span class="badge"><t t-esc="slide.total_views"/></span>
-                                                    <span class="fa fa-play"> Total Views</span>
+                                                    <i class="fa fa-play"></i> Total Views
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge"><t t-esc="slide.slide_views"/></span>
-                                                    <span class="fa fa-circle-o"> Website Views</span>
+                                                    <i class="fa fa-circle-o"></i> Website Views
                                                 </li>
                                                 <li class="list-group-item" t-if="not slide.document_id">
                                                     <span class="badge"><t t-esc="slide.embed_views"/></span>
-                                                    <span class="fa fa-code"> Embedded Views</span>
+                                                    <i class="fa fa-code"></i> Embedded Views
                                                 </li>
                                             </ul>
                                         </div>
@@ -562,19 +562,19 @@
                                             <ul class="list-group">
                                                 <li class="list-group-item">
                                                     <span class="badge" id="total-share">0</span>
-                                                    <span class="fa fa-share-alt"> Social Shares</span>
+                                                    <i class="fa fa-share-alt"></i> Social Shares
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge"><t t-esc="slide.likes"/></span>
-                                                    <span class="fa fa-thumbs-up"> Likes</span>
+                                                    <i class="fa fa-thumbs-up"></i> Likes
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge"><t t-esc="slide.dislikes"/></span>
-                                                    <span class="fa fa-thumbs-down"> Dislikes</span>
+                                                    <i class="fa fa-thumbs-down"></i> Dislikes
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge"><t t-esc="len(slide.website_message_ids)"/></span>
-                                                    <span class="fa fa-comments-o"> Comments</span>
+                                                    <i class="fa fa-comments-o"></i> Comments
                                                 </li>
                                             </ul>
                                         </div>
@@ -584,19 +584,19 @@
                                             <ul class="list-group">
                                                 <li class="list-group-item">
                                                     <span class="badge" id="facebook-badge">0</span>
-                                                    <span class="fa fa-facebook-square"> Facebook</span>
+                                                    <i class="fa fa-facebook-square"></i> Facebook
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge" id="twitter-badge">0</span>
-                                                    <span class="fa fa-twitter-square"> Twitter</span>
+                                                    <i class="fa fa-twitter-square"></i> Twitter
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge" id="linkedin-badge">0</span>
-                                                    <span class="fa fa-linkedin-square"> LinkedIn</span>
+                                                    <i class="fa fa-linkedin-square"></i> LinkedIn
                                                 </li>
                                                 <li class="list-group-item">
                                                     <span class="badge" id="google-badge">0</span>
-                                                    <span class="fa fa-google-plus-square"> Google+</span>
+                                                    <i class="fa fa-google-plus-square"></i> Google+
                                                 </li>
                                             </ul>
                                         </div>

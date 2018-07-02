@@ -765,8 +765,8 @@
     <t t-call="website_forum.header">
         <div class="alert alert-info text-center" role="status" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
             <p class='text-muted mb16'>This post is currently awaiting moderation and not yet published... Do you want <i>Accept</i> or <i>Reject</i> this post ?</p>
-            <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success"><span class="fa fa-suffix-check">Accept </span></a>
-            <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger"><span class="fa fa-suffix-times">Reject </span></a>
+            <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">Accept <i class="fa fa-check"/></a>
+            <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">Reject <i class="fa fa-times"/></a>
         </div>
         <div class="alert alert-info text-center" role="status" t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate">
             Waiting for validation
@@ -1572,7 +1572,7 @@
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><p class="fa fa-comment">New Forum</p></a></li>
+        <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>
 

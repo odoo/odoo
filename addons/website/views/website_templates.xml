@@ -336,8 +336,8 @@
         <li groups="website.group_website_publisher">
             <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
             <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
-                <span class="fa fa-plus-circle">
-                    Add a language...</span>
+                <i class="fa fa-plus-circle"/>
+                Add a language...
             </a>
         </li>
     </ul>

@@ -144,7 +144,7 @@
 <div t-name="CrashManager.error" class="o_dialog_error">
     <div class="alert alert-warning clearfix" role="alert">
         <button class="btn btn-sm btn-primary pull-right ml8 o_clipboard_button">
-            <span class="fa fa-clipboard mr8">Copy the full error to clipboard</span>
+            <i class="fa fa-clipboard mr8"/>Copy the full error to clipboard
         </button>
         <p><b>An error occurred</b></p>
         <p>Please use the copy button to report the error to your support service.</p>
@@ -630,7 +630,7 @@
 <div aria-atomic="true" t-name="DomainSelector" t-attf-class="o_domain_node o_domain_tree o_domain_selector #{widget.readonly ? 'o_read_mode' : 'o_edit_mode'}">
     <t t-if="widget.children.length === 0">
         <span>Match <strong>all records</strong></span>
-        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><span class="fa fa-plus"> Add filter</span></button>
+        <button t-if="!widget.readonly" class="btn btn-xs btn-primary o_domain_add_first_node_button"><i class="fa fa-plus"/> Add filter</button>
     </t>
     <t t-else="">
         <div class="o_domain_tree_header">
@@ -1458,12 +1458,12 @@
         <div class="col-xs-6">
             Get this feature and much more with Odoo Enterprise!
             <ul class="list-unstyled">
-                <li><span class="fa fa-check"> Access to all Enterprise Apps</span></li>
-                <li><span class="fa fa-check"> New design</span></li>
-                <li><span class="fa fa-check"> Mobile support</span></li>
-                <li><span class="fa fa-check"> Upgrade to future versions</span></li>
-                <li><span class="fa fa-check"> Bugfixes guarantee</span></li>
-                <li><a href="http://www.odoo.com/editions" target="_blank"><span class="fa fa-plus"> And more</span></a></li>
+                <li><i class="fa fa-check"></i> Access to all Enterprise Apps</li>
+                <li><i class="fa fa-check"></i> New design</li>
+                <li><i class="fa fa-check"></i> Mobile support</li>
+                <li><i class="fa fa-check"></i> Upgrade to future versions</li>
+                <li><i class="fa fa-check"></i> Bugfixes guarantee</li>
+                <li><a href="http://www.odoo.com/editions" target="_blank"><i class="fa fa-plus"></i> And more</a></li>
             </ul>
         </div>
         <div class="col-xs-6">

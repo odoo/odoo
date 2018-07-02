@@ -60,8 +60,8 @@
             <div class="o_hr_attendance_kiosk_mode">
                 <t t-set="checked_in" t-value="widget.employee_state=='checked_in'"/>
                 <div class="o_hr_attendance_back_button">
-                    <span class="btn btn-default btn-lg visible-xs"><span class="fa fa-chevron-left mr8"> Go back</span></span>
-                    <span class="btn btn-default hidden-xs"><i role="img" class="fa fa-chevron-left" aria-label="Go back" title="Go back"/></span>
+                    <span class="btn btn-default btn-lg visible-xs"><i class="fa fa-chevron-left mr8"/> Go back</span>
+                    <span class="btn btn-default hidden-xs"><i class="fa fa-chevron-left" role="img" aria-label="Go back" title="Go back"/></span>
                 </div>
                 <t t-if="widget.employee_id">
                     <div class="o_hr_attendance_user_badge o_home_menu_background">
