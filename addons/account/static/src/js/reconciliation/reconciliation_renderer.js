@@ -298,7 +298,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             };
             self.fields.partner_id.appendTo(self.$('.accounting_view caption'));
         });
-        this.$('thead .line_info_button').attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
+        $('<span class="line_info_button fa fa-info-circle"/>')
+            .appendTo(this.$('thead .cell_info_popover'))
+            .attr("data-content", qweb.render('reconciliation.line.statement_line.details', {'state': this._initialState}));
         this.$el.popover({
             'selector': '.line_info_button',
             'placement': 'left',
