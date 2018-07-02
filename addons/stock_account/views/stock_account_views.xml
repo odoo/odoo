@@ -49,6 +49,26 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_stock_return_picking_line_form">
+            <field name="name">Stock Return Picking Line</field>
+            <field name="model">stock.return.picking.line</field>
+            <field name="arch" type="xml">
+               <form string="Stock Return Picking">
+                    <sheet>
+                        <group>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="wizard_id"/>
+                            <field name="move_id"/>
+                        </group>
+                        <label for="to_refund"/>
+                        <field name="to_refund" widget="boolean_toggle" class="ml16"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!-- valuation wizard: current or at date -->
         <record id="view_stock_quantity_history" model="ir.ui.view">
             <field name="name">Valuation Report</field>
