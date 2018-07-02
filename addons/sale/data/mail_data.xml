@@ -72,11 +72,15 @@
 % set access_url = is_online and object.get_mail_url() or ''
 % set access_name = 'View %s' % doc_name
 
-% if is_online and object.state in ('draft', 'sent') and pay_sign_name == 'pay':
-    % if pay_sign_name == 'sign' and object.has_to_be_paid():
-        % set access_name = 'Sign and pay online'
+% if is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign'):
+    % if pay_sign_name == 'sign':
+        % if object.has_to_be_paid():
+            % set access_name = 'Sign and pay online'
+        % else:
+            % set access_name = 'Accept and sign online'
+        % endif
     % else:
-        % set access_name = 'Accept and %s online' % pay_sign_name
+        % set access_name = 'Accept and pay online'
     % endif
 % endif
 
