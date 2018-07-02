@@ -2,6 +2,7 @@ odoo.define('web.Menu', function (require) {
 "use strict";
 
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -37,65 +38,9 @@ var Menu = Widget.extend({
         }
         this.trigger('menu_bound');
 
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        core.bus.on('resize', this, function() {
-            if ($(window).width() < 768 ) {
-                lazyreflow('all_outside');
-            } else {
-                lazyreflow();
-            }
-        });
-        core.bus.trigger('resize');
+        dom.initAutoMoreMenu(this.$el);
 
         this.is_bound.resolve();
-    },
-
-    /**
-     * Reflow the menu items and dock overflowing items into a "More" menu item.
-     * Automatically called when 'menu_bound' event is triggered and on window resizing.
-     *
-     * @param {string} behavior If set to 'all_outside', all the items are displayed.
-     * If not set, only the overflowing items are hidden.
-     */
-    reflow: function(behavior) {
-        var self = this;
-        var $more_container = this.$('#menu_more_container').hide();
-        var $more = this.$('#menu_more');
-        var $systray = this.$el.parents().find('.oe_systray');
-
-        $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
-
-        // 'all_outside' beahavior should display all the items, so hide the more menu and exit
-        if (behavior === 'all_outside') {
-            // Show list of menu items
-            self.$el.show();
-            this.$el.find('li').show();
-            $more_container.hide();
-            return;
-        }
-
-        // Hide all menu items
-        var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
-        // Show list of menu items (which is empty for now since all menu items are hidden)
-        self.$el.show();
-        $toplevel_items.each(function() {
-            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-            self.$el.parent().children(':visible').each(function() {
-                remaining_space -= $(this).outerWidth();
-            });
-
-            if ($(this).width() >= remaining_space) {
-                return false; // the current item will be appended in more_container
-            }
-            $(this).show(); // show the current item in menu bar
-        });
-        $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length);
-        // Hide toplevel item if there is only one
-        var $toplevel = self.$el.children("li:visible");
-        if ($toplevel.length === 1) {
-            $toplevel.hide();
-        }
     },
     /**
      * Opens a given menu by id, as if a user had browsed to that menu by hand

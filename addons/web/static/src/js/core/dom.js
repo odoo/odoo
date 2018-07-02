@@ -20,6 +20,7 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 
 /**
@@ -313,6 +314,118 @@ return {
                 .moveEnd('character', range.start)
                 .moveStart('character', range.end)
                 .select();
+        }
+    },
+    /**
+     * Creates an automatic 'more' dropdown-menu for a set of navbar items.
+     *
+     * @param {jQuery} $el
+     * @param {Object} [options]
+     * @param {string} [options.unfoldable='none']
+     * @param {function} [options.maxWidth]
+     * @param {string} [options.sizeClass='SM']
+     */
+    initAutoMoreMenu: function ($el, options) {
+        options = _.extend({
+            unfoldable: 'none',
+            maxWidth: false,
+            sizeClass: 'SM',
+        }, options || {});
+
+        var $extraItemsToggle = null;
+
+        var debouncedAdapt = _.debounce(_adapt, 250);
+        core.bus.on('resize', null, debouncedAdapt);
+        _adapt();
+
+        $el.data('dom:autoMoreMenu:destroy', function () {
+            _restore();
+            core.bus.off('resize', null, debouncedAdapt);
+            $el.removeData('dom:autoMoreMenu:destroy');
+        });
+
+        function _restore() {
+            if ($extraItemsToggle === null) {
+                return;
+            }
+            var $items = $extraItemsToggle.children('.dropdown-menu').children();
+            $items.addClass('nav-item');
+            $items.children().removeClass('dropdown-item').addClass('nav-link');
+            $items.insertBefore($extraItemsToggle);
+            $extraItemsToggle.remove();
+            $extraItemsToggle = null;
+        }
+
+        function _adapt() {
+            if (!$el.is(':visible')) {
+                return;
+            }
+
+            _restore();
+            if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
+                return;
+            }
+
+            var $allItems = $el.children();
+            var $unfoldableItems = $allItems.filter(options.unfoldable);
+            var $items = $allItems.not($unfoldableItems);
+
+            var maxWidth = 0;
+            if (options.maxWidth) {
+                maxWidth = options.maxWidth();
+            } else {
+                var rect = $el[0].getBoundingClientRect();
+                var style = window.getComputedStyle($el[0]);
+                maxWidth = (rect.right - rect.left);
+                maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
+                maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
+                    return sum + computeFloatOuterWidthWithMargins(el);
+                }, 0);
+            }
+
+            var nbItems = $items.length;
+            var menuItemsWidth = _.reduce($items, function (sum, el) {
+                return sum + computeFloatOuterWidthWithMargins(el);
+            }, 0);
+
+            if (maxWidth - menuItemsWidth >= -0.001) {
+                return
+            }
+
+            var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
+            $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
+                .append($('<a/>', {href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown'})
+                    .append($('<i/>', {class: 'fa fa-plus'})))
+                .append($dropdownMenu);
+            $extraItemsToggle.insertAfter($items.last());
+
+            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
+            do {
+                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
+            } while (menuItemsWidth > maxWidth);
+
+            var $extraItems = $items.slice(nbItems).detach();
+            $extraItems.removeClass('nav-item');
+            $extraItems.children().removeClass('nav-link').addClass('dropdown-item');
+            $dropdownMenu.append($extraItems);
+            $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
+        }
+
+        function computeFloatOuterWidthWithMargins(el) {
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
+        }
+    },
+    /**
+     * Cleans what has been done by `initAutoMoreMenu'.
+     *
+     * @param {jQuery} $el
+     */
+    destroyAutoMoreMenu: function ($el) {
+        var destroyFunc = $el.data('dom:autoMoreMenu:destroy');
+        if (destroyFunc) {
+            destroyFunc.call(null);
         }
     },
 };

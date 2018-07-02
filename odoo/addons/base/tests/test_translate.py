@@ -163,16 +163,12 @@ class TranslationToolsTestCase(unittest.TestCase):
                                     <span class="oe_menu_text">Blah</span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown" id="menu_more_container" style="display: none;">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">More <b class="caret"/></a>
-                                <div class="dropdown-menu" id="menu_more"/>
-                            </li>
                         </ul>
                     </t>"""
         result = xml_translate(terms.append, source)
         self.assertEquals(result, source)
         self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>', 'More <b class="caret"/>'])
+            ['<span class="oe_menu_text">Blah</span>'])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """
