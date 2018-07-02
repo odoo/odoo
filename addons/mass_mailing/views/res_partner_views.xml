@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='opt_out']" position="after">
+                <field name="create_date" invisible="1"/>
                 <field name="blacklist_reason" invisible="1"/>
-                <field name="is_blacklisted" widget="blacklist_widget"/>
+                <field name="is_blacklisted" widget="blacklist_widget" attrs="{'invisible': [('create_date', '=', False)]}"/>
             </xpath>
         </field>
     </record>

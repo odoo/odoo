@@ -177,7 +177,7 @@
                                     <span> times</span>
                                 </div>
                                 <field name="blacklist_reason" invisible="1"/>
-                                <field name="is_blacklisted" widget="blacklist_widget"/>
+                                <field name="is_blacklisted" widget="blacklist_widget" attrs="{'invisible': [('create_date', '=', False)]}"/>
                             </group>
                         </group>
                         <field name="opt_out_list_ids" context="{'default_contact_id': active_id}">

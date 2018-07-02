@@ -30,6 +30,9 @@ class MailBlackList(models.Model):
                     message = 'The email address %s has been blacklisted.' % rec.email
                     if rec.reason:
                         message += ' %s' % rec.reason
+                    else:
+                        message += "%s has blacklisted the recipient from %s." % \
+                                              (self.env['res.users'].browse(self._uid).name, self._description)
                     self._message_log(body=_(message), message_type='comment')
             else:
                 for rec in self:
@@ -47,7 +50,7 @@ class MailBlackList(models.Model):
                 })
                 return False
             else:
-                reason = 'The recipient has added himself to the blacklist using the unsubscription page.' \
+                reason = 'The recipient joined the blacklist using the unsubscription page.' \
                     if action_from_recipient else "%s has blacklisted the recipient from %s." % \
                                                   (self.env['res.users'].browse(self._uid).name, source)
                 record.write({
@@ -55,7 +58,7 @@ class MailBlackList(models.Model):
                     'reason': reason
                 })
         else:
-            reason = 'The recipient has added himself to the blacklist using the unsubscription page.' \
+            reason = 'The recipient joined the blacklist using the unsubscription page.' \
                 if action_from_recipient else "%s has blacklisted the recipient from %s." % \
                                               (self.env['res.users'].browse(self._uid).name, source)
             record = self.create({
@@ -131,12 +134,14 @@ class MailBlackListMixin(models.Model):
 
     @api.multi
     def toggle_blacklist(self):
-        [email_field] = self._blacklist_get_email_field_name()
-        self.ensure_one()
-        email = self[email_field]
-        if email and re.match(EMAIL_PATTERN, email):
-            if self.env["mail.mass_mailing.blacklist"].sudo()._toggle_blacklist(email, self._description, False):
-                return [self.id, True]
-            else:
-                return [self.id, False]
+        if len(self) > 0:
+            [email_field] = self._blacklist_get_email_field_name()
+            self.ensure_one()
+            email = self[email_field]
+            if email and re.match(EMAIL_PATTERN, email):
+                if self.env["mail.mass_mailing.blacklist"].sudo()._toggle_blacklist(email, self._description, False):
+                    return [self.id, True]
+                else:
+                    return [self.id, False]
+            return [self.id, 'not_found']
         return [self.id, 'not_found']
