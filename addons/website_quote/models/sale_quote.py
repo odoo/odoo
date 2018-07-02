@@ -11,6 +11,16 @@ class SaleQuoteTemplate(models.Model):
     _name = "sale.quote.template"
     _description = "Sale Quotation Template"
 
+    def _get_default_require_signature(self):
+        # A confirmation mode (sign or pay) is mandatory on a quotation template
+        # If none has been activated in the settings, we force 'sign' as confirmation mode
+        if not self.env.user.company_id.portal_confirmation_pay:
+            return True
+        return self.env.user.company_id.portal_confirmation_sign
+
+    def _get_default_require_payment(self):
+        return self.env.user.company_id.portal_confirmation_pay
+
     name = fields.Char('Quotation Template', required=True)
     website_description = fields.Html('Description', translate=html_translate, sanitize_attributes=False)
     quote_line = fields.One2many('sale.quote.line', 'quote_id', 'Quotation Template Lines', copy=True)
@@ -18,8 +28,8 @@ class SaleQuoteTemplate(models.Model):
     options = fields.One2many('sale.quote.option', 'template_id', 'Optional Products Lines', copy=True)
     number_of_days = fields.Integer('Quotation Duration',
         help='Number of days for the validity date computation of the quotation')
-    require_signature = fields.Boolean('Digital Signature', default=True, help='Request a digital signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Electronic Payment', help='Request an electronic payment to the customer in order to confirm orders automatically.')
+    require_signature = fields.Boolean('Digital Signature', default=_get_default_require_signature, help='Request a digital signature to the customer in order to confirm orders automatically.')
+    require_payment = fields.Boolean('Electronic Payment', default=_get_default_require_payment,help='Request an electronic payment to the customer in order to confirm orders automatically.')
     mail_template_id = fields.Many2one(
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
