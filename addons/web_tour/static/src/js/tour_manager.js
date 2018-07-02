@@ -361,7 +361,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             position: "bottom",
             auto: true,
             run: function (actions) {
-                actions.auto("#more_menu_button");
+                var $more = $('.o_extra_menu_items > .dropdown-toggle');
+                if ($more.length) {
+                    actions.auto($more);
+                }
             },
         },
 

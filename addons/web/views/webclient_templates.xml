@@ -400,18 +400,14 @@
     </template>
 
     <template id="web.menu">
-        <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder" style="display: none;" role="menu">
+        <ul class="nav navbar-nav navbar-left d-none oe_application_menu_placeholder" role="menu">
             <li t-foreach="menu_data['children']" t-as="menu" class="nav-item">
                 <t t-call="web.menu_link"/>
             </li>
-            <li id="menu_more_container" class="nav-item dropdown" style="display: none;">
-                <a role="menuitem" href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="more_menu_button">More</a>
-                <div id="menu_more" class="dropdown-menu" role="menu"></div>
-            </li>
         </ul>
 
-        <ul class="nav navbar-nav ml-auto oe_systray" style="display: none;"/>
-        <ul class="nav navbar-nav oe_user_menu_placeholder" style="display: none;"/>
+        <ul class="nav navbar-nav flex-nowrap ml-auto oe_systray" style="display: none;"/>
+        <ul class="nav navbar-nav flex-nowrap oe_user_menu_placeholder" style="display: none;"/>
     </template>
     <template id="web.menu_secondary">
         <a class="o_sub_menu_logo" t-att-href="'/web/?debug' if debug else '/web'">
