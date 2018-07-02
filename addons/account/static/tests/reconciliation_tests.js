@@ -1019,8 +1019,8 @@ QUnit.module('account', {
         widget.$('.create .create_label input').val('test1').trigger('input');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right:last').text(), "$ 200.00", "should display the value 200.00 in left column");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Create Write-off", "should display 'Create Write-off'");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$ 25.00", "should display 'Create Write-off' with 25.00 in left column");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$ 25.00", "should display 'Open balance' with 25.00 in left column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 3, "should have 3 created reconcile lines");
 
         clientAction.destroy();
@@ -1126,8 +1126,8 @@ QUnit.module('account', {
         $('.ui-autocomplete .ui-menu-item a:contains(20.00%)').trigger('mouseenter').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_right').text().replace('$_', ''), "$\u00a01100.00$\u00a0220.00", "should have 2 created reconcile lines with right column values");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Create Write-off", "should display 'Create Write-off'");
-        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$\u00a0145.00", "should display 'Create Write-off' with 145.00 in right column");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_label').text(), "Open balance", "should display 'Open balance'");
+        assert.strictEqual(widget.$('.accounting_view tfoot .cell_left').text(), "$\u00a0145.00", "should display 'Open balance' with 145.00 in right column");
         assert.strictEqual(widget.$('.accounting_view tbody tr').length, 2, "should have 2 created reconcile lines");
 
         clientAction.destroy();
@@ -1151,7 +1151,7 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
             " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
-            "Create Write-off229.12", "should display the 'Create Write-off' line with value in left column");
+            "Open balance229.12", "should display the 'Open balance' line with value in left column");
 
         widget.$('.create .create_amount input').val('100').trigger('input');
 
@@ -1159,7 +1159,7 @@ QUnit.module('account', {
             " 101120 ATOS Banque 1075.00 101120 Tax 20.00% 215.00 101130 ATOS Frais 90.91 101300 Tax 10.00% include 9.09 ",
             "should update the value of the 4 lines (because the line must have 100% of the value)");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
-            "Create Write-off215.00", "should change the 'Create Write-off' line because the 20.00% tax is not an include tax");
+            "Open balance215.00", "should change the 'Open balance' line because the 20.00% tax is not an include tax");
 
         widget.$('.accounting_view tbody .cell_account_code:first').trigger('click');
         widget.$('.accounting_view tbody .cell_label:first').trigger('click');
