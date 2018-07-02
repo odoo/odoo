@@ -10,4 +10,45 @@
                 </field>
             </field>
         </record>
+
+        <template id="external_layout" name="l10n_de_layout" inherit_id="web.external_layout">
+            <xpath expr='.' position="inside">
+                <t t-if="company.external_report_layout == 'din5008'">
+                    <t t-call="l10n_de.external_layout_din5008"><t t-raw="0"/></t>
+                </t>
+            </xpath>
+        </template>
+
+        <record id="view_company_report_form" model="ir.ui.view">
+            <field name="name">res.company.l10nde.report.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_report_form"></field>
+            <field name="arch" type="xml">
+                <field name="external_report_layout" position="attributes">
+                    <attribute name="options">{
+                            'background': {
+                                'image_link': '/base/static/img/preview_background.png',
+                                'preview_link': '/base/static/pdf/preview_background.pdf'
+                            },
+                            'boxed': {
+                                'image_link': '/base/static/img/preview_boxed.png',
+                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                            },
+                            'clean': {
+                                'image_link': '/base/static/img/preview_clean.png',
+                                'preview_link': '/base/static/pdf/preview_clean.pdf'
+                            },
+                            'standard': {
+                                'image_link': '/base/static/img/preview_standard.png',
+                                'preview_link': '/base/static/pdf/preview_standard.pdf'
+                            },
+                            'din5008': {
+                                'image_link': '/base/static/img/preview_standard.png',
+                                'preview_link': '/base/static/pdf/preview_standard.pdf'
+                            }
+                        }
+                    </attribute>
+                </field>
+            </field>
+        </record>
 </odoo>
