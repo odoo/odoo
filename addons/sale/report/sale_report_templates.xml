@@ -3,30 +3,30 @@
 <template id="report_saleorder_document">
     <t t-call="web.external_layout">
         <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
-        <div class="page">
-            <div class="oe_structure"/>
-            <div class="row">
-                <div class="col-xs-6">
-                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
+        <t t-set="address">
+            <div t-field="doc.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+            <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
+        </t>
+        <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
-                        <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
-                        <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
-                        <div t-field="doc.partner_invoice_id"
+            <t t-set="address2">
+                <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
+                <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
+                <div t-field="doc.partner_invoice_id"
+                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+            </t>
+            <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
+                <t t-set="address3">
+                    <strong>Shipping address:</strong>
+                    <div t-field="doc.partner_shipping_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
-                            <strong>Shipping address:</strong>
-                            <div t-field="doc.partner_shipping_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </div>
-                    </t>
-                </div>
-                <div class="col-xs-5 col-xs-offset-1">
-                    <div t-field="doc.partner_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                    <p t-if="doc.partner_id.vat"><t t-esc="doc.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="doc.partner_id.vat"/></p>
-                </div>
-            </div>
+                </t>
+            </t>
+        </t>
+        <div class="page">
+            <div class="oe_structure"/>
 
             <h2>
                 <t t-if="not (env.context.get('proforma', False) or is_pro_forma)">
