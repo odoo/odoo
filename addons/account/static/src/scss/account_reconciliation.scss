@@ -160,6 +160,9 @@
         }
 
         /* info popover */
+        .popover {
+            max-width: none;
+        }
 
         table.details {
             vertical-align: top;
@@ -200,6 +203,7 @@
         }
         &[data-mode="match"] > .match {
             max-height: none;
+            overflow: visible;
             @include o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {

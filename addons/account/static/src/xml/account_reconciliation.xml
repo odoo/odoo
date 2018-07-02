@@ -260,7 +260,7 @@
         <tr><td>Description</td><td><t t-esc="state.st_line.name"/></td></tr>
         <tr><td>Amount</td><td><t t-raw="state.st_line.amount_str"/><t t-if="state.st_line.amount_currency_str"> (<t t-esc="state.st_line.amount_currency_str"/>)</t></td></tr>
         <tr><td>Account</td><td><t t-esc="state.st_line.account_code"/> <t t-esc="state.st_line.account_name"/></td></tr>
-        <tr t-if="state.st_line.note"><td>Note</td><td><t t-esc="state.st_line.note"/></td></tr>
+        <tr t-if="state.st_line.note"><td>Note</td><td style="white-space: pre;"><t t-esc="state.st_line.note"/></td></tr>
     </table>
 </t>
 
