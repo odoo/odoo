@@ -117,7 +117,7 @@ class StockMove(models.Model):
     @api.depends('move_lot_ids', 'move_lot_ids.quantity_done', 'quantity_done_store')
     def _qty_done_compute(self):
         for move in self:
-            if move.has_tracking != 'none':
+            if move.has_tracking != 'none' or move.sudo().move_lot_ids.mapped('lot_id'):
                 move.quantity_done = sum(move.move_lot_ids.filtered(lambda x: x.done_wo).mapped('quantity_done')) #TODO: change with active_move_lot_ids?
             else:
                 move.quantity_done = move.quantity_done_store
