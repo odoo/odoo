@@ -4232,10 +4232,11 @@ class stock_package(osv.osv):
         """
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = m.name
+            res[m.id] = m.name or ''
             parent = m.parent_id
             while parent:
-                res[m.id] = parent.name + ' / ' + res[m.id]
+                parent_name = parent.name or ''
+                res[m.id] = u"%s / %s" %(parent_name, res[m.id])
                 parent = parent.parent_id
         return res
 
