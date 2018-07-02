@@ -23,7 +23,7 @@ class StockQuantityHistory(models.TransientModel):
                 'view_mode': 'tree,form',
                 'name': _('Products'),
                 'res_model': 'product.product',
-                'domain': "[('type', '=', 'product'), ('qty_available', '!=', 0)]",
+                'domain': "[('type', '=', 'product'), ('qty_at_date', '!=', 0)]",
                 'context': dict(self.env.context, to_date=self.date, company_owned=True),
             }
             return action
