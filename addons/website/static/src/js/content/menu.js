@@ -2,6 +2,7 @@ odoo.define('website.content.menu', function (require) {
 'use strict';
 
 var config = require('web.config');
+var dom = require('web.dom');
 var sAnimation = require('website.content.snippets.animation');
 
 sAnimation.registry.affixMenu = sAnimation.Class.extend({
@@ -81,19 +82,13 @@ sAnimation.registry.affixMenu = sAnimation.Class.extend({
  * the backend in enterprise...
  */
 sAnimation.registry.autohideMenu = sAnimation.Class.extend({
-    selector: 'header:not(.o_no_autohide_menu) > .navbar > *',
+    selector: 'header:not(.o_no_autohide_menu) #top_menu',
 
     /**
      * @override
      */
     start: function () {
-        var $allItems = this.$('#top_menu').children();
-        this.$unfoldableItems = $allItems.filter('.divider, .divider ~ li');
-        this.$items = $allItems.not(this.$unfoldableItems);
-
-        $(window).on('resize', _.debounce(this._adapt.bind(this), 500));
-        this._adapt();
-
+        dom.initAutoMoreMenu(this.$el, {unfoldable: '.divider, .divider ~ li'});
         return this._super.apply(this, arguments);
     },
     /**
@@ -101,65 +96,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        this._restore();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _adapt: function () {
-        this._restore();
-        if (config.device.isMobile) {
-            return;
-        }
-
-        this.maxWidth = this.$el.width();
-        var $unfoldable = this.$unfoldableItems.add(this.$el.children().not('.navbar-collapse'));
-        this.maxWidth -= _.reduce($unfoldable, function (sum, el) {
-            return sum + computeFloatOuterWidthWithMargins(el);
-        }, 0);
-
-        var nbItems = this.$items.length;
-        var menuItemsWidth = _.reduce(this.$items, function (sum, el) {
-            return sum + computeFloatOuterWidthWithMargins(el);
-        }, 0);
-
-        if (menuItemsWidth > this.maxWidth) {
-            this.$extraItemsToggle = $('<li/>', {class: 'o_extra_menu_items'});
-            this.$extraItemsToggle.append($('<a/>', {href: '#', class: 'dropdown-toggle', 'data-toggle': 'dropdown'})
-                .append($('<i/>', {class: 'fa fa-plus'})));
-            this.$extraItemsToggle.append($('<ul/>', {class: 'dropdown-menu'}));
-            this.$extraItemsToggle.insertAfter(this.$items.last());
-
-            menuItemsWidth += computeFloatOuterWidthWithMargins(this.$extraItemsToggle[0]);
-            do {
-                menuItemsWidth -= computeFloatOuterWidthWithMargins(this.$items.eq(--nbItems)[0]);
-            } while (menuItemsWidth > this.maxWidth);
-
-            var $extraItems = this.$items.slice(nbItems).detach();
-            this.$extraItemsToggle.children('ul').append($extraItems);
-            this.$extraItemsToggle.toggleClass('active', $extraItems.hasClass('active'));
-        }
-
-        function computeFloatOuterWidthWithMargins(el) {
-            var rect = el.getBoundingClientRect();
-            var style = window.getComputedStyle(el);
-            return rect.right - rect.left + parseFloat(style.marginLeft) + parseFloat(style.marginRight);
-        }
-    },
-    /**
-     * @private
-     */
-    _restore: function () {
-        if (this.$extraItemsToggle) {
-            this.$extraItemsToggle.find("> ul > *").insertBefore(this.$extraItemsToggle);
-            this.$extraItemsToggle.remove();
-            delete this.$extraItemsToggle;
-        }
+        dom.destroyAutoMoreMenu(this.$el);
     },
 });
 

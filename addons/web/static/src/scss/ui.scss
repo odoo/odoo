@@ -14,8 +14,12 @@
     display: none!important;
 }
 
-.dropdown-toggle.o-no-caret {
-    &::before, &::after {
-        content: normal;
+.dropdown-toggle {
+    white-space: nowrap;
+
+    &.o-no-caret {
+        &::before, &::after {
+            content: normal;
+        }
     }
 }
