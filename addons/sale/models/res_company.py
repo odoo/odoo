@@ -8,5 +8,5 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     sale_note = fields.Text(string='Default Terms and Conditions', translate=True)
-    portal_confirmation_sign = fields.Boolean(string='Digital Signature', default=True)
+    portal_confirmation_sign = fields.Boolean(string='Digital Signature')
     portal_confirmation_pay = fields.Boolean(string='Electronic Payment')
