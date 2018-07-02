@@ -2615,10 +2615,10 @@ class BaseModel(object):
                                         "Use a search view instead if you simply want to make the field searchable."
                                     _schema.warning(msg, self._table, f._type, k)
                             if res2 and not f.select:
-                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
-                                cr.commit()
-                                msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
-                                _schema.debug(msg, self._table, k, f._type)
+                                # cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
+                                # cr.commit()
+                                msg = "Table '%s': cowardly refusing to drop index for column '%s' (ESBEP-25450)"
+                                _schema.debug(msg, self._table, k)
 
                             if isinstance(f, fields.many2one) or (isinstance(f, fields.function) and f._type == 'many2one' and f.store):
                                 dest_model = self.pool[f._obj]
