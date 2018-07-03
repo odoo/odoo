@@ -1835,7 +1835,7 @@ class TestRoutes(TestStockCommon):
         """
         self._enable_pick_ship()
 
-        # create a procurement group and set in on the pick procurement rule
+        # create a procurement group and set in on the pick stock rule
         procurement_group0 = self.env['procurement.group'].create({})
         pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
         push_rule = self.pick_ship_route.rule_ids - pick_rule

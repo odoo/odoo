@@ -54,7 +54,7 @@ class MrpBom(models.Model):
         'stock.picking.type', 'Operation Type', domain=[('code', '=', 'mrp_operation')],
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type. That allows "
-             "to define procurement rules which trigger different manufacturing orders with different BoMs.")
+             "to define stock rules which trigger different manufacturing orders with different BoMs.")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('mrp.bom'),

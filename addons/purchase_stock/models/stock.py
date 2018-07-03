@@ -109,7 +109,7 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean('Buy to Resupply', default=True,
                                      help="When products are bought, they can be delivered to this warehouse")
-    buy_pull_id = fields.Many2one('procurement.rule', 'Buy rule')
+    buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
 
     @api.multi
     def _get_buy_pull_rule(self):
@@ -136,7 +136,7 @@ class StockWarehouse(models.Model):
         res = super(StockWarehouse, self).create_routes() # super applies ensure_one()
         if self.buy_to_resupply:
             buy_pull_vals = self._get_buy_pull_rule()
-            buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
+            buy_pull = self.env['stock.rule'].create(buy_pull_vals)
             res['buy_pull_id'] = buy_pull.id
         return res
 
@@ -147,7 +147,7 @@ class StockWarehouse(models.Model):
                 for warehouse in self:
                     if not warehouse.buy_pull_id:
                         buy_pull_vals = self._get_buy_pull_rule()
-                        buy_pull = self.env['procurement.rule'].create(buy_pull_vals)
+                        buy_pull = self.env['stock.rule'].create(buy_pull_vals)
                         vals['buy_pull_id'] = buy_pull.id
             else:
                 for warehouse in self:
@@ -165,7 +165,7 @@ class StockWarehouse(models.Model):
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]
-        #change the buy procurement rule name
+        #change the buy stock rule name
         if warehouse.buy_pull_id and name:
             warehouse.buy_pull_id.write({'name': warehouse.buy_pull_id.name.replace(warehouse.name, name, 1)})
         return res

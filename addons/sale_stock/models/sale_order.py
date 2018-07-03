@@ -56,7 +56,7 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         super(SaleOrder, self)._action_confirm()
         for order in self:
-            order.order_line._action_launch_procurement_rule()
+            order.order_line._action_launch_stock_rule()
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
@@ -176,7 +176,7 @@ class SaleOrderLine(models.Model):
     def create(self, values):
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
-            line._action_launch_procurement_rule()
+            line._action_launch_stock_rule()
         return line
 
     @api.multi
@@ -188,7 +188,7 @@ class SaleOrderLine(models.Model):
                 lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
         res = super(SaleOrderLine, self).write(values)
         if lines:
-            lines._action_launch_procurement_rule()
+            lines._action_launch_stock_rule()
         return res
 
     @api.depends('order_id.state')
@@ -275,7 +275,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_procurement_values(self, group_id=False):
-        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
@@ -295,7 +295,7 @@ class SaleOrderLine(models.Model):
         return values
 
     @api.multi
-    def _action_launch_procurement_rule(self):
+    def _action_launch_stock_rule(self):
         """
         Launch procurement group run method with required/custom fields genrated by a
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
