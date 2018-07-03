@@ -1118,6 +1118,7 @@ class IrModelRelation(models.Model):
 class IrModelAccess(models.Model):
     _name = 'ir.model.access'
     _description = 'Model Access'
+    _order = 'model_id,group_id,name,id'
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')

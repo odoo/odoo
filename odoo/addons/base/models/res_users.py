@@ -251,6 +251,13 @@ class Users(models.Model):
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     email = fields.Char(related='partner_id.email', inherited=True, readonly=False)
 
+    accesses_count = fields.Integer('# Access Rights', help='Number of access rights that apply to the current user',
+                                    compute='_compute_accesses_count')
+    rules_count = fields.Integer('# Record Rules', help='Number of record rules that apply to the current user',
+                                 compute='_compute_accesses_count')
+    groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
+                                  compute='_compute_accesses_count')
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
@@ -349,6 +356,14 @@ class Users(models.Model):
     def _compute_tz_offset(self):
         for user in self:
             user.tz_offset = datetime.datetime.now(pytz.timezone(user.tz or 'GMT')).strftime('%z')
+
+    @api.depends('groups_id')
+    def _compute_accesses_count(self):
+        for user in self:
+            groups = user.groups_id
+            user.accesses_count = len(groups.mapped('model_access'))
+            user.rules_count = len(groups.mapped('rule_groups'))
+            user.groups_count = len(groups)
 
     @api.onchange('login')
     def on_change_login(self):
@@ -696,6 +711,45 @@ class Users(models.Model):
         return bool(self._cr.fetchone())
     # for a few places explicitly clearing the has_group cache
     has_group.clear_cache = _has_group.clear_cache
+
+    def action_show_groups(self):
+        self.ensure_one()
+        return {
+            'name': _('Groups'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'res.groups',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id','in', self.groups_id.ids)],
+            'target': 'current',
+        }
+
+    def action_show_accesses(self):
+        self.ensure_one()
+        return {
+            'name': _('Access Rights'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.model.access',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id', 'in', self.mapped('groups_id.model_access').ids)],
+            'target': 'current',
+        }
+
+    def action_show_rules(self):
+        self.ensure_one()
+        return {
+            'name': _('Record Rules'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'ir.rule',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False},
+            'domain': [('id', 'in', self.mapped('groups_id.rule_groups').ids)],
+            'target': 'current',
+        }
 
     @api.multi
     def _is_public(self):
