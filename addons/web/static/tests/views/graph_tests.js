@@ -622,6 +622,30 @@ QUnit.module('Views', {
         assert.ok(true,"should not generate any error");
         graph.destroy();
     });
+
+    QUnit.test('graph measures should be alphabetically sorted', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        data.foo.fields.bouh = {string: "bouh", type: "integer"};
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: data,
+            arch: '<graph string="Partners">' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="bouh" type="measure"/>' +
+                  '</graph>',
+        })
+
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list li:first').data('field'), 'bouh',
+            "Bouh should be the first measure");
+        assert.strictEqual(graph.$buttons.find('.o_graph_measures_list li:last').data('field'), '__count__',
+            "Count should be the last measure");
+
+        graph.destroy();
+    });
 });
 
 });
