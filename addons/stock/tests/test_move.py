@@ -3359,7 +3359,7 @@ class StockMove(TransactionCase):
 
     def test_scrap_1(self):
         """ Check the created stock move and the impact on quants when we scrap a
-        stockable product.
+        storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
         scrap = self.env['stock.scrap'].create({

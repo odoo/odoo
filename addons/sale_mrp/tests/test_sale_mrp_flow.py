@@ -351,7 +351,7 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # confirm our standard so, check the picking
         so.action_confirm()
-        self.assertTrue(so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
+        self.assertTrue(so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" storable products')
 
         # invoice in on delivery, nothing should be invoiced
         with self.assertRaises(UserError):

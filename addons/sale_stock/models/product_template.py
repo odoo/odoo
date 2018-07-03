@@ -9,7 +9,7 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
-        """ We want to prevent stockable product to be expensed, since it make no sense as when confirm
+        """ We want to prevent storable product to be expensed, since it make no sense as when confirm
             expenses, the product is already out of our stock.
         """
         super(ProductTemplate, self)._onchange_type()

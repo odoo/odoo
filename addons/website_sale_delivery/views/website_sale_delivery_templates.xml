@@ -65,7 +65,7 @@
         </xpath>
         <!-- we shouldn't be able to pay if there is no way to deliver -->
         <xpath expr="//div[@id='payment_method']" position="attributes">
-                <attribute name="t-att-style">'display: none!important' if not deliveries and delivery_has_stockable else ''</attribute>
+                <attribute name="t-att-style">'display: none!important' if not deliveries and delivery_has_storable else ''</attribute>
         </xpath>
     </template>
 
