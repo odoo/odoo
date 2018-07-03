@@ -804,6 +804,10 @@ following attributes:
   ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
   specific datetime (fixed second resolution) or date (fixed day resolution).
 
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
+
 .. warning::
 
    graph view aggregations are performed on database content, non-stored
@@ -844,6 +848,10 @@ following attributes:
     on date and datetime fields, groups by the specified interval (``day``,
     ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
     specific datetime (fixed second resolution) or date (fixed day resolution).
+
+The measures are automatically generated from the model fields; only the
+aggregatable fields are used. Those measures are also alphabetically
+sorted on the string of the field.
 
 .. warning::
 
