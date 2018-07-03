@@ -26,7 +26,7 @@ class Users(models.Model):
                     '|', ['start', '>=', fields.Datetime.to_string(start_dt)], ['stop', '>=', fields.Datetime.to_string(start_dt)],
                     ['start', '<=', fields.Datetime.to_string(end_dt)],
                 '&', ['allday', '=', True], ['start_date', '=', fields.Date.to_string(start_date)],
-                '&', ('attendee_ids.partner_id', '=', self.env.user.partner_id.id), ('attendee_ids.state', '!=', 'declined')]
+                ('attendee_ids.partner_id', '=', self.env.user.partner_id.id)]
 
     @api.model
     def systray_get_activities(self):
@@ -34,8 +34,9 @@ class Users(models.Model):
 
         meetings_lines = self.env['calendar.event'].search_read(
             self._systray_get_calendar_event_domain(),
-            ['id', 'start', 'name', 'allday'],
+            ['id', 'start', 'name', 'allday', 'attendee_status'],
             order='start')
+        meetings_lines = [line for line in meetings_lines if line['attendee_status'] != 'declined']
         if meetings_lines:
             meeting_label = _("Today's Meetings")
             meetings_systray = {
