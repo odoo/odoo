@@ -102,7 +102,7 @@ var PivotController = AbstractController.extend({
      */
     renderButtons: function ($node) {
         if ($node) {
-            var context = {measures: _.pairs(_.omit(this.measures, '__count'))};
+            var context = {measures: _.sortBy(_.pairs(_.omit(this.measures, '__count')), function(x) { return x[0]; })};
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this._onButtonClick.bind(this));
             this.$buttons.find('button').tooltip();
