@@ -7,12 +7,12 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
     action = fields.Selection(selection_add=[('manufacture', 'Manufacture')])
 
     def _get_message_dict(self):
-        message_dict = super(ProcurementRule, self)._get_message_dict()
+        message_dict = super(StockRule, self)._get_message_dict()
         source, destination, operation = self._get_message_values()
         manufacture_message = _('When products are needed in <b>%s</b>, <br/> a manufacturing order is created to fulfill the need.') % (destination)
         if self.location_src_id:
@@ -85,6 +85,6 @@ class ProcurementRule(models.Model):
         return date_planned
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
-        new_move_vals = super(ProcurementRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         new_move_vals['production_id'] = False
         return new_move_vals

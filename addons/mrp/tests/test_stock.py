@@ -9,7 +9,7 @@ class TestWarehouse(common.TestMrpCommon):
 
     def test_manufacturing_route(self):
         warehouse_1_stock_manager = self.warehouse_1.sudo(self.user_stock_manager)
-        manu_rule = self.env['procurement.rule'].search([
+        manu_rule = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
             ('warehouse_id', '=', self.warehouse_1.id)])
         self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)
@@ -24,7 +24,7 @@ class TestWarehouse(common.TestMrpCommon):
         warehouse_1_stock_manager.write({
             'manufacture_to_resupply': True
         })
-        manu_rule = self.env['procurement.rule'].search([
+        manu_rule = self.env['stock.rule'].search([
             ('action', '=', 'manufacture'),
             ('warehouse_id', '=', self.warehouse_1.id)])
         self.assertEqual(self.warehouse_1.manufacture_pull_id, manu_rule)

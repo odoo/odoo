@@ -23,11 +23,11 @@
             </field>
         </record>
 
-        <!-- Procurement Rules -->
+        <!-- Stock Rules -->
 
-        <record id="view_procurement_rule_filter" model="ir.ui.view">
-            <field name="name">procurement.rule.select</field>
-            <field name="model">procurement.rule</field>
+        <record id="view_stock_rule_filter" model="ir.ui.view">
+            <field name="name">stock.rule.select</field>
+            <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -40,9 +40,9 @@
         </record>
 
         <!-- <Rules> -->
-        <record id="view_procurement_rule_tree" model="ir.ui.view">
-            <field name="name">procurement.rule.tree</field>
-            <field name="model">procurement.rule</field>
+        <record id="view_stock_rule_tree" model="ir.ui.view">
+            <field name="name">stock.rule.tree</field>
+            <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <tree string="Rules">
                     <field name="sequence"/>
@@ -54,9 +54,9 @@
             </field>
         </record>
 
-        <record id="view_procurement_rule_form" model="ir.ui.view">
-            <field name="name">procurement.rule.form</field>
-            <field name="model">procurement.rule</field>
+        <record id="view_stock_rule_form" model="ir.ui.view">
+            <field name="name">stock.rule.form</field>
+            <field name="model">stock.rule</field>
             <field name="arch" type="xml">
                 <form string="Rules">
                     <sheet>
@@ -113,10 +113,10 @@
         <!-- Form view for route -->
 
         <record id="view_route_rule_form" model="ir.ui.view">
-            <field name="name">procurement.rule.form</field>
-            <field name="model">procurement.rule</field>
+            <field name="name">stock.rule.form</field>
+            <field name="model">stock.rule</field>
             <field name="mode">primary</field>
-            <field name="inherit_id" ref="stock.view_procurement_rule_form"/>
+            <field name="inherit_id" ref="stock.view_stock_rule_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='route_id']" position="replace"></xpath>
                 <xpath expr="//group[@name='apply_on']" position="attributes">
@@ -127,7 +127,7 @@
 
         <record id="action_rules_form" model="ir.actions.act_window">
             <field name="name">Rules</field>
-            <field name="res_model">procurement.rule</field>
+            <field name="res_model">stock.rule</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

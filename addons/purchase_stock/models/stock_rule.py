@@ -8,13 +8,13 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import UserError
 
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
 
     action = fields.Selection(selection_add=[('buy', 'Buy')])
 
     def _get_message_dict(self):
-        message_dict = super(ProcurementRule, self)._get_message_dict()
+        message_dict = super(StockRule, self)._get_message_dict()
         dummy, destination, dummy = self._get_message_values()
         message_dict.update({
             'buy': _('When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.') % (destination)
@@ -184,7 +184,7 @@ class ProcurementRule(models.Model):
         return suppliers[0]
 
     def _make_po_get_domain(self, values, partner):
-        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        domain = super(StockRule, self)._make_po_get_domain(values, partner)
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id) or \
                 (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
