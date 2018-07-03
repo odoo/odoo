@@ -206,18 +206,6 @@ class StockPicking(models.Model):
         self.message_post(body=msg)
         self.carrier_tracking_ref = False
 
-    @api.multi
-    def check_packages_are_identical(self):
-        '''Some shippers require identical packages in the same shipment. This utility checks it.'''
-        self.ensure_one()
-        if self.package_ids:
-            packages = [p.packaging_id for p in self.package_ids]
-            if len(set(packages)) != 1:
-                package_names = ', '.join([str(p.name) for p in packages])
-                raise UserError(_('You are shipping different packaging types in the same shipment.\nPackaging Types: %s' % package_names))
-        return True
-
-
 class StockReturnPicking(models.TransientModel):
     _inherit = 'stock.return.picking'
 
