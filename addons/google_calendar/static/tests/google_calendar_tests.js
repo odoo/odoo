@@ -4,7 +4,7 @@ odoo.define('google_calendar.calendar_tests', function (require) {
 var CalendarView = require('web.CalendarView');
 var testUtils = require('web.test_utils');
 
-var createView = testUtils.createView;
+var createAsyncView = testUtils.createAsyncView;
 
 var initialDate = new Date("2016-12-12T08:00:00Z");
 
@@ -71,8 +71,9 @@ QUnit.module('Google Calendar', {
 
     QUnit.test('sync google calendar', function (assert) {
         assert.expect(6);
+        var done = assert.async();
 
-        var calendar = createView({
+        createAsyncView({
             View: CalendarView,
             model: 'calendar.event',
             data: this.data,
@@ -98,23 +99,24 @@ QUnit.module('Google Calendar', {
                 }
                 return this._super.apply(this, arguments);
             },
+        }).then(function (calendar) {
+            assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the month");
+
+            var $sidebar = calendar.$('.o_calendar_sidebar');
+
+            calendar.$('.o_google_sync_button').click();
+
+            assert.verifySteps([
+                '/web/dataset/call_kw/calendar.event/search_read',
+                '/google_calendar/sync_data',
+                '/web/dataset/call_kw/calendar.event/search_read',
+            ], 'should do a search_read before and after the call to sync_data');
+
+            assert.strictEqual(calendar.$('.fc-event').length, 3, "should now display 3 events on the month");
+
+            calendar.destroy();
+            done();
         });
-
-        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the month");
-
-        var $sidebar = calendar.$('.o_calendar_sidebar');
-
-        calendar.$('.o_google_sync_button').click();
-
-        assert.verifySteps([
-            '/web/dataset/call_kw/calendar.event/search_read',
-            '/google_calendar/sync_data',
-            '/web/dataset/call_kw/calendar.event/search_read',
-        ], 'should do a search_read before and after the call to sync_data');
-
-        assert.strictEqual(calendar.$('.fc-event').length, 3, "should now display 3 events on the month");
-
-        calendar.destroy();
     });
 });
 });
