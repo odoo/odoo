@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
+    _order = 'sequence'
 
     available_in_pos = fields.Boolean(string='Available in Point of Sale', help='Check if you want this product to appear in the Point of Sale', default=True)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration")
