@@ -148,7 +148,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_method(self):
         """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
             For SO line coming from expense, no picking should be generate: we don't manage stock for
-            thoses lines, even if the product is a stockable.
+            thoses lines, even if the product is a storable.
         """
         super(SaleOrderLine, self)._compute_qty_delivered_method()
 
