@@ -22,7 +22,7 @@
   !record {model: account.invoice, id: demo_invoice_2}:
     partner_id: base.res_partner_2
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y-%m')+'-08'
+    date_invoice: !eval time.strftime('%Y-%m-%d')
     invoice_line_ids:
       - product_id: product.consu_delivery_03
         price_unit: 50.0
@@ -37,7 +37,7 @@
   !record {model: account.invoice, id: demo_invoice_3}:
     partner_id: base.res_partner_2
     type: 'out_invoice'
-    date_invoice: !eval time.strftime('%Y-%m')+'-08'
+    date_invoice: !eval time.strftime('%Y-%m-%d')
     invoice_line_ids:
       - product_id: product.consu_delivery_01
         price_unit: 90.0
@@ -94,7 +94,7 @@
   !record {model: account.invoice, id: demo_invoice_equipment_purchase}:
     partner_id: base.res_partner_1
     type: 'in_invoice'
-    date_invoice: !eval time.strftime('%Y-%m')+'-15'
+    date_invoice: !eval time.strftime('%Y-%m-%d')
 -
   !python {model: ir.model.data, id: False} : |
       line_vals = {
