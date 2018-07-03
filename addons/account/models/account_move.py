@@ -138,20 +138,28 @@ class AccountMove(models.Model):
                     new_name = invoice.move_name
                 else:
                     if journal.sequence_id:
-                        # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
-                        sequence = journal.sequence_id
-                        if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
-                            if not journal.refund_sequence_id:
-                                raise UserError(_('Please define a sequence for the refunds'))
-                            sequence = journal.refund_sequence_id
-                                                            
-                        new_name = sequence.with_context(ir_sequence_date=move.date).next_by_id()
+                        #Codigo modificado por Trescloud
+                        new_name = self.get_sequence_move(move, journal, invoice)
                     else:
                         raise UserError(_('Please define a sequence on the journal.'))
 
                 if new_name:
                     move.name = new_name
         return self.write({'state': 'posted'})
+    
+    #Metodo agregado por Trescloud
+    @api.multi
+    def get_sequence_move(self, move, journal, invoice):
+        '''
+        Hook va ser modificado en ecua_hr para los asientos de nominas y provisiones
+        '''
+        # If invoice is actually refund and journal has a refund_sequence then use that one or use the regular one
+        sequence = journal.sequence_id
+        if invoice and invoice.type in ['out_refund', 'in_refund'] and journal.refund_sequence:
+            if not journal.refund_sequence_id:
+                raise UserError(_('Please define a sequence for the refunds'))
+            sequence = journal.refund_sequence_id
+        return sequence.with_context(ir_sequence_date=move.date).next_by_id()
 
     @api.multi
     def button_cancel(self):
