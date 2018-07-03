@@ -727,7 +727,6 @@ class SurveyUserInput(models.Model):
 
     _sql_constraints = [
         ('unique_token', 'UNIQUE (token)', 'A token must be unique!'),
-        ('deadline_in_the_past', 'CHECK (deadline >= date_create)', 'The deadline cannot be in the past')
     ]
 
     @api.model
