@@ -663,7 +663,7 @@ ActionManager.include({
         var env = ev.data.env;
         var context = new Context(env.context, actionData.context || {});
         var recordID = env.currentID || null; // pyeval handles null value, not undefined
-        var def;
+        var def = $.Deferred();
 
         // determine the action to execute according to the actionData
         if (actionData.special) {
