@@ -4,15 +4,22 @@
 import datetime
 
 from odoo import api, fields, models, modules, _
+from pytz import timezone, UTC
 
 
 class Users(models.Model):
     _inherit = 'res.users'
 
     def _systray_get_calendar_event_domain(self):
+        tz = self.env.user.tz
         start_dt = datetime.datetime.utcnow()
-        start_date = datetime.date.today()
+        if tz:
+            start_date = timezone(tz).localize(start_dt).astimezone(UTC).date()
+        else:
+            start_date = datetime.date.today()
         end_dt = datetime.datetime.combine(start_date, datetime.time.max)
+        if tz:
+            end_dt = timezone(tz).localize(end_dt).astimezone(UTC)
 
         return ['&', '|',
                 '&',
