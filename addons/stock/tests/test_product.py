@@ -12,7 +12,7 @@ class TestVirtualAvailable(TestStockCommon):
     def setUp(self):
         super(TestVirtualAvailable, self).setUp()
 
-        # Make `product3` a stockable product for this test. Indeed, creating quants
+        # Make `product3` a storable product for this test. Indeed, creating quants
         # and playing with owners is not possible for consumables.
         self.product_3.type = 'product'
 

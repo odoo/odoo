@@ -8,7 +8,7 @@ class TestPackingNeg(TransactionCase):
 
     def test_packing_neg(self):
 
-        # Create a new "negative" stockable product 
+        # Create a new "negative" storable product
         product_neg = self.env['product.product'].create({
             'name': 'Negative product',
             'type': 'product',
