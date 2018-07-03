@@ -530,6 +530,25 @@
 
         <!-- ir.model.access -->
         <record id="ir_access_view_tree" model="ir.ui.view">
+            <field name="name">ir.model.access.view.tree</field>
+            <field name="model">ir.model.access</field>
+            <field name="arch" type="xml">
+                <tree string="Access Rights"
+                      decoration-warning="not group_id and
+                                         (perm_read or perm_write or
+                                          perm_create or perm_unlink)">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="group_id"/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
+                </tree>
+            </field>
+        </record>
+        <record id="ir_access_view_tree_edition" model="ir.ui.view">
+            <field name="name">ir.model.access.view.tree.edition</field>
             <field name="model">ir.model.access</field>
             <field name="arch" type="xml">
                 <tree string="Access Rights" editable="top"
@@ -551,6 +570,9 @@
             <field name="arch" type="xml">
                 <form string="Access Rights">
                    <sheet>
+                    <div class="alert alert-warning text-center" role="alert">
+                        Please note that modifications will be applied for all users of the specified group
+                    </div>
                     <group col="4">
                         <field name="name"/>
                         <field name="model_id"/>
@@ -590,7 +612,7 @@
             <field name="name">Access Rights</field>
             <field name="res_model">ir.model.access</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="ir_access_view_tree"/>
+            <field name="view_id" ref="ir_access_view_tree_edition"/>
             <field name="search_view_id" ref="ir_access_view_search"/>
         </record>
         <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
