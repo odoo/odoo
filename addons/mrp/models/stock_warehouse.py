@@ -11,7 +11,7 @@ class StockWarehouse(models.Model):
         'Manufacture to Resupply', default=True,
         help="When products are manufactured, they can be manufactured in this warehouse.")
     manufacture_pull_id = fields.Many2one(
-        'procurement.rule', 'Manufacture Rule')
+        'stock.rule', 'Manufacture Rule')
     manu_type_id = fields.Many2one(
         'stock.picking.type', 'Manufacturing Operation Type',
         domain=[('code', '=', 'mrp_operation')])
@@ -81,7 +81,7 @@ class StockWarehouse(models.Model):
                 manufacture_pull = warehouse.manufacture_pull_id
                 manufacture_pull.write(warehouse._get_manufacture_pull_rules_values(routings)[0])
             else:
-                manufacture_pull = self.env['procurement.rule'].create(warehouse._get_manufacture_pull_rules_values(routings)[0])
+                manufacture_pull = self.env['stock.rule'].create(warehouse._get_manufacture_pull_rules_values(routings)[0])
         return manufacture_pull
 
     @api.multi
@@ -120,7 +120,7 @@ class StockWarehouse(models.Model):
     @api.multi
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
-        # change the manufacture procurement rule name
+        # change the manufacture stock rule name
         for warehouse in self:
             if warehouse.manufacture_pull_id and name:
                 warehouse.manufacture_pull_id.write({'name': warehouse.manufacture_pull_id.name.replace(warehouse.name, name, 1)})

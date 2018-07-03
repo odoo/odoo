@@ -27,7 +27,7 @@
             <field name="product_categ_selectable" eval="True"/>
         </record>
 
-        <record id="procurement_rule_drop_shipping" model="procurement.rule">
+        <record id="stock_rule_drop_shipping" model="stock.rule">
             <field name="name">Vendor → Customer (Dropshipping)</field>
             <field name="action">buy</field>
             <field name="location_id" ref="stock.stock_location_customers"/>

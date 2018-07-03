@@ -430,20 +430,20 @@ class ProductTemplate(models.Model):
         string='Procurement', default='rfq')
 
 
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
 
     @api.multi
     def _run_buy(self, product_id, product_qty, product_uom, location_id, name, origin, values):
         if product_id.purchase_requisition != 'tenders':
-            return super(ProcurementRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
+            return super(StockRule, self)._run_buy(product_id, product_qty, product_uom, location_id, name, origin, values)
         values = self.env['purchase.requisition']._prepare_tender_values(product_id, product_qty, product_uom, location_id, name, origin, values)
         values['picking_type_id'] = self.picking_type_id.id
         self.env['purchase.requisition'].create(values)
         return True
 
     def _prepare_purchase_order(self, product_id, product_qty, product_uom, origin, values, partner):
-        res = super(ProcurementRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
+        res = super(StockRule, self)._prepare_purchase_order(product_id, product_qty, product_uom, origin, values, partner)
         res['partner_ref'] = values['supplier'].purchase_requisition_id.name
         res['requisition_id'] = values['supplier'].purchase_requisition_id.id
         if values['supplier'].purchase_requisition_id.currency_id:
@@ -451,7 +451,7 @@ class ProcurementRule(models.Model):
         return res
 
     def _make_po_get_domain(self, values, partner):
-        domain = super(ProcurementRule, self)._make_po_get_domain(values, partner)
+        domain = super(StockRule, self)._make_po_get_domain(values, partner)
         if 'supplier' in values and values['supplier'].purchase_requisition_id:
             domain += (
                 ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),

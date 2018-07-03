@@ -51,7 +51,7 @@ class Warehouse(models.Model):
     wh_qc_stock_loc_id = fields.Many2one('stock.location', 'Quality Control Location')
     wh_output_stock_loc_id = fields.Many2one('stock.location', 'Output Location')
     wh_pack_stock_loc_id = fields.Many2one('stock.location', 'Packing Location')
-    mto_pull_id = fields.Many2one('procurement.rule', 'MTO rule')
+    mto_pull_id = fields.Many2one('stock.rule', 'MTO rule')
     pick_type_id = fields.Many2one('stock.picking.type', 'Pick Type')
     pack_type_id = fields.Many2one('stock.picking.type', 'Pack Type')
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type')
@@ -116,7 +116,7 @@ class Warehouse(models.Model):
         # create sequences and operation types
         new_vals = warehouse.create_sequences_and_picking_types()
         warehouse.write(new_vals)  # TDE FIXME: use super ?
-        # create routes and push/procurement rules
+        # create routes and push/stock rules
         route_vals = warehouse.create_routes()
         warehouse.write(route_vals)
         # update partner data if partner assigned
@@ -173,7 +173,7 @@ class Warehouse(models.Model):
                     warehouse.create_resupply_routes(to_add, warehouse.default_resupply_wh_id)
                 if to_remove:
                     Route.search([('supplied_wh_id', '=', warehouse.id), ('supplier_wh_id', 'in', to_remove.ids)]).write({'active': False})
-                    # TDE FIXME: shouldn't we remove procurement rules also ? because this could make them global (not sure)
+                    # TDE FIXME: shouldn't we remove stock rules also ? because this could make them global (not sure)
 
         return res
 
@@ -272,7 +272,7 @@ class Warehouse(models.Model):
         # create route selectable on the product to resupply the warehouse from another one
         self.create_resupply_routes(self.resupply_wh_ids, self.default_resupply_wh_id)
 
-        # return routes and mto procurement rule to store on the warehouse
+        # return routes and mto stock rule to store on the warehouse
         return {
             'route_ids': [(4, route.id) for route in reception_route | delivery_route | crossdock_route],
             'mto_pull_id': mto_pull.id,
@@ -284,7 +284,7 @@ class Warehouse(models.Model):
     def _find_existing_rule_or_create(self, rules_list):
         """ This method will find existing rule or create new one"""
         for rule_vals in rules_list:
-            existing_rule = self.env['procurement.rule'].search([
+            existing_rule = self.env['stock.rule'].search([
                 ('picking_type_id', '=', rule_vals['picking_type_id']),
                 ('location_src_id', '=', rule_vals['location_src_id']),
                 ('location_id', '=', rule_vals['location_id']),
@@ -293,7 +293,7 @@ class Warehouse(models.Model):
                 ('active', '=', False),
             ])
             if not existing_rule:
-                self.env['procurement.rule'].create(rule_vals)
+                self.env['stock.rule'].create(rule_vals)
             else:
                 existing_rule.write({'active': True})
 
@@ -306,7 +306,7 @@ class Warehouse(models.Model):
                 reception_route.rule_ids.write({'active': False})
             else:
                 warehouse.reception_route_id = reception_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.reception_steps))
-            # procurement rules for reception
+            # stock rules for reception
             routings = routes_data[warehouse.id][warehouse.reception_steps]
             rules_list = warehouse._get_rule_values(
                 routings, values={'active': True, 'procure_method': 'make_to_order', 'route_id': reception_route.id})
@@ -323,7 +323,7 @@ class Warehouse(models.Model):
                 delivery_route.rule_ids.write({'active': False})
             else:
                 delivery_route = self.env['stock.location.route'].create(warehouse._get_reception_delivery_route_values(warehouse.delivery_steps))
-            # procurement (pull) rules for delivery
+            # stock (pull) rules for delivery
             routings = routes_data[warehouse.id][warehouse.delivery_steps]
             rules_list = warehouse._get_rule_values(
                 routings, values={'active': True, 'route_id': delivery_route.id})
@@ -331,9 +331,9 @@ class Warehouse(models.Model):
         return delivery_route
 
     def _create_or_update_mto_pull(self, routes_data):
-        """ Create MTO procurement rule and link it to the generic MTO route """
+        """ Create MTO stock rule and link it to the generic MTO route """
         routes_data = routes_data or self.get_routes_dict()
-        Rule = self.env['procurement.rule']
+        Rule = self.env['stock.rule']
         for warehouse in self:
             routings = routes_data[warehouse.id][warehouse.delivery_steps]
             if warehouse.mto_pull_id:
@@ -359,12 +359,12 @@ class Warehouse(models.Model):
                     routings,
                     values={'procure_method': 'make_to_order', 'active': warehouse.delivery_steps != 'ship_only' and warehouse.reception_steps != 'one_step', 'route_id': crossdock_route.id})
                 for rule_vals in pull_list:
-                    self.env['procurement.rule'].create(rule_vals)
+                    self.env['stock.rule'].create(rule_vals)
         return crossdock_route
 
     def create_resupply_routes(self, supplier_warehouses, default_resupply_wh):
         Route = self.env['stock.location.route']
-        Rule = self.env['procurement.rule']
+        Rule = self.env['stock.rule']
 
         input_location, output_location = self._get_input_output_locations(self.reception_steps, self.delivery_steps)
         internal_transit_location, external_transit_location = self._get_transit_locations()
@@ -545,7 +545,7 @@ class Warehouse(models.Model):
     def _check_delivery_resupply(self, new_location, change_to_multiple):
         """ Check if the resupply routes from this warehouse follow the changes of number of delivery steps
         Check routes being delivery bu this warehouse and change the rule going to transit location """
-        Rule = self.env["procurement.rule"]
+        Rule = self.env["stock.rule"]
         routes = self.env['stock.location.route'].search([('supplier_wh_id', '=', self.id)])
         rules = Rule.search(['&', '&', ('route_id', 'in', routes.ids), ('action', '!=', 'push'), ('location_id.usage', '=', 'transit')])
         rules.write({
@@ -558,7 +558,7 @@ class Warehouse(models.Model):
             for mto_rule_val in mto_rule_vals:
                 Rule.create(mto_rule_val)
         else:
-            # We need to delete all the MTO procurement rules, otherwise they risk to be used in the system
+            # We need to delete all the MTO stock rules, otherwise they risk to be used in the system
             Rule.search([
                 '&', ('route_id', '=', self._get_mto_route().id),
                 ('location_id.usage', '=', 'transit'),
@@ -569,7 +569,7 @@ class Warehouse(models.Model):
         """ Check routes being delivered by the warehouses (resupply routes) and
         change their rule coming from the transit location """
         routes = self.env['stock.location.route'].search([('supplied_wh_id', 'in', self.ids)])
-        self.env['procurement.rule'].search([
+        self.env['stock.rule'].search([
             '&',
                 ('route_id', 'in', routes.ids),
                 '&',
@@ -644,7 +644,7 @@ class Warehouse(models.Model):
             self.mapped('wh_output_stock_loc_id').write({'active': True})
 
     def _location_used(self, location):
-        rules = self.env['procurement.rule'].search_count([
+        rules = self.env['stock.rule'].search_count([
             '&',
             ('route_id', 'not in', [x.id for x in self.route_ids]),
             '|', ('location_src_id', '=', location.id),
@@ -759,7 +759,7 @@ class Orderpoint(models.Model):
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group', copy=False,
-        help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.")
+        help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by stock rules will be grouped into one big picking.")
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('stock.warehouse.orderpoint'))
@@ -810,7 +810,7 @@ class Orderpoint(models.Model):
         return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
-        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from an orderpoint. This method could be override in order to add other custom key that could
         be used in move/po creation.
         """
