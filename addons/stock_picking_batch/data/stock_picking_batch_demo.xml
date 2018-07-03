@@ -43,6 +43,7 @@
     <!-- Add stock move -->
     <record id="stock_move1" model="stock.move">
         <field name="name">A first stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="picking_id" ref="Picking_A"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
@@ -52,6 +53,7 @@
     </record>
     <record id="stock_move2" model="stock.move">
         <field name="name">A second stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="picking_id" ref="Picking_A"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
@@ -61,6 +63,7 @@
     </record>
     <record id="stock_move3" model="stock.move">
         <field name="name">A third stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="picking_id" ref="Picking_B"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
@@ -70,6 +73,7 @@
     </record>
     <record id="stock_move4" model="stock.move">
         <field name="name">A fourth stock move</field>
+        <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="picking_id" ref="Picking_C"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
