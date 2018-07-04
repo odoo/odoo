@@ -311,62 +311,6 @@ var SnippetEditor = Widget.extend({
 
         return $.when.apply($, defs);
     },
-<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
-=======
-    /**
-     * Removes the associated snippet from the DOM and destroys the associated
-     * editor (itself).
-     *
-     * @private
-     */
-    _removeSnippet: function () {
-        this.toggleFocus(false);
-
-        this.trigger('call_for_each_child_snippet', {
-            $snippet: this.$target,
-            callback: function (editor, $snippet) {
-                for (var i in editor.styles) {
-                    editor.styles[i].onRemove();
-                }
-            },
-        });
-
-        var $parent = this.$target.parent();
-        this.$target.find('*').andSelf().tooltip('destroy');
-        this.$target.remove();
-        this.$el.remove();
-
-        var node = $parent[0];
-        if (node && node.firstChild) {
-            $.summernote.core.dom.removeSpace(node, node.firstChild, 0, node.lastChild, 1);
-            if (!node.firstChild.tagName && node.firstChild.textContent === ' ') {
-                node.removeChild(node.firstChild);
-            }
-        }
-
-        if ($parent.closest(':data("snippet-editor")').length) {
-            while (!$parent.data('snippet-editor')) {
-                var $nextParent = $parent.parent();
-                if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                    $parent.remove();
-                }
-                $parent = $nextParent;
-            }
-            if ($parent.children().length === 0 && $parent.text().trim() === '' && !$parent.hasClass('oe_structure')) {
-                _.defer(function () {
-                    $parent.data('snippet-editor')._removeSnippet();
-                });
-            }
-        }
-
-        // clean editor if they are image or table in deleted content
-        $('.note-control-selection').hide();
-        $('.o_table_handler').remove();
-
-        this.trigger('snippet_removed');
-        this.destroy();
-    },
->>>>>>> [IMP] generic: improvments trigger_up to trigger
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -550,13 +494,8 @@ var SnippetEditor = Widget.extend({
      */
     _onRemoveClick: function (ev) {
         ev.preventDefault();
-<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
-        this.trigger_up('request_history_undo_record', {$target: this.$target});
-        this.removeSnippet();
-=======
         this.trigger('request_history_undo_record', {$target: this.$target});
-        this._removeSnippet();
->>>>>>> [IMP] generic: improvments trigger_up to trigger
+        this.removeSnippet();
     },
 });
 
@@ -695,15 +634,8 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: function () {
-<<<<<<< d38ba40c4534dcf4942fbebd2a489c2ad8bae082
-        this.trigger_up('ready_to_clean_for_save');
-        this._destroyEditors();
-=======
         this.trigger('ready_to_clean_for_save');
-        _.each(this.snippetEditors, function (snippetEditor) {
-            snippetEditor.cleanForSave();
-        });
->>>>>>> [IMP] generic: improvments trigger_up to trigger
+        this._destroyEditors();
 
         this.$editable.find('[contentEditable]')
             .removeAttr('contentEditable')
