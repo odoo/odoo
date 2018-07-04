@@ -126,7 +126,7 @@ var GroupByMenu = DropdownMenu.extend({
             itemId: groupbyName,
             description: field.string,
             fieldName: fieldName,
-            groupId: this.groupId,
+            groupId: _.uniqueId('__group__'),
             isActive: true,
         };
         var eventData = _.clone(groupby);
@@ -152,11 +152,6 @@ var GroupByMenu = DropdownMenu.extend({
         if (_.contains(['date', 'datetime'], this.fields[item.fieldName].type)) {
             item.options = this.intervalOptions;
             item.defaultOptionId = item.defaultOptionId || this.defaultOptionId;
-        }
-        // the idea is that we have only one group in the groupby menu
-        // like in the search view.
-        if (!this.groupId) {
-            this.groupId = item.groupId;
         }
         // super has to be called here because we need to add options to groupby
         // before to call it since some keys in a groupby are initialized using

@@ -578,32 +578,35 @@ var SearchView = Widget.extend({
 
         this.query.each(function (facet) {
 
+            var values = facet.get('values');
             if (facet.attributes.cat === "groupByCategory") {
-                selectedGroupIds.groupByCategory = selectedGroupIds.groupByCategory.concat(
-                    _.compact(
-                        _.uniq(
-                            _.map(facet.attributes.values, function (value) {
-                                var groupby = value.value;
-                                var groupbyDescription = _.findWhere(self.groupbysMapping, {groupby: groupby});
-                                if (groupbyDescription) {
-                                    return groupbyDescription.groupId;
-                                }
-                            })
-                        )
+                selectedGroupIds.groupByCategory = _.uniq(
+                    values.reduce(
+                        function (acc, value) {
+                            var groupby = value.value;
+                            var description = _.findWhere(self.groupbysMapping, {groupby: groupby});
+                            if (description) {
+                                acc.push(description.groupId);
+                            }
+                            return acc;
+                        },
+                        []
                     )
                 );
             }
             if (facet.attributes.cat === "filterCategory") {
                 selectedGroupIds.filterCategory = selectedGroupIds.filterCategory.concat(
                     _.uniq(
-                        _.compact(
-                            _.map(facet.attributes.values, function (value) {
+                        values.reduce(
+                            function (acc, value) {
                                 var filter = value.value;
-                                var filterDescription = _.findWhere(self.filtersMapping, {filter: filter});
-                                if (filterDescription) {
-                                    return filterDescription.groupId;
+                                var description = _.findWhere(self.filtersMapping, {filter: filter});
+                                if (description) {
+                                    acc.push(description.groupId);
                                 }
-                            })
+                                return acc;
+                            },
+                            []
                         )
                     )
                 );
@@ -869,39 +872,45 @@ var SearchView = Widget.extend({
         return fv;
     },
     /**
-     * @private
+     * This function ask the groupby menu to deactive all groupbys if no
+     * groupby is used.
+     *
      * @param {string[]]} selectedGroupIds
      */
     _unsetUnusedGroupbys: function (selectedGroupIds) {
-        var groupIds = this.selectedGroupIds.groupByCategory.reduce(
-            function (acc, id) {
-                if (!_.contains(selectedGroupIds, id)) {
-                    acc.push(id);
+        var groupIds = this.groupsMapping.reduce(
+            function (acc, triple) {
+                if (triple.category === 'Group By') {
+                    acc.push(triple.groupId);
                 }
                 return acc;
             },
             []
         );
         this.selectedGroupIds.groupByCategory = selectedGroupIds;
-        this.groupby_menu.unsetGroups(groupIds);
+        if (selectedGroupIds.length === 0) {
+            this.groupby_menu.unsetGroups(groupIds);
+        }
     },
     /**
      * @private
      * @param {string[]]} selectedGroupIds
      */
-    _unsetUnusedFilters: function (selectedGroupIds) {
-        var groupIds = this.selectedGroupIds.filterCategory.reduce(
-            function (acc, id) {
-                if (!_.contains(selectedGroupIds, id)) {
-                    acc.push(id);
-                }
-                return acc;
-            },
-            []
-        );
-        this.selectedGroupIds.filterCategory = selectedGroupIds;
-        this.filters_menu.unsetGroups(groupIds);
-    },
+     _unsetUnusedFilters: function (selectedGroupIds) {
+         var groupIds = this.groupsMapping.reduce(
+             function (acc, triple) {
+                 if (triple.category === 'Filters') {
+                     if (!_.contains(selectedGroupIds, triple.groupId)) {
+                         acc.push(triple.groupId);
+                     }
+                 }
+                 return acc;
+             },
+             []
+         );
+         this.selectedGroupIds.filterCategory = selectedGroupIds;
+         this.filters_menu.unsetGroups(groupIds);
+     },
 
     //--------------------------------------------------------------------------
     // Handlers
