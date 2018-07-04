@@ -41,7 +41,7 @@
                             string="Sales Order"/>
                 </xpath>
                 <field name="user_id" position="after">
-                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)], 'readonly': [('parent_id', '!=', False)]}" options='{"no_open": True, "no_create": True}'/>
+                    <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True, "no_create": True}'/>
                 </field>
             </field>
         </record>
