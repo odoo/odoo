@@ -105,9 +105,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             attachedDocumentDomain.unshift('&');
             attachedDocumentDomain.push(['create_uid', '=', session.uid]);
         }
-        if (this.recordData.model) {
+        if (this.recordData.res_model || this.recordData.model) {
             var relatedDomain = ['&',
-                ['res_model', '=', this.recordData.model],
+                ['res_model', '=', this.recordData.res_model || this.recordData.model],
                 ['res_id', '=', this.recordData.res_id|0]];
             if (!this.recordData.res_id) {
                 relatedDomain.unshift('&');
@@ -158,8 +158,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             this.fieldNameAttachment = fieldNameAttachment;
             this.attachments = [];
             summernoteConfig.onUpload = this._onUpload.bind(this);
-            summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
         }
+        summernoteConfig.getMediaDomain = this._getAttachmentsDomain.bind(this);
+
 
         if (config.debug) {
             summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);
