@@ -814,7 +814,8 @@ var BasicModel = AbstractModel.extend({
         return this.mutex.exec(this._applyChange.bind(this, record_id, changes, options));
     },
     /**
-     * Reload all data for a given resource
+     * Reload all data for a given resource. At any time there is at most one
+     * reload operation active.
      *
      * @param {string} id local id for a resource
      * @param {Object} [options]
@@ -823,64 +824,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Deferred<string>} resolves to the id of the resource
      */
     reload: function (id, options) {
-        options = options || {};
-        var element = this.localData[id];
-
-        if (element.type === 'record') {
-            if (!options.currentId && (('currentId' in options) || this.isNew(id))) {
-                var params = {
-                    context: element.context,
-                    fieldsInfo: element.fieldsInfo,
-                    fields: element.fields,
-                    viewType: element.viewType,
-                };
-                return this._makeDefaultRecord(element.model, params);
-            }
-            if (!options.keepChanges) {
-                this.discardChanges(id, {rollback: false});
-            }
-        } else if (element._changes) {
-            delete element.tempLimitIncrement;
-            _.each(element._changes, function (change) {
-                delete change.isNew;
-            });
-        }
-
-        if (options.context !== undefined) {
-            element.context = options.context;
-        }
-        if (options.domain !== undefined) {
-            element.domain = options.domain;
-        }
-        if (options.groupBy !== undefined) {
-            element.groupedBy = options.groupBy;
-        }
-        if (options.limit !== undefined) {
-            element.limit = options.limit;
-        }
-        if (options.offset !== undefined) {
-            this._setOffset(element.id, options.offset);
-        }
-        if (options.loadMoreOffset !== undefined) {
-            element.loadMoreOffset = options.loadMoreOffset;
-        } else {
-            // reset if not specified
-            element.loadMoreOffset = 0;
-        }
-        if (options.currentId !== undefined) {
-            element.res_id = options.currentId;
-        }
-        if (options.ids !== undefined) {
-            element.res_ids = options.ids;
-            element.count = element.res_ids.length;
-        }
-        if (element.type === 'record') {
-            element.offset = _.indexOf(element.res_ids, element.res_id);
-        }
-        var loadOptions = _.pick(options, 'fieldNames', 'viewType');
-        return this._load(element, loadOptions).then(function (result) {
-            return result.id;
-        });
+        return this.mutex.exec(this._reload.bind(this, id, options));
     },
     /**
      * In some case, we may need to remove an element from a list, without going
@@ -4006,6 +3950,76 @@ var BasicModel = AbstractModel.extend({
                 }
                 return list;
             });
+        });
+    },
+    /**
+     * Reload all data for a given resource
+     *
+     * @private
+     * @param {string} id local id for a resource
+     * @param {Object} [options]
+     * @param {boolean} [options.keepChanges=false] if true, doesn't discard the
+     *   changes on the record before reloading it
+     * @returns {Deferred<string>} resolves to the id of the resource
+     */
+    _reload: function (id, options) {
+        options = options || {};
+        var element = this.localData[id];
+
+        if (element.type === 'record') {
+            if (!options.currentId && (('currentId' in options) || this.isNew(id))) {
+                var params = {
+                    context: element.context,
+                    fieldsInfo: element.fieldsInfo,
+                    fields: element.fields,
+                    viewType: element.viewType,
+                };
+                return this._makeDefaultRecord(element.model, params);
+            }
+            if (!options.keepChanges) {
+                this.discardChanges(id, {rollback: false});
+            }
+        } else if (element._changes) {
+            delete element.tempLimitIncrement;
+            _.each(element._changes, function (change) {
+                delete change.isNew;
+            });
+        }
+
+        if (options.context !== undefined) {
+            element.context = options.context;
+        }
+        if (options.domain !== undefined) {
+            element.domain = options.domain;
+        }
+        if (options.groupBy !== undefined) {
+            element.groupedBy = options.groupBy;
+        }
+        if (options.limit !== undefined) {
+            element.limit = options.limit;
+        }
+        if (options.offset !== undefined) {
+            this._setOffset(element.id, options.offset);
+        }
+        if (options.loadMoreOffset !== undefined) {
+            element.loadMoreOffset = options.loadMoreOffset;
+        } else {
+            // reset if not specified
+            element.loadMoreOffset = 0;
+        }
+        if (options.currentId !== undefined) {
+            element.res_id = options.currentId;
+        }
+        if (options.ids !== undefined) {
+            element.res_ids = options.ids;
+            element.count = element.res_ids.length;
+        }
+        if (element.type === 'record') {
+            element.offset = _.indexOf(element.res_ids, element.res_id);
+        }
+        var loadOptions = _.pick(options, 'fieldNames', 'viewType');
+        return this._load(element, loadOptions).then(function (result) {
+            return result.id;
         });
     },
     /**
