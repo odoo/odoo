@@ -369,7 +369,8 @@ core.search_filters_registry
     .add('id', Id);
 
 return {
-    ExtendedSearchProposition: ExtendedSearchProposition
+    ExtendedSearchProposition: ExtendedSearchProposition,
+    Field: Field,
 };
 
 });
