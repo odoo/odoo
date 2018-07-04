@@ -234,7 +234,7 @@
                           </div>
                           <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                               <a role="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalaccept">
-                                  <span class="fa fa-check"> Pay Now</span>
+                                  <i class="fa fa-check"></i> Pay Now
                               </a>
                           </div>
                           <hr class="mt0 mb0"/>
@@ -401,18 +401,18 @@
 
                       <div class="text-center hidden-print mt16 mb16" id="quotation_toolbar" t-if="quotation.state in ('draft', 'sent', 'waiting_date')">
                           <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and not quotation.has_to_be_paid()">
-                              <span class="fa fa-check"> Accept</span>
+                              <i class="fa fa-check"></i> Accept
                           </a>
                           <a role="button" class="btn btn-success" data-toggle="modal" data-target="#modalaccept" t-if="order_valid and quotation.has_to_be_paid()">
-                              <span class="fa fa-check"> Accept &amp; Pay</span>
+                              <i class="fa fa-check"></i> Accept &amp; Pay
                           </a>
                           <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline">
-                              <span class="fa fa-times"> Reject</span>
+                              <i class="fa fa-times"></i> Reject
                           </a>
                       </div>
                       <div class="text-center" t-if="need_payment or (quotation.state in ('sale') and quotation.has_to_be_paid() and tx_state != 'done')" style="padding: 10px">
                           <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept">
-                              <span class="fa fa-check"> Pay Now</span>
+                              <i class="fa fa-check"></i> Pay Now
                           </a>
                       </div>
 
@@ -438,7 +438,7 @@
       </xpath>
       <xpath expr="//div[@id='quotation_toolbar']/a[@data-target='#modaldecline']" position="before">
           <a role="button" class="btn btn-info" type="submit" href="#discussion">
-              <span class="fa fa-comment"> Feedback</span>
+              <i class="fa fa-comment"></i> Feedback
           </a>
       </xpath>
   </template>

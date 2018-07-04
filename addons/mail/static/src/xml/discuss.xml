@@ -30,13 +30,13 @@
         <div class="o_mail_discuss_sidebar">
             <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_inbox') ? 'o_active': ''}"
                  data-thread-id="mailbox_inbox">
-                <span class="o_thread_name fa fa-inbox mr8">Inbox</span>
+                <span class="o_channel_name"><i class="fa fa-inbox mr8"/>Inbox</span>
                 <t t-set="counter" t-value="needactionCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
             <div t-attf-class="o_mail_discuss_title_main o_mail_mailbox_title_starred o_mail_discuss_item #{(activeThreadID === 'mailbox_starred') ? 'o_active': ''}"
                  data-thread-id="mailbox_starred">
-                <span class="o_thread_name fa fa-star-o mr8">Starred</span>
+                <span class="o_channel_name"><i class="fa fa-star-o mr8"/>Starred</span>
                 <t t-set="counter" t-value="starredCounter"/>
                 <t t-call="mail.discuss.SidebarCounter"/>
             </div>
@@ -218,16 +218,20 @@
             <div class="o_mail_discuss_content"/>
             <div class="o_mail_mobile_tabs">
                 <div class="o_mail_mobile_tab" data-type="mailbox_inbox">
-                    <span class="o_tab_title fa fa-inbox">Inbox</span>
+                    <span class="fa fa-inbox"/>
+                    <span class="o_tab_title">Inbox</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="dm">
-                    <span class="o_tab_title fa fa-user">Chat</span>
+                    <span class="fa fa-user"/>
+                    <span class="o_tab_title">Chat</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="public">
-                    <span class="o_tab_title fa fa-users">Channels</span>
+                    <span class="fa fa-users"/>
+                    <span class="o_tab_title">Channels</span>
                 </div>
                 <div class="o_mail_mobile_tab" data-type="private">
-                    <span class="o_tab_title fa fa-eye-slash">Private Channels</span>
+                    <span class="fa fa-eye-slash"/>
+                    <span class="o_tab_title">Private Channels</span>
                 </div>
             </div>
         </div>

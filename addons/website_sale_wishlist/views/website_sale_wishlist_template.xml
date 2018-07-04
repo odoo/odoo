@@ -63,7 +63,7 @@
                                         <td class='text-left'>
                                             <strong><a t-att-href="'/shop/product/%s' % slug(wish.product_id.product_tmpl_id)"><t t-esc="wish.product_id.display_name" /></a></strong>
                                             <small class='hidden-xs'><p t-field="wish.product_id.description_sale" class="text-muted"/></small>
-                                            <a class="o_wish_rm no-decoration"><small><span class='fa fa-trash-o'> Remove</span></small></a>
+                                            <a class="o_wish_rm no-decoration"><small><i class='fa fa-trash-o'></i> Remove</small></a>
                                         </td>
                                         <td style='width:80px'>
                                             <t t-if='wish.price_new != wish.price'>

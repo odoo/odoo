@@ -155,6 +155,12 @@ def valid_alternative_icon_text(arch):
     xpath += '[not(descendant-or-self::field)]'
     # And finally, if there is some text, it's good too
     xpath += '[not(descendant-or-self::*[text()])]'
+    # Following or preceding text
+    xpath += '[not(preceding-sibling::text()[normalize-space()])]'
+    xpath += '[not(following-sibling::text()[normalize-space()])]'
+    # Following or preceding text in span
+    xpath += '[not(preceding-sibling::span[text()])]'
+    xpath += '[not(following-sibling::span[text()])]'
 
     if arch.xpath(xpath):
         return "Warning"
@@ -188,6 +194,12 @@ def valid_title_icon(arch):
     xpath += '[not(descendant-or-self::field)]'
     # And finally, if there is some text, it's good too
     xpath += '[not(descendant-or-self::*[text()])]'
+    # Following or preceding text
+    xpath += '[not(preceding-sibling::text()[normalize-space()])]'
+    xpath += '[not(following-sibling::text()[normalize-space()])]'
+    # Following or preceding text in span
+    xpath += '[not(preceding-sibling::span[text()])]'
+    xpath += '[not(following-sibling::span[text()])]'
 
     if arch.xpath(xpath):
         return "Warning"
