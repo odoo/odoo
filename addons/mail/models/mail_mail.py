@@ -104,21 +104,22 @@ class MailMail(models.Model):
                                 messages to send (by default all 'outgoing'
                                 messages are sent).
         """
-        if not self.ids:
-            filters = ['&',
-                       ('state', '=', 'outgoing'),
-                       '|',
-                       ('scheduled_date', '<', datetime.datetime.now()),
-                       ('scheduled_date', '=', False)]
-            if 'filters' in self._context:
-                filters.extend(self._context['filters'])
+        filters = ['&',
+                   ('state', '=', 'outgoing'),
+                   '|',
+                   ('scheduled_date', '<', datetime.datetime.now()),
+                   ('scheduled_date', '=', False)]
+        if 'filters' in self._context:
+            filters.extend(self._context['filters'])
             # TODO: make limit configurable
-            ids = self.search(filters, limit=10000).ids
+        ids_to_process = self.search(filters, limit=10000).ids
+        if ids:
+            ids_to_process = [id in ids_to_process if id in ids]
         res = None
         try:
             # auto-commit except in testing mode
             auto_commit = not getattr(threading.currentThread(), 'testing', False)
-            res = self.browse(ids).send(auto_commit=auto_commit)
+            res = self.browse(ids_to_process).send(auto_commit=auto_commit)
         except Exception:
             _logger.exception("Failed processing mail queue")
         return res
