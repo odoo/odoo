@@ -45,17 +45,23 @@ class AccountInvoice(models.Model):
             }
         }
 
-    @api.multi
-    def invoice_validate(self):
-        result = super(AccountInvoice, self).invoice_validate()
-        # associate the invoice to the timesheet on validation
-        for invoice in self:
-            for invoice_line in invoice.invoice_line_ids.filtered(lambda line: line.product_id.type == 'service').sorted(key=lambda inv_line: (inv_line.invoice_id, inv_line.id)):
-                uninvoiced_timesheet_lines = self.env['account.analytic.line'].sudo().search([
-                    ('so_line', 'in', invoice_line.sale_line_ids.ids),
-                    ('project_id', '!=', False),
-                    ('timesheet_invoice_id', '=', False),
-                    ('timesheet_invoice_type', 'in', ['billable_time', 'billable_fixed'])
-                ])
-                uninvoiced_timesheet_lines.write({'timesheet_invoice_id': invoice.id})
-        return result
+
+class AccountInvoiceLine(models.Model):
+    _inherit = 'account.invoice.line'
+
+    @api.model
+    def create(self, values):
+        """ Link the timesheet from the SO lines to the corresponding draft invoice.
+            NOTE: only the timesheets linked to an Sale Line with a product invoiced on delivered quantity
+            are concerned, since in ordered quantity, the timesheet quantity is not invoiced, but is simply
+            to compute the delivered one (for reporting).
+        """
+        invoice_line = super(AccountInvoiceLine, self).create(values)
+        if invoice_line.invoice_id.type == 'out_invoice' and invoice_line.invoice_id.state == 'draft':
+            sale_line_delivery = invoice_line.sale_line_ids.filtered(lambda sol: sol.product_id.invoice_policy == 'delivery' and sol.product_id.service_type == 'timesheet')
+            if sale_line_delivery:
+                timesheets = self.env['account.analytic.line'].search([('so_line', 'in', sale_line_delivery.ids), ('timesheet_invoice_id', '=', False), ('project_id', '!=', False)])
+                timesheets.write({
+                    'timesheet_invoice_id': invoice_line.invoice_id.id,
+                })
+        return invoice_line
