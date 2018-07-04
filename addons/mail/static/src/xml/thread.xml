@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages
+        @param {mail.model.AbstractThread} thread
+        @param {Object[]} hideAuthorMessages dict where key is message ID and
+          value is boolean. It tells whether the message with this ID should
+          hide the author visually or not.
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
         @param {boolean} [options.displayLoadMore]
@@ -13,17 +16,18 @@
         @param {integer} ORDER.DESC=-1
     -->
     <t t-name="mail.widget.Thread">
-        <t t-if="messages.length">
+        <t t-if="thread.hasMessages()">
+            <t t-set="messages" t-value="thread.getMessages()"/>
             <t t-if="options.displayLoadMore and options.displayOrder == ORDER.ASC"
                t-call="mail.widget.Thread.LoadMore"/>
             <t t-call="mail.widget.Thread.Content"/>
             <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
                t-call="mail.widget.Thread.LoadMore"/>
         </t>
-        <t t-if="options.displayEmptyThread">
+        <t t-elif="options.displayEmptyThread">
             <t t-call="mail.widget.Thread.Empty" />
         </t>
-        <div t-if="options.displayNoMatchFound" class="o_mail_no_content">
+        <div t-elif="options.displayNoMatchFound" class="o_mail_no_content">
             <div class="o_thread_title">No matches found</div>
             <div>No message matches your search. Try to change your search filters.</div>
         </div>
@@ -116,32 +120,32 @@
     <!--
         When a thread is empty
 
-        @param {Object} options
-        @param {string|integer} options.threadID
+        @param {mail.model.Thread} thread
     -->
     <div t-name="mail.widget.Thread.Empty" class="o_mail_no_content">
-        <t t-if="options.threadID === 'mailbox_inbox'">
+        <t t-if="thread.getID() === 'mailbox_inbox'">
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>
         </t>
-        <t t-if="options.threadID === 'mailbox_starred'">
+        <t t-if="thread.getID() === 'mailbox_starred'">
             <div class="o_thread_title">No starred message</div>
             <div>You can mark any message as 'starred', and it shows up in this mailbox.</div>
         </t>
-        <t t-if="options.threadID === 'mailbox_moderation'">
+        <t t-if="thread.getID() === 'mailbox_moderation'">
             <div class="o_thread_title">You have no message to moderate</div>
             <div>Pending moderation messages appear here.</div>
         </t>
     </div>
 
     <!--
-        @param {mail.model.AbstractMessage[]} messages
+        @param {mail.model.AbstractMessage[]} messages messages ordered by increasing IDs
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
             message ID, the separator is placed just after this message.
     -->
     <t t-name="mail.widget.Thread.Content">
         <t t-if="options.messagesSeparatorPosition == 'top'" t-call="mail.MessagesSeparator"/>
         <t t-set="current_day" t-value="0"/>
+        <t t-if="options.displayOrder === ORDER.DESC" t-set="messages" t-value="messages.slice().reverse()"/>
         <t t-foreach="messages" t-as="message">
             <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
                 <span class="o_thread_date">

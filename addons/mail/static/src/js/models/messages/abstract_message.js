@@ -57,14 +57,6 @@ var AbstractMessage =  Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Set whether the message should display the author or not
-     *
-     * @param {boolean} bool if set, display the author of this message
-     */
-    displayAuthor: function (bool) {
-        this._displayAuthor = bool;
-    },
-    /**
      * Get the list of files attached to this message.
      * Note that attachments are stored with server-format
      *

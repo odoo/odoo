@@ -20,7 +20,9 @@ var READ_MORE = _t("read more");
 var READ_LESS = _t("read less");
 
 /**
- * This is a generic widget to render a chat thread
+ * This is a generic widget to render a thread.
+ * Any thread that extends mail.model.AbstractThread can be used with this
+ * widget.
  */
 var ThreadWidget = Widget.extend({
     className: 'o_mail_thread',
@@ -89,6 +91,7 @@ var ThreadWidget = Widget.extend({
      * @param {mail.model.AbstractMessage[]} messages list of messages of the
      *   thread, ordered by increasing IDs (a higher ID means a more recent
      *   message).
+     * @param {}
      * @param {Object} [options]
      * @param {integer} [options.displayOrder=ORDER.ASC] order of displaying
      *    messages in the thread:
@@ -98,11 +101,11 @@ var ThreadWidget = Widget.extend({
      * @param {boolean} [options.isCreateMode]
      * @param {boolean} [options.squashCloseMessages]
      */
-    render: function (messages, options) {
+    render: function (thread, options) {
         var self = this;
 
         // copy so that reverse do not alter order in the thread object
-        messages = _.clone(messages);
+        var messages = _.clone(thread.getMessages());
 
         var modeOptions = options.isCreateMode ? this._disabledOptions :
                                                  this._enabledOptions;
@@ -118,6 +121,10 @@ var ThreadWidget = Widget.extend({
         options = _.extend({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
         });
+
+        // dict where key is message ID, and value is whether it should hide
+        // the author of message or not visually
+        var hideAuthorMessages = {};
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -147,14 +154,16 @@ var ThreadWidget = Widget.extend({
                     )
                 )
             ) {
-                message.displayAuthor(true);
+                hideAuthorMessages[message.getID()] = false;
             } else {
-                message.displayAuthor(!options.squashCloseMessages);
+                hideAuthorMessages[message.getID()] = options.squashCloseMessages;
             }
             prevMessage = message;
         });
         this.$el.html(QWeb.render('mail.widget.Thread', {
-            messages: messages,
+            thread: thread,
+            hideAuthorMessages: hideAuthorMessages,
+            // messages: messages,
             options: options,
             ORDER: ORDER,
             dateFormat: time.getLangDatetimeFormat(),
