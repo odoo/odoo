@@ -168,7 +168,7 @@
                 <tr><td valign="middle">
                     <span style="font-size: 10px;">Your <t t-esc="'%s' % model_description or 'document'"/></span><br/>
                     <span style="font-size: 20px; font-weight: bold;">
-                        <t t-esc="message.record_name"/>
+                        <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
                     </span>
                 </td><td valign="middle" align="right">
                     <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
@@ -183,7 +183,7 @@
     <tr>
         <td align="center" style="min-width: 590px;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr><td valign="top" style="font-size: 14px;">
+                <tr><td valign="top" style="font-size: 13px;">
                     <t t-raw="message.body"/>
                 </td></tr>
                 <tr><td style="text-align:center;">
@@ -195,7 +195,7 @@
     <!-- FOOTER -->
     <tr>
         <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
                 <tr><td valign="middle" align="left">
                     <t t-esc="company.name"/>
                 </td></tr>
@@ -219,7 +219,7 @@
 <!-- POWERED BY -->
 <tr><td align="center" style="min-width: 590px;">
     <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
-      <tr><td style="text-align: center; font-size: 14px;">
+      <tr><td style="text-align: center; font-size: 13px;">
         Powered by <a target="_blank" href="https://www.odoo.com" style="color: #875A7B;">Odoo</a>
       </td></tr>
     </table>
