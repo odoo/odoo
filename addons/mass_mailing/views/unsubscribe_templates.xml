@@ -36,32 +36,12 @@
                     <div id="div_blacklist" class="col-md-6 col-md-offset-3">
                         <h1 class="page-header">Global Subscription</h1>
 
+                        <div id="blacklist_info" class="alert alert-info text-center" style="display:none">
+                            <p>Choose your mailing subscriptions.</p>
+                        </div>
+
                         <div id="div_state_blacklist" class="alert alert-info text-center" style="display:none">
                             <p><span id="state_blacklist"></span></p>
-                        </div>
-
-                        <div id="div_confirm_blacklisted" class="alert alert-success text-center" style="display:none">
-                            <p>You have been successfully <strong>removed</strong> from our global mailing subscription!</p>
-                            <p>You will not be contacted anymore by our services.</p>
-                        </div>
-
-                        <div id="div_removed_blacklist" class="alert alert-success text-center" style="display:none">
-                            <p>Welcome back!</p>
-                            <p>You are now able to be contacted by our services.</p>
-                        </div>
-
-                        <div id="div_found" class="alert alert-warning text-center" style="display:none">
-                            <p>You were already blacklisted.</p>
-                            <p>If you still received a mail from us, please contact us to report the issue.</p>
-                        </div>
-
-                        <div id="div_not_found" class="alert alert-warning text-center" style="display:none">
-                            <p>You were not blacklisted.</p>
-                            <p>If you still not receive mails from us, please contact us to report the issue.</p>
-                        </div>
-
-                        <div id="div_error" class="alert alert-warning text-center" style="display:none">
-                            <p>An error occured. Please try again later or contact us.</p>
                         </div>
 
                         <div id="div_blacklist_add" class="text-center mb16" style="display:none">
@@ -104,6 +84,7 @@
                     <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
                     <input type="hidden" name="list_ids" t-att-value="list_ids"/>
                     <input type="hidden" name="opt_out_list_ids" t-att-value="opt_out_list_ids"/>
+                    <input type="hidden" name="res_id" t-att-value="contact.id"/>
 
                     <!-- Opt-out -->
                     <div id="div_opt_out" class="col-md-6 col-md-offset-3">
@@ -134,32 +115,12 @@
                     <div id="div_blacklist" class="col-md-6 col-md-offset-3">
                         <h1 class="page-header">Global Subscription</h1>
 
+                        <div id="blacklist_info" class="alert alert-info text-center" style="display:none">
+                            <p>Choose your mailing subscriptions.</p>
+                        </div>
+
                         <div id="div_state_blacklist" class="alert alert-info text-center" style="display:none">
                             <p><span id="state_blacklist"></span></p>
-                        </div>
-
-                        <div id="div_confirm_blacklisted" class="alert alert-success text-center" style="display:none">
-                            <p>You have been successfully <strong>removed</strong> from our global mailing subscription!</p>
-                            <p>You will not be contacted anymore by our services.</p>
-                        </div>
-
-                        <div id="div_removed_blacklist" class="alert alert-success text-center" style="display:none">
-                            <p>Welcome back!</p>
-                            <p>You are now able to be contacted by our services.</p>
-                        </div>
-
-                        <div id="div_found" class="alert alert-warning text-center" style="display:none">
-                            <p>You were already blacklisted.</p>
-                            <p>If you still received a mail from us, please contact us to report the issue.</p>
-                        </div>
-
-                        <div id="div_not_found" class="alert alert-warning text-center" style="display:none">
-                            <p>You were not blacklisted.</p>
-                            <p>If you still not receive mails from us, please contact us to report the issue.</p>
-                        </div>
-
-                        <div id="div_error" class="alert alert-warning text-center" style="display:none">
-                            <p>An error occured. Please try again later or contact us.</p>
                         </div>
 
                         <div id="div_blacklist_add" class="text-center mb16" style="display:none">

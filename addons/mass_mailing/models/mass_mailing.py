@@ -262,8 +262,7 @@ class MassMailingContact(models.Model):
     def create(self, vals):
         result = super(MassMailingContact, self).create(vals)
         if 'list_ids' in vals:
-            for rec in result.opt_out_list_ids.filtered(lambda r: r.list_id.id in result.list_ids.ids):
-                rec.opt_out = False
+            result.opt_out_list_ids.filtered(lambda r: r.list_id.id in result.list_ids.ids).opt_out = False
         return result
 
     def get_name_email(self, name):
@@ -698,15 +697,14 @@ class MassMailing(models.Model):
             record = model.search([(email_fname, '=ilike', email)])
 
             if self.mailing_model_name == "mail.mass_mailing.list":
-                opt_out_records = self.env['mail.mass_mailing.list_contact_rel'].search([('contact_id', '=', record.id)])
-                for list_id in list_ids:
-                    for rec in opt_out_records:
-                        if rec.list_id.id == list_id and rec.opt_out != value:
-                            rec.write({'opt_out': value})
-                            if not value:
-                                record.sudo().message_post(body=_('The recipient subscribed to %s mailing list' % (rec.list_id.name)))
-                            else:
-                                record.sudo().message_post(body=_('The recipient unsubscribed from %s mailing list' % (rec.list_id.name)))
+                opt_out_records = self.env['mail.mass_mailing.list_contact_rel']\
+                    .search([('contact_id', '=', record.id)])\
+                    .filtered(lambda rec: rec.list_id.id in list_ids and rec.opt_out != value)
+
+                opt_out_records.write({'opt_out': value})
+                message = 'The recipient <strong>unsubscribed from %s</strong> mailing list' if value else 'The recipient <strong>subscribed to %s</strong> mailing list'
+                for list in opt_out_records.mapped('list_id'):
+                    record.sudo().message_post(body=_(message % (list.name)))
             else:
                 record.write({'opt_out': value})
 
@@ -774,18 +772,15 @@ class MassMailing(models.Model):
         self.ensure_one()
         unsubscribed_list = set()
         target = self.env[self.mailing_model_real]
-        mail_field = 'email' if 'email' in target._fields else 'email_from'
-        if not mail_field:
-            return set()
+        [mail_field] = target._blacklist_get_email_field_name()
         if 'opt_out' in target._fields or 'opt_out_list_ids' in target._fields:
             if self.mailing_model_real == "mail.mass_mailing.contact":
                 # if user is opt_out on One list but not on another, send the mail anyway
                 target_list_contacts = self.env['mail.mass_mailing.list_contact_rel'].search([('list_id', 'in', self.contact_list_ids.ids)])
                 opt_out_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out == True).mapped('contact_id')
                 opt_in_contacts = target_list_contacts.filtered(lambda rel: rel.opt_out == False).mapped('contact_id')
-                for c in opt_out_contacts:
-                    if c not in opt_in_contacts:
-                        unsubscribed_list.add(c['email'])
+
+                unsubscribed_list = set(c['email'] for c in opt_out_contacts if c not in opt_in_contacts)
             else:
                 # avoid loading a large number of records in memory
                 # + use a basic heuristic for extracting emails
@@ -810,7 +805,7 @@ class MassMailing(models.Model):
         """Returns a set of emails already targeted by current mailing/campaign (no duplicates)"""
         self.ensure_one()
         target = self.env[self.mailing_model_real]
-        mail_field = 'email' if 'email' in target._fields else 'email_from'
+        [mail_field] = target._blacklist_get_email_field_name()
         # avoid loading a large number of records in memory
         # + use a basic heuristic for extracting emails
         query = """

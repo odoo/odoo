@@ -3,6 +3,7 @@
 import re
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 EMAIL_PATTERN = '([^ ,;<@]+@[^> ,;]+)'
 
@@ -104,7 +105,7 @@ class MailBlackListMixin(models.Model):
 
     # Note :
     # With store = False, the access to the field is not evaluated because the fields is not in DB.
-    # With store = True, the access to the field can be evaluated.
+    # With store = True, the access to the field can be evaluated.Salut ! n
     is_blacklisted = fields.Boolean(string='Blacklist', compute="_blacklist_compute_is_blacklisted", store=True,
         help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list",
         groups="base.group_user")
@@ -115,20 +116,19 @@ class MailBlackListMixin(models.Model):
         if self._blacklist_get_email_field_name():
             [email_field] = self._blacklist_get_email_field_name()
             # implement search with domain [('blacklist_id', 'in', value)]
-            assert operator == 'in' and isinstance(value, list)
+            if not (operator == 'in' and isinstance(value, list)):
+                raise UserError('Operator invalid (must be "in") or value not in the correct format (should be a list)')
             black_recs = self.env['mail.mass_mailing.blacklist'].browse(value)
             emails = black_recs.mapped('email')
             return [(email_field, 'in', emails)]
-        # else:
-        #     return []
 
     @api.depends(lambda self: self._blacklist_get_depends())
     def _blacklist_compute_is_blacklisted(self):
         [email_field] = self._blacklist_get_email_field_name()
         blacklist = self.env['mail.mass_mailing.blacklist'].sudo().search([('email', 'in', [item[email_field] for item in self])]).read(['email', 'reason', 'active'])
-        for rec in self:  # Optimisation: create indexed dict sorted by email and lookup in dict to get email and reason
-            email = rec[email_field]
-            item = next((x for x in blacklist if email == x['email']), None)
+        items = dict((values['email'], values) for values in blacklist)
+        for rec in self:
+            item = items.get(rec[email_field], None)
             rec.is_blacklisted = bool(item['active']) if item else False
             rec.blacklist_reason = str(item['reason']) if item and item['reason'] else ''
 

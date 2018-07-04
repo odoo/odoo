@@ -62,15 +62,19 @@ class MassMailController(http.Controller):
         return werkzeug.utils.redirect(request.env['link.tracker'].get_url_from_code(code), 301)
 
     @route('/mail/mailing/unsubscribe', type='json', auth='none')
-    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email):
+    def unsubscribe(self, mailing_id, opt_in_ids, opt_out_ids, email, res_id, token):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing._unsubscribe_token(res_id, email) != token:
+            return 'unauthorized'
         if mailing.exists():
             mailing.update_opt_out(email, opt_in_ids, False)
             mailing.update_opt_out(email, opt_out_ids, True)
 
     @route('/mail/mailing/subscribe_contact', type='json', auth='none')
-    def subscribe_contact(self, email, mailing_id, res_id):
+    def subscribe_contact(self, email, mailing_id, res_id, token):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing._unsubscribe_token(res_id, email) != token:
+            return 'unauthorized'
         if mailing.exists():
             res_id = res_id and int(res_id)
             res_ids = []
@@ -89,11 +93,13 @@ class MassMailController(http.Controller):
         return 'error'
 
     @route('/mail/mailing/feedback', type='json', auth='none')
-    def send_feedback(self, mailing_id, email, feedback):
+    def send_feedback(self, mailing_id, res_id, email, feedback, token):
         mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing._unsubscribe_token(res_id, email) != token:
+            return 'unauthorized'
         if mailing.exists() and email:
             model = request.env[mailing.mailing_model_real]
-            email_field = 'email' if 'email' in model._fields else 'email_from'
+            [email_field] = model._blacklist_get_email_field_name()
             record = model.sudo().search([(email_field, '=ilike', email)])
             if record:
                 record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
@@ -111,7 +117,10 @@ class MassMailController(http.Controller):
         return 'error'
 
     @route('/mail/mailing/blacklist/add', type='json', auth='none')
-    def add_to_blacklist(self, email):
+    def add_to_blacklist(self, mailing_id, res_id, email, token):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing._unsubscribe_token(res_id, email) != token:
+            return 'unauthorized'
         if email:
             if self.check_blacklist(email) == 'not found':
                 if request.env['mail.mass_mailing.blacklist'].sudo()._toggle_blacklist(email, None, True):
@@ -123,7 +132,10 @@ class MassMailController(http.Controller):
         return 'error'
 
     @route('/mail/mailing/blacklist/remove', type='json', auth='none')
-    def remove_from_blacklist(self, email):
+    def remove_from_blacklist(self, mailing_id, res_id, email, token):
+        mailing = request.env['mail.mass_mailing'].sudo().browse(mailing_id)
+        if mailing._unsubscribe_token(res_id, email) != token:
+            return 'unauthorized'
         if email:
             if self.check_blacklist(email) == 'found':
                 if not request.env['mail.mass_mailing.blacklist'].sudo()._toggle_blacklist(email, None, True):
