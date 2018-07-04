@@ -18,13 +18,15 @@ var Mailbox = ThreadWithCache.extend({
 
     /**
      * @override
-     * @param {Object} data
-     * @param {string} data.id the ID of the mailbox, without the 'mailbox_'
-     *   prefix.
-     * @param {integer} [data.mailboxCounter=0] the initial mailbox counter of
-     *   this mailbox.
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {string} params.data.id the ID of the mailbox, without the
+     *   'mailbox_' prefix.
+     * @param {integer} [params.data.mailboxCounter=0] the initial mailbox
+     *   counter of this mailbox.
      */
-    init: function (parent, data) {
+    init: function (params) {
+        var data = params.data;
         // ID or mailboxes are always prefixed with 'mailbox_'
         data.id = 'mailbox_' + data.id;
         data.type = 'mailbox';
@@ -89,7 +91,7 @@ var Mailbox = ThreadWithCache.extend({
     getMessagePreviews: function () {
         var self = this;
 
-        return this.getMessages().then(function (messages) {
+        return this.fetchMessages().then(function (messages) {
             // pick only last message of chatter
             // items = list of objects
             // { unreadCounter: integer, message: mail.model.Message }

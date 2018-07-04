@@ -124,7 +124,7 @@ var ThreadWidget = Widget.extend({
 
         // dict where key is message ID, and value is whether it should hide
         // the author of message or not visually
-        var hideAuthorMessages = {};
+        var displayAuthorMessages = {};
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -154,16 +154,15 @@ var ThreadWidget = Widget.extend({
                     )
                 )
             ) {
-                hideAuthorMessages[message.getID()] = false;
+                displayAuthorMessages[message.getID()] = true;
             } else {
-                hideAuthorMessages[message.getID()] = options.squashCloseMessages;
+                displayAuthorMessages[message.getID()] = !options.squashCloseMessages;
             }
             prevMessage = message;
         });
         this.$el.html(QWeb.render('mail.widget.Thread', {
             thread: thread,
-            hideAuthorMessages: hideAuthorMessages,
-            // messages: messages,
+            displayAuthorMessages: displayAuthorMessages,
             options: options,
             ORDER: ORDER,
             dateFormat: time.getLangDatetimeFormat(),
@@ -207,17 +206,18 @@ var ThreadWidget = Widget.extend({
      * Removes a message and re-renders the thread
      *
      * @param {integer} [messageID] the id of the removed message
-     * @param {mail.model.AbstractMessage[]} [messages] the list of messages to
-     *   display, without the removed one
+     * @param {mail.model.AbstractThread} thread the thread which contains
+     *   updated list of messages (so it does not contain any message with ID
+     *   `messageID`).
      * @param {Object} [options] options for the thread rendering
      */
-    removeMessageAndRender: function (messageID, messages, options) {
+    removeMessageAndRender: function (messageID, thread, options) {
         var self = this;
         var done = $.Deferred();
         this.$('.o_thread_message[data-message-id="' + messageID + '"]')
             .fadeOut({
                 done: function () {
-                    self.render(messages, options);
+                    self.render(thread, options);
                     done.resolve();
                 },
                 duration: 200,

@@ -17,30 +17,35 @@ var time = require('web.time');
 var Channel = ThreadWithCache.extend({
     /**
      * @override
-     * @param {string} [data.anonymous_name]
-     * @param {string} data.channel_type
-     * @param {boolean} data.group_based_subscription
-     * @param {boolean} [data.is_minimized=false]
-     * @param  {boolean} data.is_moderator whether the current user is
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {string} [params.data.anonymous_name]
+     * @param {string} params.data.channel_type
+     * @param {boolean} params.data.group_based_subscription
+     * @param {boolean} [params.data.is_minimized=false]
+     * @param  {boolean} params.data.is_moderator whether the current user is
      *   moderator of this channel.
-     * @param {string} [data.last_message_date] date in server-format
-     * @param {boolean} [data.mass_mailing]
-     * @param {integer} [data.message_unread_counter]
-     * @param {string} [data.public] either 'public' or 'private'
-     * @param {string} data.state
-     * @param {string} [data.uuid]
-     * @param {Object} options
-     * @param {boolean} [options.autoswitch=true]
-     * @param {Object[]} commands
+     * @param {string} [params.data.last_message_date] date in server-format
+     * @param {boolean} [params.data.mass_mailing]
+     * @param {integer} [params.data.message_unread_counter]
+     * @param {string} [params.data.public] either 'public' or 'private'
+     * @param {string} params.data.state
+     * @param {string} [params.data.uuid]
+     * @param {Object} params.options
+     * @param {boolean} [params.options.autoswitch=true]
+     * @param {Object[]} params.commands
      */
-    init: function (parent, data, options, commands) {
+    init: function (params) {
         var self = this;
         this._super.apply(this, arguments);
+
+        var data = params.data;
+        var options = params.options;
+        var commands = params.commands;
 
         // If set, autoswitch channel on joining this channel in discuss
         // the default behaviour is to autoswitch on join.
         // exception: receiving channel or chat session notifications
-        //
         this._autoswitch = 'autoswitch' in options ? options.autoswitch : true;
         this._chat = undefined; // FIXME: could be dropped when livechat and DM are moved out of this class
         this._commands = undefined;

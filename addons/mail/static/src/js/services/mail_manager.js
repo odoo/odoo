@@ -498,7 +498,12 @@ var MailManager =  AbstractService.extend({
      */
     _addMailbox: function (data, options) {
         options = typeof options === 'object' ? options : {};
-        var mailbox = new Mailbox(this, data, options, this._commands);
+        var mailbox = new Mailbox({
+            parent: this,
+            data: data,
+            options: options,
+            commands: this._commands
+        });
         this._threads.push(mailbox);
         this._sortThreads();
         return mailbox;
@@ -957,9 +962,19 @@ var MailManager =  AbstractService.extend({
      */
     _makeChannel: function (data, options) {
         if (_.size(data.direct_partner) > 0) {
-            return new DM(this, data, options, this._commands);
+            return new DM({
+                parent: this,
+                data: data,
+                options: options,
+                commands: this._commands
+            });
         }
-        return new Channel(this, data, options, this._commands);
+        return new Channel({
+            parent: this,
+            data: data,
+            options: options,
+            commands: this._commands,
+        });
     },
     /**
      * Creates a new instance of Message with the given data.

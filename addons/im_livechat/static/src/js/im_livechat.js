@@ -260,7 +260,7 @@ var LivechatButton = Widget.extend({
      */
     _renderMessages: function () {
         var shouldScroll = !this._chatWindow.isFolded() && this._chatWindow.threadWidget.isAtBottom();
-        this._chatWindow.render(this._messages);
+        this._chatWindow.render(this._messages); // AKU: TODO store messages in website livechat thread
         if (shouldScroll) {
             this._chatWindow.threadWidget.scrollToBottom();
         }

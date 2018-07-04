@@ -2,9 +2,9 @@ odoo.define('mail.model.Thread', function (require) {
 "use strict";
 
 var emojis = require('mail.emojis');
+var AbstractThread = require('mail.model.AbstractThread');
 var mailUtils = require('mail.utils');
 
-var Class = require('web.Class');
 var Mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 
@@ -15,20 +15,20 @@ var ServicesMixin = require('web.ServicesMixin');
  *
  * In particular, channels and mailboxes are two different kinds of threads.
  */
-var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
+var Thread = AbstractThread.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     /**
-     * @param {mail.Manager} parent
-     * @param {Object} data
-     * @param {string} [data.channel_type]
-     * @param {integer|string} data.id
-     * @param {string} data.name
-     * @param {string} [data.type]
+     * @override
+     * @param {Object} params
+     * @param {mail.Manager} param.parent
+     * @param {Object} params.data
+     * @param {string} [params.data.channel_type]
+     * @param {string} params.data.name
+     * @param {string} [params.data.type]
      */
-    init: function (parent, data) {
+    init: function (params) {
+        this._super.apply(this, arguments);
         Mixins.EventDispatcherMixin.init.call(this, arguments);
-        this.setParent(parent);
-
-        this._id = data.id;
+        this.setParent(params.parent);
 
         // threads are not detached by default
         this._detached = false;
@@ -38,11 +38,11 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         // extended composer and show "Send by messages by email" on discuss
         // sidebar
         this._massMailing = false;
-        this._name = data.name;
+        this._name = params.data.name;
         // on 1st request to getPreview, fetch data if incomplete. Otherwise it
         // means that there is no message in this channel.
         this._previewed = false;
-        this._type = data.type || data.channel_type;
+        this._type = params.data.type || params.data.channel_type;
         // any new message that has not been read yet
         this._unreadCounter = 0;
         // max number of fetched messages from the server
@@ -88,6 +88,23 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         });
     },
     /**
+     * Fetch the list of messages in this thread.
+     * By default, a thread has no messages.
+     *
+     * Note that this method only returns some messages, as we do not want to
+     * fetch all messages of a thread at once, just to read the last message.
+     *
+     * As a result, this method fetches only some messages of the thread,
+     * starting from the last message in the thread. At most, it fetches
+     * `this.LIMIT` number of messages at a time.
+     *
+     * @abstract
+     * @returns {$.Promise<mail.model.Message[]>}
+     */
+    fetchMessages: function () {
+        return $.when([]);
+    },
+    /**
      * Updates the _folded state of the thread. Must be overriden to reflect
      * the new state in the interface.
      */
@@ -106,14 +123,6 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         return [];
     },
     /**
-     * Get the ID of the thread
-     *
-     * @returns {integer|string} string for mailboxes (e.g. 'mailbox_inbox')
-     */
-    getID: function () {
-        return this._id;
-    },
-    /**
      * Get the listeners of the thread.
      * By default, a thread has not listener.
      *
@@ -121,23 +130,6 @@ var Thread = Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
      * @returns {$.Promise<Object[]>}
      */
     getMentionPartnerSuggestions: function () {
-        return $.when([]);
-    },
-    /**
-     * Get the list of messages in this thread.
-     * By default, a thread has no messages.
-     *
-     * Note that this method only returns some messages, as we do not want to
-     * fetch all messages of a thread at once, just to read the last message.
-     *
-     * As a result, this method fetches only some messages of the thread,
-     * starting from the last message in the thread. At most, it fetches
-     * `this.LIMIT` number of messages at a time.
-     *
-     * @abstract
-     * @returns {$.Promise<mail.model.Message[]>}
-     */
-    getMessages: function () {
         return $.when([]);
     },
     /**

@@ -95,15 +95,13 @@ var LivechatWindow = AbstractThreadWindow.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * If there are no chat linked to this livechat window, returns null.
+     * AKU: TODO drop this method when there's the website livechat thread
+     * model linked to this website livechat window.
      *
      * @override
-     * @returns {integer|null}
+     * @returns {integer}
      */
     _getThreadID: function () {
-        if (!this.hasThread()) {
-            return null;
-        }
         return this._data.id;
     },
     /**
