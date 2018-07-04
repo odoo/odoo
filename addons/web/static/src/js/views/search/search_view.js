@@ -632,32 +632,35 @@ var SearchView = Widget.extend({
         };
         this.query.each(function (facet) {
 
+            var values = facet.get('values');
             if (facet.attributes.cat === "groupByCategory") {
-                selectedGroupIds.groupByCategory = selectedGroupIds.groupByCategory.concat(
-                    _.compact(
-                        _.uniq(
-                            _.map(facet.attributes.values, function (value) {
-                                var groupby = value.value;
-                                var groupbyDescription = _.findWhere(self.groupbysMapping, {groupby: groupby});
-                                if (groupbyDescription) {
-                                    return groupbyDescription.groupId;
-                                }
-                            })
-                        )
+                selectedGroupIds.groupByCategory = _.uniq(
+                    values.reduce(
+                        function (acc, value) {
+                            var groupby = value.value;
+                            var description = _.findWhere(self.groupbysMapping, {groupby: groupby});
+                            if (description) {
+                                acc.push(description.groupId);
+                            }
+                            return acc;
+                        },
+                        []
                     )
                 );
             }
             if (facet.attributes.cat === "filterCategory") {
                 selectedGroupIds.filterCategory = selectedGroupIds.filterCategory.concat(
                     _.uniq(
-                        _.compact(
-                            _.map(facet.attributes.values, function (value) {
+                        values.reduce(
+                            function (acc, value) {
                                 var filter = value.value;
-                                var filterDescription = _.findWhere(self.filtersMapping, {filter: filter});
-                                if (filterDescription) {
-                                    return filterDescription.groupId;
+                                var description = _.findWhere(self.filtersMapping, {filter: filter});
+                                if (description) {
+                                    acc.push(description.groupId);
                                 }
-                            })
+                                return acc;
+                            },
+                            []
                         )
                     )
                 );
@@ -934,9 +937,8 @@ var SearchView = Widget.extend({
         return fv;
     },
     /**
-     * This function ask the groupby menu to deactive all groupbys with
-     * corresponding groupId in the list selectedGroupIds.
-     * (TO DO: simplify method... actually there is only one group of groupbys)
+     * This function ask the groupby menu to deactive all groupbys if no
+     * groupby is used.
      *
      * @private
      * @param {string[]]} selectedGroupIds list of group ids to deactivate
@@ -945,16 +947,16 @@ var SearchView = Widget.extend({
         var groupIds = this.groupsMapping.reduce(
             function (acc, triple) {
                 if (triple.category === 'Group By') {
-                    if (!_.contains(selectedGroupIds, triple.groupId)) {
-                        acc.push(triple.groupId);
-                    }
+                    acc.push(triple.groupId);
                 }
                 return acc;
             },
             []
         );
         this.selectedGroupIds.groupByCategory = selectedGroupIds;
-        this.groupby_menu.unsetGroups(groupIds);
+        if (selectedGroupIds.length === 0) {
+            this.groupby_menu.unsetGroups(groupIds);
+        }
     },
     /**
      * This function ask the filters menu to deactive all filters with
