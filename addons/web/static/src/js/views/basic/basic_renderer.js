@@ -12,6 +12,7 @@ var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
 var widgetRegistry = require('web.widget_registry');
+var utils = require('web.utils');
 
 var qweb = core.qweb;
 
@@ -91,8 +92,15 @@ var BasicRenderer = AbstractRenderer.extend({
      */
     confirmChange: function (state, id, fields, ev) {
         this.state = state;
-
-        var record = state.id === id ? state : _.findWhere(state.data, {id: id});
+        var record = state.id === id && state;
+        if (!record) {
+            // for groupBy editable list view state record could be deep down in state tree
+            utils.traverse_records(this.state, function (r) {
+                if (r.id === id) {
+                    record = r;
+                }
+            });
+        }
         if (!record) {
             return this._render().then(_.constant([]));
         }

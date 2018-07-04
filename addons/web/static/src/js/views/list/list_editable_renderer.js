@@ -200,9 +200,9 @@ ListRenderer.include({
         var self = this;
         return this._super.apply(this, arguments).then(function (widgets) {
             if (widgets.length) {
-                var $row = self.getRow(RecordID);
-                var recrod = self.getRecord(RecordID);
-                self._setDecorationClasses(recrod, $row);
+                var $row = self.getRow(recordID);
+                var record = self.getRecord(recordID);
+                self._setDecorationClasses(record, $row);
                 self._updateFooter();
             }
             return widgets;
@@ -290,7 +290,7 @@ ListRenderer.include({
                             }
                         }
                 });
-            };
+            }
         });
     },
     /**

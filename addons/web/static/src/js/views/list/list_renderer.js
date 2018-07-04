@@ -504,6 +504,17 @@ var ListRenderer = BasicRenderer.extend({
                     var $records = _.map(group.data, function (record) {
                         return self._renderRow(record);
                     });
+                    if (self.addCreateLine) {
+                        var $a = $('<a href="#" role="button">')
+                            .text(_t("Add a line"))
+                            .data('groupID', group.id);
+                        var $td = $('<td>')
+                                    .attr('colspan',self._getNumberOfCols())
+                                    .addClass('o_group_field_row_add')
+                                    .append($a);
+                        var $tr = $('<tr>').append($td);
+                        $records.push($tr.prepend($('<td>').html('&nbsp;')));
+                    }
                     result.push($('<tbody>').append($records));
                 }
                 $tbody = null;

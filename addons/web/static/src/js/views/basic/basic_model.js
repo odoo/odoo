@@ -223,6 +223,39 @@ var BasicModel = AbstractModel.extend({
         record.fieldsInfo = _.extend({}, record.fieldsInfo, fieldsInfo);
     },
     /**
+     * set default context on group datapoint before create(default_get)
+     * default value will be set as per groupBy value.
+     *
+     * @private
+     * @param {string} groupID
+     */
+    _setDefaultContext: function (groupID) {
+        var defaultContext = {};
+        var group = this.localData[groupID];
+        var currentGroup = group;
+        while (group.parentID) {
+            var value;
+            var parent = this.localData[group.parentID];
+            var groupByField = parent.groupedBy[0];
+            var rawGroupField = groupByField.split(':')[0];
+            var fieldType = group.fields[rawGroupField].type;
+            if (fieldType === 'many2one'){
+                value = group.res_id || false;
+            }
+            else if (fieldType === 'selection') {
+                var choice = _.find(group.fields[groupByField].selection, function (option) {
+                    return option[1] === group.value;
+                });
+                value = choice[0];
+            } else {
+                value = group.value;
+            }
+            defaultContext['default_' + rawGroupField] = value;
+            group = parent;
+        }
+        currentGroup.context = _.extend(defaultContext, currentGroup.context);
+    },
+    /**
      * Add and process default values for a given record. Those values are
      * parsed and stored in the '_changes' key of the record. For relational
      * fields, sub-dataPoints are created, and missing relational data is

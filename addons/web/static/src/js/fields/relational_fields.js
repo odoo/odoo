@@ -1029,6 +1029,8 @@ var FieldX2Many = AbstractField.extend({
                 addCreateLine: !this.isReadonly && this.activeActions.create,
                 addTrashIcon: !this.isReadonly && this.activeActions.delete,
                 isMany2Many: this.isMany2Many,
+                isX2ManyList: true,
+                mode: this.mode,
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
@@ -1240,8 +1242,7 @@ var FieldX2Many = AbstractField.extend({
     _onEditLine: function (ev) {
         ev.stopPropagation();
         this.trigger_up('edited_list', { id: this.value.id });
-        var editedRecord = this.value.data[ev.data.index];
-        this.renderer.setRowMode(editedRecord.id, 'edit')
+        this.renderer.setRowMode(ev.data.recrodID, 'edit')
             .then(ev.data.onSuccess);
     },
     /**
