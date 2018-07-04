@@ -172,9 +172,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     _getValue: function () {
         if (this.nodeOptions['style-inline']) {
-            transcoder.linkImgToAttachmentThumbnail(this.$content);
-            transcoder.classToStyle(this.$content);
+            transcoder.attachmentThumbnailToLinkImg(this.$content);
             transcoder.fontToImg(this.$content);
+            transcoder.classToStyle(this.$content);
         }
         return this.$content.html();
     },
@@ -220,6 +220,8 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
             transcoder.styleToClass(this.$content);
+            transcoder.imgToFont(this.$content);
+            transcoder.linkImgToAttachmentThumbnail(this.$content);
         }
         // reset the history (otherwise clicking on undo before editing the
         // value will empty the editor)
