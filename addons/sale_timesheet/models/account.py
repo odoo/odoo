@@ -17,9 +17,25 @@ class AccountAnalyticLine(models.Model):
         ('billable_time', 'Billable Time'),
         ('billable_fixed', 'Billable Fixed'),
         ('non_billable', 'Non Billable'),
-        ('non_billable_project', 'No task found')], string="Billable Type", readonly=True, copy=False)
+        ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     timesheet_revenue = fields.Monetary("Revenue", default=0.0, readonly=True, copy=False)
+
+    @api.multi
+    @api.depends('so_line.product_id', 'project_id', 'task_id')
+    def _compute_timesheet_invoice_type(self):
+        for timesheet in self:
+            if timesheet.project_id:  # AAL will be set to False
+                invoice_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
+                if timesheet.task_id and timesheet.so_line.product_id.type == 'service':
+                    if timesheet.so_line.product_id.invoice_policy == 'delivery':
+                        if timesheet.so_line.product_id.service_type == 'timesheet':
+                            invoice_type = 'billable_time'
+                        else:
+                            invoice_type = 'billable_fixed'
+                    elif timesheet.so_line.product_id.invoice_policy == 'order':
+                        invoice_type = 'billable_fixed'
+                timesheet.timesheet_invoice_type = invoice_type
 
     @api.multi
     def write(self, values):
@@ -92,7 +108,6 @@ class AccountAnalyticLine(models.Model):
         so_line = timesheet.so_line
         values = {
             'timesheet_revenue': 0.0,
-            'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
         }
         # set the revenue and billable type according to the product and the SO line
         if timesheet.task_id and so_line.product_id.type == 'service':
@@ -106,7 +121,6 @@ class AccountAnalyticLine(models.Model):
             # calculate the revenue on the timesheet
             if so_line.product_id.invoice_policy == 'delivery':
                 values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
-                values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
             elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type == 'timesheet':
                 quantity_hour = unit_amount
                 if so_line.product_uom.category_id == timesheet_uom.category_id:
@@ -125,11 +139,8 @@ class AccountAnalyticLine(models.Model):
                         so_line.price_unit, analytic_account.currency_id, so_line.company_id, fields.Date.today()) * (1-so_line.discount)),
                     total_revenue_so - total_revenue_invoiced
                 )
-                values['timesheet_invoice_type'] = 'billable_fixed'
                 # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
                 if so_line.invoice_status == 'invoiced':
                     values['timesheet_invoice_id'] = so_line.invoice_lines and so_line.invoice_lines[0].invoice_id.id
-            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
-                values['timesheet_invoice_type'] = 'billable_fixed'
 
         return values
