@@ -66,7 +66,6 @@ var AbstractThreadWindow = Widget.extend({
         this.$header = this.$('.o_thread_window_header');
 
         this.threadWidget = new ThreadWidget(this, {
-            threadID: this._getThreadID(),
             displayDocumentLinks: false,
             displayMarkAsRead: false,
             displayStars: this.options.displayStars,
@@ -80,7 +79,7 @@ var AbstractThreadWindow = Widget.extend({
         if (!config.device.isMobile) {
             this.$el.css('margin-right', $.position.scrollbarWidth());
         }
-        var def = this.threadWidget.replace(this.$('.o_chat_content'));
+        var def = this.threadWidget.replace(this.$('.o_thread_window_content'));
         return $.when(this._super(), def);
     },
     /**
