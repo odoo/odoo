@@ -3,6 +3,7 @@ odoo.define('web.DebugManager', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var dialogs = require('web.view_dialogs');
+var startClickEverywhere = require('web.clickEverywhere');
 var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -210,6 +211,9 @@ var DebugManager = Widget.extend({
             type: 'ir.actions.act_url',
             url: '/web/tests/mobile?mod=*'
         });
+    },
+    perform_click_everywhere_test: function () {
+        startClickEverywhere();
     },
     split_assets: function() {
         window.location = $.param.querystring(window.location.href, 'debug=assets');
