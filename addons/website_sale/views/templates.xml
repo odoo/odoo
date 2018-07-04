@@ -43,9 +43,8 @@
             <li class="divider hidden"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li id="my_cart" t-att-class="'' if website_sale_order and website_sale_order.cart_quantity else 'hidden'">
                 <a href="/shop/cart">
-                    <span class="fa fa-shopping-cart">
-                        My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
-                    </span>
+                    <i class="fa fa-shopping-cart"></i>
+                    My Cart <sup t-attf-class="my_cart_quantity label label-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
                 </a>
             </li>
         </xpath>
@@ -779,8 +778,8 @@
                                             <div class="col-md-3 col-sm-4">
                                             </div>
                                             <div class="col-md-9 col-sm-8">
-                                                <a role="button" href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" > Previous</span></a>
-                                                <a role="button" class="fa fa-chevron-suffix-right btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next</a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-chevron-left" /> Previous</a>
+                                                <a role="button" class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
                                             </div>
                                         </div>
                                     </form>
@@ -901,10 +900,12 @@
                                     <t t-call="website_sale.cart_lines" />
                                     <div class="clearfix" />
                                     <a role="button" href="/shop" class="btn btn-default mb32 hidden-xs hidden-sm hidden-md">
-                                        <span class="fa fa-chevron-left">Continue Shopping</span>
+                                        <span class="fa fa-chevron-left" />
+                                        <span class="">Continue Shopping</span>
                                     </a>
                                     <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8 hidden visible-lg" href="/shop/checkout?express=1">
-                                        <span class="fa fa-chevron-suffix-right">Process Checkout</span>
+                                        <span class="">Process Checkout</span>
+                                        <span class="fa fa-chevron-right" />
                                     </a>
                                     <div class="oe_structure" />
                                 </div>
@@ -914,11 +915,12 @@
                             <t t-call='website_sale.short_cart_summary'/>
                             <div class='hidden-lg'>
                                 <a role="button" href="/shop" class="btn btn-default mb32">
-                                    <span class="fa fa-chevron-left">
-                                    Continue<span class="hidden-xs"> Shopping</span></span>
+                                    <span class="fa fa-chevron-left" />
+                                    Continue<span class="hidden-xs"> Shopping</span>
                                 </a>
                                 <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary pull-right mb32 mr8" href="/shop/checkout?express=1">
-                                    <span class="fa fa-suffix-chevron-right">Process Checkout</span>
+                                    <span class="">Process Checkout</span>
+                                    <span class="fa fa-chevron-right" />
                                 </a>
                             </div>
                         </div>
@@ -1056,7 +1058,7 @@
                                                 <form action="/shop/address" method="post" class=''>
                                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                                     <a role="button" class='a-submit btn btn-default mb16 btn-block'>
-                                                        <span class="fa fa-plus-square"> Add an address</span>
+                                                        <i class="fa fa-plus-square"></i> Add an address
                                                     </a>
                                                 </form>
                                             </div>
@@ -1078,8 +1080,8 @@
                             <div class="clearfix" />
                             <div>
                                 <a role="button" href="/shop/cart" class="btn btn-default mb32">
-                                    <span class="fa fa-chevron-left" > Return to Cart</span></a>
-                                <a role="button" class="btn btn-primary pull-right mb32 " href="/shop/confirm_order"><span class="fa fa-suffix-chevron-right">Confirm</span></a>
+                                    <span class="fa fa-chevron-left" /> Return to Cart</a>
+                                <a role="button" class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-chevron-right" /></a>
                             </div>
                         </div>
                     </div>
@@ -1105,7 +1107,7 @@
                 <div class='panel-footer' t-if='not readonly'>
                     <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
                         <a role="button" class="btn btn-block btn-primary">
-                            <span class='fa fa-check'> Ship to this address</span>
+                            <i class='fa fa-check'></i> Ship to this address
                         </a>
                     </span>
                     <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
@@ -1250,10 +1252,10 @@
                                     <div class="clearfix"/>
                                     <div style='padding: 0 15px'>
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
-                                            <span class="fa fa-chevron-left">Back </span>
+                                            <span class="fa fa-chevron-left" /> Back
                                         </a>
                                         <a role="button" class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
-                                            <span class="fa fa-suffix-chevron-right">Next </span>
+                                            <span>Next </span><span class="fa fa-chevron-right" />
                                         </a>
                                     </div>
                                 </form>
@@ -1332,7 +1334,7 @@
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                    <span class="fa fa-arrow-right"> Add payment acquirers</span>
+                                        <i class="fa fa-arrow-right"></i> Add payment acquirers
                                 </a>
                             </div>
                             <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
@@ -1340,8 +1342,8 @@
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                         <a role="button" class="btn btn-primary a-submit">
-                                            <span class="fa fa-suffix-chevron-right" t-if="order.amount_total &gt; 0">Pay Now </span>
-                                            <span class="fa fa-suffix-chevron-right" t-if="order.amount_total == 0">Confirm Order </span>
+                                            <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-chevron-right"></span></span>
+                                            <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-chevron-right"></span></span>
                                         </a>
                                     </form>
                                 </div>
@@ -1603,8 +1605,8 @@
         <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
             <li groups="sales_team.group_sale_manager">
                 <a id="create-new-product" href="#" data-action="new_product">
-                    <p class="fa fa-shopping-cart">
-                    New Product</p>
+                    <i class="fa fa-shopping-cart" />
+                    <p>New Product</p>
                 </a>
             </li>
         </xpath>

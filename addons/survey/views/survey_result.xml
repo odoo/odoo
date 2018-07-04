@@ -11,7 +11,7 @@
                     <div t-field="survey.description" class="oe_no_empty" />
                 </div>
                 <div class="panel panel-default hidden-print">
-                    <div class="panel-heading"><span class="fa fa-filter"> Filters </span><span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"> Clear All Filters</i></span></div>
+                    <div class="panel-heading"><span class="fa fa-filter"></span>  Filters <span t-if="filter_display_data" class="pull-right text-primary clear_survey_filter"><i class="fa fa-times"></i> Clear All Filters</span></div>
                     <div class="panel-body">
                         <span t-if="filter_finish == True">
                             <span class="label label-default only_left_radius filter-all">All surveys</span><span class="label label-primary only_right_radius filter-finished">Finished surveys</span>
@@ -138,17 +138,17 @@
             <ul class="nav nav-tabs hidden-print" role="tablist">
                 <li class="active" t-if="question.type != 'simple_choice'">
                     <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
-                        <span class="fa fa-bar-chart-o"> Graph</span>
+                        <i class="fa fa-bar-chart-o"></i> Graph
                     </a>
                 </li>
                 <li class="active" t-if="question.type == 'simple_choice'">
                     <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
-                        <span class="fa fa-bar-chart-o"> Pie Chart</span>
+                        <i class="fa fa-bar-chart-o"></i> Pie Chart
                     </a>
                 </li>
                 <li>
                     <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
-                        <span class="fa fa-list-alt"> Data</span>
+                        <i class="fa fa-list-alt"></i> Data
                     </a>
                 </li>
             </ul>
@@ -202,12 +202,14 @@
         <ul class="nav nav-tabs hidden-print" role="tablist">
             <li class="active">
                 <a t-att-href="'#graph_question_%d' % question.id" t-att-aria-controls="'graph_question_%d' % question.id" data-toggle="tab" role="tab">
-                    <span class="fa fa-bar-chart">Graph</span>
+                    <i class="fa fa-bar-chart"></i>
+                    Graph
                 </a>
             </li>
             <li>
                 <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
-                    <span class="fa fa-list-alt">Data</span>
+                    <i class="fa fa-list-alt"></i>
+                    Data
                 </a>
             </li>
         </ul>
@@ -262,13 +264,14 @@
         <ul class="nav nav-tabs hidden-print" role="tablist">
             <li class="active">
                 <a t-att-href="'#most_common_%d' % question.id" t-att-aria-controls="'most_common_%d' % question.id" data-toggle="tab" role="tab">
-                    <span class="fa fa-list-ol">Most Common </span>
-                    <span t-esc="len(number_result['most_common'])"></span>
+                    <i class="fa fa-list-ol"></i>
+                    Most Common <span t-esc="len(number_result['most_common'])"></span>
                 </a>
             </li>
             <li>
                 <a t-att-href="'#data_question_%d' % question.id" t-att-aria-controls="'data_question_%d' % question.id" data-toggle="tab" role="tab">
-                    <span class="fa fa-list-alt">All Data</span>
+                    <i class="fa fa-list-alt"></i>
+                    All Data
                 </a>
             </li>
         </ul>

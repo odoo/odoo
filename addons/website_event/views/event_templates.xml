@@ -130,7 +130,9 @@
             <div class="col-md-12 mb16 mt16 country_events">
                 <div class="country_events_list">
                     <div class="text-muted text-center">
-                        <h1 class="fa fa-flag fa-5x">Events from Your Country</h1>
+                        <h1>
+                            <i class="fa fa-flag fa-5x"/>
+                            Events from Your Country</h1>
                     </div>
                 </div>
             </div>
@@ -353,8 +355,8 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <span class="fa fa-clock-o"> From</span> <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
-                        <span class="fa fa-clock-o"> To</span> <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
+                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                 </div>
             </div>
 
@@ -472,8 +474,8 @@
             </t>
             <t t-if="request.env.user.has_group('event.group_event_manager')">
                 <a t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
-                    <span class="fa fa-plus-circle">
-                        <em>Configure and Launch Event Registration</em></span>
+                    <em><i class="fa fa-plus-circle" role="img" aria-label="Create" title="Create"></i>
+                    Configure and Launch Event Registration</em>
                 </a>
             </t>
         </div>
@@ -586,10 +588,10 @@
                     <i class="fa fa-clock-o" role="img" aria-label="Start date" title="Start date"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div id="add_to_calendar" class="mt4">
                         <a role="button" class="btn btn-primary mr8" t-att-href="iCal_url">
-                            <span class="fa fa-fw fa-arrow-right">Add to iCal/Outlook</span>
+                            <i class="fa fa-fw fa-arrow-right"/>Add to iCal/Outlook
                         </a>
                         <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
-                            <span class="fa fa-fw fa-arrow-right">Add to Google Calendar</span>
+                            <i class="fa fa-fw fa-arrow-right"/>Add to Google Calendar
                         </a>
                     </div>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
@@ -716,7 +718,7 @@
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><p class="fa fa-glass">New Event</p></a></li>
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
     </xpath>
 </template>
 </odoo>

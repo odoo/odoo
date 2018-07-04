@@ -327,7 +327,8 @@
                                     <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b class="o_kanban_record_subtitle"> <field name="country_id"/> </b> <br/> </t>
-                                        <b class="fa fa-clock-o">To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <b><i class="fa fa-clock-o"/>
+                                        To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">

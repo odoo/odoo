@@ -293,7 +293,8 @@
             <div class="screen-content">
                 <div class="top-content">
                     <span class='button back'>
-                        <span class='fa fa-angle-double-left'>Back</span>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
                     </span>
                     <h1 class='product-name'><t t-esc="widget.get_product_name()" /></h1>
                 </div>
@@ -308,7 +309,8 @@
                         123.14 €
                     </div>
                     <div class='buy-product'>
-                        <span class='fa fa-suffix-angle-double-right'>Order </span>
+                        Order
+                        <i class='fa fa-angle-double-right'></i>
                     </div>
                 </div>
             </div>
@@ -474,7 +476,8 @@
             <div class="screen-content">
                 <section class="top-content">
                     <span class='button back'>
-                        <span class='fa fa-angle-double-left'>Cancel</span>
+                        <i class='fa fa-angle-double-left'></i>
+                        Cancel
                     </span>
                     <span class='searchbox'>
                         <input placeholder='Search Customers' />
@@ -486,7 +489,8 @@
                         <i class='fa fa-plus'></i>
                     </span>
                     <span class='button next oe_hidden highlight'>
-                        <span class='fa fa-angle-double-right'>Select Customer</span>
+                        Select Customer
+                        <i class='fa fa-angle-double-right'></i>
                     </span>
                 </section>
                 <section class="full-content">
@@ -639,11 +643,13 @@
             <div class='screen-content'>
                 <div class='top-content'>
                     <span class='button back'>
-                        <i class='fa fa-angle-double-left'>Back</i>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
                     </span>
                     <h1>Payment</h1>
                     <span class='button next'>
-                        <i class='fa fa-angle-double-right'>Validate</i>
+                        Validate
+                        <i class='fa fa-angle-double-right'></i>
                     </span>
                 </div>
                 <div class='left-content pc40 touch-scrollable scrollable-y'>
@@ -675,18 +681,18 @@
                         <t t-if='widget.pos.config.module_account_invoicing'>
                             <t t-if='widget.pos.get_order()'>
                                 <div t-attf-class='button js_invoice #{ widget.pos.get_order().is_to_invoice() ? "highlight" : ""} '>
-                                    <i class='fa fa-file-text-o'> Invoice</i>
+                                    <i class='fa fa-file-text-o' /> Invoice
                                 </div>
                             </t>
                         </t>
                         <t t-if='widget.pos.config.tip_product_id'>
                             <div class='button js_tip'>
-                                <i class='fa fa-heart'> Tip</i>
+                                <i class='fa fa-heart' /> Tip 
                             </div>
                         </t>
                         <t t-if='widget.pos.config.iface_cashdrawer'>
                             <div class='button js_cashdrawer'>
-                                <i class='fa fa-archive'> Open Cashbox</i>
+                                <i class='fa fa-archive' /> Open Cashbox
                             </div>
                         </t>
                      </div>
@@ -701,12 +707,13 @@
                 <div class='top-content'>
                     <h1>Change: <span class='change-value'>0.00</span></h1>
                     <span class='button next'>
-                        <span class='fa fa-suffix-angle-double-right'>Next Order </span>
+                        Next Order
+                        <i class='fa fa-angle-double-right'></i>
                     </span>
                 </div>
                 <div class="centered-content touch-scrollable">
                     <div class="button print">
-                        <i class='fa fa-print'> Print Receipt</i>
+                        <i class='fa fa-print'></i> Print Receipt
                     </div>
                     <div class="pos-receipt-container">
                     </div>

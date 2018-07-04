@@ -287,7 +287,7 @@
     <div class="o_facebook_page">
         <div class="o_facebook_alert alert alert-info" role="status">
             <span class="o_add_facebook_page">
-                <span class="fa fa-plus-circle"> Add Facebook Page</span>
+                <i class="fa fa-plus-circle"/> Add Facebook Page
             </span>
         </div>
     </div>
@@ -296,7 +296,7 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_editable_mode_display text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><span class="fa fa-plus-circle"> Add Images</span></span></div>
+            <div class="alert alert-info css_editable_mode_display text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
         </div>
     </section>
 </template>
@@ -688,7 +688,7 @@
         <div id="o_scroll">
             <div id="snippet_structure" class="o_panel">
                 <div class="o_panel_header">
-                    <span class="fa fa-th-large"> Structure</span>
+                    <i class="fa fa-th-large"/> Structure
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
@@ -706,7 +706,7 @@
 
             <div id="snippet_feature" class="o_panel">
                 <div class="o_panel_header">
-                    <span class="fa fa-diamond"> Feature</span>
+                    <i class="fa fa-diamond"/> Feature
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
@@ -721,7 +721,7 @@
 
             <div id="snippet_effect" class="o_panel">
                 <div class="o_panel_header">
-                    <span class="fa fa-magic icon-fix"> Effect</span>
+                    <i class="fa fa-magic icon-fix"/> Effect
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
@@ -731,7 +731,7 @@
 
             <div id="snippet_content" class="o_panel">
                 <div class="o_panel_header">
-                    <span class="fa fa-indent"> Inner content</span>
+                    <i class="fa fa-indent"/> Inner content
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
@@ -764,11 +764,11 @@
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='gallery' data-selector=".o_gallery">
-        <li data-add-images="true" data-no-preview="true"><a href="#"><span class="fa fa-plus-circle">Add images</span></a></li>
-        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><span class="fa fa-trash">Remove all images</span></a></li>
+        <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
+        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
         <li class="separator"/>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-magic">Mode</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
             <ul class="dropdown-menu" role="menu">
                 <li data-mode="nomode"><a role="menuitem" href="#">Float</a></li>
                 <li data-mode="masonry"><a role="menuitem" href="#">Masonry</a></li>
@@ -777,7 +777,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-clock-o">Slideshow speed</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
             <ul class="dropdown-menu" role="menu">
                  <li data-interval="1000"><a role="menuitem" href="#">1s</a></li>
                  <li data-interval="2000"><a role="menuitem" href="#">2s</a></li>
@@ -788,7 +788,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-th">Columns</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-th"/>Columns</a>
             <ul class="dropdown-menu" role="menu">
                 <li data-columns="1"><a role="menuitem" href="#">1</a></li>
                 <li data-columns="2"><a role="menuitem" href="#">2</a></li>
@@ -799,7 +799,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-arrows-h">Images spacing</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
 
             <ul class="dropdown-menu" role="menu">
                 <li data-select-class="o_spc-none"><a role="menuitem" href="#">None</a></li>
@@ -809,7 +809,7 @@
             </ul>
         </li>
         <li class="dropdown-submenu">
-           <a tabindex="-2" href="#"><span class="fa fa-paint-brush">Styling</span></a>
+           <a tabindex="-2" href="#"><i class="fa fa-paint-brush"/>Styling</a>
            <ul class="dropdown-menu" role="menu">
                <li data-styling=""><a role="menuitem" href="#">Square</a></li>
                <li data-styling="img-rounded"><a role="menuitem" href="#">Rounded corners</a></li>
@@ -824,14 +824,14 @@
     <div data-js="background"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
         <li data-choose-image="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><span class="fa fa-picture-o">Choose Background Image</span></a>
+            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Choose Background Image</a>
         </li>
     </div>
 
     <div data-js="background_position"
         data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
         <li class="background_position_li" data-background-position="true" data-no-preview="true">
-            <a tabindex="-1" href="#"><span class="fa fa-arrows">Background Image Sizing</span></a>
+            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
         </li>
     </div>
 
@@ -839,7 +839,7 @@
         data-selector="section, :not(.o_gallery > .container) > .carousel"
         data-exclude=".parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><span class="fa fa-eyedropper">Background Color</span></a>
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
             <ul class="dropdown-menu" role="menu">
                 <li></li>
             </ul>
@@ -851,7 +851,7 @@
         data-palette-default="transparent_grayscale"
         data-palette-title="Overlay Color">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><span class="fa fa-eyedropper">Overlay color</span></a>
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
             <ul class="dropdown-menu" role="menu">
                 <li></li>
             </ul>
@@ -860,7 +860,7 @@
 
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-refresh">Re-order</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
             <ul class="dropdown-menu" role="menu" data-no-preview="true">
                 <li data-position="first"><a role="menuitem" href="#">Move to first</a></li>
                 <li data-position="prev"><a role="menuitem" href="#">Move to previous</a></li>
@@ -874,7 +874,7 @@
         data-selector=":not(.o_gallery > .container) > .carousel">
         <li class="divider"></li>
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-clock-o">Slideshow speed</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-clock-o"/>Slideshow speed</a>
             <ul class="dropdown-menu" role="menu">
                  <li data-interval="1000"><a role="menuitem" href="#">1s</a></li>
                  <li data-interval="2000"><a role="menuitem" href="#">2s</a></li>
@@ -884,8 +884,8 @@
                  <li data-interval="0"><a role="menuitem" href="#">Disable autoplay</a></li>
             </ul>
         </li>
-        <li data-add-slide="true" data-no-preview="true"><a href="#"><span class="fa fa-plus-circle">Add Slide</span></a></li>
-        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><span class="fa fa-trash-o">Remove Slide</span></a></li>
+        <li data-add-slide="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
+        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
     </div>
 
     <div data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax"
@@ -900,7 +900,7 @@
         data-target="> * > .row"
         data-exclude=".s_text_block_image_fw, .s_company_team, .s_big_picture">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-columns">Number of columns</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-columns"/>Number of columns</a>
             <ul class="dropdown-menu" role="menu" data-no-preview="true">
                 <li data-select-count="1"><a role="menuitem" href="#">1</a></li>
                 <li data-select-count="2"><a role="menuitem" href="#">2</a></li>
@@ -930,7 +930,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-expand">Margin</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
             <ul class="dropdown-menu" role="menu">
                 <li data-select-class="o_margin_xl"><a role="menuitem" href="#">Extra-Large</a></li>
                 <li data-select-class="o_margin_l"><a role="menuitem" href="#">Large</a></li>
@@ -943,7 +943,7 @@
 
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
-            <a tabindex="-2" href="#"><span class="fa fa-magnet">Float</span></a>
+            <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
             <ul class="dropdown-menu" role="menu" data-no-preview="true">
                 <li data-select-class="pull-left"><a role="menuitem" href="#">Left</a></li>
                 <li data-select-class="pull-right"><a role="menuitem" href="#">Right</a></li>
@@ -953,7 +953,7 @@
 
     <div data-js="parallax" data-selector=".parallax">
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><span class="fa fa-clock-o">Scroll Speed</span></a>
+            <a tabindex="-1" href="#"><i class="fa fa-clock-o"/>Scroll Speed</a>
             <ul class="dropdown-menu" role="menu" name="parallax-scroll">
                 <li data-scroll="0"><a role="menuitem" href="#">No-scroll</a></li>
                 <li class="separator" role="separator"/>
@@ -974,7 +974,7 @@
 
     <div data-js="facebookPage" data-selector=".o_facebook_page">
         <li data-fb-page-options="true" data-no-preview="true">
-            <a href="#"><span class="fa fa-facebook">Options</span></a>
+            <a href="#"><i class="fa fa-facebook"/>Options</a>
         </li>
     </div>
 
