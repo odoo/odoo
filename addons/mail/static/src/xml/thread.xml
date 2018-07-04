@@ -12,8 +12,8 @@
             <t t-if="options.displayLoadMore and options.displayOrder == ORDER.DESC"
                t-call="mail.widget.Thread.LoadMore"/>
         </t>
-        <t t-if="options.displayEmptyChannel">
-            <t t-call="mail.EmptyChannel" />
+        <t t-if="options.displayEmptyThread">
+            <t t-call="mail.widget.Thread.Empty" />
         </t>
         <div t-if="options.displayNoMatchFound" class="o_mail_no_content">
             <div class="o_thread_title">No matches found</div>
@@ -97,11 +97,11 @@
     </t>
 
     <!--
-        When a channel is empty
+        When a thread is empty
 
         @param {mail.widget.Thread} widget
     -->
-    <div t-name="mail.EmptyChannel" class="o_mail_no_content">
+    <div t-name="mail.widget.Thread.Empty" class="o_mail_no_content">
         <t t-if="options.threadID === 'mailbox_inbox'">
             <div class="o_thread_title">Congratulations, your inbox is empty</div>
             <div>New messages appear here.</div>

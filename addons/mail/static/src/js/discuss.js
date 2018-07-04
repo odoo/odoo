@@ -417,7 +417,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             messagesSeparatorPosition: this.messagesSeparatorPosition,
             squashCloseMessages: this._thread.getType() !== 'mailbox' &&
                                     !this._thread.isMassMailing(),
-            displayEmptyChannel: !messages.length && !this.domain.length,
+            displayEmptyThread: !messages.length && !this.domain.length,
             displayNoMatchFound: !messages.length && this.domain.length,
             displaySubjectOnMessages:
                 (
@@ -696,7 +696,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _renderThread: function () {
         this._threadWidget = new ThreadWidget(this, {
-            displayHelp: true,
             loadMoreOnScroll: true
         });
 
