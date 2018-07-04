@@ -188,10 +188,14 @@ class CrmTeam(models.Model):
         else:
             x_field = 'label'
             y_field = 'value'
-
         # generate all required x_fields and update the y_values where we have data for them
         locale = self._context.get('lang', 'en_US')
         if self.dashboard_graph_group == 'day':
+            if graph_data:
+                graph_start_date = datetime.strptime(graph_data[0]['x_value'], DF).date()
+                graph_end_date = datetime.strptime(graph_data[-1]['x_value'], DF).date()
+                start_date = graph_start_date if start_date > graph_start_date else start_date
+                end_date = graph_end_date if end_date < graph_end_date else end_date
             for day in range(0, (end_date - start_date).days + 1):
                 short_name = format_date(start_date + relativedelta(days=day), 'd MMM', locale=locale)
                 values.append({x_field: short_name, y_field: 0})
