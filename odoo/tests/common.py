@@ -343,12 +343,12 @@ class HttpCase(TransactionCase):
         self.opener = requests.Session()
         self.opener.cookies['session_id'] = self.session_id
 
-    def url_open(self, url, data=None, timeout=10):
+    def url_open(self, url, data=None, timeout=10, **kwargs):
         if url.startswith('/'):
             url = "http://%s:%s%s" % (HOST, PORT, url)
         if data:
-            return self.opener.post(url, data=data, timeout=timeout)
-        return self.opener.get(url, timeout=timeout)
+            return self.opener.post(url, data=data, timeout=timeout, **kwargs)
+        return self.opener.get(url, timeout=timeout, **kwargs)
 
     def authenticate(self, user, password):
         # stay non-authenticated
