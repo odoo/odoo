@@ -1,4 +1,4 @@
-odoo.define('im_livechat.LivechatWindow', function (require) {
+odoo.define('im_livechat.WebsiteLivechatWindow', function (require) {
 "use strict";
 
 var AbstractThreadWindow = require('mail.AbstractThreadWindow');
