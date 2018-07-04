@@ -76,6 +76,13 @@ QUnit.module('Search View', {
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
             search_view_id: [5, 'search'],
+        }, {
+            id: 7,
+            name: 'Partners Action 7',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[2, 'list']],
+            search_view_id: [6, 'search'],
         },
         ];
 
@@ -134,6 +141,11 @@ QUnit.module('Search View', {
                     '<filter string="10" name="coolName10" domain="[]"/>' +
                                     '<separator/>' +
                     '<filter string="11" name="coolName11" domain="[]"/>' +
+                '</search>',
+            'partner,6,search': '<search>'+
+                    '<filter string="Date" name="coolName" context="{\'group_by\': \'date_field:day\'}"/>' +
+                    '<separator/>' +
+                    '<filter string="Bar" name="superName" context="{\'group_by\': \'bar\'}"/>' +
                 '</search>',
         };
     },
@@ -284,6 +296,37 @@ QUnit.module('Search View', {
         // data should be grouped by the field 'Birthday' using the interval 'year'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Birthday: Year');
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
+        actionManager.destroy();
+    });
+    
+    QUnit.test('a separator in groupbys does not cause problems', function (assert) {
+        assert.expect(6);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(7);
+        // open menu 'Group By'
+        $('span.fa-bars').click();
+        // open options menu
+        $('.o_group_by_menu .o_menu_item a:first').click();
+        // activate groupby with 'day' option
+        $('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="day"]').click();
+        // activate the second groupby
+        $('.o_group_by_menu .o_menu_item > a').eq(1).click();
+        assert.strictEqual($('.o_group_by_menu .o_menu_item').length, 2);
+        assert.ok($('.o_group_by_menu .o_menu_item').hasClass('selected'));
+        // deactivate second groupby
+        $('.o_group_by_menu .o_menu_item > a').eq(1).click();
+        assert.ok($('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
+        // remove facet
+        $('.o_facet_remove').click();
+        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(0).hasClass('selected'));
+        assert.ok(!$('.o_group_by_menu .o_menu_item').eq(1).hasClass('selected'));
         actionManager.destroy();
     });
 
