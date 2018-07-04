@@ -411,7 +411,6 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             }
         }
         return {
-            threadID: this._thread.getID(),
             displayLoadMore: !this._thread.isAllHistoryLoaded(this.domain),
             displayMarkAsRead: this._thread.getID() === 'mailbox_inbox',
             messagesSeparatorPosition: this.messagesSeparatorPosition,
