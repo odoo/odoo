@@ -17,11 +17,12 @@ var HEIGHT_FOLDED = '34px';
  * This is an abstract widget for rendering thread windows.
  *
  * It contains logic that are shared between mail.ThreadWindow and
- * mail.LivechatWindow.
+ * im_livechat.WebsiteLivechatWindow.
  *
  * The reason for having two different implementation of thread windows is
  * that mail.ThreadWindow makes use of mail.Manager, which is used in the
- * backend, while mail.LivechatWindow must work without this mail service.
+ * backend, while im_livechat.WebsiteLivechatWindow must work without this
+ * mail service.
  */
 var AbstractThreadWindow = Widget.extend({
     template: 'mail.AbstractThreadWindow',

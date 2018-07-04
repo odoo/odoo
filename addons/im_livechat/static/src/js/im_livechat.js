@@ -10,8 +10,8 @@ var time = require('web.time');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 
-var LivechatMessage = require('im_livechat.model.LivechatMessage');
-var LivechatWindow = require('im_livechat.LivechatWindow');
+var WebsiteLivechatMessage = require('im_livechat.model.WebsiteLivechatMessage');
+var WebsiteLivechatWindow = require('im_livechat.WebsiteLivechatWindow');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -111,7 +111,7 @@ var LivechatButton = Widget.extend({
         options = _.extend({}, options, {
             serverURL: this._serverURL,
         });
-        var message = new LivechatMessage(this, data, options);
+        var message = new WebsiteLivechatMessage(this, data, options);
 
         if (options && options.prepend) {
             this._messages.unshift(message);
@@ -225,7 +225,7 @@ var LivechatButton = Widget.extend({
             displayStars: false,
             placeholder: this.options.input_placeholder || "",
         };
-        this._chatWindow = new LivechatWindow(this, channel, options);
+        this._chatWindow = new WebsiteLivechatWindow(this, channel, options);
         this._chatWindow.appendTo($('body')).then(function () {
             self._chatWindow.$el.css({right: 0, bottom: 0});
             self.$el.hide();
