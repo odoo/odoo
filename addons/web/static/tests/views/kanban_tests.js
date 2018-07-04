@@ -1,6 +1,7 @@
 odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
+var fieldRegistry = require('web.field_registry');
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
 var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var KanbanRenderer = require('web.KanbanRenderer');
@@ -3792,6 +3793,78 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('asynchronous rendering of a field widget (ungrouped)', function (assert) {
+        assert.expect(2);
+
+        var fooFieldDef = $.Deferred();
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return fooFieldDef;
+            },
+            start: function () {
+                this.$el.html('LOADED');
+            },
+        }));
+
+        var kanbanController;
+        testUtils.createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                        '<div><field name="foo" widget="asyncwidget"/></div>' +
+                '</t></templates></kanban>',
+        }).then(function (kanban) {
+            kanbanController = kanban;
+        });
+
+        assert.strictEqual($('.o_kanban_record').length, 0, "kanban view is not ready yet");
+
+        fooFieldDef.resolve();
+        assert.strictEqual($('.o_kanban_record').text(), "LOADEDLOADEDLOADEDLOADED");
+
+        kanbanController.destroy();
+        delete fieldRegistry.map.asyncWidget;
+    });
+
+    QUnit.test('asynchronous rendering of a field widget (grouped)', function (assert) {
+        assert.expect(2);
+
+        var fooFieldDef = $.Deferred();
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                return fooFieldDef;
+            },
+            start: function () {
+                this.$el.html('LOADED');
+            },
+        }));
+
+        var kanbanController;
+        testUtils.createAsyncView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                        '<div><field name="foo" widget="asyncwidget"/></div>' +
+                '</t></templates></kanban>',
+            groupBy: ['foo'],
+        }).then(function (kanban) {
+            kanbanController = kanban;
+        });
+
+        assert.strictEqual($('.o_kanban_record').length, 0, "kanban view is not ready yet");
+
+        fooFieldDef.resolve();
+        assert.strictEqual($('.o_kanban_record').text(), "LOADEDLOADEDLOADEDLOADED");
+
+        kanbanController.destroy();
+        delete fieldRegistry.map.asyncWidget;
+    });
+
 });
 
 });

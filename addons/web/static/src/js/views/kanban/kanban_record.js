@@ -59,8 +59,11 @@ var KanbanRecord = Widget.extend({
         // avoid quick multiple clicks
         this._onKanbanActionClicked = _.debounce(this._onKanbanActionClicked, 300, true);
     },
+    /**
+     * @override
+     */
     start: function () {
-        return this._super.apply(this, arguments).then(this._render.bind(this));
+        return $.when(this._super.apply(this, arguments), this._render());
     },
 
     //--------------------------------------------------------------------------
@@ -71,6 +74,7 @@ var KanbanRecord = Widget.extend({
      * Re-renders the record with a new state
      *
      * @param {Object} state
+     * @returns {Deferred}
      */
     update: function (state) {
         // detach the widgets because the record will empty its $el, which will
@@ -78,7 +82,7 @@ var KanbanRecord = Widget.extend({
         // those handlers alive as we will re-use these widgets
         _.invoke(_.pluck(this.subWidgets, '$el'), 'detach');
         this._setState(state);
-        this._render();
+        return this._render();
     },
 
     //--------------------------------------------------------------------------
@@ -284,7 +288,10 @@ var KanbanRecord = Widget.extend({
         });
         var options = _.extend({}, this.options, {attrs: attrs});
         var widget = new Widget(this, field_name, this.state, options);
-        widget.replace($field);
+        var def = widget.replace($field);
+        if (def.state() === 'pending') {
+            this.defs.push(def);
+        }
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
     },
@@ -305,8 +312,11 @@ var KanbanRecord = Widget.extend({
     },
     /**
      * Renders the record
+     *
+     * @returns {Deferred}
      */
     _render: function () {
+        this.defs = [];
         this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record').attr("tabindex",0);
         this.$el.attr('role', 'article');
@@ -326,6 +336,8 @@ var KanbanRecord = Widget.extend({
 
         // We use boostrap tooltips for better and faster display
         this.$('span.o_tag').tooltip({delay: {'show': 50}});
+
+        return $.when.apply(this, this.defs);
     },
     /**
      * Sets particular classnames on a field $el according to the
