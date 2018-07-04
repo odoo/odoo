@@ -130,7 +130,7 @@ class StockScrap(models.Model):
                                                             strict=True).mapped('quantity'))
         if float_compare(available_qty, self.scrap_qty, precision_digits=precision) >= 0:
             return self.do_scrap()
-        else:
+        elif self.product_id.type == 'product':
             return {
                 'name': _('Insufficient Quantity'),
                 'view_type': 'form',
@@ -145,3 +145,4 @@ class StockScrap(models.Model):
                 },
                 'target': 'new'
             }
+        return self.do_scrap()
