@@ -20,7 +20,20 @@ var _t = core._t;
  * mail.model.ThreadWithCache
  */
 var SupportChannel = ThreadWithCache.extend({
-    init: function (parent, data, options) {
+    /**
+     * @param {Object} params
+     * @param {Object} params.data
+     * @param {boolean} params.data.available
+     * @param {string|integer} params.data.id
+     * @param {boolean} params.data.is_minimized
+     * @param {Object} params.data.operator
+     * @param {string} params.data.state ['open', 'closed', 'folded']
+     * @param {string} params.data.uuid
+     * @param {string} params.data.welcome_message
+     * @param {Object} params.options
+     */
+    init: function (params) {
+        var data = params.data;
 
         data.type = 'support_channel';
         data.name = _t("Support");

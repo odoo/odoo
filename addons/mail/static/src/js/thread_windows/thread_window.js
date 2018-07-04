@@ -199,24 +199,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Get the ID of the thread window, which is equivalent to the ID of the
-     * related thread.
-     *
-     * If this window is not related to a thread, it means this is the "blank"
-     * thread window, therefore it returns "_blank" as its ID.
-     *
-     * @override
-     * @private
-     * @returns {integer|string} the threadID, or '_blank' for the window that
-     *   is not related to any thread.
-     */
-    _getThreadID: function () {
-        if (!this.hasThread()) {
-            return '_blank';
-        }
-        return this._thread.getID();
-    },
-    /**
      * @override
      * @private
      */

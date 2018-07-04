@@ -44,8 +44,6 @@ var AbstractMessage =  Class.extend({
         this._id = data.id;
         this._isDiscussion = data.is_discussion;
         this._isNotification = data.is_notification;
-        // if set, the message should display the author of the message
-        this._displayAuthor = false;
         this._serverAuthorID = data.author_id;
         this._type = data.message_type || undefined;
 
@@ -268,12 +266,12 @@ var AbstractMessage =  Class.extend({
         return this._isDiscussion;
     },
     /**
-     * State whether this message is linked to a document
-     * By default, messages are not linked to a document.
+     * State whether this message is linked to a document thread
+     * By default, messages are not linked to a document thread.
      *
      * @return {boolean}
      */
-    isLinkedToDocument: function () {
+    isLinkedToDocumentThread: function () {
         return false;
     },
     /**
@@ -336,14 +334,6 @@ var AbstractMessage =  Class.extend({
      */
     needsModeration: function () {
         return false;
-    },
-    /**
-     * State whether this message should display the author
-     *
-     * @return {boolean}
-     */
-    shouldDisplayAuthor: function () {
-        return this._displayAuthor;
     },
     /**
      * State whether this message should redirect to the author

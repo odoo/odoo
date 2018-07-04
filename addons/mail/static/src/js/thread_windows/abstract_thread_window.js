@@ -46,11 +46,13 @@ var AbstractThreadWindow = Widget.extend({
      *
      * @abstract
      * @param {Widget} parent
-     * @param {Object} thread
+     * @param {Object} thread the thread that this thread window is linked to.
      * @param {Object} [options={}]
      */
     init: function (parent, thread, options) {
         this._super(parent);
+
+        this._thread = thread;
 
         this.options = _.defaults(options || {}, {
             autofocus: true,
@@ -174,15 +176,11 @@ var AbstractThreadWindow = Widget.extend({
         return this._hidden;
     },
     /**
-     * Render the thread window, using the provided list of messages
-     *
-     * TODO: use messages in thread, instead of providing list of messages
-     *
-     * @param {mail.model.AbstractMessage[]} messages
+     * Render the thread window
      */
-    render: function (messages) {
+    render: function () {
         this._renderHeader();
-        this.threadWidget.render(messages, { displayLoadMore: false });
+        this.threadWidget.render(this._thread, { displayLoadMore: false });
     },
     /**
      * Toggle the fold state of this thread window. Also update the fold state
@@ -256,12 +254,19 @@ var AbstractThreadWindow = Widget.extend({
     },
     /**
      * Get the ID of the related thread.
+     * If this window is not related to a thread, it means this is the "blank"
+     * thread window, therefore it returns "_blank" as its ID.
      *
-     * @abstract
      * @private
-     * @return {integer}
+     * @returns {integer|string} the threadID, or '_blank' for the window that
+     *   is not related to any thread.
      */
-    _getThreadID: function () {},
+    _getThreadID: function () {
+        if (!this.hasThread()) {
+            return '_blank';
+        }
+        return this._thread.getID();
+    },
     /**
      * Post a message on this thread window
      *
