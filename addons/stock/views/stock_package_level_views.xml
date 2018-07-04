@@ -15,8 +15,8 @@
                     <field name="show_lots_text" invisible="1"/>
                     <group>
                         <field name="package_id"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                         <field name="is_done"/>
                     </group>
                     <field name="move_ids" attrs="{'invisible': [('state', 'in', ('new', 'draft', 'assigned', 'done'))]}">
