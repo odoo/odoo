@@ -1000,6 +1000,11 @@ $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDi
   r = r.deleteContents(true);
 
   var table = editor.table.createTable(dimension[0], dimension[1]);
+  var rows = table.getElementsByTagName('tr'), i, cells;
+  cells = table.getElementsByTagName('td');
+  for (i = 0; i < cells.length; i++){
+    cells[i].innerHTML ="<p></br></p>";
+  }
   var parent = r.sc;
   while (dom.isText(parent.parentNode) || dom.isRemovableEmptyNode(parent.parentNode)) {
     parent = parent.parentNode;
