@@ -2840,6 +2840,56 @@ QUnit.module('Views', {
         testUtils.unpatch(mixins.ParentedMixin);
     });
 
+    QUnit.test('grouped kanban becomes ungrouped when clearing domain then clearing groupby', function (assert) {
+        // in this test, we simulate that clearing the domain is slow, so that
+        // clearing the groupby does not corrupt the data handled while
+        // reloading the kanban view.
+        assert.expect(4);
+
+        var def = $.Deferred();
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            domain: [['foo', '=', 'norecord']],
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                var result = this._super(route, args);
+                if (args.method === 'read_group') {
+                    var isFirstUpdate = _.isEmpty(args.kwargs.domain) &&
+                                        args.kwargs.groupby &&
+                                        args.kwargs.groupby[0] === 'bar';
+                    if (isFirstUpdate) {
+                        return def.then(_.constant(result));
+                    }
+                }
+                return result;
+            },
+        });
+
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'),
+            "the kanban view should be grouped");
+        assert.notOk(kanban.$('.o_kanban_view').hasClass('o_kanban_ungrouped'),
+            "the kanban view should not be ungrouped");
+
+        kanban.update({domain: []}); // 1st update on kanban view
+        kanban.update({groupBy: false}); // 2n update on kanban view
+        def.resolve(); // simulate slow 1st update of kanban view
+
+        assert.notOk(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'),
+            "the kanban view should not longer be grouped");
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_ungrouped'),
+            "the kanban view should have become ungrouped");
+
+        kanban.destroy();
+    });
+
 });
 
 });
