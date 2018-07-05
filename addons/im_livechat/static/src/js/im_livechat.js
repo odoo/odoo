@@ -161,7 +161,7 @@ var LivechatButton = Widget.extend({
                 this._addMessage(notification[1]);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.threadWidget.isAtBottom()) {
-                    this._chatWindow.incrementUnreadCounter();
+                    this._livechat.incrementUnreadCounter();
                 }
             }
         }
@@ -255,7 +255,8 @@ var LivechatButton = Widget.extend({
         this._chatWindow.on('save_chat', this, this._onSaveChat);
         this._chatWindow.threadWidget.$el.on('scroll', null, _.debounce(function () {
             if (self._chatWindow.threadWidget.isAtBottom()) {
-                self._chatWindow.resetUnreadCounter();
+                self._livechat.resetUnreadCounter();
+                self._chatWindow.renderHeader();
             }
         }, 100));
     },

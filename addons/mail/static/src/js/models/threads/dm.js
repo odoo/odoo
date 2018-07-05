@@ -52,12 +52,6 @@ var DM = Channel.extend({
         return result;
     },
     /**
-     * @returns {string}
-     */
-    getStatus: function () {
-        return this._status;
-    },
-    /**
      * DM are chat
      *
      * @override

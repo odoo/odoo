@@ -35,11 +35,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
         // don't automatically mark unread messages as seen when at the bottom
         // of the thread
         this._passive = this.options.passively;
-        this._thread = thread || null;
 
         if (!this.hasThread()) {
-            // internal fold state of thread window without any thread
-            this._folded = false;
             // remembered partner ID of "blank" thread window in order to be
             // replaced with newly opened DM window
             this.directPartnerID = null;
@@ -86,7 +83,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
      * @override
      */
     close: function () {
-        if (this._hasThread()) {
+        if (this.hasThread()) {
             this._thread.close();
         }
     },
@@ -106,25 +103,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
         return this._getThreadID();
     },
     /**
-     * Get the status of the thread. If this window has no thread, returns
-     * 'undefined'
-     *
-     * @override
-     * @returns {string|undefined}
-     */
-    getStatus: function () {
-        if (!this.hasThread()) {
-            return undefined;
-        }
-        return this._thread.getStatus();
-    },
-    /**
-     * Get the title of the thread window, which is equivalent to the name of
-     * related thread, prefixed with "#" if this is a chat (i.e. DM, backend
-     * livechat).
-     *
-     * If there is no thread linked to this thread window, display title of
-     * "blank" thread window.
+     * Overrides so that if this thread window is not linked to any thread
+     * (= "blank" thread window), displays "New message" as its title.
      *
      * @override
      * @returns {string}
@@ -133,41 +113,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
         if (!this.hasThread()) {
             return _t("New message");
         }
-        return this._thread.getTitle();
-    },
-    /**
-     * Get the unread counter of the related thread. If there are no thread
-     * linked to this window, returns 0.
-     *
-     * @override
-     * @returns {integer}
-     */
-    getUnreadCounter: function () {
-        if (!this.hasThread()) {
-            return 0;
-        }
-        return this._thread.getUnreadCounter();
-    },
-    /**
-     * @override
-     * @returns {boolean}
-     */
-    hasThread: function () {
-        return !!this._thread;
-    },
-    /**
-     * State whether the related thread is folded or not. If there are no
-     * thread related to this window, it means this is the "blank" thread
-     * window, therefore we use the internal folded state.
-     *
-     * @override
-     * @returns {boolean}
-     */
-    isFolded: function () {
-        if (!this.hasThread()) {
-            return this._folded;
-        }
-        return this._thread.isFolded();
+        return this._super.apply(this, arguments);
     },
     /**
      * Tell whether the thread window is passive or not. A passive thread window
@@ -184,14 +130,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     removePassive: function () {
         this._passive = false;
-    },
-    /**
-     * Update the header of this thread window
-     * This is useful when some information on the header have be updated
-     * such as the status or the title of the thread that have changed.
-     */
-    updateHeader: function () {
-        this._renderHeader();
     },
 
     //--------------------------------------------------------------------------
@@ -210,17 +148,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
             options.expandTitle = _t("Open in Discuss");
         }
         return options;
-    },
-    /**
-     * States whether the window is linked to a thread or not
-     *
-     * Useful to detect whether this is the "blank" thread window or not.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _hasThread: function () {
-        return !!this._thread;
     },
     /**
      * Listen on thread widget events
@@ -273,7 +200,7 @@ var ThreadWindow = AbstractThreadWindow.extend({
      */
     _postMessage: function (messageData) {
         var self = this;
-        if (!this._hasThread()) {
+        if (!this.hasThread()) {
             return;
         }
         this._thread.postMessage(messageData)
@@ -302,22 +229,6 @@ var ThreadWindow = AbstractThreadWindow.extend({
                 },
             })
             .focus();
-    },
-    /**
-     * Update the fold state of the thread
-     * If there is no thread linked to this window, it means this is the
-     * "blank" thread window, therefore we use the internal state 'folded'
-     *
-     * @override
-     * @private
-     * @param {boolean} folded
-     */
-    _updateThreadFoldState: function (folded) {
-        if (this.hasThread()) {
-            this._thread.fold(folded);
-        } else {
-            this._folded = folded;
-        }
     },
 
     //--------------------------------------------------------------------------

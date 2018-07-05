@@ -637,7 +637,7 @@ MailManager.include({
         this._hiddenThreadWindowsUnreadCounter = 0;
         _.each(this._threadWindows, function (threadWindow) {
             if (thread.getID() === threadWindow.getID()) {
-                threadWindow.updateHeader();
+                threadWindow.renderHeader();
                 if (thread.getUnreadCounter() === 0) {
                     threadWindow.removePassive();
                 }
@@ -663,7 +663,7 @@ MailManager.include({
     _onUpdateDmPresence: function (thread) {
         _.each(this._threadWindows, function (threadWindow) {
             if (thread.getID() === threadWindow.getID()) {
-                threadWindow.updateHeader();
+                threadWindow.renderHeader();
             }
         });
     },

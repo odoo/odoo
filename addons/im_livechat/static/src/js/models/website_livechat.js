@@ -14,8 +14,8 @@ var WebsiteLivechat = AbstractThread.extend({
      *   folded or not. It is considered only if this is defined and it is a
      *   boolean value.
      * @param {integer} livechatData.id the ID of this livechat.
-     * @param {integer} [livechatData.message_unread_counter=0] the unread
-     *   counter of this livechat.
+     * @param {integer} [livechatData.message_unread_counter=undefined] the
+     *   unread counter of this livechat.
      * @param {Array} livechatData.operator_pid
      * @param {string} livechatData.name the name of this livechat.
      * @param {string} [livechatData.state] if 'folded', the livechat is folded.
@@ -27,11 +27,12 @@ var WebsiteLivechat = AbstractThread.extend({
 
         this._super(params);
 
-        this._folded = false;
-        this._name = livechatData.name;
         this._operatorPID = livechatData.operator_pid;
-        this._unreadCounter = livechatData.message_unread_counter || 0;
         this._uuid = livechatData.uuid;
+
+        if (livechatData.message_unread_counter !== undefined) {
+            this._unreadCounter = livechatData.message_unread_counter;
+        }
 
         if (_.isBoolean(livechatData.folded)) {
             this._folded = livechatData.folded;
@@ -45,16 +46,17 @@ var WebsiteLivechat = AbstractThread.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {boolean} folded
+     */
+    fold: function (folded) {
+        this._folded = folded;
+    },
+    /**
+     * @override
      * @returns {im_livechat.model.WebsiteLivechatMessage[]}
      */
     getMessages: function () {
         return this._messages;
-    },
-    /**
-     * @returns {string}
-     */
-    getName: function () {
-        return this._name;
     },
     /**
      * @returns {Array}
@@ -65,38 +67,8 @@ var WebsiteLivechat = AbstractThread.extend({
     /**
      * @returns {string}
      */
-    getTitle: function () {
-        return this.getName();
-    },
-    /**
-     * @returns {integer}
-     */
-    getUnreadCounter: function () {
-        return this._unreadCounter;
-    },
-    /**
-     * @returns {string}
-     */
     getUUID: function () {
         return this._uuid;
-    },
-    /**
-     * Increments the unread counter of this livechat by 1 unit.
-     */
-    incrementUnreadCounter: function () {
-        this._unreadCounter++;
-    },
-    /**
-     * @returns {boolean}
-     */
-    isFolded: function () {
-        return this._folded;
-    },
-    /**
-     * Resets the unread counter of this livechat to 0.
-     */
-    resetUnreadCounter: function () {
-        this._unreadCounter = 0;
     },
     /**
      * AKU: hack for the moment
@@ -118,12 +90,6 @@ var WebsiteLivechat = AbstractThread.extend({
             name: this.getName(),
             uuid: this.getUUID(),
         };
-    },
-    /**
-     * @param {boolean} folded
-     */
-    updateFoldState: function (folded) {
-        this._folded = folded;
     },
 });
 
