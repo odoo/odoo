@@ -23,30 +23,30 @@ odoo.define('website_form_editor.tour', function(require) {
         {
             content:  "Check if the snippet is dropped and if the modal is opened",
             trigger:  "body:has(form[action*='/website_form/'])" +
-                      " main.modal-body:has(select[name='model_selection'])" +
-                      ":has(input[name='success_page'])",
+                      ":has(.modal-body:has(select[name='model_selection'])" +
+                      ":has(input[name='success_page']))",
             run: function () {},
             in_modal: false,
         },
         {
             content:  "Change the action to create issues",
-            trigger:  "main.modal-body select",
+            trigger:  ".modal-body select",
             run:      "text project.issue"
         },
         {
             content:  "Change the action to Send an E-mail",
-            trigger:  "main.modal-body select",
+            trigger:  ".modal-body select",
             run:      "text mail.mail"
         },
         {
             content:  "Complete Recipient E-mail",
-            extra_trigger:  "main.modal-body input[name='email_to']",
-            trigger:  "main.modal-body input[name='email_to']",
+            extra_trigger:  ".modal-body input[name='email_to']",
+            trigger:  ".modal-body input[name='email_to']",
             run:      "text test@test.test"
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
         // Add the subject field
         {
@@ -68,7 +68,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
 
         // Customize subject field
@@ -113,7 +113,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
 
         // Customize record_name field
@@ -159,7 +159,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
 
         // Customize subject field
@@ -204,7 +204,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
         {
             content:  "Check the resulting field",
@@ -472,7 +472,7 @@ odoo.define('website_form_editor.tour', function(require) {
         },
         {
             content:  "Click on Save",
-            trigger:  "footer.modal-footer #modal-save"
+            trigger:  ".modal-footer #modal-save"
         },
 
         // Customize attachment_ids field
