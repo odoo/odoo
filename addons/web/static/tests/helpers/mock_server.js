@@ -237,7 +237,6 @@ var MockServer = Class.extend({
             if (attrs) {
                 attrs = pyeval.py_eval(attrs);
                 _.extend(modifiers, attrs);
-                node.removeAttribute('attrs');
             }
 
             var states = node.getAttribute('states');

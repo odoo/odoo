@@ -413,6 +413,12 @@ actual arch.
         self.clear_caches()
         return super(View, self).write(self._compute_defaults(vals))
 
+    def unlink(self):
+        # if in uninstall mode and has children views, emulate an ondelete cascade
+        if self.env.context.get('_force_unlink', False) and self.mapped('inherit_children_ids'):
+            self.mapped('inherit_children_ids').unlink()
+        super(View, self).unlink()
+
     @api.multi
     def toggle(self):
         """ Switches between enabled and disabled statuses

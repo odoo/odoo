@@ -23,7 +23,6 @@
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',
-        'data/project_data.xml',
         'report/project_report_views.xml',
         'views/rating_views.xml',
         'views/project_views.xml',
@@ -33,6 +32,7 @@
         'views/project_portal_templates.xml',
         'views/project_rating_templates.xml',
         'data/project_mail_template_data.xml',
+        'data/project_data.xml',
     ],
     'qweb': ['static/src/xml/project.xml'],
     'demo': ['data/project_demo.xml'],
