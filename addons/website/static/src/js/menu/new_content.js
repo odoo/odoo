@@ -15,6 +15,7 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     }),
     events: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.events || {}, {
         'click > a': '_onMenuToggleClick',
+        'click > #o_new_content_menu_choices': '_onBackgroundClick',
     }),
 
     /**
@@ -72,6 +73,15 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
     _onMenuToggleClick: function (ev) {
         ev.preventDefault();
         this.$newContentMenuChoices.toggleClass('o_hidden');
+    },
+    /**
+     * Called when a click outside the menu's options occurs -> Closes the menu
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onBackgroundClick: function (ev) {
+        this.$newContentMenuChoices.addClass('o_hidden');
     },
 });
 
