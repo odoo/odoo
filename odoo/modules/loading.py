@@ -123,7 +123,17 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             continue
 
         _logger.debug('loading module %s (%d/%d)', module_name, index, module_count)
-        migrations.migrate_module(package, 'pre')
+
+        needs_update = (
+            hasattr(package, "init")
+            or hasattr(package, "update")
+            or package.state in ("to install", "to upgrade")
+        )
+        if needs_update:
+            if package.name != 'base':
+                registry.setup_models(cr)
+            migrations.migrate_module(package, 'pre')
+
         load_openerp_module(package.name)
 
         new_install = package.state == 'to install'
@@ -136,8 +146,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         model_names = registry.load(cr, package)
 
         loaded_modules.append(package.name)
-        if (hasattr(package, 'init') or hasattr(package, 'update')
-                or package.state in ('to install', 'to upgrade')):
+        if needs_update:
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry.setup_models(cr)
@@ -157,7 +166,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
         if hasattr(package, 'init') or package.state == 'to install':
             mode = 'init'
 
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
