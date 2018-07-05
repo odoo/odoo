@@ -784,7 +784,7 @@ The only allowed element within a graph view is ``field`` which can have the
 following attributes:
 
 ``name`` (required)
-  the name of a field to use in a graph view. If used for grouping (rather
+  the name of a field to use in the view. If used for grouping (rather
   than aggregating)
 
 ``type``
@@ -793,10 +793,9 @@ following attributes:
 
   ``row`` (default)
     groups by the specified field. All graph types support at least one level
-    of grouping, some may support more. For pivot views, each group gets its
-    own row.
+    of grouping, some may support more.
   ``col``
-    only used by pivot tables, creates column-wise groups
+    authorized in graph views but only used by pivot tables
   ``measure``
     field to aggregate within a group
 
@@ -810,8 +809,11 @@ following attributes:
    graph view aggregations are performed on database content, non-stored
    function fields can not be used in graph views
 
+
+.. _reference/views/pivot:
+
 Pivots
-------
+======
 
 The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
@@ -821,7 +823,33 @@ element is ``<pivot>`` which can take the following attributes:
 ``display_quantity``
   Set to ``true`` to display the Quantity column by default.
 
-The elements allowed within a pivot view are the same as for the graph view.
+The only allowed element within a pivot view is ``field`` which can have the
+following attributes:
+
+``name`` (required)
+  the name of a field to use in the view. If used for grouping (rather
+  than aggregating)
+
+``type``
+  indicates whether the field should be used as a grouping criteria or as an
+  aggregated value within a group. Possible values are:
+
+  ``row`` (default)
+    groups by the specified field, each group gets its own row.
+  ``col``
+    creates column-wise groups
+  ``measure``
+    field to aggregate within a group
+  ``interval``
+    on date and datetime fields, groups by the specified interval (``day``,
+    ``week``, ``month``, ``quarter`` or ``year``) instead of grouping on the
+    specific datetime (fixed second resolution) or date (fixed day resolution).
+
+.. warning::
+
+    like the graph view, the pivot aggregates data on database content
+    which means that non-stored function fields can not be used in pivot views
+
 
 .. _reference/views/kanban:
 
